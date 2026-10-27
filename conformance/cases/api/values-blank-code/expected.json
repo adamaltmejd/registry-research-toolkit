@@ -1,0 +1,41 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/items/0/value_set/hash": "15f9ccc559ffc8f0476ac053ea0b093ee522ac8328a527b5c8ed1b595d832316"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "", "label": "Uppgift saknas", "level": 1, "parent": null, "sentinel": false, "child_count": null},
+        {"code": "1", "label": "Ja", "level": 1, "parent": null, "sentinel": false, "child_count": null},
+        {"code": "2", "label": "Nej", "level": 1, "parent": null, "sentinel": false, "child_count": null}
+      ],
+      "/data/next_cursor": null,
+      "/data/total": 3,
+      "/data/value_set/n_items": 3,
+      "/data/value_set/hierarchical": false,
+      "/data/value_set/names": ["svar18"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/hash": [
+        "0fb1ac8ebef54630068ea71de4c66a59621eee06480780902f46860fa0e45f39",
+        "15f9ccc559ffc8f0476ac053ea0b093ee522ac8328a527b5c8ed1b595d832316"
+      ],
+      "/data/items/*/names": [["svar20"], ["svar18"]],
+      "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {"code": "", "label": "Uppgift saknas", "level": 1, "parent": null, "sentinel": false, "child_count": null}
+      ],
+      "/data/total": 1
+    }
+  }
+]

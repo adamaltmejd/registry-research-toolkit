@@ -1,0 +1,9 @@
+{
+  "note": "Fails if the (code, label) pair mode stops answering the value sets that hold exactly that pair (1 Ja is in svar18 and svar20, ordered by hash), treats an absent `label` as a wildcard (the item `1` without a label does not exist: an empty page) or turns a pair no set holds into an error instead of an empty 200.",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "values", "path": "/api/values", "query": {"code": "1", "label": "Ja"}},
+    {"operation": "values", "path": "/api/values", "query": {"code": "1"}},
+    {"operation": "values", "path": "/api/values", "query": {"code": "9", "label": "X"}}
+  ]
+}

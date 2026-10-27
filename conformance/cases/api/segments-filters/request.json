@@ -1,0 +1,9 @@
+{
+  "note": "Fails if `period` stops selecting the segments that overlap it (2020 is only the svar20 segment) or clips them, if `value_set_name` stops matching a source's name for the value set exactly (svar18 is only the 2018-2019 segment), or if `table` stops narrowing to one table of the variable's register (Svar has no segment in table r: an empty page, not an error).",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"period": "2020"}},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"value_set_name": "svar18"}},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"table": "demo/sg/r"}}
+  ]
+}

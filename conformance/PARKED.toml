@@ -11,8 +11,6 @@ operations = [
     "diff",
     "schema",
     # r-segments-values
-    "segments",
-    "values",
     # r-findings-graph
     # r-search
     "search",
@@ -35,18 +33,6 @@ cases = [
     "api/diff-register",
     "api/schema-paging",
     # r-segments-values
-    "api/states-curated-window",
-    "api/states-deliveries",
-    "api/states-fields",
-    "api/states-filters",
-    "api/states-merged",
-    "api/states-paging",
-    "api/states-stale-cursor",
-    "api/states-window-fallback",
-    "api/values-classification",
-    "api/values-stale-cursor",
-    "api/values-state",
-    "api/values-tree",
     # r-findings-graph
     # r-search
     "api/cursor-stale",

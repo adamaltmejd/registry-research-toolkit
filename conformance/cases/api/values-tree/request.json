@@ -1,32 +1,25 @@
 {
-  "note": "Fails if `parent=` stops answering a book's parentless codes, if `parent=<code>` stops answering exactly that code's children ordered by code, paged by cursor within the node, if `child_count` stops counting children (0 for a leaf) or stops being null on a book without a tree, if a non-empty `q` stops reading the book flat, if an unknown parent code is answered instead of not_found, or if `parent` on a variable's state is accepted beside its allowed twin.",
-  "fixture": "classification-tree",
-  "kind": "catalog",
+  "note": "Fails if `parent=` (empty) stops answering the parentless codes (A, B) or `child_count` stops counting a code's children (2 for A, 0 for B), if `parent=A` stops answering exactly A's children with `level` 2 and `parent` \"A\", or if `level=2` stops keeping that one level of the hierarchical value set bransch (A1, A2).",
+  "fixture": "segments",
   "requests": [
-    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": ""}},
-    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "A"}},
-    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "011", "limit": 1}},
+    {"operation": "segments", "path": "/api/segments/demo/sg/bransch", "query": {"period": "2018"}},
     {
       "operation": "values",
-      "path": "/api/values/class/tree",
-      "query": {"parent": "011", "limit": 1},
-      "cursor_from": [2, "/data/next_cursor"]
-    },
-    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "A", "q": "spannmål"}},
-    {"operation": "values", "path": "/api/values/class/tree", "query": {"parent": "Z"}},
-    {"operation": "values", "path": "/api/values/class/flat"},
-    {"operation": "values", "path": "/api/values/class/flat", "query": {"parent": ""}},
-    {"operation": "states", "path": "/api/states/scb/example/naring"},
-    {
-      "operation": "values",
-      "path": "/api/values/scb/example/naring",
-      "query_from": {"state": [8, "/data/items/0/state_id"]}
+      "path": "/api/values",
+      "query": {"parent": ""},
+      "query_from": {"value_set": [0, "/data/items/0/value_set/hash"]}
     },
     {
       "operation": "values",
-      "path": "/api/values/scb/example/naring",
+      "path": "/api/values",
       "query": {"parent": "A"},
-      "query_from": {"state": [8, "/data/items/0/state_id"]}
+      "query_from": {"value_set": [0, "/data/items/0/value_set/hash"]}
+    },
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query": {"level": "2"},
+      "query_from": {"value_set": [0, "/data/items/0/value_set/hash"]}
     }
   ]
 }

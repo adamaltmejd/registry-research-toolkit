@@ -1,0 +1,7 @@
+{
+  "note": "Fails if a segment loses or renames a shape.Segment field, if the flag-only boundary (`sensitive` false 2018-2019, true 2020-2021, same spelling and no value set) stops giving two segments, if a segment's period is clipped or rendered inclusive instead of half-open, if a segment without a value set stops answering `value_set: null`, or if `evidence` leaks into an item when it was not asked for. Oracle: the fixture's JSONL and the resolve rules (role `measure` with no value set, `coded` unknown, `temporality` unknown, state `clear`).",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/kanslig"}
+  ]
+}

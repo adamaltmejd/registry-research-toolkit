@@ -1,0 +1,13 @@
+{
+  "note": "Fails if a ref of another kind stops being `invalid_ref` (a register is not a variable), if a register with named tables as `table` stops answering `table_is_register` with its tables' pids sorted, if the bare name `svar` (two registers' variables) stops being `ambiguous_ref`, if an unknown ref stops being 404, or if a bad `period`, `cursor` or `limit` stops being its located 422 (the `limit` step is the operation's `invalid_parameter`, which the MCP equivalence test requires each operation's cases to reach).",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg"},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"table": "demo/sg"}},
+    {"operation": "segments", "path": "/api/segments/svar"},
+    {"operation": "segments", "path": "/api/segments/demo/nope"},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"period": "20x0"}},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"cursor": "zz"}},
+    {"operation": "segments", "path": "/api/segments/demo/sg/svar", "query": {"limit": 0}}
+  ]
+}

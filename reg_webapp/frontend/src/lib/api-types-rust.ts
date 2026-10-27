@@ -11,7 +11,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug only where it is also the name). */
+        /** @description The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. */
         get: operations["show_without_ref"];
         put?: never;
         post?: never;
@@ -28,25 +28,8 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The summary of any ref, by `kind`: a provider, register, variable, classification, `class` (every classification) or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`); no ref is the catalog root. A register lists its variables, groups and variants; a classification its owning variables. `ref` is a FQID or a name, case-insensitive (a slug only where it is also the name). */
+        /** @description The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers. */
         get: operations["show"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/coded-variables": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The variables with coded value sets, by common name: each name's distinct codes over every coded state under it, its registers and its coded states, ordered by distinct codes (ties by name); pass `next_cursor` back as `cursor` for the next page. */
-        get: operations["coded_variables"];
         put?: never;
         post?: never;
         delete?: never;
@@ -62,268 +45,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The catalog's branding, identity and headline counts, for the SPA. */
+        /** @description The catalog's identity and headline counts, for the SPA. */
         get: operations["context"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/coverage/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The calendar years a register or a variable (a FQID or a name, case-insensitive; a slug only where it is also the name) is delivered in: their span and gaps, and the years per register variant, or for a variable the columns delivered each year. An open-ended delivery counts its opening year; a ref with no dated delivery is not found. */
-        get: operations["coverage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/diff/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A register's columns between two periods, per variant: the variables added at `to`, removed since `from`, and changed in type, width or column (a variable compares by its first column in each period). Variants without changes are left out. */
-        get: operations["diff"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/docs/doc/{identifier}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description One documentation entry by variable name or filename (with or without `.md`): its register, tags and source, a 500-character `excerpt` and the full markdown `body`. */
-        get: operations["docs_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/docs/file/{ref}/{filename}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A related document's bytes, served inline. */
-        get: {
-            parameters: {
-                query?: {
-                    scope?: components["schemas"]["Scope"];
-                };
-                header?: never;
-                path: {
-                    ref: string;
-                    filename: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description The raw bytes */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/pdf": unknown;
-                    };
-                };
-                /** @description An error in `api/errors.toml` */
-                default: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: components["schemas"]["Error"];
-                            meta: components["schemas"]["Meta"];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/docs/related/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A register's related documents (rehosted PDFs): title, source, license, and the `sha256` and `byte_size` of the bytes `/api/docs/file/{ref}/{filename}` serves. `ref` is a register FQID (`scb/aes`) or the register's name, case-insensitive, matched as `show` matches a register name; a bare slug (`aes`) resolves only where it is also the name. */
-        get: operations["docs_related"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/docs/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Search the documentation: with `q`, the entries whose title, variable or text match every word (as prefixes, case and diacritics ignored), best match first, each with a `snippet` marking the matched words in `**`; without `q`, every entry by filename. `register` (a register FQID or name, case-insensitive; a slug only where it is also the name) keeps that register's entries; `register_ingested` says whether it has any. `total` counts the matches. */
-        get: operations["docs_search"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/graph/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The succession graph of a variable, a classification or a group (`group/<provider>/<register>/<key>`, `group/class/<key>`): variable nodes with their states folded into representation runs, classification edition nodes, and directed succession edges. A variable draws its concept group's members, a classification its classification groups; `focus_id` is the requested node. No nodes means nothing to draw. */
-        get: operations["graph"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/lineage/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A variable's lineage: the source states feeding each of its states (`edges`), the build's lineage `warnings`, and, for every variable in scope with its name, its register's provenance role (`registers`). */
-        get: operations["lineage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/project/order": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`. */
-        post: operations["order"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/project/order/manifest": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description `order`'s manifest as the exact manifest bytes, an attachment named `order_<project slug>_<UTC date>.json`. */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": Record<string, never>;
-                };
-            };
-            responses: {
-                /** @description The raw bytes */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": unknown;
-                    };
-                };
-                /** @description An error in `api/errors.toml` */
-                default: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: components["schemas"]["Error"];
-                            meta: components["schemas"]["Meta"];
-                        };
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/project/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin. */
-        post: operations["validate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -337,7 +62,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Delivered column names (data-file headers, 1 to 200 of them) to the variables delivering them, by exact case-insensitive match: one row per name, `matched` with its variables or `no_match`. `register` (a FQID or a register name, case-insensitive; a slug only where it is also the name) keeps matches to one register. Not ref resolution: use `search` to discover names. */
+        /** @description Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched. */
         get: operations["resolve"];
         put?: never;
         post?: never;
@@ -347,15 +72,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/schema/{ref}": {
+    "/api/segments/{ref}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description The delivered columns of a register, or of one variable (a FQID or a name, case-insensitive; a slug only where it is also the name): one row per register variant, window and column, with its type, width and concept group. `period` (2019, 2015..2019) keeps rows overlapping its years; `variant` keeps one variant (a slug); pass `next_cursor` back as `cursor` for the next page. */
-        get: operations["schema"];
+        /** @description A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them. */
+        get: operations["segments"];
         put?: never;
         post?: never;
         delete?: never;
@@ -364,133 +89,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/search": {
+    "/api/values": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Search the catalog's registers, variables, classifications and codes in one ranked list. `q` is free text; `type` keeps one kind of hit; `register` (a FQID or a register name, case-insensitive; a slug only where it is also the name) and `period` (2019, 2015..2019, LA2019, 2019-03) filter; pass `next_cursor` back as `cursor` for the next page. */
-        get: operations["search"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/search/facets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Per register, how many of its variables match `q` under `search`'s variable matching, every match counted (no paging) and before concept groups fold; registers without a match are absent. With `register` (a FQID or a register name, case-insensitive), only that register, with all its matched variables; without it, `limit` lists each register's first `limit` matched variables, `variable_matches` still counting them all. */
-        get: operations["search_facets"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/states/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A variable's states: each representation it was delivered in, with its variant, bounds, column, coding and the ids of the data warnings that apply to it. Without `period`, the whole history; with `period`, the dated states overlapping it, a state's alias windows standing in for it where they overlap. `variant` and `value_set_version` (`_none` for the empty label) narrow the list. In holdings scope, only what is held, clipped to the held periods. `ref` is a variable FQID or name, case-insensitive (a slug only where it is also the name). */
-        get: operations["states"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/steward/logo.svg": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The steward's logo: the compact top bar's mark and the SPA's favicon. */
-        get: {
-            parameters: {
-                query?: {
-                    scope?: components["schemas"]["Scope"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description The raw bytes */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "image/svg+xml": unknown;
-                    };
-                };
-                /** @description An error in `api/errors.toml` */
-                default: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            error: components["schemas"]["Error"];
-                            meta: components["schemas"]["Meta"];
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/values/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A classification's codes (code, label, level, validity), or the value set of one `state` of a variable (a `state_id` from `states`), ordered by code and label. `column` with `alias_window_from` (a state's `coding_window_from`) reads the coded alias window's set instead. With `classification`, a book the coding declares, `partition` picks its part: `source_extensions` (default; the codes outside the book, nonstandard and sentinel), `nonstandard`, `sentinels`, or `canonical` (the delivered pairs whose code the book holds). On a classification, `parent` reads one level of its code tree: empty for the roots, a code for that code's children; each code's `child_count` is null when the book has no tree, 0 for a leaf. `q` keeps the rows whose code or label contains it, case and diacritics folded, over the whole set (`parent` ignored); `total` counts them. In holdings scope, only a held state. `ref` is a classification or variable FQID or name, case-insensitive (a slug only where it is also the name). */
+        /** @description A value set's items, by its hash or by a classification version's ref, with a hierarchical set paged one level at a time by `parent` and searched flat by `q`; or, given a `code` and optionally its `label`, the value sets that hold that pair. The blank code is an item like any other. */
         get: operations["values"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/warnings/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description A register's or variable's data warnings, ordered by id: a variable's include its register's unassigned ones. `period`, `variant` and `representation` (a delivery column) keep the warnings that may apply to them; `unassigned_only` keeps the register's unassigned ones. In holdings scope, a variable's warnings apply only to what is held, and a dated warning's window is clipped to the held periods (a register-wide one to the register's held span, at the requested variant when given); one wholly outside them is dropped. */
-        get: operations["warnings"];
         put?: never;
         post?: never;
         delete?: never;
@@ -503,351 +110,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        Axis: {
-            label: string;
-            name: string;
-        };
-        /**
-         * @description The serving catalog: its steward `id` (`global` for the global catalog), its
-         *     branding where the server loads it, and the two versions a `project_data.json` drafted here carries:
-         *     `reg_meta_version` and `project_schema_version` (the document's `schema_version`,
-         *     not the catalog database's).
-         */
-        CatalogIdentity: {
-            id: string;
-            long_name?: string | null;
-            name?: string | null;
-            project_schema_version: string;
-            reg_meta_version: string;
-        };
-        /** @description One differing field: `data_type`, `data_length` or `column`. */
-        Change: {
-            field: string;
-            from?: string | null;
-            to?: string | null;
-        };
-        Changed: {
-            changes: components["schemas"]["Change"][];
-            fqid?: string | null;
-            /** Format: int64 */
-            var_id?: number | null;
-            variable_name?: string | null;
-        };
-        /** @description A classification edition. Its codes are `values`, its edition chain `graph`. */
-        Classification: {
-            derivatives: components["schemas"]["Derivation"][];
-            derived_from: components["schemas"]["Derivation"][];
-            /** @description The classification groups it belongs to. */
-            dimensions: components["schemas"]["Group"][];
-            family?: components["schemas"]["Family"] | null;
-            fqid: string;
-            name?: string | null;
-            short_name?: string | null;
-            /**
-             * @description The variables in scope with a state coded by it (today's `get classification
-             *     --variables`), unpaged.
-             */
-            variables: components["schemas"]["OwningVariable"][];
-        };
-        ClassificationChild: {
-            fqid: string;
-            name?: string | null;
-            short_name?: string | null;
-        };
-        /** @description One code of a classification edition: today's `ClassificationCode`. */
-        ClassificationCode: {
-            /**
-             * Format: int64
-             * @description How many codes name this one as their parent: null when the book has no
-             *     code tree, 0 for a leaf.
-             */
-            child_count: number | null;
-            code: string;
-            /** @description True for a canonical code, null when no canonical list exists. */
-            is_valid: boolean | null;
-            label: string;
-            /**
-             * Format: int64
-             * @description The hierarchy depth; null when the classification is flat.
-             */
-            level: number | null;
-        };
-        /**
-         * @description A delivered pair outside its declared book: today's
-         *     `ClassificationExtensionMember`.
-         */
-        ClassificationExtensionMember: {
-            code: string;
-            label: string;
-            /** @description `nonstandard` or `sentinel`. */
-            member_kind: string;
-            /** @description The certificates that make a source-local code a sentinel. */
-            scoped_sentinels: components["schemas"]["ScopedSentinel"][];
-            /** @description The book's curated meaning of a sentinel code. */
-            sentinel_meaning: string | null;
-        };
-        /** @description A curated group of classifications. */
-        ClassificationGroup: {
-            axes: components["schemas"]["Axis"][];
-            fqid: string;
-            key: string;
-            label: string;
-            members: components["schemas"]["Member"][];
-            source: string;
-        };
-        /** @description A classification edition, a point in time. */
-        ClassificationNode: {
-            fqid: string;
-            /** @description `class/<key>` of the classification group or family it is drawn in. */
-            group_key?: string | null;
-            group_label?: string | null;
-            /** @description `class/<slug>`. */
-            id: string;
-            is_current: boolean;
-            label: string;
-            short_name?: string | null;
-            /** Format: int64 */
-            version_year?: number | null;
-        };
-        /**
-         * @description Every current classification, with the classification groups and families.
-         *     Editions a family stands for are reached through it.
-         */
-        ClassificationRoot: {
-            children: components["schemas"]["ClassificationChild"][];
-            families: components["schemas"]["Family"][];
-            fqid: string;
-            groups: components["schemas"]["Group"][];
-            name: string;
-        };
-        /**
-         * @description An availability clip: the binding asked for `requested_period` and is ordered
-         *     for `ordered_period`, where it is available.
-         */
-        ClipReport: {
-            ordered_period: string;
-            requested_period: string;
-            source: string;
-            variable: string;
-        };
-        CodeClassification: {
-            fqid?: string | null;
-            name?: string | null;
-            short_name?: string | null;
-        };
-        CodeVariable: {
-            fqid?: string | null;
-            name?: string | null;
-            register_name?: string | null;
-        };
-        /** @description `Page<CodedVariable>`. */
-        CodedPage: {
-            items: components["schemas"]["CodedVariable"][];
-            next_cursor?: string | null;
-        };
-        /**
-         * @description The CLI's `get coded-variables` row: a common name's distinct codes over every
-         *     coded state under it, its registers and its coded states.
-         */
-        CodedVariable: {
-            /** Format: int64 */
-            n_distinct_codes: number;
-            /** Format: int64 */
-            n_instances: number;
-            /** Format: int64 */
-            n_registers: number;
-            variable_name: string;
-        };
-        /** @description A register's concept group: its members in scope. */
-        ConceptGroup: {
-            axes: components["schemas"]["Axis"][];
-            fqid: string;
-            key: string;
-            label: string;
-            members: components["schemas"]["Member"][];
-            /** @description The register's FQID. */
-            register: string;
-            source: string;
-            tags: components["schemas"]["Tag"][];
-        };
-        /**
-         * @description The delivered domain against its declared classification; the mismatching codes
-         *     are `values`' `nonstandard` and `sentinels` partitions.
-         */
-        Conformance: {
-            /** Format: int64 */
-            checked_code_count: number;
-            declared_classification_name: string;
-            declared_classification_short_name: string;
-            declared_classification_slug: string;
-            /** Format: int64 */
-            matched_code_count: number;
-            /** Format: int64 */
-            nonconforming_code_count: number;
-            /** @description Always empty here (today's light hydration). */
-            nonconforming_codes: unknown[];
-            /** Format: int64 */
-            nonstandard_code_count: number;
-            /** Format: double */
-            overlap: number;
-            /** Format: int64 */
-            sentinel_code_count: number;
-            status: string;
-        };
-        /** @description `shape.Context`: branding, artifact identity and headline counts for the SPA. */
+        /** @description `shape.Context`. */
         Context: {
-            import_date: string;
-            period_span?: components["schemas"]["PeriodSpan"] | null;
+            catalog_version: string;
+            period_span: components["schemas"]["Period"] | null;
+            /** @description The server's version, which seeds a new project's `reg_meta_version`. */
             reg_meta_version: string;
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
-            steward: components["schemas"]["Steward"];
-        };
-        /**
-         * @description A register's or a variable's coverage (the CLI's `get availability` data); the
-         *     ref's kind is in `fqid`.
-         */
-        Coverage: components["schemas"]["RegisterCoverage"] | components["schemas"]["VariableCoverage"];
-        /**
-         * @description A retained source limitation or interpretation assumption: the builder's
-         *     `DataWarning`, reconstructed from its `data_warning` row.
-         */
-        DataWarning: {
-            /**
-             * @description The curation entry that accepts the issue, by file and position. When
-             *     several entries yield the same warning, the first by file, then position.
-             */
-            acknowledged_by?: string | null;
-            /**
-             * @description The curation entry the warning annotates, by file and position; the first
-             *     by file, then position, when several yield the same warning.
-             */
-            case_id?: string | null;
-            code: string;
-            delivery_column_name?: string | null;
-            detail: string;
-            diagnostic_detail_sha256: string;
-            fields: string[];
-            refs: components["schemas"]["SourceRecordRef"][];
-            register_fqid: string;
-            /** @description `warning` or `error`. */
-            severity: string;
-            summary: string;
-            valid_from?: string | null;
-            valid_to?: string | null;
-            variable_fqid?: string | null;
-            variant?: string | null;
-            /**
-             * @description SHA-256 of the rest of the warning with `acknowledged_by` and `case_id`
-             *     set to null, so moving a curation entry never changes it.
-             */
-            warning_id: string;
-            withheld_output: string[];
-        };
-        /**
-         * @description One `(variant, delivery column)` a variable is delivered under, with its disjoint
-         *     windows by start and their span. `column` is null for a state SCB named no
-         *     column for.
-         */
-        Delivery: {
-            column?: string | null;
-            coverage: components["schemas"]["ShowCoverage"];
-            /** @description `intervals`, or `year_independent` (no windows). */
-            period_scope: string;
-            variant: string;
-            windows: components["schemas"]["Window"][];
-        };
-        /** @description A non-temporal derivation link between classifications. */
-        Derivation: {
-            fqid?: string | null;
-            name?: string | null;
-            note?: string | null;
-            short_name?: string | null;
-        };
-        /** @description `diff`'s result: the variants whose columns differ between `from` and `to`. */
-        Diff: {
-            from: string;
-            register: string;
-            register_name: string;
-            to: string;
-            variants: components["schemas"]["VariantDiff"][];
-        };
-        /** @description A variable's column in one period: its first representation there. */
-        DiffColumn: {
-            column?: string | null;
-            data_length?: string | null;
-            data_type?: string | null;
-            fqid?: string | null;
-            /** Format: int64 */
-            var_id?: number | null;
-            variable_name?: string | null;
-        };
-        /** @description A documentation entry: its metadata, a preview and the full markdown. */
-        DocDetail: {
-            /** @description The full markdown, for agents. */
-            body: string;
-            display_name: string;
-            /** @description The plain text's first 500 characters, for the SPA. */
-            excerpt?: string | null;
-            filename: string;
-            register: string;
-            source?: string | null;
-            source_title?: string | null;
-            source_url?: string | null;
-            tags: string[];
-            variable?: string | null;
-        };
-        /**
-         * @description `docs_search`'s page: its hits, the total they page through, and whether
-         *     `register` has any documentation (false without `register`).
-         */
-        DocPage: {
-            items: components["schemas"]["DocResult"][];
-            next_cursor?: string | null;
-            register_ingested: boolean;
-            total: number;
-        };
-        /**
-         * @description One documentation hit: today's `DocResult` without the webapp's per-route `fuzzy`
-         *     flag.
-         */
-        DocResult: {
-            display_name: string;
-            filename: string;
-            register: string;
-            /**
-             * @description About 24 words of the plain text around the match, matched words in `**`; none
-             *     without `q`.
-             */
-            snippet?: string | null;
-            source?: string | null;
-            source_title?: string | null;
-            source_url?: string | null;
-            tags: string[];
-            variable?: string | null;
-        };
-        /**
-         * @description A directed succession edge, predecessor to successor. A representation edge
-         *     names its columns and, when scoped, its variant.
-         */
-        Edge: {
-            /** Format: int64 */
-            effective_year?: number | null;
-            id: string;
-            kind: string;
-            label?: string | null;
-            source: string;
-            source_column?: string | null;
-            target: string;
-            target_column?: string | null;
-            variant?: string | null;
-        };
-        Edition: {
-            /** Format: int64 */
-            effective_year?: number | null;
-            fqid?: string | null;
-            name?: string | null;
-            slug: string;
         };
         /** @description The error document `{code, class, message, remediation, fields}`. */
         Error: {
@@ -857,361 +127,59 @@ export interface components {
             message: string;
             remediation: string;
         };
-        Facet: {
-            axis?: string | null;
-            label: string;
-            value: string;
-        };
-        /** @description A one-dimensional classification succession family (ICD, LKF, SNI, SSYK). */
-        Family: {
-            /** @description Its editions in chain order. */
-            editions: components["schemas"]["FamilyEdition"][];
-            fqid: string;
-            key: string;
-            label: string;
-        };
-        /** @description An edition of a succession family. */
-        FamilyEdition: {
-            /**
-             * Format: int64
-             * @description The year of the edge by which the edition is superseded on the chain.
-             */
-            effective_year?: number | null;
-            fqid: string;
-            /** @description Started and without an active successor at the policy year. */
-            is_current: boolean;
-            /** @description The edition the family's chain was read from. */
-            is_self: boolean;
-            name?: string | null;
-            short_name?: string | null;
-            slug: string;
-            /**
-             * Format: int64
-             * @description The edition's own vintage year.
-             */
-            version_year?: number | null;
-        };
-        /** @description The graph; no nodes means there is nothing to draw. */
-        Graph: {
-            edges: components["schemas"]["Edge"][];
-            /** @description The node of the requested variable or classification; none for a group. */
-            focus_id?: string | null;
-            nodes: components["schemas"]["Node"][];
-        };
-        /** @description One emitted state; states sharing `representation_run_id` form one cell. */
-        GraphState: {
-            classification_slugs: string[];
-            delivery_column_name?: string | null;
-            period_scope: string;
-            /**
-             * Format: int64
-             * @description Increments at a change of variant, period scope, or (between states) value
-             *     set, version label, classifications or delivery column.
-             */
-            representation_run_id: number;
-            state_id: string;
-            /** @description None for an unknown start. */
-            valid_from?: string | null;
-            /** @description None for an open end. */
-            valid_to?: string | null;
-            value_set_id?: string | null;
-            value_set_version_label: string;
-            variant: string;
-            variant_family?: string | null;
-            variant_family_label?: string | null;
-            variant_label?: string | null;
-        };
-        /** @description A group as listed by its register, classification root or member classification. */
-        Group: {
-            axes: components["schemas"]["Axis"][];
-            fqid: string;
-            key: string;
-            label: string;
-            members: components["schemas"]["Member"][];
-            source: string;
-            tags: components["schemas"]["Tag"][];
-        };
-        GroupMember: {
-            delivery_column?: string | null;
-            fqid: string;
-            name?: string | null;
-        };
-        IntegerRange: {
-            /** Format: int64 */
-            max: number;
-            /** Format: int64 */
-            min: number;
-        };
-        /** @enum {string} */
-        IssueLevel: "error" | "warning" | "info";
-        Lineage: {
-            edges: components["schemas"]["LineageEdge"][];
-            /**
-             * @description Each variable in scope with the variable's name (compared case-insensitively
-             *     in ASCII), across registers: whether its register is the variable's source.
-             */
-            registers: components["schemas"]["Provenance"][];
-            warnings: components["schemas"]["LineageWarning"][];
-        };
-        /**
-         * @description A state of the variable fed by a state of a source variable over the two
-         *     states' intersection.
-         */
-        LineageEdge: {
-            consumer_state_id: string;
-            /** @description The source state's variable. */
-            source_fqid?: string | null;
-            source_state_id: string;
-            valid_from: string;
-            valid_to: string;
-        };
-        /** @description A build-time warning on one of the variable's states: `ambiguous_source_variant`. */
-        LineageWarning: {
-            consumer_state_id: string;
-            message: string;
-            warning_kind: string;
-        };
-        /** @description The project-side coordinate of an entry. */
-        LogicalCoordinate: {
-            provider: string;
-            register: string;
-            /** @description The canonical delivery column the slice resolved to. */
-            representation: string;
-            /** @description The binding's variable FQID. */
-            variable: string;
-            variant: string;
-        };
-        Match: {
-            fqid?: string | null;
-            /**
-             * @description The column's one spelling for the variable: a state's own, else the lowest
-             *     alias spelling.
-             */
-            matched_column: string;
-            register?: string | null;
-            /**
-             * Format: int64
-             * @description SCB's numeric variable id; null for other providers.
-             */
-            var_id?: number | null;
-            variable_name?: string | null;
-        };
-        /** @description A matched variable as the browse column names it. */
-        MatchedVariable: {
-            fqid: string;
-            name?: string | null;
-        };
-        /** @description A group member; two members of one variable differ by `delivery_column`. */
-        Member: {
-            coverage?: components["schemas"]["ShowCoverage"] | null;
-            delivery_column?: string | null;
-            facets: components["schemas"]["Facet"][];
-            fqid: string;
-            name?: string | null;
+        Locator: {
+            input: string;
+            locator: string;
         };
         /** @description The response `meta` (`shape.Meta`). */
         Meta: {
+            catalog_version: string;
             contract_version: string;
             generation: string;
-            scope: components["schemas"]["Scope"];
         };
-        Node: (components["schemas"]["VariableNode"] & {
-            /** @enum {string} */
-            kind: "variable";
-        }) | (components["schemas"]["ClassificationNode"] & {
-            /** @enum {string} */
-            kind: "classification";
-        });
-        ObjectType: {
-            definition?: string | null;
-            name: string;
+        /** @description One occurrence behind a segment (`shape.Segment.evidence`). */
+        Occurrence: {
+            label: string | null;
+            locators: components["schemas"]["Locator"][];
+            overrides: components["schemas"]["Override"][];
+            period: components["schemas"]["Period"];
+            release: components["schemas"]["Release"] | null;
+            source_key: string;
+            spelling: string;
+            status: string;
         };
-        /**
-         * @description One blocking finding of `order_blocked`; `source`, `variable` and `period` say
-         *     what it is about, null for a whole-project finding.
-         */
-        OrderBlocking: {
-            code: string;
-            message: string;
-            period: string | null;
-            source: string | null;
-            variable: string | null;
+        /** @description A non-source winner over one field of an occurrence. */
+        Override: {
+            field: string;
+            prov: string;
+            rule: string | null;
+            source_value: string | null;
+            /** @description `{file, line}` of a curated statement; always `null` in C. */
+            statement: Record<string, never> | null;
+            value: string | null;
         };
-        /** @description One resolved binding: what was asked for and what the steward delivers. */
-        OrderEntry: {
-            filter?: components["schemas"]["OrderRowFilter"] | null;
-            /**
-             * @description A held row key column of the output file that no binding ordered (its
-             *     variant's panel entity or time key, [`IS_KEY`]; a linking id comes only when
-             *     ordered), carried so every file joins on its row key; absent on an ordered entry.
-             */
-            key?: boolean;
-            logical: components["schemas"]["LogicalCoordinate"];
-            physical: components["schemas"]["PhysicalCoordinate"];
-            /**
-             * @description The days this entry serves: the request clipped by availability, a column
-             *     window and a year or month member. It does not choose the output file; the
-             *     table's edition does.
-             */
-            requested_period: string;
-            /** @description The project source's name. */
-            source: string;
+        /** @description `shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end. */
+        Period: {
+            end: string | null;
+            start: string | null;
         };
-        /**
-         * @description One requested range of a row filter. A bound at the table's held edge cuts
-         *     nothing and is absent, so a range may be open-ended on either side.
-         */
-        OrderFilterRange: {
-            /** @description The first requested day, `YYYY-MM-DD`; absent from the table's first held day. */
-            from?: string | null;
-            /** @description The last requested day, `YYYY-MM-DD`; absent through the table's last held day. */
-            to?: string | null;
-        };
-        /**
-         * @description The order manifest: machine-written here, machine-read by the steward-side
-         *     extract system, never hand-edited.
-         */
-        OrderManifest: {
-            /** @description Every availability clip, also when nothing blocked. */
-            clips: components["schemas"]["ClipReport"][];
-            /**
-             * @description One per resolved logical-to-physical binding, per source and binding in
-             *     declaration order, then by table, edition and column; then each file's
-             *     held row keys no binding ordered (`key`), by table, variant, edition, member
-             *     index and column.
-             */
-            entries: components["schemas"]["OrderEntry"][];
-            /**
-             * @description The file format the extract runner writes every file in: the project's
-             *     `extract_format`, `dta` when it sets none.
-             */
-            extract_format: components["schemas"]["ProjectExtractFormat"];
-            provenance: components["schemas"]["OrderProvenance"];
-            /**
-             * Format: int32
-             * @description The manifest contract version, 3.
-             */
-            version: number;
-        };
-        /**
-         * @description Which project, against which catalog, for which deployment: the manifest is
-         *     self-contained offline.
-         */
-        OrderProvenance: {
-            /** @description `catalog` or `steward`. */
-            artifact_kind: string;
-            catalog_generation_id: string;
-            catalog_schema_version: string;
-            /**
-             * @description `steward_holdings` (a steward's compiled holdings grounded the entries) or
-             *     `global_fallback` (canonical resolution alone, blank `table`).
-             */
-            mode: string;
-            /** @description SHA-256 of the project's canonical JSON. */
-            project_hash: string;
-            /** @description The project's `name`, never blank: a blank name blocks the order. */
-            project_name: string;
-            project_reg_meta_version: string;
-            project_schema_version: string;
-            steward: string;
-        };
-        /**
-         * @description A file's row filter (crates/DESIGN.md, "Order manifest"): keep the rows whose
-         *     `column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;
-         *     the extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or
-         *     `yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's
-         *     year, month or day lies inside a range.
-         */
-        OrderRowFilter: {
-            column: string;
-            encoding: string;
-            /** @description The file's requested days, ascending and disjoint, joined with OR. */
-            ranges: components["schemas"]["OrderFilterRange"][];
-        };
-        OwningVariable: {
-            fqid?: string | null;
-            name?: string | null;
-            register_name?: string | null;
-        };
-        /** @description A panel key: a variable slug (or `period`), or several (a composite key). */
-        PanelKey: string | string[];
-        /**
-         * @description The catalog's first and last year: a steward's held periods, else the reference
-         *     catalog's delivered windows. It bounds the SPA's study window.
-         */
-        PeriodSpan: {
-            /** Format: int64 */
-            from: number;
-            /** Format: int64 */
-            to: number;
-        };
-        /**
-         * @description The steward-side coordinate of an entry; in the global fallback `table` is
-         *     blank, `column` the canonical column and `edition` the requested period.
-         */
-        PhysicalCoordinate: {
-            column: string;
-            /**
-             * @description The table's edition, rendered as a period: one file per table, whatever
-             *     periods and variants its entries request.
-             */
-            edition: string;
-            /**
-             * @description The output file's name without its extension, the same on every entry of the
-             *     file: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the
-             *     table's own variant (crates/DESIGN.md, "Extraction keeps delivery topology").
-             */
-            file: string;
-            member?: components["schemas"]["PivotMember"] | null;
-            /** @description The table's disjoint-partition label; absent when it has none. */
-            partition?: string | null;
-            /**
-             * @description The table's projection token (#1634): the table is a declared projection
-             *     of another table's delivery, extracted as its own file; absent otherwise.
-             */
-            projection?: string | null;
-            /**
-             * @description The name a `dta` order writes the column under, with `column` as the
-             *     variable's label, when `column` is not a Stata variable name: its first 25
-             *     characters made a name, `_` and 6 hex digits of its SHA-256; absent otherwise,
-             *     and on every `parquet` or `csv` order.
-             */
-            stata_name?: string | null;
-            table: string;
-        };
-        /**
-         * @description A wide-pivot member index (#1495): one of N physical columns that together
-         *     deliver one representation. A position member serves the table's whole edition;
-         *     a year or month member serves only that period, so it is ordered only when the
-         *     slice reaches it. Members order by index, so `DIA2` precedes `DIA10`.
-         */
-        PivotMember: {
-            /** Format: int64 */
-            position: number;
-        } | {
-            /** Format: int64 */
-            year: number;
-        } | {
-            /** @description `YYYY-MM`. */
-            month: string;
-        };
+        /** @description One population a release states (`shape.Release.populations`). */
         Population: {
-            comment?: string | null;
-            date_range?: string | null;
-            definition?: string | null;
+            definition: string | null;
             name: string;
+            /** @description The ISO day the population is stated for. */
+            ref_day: string | null;
         };
         /** @description One variable to extract. */
         ProjectBinding: {
+            /** @description A classification version's public id `class/<family>/<version>`. */
+            classification?: string | null;
             date_format?: string | null;
             datetime_format?: string | null;
             display_name?: string | null;
             id_subtype?: components["schemas"]["ProjectIdSubtype"] | null;
             numeric_subtype?: components["schemas"]["ProjectNumericSubtype"] | null;
-            representation?: string | null;
             type: components["schemas"]["ProjectColumnType"];
-            /** @description A classification FQID `class/<slug>`. */
-            value_set?: string | null;
             /** @description The binding FQID `<provider>/<register>/<slug>`. */
             variable: string;
         };
@@ -1219,46 +187,25 @@ export interface components {
         ProjectColumnType: "id" | "categorical" | "numeric" | "date" | "datetime" | "opaque";
         /** @description The top-level `project_data.json` document. */
         ProjectData: {
-            /** @description The file format every extracted file is written in; absent means `dta`. */
-            extract_format?: components["schemas"]["ProjectExtractFormat"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
             schema_version: string;
             sources: components["schemas"]["ProjectSource"][];
-            /**
-             * @description The deployment the project is ordered from: `global`, or a steward id. Any
-             *     slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it
-             *     to the served artifact's steward.
-             */
-            steward: string;
             window?: components["schemas"]["ProjectStudyWindow"];
         };
-        /** @description A panel's entity key: one column, or a composite. */
-        ProjectEntityKey: string | string[];
         /** @enum {string} */
-        ProjectExtractFormat: "dta" | "parquet" | "csv";
+        ProjectEdition: "final" | "unstated" | "preliminary";
         /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
-        /** @description `{"period": int | string}`: a literal period, as opposed to a column ref. */
-        ProjectLiteralPeriod: {
-            period: components["schemas"]["ProjectPeriodValue"];
-        };
         /** @enum {string} */
         ProjectNumericSubtype: "integer" | "double";
         /** @description A panel over sources. */
         ProjectPanel: {
             comment?: string | null;
-            entity_key?: components["schemas"]["ProjectEntityKey"] | null;
-            members: (string | components["schemas"]["ProjectPanelMember"])[];
+            /** @description Source names. */
+            members: string[];
             panel_id: string;
-            time_key?: components["schemas"]["ProjectTimeKey"] | null;
-        };
-        /** @description A panel member; the bare-string shorthand deserializes to `{"source": <name>}`. */
-        ProjectPanelMember: {
-            entity_key?: components["schemas"]["ProjectEntityKey"];
-            source: string;
-            time_key?: components["schemas"]["ProjectTimeKey"];
         };
         /** @description The `{"from": ..., "to": ...}` range. */
         ProjectPeriodRange: {
@@ -1272,13 +219,20 @@ export interface components {
          *     included, which only a scalar source period may hold).
          */
         ProjectPeriodValue: number | string;
-        /** @description One logical extraction: a register variant, a requested period and its bindings. */
+        /** @description One logical extraction: a table, a requested period and its bindings. */
         ProjectSource: {
             bindings: components["schemas"]["ProjectBinding"][];
+            /** @description The release of the table asked for; absent asks for the primary edition. */
+            edition?: components["schemas"]["ProjectEdition"];
             name: string;
             period: components["schemas"]["ProjectSourcePeriod"];
-            /** @description The 3-part coordinate `<provider>/<register>/<variant>`. */
-            register_variant: string;
+            /** @description The delivery qualifier asked for; absent asks for every qualifier. */
+            qualifier?: string;
+            /**
+             * @description A table's public id: `<provider>/<register>` for a register's implicit table,
+             *     else `<provider>/<register>/<table>`.
+             */
+            table: string;
         };
         /**
          * @description `Source.period`: one segment, or a sorted, disjoint list of them (an interrupted
@@ -1292,572 +246,219 @@ export interface components {
             /** Format: int64 */
             to: number;
         };
-        /** @description A panel's time key: one time point, or a composite. */
-        ProjectTimeKey: components["schemas"]["ProjectTimePoint"][] | components["schemas"]["ProjectTimePoint"];
-        /** @description A literal year, a column ref, `{"period": ...}` or `{"range": {...}}`. */
-        ProjectTimePoint: number | string | components["schemas"]["ProjectLiteralPeriod"] | components["schemas"]["ProjectTimeRange"];
-        /** @description `{"range": {"from": ..., "to": ...}}`: a literal period range. */
-        ProjectTimeRange: {
-            range: components["schemas"]["ProjectPeriodRange"];
+        /** @description `shape.Release`: a delivery of a table. */
+        Release: {
+            edition: string;
+            name: string;
+            parse_state: string;
+            period: components["schemas"]["Period"] | null;
+            populations: components["schemas"]["Population"][];
+            /** @description `null` when the release is unparsed. */
+            primary: boolean | null;
+            qualifier: string;
         };
-        /** @description A variable's provenance in its register. */
-        Provenance: {
-            /**
-             * Format: int64
-             * @description Its states.
-             */
-            instance_count: number;
-            register?: string | null;
-            register_name?: string | null;
-            /**
-             * @description `source` when the register is its own source, `consumer` when it names
-             *     another, `unknown` without a source text.
-             */
-            role: string;
-            /** @description The register the source text was resolved to. */
-            source_register?: string | null;
-            source_register_text: string;
-            variable?: string | null;
-            /**
-             * @description The first and last year its states span (an open end counts its start
-             *     year); empty without a dated state.
-             */
-            year_range: number[];
+        /** @description `{columns: [ResolvedColumn]}`. */
+        Resolved: {
+            columns: components["schemas"]["ResolvedColumn"][];
         };
-        /** @description A provider and its registers in scope. */
-        Provider: {
-            children: components["schemas"]["RegisterChild"][];
-            fqid: string;
-            name?: string | null;
-        };
-        /** @description A register: its variables, concept groups and variants in scope. */
-        Register: {
-            children: components["schemas"]["VariableChild"][];
-            fqid: string;
-            groups: components["schemas"]["Group"][];
-            name?: string | null;
-            purpose?: string | null;
-            tags: components["schemas"]["Tag"][];
-            variants: components["schemas"]["Variant"][];
-        };
-        RegisterChild: {
-            coverage?: components["schemas"]["ShowRegisterCoverage"] | null;
-            fqid: string;
-            name?: string | null;
-            purpose?: string | null;
-            tags: components["schemas"]["Tag"][];
-        };
-        RegisterCoverage: components["schemas"]["Span"] & {
-            fqid: string;
-            register_name: string;
-            variant_count: number;
-            /** @description The register variants with a year in scope, in build order. */
-            variants: components["schemas"]["VariantYears"][];
-        };
-        RegisterFacet: {
-            fqid?: string | null;
-            /** @description The register's name, beside a list (a header over it); absent with counts. */
-            name?: string | null;
-            /** Format: int64 */
-            variable_matches: number;
-            /**
-             * @description With `register`, every matched variable; with `limit`, each register's first
-             *     `limit` (`variable_matches` stays the whole count); in FQID order, so a list
-             *     narrows by the same admission it counts. Absent without either.
-             */
-            variables?: components["schemas"]["MatchedVariable"][] | null;
-        };
-        /**
-         * @description `shape.RegisterFacets`: per register, how many of its variables the variable arm
-         *     admits for the query, unbounded by paging and before concept groups fold.
-         */
-        RegisterFacets: {
-            registers: components["schemas"]["RegisterFacet"][];
-        };
-        RegisterYears: components["schemas"]["Span"] & {
-            /** @description Per year, the columns delivered in it, sorted. */
-            aliases_by_year: {
-                [key: string]: string[];
-            };
-            register?: string | null;
-            register_name: string;
-            /**
-             * Format: int64
-             * @description SCB's numeric variable id; null for other providers.
-             */
-            var_id?: number | null;
-        };
-        /** @description A related document's metadata; the download route serves its bytes. */
-        RelatedDocument: {
-            /** Format: int64 */
-            byte_size: number;
-            fetched: string;
-            filename: string;
-            license: string;
-            sha256: string;
-            source_url: string;
-            title: string;
-        };
-        /** @description A requested name: `matched` with its variables, or `no_match`. */
-        Resolution: {
-            column_name: string;
-            /**
-             * @description Ordered by register, provider key and variable; split siblings share a
-             *     `var_id` and differ by `fqid`.
-             */
-            matches: components["schemas"]["Match"][];
-            /** @description `matched` or `no_match`. */
+        /** @description `shape.ResolvedColumn`: a requested column and the variables it names. */
+        ResolvedColumn: {
+            /** @description As asked. */
+            column: string;
+            matches: components["schemas"]["ResolvedMatch"][];
+            /** @description `matched` for one variable, `ambiguous` for several, `unmatched` for none. */
             status: string;
         };
-        Resolved: {
-            /** @description One row per requested name, in request order. */
-            columns: components["schemas"]["Resolution"][];
-        };
-        /**
-         * @description The catalog root: which catalog answered, the providers in scope and the
-         *     classification root.
-         */
-        Root: {
-            catalog: components["schemas"]["CatalogIdentity"];
-            children: components["schemas"]["RootChild"][];
-        };
-        RootChild: {
+        ResolvedMatch: {
+            /** @description `delivered` or `curated`. */
+            alias: string;
             fqid: string;
-            /** @enum {string} */
-            kind: "provider";
-            name?: string | null;
-        } | {
-            fqid: string;
-            /** @enum {string} */
-            kind: "classification_root";
+            /** @description The variable's label. */
             name: string;
-        };
-        SameAs: {
-            fqid: string;
-            /** @description The register slug. */
+            /** @description The register's fqid. */
             register: string;
         };
-        /**
-         * @description One delivered column of a register variant over one window: the CLI's `get schema`
-         *     column row with its variant and window. `column` is null for a state SCB named no
-         *     column for; `valid_from` and `valid_to` are null when year-independent.
-         */
-        SchemaColumn: {
-            column?: string | null;
-            data_length?: string | null;
-            data_type?: string | null;
-            definition?: string | null;
-            fqid?: string | null;
-            /**
-             * @description The variable's concept group, as a group ref; null when no member row of it is in
-             *     scope.
-             */
-            group?: string | null;
-            group_label?: string | null;
-            measurement_unit?: string | null;
-            operational_definition?: string | null;
-            /** @description `intervals` or `year_independent`. */
-            period_scope: string;
-            source?: string | null;
-            source_register_text?: string | null;
-            valid_from?: string | null;
-            valid_to?: string | null;
-            value_set_version_label: string;
-            /**
-             * Format: int64
-             * @description SCB's numeric variable id; null for other providers.
-             */
-            var_id?: number | null;
-            variable_name?: string | null;
-            variant?: string | null;
-            variant_description?: string | null;
-            variant_name?: string | null;
-        };
-        /** @description `Page<SchemaColumn>`. */
-        SchemaPage: {
-            items: components["schemas"]["SchemaColumn"][];
-            next_cursor?: string | null;
-        };
-        /**
-         * @description `holdings`: what this steward holds, the default on a steward catalog and
-         *     unavailable on the global one. `reference`: every register in the catalog. Answer
-         *     from the default; repeat with `reference` when asked what exists elsewhere or when
-         *     holdings comes up empty, and say the data exists but is not held.
-         * @enum {string}
-         */
-        Scope: "holdings" | "reference";
-        /**
-         * @description A build-time certificate of a checked, finite source sentinel decision
-         *     (today's `ScopedSentinelEvidence`).
-         */
-        ScopedSentinel: {
-            classification_sha256: string;
-            delivery_column_name: string;
-            members: string[][];
-            provenance: string;
-            source_fingerprints: string[];
-            valid_from?: string | null;
-            valid_to?: string | null;
-        };
-        /** @description `shape.SearchHit`. */
-        SearchHit: {
-            fqid?: string | null;
-            name?: string | null;
-            purpose?: string | null;
-            /** @enum {string} */
-            type: "register";
-        } | {
-            definition?: string | null;
-            delivery_column_names: string[];
-            fqid?: string | null;
-            name?: string | null;
-            operational_definition?: string | null;
-            register_name?: string | null;
-            /** @enum {string} */
-            type: "variable";
-        } | {
-            key: string;
-            kind: string;
-            label: string;
-            matched_count: number;
-            members: components["schemas"]["GroupMember"][];
-            register_name?: string | null;
-            /** @enum {string} */
-            type: "group";
-        } | {
-            fqid?: string | null;
-            name?: string | null;
-            short_name?: string | null;
-            terminal_fqid?: string | null;
-            /** @enum {string} */
-            type: "classification";
-        } | {
-            editions: components["schemas"]["Edition"][];
-            fqid?: string | null;
-            matched_count: number;
-            name?: string | null;
-            short_name?: string | null;
-            /** @enum {string} */
-            type: "classification_succession";
-        } | {
+        /** @description `shape.Segment`. */
+        Segment: {
+            /** @description A classification version's ref. */
+            classification: string | null;
+            coded: string;
+            /** @description Present only when `evidence` is asked for. */
+            evidence?: components["schemas"]["Occurrence"][] | null;
+            format: string | null;
+            id_kind: string | null;
+            identifier: boolean | null;
             /** Format: int64 */
-            classification_count: number;
-            classifications: components["schemas"]["CodeClassification"][];
-            code: string;
-            code_system?: string | null;
-            label: string;
-            /** @enum {string} */
-            type: "code";
-            /** Format: int64 */
-            variable_count: number;
-            variables: components["schemas"]["CodeVariable"][];
+            length: number | null;
+            period: components["schemas"]["Period"];
+            role: string;
+            sensitive: boolean | null;
+            spelling: string;
+            state: string;
+            /** @description The table's fqid. */
+            table: string;
+            temporality: string;
+            type: string | null;
+            value_set: components["schemas"]["ValueSetRef"] | null;
         };
-        /** @description `Page<SearchHit>`. */
-        SearchPage: {
-            items: components["schemas"]["SearchHit"][];
-            next_cursor?: string | null;
+        /** @description `Page<Segment>`. */
+        SegmentPage: {
+            items: components["schemas"]["Segment"][];
+            next_cursor: string | null;
         };
-        /** @description A `kind`-tagged summary of a ref. */
-        Show: (components["schemas"]["Root"] & {
+        /**
+         * @description `shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the
+         *     resolved `fqid`, so a bare-name request gets the id back.
+         */
+        Show: {
             /** @enum {string} */
             kind: "root";
-        }) | (components["schemas"]["Provider"] & {
+            providers: components["schemas"]["ShowProviderRef"][];
+        } | {
+            fqid: string;
             /** @enum {string} */
             kind: "provider";
-        }) | (components["schemas"]["Register"] & {
+            name: string;
+            registers: components["schemas"]["ShowRegisterRef"][];
+        } | {
+            description: string | null;
+            fqid: string;
             /** @enum {string} */
             kind: "register";
-        }) | (components["schemas"]["Variable"] & {
+            name: string;
+            period: components["schemas"]["Period"];
+            tables: components["schemas"]["ShowTable"][];
+            /** @description The literal names of the releases the reader could not place in time. */
+            unplaced: string[];
+            variables: components["schemas"]["ShowVariableRef"][];
+        } | {
+            cadence: string | null;
+            description: string | null;
+            fqid: string;
+            implicit: boolean;
+            /** @enum {string} */
+            kind: "table";
+            name: string;
+            /** @description The register's fqid. */
+            register: string;
+            releases: components["schemas"]["Release"][];
+            role: string;
+            row_keys: components["schemas"]["ShowRowKey"][];
+            spans: components["schemas"]["Period"][];
+            timeless: boolean;
+            unit_type: string | null;
+        } | {
+            definition: string | null;
+            fqid: string;
             /** @enum {string} */
             kind: "variable";
-        }) | (components["schemas"]["ClassificationRoot"] & {
-            /** @enum {string} */
-            kind: "classification_root";
-        }) | (components["schemas"]["Classification"] & {
-            /** @enum {string} */
-            kind: "classification";
-        }) | (components["schemas"]["ConceptGroup"] & {
-            /** @enum {string} */
-            kind: "concept_group";
-        }) | (components["schemas"]["ClassificationGroup"] & {
-            /** @enum {string} */
-            kind: "classification_group";
-        }) | (components["schemas"]["Family"] & {
-            /** @enum {string} */
-            kind: "classification_family";
-        });
-        /**
-         * @description The span a variable or column is delivered over: its earliest start and latest
-         *     finite end (null when unknown, or when `open_ended`), and the states (held
-         *     periods in holdings) behind it.
-         */
-        ShowCoverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            state_count: number;
+            name: string;
+            period: components["schemas"]["Period"];
+            /** @description The register's fqid. */
+            register: string;
+            spellings: components["schemas"]["ShowSpelling"][];
+            /** @description The fqids of the tables the variable has segments in. */
+            tables: string[];
+            texts: components["schemas"]["ShowText"][];
+            unit_types: string[];
         };
-        /** @description A register's span: its variables and the earliest and latest of their states. */
-        ShowRegisterCoverage: {
-            coverage_from?: string | null;
-            coverage_to?: string | null;
-            open_ended: boolean;
-            /** Format: int64 */
-            variable_count: number;
+        ShowProviderRef: {
+            fqid: string;
+            name: string;
         };
-        /** @description Browse-addressable (slugged) providers, registers and variables in the scope. */
+        ShowRegisterRef: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+        };
+        /** @description A segment of the table that holds its rows' key. */
+        ShowRowKey: {
+            fqid: string;
+            period: components["schemas"]["Period"];
+            spelling: string;
+        };
+        /** @description A folded name the variable is known by. */
+        ShowSpelling: {
+            /** @description `delivered` or `curated`. */
+            kind: string;
+            spelling: string;
+        };
+        /** @description A register's table; the implicit one has the register's fqid. */
+        ShowTable: {
+            cadence: string | null;
+            fqid: string;
+            implicit: boolean;
+            name: string;
+            period: components["schemas"]["Period"];
+            role: string;
+            timeless: boolean;
+            unit_type: string | null;
+        };
+        /** @description One run of a variable's descriptive text. */
+        ShowText: {
+            definition: string | null;
+            label: string;
+            operational_definition: string | null;
+            period: components["schemas"]["Period"];
+            unit: string | null;
+        };
+        ShowVariableRef: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+        };
+        /** @description Every provider, register, table (implicit ones included) and variable. */
         Sizes: {
             /** Format: int64 */
             providers: number;
             /** Format: int64 */
             registers: number;
             /** Format: int64 */
+            tables: number;
+            /** Format: int64 */
             variables: number;
         };
-        /** @description One semantic source member a warning cites. */
-        SourceRecordRef: {
-            semantic_record_key: string[];
-            source: string;
-        };
-        /** @description The years covered, their bounds and the years missing between the bounds. */
-        Span: {
-            gaps: number[];
-            /** Format: int32 */
-            max_year: number;
-            /** Format: int32 */
-            min_year: number;
-            years: number[];
-        };
-        /**
-         * @description A state: today's `VariableState` under the catalog page's light hydration (its
-         *     codes are the `values` facet).
-         */
-        State: {
-            classifications: components["schemas"]["StateClassification"][];
-            /** @description The coding window's start, for a column coded on its own. */
-            coding_window_from?: string | null;
-            data_length?: string | null;
-            data_type?: string | null;
-            definition?: string | null;
-            delivery_column_name?: string | null;
-            description?: string | null;
-            is_identifier: boolean;
-            measurement_unit?: string | null;
-            name?: string | null;
-            operational_definition?: string | null;
-            /** @description `intervals` or `year_independent`. */
-            period_scope: string;
+        /** @description `shape.ValueItem`. */
+        ValueItem: {
             /**
-             * @description The coarsest period token of the bounds; `_default` when year-independent,
-             *     null when open-ended.
+             * Format: int64
+             * @description `null` for a flat set.
              */
-            period_token?: string | null;
-            pooled: boolean;
-            provenance?: string | null;
-            register_variant_id: string;
-            source_register_text?: string | null;
-            state_id: string;
-            valid_from?: string | null;
-            valid_to?: string | null;
-            /** @description Always null: a state's codes are the `values` facet. */
-            value_set?: unknown[] | null;
-            value_set_id?: string | null;
-            value_set_summary?: components["schemas"]["ValueSetSummary"] | null;
-            value_set_version_label: string;
-            variant: string;
-            variant_family?: string | null;
-            variant_family_label?: string | null;
-            variant_label?: string | null;
-            /** @description The data warnings that apply to this representation at its bounds. */
-            warning_ids: string[];
-        };
-        /** @description A classification linked to a representation, with its stored conformance verdict. */
-        StateClassification: {
-            conformance?: components["schemas"]["Conformance"] | null;
-            name: string;
-            provenance?: string | null;
-            short_name: string;
-            slug: string;
-        };
-        StatesPage: {
-            items: components["schemas"]["State"][];
-            next_cursor?: string | null;
-        };
-        /** @description Deployment branding, `reg_webapp/stewards/<catalog>/steward.json`. */
-        Steward: {
-            /**
-             * @description What the deployment is for, one or two plain sentences shown under the name on
-             *     the landing page; absent where the name says enough.
-             */
-            description?: string | null;
-            id: string;
-            long_name: string;
-            name: string;
-            /**
-             * @description How a researcher hands a project to this steward for ordering, plain text shown
-             *     beside the downloads; absent when the deployment takes no orders.
-             */
-            order_instructions?: string | null;
-        };
-        Summary: {
-            added: number;
-            changed: number;
-            removed: number;
-            unchanged: number;
-        };
-        /** @description A tag membership: the tag and this member's rank, star and note. */
-        Tag: {
-            label: string;
-            note?: string | null;
+            child_count: number | null;
+            /** @description May be `""`: a real item. */
+            code: string;
+            label: string | null;
             /** Format: int64 */
-            rank: number;
-            slug: string;
-            starred: boolean;
+            level: number;
+            /** @description The parent's code. */
+            parent: string | null;
+            sentinel: boolean;
         };
-        /** @description The validation result: `ok` when no issue is an error. */
-        Validation: {
-            /** @description In emission order: per source, its variant and period, then per binding. */
-            issues: components["schemas"]["ValidationIssue"][];
-            ok: boolean;
-        };
-        /** @description One finding about the document. */
-        ValidationIssue: {
-            /** @description A stable identifier, such as `period_outside_state_validity`. */
-            code: string;
-            level: components["schemas"]["IssueLevel"];
-            message: string;
-            /** @description An RFC 6901 JSON pointer into the document; empty for the whole document. */
-            path: string;
-            /** @description The successor a `variable_replaced` finding names; null otherwise. */
-            successor_fqid: string | null;
-        };
-        /**
-         * @description A row of `values`: a classification's code, a state's delivered pair, or a
-         *     delivered pair outside a declared book.
-         */
-        ValueRow: components["schemas"]["ClassificationCode"] | components["schemas"]["ClassificationExtensionMember"] | components["schemas"]["ValueSetMember"];
-        /** @description One delivered (code, label) pair: today's `ValueSetMember`. */
-        ValueSetMember: {
-            code: string;
-            label: string;
-        };
-        /**
-         * @description `value_set_summary`: a value set's code count and, when its codes are a dense
-         *     integer run, its span.
-         */
-        ValueSetSummary: {
-            code_count: number;
-            integer_range?: components["schemas"]["IntegerRange"] | null;
-        };
-        ValuesPage: {
-            items: components["schemas"]["ValueRow"][];
-            next_cursor?: string | null;
-            /** @description The rows matching `q` in the whole set. */
+        /** @description `Page<ValueItem>` plus the value set and `total`. */
+        ValueItemsPage: {
+            items: components["schemas"]["ValueItem"][];
+            next_cursor: string | null;
+            /**
+             * Format: int64
+             * @description The items matching `q` in the whole set; the set's size without `q`.
+             */
             total: number;
+            value_set: components["schemas"]["ValueSetRef"];
         };
-        /**
-         * @description A variable's shared metadata. Its states, lineage and succession chain are the
-         *     `states`, `lineage` and `graph` operations.
-         */
-        Variable: {
-            definition?: string | null;
-            deprecated: boolean;
-            description?: string | null;
-            fqid: string;
-            /**
-             * @description The ref of the concept group the variable belongs to, null when no member row
-             *     of it is in scope.
-             */
-            group?: string | null;
-            is_identifier: boolean;
-            is_sensitive: boolean;
-            measurement_unit?: string | null;
-            name?: string | null;
-            operational_definition?: string | null;
-            /** @description The FQIDs of the variables curated as the same variable. */
-            same_as: string[];
-            source_register_text?: string | null;
-            tags: components["schemas"]["Tag"][];
+        /** @description `shape.ValueSetRef`: a value set by its hash, with the names sources gave it. */
+        ValueSetRef: {
+            /** @description The curated classification version's ref; `null` until a version is curated. */
+            classification: string | null;
+            hash: string;
+            hierarchical: boolean;
+            /** Format: int64 */
+            n_items: number;
+            names: string[];
         };
-        VariableChild: {
-            coverage?: components["schemas"]["ShowCoverage"] | null;
-            /** @description Every `(variant, column)` the variable is delivered under in scope. */
-            deliveries: components["schemas"]["Delivery"][];
-            fqid: string;
-            /**
-             * @description The variable identifies a unit (a person, a firm): the register lists it
-             *     first.
-             */
-            is_identifier: boolean;
-            name?: string | null;
-        };
-        VariableCoverage: components["schemas"]["Span"] & {
-            fqid: string;
-            register_count: number;
-            /** @description The variable's register: one entry. */
-            registers: components["schemas"]["RegisterYears"][];
-            variable_name?: string | null;
-        };
-        /**
-         * @description A variable with its state history. A succession edition that is not live in
-         *     scope is a bare node: no states, group or metadata.
-         */
-        VariableNode: {
-            definition?: string | null;
-            description?: string | null;
-            /** @description Its facets in its concept group (the first member that is this variable). */
-            facets: components["schemas"]["Facet"][];
-            fqid: string;
-            /** @description `<provider>/<register>/<key>` of its concept group. */
-            group_key?: string | null;
-            group_label?: string | null;
-            /** @description The variable's FQID. */
-            id: string;
-            label: string;
-            operational_definition?: string | null;
-            same_as: components["schemas"]["SameAs"][];
-            states: components["schemas"]["GraphState"][];
-        };
-        /** @description A register variant (the `variant` filter of `states`), with its versions' prose. */
-        Variant: {
-            description?: string | null;
-            display_group?: string | null;
-            name?: string | null;
-            panel_entity_key?: components["schemas"]["PanelKey"] | null;
-            panel_time_grain?: string | null;
-            panel_time_key?: components["schemas"]["PanelKey"] | null;
-            slug: string;
-            /** @description The key of the variant's succession family: its first head. */
-            variant_family?: string | null;
-            variant_family_label?: string | null;
-            versions: components["schemas"]["Version"][];
-        };
-        /** @description A variant's columns added at `to`, removed since `from` and changed, by `fqid`. */
-        VariantDiff: {
-            added: components["schemas"]["DiffColumn"][];
-            changed: components["schemas"]["Changed"][];
-            removed: components["schemas"]["DiffColumn"][];
-            summary: components["schemas"]["Summary"];
-            variant?: string | null;
-            variant_name?: string | null;
-        };
-        VariantYears: {
-            /** @description The variant's slug; null for the unslugged one. */
-            variant?: string | null;
-            variant_name: string;
-            years: number[];
-        };
-        Version: {
-            description?: string | null;
-            measurement_information?: string | null;
-            name?: string | null;
-            object_types: components["schemas"]["ObjectType"][];
-            populations: components["schemas"]["Population"][];
-        };
-        Window: {
-            valid_from: string;
-            valid_to: string;
+        /** @description `Page<ValueSetRef>`, ordered by hash. */
+        ValueSetsPage: {
+            items: components["schemas"]["ValueSetRef"][];
+            next_cursor: string | null;
         };
     };
     responses: never;
@@ -1870,9 +471,7 @@ export type $defs = Record<string, never>;
 export interface operations {
     show_without_ref: {
         parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -1907,9 +506,7 @@ export interface operations {
     };
     show: {
         parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
+            query?: never;
             header?: never;
             path: {
                 ref: string;
@@ -1944,50 +541,9 @@ export interface operations {
             };
         };
     };
-    coded_variables: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-                limit?: number;
-                cursor?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["CodedPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
     context: {
         parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -2020,368 +576,11 @@ export interface operations {
             };
         };
     };
-    coverage: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Coverage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    diff: {
-        parameters: {
-            query: {
-                from: string;
-                to: string;
-                variant?: string;
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Diff"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    docs_get: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                identifier: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["DocDetail"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    docs_related: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["RelatedDocument"][];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    docs_search: {
-        parameters: {
-            query?: {
-                q?: string;
-                register?: string;
-                scope?: components["schemas"]["Scope"];
-                limit?: number;
-                cursor?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["DocPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    graph: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Graph"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    lineage: {
-        parameters: {
-            query?: {
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Lineage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    order: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["OrderManifest"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    validate: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["Validation"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
     resolve: {
         parameters: {
             query: {
                 columns: string[];
                 register?: string;
-                scope?: components["schemas"]["Scope"];
             };
             header?: never;
             path?: never;
@@ -2415,12 +614,13 @@ export interface operations {
             };
         };
     };
-    schema: {
+    segments: {
         parameters: {
             query?: {
                 period?: string;
-                variant?: string;
-                scope?: components["schemas"]["Scope"];
+                table?: string;
+                value_set_name?: string;
+                evidence?: boolean;
                 limit?: number;
                 cursor?: string;
             };
@@ -2439,134 +639,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["SchemaPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    search: {
-        parameters: {
-            query: {
-                q: string;
-                type?: "register" | "variable" | "classification" | "classification_code" | "register_value";
-                register?: string;
-                period?: string;
-                scope?: components["schemas"]["Scope"];
-                limit?: number;
-                cursor?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["SearchPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    search_facets: {
-        parameters: {
-            query: {
-                q: string;
-                register?: string;
-                limit?: number;
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["RegisterFacets"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    states: {
-        parameters: {
-            query?: {
-                period?: string;
-                variant?: string;
-                value_set_version?: string;
-                scope?: components["schemas"]["Scope"];
-                limit?: number;
-                cursor?: string;
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["StatesPage"];
+                        data: components["schemas"]["SegmentPage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };
@@ -2588,21 +661,18 @@ export interface operations {
     values: {
         parameters: {
             query?: {
-                state?: string;
-                partition?: "source_extensions" | "canonical" | "nonstandard" | "sentinels";
+                value_set?: string;
                 classification?: string;
-                column?: string;
-                alias_window_from?: string;
+                code?: string;
+                label?: string;
+                level?: string;
                 parent?: string;
                 q?: string;
-                scope?: components["schemas"]["Scope"];
                 limit?: number;
                 cursor?: string;
             };
             header?: never;
-            path: {
-                ref: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -2614,50 +684,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["ValuesPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    warnings: {
-        parameters: {
-            query?: {
-                period?: string;
-                variant?: string;
-                representation?: string;
-                unassigned_only?: boolean;
-                scope?: components["schemas"]["Scope"];
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["DataWarning"][];
+                        data: components["schemas"]["ValueItemsPage"] | components["schemas"]["ValueSetsPage"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

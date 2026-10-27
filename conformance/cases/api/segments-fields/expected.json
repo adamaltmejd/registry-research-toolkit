@@ -1,0 +1,50 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "table": "demo/sg/t",
+          "period": {"start": "2018-01-01", "end": "2020-01-01"},
+          "spelling": "Kanslig",
+          "type": null,
+          "length": null,
+          "format": null,
+          "value_set": null,
+          "classification": null,
+          "coded": "unknown",
+          "sensitive": false,
+          "identifier": null,
+          "id_kind": null,
+          "role": "measure",
+          "temporality": "unknown",
+          "state": "clear"
+        },
+        {
+          "table": "demo/sg/t",
+          "period": {"start": "2020-01-01", "end": "2022-01-01"},
+          "spelling": "Kanslig",
+          "type": null,
+          "length": null,
+          "format": null,
+          "value_set": null,
+          "classification": null,
+          "coded": "unknown",
+          "sensitive": true,
+          "identifier": null,
+          "id_kind": null,
+          "role": "measure",
+          "temporality": "unknown",
+          "state": "clear"
+        }
+      ],
+      "/data/next_cursor": null
+    },
+    "keys": {
+      "/data/items/0": [
+        "classification", "coded", "format", "id_kind", "identifier", "length", "period",
+        "role", "sensitive", "spelling", "state", "table", "temporality", "type", "value_set"
+      ]
+    }
+  }
+]
