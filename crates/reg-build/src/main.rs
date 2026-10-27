@@ -4,6 +4,7 @@
 //! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
+//! reg-build diff OLD NEW [--json] [-n N]
 //! ```
 //!
 //! Both run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
@@ -14,8 +15,10 @@
 //! `<curation>/registers/<provider>/<register>/ids.toml` and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
 //! recorded in the file; `--release` refuses a variable without a ledger id. A refusal
-//! prints the error on stderr and exits 1.
+//! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
+//! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
+mod diff;
 mod emit;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -348,12 +351,15 @@ fn build(args: &Args) -> Result<(), String> {
 }
 
 fn main() -> ExitCode {
-    let result =
-        parse_args(std::env::args().skip(1)).and_then(|args| match args.command.as_str() {
-            "read" => read(&args),
-            "build" => build(&args),
-            other => Err(format!("unknown command {other:?}")),
-        });
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    if args.first().map(String::as_str) == Some("diff") {
+        return diff::run(&args[1..]);
+    }
+    let result = parse_args(args.into_iter()).and_then(|args| match args.command.as_str() {
+        "read" => read(&args),
+        "build" => build(&args),
+        other => Err(format!("unknown command {other:?}")),
+    });
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {

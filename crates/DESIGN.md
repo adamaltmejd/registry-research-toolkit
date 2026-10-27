@@ -398,6 +398,19 @@ tracks the milestones. This section holds the design decisions that outlive the 
   variable id equals a table id of its register (two cases: today's catalog kept the
   namespaces apart), the table keeps it.
 
+**Decisions taken in milestone C.**
+
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
+  natural key (pid, table name, meta key), never by row id, in eight sections: schema
+  (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
+  retired), table spans and attributes, per-variable segments, label and definition
+  runs, value sets (with the codes added and removed where only a segment's value-set
+  hash changed), and finding counts per code. Text shows at most `N` (default 20) per
+  section; `--json` is complete. Exit 0 when nothing differs, 1 when something does (the
+  meta keys `generation_id`, `catalog_version`, `builder_version` and `curation_digest`
+  never count, since they differ every release), 2 on a usage or IO error or a missing
+  or different `schema_version` major.
+
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
 against random full-register orders, with every difference classified.
