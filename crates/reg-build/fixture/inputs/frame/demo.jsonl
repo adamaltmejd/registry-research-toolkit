@@ -14,3 +14,9 @@
 {"kind":"occurrence","provider":"demo","register":"fr","table":"r","release":"r2","column":"Mat","source_key":"k2","label":"Mat"}
 {"kind":"release","provider":"demo","register":"fr","table":"p","release":"p1","name":"P 2020 prel","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary","populations":[{"name":"Kvinnor"},{"name":"Män"}]}
 {"kind":"occurrence","provider":"demo","register":"fr","table":"p","release":"p1","column":"Grp","source_key":"k5","label":"Grp","population_valuesets":[{"population":0,"valueset":"janej"},{"population":1,"valueset":"kon"}]}
+# Links and notices: a continues between two variables, a derived_from to a register by
+# name, a notice on a release, and a link to an unknown key (one link warning).
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"fr","key":"k5"},"object":{"kind":"variable","provider":"demo","register":"fr","key":"k1"},"note":"Grp tar över efter Svar."}
+{"kind":"link","relation":"derived_from","subject":{"kind":"variable","provider":"demo","register":"fr","key":"k1"},"object":{"kind":"register","provider":"demo","register_name":"Hushållsregistret"}}
+{"kind":"notice","subject":{"kind":"release","provider":"demo","register":"fr","table":"r","key":"r1"},"text":"Seriebrott: ny insamling."}
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"fr","key":"k1"},"object":{"kind":"variable","provider":"demo","register":"fr","key":"k9"}}

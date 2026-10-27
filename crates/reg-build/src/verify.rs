@@ -14,7 +14,7 @@ const CHECKS: &str = include_str!("checks.sql");
 ///
 /// # Errors
 /// The first failure, naming the check: `integrity_check: …`, `post-write check failed:\n<sql>`,
-/// `valueset <hash>: content hashes to <actual>`, or `previous release: <sql>`.
+/// `valueset <hash>: content hashes to <actual>`, `doc <hash>: content hashes to <actual>`, or `previous release: <sql>`.
 pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
     let sql = |e: rusqlite::Error| e.to_string();
     let db = Connection::open_with_flags(
@@ -40,6 +40,7 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
     }
     schema_version(&db)?;
     valuesets(&db)?;
+    pdfs(&db)?;
     if let Some(previous) = previous {
         compare(&db, previous)?;
     }
@@ -127,6 +128,28 @@ fn valuesets(db: &Connection) -> Result<(), String> {
         let actual = reg_frame::hex(&Sha256::digest(reg_frame::canonical_line(&list)));
         if actual != hash {
             return Err(format!("valueset {hash}: content hashes to {actual}"));
+        }
+    }
+    Ok(())
+}
+
+/// Each stored pdf hashes to its address.
+fn pdfs(db: &Connection) -> Result<(), String> {
+    let sql = |e: rusqlite::Error| e.to_string();
+    let mut stmt = db
+        .prepare("SELECT hash, content FROM doc WHERE kind = 'pdf' ORDER BY id")
+        .map_err(sql)?;
+    let mut rows = stmt.query([]).map_err(sql)?;
+    while let Some(row) = rows.next().map_err(sql)? {
+        let hash: String = row.get(0).map_err(sql)?;
+        let actual = reg_frame::hex(&Sha256::digest(
+            row.get_ref(1)
+                .map_err(sql)?
+                .as_blob()
+                .map_err(|e| e.to_string())?,
+        ));
+        if actual != hash {
+            return Err(format!("doc {hash}: content hashes to {actual}"));
         }
     }
     Ok(())

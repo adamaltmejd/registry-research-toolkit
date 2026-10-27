@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "99887987dcdc37141d0ebad33fc725e48c509a0c"
+commit = "d7b53cf573df9dcbcf232a5cb053aefb2d3e3a55"
 
 [[provider]]
 pid = "scb"
@@ -92,6 +92,22 @@ register = "lisa-workbook"
 name = "scb-transcription"
 reader = "transcription"
 path = "catalog/source/transcriptions/scb"
+provider = "scb"
+
+# Parsed LISA documents. Their subjects are keyed like the LISA variable list's, so the
+# register is its handle; D's `bind` joins that to the export's LISA register.
+[[input]]
+name = "lisa-docs"
+reader = "docs"
+path = "catalog/docs/markdown/lisa"
+provider = "scb"
+register = "lisa-workbook"
+
+# PDFs pinned by hash in related_documents.toml; their subjects are the list's register keys.
+[[input]]
+name = "related-docs"
+reader = "docs"
+path = "catalog/docs/related"
 provider = "scb"
 
 [[input]]
