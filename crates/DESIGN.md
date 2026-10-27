@@ -398,6 +398,15 @@ tracks the milestones. This section holds the design decisions that outlive the 
   variable id equals a table id of its register (two cases: today's catalog kept the
   namespaces apart), the table keeps it.
 
+**Decisions taken in milestone C.**
+
+- **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
+  neutral interchange format that conformance fixtures are written in by hand. The
+  reader assigns every locator (file and line) and computes every value-set hash, so a
+  line states neither, and an occurrence names its value sets. A value set's `names` are
+  the source's version names (v4 D24), which the emitter publishes as `valueset_name`;
+  so a fixture's names are published too and must not be read later as source data.
+
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
 against random full-register orders, with every difference classified.
