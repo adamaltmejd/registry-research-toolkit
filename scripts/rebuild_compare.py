@@ -240,6 +240,74 @@ def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -
             add(cls, f"{var}: {old.years[var]} -> {new.years[var]}")
 
 
+VIA_TABLE = "JOIN tbl t ON t.id = x.table_id JOIN register r ON r.id = t.register_id"
+# Columns of one count each: (heading, FROM clause naming the rows `x` and their
+# register `r`, WHERE condition).
+PLAIN_COUNTS = [
+    ("tables", "tbl x JOIN register r ON r.id = x.register_id", "1"),
+    (
+        "timeless tables",
+        "tbl x JOIN register r ON r.id = x.register_id",
+        "x.timeless = 1",
+    ),
+    ("releases", f"release x {VIA_TABLE}", "1"),
+    ("unparsed releases", f"release x {VIA_TABLE}", "x.parse_state = 'unparsed'"),
+    (
+        "clamped",
+        "override x JOIN occurrence o ON o.id = x.subject_id"
+        " JOIN tbl t ON t.id = o.table_id JOIN register r ON r.id = t.register_id",
+        "x.subject_kind = 'occurrence' AND x.field = 'period' AND x.rule_code = 'T1'",
+    ),
+    ("variables", "variable x JOIN register r ON r.id = x.register_id", "1"),
+    ("gaps", f"gap x {VIA_TABLE}", "1"),
+]
+# Columns that split one table by a key: (heading prefix, FROM clause, key
+# expression, key values).
+GROUPED_COUNTS = [
+    (
+        "occurrences",
+        f"occurrence x {VIA_TABLE}",
+        "x.status",
+        ["used", "shadowed", "gap_marker", "rejected", "unplaced"],
+    ),
+    ("segments", f"segment x {VIA_TABLE}", "x.state", ["ambiguous", "preliminary"]),
+    (
+        "findings",
+        "finding x JOIN register r ON r.id = x.register_id",
+        # finding.code is a rule code plus its sub-kind ('F1:type-change').
+        "substr(x.code, 1, instr(x.code || ':', ':') - 1)",
+        ["F1", "F2", "F5", "F6", "F7", "F8", "F9", "T1"],
+    ),
+]
+
+
+def counts(db: sqlite3.Connection, providers: set[str]) -> None:
+    """Print the new catalog's build counts, one row per provider and a total row."""
+    by_provider = " JOIN provider p ON p.id = r.provider_id"
+    columns = [name for name, _, _ in PLAIN_COUNTS]
+    columns += [f"{prefix} {k}" for prefix, _, _, keys in GROUPED_COUNTS for k in keys]
+    rows = {p: dict.fromkeys(columns, 0) for p in sorted(providers)}
+    for name, source, where in PLAIN_COUNTS:
+        for pid, n in db.execute(
+            f"SELECT p.pid, count(*) FROM {source}{by_provider} WHERE {where} GROUP BY 1"
+        ):
+            if pid in rows:
+                rows[pid][name] = n
+    for prefix, source, key, keys in GROUPED_COUNTS:
+        for pid, value, n in db.execute(
+            f"SELECT p.pid, {key}, count(*) FROM {source}{by_provider} GROUP BY 1, 2"
+        ):
+            if pid in rows and value in keys:
+                rows[pid][f"{prefix} {value}"] = n
+    print("\n## Build counts\n")
+    print("| provider | " + " | ".join(columns) + " |")
+    print("|---|" + "---:|" * len(columns))
+    for pid, row in rows.items():
+        print(f"| {pid} | " + " | ".join(str(row[c]) for c in columns) + " |")
+    totals = (str(sum(row[c] for row in rows.values())) for c in columns)
+    print("| total | " + " | ".join(totals) + " |")
+
+
 def scb_handles() -> dict[str, str]:
     """`scb/<old slug>` -> `scb/r<RegisterId>`, from the register's `native_id`."""
     out = {}
@@ -284,6 +352,7 @@ def main() -> int:
         regs = Counter(r for r, _ in found)
         top = ", ".join(f"{r} {n}" for r, n in regs.most_common(6))
         print(f"| {cls} | {len(found)} | {top} |")
+    counts(new_db, providers)
     for cls, found in sorted(diffs.items()):
         print(f"\n## {cls}\n")
         for reg, detail in found[:EXAMPLES]:

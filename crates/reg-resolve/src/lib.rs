@@ -171,35 +171,7 @@ pub struct Finding {
 /// The register's line in the build report.
 #[derive(Debug, Default, Serialize)]
 pub struct Report {
-    pub tables: usize,
-    /// Named tables only occurrences cite; the implicit table is not one.
-    pub implied_tables: usize,
-    pub timeless_tables: usize,
-    pub releases: usize,
-    pub unparsed_releases: usize,
-    pub release_collisions: usize,
-    pub edition_disagreements: usize,
-    pub occurrences: usize,
-    pub clamped: usize,
-    pub rejected: usize,
-    pub shadowed: usize,
-    pub unplaced: usize,
-    pub gap_markers: usize,
-    /// Keys documented only without a column: not variables.
-    pub keys_without_column: usize,
-    pub withheld_variables: usize,
-    pub variables: usize,
     pub split_keys: usize,
-    pub ambiguous_segments: usize,
-    pub ambiguous_pairs: usize,
-    pub preliminary_segments: usize,
-    pub valueset_conflict_keys: usize,
-    /// Keys whose merged source rows disagree on a field.
-    pub row_conflict_keys: usize,
-    pub gaps: usize,
-    pub keys_in_several_tables: usize,
-    pub label_differs_across_tables: usize,
-    pub case_variants: usize,
     pub unminted: Vec<String>,
     pub unplaced_ids: Vec<String>,
     pub merged_ids: Vec<String>,
@@ -280,21 +252,16 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     let mut table_index = BTreeMap::new();
     for handle in handles {
         let mut table = stated.get(handle).map_or_else(
-            || {
-                if !handle.is_empty() {
-                    report.implied_tables += 1;
-                }
-                Table {
-                    provider: register.provider.clone(),
-                    register: register.register.clone(),
-                    table: handle.to_owned(),
-                    name: None,
-                    description: None,
-                    from: None,
-                    to: None,
-                    cadence: None,
-                    locator: register.locator.clone(),
-                }
+            || Table {
+                provider: register.provider.clone(),
+                register: register.register.clone(),
+                table: handle.to_owned(),
+                name: None,
+                description: None,
+                from: None,
+                to: None,
+                cadence: None,
+                locator: register.locator.clone(),
             },
             |t| (*t).clone(),
         );
@@ -341,7 +308,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             primary: None,
         });
     }
-    report.releases = releases.len();
     let rank = |edition: &str| match edition {
         "final" => 0,
         "unstated" => 1,
@@ -355,7 +321,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 .or_default()
                 .push(i);
         } else {
-            report.unparsed_releases += 1;
             findings.push(Finding {
                 code: "F9:unparsed-delivery",
                 severity: "review",
@@ -387,7 +352,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             }
             primary_of.insert(i, primary);
             if rank(&releases[i].release.edition) == rank(&releases[primary].release.edition) {
-                report.release_collisions += 1;
                 findings.push(Finding {
                     code: "F8:release-collision",
                     severity: "review",
@@ -453,7 +417,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             status: "used",
         };
         if unplaced {
-            report.unplaced += 1;
             entry.status = "unplaced";
             resolved.push(entry);
             continue;
@@ -489,15 +452,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                 }
             };
         if gap_marker {
-            report.gap_markers += 1;
             entry.period = Some(period);
             entry.status = "gap_marker";
         } else {
-            match (status, &stated_period) {
-                ("rejected", _) => report.rejected += 1,
-                (_, Some(_)) => report.clamped += 1,
-                _ => {}
-            }
             entry.period = Some(period);
             entry.stated = stated_period;
             entry.status = status;
@@ -538,7 +495,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             shadowed.push(i);
         }
     }
-    report.shadowed = shadowed.len();
     for i in shadowed {
         resolved[i].status = "shadowed";
     }
@@ -574,7 +530,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             .map(|(key, _)| *key)
             .collect();
         if !differ.is_empty() {
-            report.edition_disagreements += 1;
             findings.push(Finding {
                 code: "F7:edition-disagreement",
                 severity: "review",
@@ -643,7 +598,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     variable_keys.retain(|_, members| {
         let keep = members.iter().any(|&i| resolved[i].status == "used");
         if !keep {
-            report.withheld_variables += 1;
             for &i in members.iter() {
                 resolved[i].status = "withheld";
             }
@@ -660,24 +614,20 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
 
         let last = latest(&resolved, members).expect("a variable has an occurrence");
+        let spellings: BTreeSet<String> = members
+            .iter()
+            .map(|&i| resolved[i].occurrence.column.clone())
+            .collect();
         let used: Vec<usize> = members
             .iter()
             .copied()
             .filter(|&i| resolved[i].status == "used")
             .collect();
-        let spellings: BTreeSet<String> = members
-            .iter()
-            .map(|&i| resolved[i].occurrence.column.clone())
-            .collect();
-        if spellings.len() > 1 {
-            report.case_variants += 1;
-        }
         if members
             .iter()
             .any(|&i| !resolved[i].occurrence.population_valuesets.is_empty())
             && population_keys.insert(key.clone())
         {
-            report.valueset_conflict_keys += 1;
             findings.push(Finding {
                 code: "F6:source-conflict",
                 severity: "review",
@@ -697,13 +647,11 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
             .collect();
         let tables_used: BTreeSet<usize> = members.iter().map(|&i| resolved[i].table).collect();
         if tables_used.len() > 1 {
-            report.keys_in_several_tables += 1;
             let labels: BTreeSet<String> = members
                 .iter()
                 .filter_map(|&i| resolved[i].occurrence.label.as_deref().map(label_key))
                 .collect();
             if labels.len() > 1 {
-                report.label_differs_across_tables += 1;
                 findings.push(Finding {
                     code: "F1:label-differs",
                     severity: "review",
@@ -816,19 +764,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     resolved[i].segment = Some(segments.len() + index);
                 }
             }
-            // Pairs of the variable's own occurrences that disagree where they overlap.
-            for (a, &x) in own.iter().enumerate() {
-                for &y in &own[a + 1..] {
-                    let overlap = intersect(span(&resolved[x]), span(&resolved[y])).is_some();
-                    if overlap && form(&resolved[x]) != form(&resolved[y]) {
-                        report.ambiguous_pairs += 1;
-                    }
-                }
-            }
             segments.extend(runs);
         }
         if !conflicts.is_empty() {
-            report.row_conflict_keys += 1;
             findings.push(Finding {
                 code: "F6:source-conflict",
                 severity: "review",
@@ -948,26 +886,20 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     for (v, variable) in variables.iter().enumerate() {
         let segments = &variable.segments;
         for (s, segment) in segments.iter().enumerate() {
-            match segment.state {
-                "ambiguous" => {
-                    report.ambiguous_segments += 1;
-                    findings.push(Finding {
-                        code: "F2:ambiguous",
-                        severity: "review",
-                        subject: Subject::Segment(v, s),
-                        period: Some(segment.period.clone()),
-                        message: format!(
-                            "{} cannot be placed on one variable form here",
-                            segment.spelling
-                        ),
-                    });
-                }
-                "preliminary" => report.preliminary_segments += 1,
-                _ => {}
+            if segment.state == "ambiguous" {
+                findings.push(Finding {
+                    code: "F2:ambiguous",
+                    severity: "review",
+                    subject: Subject::Segment(v, s),
+                    period: Some(segment.period.clone()),
+                    message: format!(
+                        "{} cannot be placed on one variable form here",
+                        segment.spelling
+                    ),
+                });
             }
         }
     }
-    report.variables = variables.len();
 
     // Gap markers: on their key's variable when the key is one variable. A key
     // documented only without a column is no variable (F5).
@@ -1004,7 +936,6 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     for (i, v) in marker_variable {
         resolved[i].variable = Some(v);
     }
-    report.keys_without_column = markers.len();
     for (key, label) in markers {
         findings.push(Finding {
             code: "F5:documented-without-column",
@@ -1036,13 +967,9 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
     }
 
     let gaps = gaps(&mut tables, &releases, &variables, &resolved);
-    report.gaps = gaps.len();
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
 
-    report.tables = tables.len();
-    report.timeless_tables = tables.iter().filter(|t| t.timeless).count();
-    report.occurrences = resolved.len();
     let dated: Vec<&Interval> = tables
         .iter()
         .filter(|t| !t.timeless)
