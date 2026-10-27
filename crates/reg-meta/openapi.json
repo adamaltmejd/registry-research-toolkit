@@ -56,6 +56,171 @@
           }
         }
       }
+    },
+    "/api/findings/{ref}": {
+      "get": {
+        "description": "The review items and notices on a register, a table or a variable (its segments and occurrences included), optionally narrowed to a period, a table or a rule code.",
+        "operationId": "findings",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "table",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Finding"
+                      }
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/graph/{ref}": {
+      "get": {
+        "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
+        "operationId": "graph",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "continues",
+                "equivalent",
+                "derived_from",
+                "label_of"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Graph"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -122,6 +287,146 @@
           },
           "remediation": {
             "type": "string"
+          }
+        }
+      },
+      "Finding": {
+        "type": "object",
+        "description": "`shape.Finding`.",
+        "required": [
+          "code",
+          "severity",
+          "subject",
+          "period",
+          "message",
+          "caveat"
+        ],
+        "properties": {
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "An acked statement's caveat."
+          },
+          "code": {
+            "type": "string",
+            "description": "A rule code and its sub-kind, `F7:edition-disagreement`."
+          },
+          "message": {
+            "type": "string"
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "description": "`review` or `notice`."
+          },
+          "subject": {
+            "$ref": "#/components/schemas/Subject"
+          }
+        }
+      },
+      "Graph": {
+        "type": "object",
+        "description": "`shape.Graph`: the focus, its nodes and the relations between them.",
+        "required": [
+          "focus",
+          "nodes",
+          "edges"
+        ],
+        "properties": {
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphEdge"
+            }
+          },
+          "focus": {
+            "type": "string",
+            "description": "The ref's fqid."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GraphNode"
+            }
+          }
+        }
+      },
+      "GraphEdge": {
+        "type": "object",
+        "required": [
+          "kind",
+          "from",
+          "to",
+          "at",
+          "prov",
+          "caveat"
+        ],
+        "properties": {
+          "at": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period",
+                "description": "From the day a succession takes over; `null` when the source states no day."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "caveat": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The source's own words about the relation."
+          },
+          "from": {
+            "type": "string",
+            "description": "The subject's fqid."
+          },
+          "kind": {
+            "type": "string",
+            "description": "`continues`, `equivalent`, `derived_from` or `label_of`."
+          },
+          "prov": {
+            "type": "string",
+            "description": "`source`, `curated` or `rule`."
+          },
+          "to": {
+            "type": "string",
+            "description": "The object's fqid."
+          }
+        }
+      },
+      "GraphNode": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "kind",
+          "name"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "description": "`variable`, `table`, `register` or `class_version`."
+          },
+          "name": {
+            "type": "string",
+            "description": "A register's or table's name, a variable's or class version's label."
           }
         }
       },
@@ -463,6 +768,71 @@
           "variables": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "Subject": {
+        "type": "object",
+        "description": "`shape.Subject`: what a finding is about, by natural key.",
+        "required": [
+          "kind",
+          "fqid",
+          "table",
+          "period",
+          "release",
+          "spelling",
+          "value_set"
+        ],
+        "properties": {
+          "fqid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The register, table or variable; for a segment or an occurrence, its variable."
+          },
+          "kind": {
+            "type": "string",
+            "description": "`register`, `table`, `release`, `variable`, `segment`, `occurrence` or\n`valueset`."
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period",
+                "description": "The release's, segment's or occurrence's period; `null` when unplaced."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A release's literal delivery name."
+          },
+          "spelling": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "An occurrence's exact spelling."
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The table of a release, segment or occurrence."
+          },
+          "value_set": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A value set's hash."
           }
         }
       }
