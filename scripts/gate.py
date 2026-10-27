@@ -9,7 +9,8 @@ Each named step runs its commands in order from the repository root and stops at
 first failure. `all` runs g0, rust and release;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
-`release`; `regen` also refreshes the plugin project schema. Stdlib only.
+`release`; the legacy Python builder suite runs in `release` until cutover F.
+`regen` also refreshes the plugin project schema. Stdlib only.
 """
 
 from __future__ import annotations
@@ -60,9 +61,13 @@ def run(command, cwd=ROOT, env=None, **kwargs):
     """Run `command` (a shell-quoted string or an argv list); raise on failure."""
     argv = shlex.split(command) if isinstance(command, str) else command
     print("$", shlex.join(map(str, argv)), flush=True)
-    return subprocess.run(
-        argv, cwd=cwd, env=env and os.environ | env, check=True, **kwargs
-    )
+    started = time.monotonic()
+    try:
+        return subprocess.run(
+            argv, cwd=cwd, env=env and os.environ | env, check=True, **kwargs
+        )
+    finally:
+        print(f"  elapsed {time.monotonic() - started:.2f} s", flush=True)
 
 
 def base_artifact() -> Path:
@@ -117,9 +122,22 @@ def provider_vocabulary() -> None:
 def g0(packages: list[str] | None = None) -> None:
     lint()
     crates()
-    # No packages runs every root `testpaths` entry. Conformance needs the Rust
-    # server, so it runs in `rust`, not here.
-    run(["uv", "run", "python", "-m", "pytest", *(packages or []), "-n", "auto", "-q"])
+    # The legacy builder stays mandatory in CI and `release` until cutover F;
+    # its full compiler corpus costs more than the every-change local gate allows.
+    # Explicit --packages still checks it here when working on a release fix.
+    run(
+        [
+            "uv",
+            "run",
+            "python",
+            "-m",
+            "pytest",
+            *(packages or ["scripts/tests"]),
+            "-n",
+            "auto",
+            "-q",
+        ]
+    )
 
 
 def rust() -> None:
@@ -139,6 +157,7 @@ def rust() -> None:
 
 
 def release() -> None:
+    run("uv run python -m pytest reg_meta_build -n auto -q")
     # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
     # on it as it would on a release. `-m release` runs only the selected-artifact
     # checks: the rest of the suite does not read `--artifact-dir` and already ran in
@@ -202,7 +221,7 @@ def main() -> int:
     parser.add_argument(
         "--packages",
         nargs="+",
-        help="g0's pytest paths (default: every testpaths entry)",
+        help="g0's pytest paths (default: scripts/tests; legacy builder runs in release)",
     )
     args = parser.parse_args()
     names = [n for step in args.steps for n in (ALL if step == "all" else [step])]
