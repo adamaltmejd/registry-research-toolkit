@@ -714,19 +714,19 @@ def row_value(row):
 
 
 def form_boundary(db, table, variable, boundary, tables):
-    """An adjacent catalog type/length/value-set change, independent of order partitions."""
+    """An adjacent catalog type/value-set change, independent of order partitions."""
     before, after = set(), set()
-    for tid, start, end, dtype, length, valueset in db.execute(
-        "SELECT t.pid, s.start, s.end, s.dtype, s.length, s.valueset_id FROM segment s"
+    for tid, start, end, dtype, valueset in db.execute(
+        "SELECT t.pid, s.start, s.end, s.dtype, s.valueset_id FROM segment s"
         " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
         " WHERE v.pid = ? AND (s.start = ? OR s.end = ?)",
         (variable, boundary, boundary),
     ):
         if tables.get(tid, tid.rsplit("/", 1)[-1]) == table:
             if end == boundary:
-                before.add((dtype, length, valueset))
+                before.add((dtype, valueset))
             if start == boundary:
-                after.add((dtype, length, valueset))
+                after.add((dtype, valueset))
     return len(before) == len(after) == 1 and before != after
 
 
@@ -1298,7 +1298,7 @@ def classify_difference(
             "spelling",
             "Case-only column spelling uses the resolver's latest used-occurrence spelling."
             + (
-                " Equal coverage also retains catalog type/length/value-set boundaries."
+                " Equal coverage also retains catalog type/value-set boundaries."
                 if record.get("alignment", {}).get("form_boundary")
                 else ""
             ),
@@ -1307,7 +1307,7 @@ def classify_difference(
         if old[4] == new[4] and alignment["supported"] and alignment["form_boundary"]:
             return result(
                 "form boundary",
-                "Equal covered days; every additional new split has a catalog type/length/value-set change.",
+                "Equal covered days; every additional new split has a catalog type/value-set change.",
             )
         return result(
             "other", "Equal coverage has an unexplained partition or spelling change."
