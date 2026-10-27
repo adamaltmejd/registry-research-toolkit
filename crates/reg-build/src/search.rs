@@ -84,10 +84,13 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 if !labels.contains(&run.label.as_str()) {
                     labels.push(&run.label);
                 }
-                if let Some(d) = run.definition.as_deref().filter(|d| !d.is_empty())
-                    && !definitions.contains(&d)
-                {
-                    definitions.push(d);
+                // A term may live only in the operational definition.
+                for d in [&run.definition, &run.operational_definition] {
+                    if let Some(d) = d.as_deref().filter(|d| !d.is_empty())
+                        && !definitions.contains(&d)
+                    {
+                        definitions.push(d);
+                    }
                 }
             }
             items.push(Item {
