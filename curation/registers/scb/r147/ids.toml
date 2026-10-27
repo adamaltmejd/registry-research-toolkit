@@ -1,4 +1,5 @@
 # Public ids of scb/r147 (today's scb/godselmedelsanvandning), from the slug pins at fe08cf2a9.
+public = "godselmedelsanvandning"
 [tables]
 "Gödselmedelsanvändning i jordbruket 2007-2013" = "godselmedelsanvandning"
 "Gödselmedelsanvändning i jordbruket fr o m 2016" = "godselmedelsanvandning-2016"

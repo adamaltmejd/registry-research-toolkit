@@ -1,4 +1,5 @@
 # Public ids of scb/r132 (today's scb/isen), from the slug pins at fe08cf2a9.
+public = "isen"
 [tables]
 
 [variables]

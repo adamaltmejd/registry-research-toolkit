@@ -20,3 +20,16 @@
 {"kind":"link","relation":"derived_from","subject":{"kind":"variable","provider":"demo","register":"fr","key":"k1"},"object":{"kind":"register","provider":"demo","register_name":"Hushållsregistret"}}
 {"kind":"notice","subject":{"kind":"release","provider":"demo","register":"fr","table":"r","key":"r1"},"text":"Seriebrott: ny insamling."}
 {"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"fr","key":"k1"},"object":{"kind":"variable","provider":"demo","register":"fr","key":"k9"}}
+# Register ch: F1 changes. Antal changes type, value set, label, definition and unit at
+# 2021-01-01; Grp's releases state different populations.
+{"kind":"register","provider":"demo","register":"ch","name":"Change demo"}
+{"kind":"table","provider":"demo","register":"ch","table":"t","from":"2020-01-01","to":"2021-12-31"}
+{"kind":"table","provider":"demo","register":"ch","table":"p","from":"2020-01-01","to":"2021-12-31"}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"}],"names":["antal-a"]}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej, aldrig"},{"code":"3","label":"Vet ej"}],"names":["antal-b"]}
+{"kind":"occurrence","provider":"demo","register":"ch","table":"t","column":"Antal","source_key":"c1","from":"2020-01-01","to":"2020-12-31","label":"Antal","unit":"st","dtype":"int","length":4,"valueset":"antal-a"}
+{"kind":"occurrence","provider":"demo","register":"ch","table":"t","column":"Antal","source_key":"c1","from":"2021-01-01","to":"2021-12-31","label":"Antal personer","definition":"Personer i hushållet.","unit":"tusental","dtype":"char","length":4,"valueset":"antal-b"}
+{"kind":"release","provider":"demo","register":"ch","table":"p","release":"p1","name":"P 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final","populations":[{"name":"Kvinnor"},{"name":"Män"}]}
+{"kind":"release","provider":"demo","register":"ch","table":"p","release":"p2","name":"P 2021","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"final","populations":[{"name":"Alla"}]}
+{"kind":"occurrence","provider":"demo","register":"ch","table":"p","release":"p1","column":"Grp","source_key":"c2","label":"Grp"}
+{"kind":"occurrence","provider":"demo","register":"ch","table":"p","release":"p2","column":"Grp","source_key":"c2","label":"Grp"}

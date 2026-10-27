@@ -108,6 +108,14 @@ fn toml_file<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, String> {
 }
 
 /// Every input read, in manifest order.
+fn ledger_path(curation: &Path, provider: &str, register: &str) -> PathBuf {
+    curation
+        .join("registers")
+        .join(provider)
+        .join(register)
+        .join("ids.toml")
+}
+
 fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>, String> {
     let readers = args.curation.join("readers");
     manifest
@@ -269,21 +277,20 @@ fn build(args: &Args) -> Result<(), String> {
         }
     }
 
+    let set_by_hash: BTreeMap<&str, &reg_frame::ValueSet> = valuesets
+        .iter()
+        .map(|(hash, (set, _))| (hash.as_str(), set))
+        .collect();
     let mut resolved = Vec::new();
     let mut report = BTreeMap::new();
     for ((provider, register), records) in &registers {
-        let path = args
-            .curation
-            .join("registers")
-            .join(provider)
-            .join(register)
-            .join("ids.toml");
+        let path = ledger_path(&args.curation, provider, register);
         let ledger = if path.is_file() {
             toml_file(&path)?
         } else {
             reg_resolve::Ledger::default()
         };
-        let r = reg_resolve::resolve(records, &ledger)
+        let r = reg_resolve::resolve(records, &ledger, &set_by_hash)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
@@ -293,12 +300,37 @@ fn build(args: &Args) -> Result<(), String> {
         }
         resolved.push(r);
     }
+    // A public name is one register's within its provider: no other register's public
+    // name or handle.
+    let mut named: BTreeMap<(&str, &str), &str> = BTreeMap::new();
+    for r in &resolved {
+        let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
+        if let Some(other) = named.insert((provider, r.public.as_str()), handle) {
+            return Err(format!(
+                "{}: public name {:?} of {provider}/{handle} is also {provider}/{other}'s",
+                ledger_path(&args.curation, provider, handle).display(),
+                r.public
+            ));
+        }
+    }
+    for r in &resolved {
+        let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
+        if r.public != handle && registers.contains_key(&(provider.to_owned(), r.public.clone())) {
+            return Err(format!(
+                "{}: public name {:?} of {provider}/{handle} is another register's handle",
+                ledger_path(&args.curation, provider, handle).display(),
+                r.public
+            ));
+        }
+    }
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     let linked = link::resolve(&resolved, &links, &docs)?;
     let link_unresolved = linked.warnings.len();
+    let succession_dropped = linked.succession_warnings.len();
     let doc_subject_unresolved = linked.doc_warnings.len();
     warnings.extend(linked.warnings);
+    warnings.extend(linked.succession_warnings);
     warnings.extend(linked.doc_warnings);
     for r in &resolved {
         report.insert(
@@ -374,6 +406,7 @@ fn build(args: &Args) -> Result<(), String> {
             "registers": report,
             "warnings": warnings,
             "link_unresolved": link_unresolved,
+            "succession_dropped": succession_dropped,
             "doc_subject_unresolved": doc_subject_unresolved,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;

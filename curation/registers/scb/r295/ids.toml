@@ -1,4 +1,5 @@
 # Public ids of scb/r295 (today's scb/miljorakenskaper), from the slug pins at fe08cf2a9.
+public = "miljorakenskaper"
 [tables]
 "Lufträkenskaper" = "luftrakenskaper"
 "Miljömotiverade subventioner" = "miljomotiverade-subventioner"

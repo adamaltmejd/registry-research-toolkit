@@ -1,4 +1,5 @@
 # Public ids of scb/r181 (today's scb/fmr), from the slug pins at fe08cf2a9.
+public = "fmr"
 [tables]
 "Indata" = "fmr-indata"
 

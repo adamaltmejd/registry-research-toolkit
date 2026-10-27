@@ -56,13 +56,13 @@ path = "frame"
 
 [[input]]
 name = "docs-markdown"
-reader = "docs"
+reader = "markdown"
 path = "docs/markdown"
 provider = "demo"
 register = "lisa-workbook"
 
 [[input]]
 name = "docs-related"
-reader = "docs"
+reader = "pdf-list"
 path = "docs/related"
 provider = "demo"

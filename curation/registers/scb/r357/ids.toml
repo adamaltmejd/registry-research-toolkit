@@ -1,4 +1,5 @@
 # Public ids of scb/r357 (today's scb/but), from the slug pins at fe08cf2a9.
+public = "but"
 [tables]
 "Hushåll" = "hushall"
 "Individer" = "individer"

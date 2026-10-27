@@ -10,10 +10,9 @@ it compares tables, the columns each documents and their periods, the column-to-
 mapping, labels, value-set codes, flags and coverage, and puts each difference in one
 class. Prints Markdown: a summary per class and register, then examples.
 
-SCB registers are `scb/r<RegisterId>` in the new catalog until D binds their names; the
-old catalog's are matched to them by the `native_id` of their register file in
-`reg_meta_build/curation/registers/scb/`. A register whose old catalog has only the
-implicit table and whose new catalog has one named table compares those two as one.
+Registers are matched by pid: a new register's public name comes from its id ledger,
+which took it from the old slug. A register whose old catalog has only the implicit table and whose new
+catalog has one named table compares those two as one.
 """
 
 from __future__ import annotations
@@ -21,14 +20,12 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
-import tomllib
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from pathlib import Path
 
 EXAMPLES = 8
-PINS = Path(__file__).resolve().parents[1] / "reg_meta_build/curation/registers/scb"
 # The old catalog's name for a register's one unnamed table, the new implicit table.
 OLD_IMPLICIT = "_default"
 
@@ -141,6 +138,15 @@ def new_views(db: sqlite3.Connection, providers: set[str]) -> dict[str, View]:
         view.years[var] = (min(old[0], span[0]), max(old[1], span[1]))
         if vs is not None:
             view.codes[var] |= items[vs]
+    # A segment whose occurrences disagree (F2) keeps no set; each occurrence keeps its own.
+    for reg, vpid, vs in db.execute(
+        "SELECT r.pid, v.pid, o.valueset_id FROM occurrence o"
+        " JOIN segment s ON s.id = o.segment_id AND s.valueset_id IS NULL"
+        " JOIN variable v ON v.id = s.variable_id JOIN register r ON r.id = v.register_id"
+        " WHERE o.valueset_id IS NOT NULL"
+    ):
+        if reg.split("/")[0] in providers:
+            views[reg].codes[vpid.rsplit("/", 1)[1]] |= items[vs]
     return views
 
 
@@ -308,18 +314,6 @@ def counts(db: sqlite3.Connection, providers: set[str]) -> None:
     print("| total | " + " | ".join(totals) + " |")
 
 
-def scb_handles() -> dict[str, str]:
-    """`scb/<old slug>` -> `scb/r<RegisterId>`, from the register's `native_id`."""
-    out = {}
-    for path in sorted(PINS.glob("*.toml")):
-        if path.name.endswith(".auto.toml"):
-            continue
-        register = tomllib.loads(path.read_text(encoding="utf-8")).get("register", {})
-        if "native_id" in register:
-            out[f"scb/{register['slug']}"] = f"scb/r{register['native_id']}"
-    return out
-
-
 def main() -> int:
     old_path, new_path, report_path, *wanted = sys.argv[1:]
     old_db, new_db = sqlite3.connect(old_path), sqlite3.connect(new_path)
@@ -327,11 +321,7 @@ def main() -> int:
     providers = set(wanted) or {
         p for (p,) in new_db.execute("SELECT pid FROM provider")
     }
-    handles = scb_handles()
-    old = {
-        handles.get(reg, reg): view
-        for reg, view in old_views(old_db, providers).items()
-    }
+    old = old_views(old_db, providers)
     new = new_views(new_db, providers)
     status = statuses(new_db)
     diffs: dict[str, list[tuple[str, str]]] = defaultdict(list)

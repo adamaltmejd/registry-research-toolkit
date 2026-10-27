@@ -1,4 +1,5 @@
 # Public ids of scb/r134 (today's scb/ks), from the slug pins at fe08cf2a9.
+public = "ks"
 [tables]
 
 [variables]

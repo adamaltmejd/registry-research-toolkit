@@ -176,7 +176,102 @@ The full SCB read is a heavy run.
     74 only in the new one). Take about 30 of the 920 plus the 70 and bucket them by
     cause: the ValidDates filter or its whole-set fallback; curation in the old catalog;
     a reused ItemId's dates; other. Record the buckets here. Re-open a rule only if a
-    bucket is large and wrong. Also check r118 kommun codes 0197 and 0199 per segment;
+    bucket is large and wrong. Also check r118 kommun codes 0197 and 0199 per segment.
+    - **Outcome**, from a full build at c0be3db37 against 0.64.0. The comparison now
+      gives 924 "codes differ", 75 only in old and 79 only in new. Buckets: (a) the
+      ValidDates filter, (b) the whole-set fallback, (c) curation in old, (d) a reused
+      ItemId's dates, (e) other, (f) a source error for a D `set`.
+    - "codes differ", 30 sampled with seed 0: 9 (a), 13 (d), 1 (b), 1 (c), 6 (e).
+      - Of the 9 (a), 4 drops are right: code 86 and the historical kommuner end before
+        the release, and Europabolag starts after it.
+      - The other 5 (a) and all 13 (d) are wrong. Each drops real answer codes (Ja, Nej,
+        Vet ej, grades A-F, kommun 0114) because their ItemIds are dated only from
+        2008-2014, after the release. These dates record when the item entered the
+        metadata, not when the code was valid.
+      - The filter guards against this only when no item is kept. Here a sentinel such
+        as "." or "Uppgift saknas" carries an older date and is kept.
+      - The 6 (e) are 4 columns that one catalog merges and the other splits, 1
+        ambiguous segment, and 1 code (Nej) the old build left out.
+    - Only in old, all 75: (e).
+      - 56 are ambiguous segments (F2): the occurrences state different sets, so the
+        segment keeps none and the comparison, which reads segments, sees no codes. In 5
+        of these the date filter causes the disagreement.
+      - 2 are population alternatives (F6), 6 are CVIDs holding only an uncoded marker,
+        5 are CVIDs with no rows in `Vardemangder`, and 6 are SOS transcriptions that
+        state no set. In 10 of these 11 SCB cases the old variable merged another
+        column's set.
+      - #1949 tag: 5 involve a reused ItemId's interval, all among the F2 cases. In the
+        2 `studiekommun` cases the dates end before the release and the drop is right;
+        in `avslutunderaret` and `terminstuderande` (ht, vt) they start after it and it
+        is wrong. A filter drop never empties a set (the fallback), so the ruling's
+        evidence is in "codes differ", not here.
+    - Only in new, 79: 49 (c), 17 (b), 13 (e).
+      - (c) is the old `errata:steward-holdings`, `curated:representations` and
+        `curated:coding.uncoded`.
+      - (b) is 16 undated ULF sets and one r235 set, which the old build dropped.
+      - (e) is 9 SOS transcriptions, 3 free-text marker sets (`Alfanumerisk`,
+        `Kontinuerlig`) missing from the reader's uncoded list, and 1 Ja/Nej set the old
+        build left out.
+    - r118: the "Taxeringsår 2013" delivery names CVID 320512, the 21 Län codes, which
+      is bucket (f). Check that F1 `domain-change` is raised there (c-f1 adds it).
+    - r118 `kommun` has no segment from 2017 on. All seven "Deklarationsår YYYY
+      (beskattningsår YYYY-1)" deliveries (2014-2020) are unparsed, so every r118
+      variable ends in 2013. 0197 and 0199 are open-ended in the 2017, 2018 and 2021 LKF
+      sets those deliveries name, so the cause is the delivery-name grammar, not a
+      value-set rule.
+    - Verdict: one bucket is large and wrong. The filter's start dates, which record
+      metadata entry rather than code validity, drop real codes in 18 of the 30 sampled
+      cases (13 on reused ItemIds, 5 on single-use ones; about 550 of the 924 by
+      extrapolation). Reuse widens it. This re-opens D30 and the #1949 ruling and is
+      escalated to the tracker. The rule is not changed here. The per-case table is in
+      the PR that recorded it.
+    - **After the ValidTo rule** (the tracker's ruling: drop an item only when all its
+      intervals are closed and the latest ValidTo is before the period; ignore
+      ValidFrom), from a full build at bc3e972c5 against 0.64.0.
+      - Counts: "codes differ" 924 → 967, only in old 75 → 19, only in new 79 → 80. Two
+        causes. The comparison now reads the occurrence sets of ambiguous (F2) segments;
+        that empties "only in old" of its 56 F2 cases and adds one to "only in new". The
+        rule moves 604 cases out of "codes differ" (553 to no difference, 51 to the
+        blank code only) and 647 in.
+      - The 30 sampled cases: of the 18 wrong drops, 16 now match and 1 differs only by
+        the blank code. The 18th (ULF `ha1822`) gets back 3 of its 4 codes. Its fourth,
+        `0`, now drops by the new rule, the class below. The 4 right drops: code 86
+        (twice) and the historical kommuner still drop. Europabolag and code 55 are kept
+        for the 1997 release, the cost the ruling named. The other 8 are unchanged (b,
+        c, e), and the F2 case differs only by the blank code.
+      - Only in old: the 56 F2 cases now show 44 no difference, 10 blank code only and 2
+        `studiekommun` codes differ (1,151 → 295, retired kommuner, right). The other 19
+        are unchanged. Only in new: the 79 are unchanged, plus `cfl/kurskod` (an F2
+        segment with 7,177 codes, no set in the old catalog).
+      - The 647 entrants: 646 lose only codes whose every interval is closed and ends
+        before the release. The old "every item dated" and "some overlap" guards kept
+        them, and the ruling removed those guards. 524 lose code `0`, a missing-value
+        sentinel ("Värde saknas", "Okänt värde") whose three ItemIds end in 1993-1994.
+        These are in ULF and the work-related-disorders survey from 2004 on, where `.`
+        "Värde saknas" is open-ended. The rest are retired codes: SU, YU, ZR, TP, kommun
+        1504, sector codes 11 and 15. Under the ruling these are right drops. Whether a
+        sentinel that SCB closed in 1994 should drop from 2004 releases that still list
+        it is for the tracker. The 647th, `ep-val-resultat/riksdagsvalkrets-kod`, loses
+        `02`: its occurrences carry F6 although every population's rows name the same
+        set. That is escalated as a possible resolver defect.
+      - r118 (`scb/taxeringsutfallet`) `kommun`: 0197 and 0199 are absent 2014-2017 and
+        present from the delivery named 2018 (beskattningsår 2017). The 2014-2016
+        deliveries name the LKF 2013 set, and the 2017 delivery the LKF 2016 set. Both
+        sets have 290 items and neither code. From 2018 the LKF 2017, 2018 and 2021 sets
+        hold both, open-ended. This is the source, bucket (f): a D `set` if the
+        2014-2017 data hold them.
+      - Verdict: the ruling's check passes. The wrong drops are gone and the right ones
+        stay. The guards' removal adds one large class, 646 ended codes that are right
+        by the rule, most of them a legacy missing-value sentinel. It is reported to the
+        tracker, not ruled here. The per-case table is in the PR that recorded it;
+      - Ruling (tracker, drift-review-b2-recheck §2): the 646 codes newly dropped under
+        the end-of-validity rule are "expected: validity end stated by the source"
+        (bucket a). 524 of them are the sentinel `0`, superseded by the open-ended `.`.
+        A marker row beside a coded row in one population is not a second value set
+        (c-marker-rows), which clears the F6 on `riksdagsvalkrets-kod`. After #1975 the
+        F6 'states different value sets across its rows' findings fell from 53 to 43;
+        the remaining ones spot-checked are real disagreements (e.g. `scb/aku/syssokt8`:
+        one population names two sets where 0 = 'Nej' vs 'Ej svar').
   - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
     (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
     the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
@@ -225,6 +320,10 @@ The full SCB read is a heavy run.
 
 ### D: curation carry-over
 
+- **F1 `domain-change` rule**: it is not emitted when only the classification version
+  differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
+  with V1, or every version bump fires a domain-change.
+
 - **A one-shot converter** turns today's 17,299 entries into the six statement kinds,
   reading the new frames. It is deleted at F. For the 1,819 identity partitions the dry
   run gives the expected outcome:
@@ -253,6 +352,17 @@ The full SCB read is a heavy run.
   - `set` value set (or `assert`) for the six code lists the reader leaves unbound: BU
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
+
+- **Proposals, built before new curation** (review findings that carry a proposed
+  statement, so they need D's statement grammar): F3 continuation proposals (a proposed
+  `link continues` or `assign`; the only way renames under successive keys are found)
+  and V1 classification-version proposals (they rank, never bind). F4 `same-text`
+  proposals are built when a curator asks.
+
+- **D's `link`/`reject` resolves the successions the link stage drops**: same-day
+  successors of one table and cycle-closing `continues` edges. Today each is dropped
+  with a warning (all same-day successors; the later-by-locator edge of a cycle); the
+  build report counts them as `succession_dropped`.
 
 - **Release builds refuse unplaced and split ledger ids** once D's curation exists;
   until then they are only counted in the build report.
@@ -292,7 +402,9 @@ The full SCB read is a heavy run.
   - the MONA order file;
   - mock data;
   - today's holdings vocabulary as a checklist: partitions, projections, wide column
-    series, column windows and key-only files.
+    series, column windows and key-only files;
+  - N1 logical-type inference: review findings where it disagrees with the reader's
+    `[types]` map. Its consumers are mock data and output types, which are E's.
 - **Then the build.** SWECOV's holdings run on the new catalog, together with its
   steward catalog, its release asset and physical orders. `reg_mona_runner` reads the
   new order file.
