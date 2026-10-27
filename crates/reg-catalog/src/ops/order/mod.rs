@@ -463,7 +463,7 @@ fn check_source(
         checked.clips.extend(outcome.clip);
     }
     let (row_keys, mut keyed) = rows::row_keys(server, conn, index, source, &serving)?;
-    // A bound row key already has its binding's `ambiguous_window` in that table.
+    // A bound row key already has its binding's finding of that code in that table.
     keyed.retain(|k| {
         !checked
             .findings

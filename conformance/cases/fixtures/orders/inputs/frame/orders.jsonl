@@ -125,3 +125,7 @@
 {"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Id","source_key":"k2","label":"Idnummer","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2019","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2020","name":"Ark 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"ark","table":"","release":"r2020p","name":"Ark 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"ark","table":"","release":"r2020p","column":"Nyckel","source_key":"k4","label":"Nyckel","dtype":"int","identifier":true}

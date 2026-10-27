@@ -17,8 +17,9 @@ type Columns = BTreeSet<(String, String)>;
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
 /// spelling); days without a row-key column are left out. Row keys join the order
-/// unbound, so an ambiguous row-key segment inside the requested days is an
-/// `ambiguous_window` here, located at the source.
+/// unbound, so their window findings are made here, located at the source: an
+/// ambiguous row-key segment inside the requested days is an `ambiguous_window`, a
+/// preliminary one a `preliminary_data` warning.
 pub(super) fn row_keys(
     server: &Server,
     conn: &Connection,
@@ -55,7 +56,22 @@ pub(super) fn row_keys(
                 if lo >= hi {
                     continue;
                 }
-                if state == "ambiguous" {
+                let found = match state.as_str() {
+                    "ambiguous" => Some((
+                        IssueLevel::Error,
+                        "ambiguous_window",
+                        "cannot be placed on one form in",
+                        "; the window needs curation",
+                    )),
+                    "preliminary" => Some((
+                        IssueLevel::Warning,
+                        "preliminary_data",
+                        "in",
+                        " is preliminary data: no final release covers it",
+                    )),
+                    _ => None,
+                };
+                if let Some((level, code, verb, tail)) = found {
                     let period = server.period(lo, hi);
                     let over = format!(
                         "[{}, {})",
@@ -63,13 +79,12 @@ pub(super) fn row_keys(
                         period.end.as_deref().unwrap_or("open")
                     );
                     findings.push(Issue {
-                        level: IssueLevel::Error,
-                        code: "ambiguous_window".to_owned(),
+                        level,
+                        code: code.to_owned(),
                         path: format!("/sources/{index}"),
                         message: format!(
-                            "Row key {variable} cannot be placed on one form in {} over {}; \
-                             the window needs curation",
-                            s.table.pid, over
+                            "Row key {variable} {verb} {} over {over}{tail}",
+                            s.table.pid
                         ),
                         source: Some(source.name.clone()),
                         variable: Some(variable.clone()),

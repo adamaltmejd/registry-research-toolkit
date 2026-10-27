@@ -66,8 +66,10 @@ struct Piece {
 const FORM: &str = "sp.exact, x.dtype, x.length, x.valueset_id, x.class_version_id, \
     COALESCE(x.sensitive, 0), COALESCE(x.identifier, 0)";
 
-/// The binding's variable and its classification pin, or the findings refusing them
-/// (`fqid_unresolved`, `retired_ref`), located at the field.
+/// The binding's variable and its classification pin, and the findings refusing them
+/// (`fqid_unresolved`, `retired_ref`), located at the field. A resolved variable is
+/// returned even when its pin is refused, so its window checks still run: a blocked
+/// order reports every finding at once.
 pub(super) fn refs(
     conn: &Connection,
     index: usize,
@@ -127,14 +129,11 @@ pub(super) fn refs(
             ),
         }
     }
-    let variable = match variable {
-        Some((id, pid)) if findings.is_empty() => Some(Variable {
-            id,
-            pid,
-            pinned: binding.classification.is_some(),
-        }),
-        _ => None,
-    };
+    let variable = variable.map(|(id, pid)| Variable {
+        id,
+        pid,
+        pinned: binding.classification.is_some(),
+    });
     Ok((variable, findings))
 }
 
