@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "source_outside_window",
+      "path": "/sources/0/period",
+      "message": "s's period lies wholly outside the study window 2025..2026; change the period or the window.",
+      "source": "s"
+    }
+  ]
+}

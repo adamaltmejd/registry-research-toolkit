@@ -112,14 +112,6 @@
         "opaque"
       ]
     },
-    "ProjectEdition": {
-      "type": "string",
-      "enum": [
-        "final",
-        "unstated",
-        "preliminary"
-      ]
-    },
     "ProjectIdSubtype": {
       "type": "string",
       "enum": [
@@ -217,19 +209,11 @@
             "$ref": "#/$defs/ProjectBinding"
           }
         },
-        "edition": {
-          "$ref": "#/$defs/ProjectEdition",
-          "description": "The release of the table asked for; absent asks for the primary edition."
-        },
         "name": {
           "type": "string"
         },
         "period": {
           "$ref": "#/$defs/ProjectSourcePeriod"
-        },
-        "qualifier": {
-          "type": "string",
-          "description": "The delivery qualifier asked for; absent asks for every qualifier."
         },
         "table": {
           "type": "string",

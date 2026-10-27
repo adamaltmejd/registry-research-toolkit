@@ -55,6 +55,209 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/coverage/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The periods a register, a table or a variable is delivered over: per table its spans, gaps with their reasons and releases; for a variable also the periods of each delivered column name. */
+        get: operations["coverage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/diff/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A table's or a register's schema at two periods, joined on variable: what was added, removed or changed (spelling, type, length, value set). A rename is a changed spelling. */
+        get: operations["diff"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/doc/{doc}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text. */
+        get: operations["docs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/file/{doc}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The bytes of a PDF document by its content hash, shown inline. */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    doc: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The raw bytes */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/pdf": unknown;
+                    };
+                };
+                /** @description An error in `api/errors.toml` */
+                default: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            error: components["schemas"]["Error"];
+                            meta: components["schemas"]["Meta"];
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/related/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables. */
+        get: operations["docs_related"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/docs/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables. */
+        get: operations["docs_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/findings/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The review items and notices on a register, a table or a variable (its segments and occurrences included), optionally narrowed to a period, a table or a rule code. */
+        get: operations["findings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/graph/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage. */
+        get: operations["graph"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description The logical order of a project_data.json document: per binding, each window's table, period, spelling and form, with the availability clips, the row keys and the non-blocking findings; or `order_blocked` with every finding. */
+        post: operations["order"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/project/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Validate a project_data.json document: its structural issues, then the order check's findings at their levels. A 200 even when the project is invalid; `ok` is true exactly when `order` returns a logical order. */
+        post: operations["validate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/resolve": {
         parameters: {
             query?: never;
@@ -64,6 +267,57 @@ export interface paths {
         };
         /** @description Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched. */
         get: operations["resolve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/schema/{ref}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description The columns of a table, a register's tables or one variable's tables over a period: one line per variable and delivered spelling, with its type, length, value set and role. */
+        get: operations["schema"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`. */
+        get: operations["search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/search/facets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Per register, how many variables a search query matches, for the SPA's register filter. */
+        get: operations["search_facets"];
         put?: never;
         post?: never;
         delete?: never;
@@ -119,6 +373,110 @@ export interface components {
             schema_version: string;
             sizes: components["schemas"]["Sizes"];
         };
+        /** @description `shape.Coverage`. */
+        Coverage: {
+            /**
+             * @description A variable's folded spellings with the periods each was delivered under;
+             *     `null` for a register or a table.
+             */
+            columns: components["schemas"]["CoverageColumn"][] | null;
+            fqid: string;
+            kind: string;
+            /** @description The entity's hull. */
+            period: components["schemas"]["Period"];
+            tables: components["schemas"]["CoverageTable"][];
+        };
+        CoverageColumn: {
+            spans: components["schemas"]["Period"][];
+            spelling: string;
+        };
+        CoverageGap: {
+            period: components["schemas"]["Period"];
+            reason: string;
+        };
+        CoverageTable: {
+            fqid: string;
+            gaps: components["schemas"]["CoverageGap"][];
+            name: string;
+            /** @description Empty for a variable ref: releases belong to tables. */
+            releases: components["schemas"]["Release"][];
+            spans: components["schemas"]["Period"][];
+        };
+        /** @description `shape.Diff`. */
+        Diff: {
+            fqid: string;
+            /** @description The request's `from`. */
+            from: string;
+            tables: components["schemas"]["DiffTable"][];
+            /** @description The request's `to`. */
+            to: string;
+        };
+        /**
+         * @description One field that differs between the two periods: `spelling`, `type`, `length` or
+         *     `value_set`.
+         */
+        DiffChange: {
+            field: string;
+            from: unknown;
+            to: unknown;
+        };
+        DiffChanged: {
+            changes: components["schemas"]["DiffChange"][];
+            variable: string;
+        };
+        DiffSummary: {
+            added: number;
+            changed: number;
+            removed: number;
+            unchanged: number;
+        };
+        DiffTable: {
+            added: components["schemas"]["SchemaLine"][];
+            changed: components["schemas"]["DiffChanged"][];
+            removed: components["schemas"]["SchemaLine"][];
+            summary: components["schemas"]["DiffSummary"];
+            table: string;
+        };
+        /** @description `shape.DocDetail`. */
+        DocDetail: {
+            /** @description The sections joined by a blank line; `null` for a pdf. */
+            body: string | null;
+            /** Format: int64 */
+            bytes: number;
+            doc: string;
+            excerpt: string;
+            kind: string;
+            licence: string;
+            subjects: components["schemas"]["DocSubject"][];
+            title: string;
+            url: string | null;
+        };
+        /** @description `shape.DocHit`. */
+        DocHit: {
+            doc: string;
+            heading: string | null;
+            kind: string;
+            /** Format: int64 */
+            page: number | null;
+            snippet: string | null;
+            title: string;
+        };
+        /** @description `docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`. */
+        DocPage: {
+            items: components["schemas"]["DocHit"][];
+            next_cursor: string | null;
+            /** @description Whether `register` has any linked document; `null` without `register`. */
+            register_ingested: boolean | null;
+            /** Format: int64 */
+            total: number;
+        };
+        /** @description One entity a document is about (`shape.DocDetail.subjects`). */
+        DocSubject: {
+            fqid: string;
+            kind: string;
+            /** Format: int64 */
+            page: number;
+        };
         /** @description The error document `{code, class, message, remediation, fields}`. */
         Error: {
             class: string;
@@ -127,9 +485,86 @@ export interface components {
             message: string;
             remediation: string;
         };
+        /** @description A matched variable: its FQID and label. */
+        FacetVariable: {
+            fqid: string;
+            name: string;
+        };
+        /** @description `shape.Finding`. */
+        Finding: {
+            /** @description An acked statement's caveat. */
+            caveat: string | null;
+            /** @description A rule code and its sub-kind, `F7:edition-disagreement`. */
+            code: string;
+            message: string;
+            period: components["schemas"]["Period"] | null;
+            /** @description `review` or `notice`. */
+            severity: string;
+            subject: components["schemas"]["Subject"];
+        };
+        /** @description `shape.Graph`: the focus, its nodes and the relations between them. */
+        Graph: {
+            edges: components["schemas"]["GraphEdge"][];
+            /** @description The ref's fqid. */
+            focus: string;
+            nodes: components["schemas"]["GraphNode"][];
+        };
+        GraphEdge: {
+            at: components["schemas"]["Period"] | null;
+            /** @description The source's own words about the relation. */
+            caveat: string | null;
+            /** @description The subject's fqid. */
+            from: string;
+            /** @description `continues`, `equivalent`, `derived_from` or `label_of`. */
+            kind: string;
+            /** @description `source`, `curated` or `rule`. */
+            prov: string;
+            /** @description The object's fqid. */
+            to: string;
+        };
+        GraphNode: {
+            fqid: string;
+            /** @description `variable`, `table`, `register` or `class_version`. */
+            kind: string;
+            /** @description A register's or table's name, a variable's or class version's label. */
+            name: string;
+        };
+        /** @description `shape.Issue`: a project issue or an order finding, located in the project. */
+        Issue: {
+            code: string;
+            level: components["schemas"]["IssueLevel"];
+            message: string;
+            /** @description An RFC 6901 pointer into the project; empty for the whole document. */
+            path: string;
+            period: components["schemas"]["Period"] | null;
+            /** @description The project source's name. */
+            source: string | null;
+            /**
+             * @description The successor a `variable_replaced` finding names, or the successor table of an
+             *     undated succession (`table_succession_undated`).
+             */
+            successor_fqid: string | null;
+            table: string | null;
+            variable: string | null;
+        };
+        /** @enum {string} */
+        IssueLevel: "error" | "warning" | "info";
         Locator: {
             input: string;
             locator: string;
+        };
+        /** @description `shape.LogicalOrder` (crates/DESIGN.md, "The logical order"). */
+        LogicalOrder: {
+            catalog: components["schemas"]["OrderCatalog"];
+            /** @description Every availability clip, also when nothing blocks. */
+            clips: components["schemas"]["OrderClip"][];
+            /** @description Per source, per binding in declaration order, then by period start. */
+            entries: components["schemas"]["OrderEntry"][];
+            /** @description The non-blocking findings (level `warning` or `info`). */
+            findings: components["schemas"]["Issue"][];
+            project: components["schemas"]["OrderProject"];
+            /** @description Per source, then by period start. */
+            row_keys: components["schemas"]["OrderRowKeys"][];
         };
         /** @description The response `meta` (`shape.Meta`). */
         Meta: {
@@ -147,6 +582,67 @@ export interface components {
             source_key: string;
             spelling: string;
             status: string;
+        };
+        /** @description The catalog generation an order was checked against (`meta`). */
+        OrderCatalog: {
+            catalog_version: string;
+            generation_id: string;
+            schema_version: string;
+        };
+        /** @description An availability clip of one binding. */
+        OrderClip: {
+            ordered: components["schemas"]["Period"][];
+            requested: components["schemas"]["Period"][];
+            source: string;
+            variable: string;
+        };
+        /** @description One merged segment of one binding in one table. */
+        OrderEntry: {
+            /** @description The binding's index in the source. */
+            binding: number;
+            /** @description A class version's public id. */
+            classification: string | null;
+            /** @description As the binding states it. */
+            display_name: string | null;
+            /** Format: int64 */
+            length: number | null;
+            /**
+             * @description The clipped request over the merged segment; `{start: null, end: null}` for a
+             *     timeless table.
+             */
+            period: components["schemas"]["Period"];
+            provider: string;
+            register: string;
+            /** @description The project source's name. */
+            source: string;
+            /** @description The merged segment's exact spelling. */
+            spelling: string;
+            /** @description The table that serves the window. */
+            table: string;
+            type: string | null;
+            value_set: components["schemas"]["OrderValueSet"] | null;
+            variable: string;
+        };
+        /** @description The project an order was checked for. */
+        OrderProject: {
+            name: string;
+            /** @description `reg_core::project::project_hash` of the document. */
+            project_hash: string;
+            reg_meta_version: string;
+            schema_version: string;
+        };
+        /** @description A serving table's row-key columns over a period. */
+        OrderRowKeys: {
+            columns: components["schemas"]["RowKeyColumn"][];
+            period: components["schemas"]["Period"];
+            source: string;
+            table: string;
+        };
+        /** @description An entry's value set by its content hash. */
+        OrderValueSet: {
+            hash: string;
+            /** Format: int64 */
+            n_items: number;
         };
         /** @description A non-source winner over one field of an occurrence. */
         Override: {
@@ -195,8 +691,6 @@ export interface components {
             window?: components["schemas"]["ProjectStudyWindow"];
         };
         /** @enum {string} */
-        ProjectEdition: "final" | "unstated" | "preliminary";
-        /** @enum {string} */
         ProjectIdSubtype: "integer" | "string";
         /** @enum {string} */
         ProjectNumericSubtype: "integer" | "double";
@@ -222,12 +716,8 @@ export interface components {
         /** @description One logical extraction: a table, a requested period and its bindings. */
         ProjectSource: {
             bindings: components["schemas"]["ProjectBinding"][];
-            /** @description The release of the table asked for; absent asks for the primary edition. */
-            edition?: components["schemas"]["ProjectEdition"];
             name: string;
             period: components["schemas"]["ProjectSourcePeriod"];
-            /** @description The delivery qualifier asked for; absent asks for every qualifier. */
-            qualifier?: string;
             /**
              * @description A table's public id: `<provider>/<register>` for a register's implicit table,
              *     else `<provider>/<register>/<table>`.
@@ -245,6 +735,36 @@ export interface components {
             from: number;
             /** Format: int64 */
             to: number;
+        };
+        /**
+         * @description One register's matched variables. `name` and `variables` are present only in the
+         *     modes that list them, never `null`.
+         */
+        RegisterFacet: {
+            fqid: string;
+            name?: string;
+            /** Format: int64 */
+            variable_matches: number;
+            variables?: components["schemas"]["FacetVariable"][];
+        };
+        /** @description `search_facets`' result. */
+        RegisterFacets: {
+            registers: components["schemas"]["RegisterFacet"][];
+        };
+        /** @description `shape.RelatedDocument`. */
+        RelatedDocument: {
+            /** Format: int64 */
+            bytes: number;
+            doc: string;
+            kind: string;
+            licence: string;
+            /**
+             * Format: int64
+             * @description 0 = the whole document.
+             */
+            page: number;
+            title: string;
+            url: string | null;
         };
         /** @description `shape.Release`: a delivery of a table. */
         Release: {
@@ -277,6 +797,91 @@ export interface components {
             name: string;
             /** @description The register's fqid. */
             register: string;
+        };
+        /** @description A row-key column: its variable and the spelling it is delivered under. */
+        RowKeyColumn: {
+            spelling: string;
+            variable: string;
+        };
+        /** @description `shape.SchemaLine`: one variable's delivery under one folded spelling in one table. */
+        SchemaLine: {
+            /** Format: int64 */
+            length: number | null;
+            /** @description The variable's label. */
+            name: string;
+            /** @description The line's segments merged, clipped to the request. */
+            period: components["schemas"]["Period"];
+            role: string;
+            spelling: string;
+            state: string;
+            table: string;
+            type: string | null;
+            value_set: components["schemas"]["ValueSetRef"] | null;
+            variable: string;
+        };
+        /** @description `Page<SchemaLine>`. */
+        SchemaPage: {
+            items: components["schemas"]["SchemaLine"][];
+            next_cursor: string | null;
+        };
+        /** @description `shape.SearchHit`: one hit, tagged by its kind. */
+        SearchHit: {
+            description: string | null;
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+            /** @enum {string} */
+            type: "register";
+        } | {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+            register_name: string;
+            role: string;
+            /** @enum {string} */
+            type: "table";
+        } | {
+            definition: string | null;
+            fqid: string;
+            /** @description The label. */
+            name: string;
+            period: components["schemas"]["Period"];
+            register_name: string;
+            /** @description The folded names it was delivered under, sorted. */
+            spellings: string[];
+            /** @enum {string} */
+            type: "variable";
+        } | {
+            family: string;
+            fqid: string;
+            name: string;
+            /** @enum {string} */
+            type: "classification";
+        } | {
+            code: string;
+            label: string | null;
+            /** @enum {string} */
+            type: "code";
+            /**
+             * Format: int64
+             * @description The value sets some segment references that hold the pair.
+             */
+            value_set_count: number;
+        } | {
+            /** @description The document's hash. */
+            doc: string;
+            /** @description The best-matching section's heading; `null` when no section matches. */
+            heading: string | null;
+            /** Format: int64 */
+            page: number | null;
+            title: string;
+            /** @enum {string} */
+            type: "document";
+        };
+        /** @description `Page<SearchHit>`. */
+        SearchPage: {
+            items: components["schemas"]["SearchHit"][];
+            next_cursor: string | null;
         };
         /** @description `shape.Segment`. */
         Segment: {
@@ -417,6 +1022,30 @@ export interface components {
             tables: number;
             /** Format: int64 */
             variables: number;
+        };
+        /** @description `shape.Subject`: what a finding is about, by natural key. */
+        Subject: {
+            /** @description The register, table or variable; for a segment or an occurrence, its variable. */
+            fqid: string | null;
+            /**
+             * @description `register`, `table`, `release`, `variable`, `segment`, `occurrence` or
+             *     `valueset`.
+             */
+            kind: string;
+            period: components["schemas"]["Period"] | null;
+            /** @description A release's literal delivery name. */
+            release: string | null;
+            /** @description An occurrence's exact spelling. */
+            spelling: string | null;
+            /** @description The table of a release, segment or occurrence. */
+            table: string | null;
+            /** @description A value set's hash. */
+            value_set: string | null;
+        };
+        /** @description `validate`'s result: `ok` exactly when no issue is an `error`. */
+        Validation: {
+            issues: components["schemas"]["Issue"][];
+            ok: boolean;
         };
         /** @description `shape.ValueItem`. */
         ValueItem: {
@@ -576,6 +1205,356 @@ export interface operations {
             };
         };
     };
+    coverage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Coverage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    diff: {
+        parameters: {
+            query: {
+                from: string;
+                to: string;
+                table?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Diff"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    docs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                doc: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocDetail"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    docs_related: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RelatedDocument"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    docs_search: {
+        parameters: {
+            query?: {
+                q?: string;
+                register?: string;
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["DocPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    findings: {
+        parameters: {
+            query?: {
+                period?: string;
+                table?: string;
+                code?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Finding"][];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    graph: {
+        parameters: {
+            query?: {
+                kind?: "continues" | "equivalent" | "derived_from" | "label_of";
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Graph"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    order: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["LogicalOrder"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    validate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["Validation"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
     resolve: {
         parameters: {
             query: {
@@ -596,6 +1575,129 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["Resolved"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    schema: {
+        parameters: {
+            query?: {
+                period?: string;
+                table?: string;
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path: {
+                ref: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SchemaPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    search: {
+        parameters: {
+            query: {
+                q: string;
+                type?: "register" | "table" | "variable" | "classification" | "code" | "document";
+                register?: string;
+                period?: string;
+                limit?: number;
+                cursor?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["SearchPage"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+            /** @description An error in `api/errors.toml` */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        error: components["schemas"]["Error"];
+                        meta: components["schemas"]["Meta"];
+                    };
+                };
+            };
+        };
+    };
+    search_facets: {
+        parameters: {
+            query: {
+                q: string;
+                register?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["RegisterFacets"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

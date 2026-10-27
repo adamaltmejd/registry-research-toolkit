@@ -22,7 +22,7 @@ mod window;
 
 use std::collections::BTreeSet;
 
-use reg_core::project::{ProjectData, Source};
+use reg_core::project::{ProjectData, Source, StudyWindow};
 use reg_core::{Interval, IssueLevel, ValidationIssue, merge, overlap};
 use rusqlite::Connection;
 use serde::Serialize;
@@ -330,6 +330,34 @@ pub fn check(
     }
     for (index, panel) in project.panels.iter().enumerate() {
         findings.extend(rows::panel(&conn, index, panel, &members)?);
+    }
+    // Editing the study window never rewrites a source's period; a source left wholly
+    // outside it blocks (reg-core DESIGN.md, "Logical selection").
+    if let Some(window) = project.window.as_ref().and_then(StudyWindow::interval) {
+        for (index, source) in project.sources.iter().enumerate() {
+            let Ok(Some(items)) = source.period.items() else {
+                continue;
+            };
+            if overlap(&items, std::slice::from_ref(&window)).is_empty() {
+                findings.push(Issue {
+                    level: IssueLevel::Error,
+                    code: "source_outside_window".to_owned(),
+                    path: format!("/sources/{index}/period"),
+                    message: format!(
+                        "{}'s period lies wholly outside the study window {}..{}; change the \
+                         period or the window.",
+                        source.name,
+                        &window.0[..4],
+                        &window.1[..4]
+                    ),
+                    source: Some(source.name.clone()),
+                    variable: None,
+                    table: None,
+                    period: None,
+                    successor_fqid: None,
+                });
+            }
+        }
     }
     if project.sources.is_empty() {
         // A valid draft, but nothing to order (reg-core DESIGN.md, "An empty project").

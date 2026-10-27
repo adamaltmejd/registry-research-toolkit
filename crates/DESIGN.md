@@ -675,7 +675,8 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
 `period_default_on_dated_table`, `period_on_timeless_table`, `period_not_orderable` and
-`project_empty` (no sources; a whole-project finding). Warnings and infos do not:
+`project_empty` (no sources; a whole-project finding) and `source_outside_window` (a
+dated source period wholly outside the study window). Warnings and infos do not:
 `classification_version_ambiguous`, `preliminary_data` (a window only a preliminary
 release covers; final wins where both exist), `edition_disagreement`,
 `variable_sensitive`, `variable_replaced`, `panel_row_keys_differ`, `period_clipped`,
