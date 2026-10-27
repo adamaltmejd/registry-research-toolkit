@@ -15,7 +15,7 @@ const CHECKS: &str = include_str!("checks.sql");
 /// # Errors
 /// The first failure, naming the check: `integrity_check: …`, `post-write check failed:\n<sql>`,
 /// `valueset <hash>: content hashes to <actual>`, or `previous release: <sql>`.
-pub fn catalog(path: &Path, _previous: Option<&Path>) -> Result<(), String> {
+pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
     let sql = |e: rusqlite::Error| e.to_string();
     let db = Connection::open_with_flags(
         path,
@@ -39,6 +39,9 @@ pub fn catalog(path: &Path, _previous: Option<&Path>) -> Result<(), String> {
         }
     }
     valuesets(&db)?;
+    if let Some(previous) = previous {
+        compare(&db, previous)?;
+    }
     Ok(())
 }
 
@@ -95,6 +98,56 @@ fn valuesets(db: &Connection) -> Result<(), String> {
         let actual = reg_frame::hex(&Sha256::digest(reg_frame::canonical_line(&list)));
         if actual != hash {
             return Err(format!("valueset {hash}: content hashes to {actual}"));
+        }
+    }
+    Ok(())
+}
+
+/// Against the previous release, every id survives or is retired, and retirement is
+/// permanent (schema v4 §4.3).
+fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
+    let fail = |what: String| format!("previous release: {what}");
+    let uri = format!("file:{}?mode=ro", previous.display());
+    db.execute("ATTACH DATABASE ?1 AS prev", [uri])
+        .map_err(|e| fail(format!("{}: {e}", previous.display())))?;
+    let version = |schema: &str| -> Result<Option<String>, String> {
+        db.query_row(
+            &format!("SELECT value FROM {schema}.meta WHERE key = 'schema_version'"),
+            [],
+            |r| r.get(0),
+        )
+        .map(Some)
+        .or_else(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => Ok(None),
+            e => Err(fail(format!("{}: {e}", previous.display()))),
+        })
+    };
+    let major = |v: &str| v.split('.').next().unwrap_or(v).to_owned();
+    let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
+    match version("prev")? {
+        Some(p) if major(&p) == major(&current) => {}
+        other => {
+            return Err(fail(format!(
+                "schema {} is not comparable",
+                other.as_deref().unwrap_or("(none)")
+            )));
+        }
+    }
+    for statement in [
+        "SELECT p.pid FROM prev.ident p
+          WHERE NOT EXISTS (SELECT 1 FROM main.ident c WHERE c.pid = p.pid AND c.kind = p.kind)
+            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid)",
+        "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired",
+    ] {
+        let first: Option<String> = db
+            .query_row(statement, [], |r| r.get(0))
+            .map(Some)
+            .or_else(|e| match e {
+                rusqlite::Error::QueryReturnedNoRows => Ok(None),
+                e => Err(e.to_string()),
+            })?;
+        if let Some(pid) = first {
+            return Err(fail(format!("{statement}; e.g. {pid}")));
         }
     }
     Ok(())
