@@ -1,15 +1,15 @@
 //! Final field provenance, decided before catalog emission.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 use reg_core::Interval;
-use reg_frame::{Locator, Record, ValueSet};
+use reg_frame::{Locator, ValueSet};
 use serde_json::Value;
 
 use crate::Resolved;
-use crate::curation::apply::{Change, Classification};
+use crate::curation::apply::Classification;
 
-/// A source-shaped application's claim, before later binds and default resolution.
+/// A source-shaped application's claim, before default resolution.
 #[derive(Clone)]
 pub struct Claim {
     pub kind: String,
@@ -23,187 +23,6 @@ pub struct Claim {
     pub value: Option<String>,
     pub source_value: Option<String>,
     pub statement: String,
-}
-
-type Coordinates = (
-    String,
-    Option<String>,
-    Option<String>,
-    Option<String>,
-    Option<String>,
-);
-type OccurrenceCoordinates = (
-    Option<String>,
-    Option<String>,
-    Option<String>,
-    Option<String>,
-);
-
-fn coordinates(claim: &Claim) -> Coordinates {
-    (
-        claim.kind.clone(),
-        claim.provider.clone(),
-        claim.register.clone(),
-        claim.table.clone(),
-        claim.release.clone(),
-    )
-}
-
-/// Follow existing field claims through a later coordinate move, preserving other
-/// periods and every source holder of a merged row.
-#[allow(clippy::too_many_lines)]
-pub fn remap(claims: &mut Vec<Claim>, changes: &[Change], before: &[Record]) {
-    let mut holders =
-        BTreeMap::<OccurrenceCoordinates, BTreeMap<Locator, BTreeSet<Locator>>>::new();
-    for record in before {
-        let Record::Occurrence(row) = record else {
-            continue;
-        };
-        let coordinate = (
-            Some(row.provider.clone()),
-            Some(row.register.clone()),
-            Some(row.table.clone()),
-            row.release.clone(),
-        );
-        let locators = std::iter::once(row.locator.clone())
-            .chain(row.also.iter().cloned())
-            .collect::<BTreeSet<_>>();
-        let group = holders.entry(coordinate).or_default();
-        for locator in &locators {
-            group
-                .entry(locator.clone())
-                .or_default()
-                .extend(locators.iter().cloned());
-        }
-    }
-    let mut by_coordinates = BTreeMap::<Coordinates, Vec<Claim>>::new();
-    for claim in claims.drain(..) {
-        by_coordinates
-            .entry(coordinates(&claim))
-            .or_default()
-            .push(claim);
-    }
-    for change in changes {
-        if !matches!(change.field.as_str(), "table" | "register" | "release") {
-            continue;
-        }
-        // A table move can detach a release in the same application. Both changes
-        // carry final coordinates, so follow the pair from its original coordinate.
-        let detached_release = (change.kind == "occurrence" && change.field == "table")
-            .then(|| {
-                changes.iter().find(|other| {
-                    other.field == "release"
-                        && other.kind == change.kind
-                        && other.locator == change.locator
-                        && other.provider == change.provider
-                        && other.register == change.register
-                        && other.table == change.table
-                        && other.release == change.release
-                        && other.period == change.period
-                })
-            })
-            .flatten();
-        let old_register = if change.field == "register" {
-            change.source_value.clone()
-        } else {
-            change.register.clone()
-        };
-        let old_table = if change.field == "table" {
-            change.source_value.clone()
-        } else {
-            change.table.clone()
-        };
-        let old_release = if let Some(detached) = detached_release {
-            detached.source_value.clone()
-        } else if change.field == "release" {
-            change.source_value.clone()
-        } else {
-            change.release.clone()
-        };
-        let old = (
-            change.kind.clone(),
-            change.provider.clone(),
-            old_register.clone(),
-            old_table.clone(),
-            old_release.clone(),
-        );
-        let lineage = if change.kind == "occurrence" {
-            let source = (
-                change.provider.clone(),
-                old_register,
-                old_table,
-                old_release,
-            );
-            let lineage = holders
-                .get(&source)
-                .and_then(|group| group.get(&change.locator))
-                .cloned()
-                .unwrap_or_else(|| BTreeSet::from([change.locator.clone()]));
-            let destination = (
-                change.provider.clone(),
-                change.register.clone(),
-                change.table.clone(),
-                change.release.clone(),
-            );
-            // A move may change table/register before detaching its release. Keep
-            // the lineage under each intermediate coordinate used by later changes.
-            let group = holders.entry(destination).or_default();
-            for locator in &lineage {
-                group
-                    .entry(locator.clone())
-                    .or_default()
-                    .extend(lineage.iter().cloned());
-            }
-            Some(lineage)
-        } else {
-            None
-        };
-        for claim in by_coordinates.remove(&old).unwrap_or_default() {
-            if lineage
-                .as_ref()
-                .is_some_and(|locators| !locators.contains(&claim.locator))
-            {
-                by_coordinates.entry(old.clone()).or_default().push(claim);
-                continue;
-            }
-            let mut moved = claim.clone();
-            if let Some(scope) = &change.period {
-                let original = claim
-                    .period
-                    .clone()
-                    .unwrap_or_else(|| (reg_frame::OPEN_START.into(), reg_frame::OPEN_END.into()));
-                let Some(selected) = reg_core::intersect(&original, scope) else {
-                    by_coordinates.entry(old.clone()).or_default().push(claim);
-                    continue;
-                };
-                for period in
-                    reg_core::gaps(std::slice::from_ref(&original), vec![selected.clone()])
-                {
-                    let mut residual = claim.clone();
-                    residual.period = Some(period);
-                    by_coordinates
-                        .entry(old.clone())
-                        .or_default()
-                        .push(residual);
-                }
-                moved.period = Some(selected);
-            }
-            match change.field.as_str() {
-                "register" => moved.register.clone_from(&change.value),
-                "table" => moved.table.clone_from(&change.value),
-                "release" => moved.release.clone_from(&change.value),
-                _ => {}
-            }
-            if detached_release.is_some() {
-                moved.release.clone_from(&change.release);
-            }
-            by_coordinates
-                .entry(coordinates(&moved))
-                .or_default()
-                .push(moved);
-        }
-    }
-    claims.extend(by_coordinates.into_values().flatten());
 }
 
 /// A final catalog subject, using positions in the resolved build rather than row ids.
@@ -312,8 +131,8 @@ fn field_values<'a>(
         } else {
             claim.value.clone()
         };
-        // Later binds may repartition a row or merge source holders. Only a claim
-        // for the final value can own it. Equal claims use one deterministic owner.
+        // Only a claim for the resolved value can own it. Shared code lists can
+        // have equal claims; use one deterministic owner.
         if field != "period" && final_value != claim.value {
             continue;
         }
@@ -473,12 +292,13 @@ pub fn finalize(
                             occurrence.period.as_ref().or(c.period.as_ref()),
                         )
                 });
-            let mut values = field_values(
-                candidates,
-                &subject,
-                &serde_json::to_value(source).expect("occurrence serializes"),
-                occurrence.period.as_ref(),
-            );
+            let mut current = serde_json::to_value(source).expect("occurrence serializes");
+            current["variable"] = Value::String(occurrence.variable.map_or_else(
+                || "none".to_owned(),
+                |index| resolved.variables[index].slug.clone(),
+            ));
+            let mut values =
+                field_values(candidates, &subject, &current, occurrence.period.as_ref());
             let mut mask = values
                 .iter()
                 .fold(0, |mask, value| mask | override_bit(&value.field));

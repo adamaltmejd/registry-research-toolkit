@@ -1,5 +1,5 @@
 //! Resolve curation against source coordinates. The apply module prepares the
-//! bound/asserted frame; other overrides never feed selector resolution. Selectors
+//! moved/asserted frame; other overrides never feed selector resolution. Selectors
 //! and premises describe the source the curator reviewed.
 
 pub mod apply;
@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, fold_identity, intersect};
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
-use reg_frame::statement::{AssertFact, BindTarget, SetFields, Statement};
+use reg_frame::statement::{AssertFact, SetFields, Statement};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Record};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -371,6 +371,22 @@ fn select(
         .collect()
 }
 
+fn whole_occurrences(matches: &[Match], view: &[Source]) -> Result<(), String> {
+    for matched in matches {
+        let source = &view[matched.source];
+        if source.text("kind") == Some("occurrence")
+            && let Some(period) = &source.period
+            && !reg_core::gaps(std::slice::from_ref(period), matched.spans.clone()).is_empty()
+        {
+            return Err(format!(
+                "selector period cuts occurrence {}:{}; select whole occurrences",
+                source.locators[0].input, source.locators[0].at
+            ));
+        }
+    }
+    Ok(())
+}
+
 fn overlaps(a: &Match, b: &Match) -> bool {
     !reg_core::overlap(&a.spans, &b.spans).is_empty()
 }
@@ -553,8 +569,6 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
             }
             result
         }
-        Statement::Assign { .. } => BTreeSet::from(["variable".into()]),
-        Statement::Bind { .. } => BTreeSet::from(["binding".into()]),
         Statement::Assert { fact, .. } => match fact {
             AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                 stated_fields(fields).into_keys().collect()
@@ -574,11 +588,15 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
     }
 }
 
+fn moves_table(statement: &Statement) -> bool {
+    matches!(statement, Statement::Set { fields, .. } if fields.table.is_some())
+}
+
 fn effects_overlap(a: &BTreeSet<String>, b: &BTreeSet<String>) -> bool {
     !a.is_disjoint(b) || a.contains("reject") || b.contains("reject")
 }
 
-/// A field introduced by an accepted bind/assert, in final source coordinates.
+/// A field introduced by an accepted table move or assertion, in final source coordinates.
 /// `statement` indexes the evaluated statements supplied to [`applied_conflicts`].
 pub struct AppliedClaim<'a> {
     pub statement: usize,
@@ -616,45 +634,22 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
     let mut selected = match subject(statement) {
-        Some(Address::Occurrence {
+        Address::Occurrence {
             periods: Some(scope),
             ..
-        }) => periods(scope)
+        } => periods(scope)
             .iter()
             .filter_map(|p| intersect(&span, p))
             .collect(),
         _ => vec![span],
     };
-    if let Statement::Bind {
-        period: Some(scope),
-        ..
-    }
-    | Statement::Link {
+    if let Statement::Link {
         at: Some(scope), ..
     } = statement
     {
         selected = reg_core::overlap(&selected, &periods(scope));
     }
     selected
-}
-
-/// Conflicting effects selected in separate authoring groups must be refused before
-/// any group mutates the frame. Binding dependencies include destination facts, so
-/// a bind cannot consume a coordinate another bind rewrites in the same phase.
-#[must_use]
-pub fn source_conflicts(statements: &[(&Statement, &Premise)]) -> Vec<(usize, usize)> {
-    let mut conflicts = Vec::new();
-    for (a, (left, left_premise)) in statements.iter().enumerate() {
-        for (b, (right, right_premise)) in statements.iter().enumerate().skip(a + 1) {
-            if !effects_overlap(&effects(left), &effects(right)) {
-                continue;
-            }
-            if premise_overlap(left, left_premise, right, right_premise) {
-                conflicts.push((a, b));
-            }
-        }
-    }
-    conflicts
 }
 
 fn premise_overlap(
@@ -674,11 +669,29 @@ fn premise_overlap(
             })
         })
     };
+    let selects_moved = |moving: &Statement, premise: &Premise, other: &Statement| {
+        let Statement::Set { fields, .. } = moving else {
+            return false;
+        };
+        let Some(table) = &fields.table else {
+            return false;
+        };
+        let address = subject(other);
+        premise.subjects.iter().any(|row| {
+            let mut source = premise_source(row);
+            source
+                .fields
+                .insert("table_slug".into(), Value::String(table.clone()));
+            // Table moves detach dated release rows; a release guard no longer matches.
+            source.fields.insert("release".into(), Value::Null);
+            !select(address, &[source], &BTreeMap::new()).is_empty()
+        })
+    };
     overlaps(&left_premise.subjects, &right_premise.subjects)
-        || (matches!(left, Statement::Bind { .. })
-            && matches!(right, Statement::Bind { .. })
-            && (overlaps(&left_premise.subjects, &right_premise.objects)
-                || overlaps(&left_premise.objects, &right_premise.subjects)))
+        || (moves_table(left)
+            && moves_table(right)
+            && (selects_moved(left, left_premise, right)
+                || selects_moved(right, right_premise, left)))
 }
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
@@ -770,32 +783,30 @@ pub fn classification_conflicts(classes: &[apply::Classification]) -> Vec<(usize
     conflicts
 }
 
-fn subject(statement: &Statement) -> Option<&Address> {
+fn subject(statement: &Statement) -> &Address {
     match statement {
-        Statement::Bind { subject, .. } => subject.as_ref(),
         Statement::Assert { subject, .. }
-        | Statement::Assign { subject, .. }
         | Statement::Set { subject, .. }
         | Statement::Link { subject, .. }
-        | Statement::Ack { subject, .. } => Some(subject),
+        | Statement::Ack { subject, .. } => subject,
     }
 }
 
-fn addresses_overlap(a: Option<&Address>, b: Option<&Address>) -> bool {
+fn addresses_overlap(a: &Address, b: &Address) -> bool {
     match (a, b) {
         (
-            Some(Address::Occurrence {
+            Address::Occurrence {
                 table: a_table,
                 spellings: a_spellings,
                 periods: a_periods,
                 guards: a_guards,
-            }),
-            Some(Address::Occurrence {
+            },
+            Address::Occurrence {
                 table: b_table,
                 spellings: b_spellings,
                 periods: b_periods,
                 guards: b_guards,
-            }),
+            },
         ) => {
             a_table == b_table
                 && a_spellings.iter().any(|s| b_spellings.contains(s))
@@ -823,16 +834,16 @@ fn addresses_overlap(a: Option<&Address>, b: Option<&Address>) -> bool {
                     _ => true,
                 }
         }
-        (Some(a), Some(b)) => a == b,
-        _ => false,
+        (a, b) => a == b,
     }
 }
 
 fn variable_locators(
     records: &[Record],
     ledger: &Ledger,
+    assignments: &BTreeMap<Locator, String>,
 ) -> Result<BTreeMap<String, BTreeSet<Locator>>, String> {
-    let resolved = crate::resolve(records, ledger, &BTreeMap::new())?;
+    let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments)?;
     let mut variables: BTreeMap<String, BTreeSet<Locator>> = BTreeMap::new();
     for occurrence in &resolved.occurrences {
         if let Some(index) = occurrence.variable {
@@ -857,10 +868,11 @@ pub fn reference(
     records: &[Record],
     ledger: &Ledger,
     variable: Option<&str>,
+    assignments: &BTreeMap<Locator, String>,
 ) -> Result<Vec<SourcePremise>, String> {
     let view = sources(records, ledger);
     let variables = if variable.is_some() {
-        variable_locators(records, ledger)?
+        variable_locators(records, ledger, assignments)?
     } else {
         BTreeMap::new()
     };
@@ -896,7 +908,7 @@ pub fn reference(
     Ok(premise(&matches, &view, &fields))
 }
 
-/// Extra source facts consumed while applying a bind/assert. Keep these out of
+/// Extra source facts consumed while applying a table move or assertion. Keep these out of
 /// `subjects`: they are evidence, never additional rows selected for rewriting.
 #[allow(clippy::too_many_lines)]
 fn application_dependencies(
@@ -974,26 +986,16 @@ fn application_dependencies(
         }
     }
     match statement {
-        Statement::Bind { target, .. } => {
-            let (field, destination) = match target {
-                BindTarget::Register { id } => ("register", id.clone()),
-                BindTarget::Table { id } => ("table", apply::table_handle(records, ledger, id)?),
-            };
+        Statement::Set { fields, .. } if fields.table.is_some() => {
+            let destination =
+                apply::table_handle(records, ledger, fields.table.as_ref().expect("table set"))?;
             for matched in selected {
                 let source = &view[matched.source];
-                let Some((provider, register, table, release)) = context(source) else {
+                let Some((provider, register, _table, release)) = context(source) else {
                     continue;
                 };
-                let target_register = if field == "register" {
-                    destination.clone()
-                } else {
-                    register
-                };
-                let target_table = if field == "table" {
-                    Some(destination.clone())
-                } else {
-                    table
-                };
+                let target_register = register;
+                let target_table = Some(destination.clone());
                 contexts.insert((
                     provider.clone(),
                     target_register.clone(),
@@ -1139,33 +1141,6 @@ fn application_dependencies(
         .flat_map(|m| view[m.source].fields.keys().cloned())
         .collect();
     let mut dependencies = premise(&matches, view, &fields);
-    if let Statement::Bind {
-        source: Some(handle),
-        target,
-        ..
-    } = statement
-    {
-        let field = match target {
-            BindTarget::Register { .. } => "register",
-            BindTarget::Table { .. } => "table",
-        };
-        for record in apply::binding_references(records, handle, field) {
-            let Value::Object(value) =
-                serde_json::to_value(record).expect("frame record serializes")
-            else {
-                unreachable!("frame object")
-            };
-            let mut fields = value.into_iter().collect::<BTreeMap<_, _>>();
-            // The hash identifies document bytes/sections; only metadata and its
-            // endpoint list decide reference rebinding.
-            if matches!(record, Record::Doc(_)) {
-                fields.remove("content");
-                fields.remove("sections");
-            }
-            let locator = serde_json::from_value(fields["locator"].clone()).expect("frame locator");
-            dependencies.push(SourcePremise { locator, fields });
-        }
-    }
     dependencies.sort_by_cached_key(reg_frame::canonical_line);
     dependencies.dedup();
     Ok(dependencies)
@@ -1173,7 +1148,7 @@ fn application_dependencies(
 
 /// Compute premises in statement order. This function performs no IO and applies no
 /// statements. The caller supplies the immutable view for the current application
-/// phase; ordinary selectors see the bound frame plus asserted facts.
+/// phase; ordinary selectors see the moved frame plus asserted facts.
 ///
 /// Empty ordinary selectors, ambiguous source coordinates and source-redundant
 /// assertions are refusals. Conflicts point to both statement indices on success.
@@ -1187,55 +1162,28 @@ pub fn resolve(
     ledger: &Ledger,
     statements: &[&Statement],
     references: &BTreeMap<String, Vec<SourcePremise>>,
+    assignments: &BTreeMap<Locator, String>,
 ) -> Vec<Result<ResolvedStatement, String>> {
     if statements.is_empty() {
         return Vec::new();
     }
     let view = sources(records, ledger);
     let needs_variables = statements.iter().any(|statement| {
-        matches!(subject(statement), Some(Address::Variable(_))) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
-        variable_locators(records, ledger)
+        variable_locators(records, ledger, assignments)
     } else {
         Ok(BTreeMap::new())
     };
     let empty_variables = BTreeMap::new();
     let variables = variable_result.as_ref().unwrap_or(&empty_variables);
     let mut out = Vec::new();
+    let mut selected = Vec::new();
     for statement in statements {
         let address = subject(statement);
-        let mut matches = if let Some(address) = address {
-            select(address, &view, variables)
-        } else if let Statement::Bind {
-            source: Some(handle),
-            target,
-            ..
-        } = statement
-        {
-            view.iter()
-                .enumerate()
-                .filter(|(_, s)| match target {
-                    BindTarget::Register { .. } => s.text("register") == Some(handle),
-                    BindTarget::Table { .. } => s.text("table") == Some(handle),
-                })
-                .map(|(source, s)| Match {
-                    source,
-                    spans: vec![
-                        s.period
-                            .clone()
-                            .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
-                    ],
-                })
-                .collect()
-        } else {
-            Vec::new()
-        };
-        if let Statement::Bind {
-            period: Some(scope),
-            ..
-        }
-        | Statement::Link {
+        let mut matches = select(address, &view, variables);
+        if let Statement::Link {
             at: Some(scope), ..
         } = statement
         {
@@ -1253,8 +1201,13 @@ pub fn resolve(
             }
             matches.retain(|m| !m.spans.is_empty());
         }
+        let fields = view.iter().flat_map(|s| s.fields.keys().cloned()).collect();
+        selected.push(Premise {
+            subjects: premise(&matches, &view, &fields),
+            objects: Vec::new(),
+        });
         let result = (|| {
-            if matches!(address, Some(Address::Variable(_)))
+            if matches!(address, Address::Variable(_))
                 && let Err(error) = &variable_result
             {
                 return Err(format!("variable selector: {error}"));
@@ -1262,15 +1215,8 @@ pub fn resolve(
             if matches.is_empty() && !matches!(statement, Statement::Assert { .. }) {
                 return Err("empty match".into());
             }
-            if !matches!(
-                statement,
-                Statement::Bind {
-                    source: Some(_),
-                    ..
-                }
-            ) {
-                ambiguity(&matches, &view)?;
-            }
+            ambiguity(&matches, &view)?;
+            whole_occurrences(&matches, &view)?;
             let mut fields: BTreeSet<String> = [
                 "kind",
                 "provider",
@@ -1290,9 +1236,7 @@ pub fn resolve(
             let mut affected = effects(statement);
             field_dependencies(&mut affected);
             fields.extend(affected);
-            if let Some(address) = address {
-                dependency_fields(address, &mut fields);
-            }
+            dependency_fields(address, &mut fields);
             let mut redundant = false;
             match statement {
                 Statement::Set {
@@ -1300,6 +1244,19 @@ pub fn resolve(
                     reject,
                     ..
                 } => {
+                    if (values.table.is_some() || values.variable.is_some())
+                        && !matches!(address, Address::Occurrence { .. })
+                    {
+                        return Err(
+                            "table and variable fields require an occurrence selector".into()
+                        );
+                    }
+                    if let Some(variable) = &values.variable
+                        && variable != "none"
+                        && !ledger.variables.contains_key(variable)
+                    {
+                        return Err(format!("variable {variable:?} is not a ledger slug"));
+                    }
                     let values = stated_fields(values);
                     redundant = !reject
                         && !values.is_empty()
@@ -1348,12 +1305,6 @@ pub fn resolve(
                         return Err("redundant assert: the source now states this fact".into());
                     }
                 }
-                Statement::Assign { .. } => {
-                    fields.extend(["type", "value_set"].map(str::to_owned));
-                }
-                Statement::Bind { .. } => {
-                    fields.extend(view.iter().flat_map(|s| s.fields.keys().cloned()));
-                }
                 Statement::Ack { .. } | Statement::Link { .. } => {
                     fields.extend(view.iter().flat_map(|s| {
                         s.fields
@@ -1370,6 +1321,7 @@ pub fn resolve(
                         return Err("empty match for link object".into());
                     }
                     ambiguity(&objects, &view)?;
+                    whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);
                     premise(&objects, &view, &fields)
                 } else {
@@ -1401,18 +1353,31 @@ pub fn resolve(
         for b in a + 1..statements.len() {
             let a_effects = effects(statements[a]);
             let b_effects = effects(statements[b]);
-            if out[a].is_err() || out[b].is_err() || !effects_overlap(&a_effects, &b_effects) {
+            if !effects_overlap(&a_effects, &b_effects)
+                || [a, b]
+                    .into_iter()
+                    .any(|i| out[i].as_ref().is_err_and(|error| error != "empty match"))
+            {
                 continue;
             }
             if premise_overlap(
                 statements[a],
-                &out[a].as_ref().expect("successful evaluation").premise,
+                out[a].as_ref().map_or(&selected[a], |r| &r.premise),
                 statements[b],
-                &out[b].as_ref().expect("successful evaluation").premise,
+                out[b].as_ref().map_or(&selected[b], |r| &r.premise),
             ) || (matches!(statements[a], Statement::Assert { .. })
                 && matches!(statements[b], Statement::Assert { .. })
                 && addresses_overlap(subject(statements[a]), subject(statements[b])))
             {
+                for i in [a, b] {
+                    if out[i].is_err() {
+                        out[i] = Ok(ResolvedStatement {
+                            premise: selected[i].clone(),
+                            redundant: false,
+                            conflicts: Vec::new(),
+                        });
+                    }
+                }
                 out[a]
                     .as_mut()
                     .expect("successful evaluation")

@@ -9,24 +9,9 @@ use crate::address::{Address, PeriodSet};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum Statement {
-    Bind {
-        source: Option<String>,
-        subject: Option<Address>,
-        target: BindTarget,
-        period: Option<PeriodSet>,
-        priority: Option<i64>,
-        evidence: String,
-        caveat: Option<String>,
-    },
     Assert {
         subject: Address,
         fact: AssertFact,
-        evidence: String,
-        caveat: Option<String>,
-    },
-    Assign {
-        subject: Address,
-        variable: String,
         evidence: String,
         caveat: Option<String>,
     },
@@ -54,14 +39,6 @@ pub enum Statement {
         evidence: Option<String>,
         caveat: Option<String>,
     },
-}
-
-/// A bind names a catalog register or table, rather than another source coordinate.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "entity", rename_all = "kebab-case", deny_unknown_fields)]
-pub enum BindTarget {
-    Register { id: String },
-    Table { id: String },
 }
 
 /// A curator may state facts without introducing opaque provider coordinates.
@@ -109,6 +86,8 @@ pub enum Severity {
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SetFields {
+    pub table: Option<String>,
+    pub variable: Option<String>,
     pub name: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
@@ -143,9 +122,7 @@ impl Statement {
     /// Missing evidence, an empty operation or an invalid catalog reference.
     pub fn validate(&self) -> Result<(), String> {
         let evidence = match self {
-            Self::Bind { evidence, .. }
-            | Self::Assert { evidence, .. }
-            | Self::Assign { evidence, .. }
+            Self::Assert { evidence, .. }
             | Self::Set { evidence, .. }
             | Self::Link { evidence, .. } => Some(evidence),
             Self::Ack {
@@ -161,26 +138,6 @@ impl Statement {
             return Err("evidence must not be blank".into());
         }
         match self {
-            Self::Bind {
-                source,
-                subject,
-                target,
-                ..
-            } => {
-                if source.is_some() == subject.is_some() {
-                    return Err("bind requires exactly one of source or subject".into());
-                }
-                if source.as_ref().is_some_and(|s| s.trim().is_empty()) {
-                    return Err("bind source must not be blank".into());
-                }
-                let (BindTarget::Register { id } | BindTarget::Table { id }) = target;
-                slug(id)?;
-            }
-            Self::Assign { variable, .. } => {
-                if variable != "none" {
-                    slug(variable)?;
-                }
-            }
             Self::Set { fields, reject, .. } => {
                 if !reject {
                     fields.validate()?;
@@ -262,7 +219,7 @@ impl Statement {
                     *object = address.to_string();
                 }
             }
-            _ => {}
+            Self::Ack { .. } => {}
         }
         crate::hex(&Sha256::digest(crate::canonical_line(&normalized)))
     }
@@ -270,6 +227,14 @@ impl Statement {
 
 impl SetFields {
     fn validate_references(&self) -> Result<(), String> {
+        if let Some(table) = &self.table {
+            slug(table)?;
+        }
+        if let Some(variable) = &self.variable
+            && variable != "none"
+        {
+            slug(variable)?;
+        }
         if let Some(reference) = &self.classification {
             match reference.parse::<reg_core::Fqid>() {
                 Ok(reg_core::Fqid::Classification { .. } | reg_core::Fqid::ClassVersion { .. }) => {

@@ -2,9 +2,9 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, gaps, intersect, merge, next_iso_day, prev_iso_day};
-use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
-use reg_frame::statement::{AssertFact, BindTarget, Statement};
+use reg_core::Interval;
+use reg_frame::address::{Address, Comparison, GuardField};
+use reg_frame::statement::{AssertFact, Statement};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Record, ValueSet};
 use serde_json::{Value, json};
 
@@ -52,102 +52,6 @@ pub fn asserted_value_set(statement: &Statement, at: &Locator) -> Option<ValueSe
             ..
         } => Some(ValueSet::new(items.clone(), None, at.clone())),
         _ => None,
-    }
-}
-
-struct Priority {
-    provider: String,
-    kind: String,
-    period: Option<Interval>,
-    rank: i64,
-}
-
-/// Reviewed source priorities retain their selected intervals. One input row can
-/// contribute different ranks in disjoint scopes without a statement-order winner.
-#[derive(Default)]
-pub struct Priorities {
-    by_locator: BTreeMap<Locator, Vec<Priority>>,
-}
-
-impl Priorities {
-    /// Add the priority of an accepted binding, clipped to its source and subject.
-    pub fn add(&mut self, statement: &Statement, premise: &Premise) {
-        let Statement::Bind {
-            subject,
-            period,
-            priority: Some(rank),
-            ..
-        } = statement
-        else {
-            return;
-        };
-        let scope = binding_scope(period.as_ref(), subject.as_ref());
-        for source in &premise.subjects {
-            let Some(provider) = source.fields.get("provider").and_then(Value::as_str) else {
-                continue;
-            };
-            let Some(kind) = source.fields.get("kind").and_then(Value::as_str) else {
-                continue;
-            };
-            let source_period = source
-                .fields
-                .get("period")
-                .and_then(|p| serde_json::from_value::<Interval>(p.clone()).ok());
-            let periods: Vec<Option<Interval>> = match (&source_period, &scope) {
-                (Some(source), Some(scope)) => scope
-                    .iter()
-                    .filter_map(|p| intersect(source, p))
-                    .map(Some)
-                    .collect(),
-                (None, Some(scope)) => scope.iter().cloned().map(Some).collect(),
-                (_, None) => vec![source_period],
-            };
-            for period in periods {
-                self.by_locator
-                    .entry(source.locator.clone())
-                    .or_default()
-                    .push(Priority {
-                        provider: provider.to_owned(),
-                        kind: kind.to_owned(),
-                        period,
-                        rank: *rank,
-                    });
-            }
-        }
-    }
-
-    fn rank(&self, at: &Locator, value: &Value, period: &Interval) -> i64 {
-        self.by_locator
-            .get(at)
-            .into_iter()
-            .flatten()
-            .filter(|priority| {
-                text(value, "provider") == Some(priority.provider.as_str())
-                    && text(value, "kind") == Some(priority.kind.as_str())
-                    && priority
-                        .period
-                        .as_ref()
-                        .is_none_or(|scope| intersect(scope, period).is_some())
-            })
-            .map(|priority| priority.rank)
-            .max()
-            .unwrap_or(0)
-    }
-}
-
-fn binding_scope(period: Option<&PeriodSet>, subject: Option<&Address>) -> Option<Vec<Interval>> {
-    let scope = period.map(periods);
-    if let Some(Address::Occurrence {
-        periods: Some(period),
-        ..
-    }) = subject
-    {
-        Some(scope.map_or_else(
-            || periods(period),
-            |scope| reg_core::overlap(&scope, &periods(period)),
-        ))
-    } else {
-        scope
     }
 }
 
@@ -260,17 +164,6 @@ fn decode(value: Value) -> Result<Record, String> {
     serde_json::from_value(value).map_err(|e| format!("asserted frame: {e}"))
 }
 
-fn scoped(mut value: Value, period: &Interval, original: &Interval) -> Value {
-    if period != original {
-        value["from"] = json!(period.0);
-        value["to"] = json!(period.1);
-        if text(&value, "kind") == Some("release") {
-            value["grain"] = json!("span");
-        }
-    }
-    value
-}
-
 pub(super) fn table_handle(
     records: &[Record],
     ledger: &Ledger,
@@ -340,24 +233,19 @@ fn assert_fields(
 
 /// Apply one already-reviewed statement. This stage does no IO and never accepts a
 /// premise; the caller supplies the lock-checked premise and statement location.
-/// `origins` retains declaration source holders between applications in this build;
-/// occurrence holders remain in the frame's `also` locators.
 ///
 /// # Errors
 /// Unsupported source shapes, missing parent coordinates or conflicting source facts.
 ///
 /// # Panics
 /// Only if a typed frame record stops serializing to its declared JSON shape.
-#[allow(clippy::too_many_lines, clippy::too_many_arguments)]
+#[allow(clippy::too_many_lines)]
 pub fn apply(
     records: &[Record],
     ledger: &Ledger,
     statement: &Statement,
     at: &Locator,
     premise: &Premise,
-    priorities: &Priorities,
-    source_records: &[Record],
-    origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
 ) -> Result<Applied, String> {
     let mut out = Applied {
         records: records.to_vec(),
@@ -365,212 +253,114 @@ pub fn apply(
         classifications: Vec::new(),
     };
     match statement {
-        Statement::Bind {
-            source,
-            subject,
-            target,
-            period,
-            priority,
-            ..
-        } => {
-            let field = match target {
-                BindTarget::Register { .. } => "register",
-                BindTarget::Table { .. } => "table",
-            };
-            let (BindTarget::Register { id } | BindTarget::Table { id }) = target;
-            if subject.is_some()
-                && !matches!(
-                    (subject, target),
-                    (Some(Address::Occurrence { .. }), BindTarget::Table { .. })
-                )
+        Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
+            let target_handle = fields
+                .table
+                .as_ref()
+                .map(|target| table_handle(records, ledger, target))
+                .transpose()?;
+            if let Some(target) = &target_handle
+                && !records
+                    .iter()
+                    .any(|r| matches!(r, Record::Table(t) if t.table == *target))
             {
-                return Err(
-                    "bind subject must be an occurrence selector with a table target".into(),
-                );
+                return Err("set table requires an existing table; assert the table first".into());
             }
-            let target_handle = if field == "table" {
-                table_handle(records, ledger, id)?
-            } else {
-                id.clone()
-            };
-            let scope = binding_scope(period.as_ref(), subject.as_ref());
-            let reviewed = |value: &Value| {
-                premise.subjects.iter().any(|p| {
-                    (p.locator == locator(value)
-                        || value["also"].as_array().is_some_and(|a| {
-                            a.iter().any(|l| {
-                                serde_json::from_value::<Locator>(l.clone())
-                                    .is_ok_and(|l| l == p.locator)
-                            })
-                        }))
-                        && ["provider", "register", "table", "release"]
-                            .iter()
-                            .all(|field| {
-                                p.fields
-                                    .get(*field)
-                                    .is_none_or(|expected| expected == &value[*field])
-                            })
-                })
-            };
-            let mut output = Vec::new();
-            let mut moved = Vec::new();
-            for record in records {
-                let value = tree(record);
-                let kind = text(&value, "kind").unwrap_or_default();
-                let selected = if let Some(source) = source {
-                    matches!(kind, "register" | "table" | "release" | "occurrence")
-                        && text(&value, field) == Some(source)
-                        && reviewed(&value)
-                } else {
-                    kind == "occurrence" && reviewed(&value)
+            for record in &mut out.records {
+                let Record::Occurrence(row) = record else {
+                    continue;
                 };
+                let value = tree(&Record::Occurrence(row.clone()));
+                let selected = premise.subjects.iter().any(|p| {
+                    (p.locator == row.locator || row.also.contains(&p.locator))
+                        && [
+                            ("provider", "provider"),
+                            ("register", "register"),
+                            ("table", "table"),
+                            ("release", "release"),
+                            ("key", "source_key"),
+                            ("spelling", "column"),
+                            ("label", "label"),
+                            ("type", "dtype"),
+                            ("unit", "unit"),
+                        ]
+                        .iter()
+                        .all(|(field, raw)| {
+                            p.fields
+                                .get(*field)
+                                .is_none_or(|expected| expected == &value[*raw])
+                        })
+                });
                 if !selected {
-                    output.push(record.clone());
                     continue;
                 }
-                let unplaced = !value["release"].is_null()
-                    && records.iter().any(|r| {
-                        matches!(r, Record::Release(r)
-                        if value["provider"] == r.provider && value["register"] == r.register
-                            && value["table"] == r.table && value["release"] == r.release
-                            && (r.from.is_none() || r.to.is_none()))
-                    });
-                if subject.is_some() && unplaced {
-                    return Err(
-                        "bind cannot move rows from an unplaced release; set its period first"
-                            .into(),
-                    );
-                }
-                let original = span(&value, records);
-                let spans = scope.as_ref().map_or_else(
-                    || vec![original.clone()],
-                    |scope| {
-                        merge(
-                            scope
-                                .iter()
-                                .filter_map(|s| intersect(&original, s))
-                                .collect(),
-                        )
-                    },
-                );
-                if spans.is_empty() {
-                    output.push(record.clone());
-                    continue;
-                }
-                if (kind == "release" || (kind == "occurrence" && !value["release"].is_null()))
-                    && spans != vec![original.clone()]
+                let period = span(&value, records);
+                if let Some(target_handle) = &target_handle
+                    && row.table != *target_handle
                 {
-                    return Err(
-                        "bind period may select a release, but cannot split its stated period"
-                            .into(),
-                    );
-                }
-                let spans = if matches!(kind, "register" | "table") {
-                    if !gaps(std::slice::from_ref(&original), spans.clone()).is_empty() {
-                        output.push(record.clone());
-                    }
-                    vec![(
-                        spans.first().expect("selected span").0.clone(),
-                        spans.last().expect("selected span").1.clone(),
-                    )]
-                } else {
-                    for residual in gaps(std::slice::from_ref(&original), spans.clone()) {
-                        output.push(decode(scoped(value.clone(), &residual, &original))?);
-                    }
-                    spans
-                };
-                for selected in spans {
-                    let mut bound = scoped(value.clone(), &selected, &original);
-                    bound[field] = json!(target_handle);
-                    if kind == "occurrence" && value["release"].is_null() {
-                        bound["from"] = json!(selected.0);
-                        bound["to"] = json!(selected.1);
-                    }
-                    if kind == "occurrence" && !unplaced {
-                        check_table_coverage(&bound, &selected, records)?;
-                    }
-                    // A row moved out of its release becomes its own dated documented
-                    // occurrence; the original delivery does not describe the new table.
-                    if subject.is_some() && kind == "occurrence" && !bound["release"].is_null() {
-                        if bound["population_valuesets"]
-                            .as_array()
-                            .is_some_and(|sets| !sets.is_empty())
-                        {
+                    if let Some(handle) = &row.release {
+                        let release = records
+                            .iter()
+                            .find_map(|r| match r {
+                                Record::Release(r)
+                                    if r.provider == row.provider
+                                        && r.register == row.register
+                                        && r.table == row.table
+                                        && r.release == *handle =>
+                                {
+                                    Some(r)
+                                }
+                                _ => None,
+                            })
+                            .ok_or("set table occurrence names an unknown release")?;
+                        if release.from.is_none() || release.to.is_none() {
                             return Err(
-                                "bind cannot detach an occurrence with population-specific value sets from its release"
+                                "set table cannot detach an unplaced release; set its period first"
                                     .into(),
                             );
                         }
-                        bound["release"] = Value::Null;
-                        bound["from"] = json!(selected.0);
-                        bound["to"] = json!(selected.1);
+                        if !row.population_valuesets.is_empty() {
+                            return Err("set table cannot detach population-specific value sets from their release".into());
+                        }
+                        row.release = None;
                     }
-                    for changed in [field, "release", "grain"] {
-                        if bound[changed] != value[changed] {
+                    row.table.clone_from(target_handle);
+                    row.from = Some(period.0.clone());
+                    row.to = Some(period.1.clone());
+                    let moved = tree(&Record::Occurrence(row.clone()));
+                    check_table_coverage(&moved, &period, records)?;
+                    for field in ["table", "release"] {
+                        if moved[field] != value[field] {
                             out.changes.push(change(
-                                &bound,
-                                changed,
-                                &bound[changed],
-                                &value[changed],
-                                (!unplaced).then(|| selected.clone()),
+                                &moved,
+                                field,
+                                &moved[field],
+                                &value[field],
+                                Some(period.clone()),
                             ));
                         }
                     }
-                    if bound["from"] != value["from"] || bound["to"] != value["to"] {
+                    if moved["from"] != value["from"] || moved["to"] != value["to"] {
                         out.changes.push(change(
-                            &bound,
+                            &moved,
                             "period",
-                            &json!(selected),
-                            &json!(original),
-                            Some(selected.clone()),
+                            &json!(period),
+                            &json!(span(&value, records)),
+                            Some(period.clone()),
                         ));
                     }
-                    moved.push(decode(bound)?);
+                }
+                if let Some(variable) = &fields.variable {
+                    let value = tree(&Record::Occurrence(row.clone()));
+                    out.changes.push(change(
+                        &value,
+                        "variable",
+                        &json!(variable),
+                        &Value::Null,
+                        Some(period),
+                    ));
                 }
             }
-            if moved.is_empty() {
-                return Err("empty match".into());
-            }
-            if field == "table"
-                && !output
-                    .iter()
-                    .chain(&moved)
-                    .any(|r| matches!(r,Record::Table(t) if t.table == target_handle))
-            {
-                let row = moved
-                    .iter()
-                    .find_map(|r| match r {
-                        Record::Occurrence(o) => Some(o),
-                        _ => None,
-                    })
-                    .ok_or("table binding states no rows")?;
-                let table = json!({"kind":"table","provider":row.provider,"register":row.register,"table":target_handle,"name":id,"description":null,"from":null,"to":null,"cadence":null,"locator":at});
-                for field in ["provider", "register", "table", "name"] {
-                    out.changes
-                        .push(change(&table, field, &table[field], &Value::Null, None));
-                }
-                output.push(decode(table)?);
-            }
-            merge_bound(
-                &mut output,
-                moved,
-                *priority,
-                priorities,
-                source_records,
-                origins,
-                &mut out.changes,
-            )?;
-            if let Some(source) = source {
-                rebind_endpoints(
-                    &mut output,
-                    records,
-                    source,
-                    field,
-                    &target_handle,
-                    scope.as_deref(),
-                )?;
-            }
-            out.records = output;
         }
         Statement::Assert { subject, fact, .. } => {
             let register = records
@@ -900,100 +690,6 @@ pub fn apply(
     Ok(out)
 }
 
-fn bound_endpoint(
-    records: &[Record],
-    endpoint: &reg_frame::Endpoint,
-    source: &str,
-    field: &str,
-) -> bool {
-    (field != "table" || endpoint.table.as_deref() == Some(source))
-        && records.iter().any(|record| match record {
-            Record::Register(register) if field == "table" || register.register == source => {
-                register.provider == endpoint.provider
-                    && (endpoint.register.as_deref() == Some(register.register.as_str())
-                        || endpoint
-                            .register_name
-                            .as_ref()
-                            .zip(register.name.as_ref())
-                            .is_some_and(|(a, b)| {
-                                reg_core::fold_identity(a) == reg_core::fold_identity(b)
-                            }))
-            }
-            _ => false,
-        })
-}
-
-pub(super) fn binding_references<'a>(
-    records: &'a [Record],
-    source: &str,
-    field: &str,
-) -> Vec<&'a Record> {
-    records
-        .iter()
-        .filter(|record| match record {
-            Record::Link(link) => {
-                bound_endpoint(records, &link.subject, source, field)
-                    || bound_endpoint(records, &link.object, source, field)
-            }
-            Record::Notice(notice) => bound_endpoint(records, &notice.subject, source, field),
-            Record::Doc(doc) => doc
-                .subjects
-                .iter()
-                .any(|subject| bound_endpoint(records, &subject.endpoint, source, field)),
-            _ => false,
-        })
-        .collect()
-}
-
-fn rebind_endpoints(
-    output: &mut [Record],
-    records: &[Record],
-    source: &str,
-    field: &str,
-    target: &str,
-    scope: Option<&[Interval]>,
-) -> Result<(), String> {
-    let update = |endpoint: &mut reg_frame::Endpoint, at: Option<&str>| -> Result<(), String> {
-        if !bound_endpoint(records, endpoint, source, field) {
-            return Ok(());
-        }
-        if let Some(scope) = scope {
-            let Some(at) = at else {
-                return Err("scoped bind has an undated source link or document subject; cannot choose its target coordinate".into());
-            };
-            if !scope
-                .iter()
-                .any(|p| p.0.as_str() <= at && at <= p.1.as_str())
-            {
-                return Ok(());
-            }
-        }
-        if field == "register" {
-            endpoint.register = Some(target.into());
-            endpoint.register_name = None;
-        } else {
-            endpoint.table = Some(target.into());
-        }
-        Ok(())
-    };
-    for record in output {
-        match record {
-            Record::Link(link) => {
-                update(&mut link.subject, link.at.as_deref())?;
-                update(&mut link.object, link.at.as_deref())?;
-            }
-            Record::Notice(notice) => update(&mut notice.subject, notice.at.as_deref())?,
-            Record::Doc(doc) => {
-                for subject in &mut doc.subjects {
-                    update(&mut subject.endpoint, None)?;
-                }
-            }
-            _ => {}
-        }
-    }
-    Ok(())
-}
-
 fn check_table_coverage(value: &Value, p: &Interval, records: &[Record]) -> Result<(), String> {
     let register = records.iter().find_map(|r| match r {
         Record::Register(r)
@@ -1068,413 +764,62 @@ fn attach_valueset(
         };
         let value = tree(record);
         let original = span(&value, &out.records);
-        let spans = merge(
-            selected
-                .iter()
-                .filter(|m| {
-                    let source = &view[m.source];
-                    source.text("kind") == Some("occurrence")
-                        && [
-                            ("provider", "provider"),
-                            ("register", "register"),
-                            ("table", "table"),
-                            ("release", "release"),
-                            ("key", "source_key"),
-                            ("spelling", "column"),
-                            ("label", "label"),
-                            ("type", "dtype"),
-                            ("unit", "unit"),
-                        ]
-                        .iter()
-                        .all(|(field, raw)| source.fields.get(*field) == Some(&value[*raw]))
-                        && (source.locators.contains(&o.locator)
-                            || o.also.iter().any(|l| source.locators.contains(l)))
-                })
-                .flat_map(|m| m.spans.iter().filter_map(|p| intersect(p, &original)))
-                .collect(),
-        );
-        if spans.is_empty() {
+        let matches = selected
+            .iter()
+            .filter(|m| {
+                let source = &view[m.source];
+                source.text("kind") == Some("occurrence")
+                    && [
+                        ("provider", "provider"),
+                        ("register", "register"),
+                        ("table", "table"),
+                        ("release", "release"),
+                        ("key", "source_key"),
+                        ("spelling", "column"),
+                        ("label", "label"),
+                        ("type", "dtype"),
+                        ("unit", "unit"),
+                    ]
+                    .iter()
+                    .all(|(field, raw)| source.fields.get(*field) == Some(&value[*raw]))
+                    && (source.locators.contains(&o.locator)
+                        || o.also.iter().any(|l| source.locators.contains(l)))
+            })
+            .collect::<Vec<_>>();
+        if matches.is_empty() {
             output.push(record.clone());
             continue;
+        }
+        let spans = matches
+            .iter()
+            .flat_map(|m| m.spans.iter().cloned())
+            .collect();
+        if !reg_core::gaps(std::slice::from_ref(&original), spans).is_empty() {
+            return Err(format!(
+                "selector period cuts occurrence {}; select whole occurrences",
+                o.column
+            ));
         }
         if o.valueset.is_some() || !o.population_valuesets.is_empty() {
             return Err(
                 "assert value set cannot replace a source-stated value set; use set".into(),
             );
         }
-        if o.release.is_some() && spans != vec![original.clone()] {
-            return Err("assert value set period cannot split a stated release; use set".into());
-        }
-        for residual in gaps(std::slice::from_ref(&original), spans.clone()) {
-            output.push(decode(scoped(tree(record), &residual, &original))?);
-        }
-        for p in spans {
-            let mut value = scoped(tree(record), &p, &original);
-            value["valueset"] = json!(hash);
-            out.changes.push(change(
-                &value,
-                "value_set",
-                &value["valueset"],
-                &tree(record)["valueset"],
-                Some(p.clone()),
-            ));
-            if value["from"] != tree(record)["from"] || value["to"] != tree(record)["to"] {
-                out.changes.push(change(
-                    &value,
-                    "period",
-                    &json!(p),
-                    &json!(original),
-                    Some(p.clone()),
-                ));
-            }
-            output.push(decode(value)?);
-        }
+        let mut value = value;
+        value["valueset"] = json!(hash);
+        out.changes.push(change(
+            &value,
+            "value_set",
+            &value["valueset"],
+            &Value::Null,
+            Some(original),
+        ));
+        output.push(decode(value)?);
         attached = true;
     }
     if !attached {
         return Err("assert value set requires an existing occurrence subject".into());
     }
     out.records = output;
-    Ok(())
-}
-
-// Compare moved rows only with destination rows. Editions already within one
-// source keep their release precedence; only cross-source overlap needs partitioning
-// to make source priority a per-period decision.
-#[allow(clippy::too_many_lines)]
-fn partition_overlaps(
-    output: &mut Vec<Record>,
-    moved: &mut Vec<Record>,
-    changes: &mut Vec<Change>,
-) -> Result<(), String> {
-    let all = output
-        .iter()
-        .chain(moved.iter())
-        .cloned()
-        .collect::<Vec<_>>();
-    let coordinate = |o: &reg_frame::Occurrence| {
-        (
-            o.provider.clone(),
-            o.register.clone(),
-            o.table.clone(),
-            o.source_key.clone(),
-            reg_core::fold_identity(&o.column),
-        )
-    };
-    let mut existing_groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
-    let mut moved_groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
-    for (index, record) in all.iter().enumerate() {
-        if let Record::Occurrence(o) = record {
-            let groups = if index < output.len() {
-                &mut existing_groups
-            } else {
-                &mut moved_groups
-            };
-            groups.entry(coordinate(o)).or_default().push(record);
-        }
-    }
-    let source_key = |value: &Value, at: &Locator| {
-        reg_frame::canonical_line(&(
-            at,
-            &value["provider"],
-            &value["register"],
-            &value["table"],
-            &value["release"],
-            value
-                .get("source_key")
-                .or_else(|| value.get("key"))
-                .unwrap_or(&Value::Null),
-            &value["from"],
-            &value["to"],
-        ))
-    };
-    let mut spans_by_source = BTreeMap::new();
-    for source in super::sources(&all, &Ledger::default()) {
-        if let Some(period) = source.period {
-            let value = serde_json::to_value(&source.fields).expect("source fields serialize");
-            for at in source.locators {
-                spans_by_source.insert(source_key(&value, &at), period.clone());
-            }
-        }
-    }
-    let cached_span = |record: &Record| {
-        let value = tree(record);
-        spans_by_source
-            .get(&source_key(&value, &locator(&value)))
-            .cloned()
-    };
-    let partition = |records: &[Record],
-                     rivals_by_coordinate: &BTreeMap<_, Vec<_>>,
-                     changes: &mut Vec<Change>|
-     -> Result<Vec<Record>, String> {
-        let mut result = Vec::new();
-        for record in records {
-            let Record::Occurrence(o) = record else {
-                result.push(record.clone());
-                continue;
-            };
-            let Some(original) = cached_span(record) else {
-                // An unplaced release states no interval to split or compare. A
-                // handle bind preserves it; inventing register-wide dates here
-                // would promote its occurrences into orderable source facts.
-                result.push(record.clone());
-                continue;
-            };
-            let rivals = rivals_by_coordinate
-                .get(&coordinate(o))
-                .into_iter()
-                .flatten()
-                .copied()
-                .filter_map(|r| {
-                    cached_span(r)
-                        .and_then(|period| intersect(&original, &period))
-                        .map(|p| (r, p))
-                })
-                .collect::<Vec<_>>();
-            if rivals.is_empty() {
-                result.push(record.clone());
-                continue;
-            }
-            let mut edges: BTreeSet<String> = [original.0.clone()].into_iter().collect();
-            for (_, p) in &rivals {
-                edges.insert(p.0.clone());
-                if p.1 < original.1 {
-                    edges.insert(next_iso_day(&p.1));
-                }
-            }
-            let edges = edges.into_iter().collect::<Vec<_>>();
-            let detach = o.release.is_some() && (edges.len()>1 || rivals.iter().any(|(r,_)|matches!(r,Record::Occurrence(other) if other.release != o.release)));
-            if detach && !o.population_valuesets.is_empty() {
-                return Err(
-                    "bind cannot detach an occurrence with population-specific value sets from its release"
-                        .into(),
-                );
-            }
-            for (index, start) in edges.iter().enumerate() {
-                let p = (
-                    start.clone(),
-                    edges
-                        .get(index + 1)
-                        .map_or_else(|| original.1.clone(), |next| prev_iso_day(next)),
-                );
-                let mut value = scoped(tree(record), &p, &original);
-                // Releases own a whole source period; a priority-split row is a
-                // dated curated occurrence while the delivery remains evidence.
-                if detach {
-                    value["release"] = Value::Null;
-                    value["from"] = json!(p.0);
-                    value["to"] = json!(p.1);
-                }
-                // A non-release row with inherited bounds needs explicit coordinates
-                // too, so all pieces at the same period reach one merge coordinate.
-                if value["release"].is_null() {
-                    value["from"] = json!(p.0);
-                    value["to"] = json!(p.1);
-                }
-                if value["from"] != tree(record)["from"] || value["to"] != tree(record)["to"] {
-                    changes.push(change(
-                        &value,
-                        "period",
-                        &json!(p),
-                        &json!(original),
-                        Some(p.clone()),
-                    ));
-                }
-                if detach {
-                    changes.push(change(
-                        &value,
-                        "release",
-                        &Value::Null,
-                        &json!(o.release),
-                        Some(p.clone()),
-                    ));
-                }
-                result.push(decode(value)?);
-            }
-        }
-        Ok(result)
-    };
-    *output = partition(output, &moved_groups, changes)?;
-    *moved = partition(moved, &existing_groups, changes)?;
-    Ok(())
-}
-
-// Source priorities apply only while merging source facts. Curated winners never
-// enter here as another competing source: the caller rejects overlapping binds.
-#[allow(clippy::too_many_lines)]
-fn merge_bound(
-    output: &mut Vec<Record>,
-    moved: Vec<Record>,
-    priority: Option<i64>,
-    priorities: &Priorities,
-    source_records: &[Record],
-    origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
-    changes: &mut Vec<Change>,
-) -> Result<(), String> {
-    let mut raw_fields: BTreeMap<Locator, Vec<Value>> = BTreeMap::new();
-    for source in source_records {
-        let value = tree(source);
-        if value["locator"].is_null() {
-            continue;
-        }
-        let mut locators = vec![locator(&value)];
-        if let Some(also) = value["also"].as_array() {
-            locators.extend(
-                also.iter()
-                    .filter_map(|l| serde_json::from_value::<Locator>(l.clone()).ok()),
-            );
-        }
-        for at in locators {
-            raw_fields.entry(at).or_default().push(value.clone());
-        }
-    }
-    let mut moved = moved;
-    for record in &moved {
-        let Record::Release(incoming) = record else {
-            continue;
-        };
-        if output.iter().any(|record| {
-            matches!(record, Record::Release(old)
-                if old.provider == incoming.provider && old.register == incoming.register
-                    && old.table == incoming.table && old.release == incoming.release
-                    && old.populations != incoming.populations)
-        }) && output.iter().chain(&moved).any(|record| {
-            matches!(record, Record::Occurrence(o)
-                if o.provider == incoming.provider && o.register == incoming.register
-                    && o.table == incoming.table && o.release.as_ref() == Some(&incoming.release)
-                    && !o.population_valuesets.is_empty())
-        }) {
-            return Err(
-                "bind cannot merge differing release populations used by population-specific value sets"
-                    .into(),
-            );
-        }
-    }
-    partition_overlaps(output, &mut moved, changes)?;
-    for record in moved {
-        let mut incoming = tree(&record);
-        let kind = text(&incoming, "kind").unwrap_or_default().to_owned();
-        let existing = output.iter().position(|r| {
-            let old = tree(r);
-            text(&old, "kind") == Some(kind.as_str())
-                && ["provider", "register", "table", "release", "source_key"]
-                    .iter()
-                    .all(|f| old[*f] == incoming[*f])
-                && (kind != "occurrence"
-                    || (["from", "to"].iter().all(|f| old[*f] == incoming[*f])
-                        && reg_core::fold_identity(text(&old, "column").unwrap_or_default())
-                            == reg_core::fold_identity(
-                                text(&incoming, "column").unwrap_or_default(),
-                            )))
-        });
-        if let Some(index) = existing {
-            let old = tree(&output[index]);
-            let rank = |v: &Value, field: &str| {
-                let period = span(v, output);
-                let at = locator(v);
-                let mut locators = vec![at.clone()];
-                locators.extend(origins.get(&at).into_iter().flatten().cloned());
-                if let Some(also) = v["also"].as_array() {
-                    locators.extend(
-                        also.iter()
-                            .filter_map(|l| serde_json::from_value::<Locator>(l.clone()).ok()),
-                    );
-                }
-                // A merged row may borrow a missing label from a lower-priority
-                // source. Rank each stated field by its actual original holders,
-                // rather than lending the row's highest source rank to that label.
-                locators
-                    .iter()
-                    .filter(|at| {
-                        raw_fields.get(*at).is_some_and(|sources| {
-                            sources.iter().any(|source| {
-                                source["kind"] == v["kind"] && source[field] == v[field]
-                            })
-                        })
-                    })
-                    .map(|at| priorities.rank(at, v, &period))
-                    .max()
-                    .unwrap_or(0)
-            };
-            let old_conflicts: BTreeSet<String> =
-                serde_json::from_value(old["conflicts"].clone()).unwrap_or_default();
-            let incoming_conflicts: BTreeSet<String> =
-                serde_json::from_value(incoming["conflicts"].clone()).unwrap_or_default();
-            let mut conflicts = old_conflicts
-                .union(&incoming_conflicts)
-                .cloned()
-                .collect::<BTreeSet<_>>();
-            for (field, source) in old.as_object().expect("record object") {
-                if matches!(field.as_str(), "locator" | "also" | "conflicts") {
-                    continue;
-                }
-                let incoming_rank = rank(&incoming, field);
-                let old_rank = rank(&old, field);
-                // A silent higher-priority row cannot resolve a disagreement in a
-                // field it borrows. A genuinely higher stated value can, including
-                // agreement with the former provisional winner.
-                if !incoming[field].is_null()
-                    && incoming_rank > old_rank
-                    && !incoming_conflicts.contains(field)
-                {
-                    conflicts.remove(field);
-                }
-                if !source.is_null() && old_rank > incoming_rank && !old_conflicts.contains(field) {
-                    conflicts.remove(field);
-                }
-                if source == &incoming[field] || source.is_null() {
-                    continue;
-                }
-                if !incoming[field].is_null() && incoming_rank == old_rank && kind == "occurrence" {
-                    conflicts.insert(field.clone());
-                }
-                let losing = incoming[field].clone();
-                if incoming[field].is_null()
-                    || incoming_rank < old_rank
-                    || (incoming_rank == old_rank && locator(&old) < locator(&incoming))
-                {
-                    incoming[field] = source.clone();
-                }
-                if priority.is_some() && incoming_rank != old_rank && !losing.is_null() {
-                    changes.push(change(
-                        &incoming,
-                        field,
-                        &incoming[field],
-                        if incoming_rank <= old_rank {
-                            &losing
-                        } else {
-                            source
-                        },
-                        None,
-                    ));
-                }
-            }
-            if kind == "occurrence" {
-                incoming["conflicts"] = json!(conflicts);
-                let mut locators: Vec<Locator> =
-                    serde_json::from_value(incoming["also"].clone()).expect("also locators");
-                locators.push(locator(&old));
-                locators.extend(
-                    serde_json::from_value::<Vec<Locator>>(old["also"].clone())
-                        .expect("also locators"),
-                );
-                locators.sort();
-                locators.dedup();
-                incoming["also"] = json!(locators);
-            } else {
-                // Declarations have no `also` field. Keep their merged source
-                // holders beside the frame so later binds can rank borrowed fields.
-                let incoming_at = locator(&incoming);
-                let old_at = locator(&old);
-                let mut holders = BTreeSet::from([incoming_at.clone(), old_at.clone()]);
-                holders.extend(origins.get(&incoming_at).into_iter().flatten().cloned());
-                holders.extend(origins.get(&old_at).into_iter().flatten().cloned());
-                origins.insert(incoming_at, holders);
-            }
-            output[index] = decode(incoming)?;
-        } else {
-            output.push(record);
-        }
-    }
     Ok(())
 }

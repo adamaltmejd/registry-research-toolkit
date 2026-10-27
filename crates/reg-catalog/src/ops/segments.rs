@@ -106,15 +106,19 @@ pub struct Override {
     #[schema(required = true)]
     value: Option<String>,
     prov: String,
-    /// `{file, line}` of a curated statement; always `null` in C.
-    // simplify: curated overrides name their statement once D emits statements; type
-    // and fill this then.
-    #[schema(required = true, value_type = Option<Object>)]
-    statement: Option<()>,
+    /// Authoring location of the curated statement.
+    #[schema(required = true)]
+    statement: Option<StatementLocation>,
     #[schema(required = true)]
     rule: Option<String>,
     #[schema(required = true)]
     source_value: Option<String>,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct StatementLocation {
+    file: String,
+    line: i64,
 }
 
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -303,9 +307,10 @@ fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<O
          WHERE l.occurrence_id = ? ORDER BY i.name, l.locator",
     )?;
     let mut overrides = conn.prepare(
-        "SELECT field, value, prov, rule_code, source_value
-         FROM override WHERE subject_kind = 'occurrence' AND subject_id = ?
-         ORDER BY field",
+        "SELECT o.field, o.value, o.prov, o.rule_code, o.source_value, s.file, s.line
+         FROM override o LEFT JOIN statement s ON s.id = o.statement_id
+         WHERE o.subject_kind = 'occurrence' AND o.subject_id = ?
+         ORDER BY o.field",
     )?;
     rows.into_iter()
         .map(
@@ -333,7 +338,10 @@ fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<O
                                 field: row.get(0)?,
                                 value: row.get(1)?,
                                 prov: row.get(2)?,
-                                statement: None,
+                                statement: row
+                                    .get::<_, Option<String>>(5)?
+                                    .zip(row.get::<_, Option<i64>>(6)?)
+                                    .map(|(file, line)| StatementLocation { file, line }),
                                 rule: row.get(3)?,
                                 source_value: row.get(4)?,
                             })

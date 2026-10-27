@@ -326,7 +326,7 @@ fn build(args: &Args) -> Result<(), String> {
         } else {
             reg_resolve::Ledger::default()
         };
-        let r = reg_resolve::resolve(records, &ledger, &set_by_hash)
+        let r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(

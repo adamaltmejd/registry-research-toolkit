@@ -2,8 +2,8 @@
 //! register (`crates/DESIGN.md`, "The catalog builder"). A pure function: it sees one
 //! register's records and ledger, never another register's, and reads nothing else.
 //!
-//! It resolves with the default rules only: no statements, no classification binding,
-//! no unit types.
+//! Table moves and assertions prepare its input frame. Explicit variable assignments
+//! enter the identity step; other field overrides are not applied yet.
 //!
 //! - **Periods.** An occurrence of a release takes the release's period; an unplaced
 //!   release leaves its occurrences unplaced. Otherwise an occurrence's unstated bound is
@@ -209,6 +209,7 @@ pub fn resolve(
     records: &[Record],
     ledger: &Ledger,
     valuesets: &BTreeMap<&str, &ValueSet>,
+    assignments: &BTreeMap<Locator, String>,
 ) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
@@ -570,6 +571,31 @@ pub fn resolve(
         }
     }
 
+    let assignment = |row: &Occurrence| -> Result<Option<&str>, String> {
+        let values = std::iter::once(&row.locator)
+            .chain(&row.also)
+            .filter_map(|at| assignments.get(at).map(String::as_str))
+            .collect::<BTreeSet<_>>();
+        if values.len() > 1 {
+            return Err("conflicting variable assignments on one occurrence".into());
+        }
+        let value = values.into_iter().next();
+        if let Some(value) = value
+            && value != "none"
+            && !ledger.variables.contains_key(value)
+        {
+            return Err(format!("variable {value:?} is not a ledger slug"));
+        }
+        Ok(value)
+    };
+    for row in &mut resolved {
+        if !matches!(row.status, "unplaced" | "gap_marker")
+            && assignment(&row.occurrence)? == Some("none")
+        {
+            row.status = "withheld";
+        }
+    }
+
     // Identity: a key splits by fold when two folds overlap anywhere in the register,
     // among used rows. Shadowing leaves a worse edition's row only where the primary
     // lacks its key, so a preliminary and a final edition of one period never split it.
@@ -598,19 +624,60 @@ pub fn resolve(
         }
     }
     report.split_keys = split.len();
-    let mut variable_keys: BTreeMap<(String, String), Vec<usize>> = BTreeMap::new();
+    let default_identity = |row: &ResolvedOccurrence| {
+        let key = row.occurrence.source_key.clone();
+        let sub = if split.contains(key.as_str()) {
+            fold_identity(&row.occurrence.column)
+        } else {
+            String::new()
+        };
+        (key, sub)
+    };
+    let targets = resolved
+        .iter()
+        .map(|row| assignment(&row.occurrence))
+        .collect::<Result<BTreeSet<_>, _>>()?
+        .into_iter()
+        .flatten()
+        .filter(|id| *id != "none")
+        .collect::<BTreeSet<_>>();
+    let mut anchor_groups = BTreeMap::<&str, BTreeSet<(String, String)>>::new();
+    for row in &resolved {
+        if !matches!(row.status, "used" | "shadowed" | "rejected") {
+            continue;
+        }
+        for id in &targets {
+            let anchors = ledger
+                .variables
+                .get(*id)
+                .ok_or_else(|| format!("variable {id:?} is not a ledger slug"))?;
+            if ledger::matches_anchor(id, anchors, row, &tables[row.table].table.table)? {
+                anchor_groups
+                    .entry(*id)
+                    .or_default()
+                    .insert(default_identity(row));
+            }
+        }
+    }
+    let mut anchored = BTreeMap::new();
+    for (id, groups) in anchor_groups {
+        if let Some(group) = groups.into_iter().next() {
+            anchored.entry(group).or_insert(id);
+        }
+    }
+    let mut variable_keys: BTreeMap<(String, String, bool), Vec<usize>> = BTreeMap::new();
     for (i, r) in resolved.iter().enumerate() {
         if !matches!(r.status, "used" | "shadowed" | "rejected") {
             continue;
         }
-        let key = r.occurrence.source_key.clone();
-        let f = fold_identity(&r.occurrence.column);
-        let sub = if split.contains(key.as_str()) {
-            f
-        } else {
-            String::new()
-        };
-        variable_keys.entry((key, sub)).or_default().push(i);
+        let (key, sub) = default_identity(r);
+        let chosen = assignment(&r.occurrence)?
+            .or_else(|| anchored.get(&(key.clone(), sub.clone())).copied());
+        let identity = chosen.map_or_else(
+            || (key, sub, false),
+            |id| (id.to_owned(), String::new(), true),
+        );
+        variable_keys.entry(identity).or_default().push(i);
     }
     // A variable needs a used occurrence. One documented only outside its tables'
     // coverage is withheld, with its T1 notices.
@@ -627,7 +694,7 @@ pub fn resolve(
     // Variables and their segments.
     let mut variables: Vec<Variable> = Vec::new();
     let mut population_keys = BTreeSet::new();
-    for (v, ((key, _), members)) in variable_keys.iter().enumerate() {
+    for (v, ((key, _, assigned), members)) in variable_keys.iter().enumerate() {
         for &i in members {
             resolved[i].variable = Some(v);
         }
@@ -861,9 +928,13 @@ pub fn resolve(
                 .expect("a variable is used"),
         );
         variables.push(Variable {
-            slug: String::new(),
-            pinned: false,
-            source_key: key.clone(),
+            slug: if *assigned {
+                key.clone()
+            } else {
+                String::new()
+            },
+            pinned: *assigned,
+            source_key: o.source_key.clone(),
             fold: fold_identity(&o.column),
             spellings,
             label: texts.last().map_or_else(
@@ -984,11 +1055,13 @@ pub fn resolve(
     // Gap markers: on their key's variable when the key is one variable. A key
     // documented only without a column is no variable (F5).
     let mut key_variables: BTreeMap<&str, BTreeSet<usize>> = BTreeMap::new();
-    for ((key, _), members) in &variable_keys {
-        key_variables
-            .entry(key.as_str())
-            .or_default()
-            .insert(resolved[members[0]].variable.expect("assigned above"));
+    for members in variable_keys.values() {
+        for &i in members {
+            key_variables
+                .entry(resolved[i].occurrence.source_key.as_str())
+                .or_default()
+                .insert(resolved[i].variable.expect("assigned above"));
+        }
     }
     let columned: BTreeSet<&str> = resolved
         .iter()
