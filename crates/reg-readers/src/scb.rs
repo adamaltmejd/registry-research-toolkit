@@ -462,7 +462,16 @@ pub fn read(
         }
         // Rows that name different sets give their populations alternatives (F6),
         // a population with several rows possibly more than one.
-        let pairs: BTreeSet<(Option<usize>, Option<String>)> = hashes.into_iter().collect();
+        // Within one population, a marker row beside a coded row is not a second set.
+        let coded: BTreeSet<Option<usize>> = hashes
+            .iter()
+            .filter(|(_, h)| h.is_some())
+            .map(|(p, _)| *p)
+            .collect();
+        let pairs: BTreeSet<(Option<usize>, Option<String>)> = hashes
+            .into_iter()
+            .filter(|(p, h)| h.is_some() || !coded.contains(p))
+            .collect();
         let distinct: BTreeSet<&Option<String>> = pairs.iter().map(|(_, h)| h).collect();
         if distinct.len() == 1 {
             o.valueset = pairs.into_iter().next().and_then(|(_, h)| h);
