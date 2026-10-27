@@ -509,6 +509,8 @@ impl Seg {
     }
 }
 
+// simplify: primary segments only; a selection_segment change is invisible here. Compare
+// selections when the first release dbdiff runs.
 fn segments(conn: &Connection) -> Res<BTreeMap<String, BTreeSet<Seg>>> {
     let rows = query(
         conn,

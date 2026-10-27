@@ -24,6 +24,9 @@
 //! - **Segments.** Per variable and table, maximal runs of one form. A run where the
 //!   variable's own occurrences disagree on label, type or value set, or where another
 //!   variable claims the same folded spelling, is ambiguous (F2).
+//! - **Selections.** The same segments, built again per table over the releases one
+//!   edition, one qualifier or both name; stored only where they differ from the
+//!   primary ones.
 //! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
 //!   release), and the days inside a variable's hull a release covers without the
 //!   variable's column: documented without a column, or not documented.
@@ -61,6 +64,8 @@ pub struct Resolved {
     pub releases: Vec<ResolvedRelease>,
     pub variables: Vec<Variable>,
     pub occurrences: Vec<ResolvedOccurrence>,
+    /// In (table, edition, qualifier) order, `None` first.
+    pub selections: Vec<Selection>,
     pub gaps: Vec<Gap>,
     pub findings: Vec<Finding>,
     pub report: Report,
@@ -119,6 +124,22 @@ pub struct Segment {
     pub role: &'static str,
     /// `clear`, `ambiguous` or `preliminary`.
     pub state: &'static str,
+}
+
+/// The releases of one table a source's `edition` and `qualifier` name, and the
+/// segments built from their occurrences alone (`crates/DESIGN.md`, "Selections").
+#[derive(Debug)]
+pub struct Selection {
+    /// Index into [`Resolved::tables`].
+    pub table: usize,
+    /// `None`: no edition named, the primary of the named qualifier's releases.
+    pub edition: Option<String>,
+    /// `None`: no qualifier named; `""` names the unqualified releases.
+    pub qualifier: Option<String>,
+    /// `(variable index, segment)` by variable, then start; `None` when the selection's
+    /// occurrences are exactly the table's primary ones, so its segments are the
+    /// variables' own.
+    pub segments: Option<Vec<(usize, Segment)>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -685,106 +706,12 @@ pub fn resolve(
                 .copied()
                 .filter(|&i| resolved[i].table == t)
                 .collect();
-            // A segment holds whole occurrences: the variable's occurrences that
-            // overlap form one component, and adjacent components of one form join.
-            let mut sorted = own.clone();
-            sorted.sort_by(|&a, &b| span(&resolved[a]).cmp(span(&resolved[b])));
-            let mut components: Vec<(Interval, Vec<usize>)> = Vec::new();
-            for i in sorted {
-                let p = span(&resolved[i]).clone();
-                match components.last_mut() {
-                    Some((span, members)) if p.0 <= span.1 => {
-                        if p.1 > span.1 {
-                            span.1 = p.1;
-                        }
-                        members.push(i);
-                    }
-                    _ => components.push((p, vec![i])),
-                }
+            let (runs, run_of, names) =
+                table_segments(&resolved, &own, t, |i| resolved[i].preliminary);
+            for (i, run) in run_of {
+                resolved[i].segment = Some(segments.len() + run);
             }
-            let mut runs: Vec<Segment> = Vec::new();
-            for (period, covering) in components {
-                let top = latest(&resolved, &covering).expect("a component has a member");
-                let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
-                let o = &resolved[top].occurrence;
-                let agree = forms.len() == 1;
-                // A form field is stated only where every occurrence agrees on it.
-                let agreed = |field: fn(&Form) -> &Option<String>| {
-                    let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
-                    match values.len() {
-                        1 => values.into_iter().next().cloned().flatten(),
-                        _ => None,
-                    }
-                };
-                let state = if !agree {
-                    "ambiguous"
-                } else if covering.iter().all(|&i| resolved[i].preliminary) {
-                    "preliminary"
-                } else {
-                    "clear"
-                };
-                // Flags hold if any covering occurrence states them: under-flagging is the
-                // dangerous direction. An identifier is a row key whichever occurrence says so.
-                let flag = |f: fn(&Occurrence) -> Option<bool>| {
-                    covering
-                        .iter()
-                        .map(|&i| f(&resolved[i].occurrence))
-                        .max()
-                        .flatten()
-                };
-                let identifier = flag(|o| o.identifier);
-                for (name, f) in [
-                    (
-                        "sensitive",
-                        (|o| o.sensitive) as fn(&Occurrence) -> Option<bool>,
-                    ),
-                    ("identifier", |o| o.identifier),
-                ] {
-                    let stated: BTreeSet<bool> = covering
-                        .iter()
-                        .filter_map(|&i| f(&resolved[i].occurrence))
-                        .collect();
-                    if stated.len() > 1 {
-                        conflicts.insert(name.to_owned());
-                    }
-                }
-                let (length, length_conflict) = reg_core::agreed_length(
-                    covering.iter().map(|&i| resolved[i].occurrence.length),
-                );
-                if length_conflict {
-                    conflicts.insert("length".to_owned());
-                }
-                let segment = Segment {
-                    table: t,
-                    period,
-                    spelling: o.column.clone(),
-                    dtype: agreed(|f| &f.dtype),
-                    length,
-                    valueset: agreed(|f| &f.valueset),
-                    coded: coded(o),
-                    sensitive: flag(|o| o.sensitive),
-                    identifier,
-                    role: role(o, identifier),
-                    state,
-                };
-                let index = match runs.last_mut() {
-                    Some(prev)
-                        if next_iso_day(&prev.period.1) == segment.period.0
-                            && same_form(prev, &segment) =>
-                    {
-                        prev.period.1 = segment.period.1;
-                        prev.spelling = segment.spelling;
-                        runs.len() - 1
-                    }
-                    _ => {
-                        runs.push(segment);
-                        runs.len() - 1
-                    }
-                };
-                for i in covering {
-                    resolved[i].segment = Some(segments.len() + index);
-                }
-            }
+            conflicts.extend(names);
             segments.extend(runs);
         }
         if !conflicts.is_empty() {
@@ -873,37 +800,13 @@ pub fn resolve(
             texts,
         });
     }
-    // Rival claimants: segments of two variables under one folded spelling, in one
-    // table, that overlap are both ambiguous.
-    let mut by_fold: BTreeMap<(usize, String), Vec<(usize, usize)>> = BTreeMap::new();
-    for (v, variable) in variables.iter().enumerate() {
-        for (s, segment) in variable.segments.iter().enumerate() {
-            by_fold
-                .entry((segment.table, fold_identity(&segment.spelling)))
-                .or_default()
-                .push((v, s));
-        }
-    }
-    let mut contested = BTreeSet::new();
-    for members in by_fold.values() {
-        for (a, &(va, sa)) in members.iter().enumerate() {
-            for &(vb, sb) in &members[a + 1..] {
-                if va != vb
-                    && intersect(
-                        &variables[va].segments[sa].period,
-                        &variables[vb].segments[sb].period,
-                    )
-                    .is_some()
-                {
-                    contested.insert((va, sa));
-                    contested.insert((vb, sb));
-                }
-            }
-        }
-    }
-    for &(v, s) in &contested {
-        variables[v].segments[s].state = "ambiguous";
-    }
+    mark_rivals(
+        &mut variables
+            .iter_mut()
+            .enumerate()
+            .flat_map(|(v, variable)| variable.segments.iter_mut().map(move |s| (v, s)))
+            .collect::<Vec<_>>(),
+    );
     for (v, variable) in variables.iter().enumerate() {
         let segments = &variable.segments;
         for (s, segment) in segments.iter().enumerate() {
@@ -921,6 +824,8 @@ pub fn resolve(
             }
         }
     }
+
+    let selections = selections(&resolved, &releases);
 
     f1::changes(
         &variables,
@@ -1027,10 +932,228 @@ pub fn resolve(
         releases,
         variables,
         occurrences: resolved,
+        selections,
         gaps,
         findings,
         report,
     })
+}
+
+/// One variable's segments in table `table`, from its occurrences `own` there:
+/// the runs, each occurrence's run index, and the fields the covering occurrences
+/// state differently (F6). A component is `preliminary` when `preliminary` holds for
+/// every member.
+fn table_segments(
+    resolved: &[ResolvedOccurrence],
+    own: &[usize],
+    table: usize,
+    preliminary: impl Fn(usize) -> bool,
+) -> (Vec<Segment>, Vec<(usize, usize)>, BTreeSet<String>) {
+    let mut conflicts = BTreeSet::new();
+    let mut run_of = Vec::new();
+    // A segment holds whole occurrences: the variable's occurrences that
+    // overlap form one component, and adjacent components of one form join.
+    let mut sorted = own.to_vec();
+    sorted.sort_by(|&a, &b| span(&resolved[a]).cmp(span(&resolved[b])));
+    let mut components: Vec<(Interval, Vec<usize>)> = Vec::new();
+    for i in sorted {
+        let p = span(&resolved[i]).clone();
+        match components.last_mut() {
+            Some((span, members)) if p.0 <= span.1 => {
+                if p.1 > span.1 {
+                    span.1 = p.1;
+                }
+                members.push(i);
+            }
+            _ => components.push((p, vec![i])),
+        }
+    }
+    let mut runs: Vec<Segment> = Vec::new();
+    for (period, covering) in components {
+        let top = latest(resolved, &covering).expect("a component has a member");
+        let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
+        let o = &resolved[top].occurrence;
+        let agree = forms.len() == 1;
+        // A form field is stated only where every occurrence agrees on it.
+        let agreed = |field: fn(&Form) -> &Option<String>| {
+            let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
+            match values.len() {
+                1 => values.into_iter().next().cloned().flatten(),
+                _ => None,
+            }
+        };
+        let state = if !agree {
+            "ambiguous"
+        } else if covering.iter().all(|&i| preliminary(i)) {
+            "preliminary"
+        } else {
+            "clear"
+        };
+        // Flags hold if any covering occurrence states them: under-flagging is the
+        // dangerous direction. An identifier is a row key whichever occurrence says so.
+        let flag = |f: fn(&Occurrence) -> Option<bool>| {
+            covering
+                .iter()
+                .map(|&i| f(&resolved[i].occurrence))
+                .max()
+                .flatten()
+        };
+        let identifier = flag(|o| o.identifier);
+        for (name, f) in [
+            (
+                "sensitive",
+                (|o| o.sensitive) as fn(&Occurrence) -> Option<bool>,
+            ),
+            ("identifier", |o| o.identifier),
+        ] {
+            let stated: BTreeSet<bool> = covering
+                .iter()
+                .filter_map(|&i| f(&resolved[i].occurrence))
+                .collect();
+            if stated.len() > 1 {
+                conflicts.insert(name.to_owned());
+            }
+        }
+        let (length, length_conflict) =
+            reg_core::agreed_length(covering.iter().map(|&i| resolved[i].occurrence.length));
+        if length_conflict {
+            conflicts.insert("length".to_owned());
+        }
+        let segment = Segment {
+            table,
+            period,
+            spelling: o.column.clone(),
+            dtype: agreed(|f| &f.dtype),
+            length,
+            valueset: agreed(|f| &f.valueset),
+            coded: coded(o),
+            sensitive: flag(|o| o.sensitive),
+            identifier,
+            role: role(o, identifier),
+            state,
+        };
+        let index = match runs.last_mut() {
+            Some(prev)
+                if next_iso_day(&prev.period.1) == segment.period.0
+                    && same_form(prev, &segment) =>
+            {
+                prev.period.1 = segment.period.1;
+                prev.spelling = segment.spelling;
+                runs.len() - 1
+            }
+            _ => {
+                runs.push(segment);
+                runs.len() - 1
+            }
+        };
+        run_of.extend(covering.into_iter().map(|i| (i, index)));
+    }
+    (runs, run_of, conflicts)
+}
+
+/// Rival claimants: segments of two variables under one folded spelling, in one
+/// table, that overlap are both ambiguous.
+fn mark_rivals(segments: &mut [(usize, &mut Segment)]) {
+    let mut by_fold: BTreeMap<(usize, String), Vec<usize>> = BTreeMap::new();
+    for (k, (_, segment)) in segments.iter().enumerate() {
+        by_fold
+            .entry((segment.table, fold_identity(&segment.spelling)))
+            .or_default()
+            .push(k);
+    }
+    let mut contested = BTreeSet::new();
+    for members in by_fold.values() {
+        for (a, &ka) in members.iter().enumerate() {
+            for &kb in &members[a + 1..] {
+                let ((va, sa), (vb, sb)) = (&segments[ka], &segments[kb]);
+                if va != vb && intersect(&sa.period, &sb.period).is_some() {
+                    contested.insert(ka);
+                    contested.insert(kb);
+                }
+            }
+        }
+    }
+    for k in contested {
+        segments[k].1.state = "ambiguous";
+    }
+}
+
+/// Every selection of every table with a placed release (`crates/DESIGN.md`,
+/// "Selections"): per edition, per edition and qualifier, and per qualifier (`""` the
+/// unqualified releases). An edition key takes its releases' used and shadowed
+/// occurrences, none preliminary since the source named the edition, and does not
+/// re-shadow among them; a qualifier key takes the used ones, keeping their flag. The
+/// variables, their split and the primary segments are the main run's: the pass writes
+/// no finding.
+fn selections(resolved: &[ResolvedOccurrence], releases: &[ResolvedRelease]) -> Vec<Selection> {
+    type Key = (usize, Option<String>, Option<String>);
+    let mut keys: BTreeMap<Key, BTreeSet<usize>> = BTreeMap::new();
+    for (x, r) in releases.iter().enumerate() {
+        if r.primary.is_none() {
+            continue;
+        }
+        let edition = &r.release.edition;
+        let qualifier = r.release.qualifier.clone().unwrap_or_default();
+        for (e, q) in [
+            (Some(edition.clone()), None),
+            (Some(edition.clone()), Some(qualifier.clone())),
+            (None, Some(qualifier)),
+        ] {
+            keys.entry((r.table, e, q)).or_default().insert(x);
+        }
+    }
+    let mut used: BTreeMap<usize, BTreeSet<usize>> = BTreeMap::new();
+    for (i, r) in resolved.iter().enumerate() {
+        if r.status == "used" {
+            used.entry(r.table).or_default().insert(i);
+        }
+    }
+    let empty = BTreeSet::new();
+    keys.into_iter()
+        .map(|((table, edition, qualifier), named)| {
+            let members: BTreeSet<usize> = resolved
+                .iter()
+                .enumerate()
+                .filter(|(_, r)| {
+                    r.release.is_some_and(|x| named.contains(&x))
+                        && r.variable.is_some()
+                        && (r.status == "used" || (edition.is_some() && r.status == "shadowed"))
+                })
+                .map(|(i, _)| i)
+                .collect();
+            let same_as_primary = members == *used.get(&table).unwrap_or(&empty)
+                && (edition.is_none() || members.iter().all(|&i| !resolved[i].preliminary));
+            let segments = (!same_as_primary).then(|| {
+                let mut by_variable: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+                for &i in &members {
+                    by_variable
+                        .entry(resolved[i].variable.expect("filtered above"))
+                        .or_default()
+                        .push(i);
+                }
+                let mut segments: Vec<(usize, Segment)> = Vec::new();
+                for (v, own) in by_variable {
+                    let (runs, _, _) = table_segments(resolved, &own, table, |i| {
+                        edition.is_none() && resolved[i].preliminary
+                    });
+                    segments.extend(runs.into_iter().map(|s| (v, s)));
+                }
+                mark_rivals(
+                    &mut segments
+                        .iter_mut()
+                        .map(|(v, s)| (*v, s))
+                        .collect::<Vec<_>>(),
+                );
+                segments
+            });
+            Selection {
+                table,
+                edition,
+                qualifier,
+                segments,
+            }
+        })
+        .collect()
 }
 
 /// The default coded state: `no` when the source says the column carries no codes,

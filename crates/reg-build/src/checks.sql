@@ -19,6 +19,22 @@ SELECT id FROM (
     PARTITION BY variable_id, table_id ORDER BY start) AS prev_end
   FROM segment) WHERE start < prev_end;
 
+-- selections: one row per (table, edition, qualifier); UNIQUE lets two NULLs pass,
+-- GROUP BY puts them in one group
+SELECT table_id, edition, qualifier FROM selection
+GROUP BY table_id, edition, qualifier HAVING COUNT(*) > 1;
+
+-- a selection's segments sit in its table, and one that segment serves has none
+SELECT ss.selection_id, ss.variable_id, ss.start FROM selection_segment ss
+  JOIN selection s ON s.id = ss.selection_id
+WHERE s.same_as_primary = 1 OR ss.table_id <> s.table_id;
+
+-- no overlap within (selection, variable)
+SELECT selection_id, variable_id, start FROM (
+  SELECT selection_id, variable_id, start, LAG(end) OVER (
+    PARTITION BY selection_id, variable_id ORDER BY start) AS prev_end
+  FROM selection_segment) WHERE start < prev_end;
+
 -- (5) ambiguity is marked and symmetric
 SELECT a.id FROM segment a JOIN segment b
   ON b.table_id = a.table_id AND b.fold_id = a.fold_id AND b.variable_id <> a.variable_id

@@ -2,7 +2,7 @@
 //! The emitter decides nothing. Row ids follow natural-key order, indexes come after
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
-//! It fills the identity, coverage, release, variable, segment, occurrence, gap,
+//! It fills the identity, coverage, release, variable, segment, selection, occurrence, gap,
 //! value-set, relation, finding, document and search tables (`search.rs`);
 //! classifications and curation statements stay empty.
 
@@ -207,6 +207,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let mut segment_keys = Vec::new();
     let mut occurrence_keys = Vec::new();
     let mut release_keys = Vec::new();
+    let mut selection_keys = Vec::new();
     for (ri, r) in catalog.registers.iter().enumerate() {
         for t in 0..r.tables.len() {
             table_keys.push((pid_of_table(r, t), (ri, t)));
@@ -233,6 +234,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 ));
             }
         }
+        for s in &r.selections {
+            selection_keys.push((
+                (
+                    pid_of_table(r, s.table),
+                    s.edition.clone(),
+                    s.qualifier.clone(),
+                ),
+                (ri, s.table, &s.edition, &s.qualifier),
+            ));
+        }
         for (o, occ) in r.occurrences.iter().enumerate() {
             let x = &occ.occurrence;
             occurrence_keys.push((
@@ -253,6 +264,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let segment_id = index(segment_keys, "segment keys")?;
     let occurrence_id = index(occurrence_keys, "occurrence keys")?;
     let release_id = index(release_keys, "release keys")?;
+    // By table id, then edition and qualifier, `None` (NULL) first.
+    let selection_id = index(selection_keys, "selection keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
     for p in &catalog.providers {
@@ -460,30 +473,41 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 );
             }
             for (s, segment) in variable.segments.iter().enumerate() {
-                rows.push(
-                    "segment",
-                    vec![
-                        Cell::Int(segment_id[&(ri, v, s)]),
-                        Cell::Int(vid),
-                        Cell::Int(table_id[&(ri, segment.table)]),
-                        Cell::Fold(reg_core::fold_identity(&segment.spelling)),
-                        Cell::Int(start(&segment.period.0)),
-                        Cell::Int(end(&segment.period.1)),
-                        Cell::Spelling(segment.spelling.clone()),
-                        opt_str(segment.dtype.as_ref()),
-                        opt_int(segment.length),
-                        Cell::Null,
-                        opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
-                        Cell::Null,
-                        Cell::Str(segment.coded.into()),
-                        flag(segment.sensitive),
-                        flag(segment.identifier),
-                        Cell::Null,
-                        Cell::Str(segment.role.into()),
-                        Cell::Str("unknown".into()),
-                        Cell::Str(segment.state.into()),
-                    ],
-                );
+                let mut row = vec![
+                    Cell::Int(segment_id[&(ri, v, s)]),
+                    Cell::Int(vid),
+                    Cell::Int(table_id[&(ri, segment.table)]),
+                ];
+                row.extend(segment_cells(segment, &valueset_id));
+                rows.push("segment", row);
+            }
+        }
+
+        for selection in &r.selections {
+            let sid = selection_id[&(
+                ri,
+                selection.table,
+                &selection.edition,
+                &selection.qualifier,
+            )];
+            rows.push(
+                "selection",
+                vec![
+                    Cell::Int(sid),
+                    Cell::Int(table_id[&(ri, selection.table)]),
+                    opt_str(selection.edition.as_ref()),
+                    opt_str(selection.qualifier.as_ref()),
+                    Cell::Int(i64::from(selection.segments.is_none())),
+                ],
+            );
+            for (v, segment) in selection.segments.iter().flatten() {
+                let mut row = vec![
+                    Cell::Int(sid),
+                    Cell::Int(variable_id[&(ri, *v)]),
+                    Cell::Int(table_id[&(ri, segment.table)]),
+                ];
+                row.extend(segment_cells(segment, &valueset_id));
+                rows.push("selection_segment", row);
             }
         }
 
@@ -1014,6 +1038,29 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])
         .map_err(sql)?;
     Ok(())
+}
+
+/// A segment's cells from `fold_id` to `state`: `segment` and `selection_segment`
+/// share them.
+fn segment_cells(segment: &reg_resolve::Segment, valueset_id: &BTreeMap<&str, i64>) -> Vec<Cell> {
+    vec![
+        Cell::Fold(reg_core::fold_identity(&segment.spelling)),
+        Cell::Int(start(&segment.period.0)),
+        Cell::Int(end(&segment.period.1)),
+        Cell::Spelling(segment.spelling.clone()),
+        opt_str(segment.dtype.as_ref()),
+        opt_int(segment.length),
+        Cell::Null,
+        opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
+        Cell::Null,
+        Cell::Str(segment.coded.into()),
+        flag(segment.sensitive),
+        flag(segment.identifier),
+        Cell::Null,
+        Cell::Str(segment.role.into()),
+        Cell::Str("unknown".into()),
+        Cell::Str(segment.state.into()),
+    ]
 }
 
 /// Row ids 1.. for `keys` in sort order.
