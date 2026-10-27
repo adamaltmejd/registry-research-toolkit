@@ -351,7 +351,29 @@ fn sections(body: &str) -> Vec<DocSection> {
             });
         }
     };
+    // An open code fence as (marker, length); it closes on the same marker, at least as long.
+    let mut fence: Option<(char, usize)> = None;
     for line in body.lines() {
+        let trimmed = line.trim_start();
+        let marker = trimmed.chars().next().filter(|&c| c == '`' || c == '~');
+        let run = marker.map_or(0, |m| trimmed.chars().take_while(|&c| c == m).count());
+        if let (Some(m), true) = (marker, run >= 3) {
+            match fence {
+                None => fence = Some((m, run)),
+                Some((open, len))
+                    if open == m && run >= len && trimmed[run..].trim().is_empty() =>
+                {
+                    fence = None;
+                }
+                Some(_) => {}
+            }
+            text.push(line);
+            continue;
+        }
+        if fence.is_some() {
+            text.push(line);
+            continue;
+        }
         let hashes = line.chars().take_while(|&c| c == '#').count();
         let rest = &line[hashes..];
         if (1..=6).contains(&hashes) && (rest.is_empty() || rest.starts_with(' ')) {

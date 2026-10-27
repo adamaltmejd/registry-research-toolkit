@@ -15,3 +15,8 @@ Kön anges som kvinna eller man. Uppgiften hämtas från folkbokföringen.
 ### Förändringar
 
 Kodningen ändrades under nittiotalet.
+
+```
+# Kodrad, inte rubrik
+kon = 1
+```
