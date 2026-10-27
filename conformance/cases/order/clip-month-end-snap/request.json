@@ -1,23 +1,21 @@
 {
-  "note": "A range ending at a month ends on that month's last day (2017..2019-02-28). kon starts in 2018, so it is ordered for 2018..2019-02-28. Moved from `api/validate-month-end-snap` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
-  "fixture": "semantic",
-  "artifact": "catalog",
+  "note": "A range ending at a month ends on that month's last day: `{from: 2017, to: \"2019-02\"}` is `[2017-01-01, 2019-03-01)` (the reg-core period grammar has months). `imp` starts in 2018. Fails if `Kon` stops being ordered over `[2018-01-01, 2019-03-01)` with its value set, if the clip or its `period_clipped` over 2017 changes, or if the row key's period stops ending with the request. Oracle: the fixture's JSONL, the period grammar and logical-order.md §1; the value set hash is the fixture build's (content-addressed).",
+  "fixture": "orders",
   "project": {
-    "schema_version": "4.0.0",
-    "steward": "global",
-    "reg_meta_version": "5.1.0",
-    "name": "Reader case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
     "sources": [
       {
-        "name": "source",
-        "register_variant": "scb/example/annual",
+        "name": "s",
+        "table": "demo/imp",
         "period": {
           "from": 2017,
           "to": "2019-02"
         },
         "bindings": [
           {
-            "variable": "scb/example/kon",
+            "variable": "demo/imp/kon",
             "type": "categorical"
           }
         ]

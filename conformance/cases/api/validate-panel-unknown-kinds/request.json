@@ -1,0 +1,31 @@
+{
+  "note": "Fails if a panel whose members' row-key segments carry no identifier kind (`imp` and `nam/a` both key on a `Lopnr` with `id_kind_id` NULL; the default rules set no kind in C) raises `panel_row_keys_differ`, or any other issue: a NULL kind gives no finding (logical-order.md §3). The bound variables raise nothing themselves.",
+  "fixture": "orders",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "5.0.0",
+        "reg_meta_version": "0.64.0",
+        "name": "Order case",
+        "sources": [
+          {
+            "name": "income",
+            "table": "demo/imp",
+            "period": 2019,
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          },
+          {
+            "name": "amounts",
+            "table": "demo/nam/a",
+            "period": 2019,
+            "bindings": [{"variable": "demo/nam/belopptot", "type": "numeric"}]
+          }
+        ],
+        "panels": [{"panel_id": "p1", "members": ["income", "amounts"], "comment": "two keys"}]
+      }
+    }
+  ]
+}

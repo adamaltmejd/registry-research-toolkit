@@ -1,0 +1,76 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/ok": false,
+      "/data/issues/*/code": [
+        "table_is_register",
+        "variable_not_in_table",
+        "outside_availability",
+        "ambiguous_window",
+        "preliminary_without_edition",
+        "edition_not_found",
+        "period_default_on_dated_table",
+        "period_on_timeless_table",
+        "period_not_orderable"
+      ],
+      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error", "error"],
+      "/data/issues/*/path": [
+        "/sources/0/table",
+        "/sources/1/bindings/0",
+        "/sources/2/bindings/0",
+        "/sources/3/bindings/0",
+        "/sources/4/bindings/0",
+        "/sources/5/edition",
+        "/sources/6/period",
+        "/sources/7/period",
+        "/sources/8/period"
+      ],
+      "/data/issues/*/source": [
+        "register",
+        "not-in-table",
+        "outside",
+        "ambiguous",
+        "preliminary",
+        "edition",
+        "default",
+        "timeless",
+        "inverted"
+      ],
+      "/data/issues/*/variable": [
+        null,
+        "demo/nam/annan",
+        "demo/imp/ink",
+        "demo/amb/del",
+        "demo/pre/mat",
+        null,
+        null,
+        null,
+        null
+      ],
+      "/data/issues/*/table": [
+        null,
+        "demo/nam/a",
+        "demo/imp",
+        "demo/amb",
+        "demo/pre",
+        "demo/imp",
+        "demo/imp",
+        "demo/tid",
+        "demo/imp"
+      ],
+      "/data/issues/*/period": [
+        null,
+        null,
+        {"start": "2010-01-01", "end": "2011-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"},
+        null,
+        null,
+        null,
+        null
+      ],
+      "/data/issues/*/successor_fqid": [null, null, null, null, null, null, null, null, null]
+    }
+  }
+]

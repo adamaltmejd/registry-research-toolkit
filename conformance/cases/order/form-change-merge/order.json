@@ -1,0 +1,114 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/nam",
+      "table": "demo/nam/a",
+      "variable": "demo/nam/belopptot",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "spelling": "Belopp",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    },
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/nam",
+      "table": "demo/nam/a",
+      "variable": "demo/nam/belopptot",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "BeloppTot",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    },
+    {
+      "source": "s",
+      "binding": 1,
+      "provider": "demo",
+      "register": "demo/nam",
+      "table": "demo/nam/a",
+      "variable": "demo/nam/flagga",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Flagga",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/nam/a",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2021-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/nam/lopnr",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "form_change",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/nam/belopptot changes form at 2020-01-01 (Belopp -> BeloppTot)",
+      "source": "s",
+      "variable": "demo/nam/belopptot",
+      "table": "demo/nam/a",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null
+    },
+    {
+      "level": "warning",
+      "code": "variable_sensitive",
+      "path": "/sources/0/bindings/1",
+      "message": "demo/nam/flagga is sensitive in demo/nam/a over [2020-01-01, 2021-01-01)",
+      "source": "s",
+      "variable": "demo/nam/flagga",
+      "table": "demo/nam/a",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

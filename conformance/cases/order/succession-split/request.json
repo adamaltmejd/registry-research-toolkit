@@ -1,0 +1,25 @@
+{
+  "note": "`suc/ny` continues `suc/gammal` from 2018-01-01 (a dated table succession). Fails if ordering `Ink` from `gammal` over 2016..2019 stops sending each day to the table whose window holds it, `gammal` for 2016-2017 and `ny` for 2018-2019, or clips or flags the days `ny` serves; one form across the two tables is no form change. Oracle: the fixture's JSONL and logical-order.md §1.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/suc/gammal",
+        "period": {
+          "from": 2016,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/suc/ink",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

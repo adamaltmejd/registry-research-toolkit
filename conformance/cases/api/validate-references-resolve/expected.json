@@ -2,8 +2,19 @@
   {
     "status": 200,
     "json": {
-      "/data/ok": true,
-      "/data/issues": []
+      "/data/ok": false,
+      "/data/issues/*/code": ["fqid_unresolved", "fqid_unresolved", "fqid_unresolved"],
+      "/data/issues/*/level": ["error", "error", "error"],
+      "/data/issues/*/path": [
+        "/sources/0/table",
+        "/sources/1/bindings/0/variable",
+        "/sources/2/bindings/0/classification"
+      ],
+      "/data/issues/*/source": ["unknown-table", "unknown-variable", "pin"],
+      "/data/issues/*/variable": [null, null, "demo/imp/kon"],
+      "/data/issues/*/table": [null, "demo/imp", "demo/imp"],
+      "/data/issues/*/period": [null, null, null],
+      "/data/issues/*/successor_fqid": [null, null, null]
     }
   }
 ]

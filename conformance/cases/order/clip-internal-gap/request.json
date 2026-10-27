@@ -1,58 +1,22 @@
 {
-  "note": "avbrott is delivered 2010..2012 and 2016..2018. A range over the gap is ordered for both runs with one clip; a range inside one run and a list period that skips the gap are ordered whole, with no clip. Moved from `api/validate-internal-gap` when `validate` dropped `range_period_partially_covered` (#1836). Fails if the order stops clipping each binding to these days, reports another clip, or renders a clipped period differently.",
-  "fixture": "semantic",
-  "artifact": "catalog",
+  "note": "`gap` has releases 2015, 2016 and 2018, so `X` has two segments with no 2017 between them. Fails if ordering 2015..2018 stops giving one entry per segment piece, `[2015, 2017)` and `[2018, 2019)`, one clip whose `ordered` lists both pieces, and one `period_clipped` over the missing 2017; or if a same-form gap is reported as a form change. Oracle: the fixture's JSONL and logical-order.md §1.",
+  "fixture": "orders",
   "project": {
-    "schema_version": "4.0.0",
-    "steward": "global",
-    "reg_meta_version": "5.1.0",
-    "name": "Reader case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
     "sources": [
       {
-        "name": "range",
-        "register_variant": "scb/example/annual",
+        "name": "s",
+        "table": "demo/gap",
         "period": {
-          "from": 2010,
+          "from": 2015,
           "to": 2018
         },
         "bindings": [
           {
-            "variable": "scb/example/avbrott",
-            "type": "categorical"
-          }
-        ]
-      },
-      {
-        "name": "tail",
-        "register_variant": "scb/example/annual",
-        "period": {
-          "from": 2016,
-          "to": 2018
-        },
-        "bindings": [
-          {
-            "variable": "scb/example/avbrott",
-            "type": "categorical"
-          }
-        ]
-      },
-      {
-        "name": "list",
-        "register_variant": "scb/example/annual",
-        "period": [
-          {
-            "from": 2010,
-            "to": 2012
-          },
-          {
-            "from": 2016,
-            "to": 2018
-          }
-        ],
-        "bindings": [
-          {
-            "variable": "scb/example/avbrott",
-            "type": "categorical"
+            "variable": "demo/gap/x",
+            "type": "numeric"
           }
         ]
       }

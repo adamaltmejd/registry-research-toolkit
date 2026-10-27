@@ -1,88 +1,85 @@
 {
-  "clips": [
-    {
-      "ordered_period": "2018",
-      "requested_period": "2010..2012,2018",
-      "source": "segment",
-      "variable": "scb/example/kon"
-    },
-    {
-      "ordered_period": "2018",
-      "requested_period": "2015..2016,2018",
-      "source": "adjacent",
-      "variable": "scb/example/kon"
-    },
-    {
-      "ordered_period": "2018..2019,2021..2022",
-      "requested_period": "2017..2019,2021..2022",
-      "source": "partial",
-      "variable": "scb/example/kon"
-    }
-  ],
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
   "entries": [
     {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Kon",
-        "variable": "scb/example/kon",
-        "variant": "annual"
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/imp",
+      "table": "demo/imp",
+      "variable": "demo/imp/ink",
+      "display_name": null,
+      "period": {
+        "start": "2019-01-01",
+        "end": "2021-01-01"
       },
-      "physical": {
-        "column": "Kon",
-        "edition": "2018",
-        "file": "scb_example_annual_2018",
-        "table": ""
-      },
-      "requested_period": "2018",
-      "source": "segment"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Kon",
-        "variable": "scb/example/kon",
-        "variant": "annual"
-      },
-      "physical": {
-        "column": "Kon",
-        "edition": "2018",
-        "file": "scb_example_annual_2018",
-        "table": ""
-      },
-      "requested_period": "2018",
-      "source": "adjacent"
-    },
-    {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Kon",
-        "variable": "scb/example/kon",
-        "variant": "annual"
-      },
-      "physical": {
-        "column": "Kon",
-        "edition": "2018..2019,2021..2022",
-        "file": "scb_example_annual",
-        "table": ""
-      },
-      "requested_period": "2018..2019,2021..2022",
-      "source": "partial"
+      "spelling": "Ink",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
     }
   ],
-  "extract_format": "dta",
-  "provenance": {
-    "artifact_kind": "catalog",
-    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
-    "catalog_schema_version": "12.3.0",
-    "mode": "global_fallback",
-    "project_hash": "c6f06912f68b4ca067d5faa70fe60010c83bf0673a4aa99e9b627e1dac278531",
-    "project_name": "Reader case",
-    "project_reg_meta_version": "5.1.0",
-    "project_schema_version": "4.0.0",
-    "steward": "global"
-  },
-  "version": 3
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/imp",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2021-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/imp/lopnr",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "clips": [
+    {
+      "source": "s",
+      "variable": "demo/imp/ink",
+      "requested": [
+        {
+          "start": "2016-01-01",
+          "end": "2017-01-01"
+        },
+        {
+          "start": "2019-01-01",
+          "end": "2021-01-01"
+        }
+      ],
+      "ordered": [
+        {
+          "start": "2019-01-01",
+          "end": "2021-01-01"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "level": "info",
+      "code": "period_clipped",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/imp/ink is not available over [2016-01-01, 2017-01-01); that part is not ordered",
+      "source": "s",
+      "variable": "demo/imp/ink",
+      "table": "demo/imp",
+      "period": {
+        "start": "2016-01-01",
+        "end": "2017-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
 }

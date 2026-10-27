@@ -1,0 +1,73 @@
+{
+  "note": "Fails if a blocking finding stops being an `error` at its located path, or if validate stops reporting every one at once in source order: `table_is_register` (`demo/nam` names a register with tables `a` and `b`), `variable_not_in_table` (`annan` has segments only in `nam/b`), `outside_availability` (`imp` starts in 2018), `ambiguous_window` (two variables claim `Del` in `amb` over 2019), `preliminary_without_edition` (`pre`'s `Mat` for 2020 comes only from a preliminary release), `edition_not_found` (`imp` has final releases only), `period_default_on_dated_table`, `period_on_timeless_table` (`tid` has no dated occurrence, so it is timeless) and `period_not_orderable` (a scalar `{from: 2020, to: 2019}`). Each source binds one variable that raises nothing else. Oracle: the fixture's JSONL, reg-resolve's rules (lib.rs module docs: timeless tables, T2 editions, F2 rival claimants) and logical-order.md §3.",
+  "fixture": "orders",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "5.0.0",
+        "reg_meta_version": "0.64.0",
+        "name": "Order case",
+        "sources": [
+          {
+            "name": "register",
+            "table": "demo/nam",
+            "period": 2020,
+            "bindings": [{"variable": "demo/nam/annan", "type": "numeric"}]
+          },
+          {
+            "name": "not-in-table",
+            "table": "demo/nam/a",
+            "period": 2020,
+            "bindings": [{"variable": "demo/nam/annan", "type": "numeric"}]
+          },
+          {
+            "name": "outside",
+            "table": "demo/imp",
+            "period": 2010,
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          },
+          {
+            "name": "ambiguous",
+            "table": "demo/amb",
+            "period": 2019,
+            "bindings": [{"variable": "demo/amb/del", "type": "numeric"}]
+          },
+          {
+            "name": "preliminary",
+            "table": "demo/pre",
+            "period": 2020,
+            "bindings": [{"variable": "demo/pre/mat", "type": "numeric"}]
+          },
+          {
+            "name": "edition",
+            "table": "demo/imp",
+            "period": 2019,
+            "edition": "preliminary",
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          },
+          {
+            "name": "default",
+            "table": "demo/imp",
+            "period": "_default",
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          },
+          {
+            "name": "timeless",
+            "table": "demo/tid",
+            "period": 2019,
+            "bindings": [{"variable": "demo/tid/kod", "type": "categorical"}]
+          },
+          {
+            "name": "inverted",
+            "table": "demo/imp",
+            "period": {"from": 2020, "to": 2019},
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          }
+        ]
+      }
+    }
+  ]
+}

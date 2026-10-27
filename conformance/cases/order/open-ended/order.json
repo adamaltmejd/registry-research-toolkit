@@ -1,35 +1,49 @@
 {
-  "clips": [],
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0"
+  },
   "entries": [
     {
-      "logical": {
-        "provider": "scb",
-        "register": "example",
-        "representation": "Value",
-        "variable": "scb/example/value",
-        "variant": "annual"
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/opn",
+      "table": "demo/opn",
+      "variable": "demo/opn/y",
+      "display_name": null,
+      "period": {
+        "start": "2019-01-01",
+        "end": "2021-01-01"
       },
-      "physical": {
-        "column": "Value",
-        "edition": "2018..2020",
-        "file": "scb_example_annual",
-        "table": ""
-      },
-      "requested_period": "2018..2020",
-      "source": "Example"
+      "spelling": "Y",
+      "type": "int",
+      "length": null,
+      "value_set": null,
+      "classification": null
     }
   ],
-  "extract_format": "dta",
-  "provenance": {
-    "artifact_kind": "catalog",
-    "catalog_generation_id": "6ee6dd36e90fe4a0c5e4d6d4aaa0faaaf9fc237d94aa685fcbf80191027744ad",
-    "catalog_schema_version": "12.3.0",
-    "mode": "global_fallback",
-    "project_hash": "a31a50cdfb4a5f0dbf71a6dfc28e344a485d91e2cdd64a825eac3b9c8874836a",
-    "project_name": "Reader case",
-    "project_reg_meta_version": "reg_meta/v0.40.1",
-    "project_schema_version": "4.0.0",
-    "steward": "global"
-  },
-  "version": 3
+  "row_keys": [],
+  "clips": [],
+  "findings": [
+    {
+      "level": "info",
+      "code": "coverage_end_unstated",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/opn/y in demo/opn has no stated coverage end; data over [2019-01-01, 2021-01-01) is not confirmed",
+      "source": "s",
+      "variable": "demo/opn/y",
+      "table": "demo/opn",
+      "period": {
+        "start": "2019-01-01",
+        "end": "2021-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
 }

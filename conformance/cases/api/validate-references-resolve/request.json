@@ -1,40 +1,34 @@
 {
-  "note": "Twin of `validate/references-resolve`: fails if `validate` stops answering this project with 200 and these `ok` and issues (code, level, path, message, in emission order).",
-  "kind": "catalog",
-  "fixture": "semantic",
+  "note": "Fails if an id the catalog does not hold stops being `fqid_unresolved` at the field that names it: an unknown table (`/sources/0/table`; the source's windows are not checked, so its known binding adds nothing), an unknown variable (`/sources/1/bindings/0/variable`) and a classification pin, which no version can satisfy until D curates classification versions (`/sources/2/bindings/0/classification`). Also fails if the issues leave source order or `ok` turns true. Oracle: logical-order.md §3 and the fixture's ids.",
+  "fixture": "orders",
   "requests": [
     {
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "4.0.0",
-        "steward": "global",
-        "reg_meta_version": "5.1.0",
-        "name": "Synthetic semantic",
+        "schema_version": "5.0.0",
+        "reg_meta_version": "0.64.0",
+        "name": "Order case",
         "sources": [
           {
-            "name": "source",
-            "register_variant": "scb/example/annual",
-            "period": 2018,
-            "bindings": [
-              {
-                "variable": "scb/example/kon",
-                "type": "categorical",
-                "value_set": "class/kon"
-              }
-            ]
+            "name": "unknown-table",
+            "table": "demo/imp/nope",
+            "period": 2019,
+            "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
           },
           {
-            "name": "second",
-            "register_variant": "scb/example/annual",
-            "period": 2018,
+            "name": "unknown-variable",
+            "table": "demo/imp",
+            "period": 2019,
+            "bindings": [{"variable": "demo/imp/nope", "type": "numeric"}]
+          },
+          {
+            "name": "pin",
+            "table": "demo/imp",
+            "period": 2019,
             "bindings": [
-              {
-                "variable": "scb/example/kon",
-                "type": "categorical",
-                "value_set": "class/kon"
-              }
+              {"variable": "demo/imp/kon", "type": "categorical", "classification": "class/kon/2020"}
             ]
           }
         ]

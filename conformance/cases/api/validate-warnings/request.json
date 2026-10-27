@@ -1,0 +1,64 @@
+{
+  "note": "Fails if a clear project stops being `ok: true` with exactly these non-blocking findings, at their levels and located paths, in source, then binding (source-level first), then code order: `identifier` (`imp` Lopnr) and `variable_sensitive` (`imp` Kansl is sensitive from 2020); `edition_disagreement` (the preliminary 2019 release of `pre` types `Mat` decimal, the final one int: reg-resolve's F7 on that release); `period_clipped` and `variable_replaced` (`rep` Gammal ends 2017; `Ny` continues it from 2018, named in `successor_fqid` and never followed); `form_change` (`nam/a` spells the variable `Belopp`, then `BeloppTot` from 2020); `coverage_end_unstated` (`opn`'s only column has no stated end); `table_succession_undated` and `period_clipped` (`und/tva` continues `und/ett` with no `at`, so the request past `ett`'s coverage end is clipped, not followed). Oracle: the fixture's JSONL, reg-resolve's rules and logical-order.md §3. The second step fails if an unknown query parameter stops being `invalid_parameter` naming it (the error the MCP equivalence test requires `validate`'s cases to reach).",
+  "fixture": "orders",
+  "requests": [
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "body": {
+        "schema_version": "5.0.0",
+        "reg_meta_version": "0.64.0",
+        "name": "Order case",
+        "sources": [
+          {
+            "name": "flags",
+            "table": "demo/imp",
+            "period": 2020,
+            "bindings": [
+              {"variable": "demo/imp/lopnr", "type": "id", "id_subtype": "integer"},
+              {"variable": "demo/imp/kansl", "type": "numeric"}
+            ]
+          },
+          {
+            "name": "editions",
+            "table": "demo/pre",
+            "period": 2019,
+            "bindings": [{"variable": "demo/pre/mat", "type": "numeric"}]
+          },
+          {
+            "name": "replaced",
+            "table": "demo/rep",
+            "period": {"from": 2015, "to": 2020},
+            "bindings": [{"variable": "demo/rep/gammal", "type": "numeric"}]
+          },
+          {
+            "name": "forms",
+            "table": "demo/nam/a",
+            "period": {"from": 2018, "to": 2020},
+            "bindings": [{"variable": "demo/nam/belopptot", "type": "numeric"}]
+          },
+          {
+            "name": "open",
+            "table": "demo/opn",
+            "period": 2019,
+            "bindings": [{"variable": "demo/opn/y", "type": "numeric"}]
+          },
+          {
+            "name": "undated",
+            "table": "demo/und/ett",
+            "period": {"from": 2016, "to": 2019},
+            "bindings": [{"variable": "demo/und/ink", "type": "numeric"}]
+          }
+        ]
+      }
+    },
+    {
+      "operation": "validate",
+      "method": "POST",
+      "path": "/api/project/validate",
+      "query": {"verbose": "true"},
+      "body": {"schema_version": "5.0.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
+    }
+  ]
+}
