@@ -372,13 +372,20 @@ fn select(
 }
 
 fn overlaps(a: &Match, b: &Match) -> bool {
-    a.spans
-        .iter()
-        .any(|a| b.spans.iter().any(|b| intersect(a, b).is_some()))
+    !reg_core::overlap(&a.spans, &b.spans).is_empty()
 }
 
 fn same_subject(a: &Source, b: &Source) -> bool {
-    a.text("kind") == b.text("kind") && a.locators.iter().any(|l| b.locators.contains(l))
+    a.text("kind") == b.text("kind")
+        && ["provider", "register", "table", "release"]
+            .iter()
+            .all(|field| {
+                a.fields
+                    .get(*field)
+                    .zip(b.fields.get(*field))
+                    .is_none_or(|(a, b)| a == b)
+            })
+        && a.locators.iter().any(|l| b.locators.contains(l))
 }
 
 fn ambiguity(matches: &[Match], view: &[Source]) -> Result<(), String> {
@@ -546,7 +553,7 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
             }
             result
         }
-        Statement::Assign { .. } => BTreeSet::from(["assignment".into()]),
+        Statement::Assign { .. } => BTreeSet::from(["variable".into()]),
         Statement::Bind { .. } => BTreeSet::from(["binding".into()]),
         Statement::Assert { fact, .. } => match fact {
             AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
@@ -564,6 +571,148 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
         }
         Statement::Ack { finding, .. } => BTreeSet::from([format!("finding:{finding}")]),
     }
+}
+
+fn effects_overlap(a: &BTreeSet<String>, b: &BTreeSet<String>) -> bool {
+    !a.is_disjoint(b) || a.contains("reject") || b.contains("reject")
+}
+
+/// A field introduced by an accepted bind/assert, in final source coordinates.
+/// `statement` indexes the evaluated statements supplied to [`applied_conflicts`].
+pub struct AppliedClaim<'a> {
+    pub statement: usize,
+    pub kind: &'a str,
+    pub locator: &'a Locator,
+    pub provider: Option<&'a str>,
+    pub register: Option<&'a str>,
+    pub table: Option<&'a str>,
+    pub release: Option<&'a str>,
+    pub field: &'a str,
+    pub period: Option<&'a Interval>,
+}
+
+fn premise_source(premise: &SourcePremise) -> Source {
+    let period = premise
+        .fields
+        .get("period")
+        .and_then(Value::as_array)
+        .and_then(|p| {
+            p.first()
+                .and_then(Value::as_str)
+                .zip(p.get(1).and_then(Value::as_str))
+                .map(|(a, b)| (a.to_owned(), b.to_owned()))
+        });
+    Source {
+        fields: premise.fields.clone(),
+        locators: vec![premise.locator.clone()],
+        period,
+    }
+}
+
+fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
+    let span = source
+        .period
+        .clone()
+        .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
+    match subject(statement) {
+        Some(Address::Occurrence {
+            periods: Some(scope),
+            ..
+        }) => periods(scope)
+            .iter()
+            .filter_map(|p| intersect(&span, p))
+            .collect(),
+        _ => vec![span],
+    }
+}
+
+/// Find overlaps between already-applied source-shaped claims and evaluated
+/// statements. Uses the same effects, source identity and interval overlap as the
+/// register-local evaluator; the build boundary adds authoring locations.
+#[must_use]
+pub fn applied_conflicts(
+    statements: &[(&Statement, &Premise)],
+    claims: &[AppliedClaim<'_>],
+) -> Vec<(usize, usize)> {
+    let mut conflicts = BTreeSet::new();
+    let evaluated: Vec<_> = statements
+        .iter()
+        .map(|(statement, premise)| {
+            (
+                effects(statement),
+                premise
+                    .subjects
+                    .iter()
+                    .map(premise_source)
+                    .collect::<Vec<_>>(),
+            )
+        })
+        .collect();
+    for claim in claims {
+        let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
+        for (field, value) in [
+            ("provider", claim.provider),
+            ("register", claim.register),
+            ("table", claim.table),
+            ("release", claim.release),
+        ] {
+            if let Some(value) = value {
+                fields.insert(field.into(), Value::String(value.into()));
+            }
+        }
+        let source = Source {
+            fields,
+            locators: vec![claim.locator.clone()],
+            period: claim.period.cloned(),
+        };
+        let claimed = Match {
+            source: 0,
+            spans: vec![
+                claim
+                    .period
+                    .cloned()
+                    .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into())),
+            ],
+        };
+        let field = BTreeSet::from([claim.field.to_owned()]);
+        for (index, ((statement, _), (effects, sources))) in
+            statements.iter().zip(&evaluated).enumerate()
+        {
+            if index == claim.statement || !effects_overlap(effects, &field) {
+                continue;
+            }
+            if sources.iter().any(|selected| {
+                same_subject(selected, &source)
+                    && overlaps(
+                        &Match {
+                            source: 0,
+                            spans: subject_spans(statement, selected),
+                        },
+                        &claimed,
+                    )
+            }) {
+                conflicts.insert((index.min(claim.statement), index.max(claim.statement)));
+            }
+        }
+    }
+    conflicts.into_iter().collect()
+}
+
+/// Classification versions of one family have distinct names and disjoint periods.
+#[must_use]
+pub fn classification_conflicts(classes: &[apply::Classification]) -> Vec<(usize, usize)> {
+    let mut conflicts = Vec::new();
+    for (a, left) in classes.iter().enumerate() {
+        for (b, right) in classes.iter().enumerate().skip(a + 1) {
+            if left.family == right.family
+                && (left.version == right.version
+                    || intersect(&left.period, &right.period).is_some())
+            {
+                conflicts.push((a, b));
+            }
+        }
+    }
+    conflicts
 }
 
 fn subject(statement: &Statement) -> Option<&Address> {
@@ -924,12 +1073,7 @@ pub fn resolve(
         for b in a + 1..statements.len() {
             let a_effects = effects(statements[a]);
             let b_effects = effects(statements[b]);
-            if out[a].is_err()
-                || out[b].is_err()
-                || (a_effects.is_disjoint(&b_effects)
-                    && !a_effects.contains("reject")
-                    && !b_effects.contains("reject"))
-            {
+            if out[a].is_err() || out[b].is_err() || !effects_overlap(&a_effects, &b_effects) {
                 continue;
             }
             if subjects[a].iter().any(|a| {

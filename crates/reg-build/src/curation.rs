@@ -231,30 +231,6 @@ fn checked_premise(
     }
 }
 
-fn affected(statement: &reg_frame::statement::Statement) -> BTreeSet<String> {
-    use reg_frame::statement::Statement;
-    match statement {
-        Statement::Set { fields, reject, .. } => {
-            if *reject {
-                return ["spelling", "type", "label", "value_set", "table", "period"]
-                    .into_iter()
-                    .map(str::to_owned)
-                    .collect();
-            }
-            serde_json::to_value(fields)
-                .expect("typed fields")
-                .as_object()
-                .expect("fields object")
-                .iter()
-                .filter(|(_, v)| !v.is_null())
-                .map(|(k, _)| k.clone())
-                .collect()
-        }
-        Statement::Assign { .. } => BTreeSet::from(["variable".into()]),
-        _ => BTreeSet::new(),
-    }
-}
-
 fn remap(
     values: &mut [crate::emit::CuratedValue],
     changes: &[reg_resolve::curation::apply::Change],
@@ -352,6 +328,7 @@ fn run_selected(
         locks.insert((provider, register), (path, ledger, old));
     }
     let mut priorities = BTreeMap::new();
+    let mut origins = BTreeMap::new();
     for stage in 0..4 {
         // Resolve every group before changing this phase's frame. This makes file
         // order immaterial, including a bind that moves a foreign source register.
@@ -460,8 +437,14 @@ fn run_selected(
                 .collect::<Vec<_>>();
             let file = statement
                 .path
-                .strip_prefix(std::env::current_dir().map_err(|e| e.to_string())?)
-                .unwrap_or(&statement.path)
+                .strip_prefix(root)
+                .map_err(|_| {
+                    format!(
+                        "{}: statement is outside curation root {}",
+                        statement.path.display(),
+                        root.display()
+                    )
+                })?
                 .to_string_lossy()
                 .into_owned();
             let locator = reg_frame::Locator {
@@ -487,6 +470,7 @@ fn run_selected(
                 &premise,
                 &priorities,
                 &source_records,
+                &mut origins,
             ) {
                 Ok(a) => a,
                 Err(e) => {
@@ -557,70 +541,53 @@ fn run_selected(
         }
     }
     let mut conflicts = BTreeSet::new();
-    for (statement, premise) in &evaluated {
-        if phase(&statement.statement) != 3 {
-            continue;
-        }
-        let fields = affected(&statement.statement);
-        for winner in &result.overrides {
-            if fields.contains(winner.field.as_str())
-                && premise.subjects.iter().any(|p| {
-                    p.locator == winner.locator
-                        && winner.period.as_ref().is_none_or(|scope| {
-                            p.fields
-                                .get("period")
-                                .and_then(serde_json::Value::as_array)
-                                .is_none_or(|bounds| {
-                                    bounds
-                                        .first()
-                                        .and_then(serde_json::Value::as_str)
-                                        .zip(bounds.get(1).and_then(serde_json::Value::as_str))
-                                        .is_none_or(|(a, b)| {
-                                            reg_core::intersect(
-                                                scope,
-                                                &(a.to_owned(), b.to_owned()),
-                                            )
-                                            .is_some()
-                                        })
-                                })
-                        })
-                })
-            {
-                conflicts.insert(statement.identity.clone());
-                conflicts.insert(winner.statement.clone());
-                let other = result
-                    .statements
-                    .iter()
-                    .find(|s| s.hash == winner.statement)
-                    .expect("curated statement");
-                refusals.push(format!(
-                    "{}: curation-overlap: overlapping overrides with {}:{}",
-                    location(statement),
-                    other.file,
-                    other.line
-                ));
-            }
-        }
+    let indices = evaluated
+        .iter()
+        .enumerate()
+        .map(|(i, (s, _))| (s.identity.as_str(), i))
+        .collect::<BTreeMap<_, _>>();
+    let claims = result
+        .overrides
+        .iter()
+        .map(|value| reg_resolve::curation::AppliedClaim {
+            statement: indices[value.statement.as_str()],
+            kind: &value.kind,
+            locator: &value.locator,
+            provider: value.provider.as_deref(),
+            register: value.register.as_deref(),
+            table: value.table.as_deref(),
+            release: value.release.as_deref(),
+            field: &value.field,
+            period: value.period.as_ref(),
+        })
+        .collect::<Vec<_>>();
+    let resolved = evaluated
+        .iter()
+        .map(|(s, p)| (&s.statement, p))
+        .collect::<Vec<_>>();
+    for (a, b) in reg_resolve::curation::applied_conflicts(&resolved, &claims) {
+        let (left, right) = (evaluated[a].0, evaluated[b].0);
+        conflicts.insert(left.identity.clone());
+        conflicts.insert(right.identity.clone());
+        refusals.push(format!(
+            "{}: curation-overlap: overlapping overrides with {}",
+            location(left),
+            location(right)
+        ));
     }
-    for (i, a) in result.classifications.iter().enumerate() {
-        for b in &result.classifications[i + 1..] {
-            if a.family == b.family
-                && (a.version == b.version || reg_core::intersect(&a.period, &b.period).is_some())
-            {
-                for class in [a, b] {
-                    if let Some(s) = result.statements.iter().find(|s| {
-                        s.file == class.locator.input
-                            && format!("line={}", s.line) == class.locator.at
-                    }) {
-                        conflicts.insert(s.hash.clone());
-                    }
-                }
-                refusals.push(format!(
-                    "{}:{}: curation-overlap: classification version overlaps {}:{}",
-                    a.locator.input, a.locator.at, b.locator.input, b.locator.at
-                ));
+    for (a, b) in reg_resolve::curation::classification_conflicts(&result.classifications) {
+        let (left, right) = (&result.classifications[a], &result.classifications[b]);
+        for class in [left, right] {
+            if let Some(statement) = result.statements.iter().find(|s| {
+                s.file == class.locator.input && format!("line={}", s.line) == class.locator.at
+            }) {
+                conflicts.insert(statement.hash.clone());
             }
         }
+        refusals.push(format!(
+            "{}:{}: curation-overlap: classification version overlaps {}:{}",
+            left.locator.input, left.locator.at, right.locator.input, right.locator.at
+        ));
     }
     if !conflicts.is_empty() {
         if record || release {

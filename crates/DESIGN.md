@@ -254,7 +254,9 @@ spelling and type. A D `set` states those.
   tables: normalized hash, file/line, evidence, caveat, winning values and losing source
   values. Moved rows retain their source locators. Asserted rows have statement
   provenance instead of invented input rows; asserted releases use `curated` parse
-  state. No catalog schema change is needed.
+  state. Statement paths are relative to the curation root, independent of the
+  invocation directory or whether that root is passed as an absolute path. No catalog
+  schema change is needed.
 - `curation.lock` is generated canonical JSON (via `reg-frame::canonical_line`), with
   `version = 1` and a `statements` object keyed by normalized statement identity. Each
   premise stores sorted `subjects` and `objects`: source locators and the source values

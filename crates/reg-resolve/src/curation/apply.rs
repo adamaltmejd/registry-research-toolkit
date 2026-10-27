@@ -2,7 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, intersect, merge, next_iso_day, prev_iso_day};
+use reg_core::{Interval, gaps, intersect, merge, next_iso_day, prev_iso_day};
 use reg_frame::address::{Address, Comparison, GuardField};
 use reg_frame::statement::{AssertFact, BindTarget, Statement};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Record, ValueSet};
@@ -121,14 +121,20 @@ fn change(
     losing: &Value,
     period: Option<Interval>,
 ) -> Change {
+    let kind = text(value, "kind").expect("record kind");
     Change {
-        kind: text(value, "kind").expect("record kind").into(),
+        kind: if kind == "value_set" {
+            "valueset"
+        } else {
+            kind
+        }
+        .into(),
         locator: locator(value),
         provider: text(value, "provider").map(str::to_owned),
         register: text(value, "register").map(str::to_owned),
         table: text(value, "table").map(str::to_owned),
         release: text(value, "release").map(str::to_owned),
-        period,
+        period: if kind == "value_set" { None } else { period },
         field: match field {
             "dtype" => "type",
             "column" => "spelling",
@@ -143,29 +149,6 @@ fn change(
 
 fn decode(value: Value) -> Result<Record, String> {
     serde_json::from_value(value).map_err(|e| format!("asserted frame: {e}"))
-}
-
-fn subtract(base: &Interval, selected: &[Interval]) -> Vec<Interval> {
-    let mut residual = vec![base.clone()];
-    for cut in selected {
-        residual = residual
-            .into_iter()
-            .flat_map(|p| {
-                let Some(hit) = intersect(&p, cut) else {
-                    return vec![p];
-                };
-                let mut out = Vec::new();
-                if p.0 < hit.0 {
-                    out.push((p.0, prev_iso_day(&hit.0)));
-                }
-                if hit.1 < p.1 {
-                    out.push((next_iso_day(&hit.1), p.1));
-                }
-                out
-            })
-            .collect();
-    }
-    residual
 }
 
 fn scoped(mut value: Value, period: &Interval, original: &Interval) -> Value {
@@ -234,13 +217,15 @@ fn assert_fields(
 
 /// Apply one already-reviewed statement. This stage does no IO and never accepts a
 /// premise; the caller supplies the lock-checked premise and statement location.
+/// `origins` retains declaration source holders between applications in this build;
+/// occurrence holders remain in the frame's `also` locators.
 ///
 /// # Errors
 /// Unsupported source shapes, missing parent coordinates or conflicting source facts.
 ///
 /// # Panics
 /// Only if a typed frame record stops serializing to its declared JSON shape.
-#[allow(clippy::too_many_lines)]
+#[allow(clippy::too_many_lines, clippy::too_many_arguments)]
 pub fn apply(
     records: &[Record],
     ledger: &Ledger,
@@ -249,6 +234,7 @@ pub fn apply(
     premise: &Premise,
     priorities: &BTreeMap<Locator, i64>,
     source_records: &[Record],
+    origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
 ) -> Result<Applied, String> {
     let mut out = Applied {
         records: records.to_vec(),
@@ -361,7 +347,7 @@ pub fn apply(
                     );
                 }
                 let spans = if matches!(kind, "register" | "table") {
-                    if !subtract(&original, &spans).is_empty() {
+                    if !gaps(std::slice::from_ref(&original), spans.clone()).is_empty() {
                         output.push(record.clone());
                     }
                     vec![(
@@ -369,7 +355,7 @@ pub fn apply(
                         spans.last().expect("selected span").1.clone(),
                     )]
                 } else {
-                    for residual in subtract(&original, &spans) {
+                    for residual in gaps(std::slice::from_ref(&original), spans.clone()) {
                         output.push(decode(scoped(value.clone(), &residual, &original))?);
                     }
                     spans
@@ -443,6 +429,7 @@ pub fn apply(
                 *priority,
                 priorities,
                 source_records,
+                origins,
                 &mut out.changes,
             )?;
             if let Some(source) = source {
@@ -646,10 +633,27 @@ pub fn apply(
                         value["from"] = json!(p.0);
                         value["to"] = json!(p.1);
                     } else {
-                        if !records.iter().any(|r|matches!(r,Record::Release(r) if r.table == table && Some(r.release.as_str()) == text(&value,"release"))) { return Err("assert occurrence names an unknown release".into()); }
-                        let release_period = span(&value, records);
+                        let release = records
+                            .iter()
+                            .find_map(|r| match r {
+                                Record::Release(r)
+                                    if value["provider"] == r.provider
+                                        && value["register"] == r.register
+                                        && r.table == table
+                                        && Some(r.release.as_str()) == text(&value, "release") =>
+                                {
+                                    Some(r)
+                                }
+                                _ => None,
+                            })
+                            .ok_or("assert occurrence names an unknown release")?;
+                        let release_period = release
+                            .from
+                            .as_ref()
+                            .zip(release.to.as_ref())
+                            .map(|(from, to)| (from.clone(), to.clone()));
                         if (scope.is_some() || !value["from"].is_null() || !value["to"].is_null())
-                            && p != release_period
+                            && release_period.as_ref() != Some(&p)
                         {
                             return Err(
                                 "assert occurrence period differs from its source release".into()
@@ -890,14 +894,31 @@ fn attach_valueset(
             output.push(record.clone());
             continue;
         };
+        let value = tree(record);
+        let original = span(&value, &out.records);
         let spans = merge(
             selected
                 .iter()
                 .filter(|m| {
-                    view[m.source].locators.contains(&o.locator)
-                        || o.also.iter().any(|l| view[m.source].locators.contains(l))
+                    let source = &view[m.source];
+                    source.text("kind") == Some("occurrence")
+                        && [
+                            ("provider", "provider"),
+                            ("register", "register"),
+                            ("table", "table"),
+                            ("release", "release"),
+                            ("key", "source_key"),
+                            ("spelling", "column"),
+                            ("label", "label"),
+                            ("type", "dtype"),
+                            ("unit", "unit"),
+                        ]
+                        .iter()
+                        .all(|(field, raw)| source.fields.get(*field) == Some(&value[*raw]))
+                        && (source.locators.contains(&o.locator)
+                            || o.also.iter().any(|l| source.locators.contains(l)))
                 })
-                .flat_map(|m| m.spans.clone())
+                .flat_map(|m| m.spans.iter().filter_map(|p| intersect(p, &original)))
                 .collect(),
         );
         if spans.is_empty() {
@@ -909,11 +930,10 @@ fn attach_valueset(
                 "assert value set cannot replace a source-stated value set; use set".into(),
             );
         }
-        let original = span(&tree(record), &out.records);
         if o.release.is_some() && spans != vec![original.clone()] {
             return Err("assert value set period cannot split a stated release; use set".into());
         }
-        for residual in subtract(&original, &spans) {
+        for residual in gaps(std::slice::from_ref(&original), spans.clone()) {
             output.push(decode(scoped(tree(record), &residual, &original))?);
         }
         for p in spans {
@@ -1088,6 +1108,7 @@ fn merge_bound(
     priority: Option<i64>,
     priorities: &BTreeMap<Locator, i64>,
     source_records: &[Record],
+    origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
     changes: &mut Vec<Change>,
 ) -> Result<(), String> {
     let mut raw_fields: BTreeMap<Locator, Vec<Value>> = BTreeMap::new();
@@ -1128,7 +1149,9 @@ fn merge_bound(
         if let Some(index) = existing {
             let old = tree(&output[index]);
             let rank = |v: &Value, field: &str| {
-                let mut locators = vec![locator(v)];
+                let at = locator(v);
+                let mut locators = vec![at.clone()];
+                locators.extend(origins.get(&at).into_iter().flatten().cloned());
                 if let Some(also) = v["also"].as_array() {
                     locators.extend(
                         also.iter()
@@ -1142,7 +1165,9 @@ fn merge_bound(
                     .iter()
                     .filter(|at| {
                         raw_fields.get(*at).is_some_and(|sources| {
-                            sources.iter().any(|source| source[field] == v[field])
+                            sources.iter().any(|source| {
+                                source["kind"] == v["kind"] && source[field] == v[field]
+                            })
                         })
                     })
                     .map(|at| priorities.get(at).copied().unwrap_or(0))
@@ -1214,6 +1239,15 @@ fn merge_bound(
                 locators.sort();
                 locators.dedup();
                 incoming["also"] = json!(locators);
+            } else {
+                // Declarations have no `also` field. Keep their merged source
+                // holders beside the frame so later binds can rank borrowed fields.
+                let incoming_at = locator(&incoming);
+                let old_at = locator(&old);
+                let mut holders = BTreeSet::from([incoming_at.clone(), old_at.clone()]);
+                holders.extend(origins.get(&incoming_at).into_iter().flatten().cloned());
+                holders.extend(origins.get(&old_at).into_iter().flatten().cloned());
+                origins.insert(incoming_at, holders);
             }
             output[index] = decode(incoming)?;
         } else {
