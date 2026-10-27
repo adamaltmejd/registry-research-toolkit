@@ -3,8 +3,8 @@
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
 //! It fills the identity, coverage, release, variable, segment, occurrence, gap,
-//! value-set and finding tables; classifications, documents, search and curation
-//! statements stay empty.
+//! value-set, finding and search tables (`search.rs`); classifications, documents and
+//! curation statements stay empty.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -91,13 +91,36 @@ fn flag(b: Option<bool>) -> Cell {
 }
 
 /// The day number of an inclusive start.
-fn start(iso: &str) -> i64 {
+pub(crate) fn start(iso: &str) -> i64 {
     reg_core::iso_day_number(iso).expect("resolved periods are ISO days")
 }
 
 /// The half-open end of an inclusive end: the day after.
-fn end(iso: &str) -> i64 {
+pub(crate) fn end(iso: &str) -> i64 {
     start(iso) + 1
+}
+
+/// The half-open hull of a table's coverage spans.
+pub(crate) fn hull(spans: &[reg_core::Interval]) -> (i64, i64) {
+    spans.iter().fold((i64::MAX, i64::MIN), |(lo, hi), p| {
+        (lo.min(start(&p.0)), hi.max(end(&p.1)))
+    })
+}
+
+pub(crate) fn pid_of_register(r: &Resolved) -> String {
+    format!("{}/{}", r.register.provider, r.register.register)
+}
+
+pub(crate) fn pid_of_table(r: &Resolved, t: usize) -> String {
+    let base = pid_of_register(r);
+    match &r.tables[t].slug {
+        Some(slug) => format!("{base}/{slug}"),
+        None => base,
+    }
+}
+
+pub(crate) fn pid_of_variable(r: &Resolved, v: usize) -> String {
+    format!("{}/{}", pid_of_register(r), r.variables[v].slug)
 }
 
 #[derive(Default)]
@@ -165,18 +188,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     // Row ids by natural key.
     let provider_id: BTreeMap<&str, i64> =
         sorted_ids(catalog.providers.iter().map(|p| p.pid.as_str()));
-    let pid_of_register = |r: &Resolved| format!("{}/{}", r.register.provider, r.register.register);
     let register_id: BTreeMap<String, i64> =
         sorted_ids(catalog.registers.iter().map(pid_of_register));
-    let pid_of_table = |r: &Resolved, t: usize| {
-        let base = pid_of_register(r);
-        match &r.tables[t].slug {
-            Some(slug) => format!("{base}/{slug}"),
-            None => base,
-        }
-    };
-    let pid_of_variable =
-        |r: &Resolved, v: usize| format!("{}/{}", pid_of_register(r), r.variables[v].slug);
     let mut table_keys = Vec::new();
     let mut variable_keys = Vec::new();
     let mut segment_keys = Vec::new();
@@ -268,11 +281,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         let pid = *provider_id
             .get(reg.provider.as_str())
             .ok_or_else(|| format!("provider {:?} is not in the manifest", reg.provider))?;
-        let hull = |spans: &mut dyn Iterator<Item = &reg_core::Interval>| {
-            spans.fold((i64::MAX, i64::MIN), |(lo, hi), p| {
-                (lo.min(start(&p.0)), hi.max(end(&p.1)))
-            })
-        };
         rows.push(
             "register",
             vec![
@@ -298,7 +306,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
         for (t, table) in r.tables.iter().enumerate() {
             let tid = table_id[&(ri, t)];
-            let (lo, hi) = hull(&mut table.spans.iter());
+            let (lo, hi) = hull(&table.spans);
             rows.push(
                 "tbl",
                 vec![
@@ -666,6 +674,31 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
     }
 
+    let search = crate::search::items(
+        catalog,
+        &crate::search::Ids {
+            register: &register_id,
+            table: &table_id,
+            variable: &variable_id,
+        },
+    )?;
+    for (i, item) in search.iter().enumerate() {
+        rows.push(
+            "search_item",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str(item.kind.into()),
+                opt_int(item.entity_id),
+                Cell::Null,
+                Cell::Null,
+                opt_int(item.register_id),
+                opt_int(item.span.map(|s| s.0)),
+                opt_int(item.span.map(|s| s.1)),
+                Cell::Str(item.sort_key.clone()),
+            ],
+        );
+    }
+
     // Interning, in sort order.
     let mut texts = BTreeSet::new();
     let mut folds = BTreeSet::new();
@@ -792,6 +825,21 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     for statement in indexes {
         db.execute_batch(statement).map_err(sql)?;
     }
+    // Contentless FTS5: the rows go in rowid order, then the index is merged.
+    let tx = db.transaction().map_err(sql)?;
+    {
+        let mut insert = tx
+            .prepare("INSERT INTO search(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)")
+            .map_err(sql)?;
+        for (i, item) in search.iter().enumerate() {
+            insert
+                .execute((id(i), &item.name, &item.label, &item.body))
+                .map_err(|e| format!("search: {e}"))?;
+        }
+    }
+    tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])
+        .map_err(sql)?;
+    tx.commit().map_err(sql)?;
     db.execute_batch("ANALYZE;").map_err(sql)?;
     db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])
         .map_err(sql)?;
@@ -828,6 +876,6 @@ fn id(index: usize) -> i64 {
     count(index) + 1
 }
 
-fn count(n: usize) -> i64 {
+pub(crate) fn count(n: usize) -> i64 {
     i64::try_from(n).expect("row counts fit in i64")
 }
