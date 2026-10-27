@@ -1,10 +1,11 @@
 name: Artifact conformance
 
 # Server-side home for the release-asset-dependent checks: conformance against the
-# published global and SWECOV DB assets, served by the Rust server. They need a
-# published release asset matching the current schema, so this workflow deliberately
-# does NOT run on push/PR — a red X on unrelated work when a release is merely owed
-# would be noise.
+# published global DB asset, served by the Rust server. They need a published release
+# asset matching the current schema, so this workflow deliberately does NOT run on
+# push/PR — a red X on unrelated work when a release is merely owed would be noise.
+# Until the v4 switch release exists, the newest release is old-schema and this
+# workflow fails at server admission, like the deploy guard in container-build.yml.
 on:
   # Weekly drift catch (GitHub Releases availability). Off the top of the hour —
   # GitHub delays/drops crons scheduled at :00 under load.
@@ -18,21 +19,11 @@ on:
 
 jobs:
   artifact-conformance:
-    name: Artifact conformance (${{ matrix.catalog }})
+    name: Artifact conformance
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
       contents: read
-    # Keep both artifact kinds independent: schema drift in one asset must not
-    # suppress the other's gate.
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - catalog: global
-            asset: reg_meta.db.zst
-          - catalog: swecov
-            asset: reg_meta_swecov.db.zst
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.2
@@ -44,7 +35,7 @@ jobs:
       - run: uv sync --frozen
       - run: cargo build --workspace --locked
       # Tier 3 admits the downloaded artifact and its embedded import_manifest,
-      # never synthetic data. Each kind uses its own job and directory.
+      # never synthetic data.
       #
       # It must come from the EXACT release under test: the reg_meta/v* release
       # that called this workflow (a `workflow_call` inherits the CALLER's
@@ -58,19 +49,15 @@ jobs:
       # hand back a reg_meta_build/v* release.
       #
       # The SHA-256 digest GitHub records for the asset is verified BEFORE
-      # decompression. Admission is then the Rust server's own, at boot with
-      # `--catalog "$CATALOG"`: a missing or duplicated asset, a malformed or
-      # mismatched digest, a schema-incompatible DB, nonpublishable manifest or an
-      # artifact of another catalog all fail before conformance (the conformance
-      # servers take `{catalog}` from the artifact itself, so only this boot pins
-      # the expected kind). There is deliberately no fallback to an older asset,
-      # another artifact kind or synthetic data.
+      # decompression. Admission is then the Rust server's own, at boot: a missing
+      # or duplicated asset, a malformed or mismatched digest, a schema-incompatible
+      # DB or a nonpublishable manifest all fail before conformance. There is
+      # deliberately no fallback to an older asset or synthetic data.
       - name: Provision the selected release DB
         id: release-db
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ASSET: ${{ matrix.asset }}
-          CATALOG: ${{ matrix.catalog }}
+          ASSET: reg_meta.db.zst
           TRIGGER_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || '' }}
         run: |
           set -euo pipefail
@@ -80,7 +67,7 @@ jobs:
               --json tagName -q '[.[].tagName | select(startswith("reg_meta/v"))][0] // empty')
           fi
           [ -n "$tag" ] || { echo "::error::no published reg_meta/v* release to take the artifact from"; exit 1; }
-          echo "$CATALOG DB source release: $tag"
+          echo "DB source release: $tag"
           digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
             | jq -r --arg name "$ASSET" '[.assets[] | select(.name == $name) | .digest]
                   | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]')
@@ -88,7 +75,7 @@ jobs:
             echo "::error::release $tag has no single sha256-digested $ASSET asset"
             exit 1
           fi
-          db_dir="$RUNNER_TEMP/$CATALOG-db"
+          db_dir="$RUNNER_TEMP/global-db"
           mkdir -p "$db_dir"
           gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
             --pattern "$ASSET" --dir "$db_dir"
@@ -99,8 +86,7 @@ jobs:
             exit 1
           fi
           zstd -q -d --rm "$zst" -o "$db_dir/reg_meta.db"
-          target/debug/reg-meta serve --db "$db_dir" --catalog "$CATALOG" \
-            --stewards reg_webapp/stewards --port 18000 &
+          target/debug/reg-meta serve --db "$db_dir" --port 18000 &
           pid=$!
           # The refusal's error document is on the server's stderr.
           until curl -fs -o /dev/null http://127.0.0.1:18000/api/context; do
@@ -117,4 +103,4 @@ jobs:
         run: |
           uv run python -m pytest conformance -m release --run-release \
             --artifact-dir="${{ steps.release-db.outputs.db_dir }}" \
-            --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
+            --server-cmd='target/debug/reg-meta serve --db {db} --port {port} --write-limit 100000' -q

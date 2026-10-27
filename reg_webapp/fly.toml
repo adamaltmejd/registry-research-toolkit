@@ -16,11 +16,11 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # Resolved relative to this file (flyctl convention), i.e. reg_webapp/Dockerfile.
   dockerfile = "Dockerfile"
   # A local `fly deploy` must pass the bake's build args: REG_META_TAG=reg_meta/vX.Y.Z
-  # and the REG_META_DB_SHA256 / REG_META_DOCS_SHA256 asset digests (Dockerfile header).
+  # and the REG_META_DB_SHA256 asset digest (Dockerfile header).
 
 [env]
   # The hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"): `/mcp` admits this
-  # `Host` besides loopback; fly.swecov.toml names data.swecov.se. The global catalog
+  # `Host` besides loopback. The global catalog
   # has no public webapp: its edge worker forwards `/mcp` only. The edge token
   # (REG_META_EDGE_TOKEN, a Fly secret matching the edge worker's EDGE_TOKEN)
   # lets `/mcp` rate-limit each edge client by its own address.

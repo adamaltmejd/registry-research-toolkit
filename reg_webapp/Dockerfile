@@ -1,21 +1,20 @@
 # syntax=docker/dockerfile:1.28.0@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
 # reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
-# baked reg_meta DB pair and the steward branding (crates/DESIGN.md,
-# "Distribution"). It serves the API and `/mcp` only; the edge worker serves the SPA
-# (reg_webapp/edge/, built by container-build.yml's edge jobs).
+# baked reg_meta DB (crates/DESIGN.md, "Distribution"). It serves the API and `/mcp`
+# only; the edge worker serves the SPA (reg_webapp/edge/, built by
+# container-build.yml's edge jobs).
 #
 # Build context is the REPO ROOT (not reg_webapp/): the server stage needs the
-# Cargo workspace. The DB bake needs the release tag and the SHA-256 digests GitHub
-# records for its assets (container-build.yml resolves them). Build with:
+# Cargo workspace. The DB bake needs the release tag and the SHA-256 digest GitHub
+# records for the asset (container-build.yml resolves them). Build with:
 #
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp \
-#     --build-arg REG_META_TAG=reg_meta/vX.Y.Z \
-#     --build-arg REG_META_DB_SHA256=<hex> --build-arg REG_META_DOCS_SHA256=<hex> .
+#     --build-arg REG_META_TAG=reg_meta/vX.Y.Z --build-arg REG_META_DB_SHA256=<hex> .
 #
-# (`gh release view reg_meta/vX.Y.Z --json assets` lists each asset's digest.)
+# (`gh release view reg_meta/vX.Y.Z --json assets` lists the asset's digest.)
 #
-# Three stages: (1) a DB-bake stage fetches the reg_meta release DB pair with curl,
+# Three stages: (1) a DB-bake stage fetches the reg_meta release DB with curl,
 # verifies it and unpacks it with zstd — isolated so server edits don't re-download it
 # (#290), (2) a pinned Rust stage builds `reg-meta`, (3) a lean runtime that runs
 # `reg-meta serve` behind an entrypoint smoke gate.
@@ -28,30 +27,23 @@
 # non-reproducible.
 
 # ---------------------------------------------------------------------------
-# Stage 1 — regmeta-db: fetch + bake the reg_meta DB pair.
+# Stage 1 — regmeta-db: fetch + bake the reg_meta DB.
 # ---------------------------------------------------------------------------
 # Isolated from the server stage (#290): it copies nothing from the build context,
-# so its cache key is the base image plus the four ARGs below, and server edits
-# reuse the cached DB layer instead of re-fetching it. The digests are part of
+# so its cache key is the base image plus the two ARGs below, and server edits
+# reuse the cached DB layer instead of re-fetching it. The digest is part of
 # that key, so an asset re-uploaded under an existing tag rebakes on its own.
 #
-# The stage downloads the catalog asset (`reg_meta.db.zst`, or
-# `reg_meta_<FLAVOR>.db.zst` for a steward) and the shared `reg_meta_docs.db.zst`
-# from the one release REG_META_TAG names, checks each against the SHA-256 digest
-# GitHub records for it, and unpacks both into /opt/reg_meta, which the runtime
-# serves with `reg-meta serve --db`. Every reg_meta release is self-contained
-# (release skill step 8 copies assets forward on code-only releases), so a missing
-# asset is a broken release: curl fails the build (#343; a steward release without
-# reg_meta_<FLAVOR>.db.zst, #1091). Schema admission is the server's, at boot
-# (the entrypoint smoke gate); container-build.yml's schema guard keeps a
-# behind-schema asset from being built at all.
+# The stage downloads `reg_meta.db.zst` from the one release REG_META_TAG names,
+# checks it against the SHA-256 digest GitHub records for it, and unpacks it into
+# /opt/reg_meta, which the runtime serves with `reg-meta serve --db`. A missing
+# asset is a broken release: curl fails the build (#343). Schema admission is the
+# server's, at boot (the entrypoint smoke gate); container-build.yml's schema guard
+# keeps a mismatched-schema asset from being built at all.
 #
 # No ARG has a usable default: nothing in this stage resolves `latest`, and an
-# unverified download never enters the image. The digests are bare lowercase hex
+# unverified download never enters the image. The digest is bare lowercase hex
 # (GitHub's `sha256:` prefix stripped). The tag's `/` is URL-encoded in the URL.
-# REG_META_FLAVOR is the catalog name: `global` (public catalog) or a steward slug
-# such as `swecov`. The runtime serves it as `--catalog`, so artifact admission at
-# boot rejects a baked DB of another catalog.
 FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS regmeta-db
 
 # ca-certificates is only a Recommends of curl, so it is named for the HTTPS fetch.
@@ -60,24 +52,16 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ARG REG_META_TAG
-ARG REG_META_FLAVOR=global
 ARG REG_META_DB_SHA256
-ARG REG_META_DOCS_SHA256
 WORKDIR /opt/reg_meta
 RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
     && : "${REG_META_DB_SHA256:?build arg REG_META_DB_SHA256 is required (the release has no such catalog asset?)}" \
-    && : "${REG_META_DOCS_SHA256:?build arg REG_META_DOCS_SHA256 is required}" \
-    && if [ "$REG_META_FLAVOR" = global ]; then asset=reg_meta.db.zst; \
-       else asset="reg_meta_${REG_META_FLAVOR}.db.zst"; fi \
     && base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/$(printf '%s' "$REG_META_TAG" | sed 's|/|%2F|g')" \
-    && curl -fsSL --retry 3 -o db.zst "$base/$asset" \
-    && curl -fsSL --retry 3 -o docs.zst "$base/reg_meta_docs.db.zst" \
-    && printf '%s  db.zst\n%s  docs.zst\n' "$REG_META_DB_SHA256" "$REG_META_DOCS_SHA256" \
-        | sha256sum --strict -c - \
-    && zstd -q -d --rm db.zst -o reg_meta.db \
-    && zstd -q -d --rm docs.zst -o reg_meta_docs.db
+    && curl -fsSL --retry 3 -o db.zst "$base/reg_meta.db.zst" \
+    && printf '%s  db.zst\n' "$REG_META_DB_SHA256" | sha256sum --strict -c - \
+    && zstd -q -d --rm db.zst -o reg_meta.db
 
-# Read-only confinement of the baked WAL-mode DBs relies on the server opening them
+# Read-only confinement of the baked WAL-mode DB relies on the server opening it
 # `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
 
 # ---------------------------------------------------------------------------
@@ -108,24 +92,24 @@ RUN groupadd --system app && useradd --system --gid app --home /app app
 
 COPY --from=server /build/target/release/reg-meta /usr/local/bin/reg-meta
 COPY --from=regmeta-db /opt/reg_meta /opt/reg_meta
-COPY reg_webapp/stewards/ /opt/reg_webapp/stewards/
 # chmod explicitly: don't rely on the source file's executable bit surviving the
 # CI checkout / build-context transfer.
 COPY reg_webapp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # The cache validators' content digest (crates/reg-meta/src/validator.rs): the served
-# binary and databases, hashed here because hashing ~640 MB at boot on Fly's throttled
+# binary and database, hashed here because hashing the DB at boot on Fly's throttled
 # rootfs (~8 MiB/s cold) would outlast the entrypoint's readiness deadline. The
 # entrypoint passes it to the server as REG_META_CONTENT_DIGEST.
-RUN sha256sum /usr/local/bin/reg-meta /opt/reg_meta/reg_meta.db /opt/reg_meta/reg_meta_docs.db \
+RUN mkdir -p /opt/reg_webapp \
+    && sha256sum /usr/local/bin/reg-meta /opt/reg_meta/reg_meta.db \
     | sha256sum | cut -d' ' -f1 > /opt/reg_webapp/content.sha256
 
 # #224 provenance-confinement assertion (deployment-side). The earlier route-source
 # check was vacuous and is retired, and assertion #1 lived in the now-archived MONA
-# bundle build, so this is the one that remains. The bake stage fetches only the
-# catalog asset and reg_meta_docs.db.zst (no provenance asset), so the maintainer-only reg_meta.provenance.db* debug sibling should never enter
-# the image. This RUN is defense in depth: it FAILS THE BUILD if any
+# bundle build, so this is the one that remains. The bake stage fetches only
+# reg_meta.db.zst (no provenance asset), so the maintainer-only reg_meta.provenance.db*
+# debug sibling should never enter the image. This RUN is defense in depth: it FAILS THE BUILD if any
 # provenance.db* file is present anywhere in the image filesystem (.dockerignore
 # also excludes local copies from the build context). Stable non-zero exit on
 # hit. Runs in THIS stage (not the bake stage) so it scans the assembled
@@ -135,11 +119,6 @@ RUN if find / -name 'reg_meta.provenance.db*' -print -quit 2>/dev/null | grep -q
         echo 'FATAL: reg_meta.provenance.db* present in image (provenance confinement #3 breached)' >&2; \
         exit 1; \
     fi
-
-# The catalog the image serves: the baked flavor (`global` or a steward slug),
-# admitted as `--catalog` and branded from /opt/reg_webapp/stewards/<catalog>/.
-ARG REG_META_FLAVOR=global
-ENV REG_META_CATALOG=$REG_META_FLAVOR
 
 USER app
 EXPOSE 8000
