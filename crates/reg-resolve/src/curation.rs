@@ -1202,6 +1202,14 @@ pub fn resolve(
                     reject,
                     ..
                 } => {
+                    if values.table.is_some() {
+                        fields.extend(view.iter().flat_map(|s| s.fields.keys().cloned()));
+                    }
+                    if values.variable.is_some() {
+                        fields.extend(
+                            ["type", "value_set", "population_valuesets"].map(str::to_owned),
+                        );
+                    }
                     if (values.table.is_some() || values.variable.is_some())
                         && !matches!(address, Address::Occurrence { .. })
                     {
