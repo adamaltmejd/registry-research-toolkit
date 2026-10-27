@@ -30,19 +30,6 @@ def search(api, **query):
 
 
 @pytest.mark.release
-def test_query_cap(http_servers, artifact_dir):
-    """Fails if a 200-character `q` is refused, or a 201-character one is answered
-    rather than refused as `invalid_parameter` naming `q`."""
-    api = client(http_servers, artifact_dir)
-    status, _ = search(api, q="a" * 200)
-    assert status == 200, status
-    status, body = search(api, q="a" * 201)
-    assert status == 422, status
-    assert body["error"]["code"] == "invalid_parameter", body["error"]["code"]
-    assert body["error"]["fields"] == {"parameter": "q"}
-
-
-@pytest.mark.release
 def test_paging_stops_at_depth(http_servers, artifact_dir):
     """Fails if paging passes the 1000th hit (the fifth full page still has a
     `next_cursor`), or if offset paging repeats a hit across pages."""
@@ -102,12 +89,15 @@ def probes(artifact_dir):
 def test_every_kind_reachable(http_servers, artifact_dir):
     """Fails if a kind the artifact indexes cannot be found with `type=<kind>`: its
     rows are missing from the FTS index, the `type` filter drops them, or the hit
-    cannot be built."""
+    cannot be built, or repeated searches serialize different bytes."""
     api = client(http_servers, artifact_dir)
     found = probes(artifact_dir)
     assert found, "no search rows"
     for kind, token in sorted(found.items()):
-        status, body = search(api, q=token, type=kind)
-        assert status == 200, (kind, status)
+        query = {"q": token, "type": kind}
+        response = api.get("/api/search", params=query)
+        assert response.status_code == 200, (kind, response.status_code)
+        assert response.content == api.get("/api/search", params=query).content, kind
+        body = response.json()
         types = {hit["type"] for hit in body["data"]["items"]}
         assert types == {kind}, (kind, sorted(types), len(body["data"]["items"]))

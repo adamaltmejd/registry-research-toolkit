@@ -12,7 +12,7 @@ import tomllib
 from pathlib import Path
 
 import pytest
-from http_cases import fixture_source, is_parked
+from http_cases import fixture_source
 from reader_artifacts import fixture_source as reader_fixture_source
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +38,7 @@ def test_operations_name_catalogued_codes():
 
 @pytest.mark.parametrize(
     "case",
-    [case for case in sorted((CASES / "api").iterdir()) if not is_parked(case)],
+    sorted((CASES / "api").iterdir()),
     ids=lambda p: p.name,
 )
 def test_api_case_is_well_formed(case):

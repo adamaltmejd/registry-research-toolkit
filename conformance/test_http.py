@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import pytest
-from http_cases import CASES, assert_http_case, is_parked
+from http_cases import CASES, assert_http_case
 
 
 def pytest_generate_tests(metafunc):
@@ -15,6 +14,4 @@ def pytest_generate_tests(metafunc):
 
 
 def test_http_contract(case, tmp_path, http_servers):
-    if is_parked(case):
-        pytest.skip("parked: conformance/PARKED.toml")
     assert_http_case(case, tmp_path, http_servers)

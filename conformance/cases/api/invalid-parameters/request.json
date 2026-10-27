@@ -1,5 +1,5 @@
 {
-  "note": "Each step fails if the request is answered rather than refused with `invalid_parameter` naming the parameter: `limit` 0 and 201, an enum value outside `type`, no `q`, a 201-character `q`, an unknown parameter and a `q` with a NUL.",
+  "note": "Fails if a 200-character query is refused, or if the other steps are answered rather than refused with `invalid_parameter` naming the parameter: `limit` 0 and 201, an enum value outside `type`, no `q`, a 201-character `q`, an unknown parameter and a `q` with a NUL.",
   "fixture": "ranking",
   "requests": [
     {
@@ -30,6 +30,13 @@
       "operation": "search",
       "path": "/api/search",
       "query": {}
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+      }
     },
     {
       "operation": "search",

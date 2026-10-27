@@ -1,5 +1,5 @@
 {
-  "note": "The four `vikt` hits one per page. Fails if a cursor skips or repeats a hit, or if the last page has a `next_cursor`.",
+  "note": "The four `vikt` hits one per page. Table `tv` and variables `va`, `vb` are labelled `Vikt` in rows of five tokens; `vc` has it only in its definition, in a row of eight. Fails if equal bm25 does not order by kind (table before variable) and then `sort_key` (va before vb), if a definition hit outranks a label hit (DESIGN.md Search 2-3), if a cursor skips or repeats a hit, or if the last page has a `next_cursor`.",
   "fixture": "ranking",
   "requests": [
     {
