@@ -331,6 +331,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     x.source_key.clone(),
                     x.label.clone(),
                     x.locator.clone(),
+                    // Preserve existing row order; use full source identity on ties.
+                    reg_resolve::OccurrenceIdentity::new(
+                        x,
+                        occ.stated.clone().or_else(|| occ.period.clone()),
+                    ),
                 ),
                 (ri, o),
             ));

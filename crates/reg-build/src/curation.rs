@@ -481,6 +481,7 @@ fn run_selected(
                     reg_resolve::provenance::Claim {
                         kind: c.kind.clone(),
                         locator: c.locator.clone(),
+                        identity: c.identity.clone(),
                         provider: c.provider.clone(),
                         register: c.register.clone(),
                         table: c.table.clone(),
@@ -514,6 +515,7 @@ fn run_selected(
             statement: indices[value.statement.as_str()],
             kind: &value.kind,
             locator: &value.locator,
+            identity: value.identity.as_ref(),
             provider: value.provider.as_deref(),
             register: value.register.as_deref(),
             table: value.table.as_deref(),

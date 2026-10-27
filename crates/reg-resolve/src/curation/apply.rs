@@ -16,6 +16,7 @@ use crate::Ledger;
 pub struct Change {
     pub kind: String,
     pub locator: Locator,
+    pub identity: Option<crate::OccurrenceIdentity>,
     pub provider: Option<String>,
     pub register: Option<String>,
     pub table: Option<String>,
@@ -133,42 +134,39 @@ fn matches_occurrence(
     locators: &[Locator],
     row: &Occurrence,
     value: &Value,
-    records: &[Record],
+    context: &crate::OccurrenceContext<'_>,
 ) -> bool {
-    fields.get("kind").and_then(Value::as_str) == Some("occurrence")
+    crate::OccurrenceIdentity::from_fields(fields)
+        .is_some_and(|identity| identity == context.identity(row))
         && (locators.contains(&row.locator) || row.also.iter().any(|at| locators.contains(at)))
-        && [
-            ("provider", "provider"),
-            ("register", "register"),
-            ("table", "table"),
-            ("release", "release"),
-            ("key", "source_key"),
-            ("spelling", "column"),
-            ("label", "label"),
-            ("type", "dtype"),
-            ("unit", "unit"),
-        ]
-        .iter()
-        .all(|(field, raw)| {
-            fields
-                .get(*field)
-                .is_none_or(|expected| expected == &value[*raw])
-        })
-        && fields.get("period").is_none_or(|expected| {
-            // An unplaced release has no period; its handle supplies the coordinate.
-            expected.is_null() || expected == &json!(span(value, records))
-        })
+        && [("label", "label"), ("type", "dtype"), ("unit", "unit")]
+            .iter()
+            .all(|(field, raw)| {
+                fields
+                    .get(*field)
+                    .is_none_or(|expected| expected == &value[*raw])
+            })
 }
 
 fn change(
+    context: &crate::OccurrenceContext<'_>,
     value: &Value,
     field: &str,
     winning: &Value,
     losing: &Value,
     period: Option<Interval>,
-) -> Change {
+) -> Result<Change, String> {
     let kind = text(value, "kind").expect("record kind");
-    Change {
+    let identity = if kind == "occurrence" {
+        let Record::Occurrence(row) = decode(value.clone())? else {
+            unreachable!()
+        };
+        Some(context.identity(&row))
+    } else {
+        None
+    };
+    Ok(Change {
+        identity,
         kind: if kind == "value_set" {
             "valueset"
         } else {
@@ -190,7 +188,7 @@ fn change(
         .into(),
         value: rendered(winning),
         source_value: rendered(losing),
-    }
+    })
 }
 
 fn decode(value: Value) -> Result<Record, String> {
@@ -282,6 +280,7 @@ pub fn apply(
     at: &Locator,
     premise: &Premise,
 ) -> Result<Applied, String> {
+    let context = crate::OccurrenceContext::new(records);
     let mut out = Applied {
         records: records.to_vec(),
         changes: Vec::new(),
@@ -311,7 +310,7 @@ pub fn apply(
                         std::slice::from_ref(&p.locator),
                         row,
                         &value,
-                        records,
+                        &context,
                     )
                 });
                 if !selected {
@@ -352,40 +351,54 @@ pub fn apply(
                     row.to = Some(period.1.clone());
                     let moved = tree(&Record::Occurrence(row.clone()));
                     check_table_coverage(&moved, &period, records)?;
+                    let identity = context.identity(row);
+                    if records.iter().any(|record| {
+                        matches!(record, Record::Occurrence(existing)
+                            if existing.locator == row.locator
+                                && existing.label == row.label
+                                && context.identity(existing) == identity)
+                    }) {
+                        return Err(format!(
+                            "set table would collide with an existing occurrence in destination table {target_handle:?}"
+                        ));
+                    }
                     for field in ["table", "release"] {
                         if moved[field] != value[field] {
                             out.changes.push(change(
+                                &context,
                                 &moved,
                                 field,
                                 &moved[field],
                                 &value[field],
                                 Some(period.clone()),
-                            ));
+                            )?);
                         }
                     }
                     if moved["from"] != value["from"] || moved["to"] != value["to"] {
                         out.changes.push(change(
+                            &context,
                             &moved,
                             "period",
                             &json!(period),
                             &json!(span(&value, records)),
                             Some(period.clone()),
-                        ));
+                        )?);
                     }
                 }
                 if let Some(variable) = &fields.variable {
                     out.assignments.insert(
-                        crate::OccurrenceKey::new(row, &row.locator),
+                        crate::OccurrenceKey::new(context.identity(row), &row.locator),
                         variable.clone(),
                     );
                     let value = tree(&Record::Occurrence(row.clone()));
                     out.changes.push(change(
+                        &context,
                         &value,
                         "variable",
                         &json!(variable),
                         &Value::Null,
                         Some(period),
-                    ));
+                    )?);
                 }
             }
         }
@@ -553,6 +566,7 @@ pub fn apply(
                             ("period", json!(p[0])),
                         ] {
                             out.changes.push(Change {
+                                identity: None,
                                 kind: "class_version".into(),
                                 locator: at.clone(),
                                 provider: None,
@@ -658,23 +672,25 @@ pub fn apply(
                         existing[field] = winning.clone();
                         if !matches!(field.as_str(), "from" | "to") {
                             out.changes.push(change(
+                                &context,
                                 &existing,
                                 field,
                                 winning,
                                 &Value::Null,
                                 Some(p.clone()),
-                            ));
+                            )?);
                         }
                     }
                     let final_period = json!([existing["from"], existing["to"]]);
                     if final_period != previous_period {
                         out.changes.push(change(
+                            &context,
                             &existing,
                             "period",
                             &final_period,
                             &previous_period,
                             Some(p.clone()),
-                        ));
+                        )?);
                     }
                     out.records[index] = decode(existing)?;
                     continue;
@@ -689,22 +705,24 @@ pub fn apply(
                         )
                     {
                         out.changes.push(change(
+                            &context,
                             &value,
                             field,
                             winning,
                             &Value::Null,
                             Some(p.clone()),
-                        ));
+                        )?);
                     }
                 }
                 if !value["from"].is_null() || !value["to"].is_null() {
                     out.changes.push(change(
+                        &context,
                         &value,
                         "period",
                         &json!(p),
                         &Value::Null,
                         Some(p.clone()),
-                    ));
+                    )?);
                 }
                 let record = decode(value.clone())?;
                 if !out.records.contains(&record) {
@@ -780,6 +798,7 @@ fn attach_valueset(
     ledger: &Ledger,
     hash: &str,
 ) -> Result<(), String> {
+    let context = crate::OccurrenceContext::new(&out.records);
     let view = super::sources(&out.records, ledger);
     let selected = super::select(subject, &view, &BTreeMap::new());
     let mut output = Vec::new();
@@ -795,7 +814,7 @@ fn attach_valueset(
             .iter()
             .filter(|m| {
                 let source = &view[m.source];
-                matches_occurrence(&source.fields, &source.locators, o, &value, &out.records)
+                matches_occurrence(&source.fields, &source.locators, o, &value, &context)
             })
             .collect::<Vec<_>>();
         if matches.is_empty() {
@@ -820,12 +839,13 @@ fn attach_valueset(
         let mut value = value;
         value["valueset"] = json!(hash);
         out.changes.push(change(
+            &context,
             &value,
             "value_set",
             &value["valueset"],
             &Value::Null,
             Some(original),
-        ));
+        )?);
         output.push(decode(value)?);
         attached = true;
     }

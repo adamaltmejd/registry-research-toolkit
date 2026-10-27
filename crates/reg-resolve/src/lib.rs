@@ -53,23 +53,21 @@ use gaps::gaps;
 pub use ledger::Ledger;
 use ledger::assign_ids;
 
-/// One documented occurrence, rather than every row expanded from one locator.
+/// The coordinates of one documented occurrence, independent of source location.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct OccurrenceKey {
-    provider: String,
-    register: String,
-    table: String,
-    release: Option<String>,
-    column: String,
-    source_key: String,
-    from: Option<String>,
-    to: Option<String>,
-    locator: Locator,
+pub struct OccurrenceIdentity {
+    pub provider: String,
+    pub register: String,
+    pub table: String,
+    pub release: Option<String>,
+    pub column: String,
+    pub source_key: String,
+    pub period: Option<Interval>,
 }
 
-impl OccurrenceKey {
+impl OccurrenceIdentity {
     #[must_use]
-    pub fn new(row: &Occurrence, locator: &Locator) -> Self {
+    pub fn new(row: &Occurrence, period: Option<Interval>) -> Self {
         Self {
             provider: row.provider.clone(),
             register: row.register.clone(),
@@ -77,10 +75,127 @@ impl OccurrenceKey {
             release: row.release.clone(),
             column: row.column.clone(),
             source_key: row.source_key.clone(),
-            from: row.from.clone(),
-            to: row.to.clone(),
+            period,
+        }
+    }
+
+    pub(crate) fn from_fields(fields: &BTreeMap<String, serde_json::Value>) -> Option<Self> {
+        let text = |key| fields.get(key).and_then(serde_json::Value::as_str);
+        (text("kind") == Some("occurrence")).then_some(())?;
+        Some(Self {
+            provider: text("provider")?.into(),
+            register: text("register")?.into(),
+            table: text("table")?.into(),
+            release: text("release").map(str::to_owned),
+            column: text("spelling")?.into(),
+            source_key: text("key")?.into(),
+            period: serde_json::from_value(fields.get("period")?.clone()).ok()?,
+        })
+    }
+}
+
+/// One occurrence and a holder of its source evidence.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OccurrenceKey {
+    pub identity: OccurrenceIdentity,
+    pub locator: Locator,
+}
+
+impl OccurrenceKey {
+    #[must_use]
+    pub fn new(identity: OccurrenceIdentity, locator: &Locator) -> Self {
+        Self {
+            identity,
             locator: locator.clone(),
         }
+    }
+}
+
+pub(crate) struct OccurrenceContext<'a> {
+    registers: BTreeMap<(&'a str, &'a str), &'a Register>,
+    tables: BTreeMap<(&'a str, &'a str, &'a str), &'a Table>,
+    releases: BTreeMap<(&'a str, &'a str, &'a str, &'a str), &'a Release>,
+}
+
+impl<'a> OccurrenceContext<'a> {
+    pub(crate) fn new(records: &'a [Record]) -> Self {
+        Self {
+            registers: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Register(r) => Some(((r.provider.as_str(), r.register.as_str()), r)),
+                    _ => None,
+                })
+                .collect(),
+            tables: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Table(t) => Some((
+                        (t.provider.as_str(), t.register.as_str(), t.table.as_str()),
+                        t,
+                    )),
+                    _ => None,
+                })
+                .collect(),
+            releases: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Release(r) => Some((
+                        (
+                            r.provider.as_str(),
+                            r.register.as_str(),
+                            r.table.as_str(),
+                            r.release.as_str(),
+                        ),
+                        r,
+                    )),
+                    _ => None,
+                })
+                .collect(),
+        }
+    }
+
+    pub(crate) fn period(&self, row: &Occurrence) -> Option<Interval> {
+        if let Some(release) = &row.release {
+            return self
+                .releases
+                .get(&(
+                    row.provider.as_str(),
+                    row.register.as_str(),
+                    row.table.as_str(),
+                    release.as_str(),
+                ))
+                .and_then(|r| {
+                    r.from
+                        .as_ref()
+                        .zip(r.to.as_ref())
+                        .map(|(a, b)| (a.clone(), b.clone()))
+                });
+        }
+        let table = self.tables.get(&(
+            row.provider.as_str(),
+            row.register.as_str(),
+            row.table.as_str(),
+        ));
+        let register = self
+            .registers
+            .get(&(row.provider.as_str(), row.register.as_str()));
+        Some((
+            row.from
+                .clone()
+                .or_else(|| table.and_then(|t| t.from.clone()))
+                .or_else(|| register.and_then(|r| r.from.clone()))
+                .unwrap_or_else(|| OPEN_START.into()),
+            row.to
+                .clone()
+                .or_else(|| table.and_then(|t| t.to.clone()))
+                .or_else(|| register.and_then(|r| r.to.clone()))
+                .unwrap_or_else(|| OPEN_END.into()),
+        ))
+    }
+
+    pub(crate) fn identity(&self, row: &Occurrence) -> OccurrenceIdentity {
+        OccurrenceIdentity::new(row, self.period(row))
     }
 }
 
@@ -602,12 +717,13 @@ pub fn resolve(
         }
     }
 
+    let occurrence_context = OccurrenceContext::new(records);
     let assignment = |row: &Occurrence| -> Result<Option<&str>, String> {
         let values = std::iter::once(&row.locator)
             .chain(&row.also)
             .filter_map(|at| {
                 assignments
-                    .get(&OccurrenceKey::new(row, at))
+                    .get(&OccurrenceKey::new(occurrence_context.identity(row), at))
                     .map(String::as_str)
             })
             .collect::<BTreeSet<_>>();

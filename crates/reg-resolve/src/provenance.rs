@@ -14,6 +14,7 @@ use crate::curation::apply::Classification;
 pub struct Claim {
     pub kind: String,
     pub locator: Locator,
+    pub identity: Option<crate::OccurrenceIdentity>,
     pub provider: Option<String>,
     pub register: Option<String>,
     pub table: Option<String>,
@@ -278,19 +279,16 @@ pub fn finalize(
                 .filter_map(|at| by_locator.get(&("occurrence", at)))
                 .flatten()
                 .copied()
-                .filter(|c| {
-                    // An unplaced source release has no publication period. Its
-                    // asserted fields still have provenance at that exact release;
-                    // an invented period does not become a published winner.
-                    c.release == source.release
-                        && (occurrence.period.is_some() || c.field != "period")
-                        && matches(
-                            c,
-                            Some(&source.provider),
-                            Some(&source.register),
-                            Some(&source.table),
-                            occurrence.period.as_ref().or(c.period.as_ref()),
-                        )
+                .filter(|claim| {
+                    claim.identity.as_ref()
+                        == Some(&crate::OccurrenceIdentity::new(
+                            source,
+                            occurrence
+                                .stated
+                                .clone()
+                                .or_else(|| occurrence.period.clone()),
+                        ))
+                        && (occurrence.period.is_some() || claim.field != "period")
                 });
             let mut current = serde_json::to_value(source).expect("occurrence serializes");
             current["variable"] = Value::String(occurrence.variable.map_or_else(

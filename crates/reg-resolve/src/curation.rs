@@ -94,38 +94,9 @@ fn bounds(fields: &BTreeMap<String, Value>) -> Interval {
 
 #[allow(clippy::too_many_lines)]
 fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
-    let registers: BTreeMap<_, _> = records
-        .iter()
-        .filter_map(|r| match r {
-            Record::Register(r) => Some(((r.provider.as_str(), r.register.as_str()), r)),
-            _ => None,
-        })
-        .collect();
-    let tables: BTreeMap<_, _> = records
-        .iter()
-        .filter_map(|r| match r {
-            Record::Table(t) => Some((
-                (t.provider.as_str(), t.register.as_str(), t.table.as_str()),
-                t,
-            )),
-            _ => None,
-        })
-        .collect();
-    let releases: BTreeMap<_, _> = records
-        .iter()
-        .filter_map(|r| match r {
-            Record::Release(r) => Some((
-                (
-                    r.provider.as_str(),
-                    r.register.as_str(),
-                    r.table.as_str(),
-                    r.release.as_str(),
-                ),
-                r,
-            )),
-            _ => None,
-        })
-        .collect();
+    let context = crate::OccurrenceContext::new(records);
+    let registers = &context.registers;
+    let tables = &context.tables;
     let mut sources: Vec<_> = records
         .iter()
         .filter_map(|record| {
@@ -154,41 +125,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 Record::Occurrence(o) => {
                     let mut locators = vec![o.locator.clone()];
                     locators.extend(o.also.iter().cloned());
-                    let period = if let Some(handle) = &o.release {
-                        releases
-                            .get(&(
-                                o.provider.as_str(),
-                                o.register.as_str(),
-                                o.table.as_str(),
-                                handle.as_str(),
-                            ))
-                            .and_then(|r| {
-                                r.from
-                                    .as_ref()
-                                    .zip(r.to.as_ref())
-                                    .map(|(a, b)| (a.clone(), b.clone()))
-                            })
-                    } else {
-                        let table = tables.get(&(
-                            o.provider.as_str(),
-                            o.register.as_str(),
-                            o.table.as_str(),
-                        ));
-                        let register = registers
-                            .get(&(o.provider.as_str(), o.register.as_str()))
-                            .copied();
-                        Some((
-                            o.from
-                                .clone()
-                                .or_else(|| table.and_then(|t| t.from.clone()))
-                                .or_else(|| register.and_then(|r| r.from.clone()))
-                                .unwrap_or_else(|| OPEN_START.into()),
-                            o.to.clone()
-                                .or_else(|| table.and_then(|t| t.to.clone()))
-                                .or_else(|| register.and_then(|r| r.to.clone()))
-                                .unwrap_or_else(|| OPEN_END.into()),
-                        ))
-                    };
+                    let period = context.period(o);
                     (locators, period)
                 }
                 Record::ValueSet(v) => (vec![v.locator.clone()], None),
@@ -297,7 +234,7 @@ fn guard_name(field: GuardField) -> &'static str {
 fn select(
     address: &Address,
     view: &[Source],
-    variables: &BTreeMap<String, BTreeSet<Locator>>,
+    variables: &BTreeMap<String, BTreeSet<crate::OccurrenceKey>>,
 ) -> Vec<Match> {
     view.iter()
         .enumerate()
@@ -335,9 +272,12 @@ fn select(
                         && source.text("table_slug") == Some(table)
                         && source.text("release") == Some(handle)
                 }
-                Address::Variable(id) => variables.get(id).is_some_and(|locators| {
-                    source.text("kind") == Some("occurrence")
-                        && source.locators.iter().any(|l| locators.contains(l))
+                Address::Variable(id) => variables.get(id).is_some_and(|members| {
+                    crate::OccurrenceIdentity::from_fields(&source.fields).is_some_and(|identity| {
+                        source.locators.iter().any(|at| {
+                            members.contains(&crate::OccurrenceKey::new(identity.clone(), at))
+                        })
+                    })
                 }),
             };
             if !selected {
@@ -392,6 +332,12 @@ fn overlaps(a: &Match, b: &Match) -> bool {
 }
 
 fn same_subject(a: &Source, b: &Source) -> bool {
+    if a.text("kind") == Some("occurrence") || b.text("kind") == Some("occurrence") {
+        return crate::OccurrenceIdentity::from_fields(&a.fields)
+            .zip(crate::OccurrenceIdentity::from_fields(&b.fields))
+            .is_some_and(|(a, b)| a == b)
+            && a.locators.iter().any(|l| b.locators.contains(l));
+    }
     a.text("kind") == b.text("kind")
         && ["provider", "register", "table", "release"]
             .iter()
@@ -602,6 +548,7 @@ pub struct AppliedClaim<'a> {
     pub statement: usize,
     pub kind: &'a str,
     pub locator: &'a Locator,
+    pub identity: Option<&'a crate::OccurrenceIdentity>,
     pub provider: Option<&'a str>,
     pub register: Option<&'a str>,
     pub table: Option<&'a str>,
@@ -728,6 +675,11 @@ pub fn applied_conflicts(
                 fields.insert(field.into(), Value::String(value.into()));
             }
         }
+        if let Some(identity) = claim.identity {
+            fields.insert("spelling".into(), Value::String(identity.column.clone()));
+            fields.insert("key".into(), Value::String(identity.source_key.clone()));
+            fields.insert("period".into(), serde_json::json!(identity.period));
+        }
         let source = Source {
             fields,
             locators: vec![claim.locator.clone()],
@@ -838,20 +790,26 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
     }
 }
 
-fn variable_locators(
+fn variable_members(
     records: &[Record],
     ledger: &Ledger,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
-) -> Result<BTreeMap<String, BTreeSet<Locator>>, String> {
+) -> Result<BTreeMap<String, BTreeSet<crate::OccurrenceKey>>, String> {
     let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments)?;
-    let mut variables: BTreeMap<String, BTreeSet<Locator>> = BTreeMap::new();
+    let mut variables: BTreeMap<String, BTreeSet<crate::OccurrenceKey>> = BTreeMap::new();
+    let context = crate::OccurrenceContext::new(records);
     for occurrence in &resolved.occurrences {
         if let Some(index) = occurrence.variable {
             let variable = &resolved.variables[index];
             if variable.pinned {
-                let locators = variables.entry(variable.slug.clone()).or_default();
-                locators.insert(occurrence.occurrence.locator.clone());
-                locators.extend(occurrence.occurrence.also.iter().cloned());
+                let members = variables.entry(variable.slug.clone()).or_default();
+                let row = &occurrence.occurrence;
+                let identity = context.identity(row);
+                members.extend(
+                    std::iter::once(&row.locator)
+                        .chain(&row.also)
+                        .map(|at| crate::OccurrenceKey::new(identity.clone(), at)),
+                );
             }
         }
     }
@@ -872,7 +830,7 @@ pub fn reference(
 ) -> Result<Vec<SourcePremise>, String> {
     let view = sources(records, ledger);
     let variables = if variable.is_some() {
-        variable_locators(records, ledger, assignments)?
+        variable_members(records, ledger, assignments)?
     } else {
         BTreeMap::new()
     };
@@ -1172,7 +1130,7 @@ pub fn resolve(
         matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
-        variable_locators(records, ledger, assignments)
+        variable_members(records, ledger, assignments)
     } else {
         Ok(BTreeMap::new())
     };
