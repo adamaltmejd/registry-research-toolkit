@@ -122,7 +122,8 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   - `VardemangderValidDates`, applied at read time;
   - `UnikaRegisterOchVariabler` and `Identifierare` (the flags). `Timeseries` moves to C.
 - **The delivery-name grammar** in `curation/readers/scb.toml`.
-- **The LISA workbook reader**, its rows a register of their own until D binds them.
+- **The LISA workbook reader**, its rows a register of their own until attachment in D-8
+  (LISA headings). Add a cross-register destination only if the D-4 converter needs it.
 - **SCB ledgers** generated from today's slug pins.
 
 **Exit:**
@@ -426,20 +427,18 @@ The remaining C checklist:
 
 ### D: curation carry-over
 
-- **Release model** (maintainer ruling, 2026-10-27). A read-only investigation reports
-  first; the maintainer rules from it. Investigate whether period plus description, with
-  an optional `supersedes`, replaces edition and qualifier with fewer concepts. Releases
-  stay optional and are never synthesized as placeholders for tables without one.
-  Edition or qualifier selection in orders, if still needed, is designed together with
-  this model. The statement address grammar lands without `:edition/qualifier` until
-  that ruling.
-
-- **Ambiguity** (maintainer ruling, 2026-10-27):
-  - adopt the same-VarId type-only exemption: a column whose occurrences share one
-    source key and one folded spelling, and disagree only in type, or type and case, is
-    not ambiguous. Label and value-set disagreements and rival variables still block;
-  - overlap-only blocking is not adopted. The rival check keeps marking the whole run;
-  - sizing: 99 → 93 registers.
+- **Maintainer rulings** (2026-10-27):
+  - D-R: keep edition and qualifier. Address a release with `where release = '<handle>'`
+    or `release:<table-slug>/<handle>`. Order-time release selection is deferred.
+    Releases stay optional and are never synthesized for tables without one;
+  - ambiguity: occurrences sharing a source key and folded spelling are not ambiguous
+    when they disagree only in type, or type and case (#1998). Label, value-set and
+    rival-variable disagreements still block. Overlap-only blocking is not adopted; the
+    rival check marks the whole run (99 → 93 registers);
+  - D-3: no source priority or frame-level merges. Selectors that split occurrence
+    periods are refused; chained moves conflict. `set variable` changes exactly the
+    selected occurrences;
+  - contract 5.1.0 is approved within D for D-10's `follow_successor`.
 
 - **F1 `domain-change` rule**: it is not emitted when only the classification version
   differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
@@ -494,9 +493,8 @@ The remaining C checklist:
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
 
-- **`follow_successor`**, an optional binding field, was approved as contract 5.1.0
-  (maintainer ruling, 2026-10-27): additive; the default does not follow. It landed with
-  D's first variable `link` statements.
+- **`follow_successor`**, an optional binding field in D-10, is additive; the default
+  does not follow.
 
 - **Classification pins** (`classification` in a binding) resolve once D curates class
   versions. Until then every pin is `fqid_unresolved`.
