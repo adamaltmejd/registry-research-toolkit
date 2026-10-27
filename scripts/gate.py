@@ -6,23 +6,20 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release and frontend;
+first failure. `all` runs g0, rust and release;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
-`release` and `frontend`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
-of the workspace build.
+`release`; `regen` also refreshes the plugin project schema. Stdlib only.
 """
 
 from __future__ import annotations
 
 import argparse
 import filecmp
-import gzip
 import json
 import os
 import re
 import shlex
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -30,7 +27,6 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-FRONTEND = ROOT / "reg_webapp/frontend"
 # The repo takes new releases immediately (`exclude-newer = false` in pyproject.toml), but
 # project-less `uvx` reads only the host uv config, which may delay them; without this a
 # freshly bumped tool pin fails locally until the host cutoff passes.
@@ -43,8 +39,7 @@ SERVER_CMD = (
     " --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
-# simplify: frozen on rebuild-c until s-flows, which restores flows here (dev.sh --fixture-db and the webapp-dev fixture are gone).
-ALL = ("g0", "rust", "release", "frontend")
+ALL = ("g0", "rust", "release")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
 # builder"). These words fail `lint` in the other builder crates and in the catalog
 # reader and server, which read only the catalog: providers, their template
@@ -59,10 +54,6 @@ PROVIDER_WORDS = re.compile(
 )
 # The builder's CI fixture (crates/reg-build/fixture), built twice by `rust`.
 FIXTURE = ROOT / "crates/reg-build/fixture"
-# The SPA's reg-core .wasm, gzipped (crates/DESIGN.md, "Crates and run modes"). Over
-# it, the frontend step fails: raising the budget is a maintainer call. It includes the
-# search fold (about 145 KB gz measured with it).
-WASM_GZ_BUDGET = 200_000
 
 
 def run(command, cwd=ROOT, env=None, **kwargs):
@@ -104,6 +95,7 @@ def lint() -> None:
     run("uvx --from panache-cli==3.17.0 panache format --check .")
     run("uvx --from panache-cli==3.17.0 panache lint .")
     run("uvx --from ty==0.0.91 ty check")
+    run("uv run --no-project scripts/gen_project_schema.py --check")
     provider_vocabulary()
 
 
@@ -157,38 +149,6 @@ def release() -> None:
     )
 
 
-def flows() -> None:
-    out = Path(tempfile.mkdtemp(prefix="gate-flows-"))
-    dev = ROOT / "reg_webapp/dev/dev.sh"
-    run(["bash", dev, "--fixture-db", "flows", out], stdin=subprocess.DEVNULL)
-    # Kept on failure: the screenshots are the evidence.
-    shutil.rmtree(out)
-
-
-def frontend() -> None:
-    # On demand, so a fresh worktree needs no setup; a no-op when in sync.
-    run(["bun", "install", "--frozen-lockfile"], cwd=FRONTEND)
-    run(["bun", "run", "gen:wasm"], cwd=FRONTEND)
-    wasm = FRONTEND / "src/lib/reg-core-wasm/reg_core_wasm_bg.wasm"
-    size = len(gzip.compress(wasm.read_bytes(), compresslevel=9))
-    print(f"gate: {wasm.name} {size} bytes gzipped (budget {WASM_GZ_BUDGET})")
-    if size > WASM_GZ_BUDGET:
-        sys.exit(f"gate: {wasm.name} is over its gzipped budget; see WASM_GZ_BUDGET")
-    for script in ("check", "lint", "test", "build", "gen:types"):
-        run(["bun", "run", script], cwd=FRONTEND)
-    # A diff means the SPA's types, or the plugin's project_data.json schema, drifted
-    # from the committed API contract. `ls-files` fails on an untracked one, which
-    # `git diff` ignores.
-    generated = (
-        "src/lib/api-types-rust.ts"
-        " ../../plugins/microdata-tools-se/skills/register-project/project_data.schema.json"
-    )
-    run(f"git ls-files --error-unmatch -- {generated}", cwd=FRONTEND)
-    run(f"git diff --exit-code -- {generated}", cwd=FRONTEND)
-    # The built app's bootstrap: mounts, serves the .wasm, alerts without it.
-    run(["bun", "scripts/smoke_build.ts"], cwd=FRONTEND)
-
-
 def regen() -> None:
     run("cargo build --workspace --locked")
     run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
@@ -220,7 +180,7 @@ def regen() -> None:
     )
     golden = ROOT / "conformance/cases/mcp/tools-list.json"
     golden.write_text(json.dumps(tools, indent=2) + "\n", encoding="utf-8")
-    run("bun run gen:types", cwd=FRONTEND)
+    run("uv run --no-project scripts/gen_project_schema.py")
 
 
 STEPS = {
@@ -231,8 +191,6 @@ STEPS = {
         crates,
         rust,
         release,
-        flows,
-        frontend,
         regen,
     )
 }

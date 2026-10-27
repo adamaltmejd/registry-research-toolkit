@@ -282,16 +282,6 @@ fn segment(v: &Value) -> Option<(Date, Date)> {
         .or_else(|| period_range(v))
 }
 
-/// The structural rules of one `Source.period` on its own, with paths relative to
-/// the period (`""`, `/0`): what the project check applies at
-/// `/sources/<i>/period`. [`crate::project::SourcePeriod::from_value`] runs it.
-#[must_use]
-pub(crate) fn validate_source_period(period: &Value) -> ValidationResult {
-    let mut issues = Issues::default();
-    check_period(period, String::new(), &mut issues);
-    ValidationResult { issues: issues.0 }
-}
-
 fn check_period(period: &Value, path: String, issues: &mut Issues) {
     if period == "_default" || endpoint(period).is_some() {
         return;

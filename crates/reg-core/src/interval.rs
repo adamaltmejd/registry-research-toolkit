@@ -91,8 +91,7 @@ pub fn render(intervals: &[Interval]) -> String {
                 return token;
             }
             // The year is what precedes the suffix: four digits for an ISO date, and
-            // no byte slicing, so any string renders without a panic (the SPA calls
-            // this through `reg-core-wasm`).
+            // no byte slicing, so any string renders without a panic.
             let start = lo.strip_suffix("-01-01").unwrap_or(lo);
             let end = hi.strip_suffix("-12-31").unwrap_or(hi);
             format!("{start}..{end}")

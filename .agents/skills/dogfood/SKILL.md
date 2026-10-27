@@ -1,10 +1,10 @@
 ---
 name: dogfood
 description: >-
-  Registry Research Toolkit dogfooding session: the maintainer uses the tools (webapp,
-  MCP, builder, runners) and posts what they want fixed; the agent confirms, locates and
-  logs each finding, implements nothing, and at wrap-up drafts non-overlapping GitHub
-  issues for review, then files them. Use whenever a session is briefed or started as
+  Registry Research Toolkit dogfooding session: the maintainer uses the tools (MCP,
+  builder, runners) and posts what they want fixed; the agent confirms, locates and logs
+  each finding, implements nothing, and at wrap-up drafts non-overlapping GitHub issues
+  for review, then files them. Use whenever a session is briefed or started as
   dogfooding ("dogfood", "I'm dogfooding X", "log these and file issues at the end",
   "collect findings, draft issues"), including when the Operator starts the session on
   the maintainer's behalf.
@@ -36,8 +36,8 @@ grouping is the maintainer's call, made from the filed issues.
 1. Create the log `.local/dogfood/<YYYY-MM-DD>-<slug>.md` in the **main checkout**
    (gitignored; it survives worktree removal and session loss). From a worktree, the
    main checkout is the first path `git worktree list` prints. `<slug>` names the
-   surface if one was given (`webapp`, `mcp`, `builder`), else `session`. If a log for
-   today's surface already exists with open entries, ask whether to resume it.
+   surface if one was given (`mcp`, `builder`), else `session`. If a log for today's
+   surface already exists with open entries, ask whether to resume it.
 2. Record the header: date, surface, `git rev-parse --short HEAD` of the checkout under
    test, and the catalog in use (release version or `REG_META_DB` path, hosted URL for
    MCP).
@@ -48,8 +48,6 @@ grouping is the maintainer's call, made from the filed issues.
 For each post:
 
 1. **Confirm it.** Reproduce it the way the maintainer hit it:
-   - SPA: the [run-reg-webapp](../run-reg-webapp/SKILL.md) skill (`preview_start` with
-     `reg-webapp`, or `dev.sh smoke` / `shot`).
    - MCP / catalog: call the same catalog MCP tool with the same arguments.
    - Builder or runner: read the code path and the artifact; do not start heavy runs
      (real-seed builds are scheduled with the maintainer).
@@ -78,9 +76,9 @@ grouping is known.
 ## F3 — <short title>
 
 - Status: confirmed | not reproduced | investigating | withdrawn
-- Surface: webapp /catalog/<path> | MCP `search` | builder `<command>`
+- Surface: MCP `search` | builder `<command>`
 - Observed: <what the maintainer did, what happened, what they expected>
-- Cause: `reg_webapp/frontend/src/...tsx:142` — <one sentence>
+- Cause: `<path>:<line>` — <one sentence>
 - Type / area: bug / reg_webapp
 - Decision: <the maintainer's pick, quoted, if any>
 - Open question: <if any>

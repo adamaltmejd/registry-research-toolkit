@@ -29,7 +29,7 @@ runtime:
   small.
 - **Start-up does not matter**, because the runtime runs as long-lived processes
   (`serve`, `mcp`). The case for Rust is one implementation of each shared contract
-  across build, server and browser, typed contracts, and memory use.
+  across build and server, typed contracts, and memory use.
 
 The HTTP server is Rust rather than a Python server calling Rust through bindings. With
 bindings every result type would exist twice, as a Rust struct and as a Pydantic model
@@ -50,17 +50,12 @@ second copy held in step by a parity test.
   | Catalog schema version                  | `reg_core::CATALOG_SCHEMA_VERSION`                                                                                          | `reg-build` stamps it; `reg-catalog` admits on equality; the deploy guard compares it with the newest release's |
   | Artifact validation                     | `reg-build verify`                                                                                                          | The single authority; the release tier and the release skill run it                                             |
   | Resolver semantics                      | `reg-resolve` (Rust)                                                                                                        | Compiled into the artifact                                                                                      |
-  | FQID and period grammar                 | `reg-core`                                                                                                                  | Build via `reg-core-py`; SPA via `reg-core-wasm`                                                                |
-  | Interval algebra over periods           | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader; SPA via WASM                                                                   |
-  | Text folds                              | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader; SPA via WASM                                                                   |
+  | FQID and period grammar                 | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
+  | Interval algebra over periods           | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
+  | Text folds                              | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader                                                                                 |
   | Canonical JSON + SHA-256 (build hashes) | `reg-frame::canonical_line` and value-set hashing (`src/lib.rs`); `reg-build`'s `main` module (input and generation hashes) | Build only                                                                                                      |
-  | Project schema + structural validator   | `reg-core` (`project::check`)                                                                                               | Server and MCP; SPA via WASM; JSON Schema export                                                                |
-  | Result types                            | Rust structs (serde + utoipa)                                                                                               | OpenAPI; MCP tool schemas and TS types derive from it                                                           |
-
-The SPA never parses period grammar or computes a project period's bounds: it composes
-`reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
-interval merge that fuses delivery windows in `catalog.ts`. Its type-to-filter fold is
-`fold_search` through the same module.
+  | Project schema + structural validator   | `reg-core` (`project::check`)                                                                                               | Server and MCP; JSON Schema export                                                                              |
+  | Result types                            | Rust structs (serde + utoipa)                                                                                               | OpenAPI and MCP tool schemas derive from it                                                                     |
 
 The build reaches `reg-core` through the compiled `reg-core-py` extension, which
 `resolve_code_sha256` (`reg_meta_build/src/reg_meta_build/resolve_code.py`) hashes. A
@@ -103,15 +98,13 @@ reg_meta.db (documents inside), immutable
 reg-catalog: one operation set
         ┌────────┴─────────┐
 reg-meta serve        reg-meta mcp
-HTTP API (SPA)        MCP over stdio (local catalog)
+HTTP API             MCP over stdio (local catalog)
 + /mcp (hosted)
-        │
-SPA (React) + reg-core-wasm
 ```
 
 - `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data
   types and the structural validator, error codes. Compiles natively, as a Python
-  extension (`reg-core-py`, PyO3 via maturin) and to WASM (`reg-core-wasm`).
+  extension (`reg-core-py`, PyO3 via maturin).
 - `reg-catalog`: the reader. Opens and admits an artifact and defines the operation set:
   one function per operation, typed parameters and results with JSON Schemas. Search
   (one ranking), the logical order and project semantic validation live here.
@@ -122,18 +115,6 @@ SPA (React) + reg-core-wasm
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
-- `reg-core-wasm`: thin `wasm-bindgen` glue for the SPA. JSON text crosses the boundary
-  (no `serde-wasm-bindgen`), and every export is total: it runs the matching structural
-  check before a `reg-core` function that can panic. It is built with
-  `wasm-bindgen-cli --target web`, the CLI pinned to its `Cargo.lock` version, and the
-  `[profile.wasm]` (`opt-level = "s"`, LTO, one codegen unit); no wasm-pack, wasm-opt or
-  Vite plugin. The CLI drops the name and producers sections (about 5% gzipped; a trap's
-  stack trace then reads `wasm-function[N]`). Measured and declined in #1427:
-  `opt-level = "z"` (2% smaller gzipped once names are dropped, a third slower on the
-  fold), `panic = "abort"` (wasm32 already aborts) and `wasm-opt -Oz` (6% gzipped, too
-  little for another pinned tool). The gzipped `.wasm` has a 200 KB budget
-  (`WASM_GZ_BUDGET` in `scripts/gate.py`, checked by the `frontend` step); raising it is
-  a maintainer decision.
 
 Each crate's `Cargo.toml` is its dependency list. Adding a runtime crate is a design
 decision, not an implementation detail. `toml` is a runtime dependency only of
@@ -530,9 +511,9 @@ against random full-register orders, with every difference classified.
 
 ## Agent and web interface
 
-**Users are agents and the SPA.** Agents use MCP; the SPA uses HTTP. Interactive human
-use is out of scope: no feature, flag or output exists for it (no text output, prompts,
-progress or notebook import). Revisit when a concrete human-facing use appears.
+**Agents use MCP; HTTP exposes the same operations.** Interactive CLI use is out of
+scope: no feature, flag or output exists for it (no text output, prompts, progress or
+notebook import). Revisit when a concrete human-facing use appears.
 
 **One operation set, two transports.** Each operation in `reg-catalog` has a name, a
 typed parameter object and a typed result. The HTTP routes are generated from those
@@ -571,7 +552,7 @@ Rules:
   `error = {code, class, message, remediation, fields}`; MCP returns the same document
   as a tool error.
 - **Few, coarse MCP tools**, about ten, because every tool's schema occupies agent
-  context. Fine-grained HTTP routes for the SPA map onto the same operations.
+  context. Fine-grained HTTP routes map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
@@ -878,7 +859,7 @@ delivered spellings; `label`: labels; `body`: definitions, descriptions and docu
 text), whose rowid is `search_item.id`. The builder indexes raw text under
 `unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
 of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
-A call returns one ranked list; the SPA makes one call per typed group it shows.
+A call returns one ranked list.
 
 1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
    term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
@@ -962,10 +943,10 @@ identity, and a variable page does not list the variables sharing its tags (#179
 
 ## Relationship graph
 
-`graph` returns the `relation` edges where the ref is the subject or the object, so the
-SPA renders the topology as-is. A relation has a `kind`: `continues` (a successor takes
-over, with the day it starts), `derived_from` (the lineage), `equivalent` and
-`label_of`. `kind` narrows the edges. A lone entity with no relations returns no edges.
+`graph` returns the `relation` edges where the ref is the subject or the object. A
+relation has a `kind`: `continues` (a successor takes over, with the day it starts),
+`derived_from` (the lineage), `equivalent` and `label_of`. `kind` narrows the edges. A
+lone entity with no relations returns no edges.
 
 ## Documentation and what is not in the catalog
 

@@ -16,9 +16,8 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   study `window` and the period types. A `Source` carries a `table` (a table's public
   id, `provider/register` or `provider/register/table`) and a required `period`; each
   binding names a three-segment binding FQID in `variable`. The optional top-level
-  `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as an
-  authoring default, and the semantic layer measures a source period against it; absent
-  means the full history.
+  `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
+  measures a source period against; absent means the full history.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
@@ -27,14 +26,14 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   from the document.
 - **`Source.period`** is an int year, a period token, a `{"from", "to"}` range, or a
   finite list of those segments. A list is an interrupted series
-  (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`, wire form
-  `2005..2010,2015..2020`): one source stays one register extraction, so panel keys and
-  bindings are not duplicated across pseudo-sources. A list is non-empty, its members
-  are segments (not nested lists), each member is non-inverted, and the members are
-  sorted and non-overlapping. Adjacency is allowed: rejecting it would need calendar
-  adjacency math for no safety gain. Sorted and disjoint keeps the wire form canonical
-  and per-segment resolution deterministic. Bare `"_default"` is a separate
-  year-independent selection (a timeless table's period), never a list or range member.
+  (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`): one source stays one
+  register extraction, so panel keys and bindings are not duplicated across
+  pseudo-sources. A list is non-empty, its members are segments (not nested lists), each
+  member is non-inverted, and the members are sorted and non-overlapping. Adjacency is
+  allowed: rejecting it would need calendar adjacency math for no safety gain. Sorted
+  and disjoint keeps per-segment resolution deterministic. Bare `"_default"` is a
+  separate year-independent selection (a timeless table's period), never a list or range
+  member.
 - **One period per source.** Every column of a source is ordered for the source period,
   and the order clips each column to the years it is delivered inside it. There is no
   per-column period (maintainer, 2026-10-23, #1838; it reverses #1462's
@@ -43,7 +42,7 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   source. Add a per-column period back only if researchers ask for one.
 - **The structural validator**: every rule checkable from the document alone.
 - **The validation result** (`{ok, issues}`), shared by the structural layer, the
-  semantic layer and the SPA. Composition concatenates `issues`.
+  semantic layer. Composition concatenates `issues`.
 
 ## Logical selection, not physical delivery
 
@@ -57,13 +56,9 @@ order"); this contract stays independent of holdings, and the document has no st
 Every source carries an explicit period. Dated selections use finite periods. Bare
 `"_default"` selects a timeless table's data; whether the table is timeless is the
 catalog rule `period_default_on_dated_table`, not a structural one; it is not a
-whole-history request. The SPA may offer the study window as a default, but each source
-persists its own concrete period: adding a source defaults to the full available
-intersection (disjoint segments included), and an empty intersection blocks the add
-rather than inventing a period. Editing the window later never rewrites existing
-sources; a source left disjoint keeps its period and the project becomes blocking.
-Divergence stays visible rather than hidden as inheritance. An empty project is a valid
-draft that cannot be ordered.
+whole-history request. Each source persists its own concrete period. Editing the study
+window does not change that period; a source disjoint from the window blocks the order.
+An empty project is a valid draft that cannot be ordered.
 
 ## Closed project root
 
@@ -97,9 +92,7 @@ or `invalid_field_type`. `reg_meta_version` is a record, not a check: nothing co
 it with the loaded catalog, and the order manifest echoes it.
 
 `project::check` runs the two in that order and is the single entry point: the server's
-validate and order operations call it, and so does the SPA through `reg-core-wasm`'s
-`check_project`, so the browser rejects a draft by exactly the server's rules before
-posting it.
+validate and order operations call it.
 
 ## Two layers: types and validator
 
@@ -122,9 +115,9 @@ list that defines their serde encoding, so the two cannot disagree.
 
 The optional `openapi` feature derives the types' input-shape schemas (`ProjectData` and
 `Project*`) and the result's `Validation`, `ValidationIssue` and `IssueLevel`.
-`reg-catalog` enables it and publishes them in `openapi.json`, where the SPA's
-TypeScript types are generated from them; the enum schemas come from the same wire list.
-A doc comment on one of these types is its schema description.
+`reg-catalog` enables it and publishes them in `openapi.json`; the plugin's project JSON
+Schema is generated from that contract. The enum schemas come from the same wire list. A
+doc comment on one of these types is its schema description.
 
 `ok` is true when no issue is an error. Warnings and infos do not block, so `ok` is not
 a clean bill of health.
@@ -134,15 +127,13 @@ a clean bill of health.
 The structural rules are pinned as data: each case is a directory with an `input.json`
 and its `expected_ValidationResult.json`, readable without code. The corpus is
 `crates/reg-core/tests/project/corpus/`, which also pins the Rust validator's message
-quoting. The SPA's tests import the same expected files, so a drift in the issue shape
-fails both runtimes. There are one or more cases per rule, positive and negative, each a
-whole payload with its complete expected issue set; the directory name states the
-behavior. Semantic cases live with the semantic layer.
+quoting. There are one or more cases per rule, positive and negative, each a whole
+payload with its complete expected issue set; the directory name states the behavior.
+Semantic cases live with the semantic layer.
 
 ## Structural rules and issue codes
 
-Issue codes are stable: tests pin them, the SPA maps them to UI affordances, and new
-codes are additive.
+Issue codes are stable: tests pin them and new codes are additive.
 
   | Code                                   | Rule                                                                                                                                                                                                                                                                                                                |
   | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -176,12 +167,4 @@ gives (`HT2018` lies inside `2018`). The Python era kept a bound-for-bound copy 
 `reg_schema` and a parity test to hold the two together; with one implementation a
 document that passes the structural gate cannot later fail period resolution over a
 grammar disagreement. FQIDs get only a shape check here (segment count and characters);
-whether a slug is well formed and names something is resolution's job. The SPA uses this
-crate through WASM (`crates/reg-core-wasm`) for the period grammar and project periods,
-which it never parses or bounds itself: one period through the grammar, a `?period` wire
-shaped into a `Source.period` and back (`SourcePeriod::from_wire`, `from_shape`,
-`to_wire`), the days a source period requests behind its own structural check
-(`SourcePeriod::from_value`), their year spans, a study window's days
-(`StudyWindow::interval`), and the interval merge, overlap and render; the merge also
-fuses the catalog's delivery windows and value-set spans. Every export is total: it runs
-the matching check before a function that can panic.
+whether a slug is well formed and names something is resolution's job.

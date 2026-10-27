@@ -15,8 +15,8 @@ Own the requested upgrade through a verified candidate, following
 selected versions; unrelated product features remain outside this task. Do not publish
 packages or deploy merely because an upgrade is complete.
 
-Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and dev
-deps nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
+Renovate (`renovate.json`) opens the routine dependency PRs: tools, CI and dev deps
+nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
 lockfile-maintenance PR (the weekly ones are proven by the next curation real-seed
 build). This skill is for an Operator session repairing a red Renovate PR locally, on
 its branch, and for manual, larger upgrades.
@@ -32,16 +32,9 @@ with its necessary dependency closure. For a complete refresh, audit these surfa
 together, reading actual files rather than a saved version list:
 
 - Root/member `pyproject.toml`, `uv.lock`, Python floor and `.python-version`.
-- Frontend `package.json`, `bun.lock`, `bunfig.toml`, including peer constraints and npm
-  aliases such as the native TypeScript checker.
 - Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.py` (the `uvx` checker
   pins), `reg_webapp/Dockerfile`, and the Rust toolchain and `Cargo.toml`/`Cargo.lock`
   dependencies.
-- `wasm-bindgen`, pinned in three places that move together: the `=` pin in
-  `crates/reg-core-wasm/Cargo.toml` (and so `Cargo.lock`), the `wasm-bindgen@` tool in
-  `ci.yml`'s frontend job, and the same tool in `container-build.yml`'s
-  `edge-deploy-swecov` job (the only one that builds the SPA). The CLI must equal the
-  crate version (a mismatch fails `gen:wasm`).
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
@@ -49,26 +42,25 @@ line. Record held-back packages and the specific constraint; do not force every
 transitive package to its newest version through overrides. Docker tag/digest pairs must
 identify the same exact multi-architecture image.
 
-Read the repository's release-age policy. Its explicit uv `exclude-newer = false` and
-Bun `minimumReleaseAge = 0` prevent inherited host delays; deleting them is not
-equivalent. Project-less `uvx` can still inherit host configuration: use a task-scoped
-`UV_EXCLUDE_NEWER=false` when applying this policy there. Prefer task-local tooling to
-modifying shared host installations, and verify the tool actually invoked by a gate step
-or image rather than relying on the shell's PATH.
+Read the repository's release-age policy. Its explicit uv `exclude-newer = false`
+prevents inherited host delays; deleting it is not equivalent. Project-less `uvx` can
+still inherit host configuration: use a task-scoped `UV_EXCLUDE_NEWER=false` when
+applying this policy there. Prefer task-local tooling to modifying shared host
+installations, and verify the tool actually invoked by a gate step or image rather than
+relying on the shell's PATH.
 
 ## Update and repair in one worktree
 
 Use the repository's package managers: `uv lock --upgrade` for resolution;
-`uv add`/`uv add --dev` only when a new dependency is necessary; Bun for the frontend.
-An existing declared constraint may be edited to admit the chosen version, then
-regenerated through its package manager. For a scoped upgrade, use targeted resolution
-and avoid unrelated lockfile churn.
+`uv add`/`uv add --dev` only when a new dependency is necessary. An existing declared
+constraint may be edited to admit the chosen version, then regenerated through its
+package manager. For a scoped upgrade, use targeted resolution and avoid unrelated
+lockfile churn.
 
-Update all homes of a selected runtime together. Frontend tool launchers may resolve
-`node` differently in CI and production. Check the actual runtime and shared libraries
-in each affected environment. Test a changed image early with its actual runtime (Docker
-for production publishing/deployment), before expensive review. Keep task-owned
-images/containers identifiable; no shared-cache pruning.
+Update all homes of a selected runtime together. Check the actual runtime and shared
+libraries in each affected environment. Test a changed image early with its actual
+runtime (Docker for production publishing/deployment), before expensive review. Keep
+task-owned images/containers identifiable; no shared-cache pruning.
 
 Fix resulting API, typing, build and test incompatibilities directly. Extend focused
 regression tests for behavior changes and preserve the repository's
@@ -83,14 +75,9 @@ existing checks once; read their current commands and checker pins from
 
 - Python and Rust: frozen installation, lint/format/types and the relevant full test
   suite (`scripts/gate.py all` covers both).
-- Frontend: lint, TypeScript checking, tests, production build and generated API-type
-  drift check when its dependency/runtime stack changes.
 - Images/toolchains: build affected stages and exercise the existing affected gate
   commands directly in the candidate image, including their documented offline
   environment. A host test pass alone does not verify Linux image tools.
-- Browser/runtime changes: use the existing flow driver and inspect its images under the
-  design-review skill. Extend coverage for changed rendered behavior; a source review
-  does not establish browser behavior.
 
 CI remains in force. Reuse successful evidence when the tested source, dependency lock,
 environment and inputs are unchanged; rerun checks invalidated by a repair or

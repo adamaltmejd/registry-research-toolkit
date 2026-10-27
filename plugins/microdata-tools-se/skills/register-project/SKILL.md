@@ -10,7 +10,8 @@ A `project_data.json` lists the register columns a study orders: each source is 
 table over a period, and each binding is one variable delivered from it. The agent
 drafts and checks the file. The document's schema is
 [project_data.schema.json](project_data.schema.json), generated from the server's API
-contract.
+contract. Regenerate it with `uv run --no-project scripts/gen_project_schema.py` from
+the repository root.
 
 The catalog server's `search`, `show`, `segments` and `coverage` tools are described in
 the `register-metadata-search` skill.
@@ -18,9 +19,9 @@ the `register-metadata-search` skill.
 ## Drafting a project
 
 1. Set the document's `schema_version` to `"5.0.0"`. Set `reg_meta_version` (required)
-   to the version the user's reg-meta reports (`reg-meta --version`, or the web app's
-   footer); ask if unknown. It is not `meta.catalog_version`, which is a different
-   thing. Never write these from memory.
+   to the version the user's reg-meta reports (`reg-meta --version`); ask if unknown. It
+   is not `meta.catalog_version`, which is a different thing. Never write these from
+   memory.
 2. Find each variable with `search` and `show`, then `segments` for the table that
    delivers it over the study period. A source is a `table` and a `period`. `table` is
    the table's public id, `<provider>/<register>/<table>`, or `<provider>/<register>`

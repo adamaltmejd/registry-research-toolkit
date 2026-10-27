@@ -917,15 +917,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "reg-core-wasm"
-version = "0.0.0"
-dependencies = [
- "reg-core",
- "serde_json",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "reg-frame"
 version = "0.0.0"
 dependencies = [

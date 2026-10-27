@@ -227,7 +227,7 @@ jobs:
           exit 1
 
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
-  # (lint + ty + pytest + frontend jobs). CI runs on every main push (no paths
+  # (lint + ty + pytest + Rust jobs). CI runs on every main push (no paths
   # filter), so a run always exists; for a workflow_dispatch the gate finds the
   # CI run from the SHA's original push. Polls because ci.yml (~2 min) and the
   # image build run in parallel — this usually resolves first.
@@ -430,7 +430,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
-      # Pinned to the same bun as ci.yml's frontend job — bump both together.
+      # Bun runs the pinned Wrangler CLI for the MCP edge worker.
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version: "1.4.4"

@@ -1,5 +1,0 @@
-node_modules/
-dist/
-
-# reg-core-wasm bindings (`bun run gen:wasm`), generated from crates/reg-core-wasm.
-src/lib/reg-core-wasm/
