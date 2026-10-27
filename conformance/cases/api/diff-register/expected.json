@@ -2,57 +2,81 @@
   {
     "status": 200,
     "json": {
-      "/data/register": "scb/example",
-      "/data/register_name": "Example",
-      "/data/from": "2015",
-      "/data/to": "2019",
-      "/data/variants/*/variant": ["annual"],
-      "/data/variants/0/variant_name": "Annual",
-      "/data/variants/0/summary": {"added": 8, "removed": 0, "changed": 3, "unchanged": 3},
-      "/data/variants/0/added/*/fqid": [
-        "scb/example/avbrott",
-        "scb/example/bransch",
-        "scb/example/bransch-ny",
-        "scb/example/februari",
-        "scb/example/kon",
-        "scb/example/lan",
-        "scb/example/utgangen",
-        "scb/example/yrke"
-      ],
-      "/data/variants/0/added/0": {
-        "fqid": "scb/example/avbrott",
-        "var_id": 14,
-        "variable_name": "Avbrott",
-        "data_type": "integer",
-        "data_length": "8",
-        "column": "Avbrott"
-      },
-      "/data/variants/0/removed": [],
-      "/data/variants/0/changed": [
+      "/data/fqid": "demo/sp",
+      "/data/from": "2017",
+      "/data/to": "2020",
+      "/data/tables/*/table": ["demo/sp/a", "demo/sp/b"],
+      "/data/tables/0/added": [
         {
-          "fqid": "scb/example/lucka",
-          "var_id": 10,
-          "variable_name": "Lucka",
-          "changes": [{"field": "column", "from": "LuckaDetalj", "to": "Lucka"}]
-        },
-        {
-          "fqid": "scb/example/mitten",
-          "var_id": 16,
-          "variable_name": "Mitten",
-          "changes": [{"field": "column", "from": "MittenAlt", "to": "Mitten"}]
-        },
-        {
-          "fqid": "scb/example/omdopt",
-          "var_id": 8,
-          "variable_name": "Omdöpt",
-          "changes": [{"field": "column", "from": "OmdoptOld", "to": "OmdoptNew"}]
+          "table": "demo/sp/a",
+          "variable": "demo/sp/yrke",
+          "name": "Yrke",
+          "spelling": "Yrke",
+          "type": "char",
+          "length": 4,
+          "value_set": null,
+          "role": "measure",
+          "state": "clear",
+          "period": {"start": "2020-01-01", "end": "2021-01-01"}
         }
-      ]
+      ],
+      "/data/tables/0/removed": [
+        {
+          "table": "demo/sp/a",
+          "variable": "demo/sp/ort",
+          "name": "Ort",
+          "spelling": "Ort",
+          "type": "char",
+          "length": 20,
+          "value_set": null,
+          "role": "measure",
+          "state": "clear",
+          "period": {"start": "2017-01-01", "end": "2018-01-01"}
+        }
+      ],
+      "/data/tables/0/changed": [
+        {
+          "variable": "demo/sp/alder",
+          "changes": [{"field": "type", "from": "int", "to": "char"}]
+        },
+        {
+          "variable": "demo/sp/lankod",
+          "changes": [{"field": "spelling", "from": "Lan", "to": "LanKod"}]
+        }
+      ],
+      "/data/tables/0/summary": {"added": 1, "removed": 1, "changed": 2, "unchanged": 2},
+      "/data/tables/1/added/*/variable": ["demo/sp/antal", "demo/sp/id"],
+      "/data/tables/1/removed": [],
+      "/data/tables/1/changed": [],
+      "/data/tables/1/summary": {"added": 2, "removed": 0, "changed": 0, "unchanged": 0}
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/sp/id"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_period", "/error/fields/parameter": "from"}
+  },
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "table_is_register",
+      "/error/fields/ref": "demo/sp",
+      "/error/fields/tables": ["demo/sp/a", "demo/sp/b"]
     }
   },
   {
     "status": 404,
-    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/example"}
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/candidates/*/fqid": ["demo/sp/kon", "demo/sp2/kon"]
+    }
   },
   {
     "status": 422,

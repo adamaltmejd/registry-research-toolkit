@@ -46,9 +46,9 @@ EQUIVALENCE = {
     "show": ("show-provider", "show-refs"),
     "resolve": ("resolve-columns",),
     # r-schema
-    "schema": (),
-    "diff": (),
-    "coverage": (),
+    "schema": ("schema-paging", "schema-errors"),
+    "diff": ("diff-register",),
+    "coverage": ("coverage-register", "coverage-variable"),
     # r-segments-values
     "segments": ("segments-fields", "segments-filters", "segments-errors"),
     "values": ("values-blank-code", "values-pair", "values-tree", "values-errors"),

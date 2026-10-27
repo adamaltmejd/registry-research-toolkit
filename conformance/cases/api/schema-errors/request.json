@@ -1,0 +1,14 @@
+{
+  "note": "The refusals of schema, each with its located code, and the one allowed request they sit beside: `table` naming a register with named tables, a malformed period, a malformed cursor, a bare name two registers share (Kon), an unknown ref, a malformed ref, an out-of-range limit, and period=2017 on table a, which keeps only the lines whose segments overlap 2017, clipped to it, with the type of the segment inside the request (Alder is int in 2017, char only from 2020). Fails if a refusal changes code or loses its field, Yrke (from 2018) appears, a period is not clipped, or the type is taken from outside the request.",
+  "fixture": "spans",
+  "requests": [
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"table": "demo/sp"}},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"period": "20x9"}},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"cursor": "zz"}},
+    {"operation": "schema", "path": "/api/schema/kon"},
+    {"operation": "schema", "path": "/api/schema/demo/nope"},
+    {"operation": "schema", "path": "/api/schema/demo/sp/a", "query": {"period": "2017"}},
+    {"operation": "schema", "path": "/api/schema/demo/a/b/c"},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 201}}
+  ]
+}

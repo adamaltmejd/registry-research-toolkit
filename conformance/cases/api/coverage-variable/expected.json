@@ -2,30 +2,66 @@
   {
     "status": 200,
     "json": {
-      "/data/fqid": "scb/example/avbrott",
-      "/data/variable_name": "Avbrott",
-      "/data/min_year": 2010,
-      "/data/max_year": 2016,
-      "/data/years": [2010, 2011, 2012, 2016],
-      "/data/gaps": [2013, 2014, 2015],
-      "/data/register_count": 1,
-      "/data/registers": [
+      "/data/fqid": "demo/sp/kon",
+      "/data/kind": "variable",
+      "/data/period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "/data/tables/*/fqid": ["demo/sp/a"],
+      "/data/tables/0/spans": [
+        {"start": "2017-01-01", "end": "2018-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"}
+      ],
+      "/data/tables/0/gaps": [
+        {"period": {"start": "2018-01-01", "end": "2019-01-01"}, "reason": "release_without_column"}
+      ],
+      "/data/tables/0/releases": [],
+      "/data/columns": [
         {
-          "register": "scb/example",
-          "register_name": "Example",
-          "var_id": 14,
-          "min_year": 2010,
-          "max_year": 2016,
-          "years": [2010, 2011, 2012, 2016],
-          "gaps": [2013, 2014, 2015],
-          "aliases_by_year": {
-            "2010": ["Avbrott"],
-            "2011": ["Avbrott"],
-            "2012": ["Avbrott"],
-            "2016": ["Avbrott"]
-          }
+          "spelling": "kon",
+          "spans": [
+            {"start": "2017-01-01", "end": "2018-01-01"},
+            {"start": "2020-01-01", "end": "2021-01-01"}
+          ]
         }
       ]
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "demo/sp/lankod",
+      "/data/period": {"start": "2017-01-01", "end": "2021-01-01"},
+      "/data/tables/0/spans": [
+        {"start": "2017-01-01", "end": "2019-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"}
+      ],
+      "/data/tables/0/gaps": [],
+      "/data/columns": [
+        {"spelling": "lan", "spans": [{"start": "2017-01-01", "end": "2019-01-01"}]},
+        {"spelling": "lankod", "spans": [{"start": "2020-01-01", "end": "2021-01-01"}]}
+      ]
+    }
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "kon",
+      "/error/fields/candidates": [
+        {"fqid": "demo/sp/kon", "kind": "variable", "name": "Kön"},
+        {"fqid": "demo/sp2/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/a/b/c"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
   }
 ]

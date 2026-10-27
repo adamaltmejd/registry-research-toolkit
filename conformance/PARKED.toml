@@ -7,9 +7,6 @@
 operations = [
     # r-show
     # r-schema
-    "coverage",
-    "diff",
-    "schema",
     # r-segments-values
     # r-findings-graph
     # r-search
@@ -28,10 +25,6 @@ operations = [
 cases = [
     # r-show
     # r-schema
-    "api/coverage-register",
-    "api/coverage-variable",
-    "api/diff-register",
-    "api/schema-paging",
     # r-segments-values
     # r-findings-graph
     # r-search

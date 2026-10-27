@@ -1,0 +1,13 @@
+# The spans fixture: a table with a release gap, a type change, a renamed spelling,
+# an added, a removed and a gapped column, and a second register sharing a column name.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"
