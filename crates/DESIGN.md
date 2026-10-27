@@ -35,7 +35,7 @@ The HTTP server is Rust rather than a Python server calling Rust through binding
 bindings every result type would exist twice, as a Rust struct and as a Pydantic model
 for OpenAPI, which is the drift this design removes. Most of the old backend was catalog
 logic (node assembly, search ranking, semantic validation) that belongs in the operation
-set, where agents get it too. The deploy image is one static binary plus the baked DBs
+set, where agents get it too. The deploy image is one static binary plus the baked DB
 (the 1 GB Fly VM is kept for the page cache), and local MCP needs no Python environment.
 
 ## One implementation per contract
@@ -44,16 +44,18 @@ Each contract that crosses a language or package boundary has exactly one
 implementation. New code that needs one of these calls its home; it does not add a
 second copy held in step by a parity test.
 
-  | Contract                                | Single home                      | Reached from                                          |
-  | --------------------------------------- | -------------------------------- | ----------------------------------------------------- |
-  | Artifact schema (DDL, manifest)         | `reg_meta_build` (Python)        | The reader reads it, behind its schema gate           |
-  | Resolver semantics                      | `reg_meta_build` derive (Python) | Compiled into the artifact                            |
-  | FQID and period grammar                 | `reg-core`                       | Build via `reg-core-py`; SPA via `reg-core-wasm`      |
-  | Interval algebra over periods           | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
-  | Text folds                              | `reg-core`                       | Build via `reg-core-py`; reader; SPA via WASM         |
-  | Canonical JSON + SHA-256 (build hashes) | `reg_meta_build` (Python)        | Build only                                            |
-  | Project schema + structural validator   | `reg-core` (`project::check`)    | Server and MCP; SPA via WASM; JSON Schema export      |
-  | Result types                            | Rust structs (serde + utoipa)    | OpenAPI; MCP tool schemas and TS types derive from it |
+  | Contract                                | Single home                                                                                                                 | Reached from                                                                                                    |
+  | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+  | Artifact schema (DDL)                   | `reg-build/src/schema.sql` (Rust builder)                                                                                   | `reg-catalog` reads it; admission by the schema version                                                         |
+  | Catalog schema version                  | `reg_core::CATALOG_SCHEMA_VERSION`                                                                                          | `reg-build` stamps it; `reg-catalog` admits on equality; the deploy guard compares it with the newest release's |
+  | Artifact validation                     | `reg-build verify`                                                                                                          | The single authority; the release tier and the release skill run it                                             |
+  | Resolver semantics                      | `reg-resolve` (Rust)                                                                                                        | Compiled into the artifact                                                                                      |
+  | FQID and period grammar                 | `reg-core`                                                                                                                  | Build via `reg-core-py`; SPA via `reg-core-wasm`                                                                |
+  | Interval algebra over periods           | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader; SPA via WASM                                                                   |
+  | Text folds                              | `reg-core`                                                                                                                  | Build via `reg-core-py`; reader; SPA via WASM                                                                   |
+  | Canonical JSON + SHA-256 (build hashes) | `reg-frame::canonical_line` and value-set hashing (`src/lib.rs`); `reg-build`'s `main` module (input and generation hashes) | Build only                                                                                                      |
+  | Project schema + structural validator   | `reg-core` (`project::check`)                                                                                               | Server and MCP; SPA via WASM; JSON Schema export                                                                |
+  | Result types                            | Rust structs (serde + utoipa)                                                                                               | OpenAPI; MCP tool schemas and TS types derive from it                                                           |
 
 The SPA never parses period grammar or computes a project period's bounds: it composes
 `reg-core`'s answers ([../reg_webapp/DESIGN.md](../reg_webapp/DESIGN.md)), including the
@@ -138,16 +140,18 @@ decision, not an implementation detail. `toml` is a runtime dependency only of
 `reg-readers`, which reads curation for the builder; the runtime keeps it a dev
 dependency.
 
-**Distribution.** The server image is one static binary plus the baked DBs, fetched in
-the Dockerfile with `curl`, SHA-256 verification against GitHub's asset digests, and
-`zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS arm64 and Linux
-x86_64 with SHA-256 checksums, used only for local `reg-meta mcp`; the catalog is
-downloaded with `curl` and `zstd`. There is no PyPI package and no `fetch` run mode.
-Windows agents use hosted MCP; a local Windows binary is added only if it builds and
-runs without special effort. The `microdata-tools-se` plugin declares one hosted MCP
-server whose URL is a user setting: the global catalog by default, a hosted steward
-catalog (`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the
-agent's MCP configuration by hand.
+**Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
+fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
+digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
+arm64 and Linux x86_64 with SHA-256 checksums, and one catalog asset, `reg_meta.db.zst`,
+documents included. There is no separate docs asset; SWECOV's asset is not produced
+until milestone E. The binaries serve local HTTP or MCP; the catalog is downloaded with
+`curl` and `zstd`. There is no PyPI package and no `fetch` run mode. Windows agents use
+hosted MCP; a local Windows binary is added only if it builds and runs without special
+effort. The `microdata-tools-se` plugin declares one hosted MCP server whose URL is a
+user setting: the global catalog by default, a hosted steward catalog
+(`https://data.swecov.se/mcp`) instead. A local `reg-meta mcp` is added to the agent's
+MCP configuration by hand.
 
 ## The catalog builder
 
@@ -978,24 +982,24 @@ and not FQID kinds.
 
 ## Versioning and determinism
 
-- **Schema gate.** The reader requires the artifact's schema major to equal its own and
-  the minor to be at least its own (`reg-catalog`'s `SCHEMA`); anything else is
-  `schema_incompatible`. A major bump marks a breaking change. A minor bump marks a new
-  table or column the reader starts to read, or a content change that must invalidate
-  older artifacts even without a shape change, so an old artifact is refused cleanly
-  instead of failing later or serving stale content. The artifact is regenerated, never
-  migrated.
+- **Schema gate.** The reader requires the artifact's schema version to equal
+  `reg_core::CATALOG_SCHEMA_VERSION` exactly; anything else is `schema_incompatible`.
+  There is no major/minor compatibility rule. The artifact is regenerated, never
+  migrated. The deploy guard is fail-closed: it compares the constant at HEAD with the
+  newest release's, and a missing constant or a mismatch blocks deployment. A PR that
+  bumps `CATALOG_SCHEMA_VERSION` is red at `schema-guard` until it merges and its
+  release publishes. That is expected; the check is not required on main. Merge, then
+  release when the maintainer runs it; a gap is allowed, with deployments blocked until
+  the matching release publishes.
 - **Contract version.** `CONTRACT_VERSION` versions the operation set and its JSON
   shapes, and `meta` reports it on every response.
 - **Releases** are tagged per package (`reg_meta/vX.Y.Z`); each release carries the
-  catalog and docs assets. `project_data.json` records the catalog release it was
+  single `reg_meta.db.zst` catalog asset (documents included) and the binaries. SWECOV's
+  asset is not produced until E. `project_data.json` records the catalog release it was
   written against in that tag form.
 - **Determinism.** The same request on the same artifact returns the same bytes: stable
   ordering with a unique final tie-breaker, sorted JSON keys where the contract says so,
   no timing in `meta`, cursors bound to the generation.
-- **Identifiers on the wire.** Storage ids are exact integers in SQLite and opaque
-  decimal strings in JSON, since they can pass 2^53. Counts, years and run ordinals stay
-  numbers. The `0001-01-01` unknown-coverage sentinel reads as an absent start.
 - **Security.** Metadata only, no microdata. No credentials are read or stored. The
   server makes no outbound requests.
 

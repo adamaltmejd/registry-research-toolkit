@@ -9,11 +9,9 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-**Compiled holdings.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
-contract. The webapp admits one immutable catalog or steward artifact and delegates
-scope-sensitive reads to the shared SQL reader. Steward configuration supplies branding;
-it does not supply holdings. The optional SPA scope switch is deferred. HTTP browse
-clients can request reference or holdings scope explicitly.
+**Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
+contract. The webapp admits one immutable catalog DB and delegates reads to the shared
+SQL reader. Holdings, scope and steward branding return in milestone E.
 
 ## Why no auth — cost protection instead
 
@@ -34,41 +32,20 @@ reg_webapp/
                           # how to use it: .agents/skills/run-reg-webapp/
   frontend/               # React 19 + React Aria Components + Vite (bun)
     src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
-  stewards/               # per-steward branding, read by `reg-meta serve --stewards`
-    global/                # steward.json + logo.svg; no catalog → full universe
-    swecov/                # steward.json + logo.svg (branding) + the steward spec the
-                           # builder reads (scope.toml, series/); serve reads the
-                           # branding only
+  stewards/               # only swecov/: old builder inventory retained until E
   DESIGN.md
 ```
 
-`stewards/` is deployment data, not server source: `reg-meta serve --stewards DIR` reads
-`DIR/<catalog>/steward.json` and `DIR/<catalog>/logo.svg`, and nothing else.
-
-Every steward supplies `logo.svg`; boot refuses without it. It is served as
-`GET /api/steward/logo.svg` (sandboxed, so opening it runs no script) and is both the
-favicon and the top bar's mark where the full name does not fit (frontend `DESIGN.md` →
-Layout). The global logo is the toolkit's own: three spans in `accent` (#1820,
-maintainer ruling 2026-10-23).
-
-`steward.json` holds `id`, `name`, `long_name`, an optional `description` (one or two
-plain sentences on what the deployment is for, the landing page's line under the name;
-`[text](https://…)` in it renders as a link, the one markup it takes) and an optional
-`order_instructions`: plain text on how a researcher hands a project to the steward.
-`/api/context` serves it under `steward`, and /project shows it under the two downloads.
-A deployment that takes no orders (global) omits it and the page shows nothing. SWECOV's
-text asks for `project_data.json` only, sent to the researcher's SWECOV coordinator, who
-reviews it and generates `order.json` themselves.
+`stewards/swecov/` remains input to the old builder until milestone E. The current
+server and container load no steward configuration or logos.
 
 ## Boot seam (artifact admission)
 
 The Rust server admits its catalog at startup and refuses to serve otherwise
-(`Catalog::open` in `crates/reg-catalog`): the schema gate (`schema_incompatible`), the
-artifact identity (`catalog_unpublishable`), and the selected `--catalog` against the
-artifact's own name (`catalog_mismatch`; a steward artifact never serves as `global`).
-The `api` corpus pins each refusal (`conformance/cases/api/admission-*`). The branding
-comes from the admitted catalog's name, so a deployment cannot pair one steward's
-artifact with another's branding. The webapp ships no DDL and owns no `SCHEMA_VERSION`.
+(`Catalog::open` in `crates/reg-catalog`): metadata must be well formed and its schema
+version must exactly equal `reg_core::CATALOG_SCHEMA_VERSION`. The `api` admission
+corpus pins the refusals. The webapp ships no DDL or schema-version authority;
+`reg-build verify` owns published artifact invariants.
 
 ## Catalog pages (the Rust server)
 
@@ -209,8 +186,8 @@ converted body is never fetched.
 ## Docs library (the Rust server's `docs` operations)
 
 `/api/docs/*` (#354/#742) is served by the Rust server (the vite dev proxy sends
-`/api/docs` there). The operations (`conformance/api/operations.toml`) read the prebuilt
-`reg_meta_docs.db` beside the catalog, each answering `{data, meta}`:
+`/api/docs` there). The operations (`conformance/api/operations.toml`) read
+documentation from the single `reg_meta.db` catalog, each answering `{data, meta}`:
 
 - `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
   entries matching every word, best first, with an FTS `snippet`; without `q`, every
@@ -233,10 +210,8 @@ link (populated at doc-DB build from the curated `doc_sources.toml` map, #372), 
 when the source is uncurated; `source_title` is the publication title. Coverage is
 LISA-only today.
 
-- **Optional DB**: a deployment without a docs database answers `docs_unavailable` (404)
-  on every docs operation; an incompatible one refuses server startup. The SPA's
-  `getDocsForVariable` and `getRelatedDocuments` map `docs_unavailable` to `null`, so
-  both panels treat it like "no docs" and omit their section.
+- **Embedded docs**: documentation is part of the admitted catalog; there is no optional
+  docs database or separate schema gate.
 - **Not in global search**: the command palette does not call `/api/docs/search`; the
   SPA reaches docs through item pages.
 - **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.tsx` renders
@@ -498,19 +473,16 @@ The Rust server sets the reads' ETags and `Cache-Control` (tiers in
 `crates/reg-catalog`, validators in `crates/reg-meta/src/validator.rs`); a POST answer
 (`validate`, `order`, the manifest download) carries no validator.
 
-**Early revalidation (#1453).** App code, compiled catalog DB, steward branding
-configuration and paired docs DB are immutable for a process lifetime; changing any of
-them replaces the process. At startup the server derives one token from them: the
-SHA-256 of the bytes of its own binary (an image change without a version bump still
-changes it), the catalog and docs database files and the steward branding. File bytes,
-not identity fields: `generation_id` does not cover the import date `/api/context`
-shows, nor the docs `generation` the related documents. The image hashes the binary and
-both databases when it is built (`Dockerfile`, passed in as `REG_META_CONTENT_DIGEST` by
-the entrypoint): hashing ~640 MB at boot on the throttled rootfs (~8 MiB/s cold) would
-outlast the entrypoint's 60 s readiness deadline. Without the variable (local runs, the
-conformance suite) the server hashes them at boot, about 0.2 s on a warm page cache.
-Loose delivery inventory is not an HTTP input. A GET read's strong ETag is that token
-plus the request's path and query, without `__edge_v`, so read scope (a parameter or the
+**Early revalidation (#1453).** App code and the compiled catalog DB are immutable for a
+process lifetime; changing either replaces the process. At startup the server derives
+one token from the SHA-256 of its own binary and the catalog database file. File bytes,
+not identity fields: `generation_id` does not cover `catalog_version`, which reaches
+responses. The image hashes the binary and database when it is built (`Dockerfile`,
+passed in as `REG_META_CONTENT_DIGEST` by the entrypoint): hashing the catalog at boot
+on the throttled rootfs would outlast the entrypoint's 60 s readiness deadline. Without
+the variable (local runs, the conformance suite) the server hashes them at boot. Loose
+delivery inventory is not an HTTP input. A GET read's strong ETag is that token plus the
+request's path and query, without `__edge_v`, so read scope (a parameter or the
 catalog's default) is part of it. A tower layer in front of every GET operation and
 download (a route layer, so another method keeps its 405) answers a matching
 `If-None-Match` with a 304 before the route runs, so a revalidation does no DB work and
@@ -553,13 +525,10 @@ throttling; never substitute Lighthouse values for missing trace metrics):
 
 ## Compiled artifact identity and read scope
 
-Boot opens the admitted reg_meta artifact and checks its manifest: schema compatibility,
-publishability, completeness, artifact kind, and generation identity. A catalog artifact
-requires the `global` deployment; a steward artifact requires its exact manifest
-steward. A mismatch fails with the DB path and `REG_WEBAPP_STEWARD` locator. Only
-`stewards/<id>/steward.json` and `logo.svg` are loaded for branding. Runtime inventory
-loading, reconciliation, drift warnings, the in-memory index, and the runtime release
-gate are removed; builder publication validation owns those invariants.
+Boot opens the single `reg_meta.db` artifact and admits its metadata against
+`reg_core::CATALOG_SCHEMA_VERSION` by exact equality. Published catalog invariants
+belong to `reg-build verify`. The runtime loads no steward branding or delivery
+inventory; steward artifacts and their deployment return in milestone E.
 
 The Rust server's reads (the catalog pages' `show` and facets, `context`, `search`)
 accept `?scope=holdings|reference`. Catalog artifacts default to reference and reject
@@ -581,17 +550,15 @@ graph edges, and lineage remain reference evidence. The browse subject is scoped
 reference neighbor does not grant holdings or orderability. Hydrated graph states use
 the scoped reader; unheld neighboring variables remain thin with no selectable states.
 
-The Rust server's `context` reports branding, schema version, import date and the
-`reg_meta` version; its `meta` carries the full generation and the effective scope. Its
-optional `period_span` is computed from compiled physical `holding_period` MIN/MAX
-bounds of known tables with an explicit mapping, then capped at the catalog import year.
-It is a coarse UI slider bound, never a coverage or validity check. Catalog artifacts
-and holdings without dated periods return null.
+The Rust server's `context` reports schema version, catalog version and the `reg_meta`
+version; its `meta` carries the full generation and the effective scope. Its optional
+`period_span` is computed from compiled physical `holding_period` MIN/MAX bounds of
+known tables with an explicit mapping, then capped at the catalog import year. It is a
+coarse UI slider bound, never a coverage or validity check. Catalog artifacts and
+holdings without dated periods return null.
 
-The Docker image copies the branding root to `/opt/reg_webapp/stewards/` and passes it
-as `--stewards`. SWECOV is the proving steward; extracting its branding and delivery
-pipeline into its own system remains separate from this runtime cut. No generic
-per-steward extension surface is introduced.
+The Docker image contains one catalog DB and the server binary. It has no steward
+branding input. SWECOV's delivery pipeline returns in milestone E.
 
 ## OpenAPI snapshot + TS codegen (the drift gate)
 
@@ -1127,77 +1094,73 @@ SWECOV offers, so it is not published under swecov.se, and its webapp runs local
 (`reg_webapp/dev/dev.sh`). Agents still need its hosted MCP (no install, no 1.2 GB
 download), so `reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`. vqv.uk is
 the maintainer's side-project zone, chosen to keep the personal altmejd.se zone out of
-it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
+it. `data.swecov.se` retains its last old-schema catalog, SPA and MCP. Its running app
+is untouched; it has no deploy path until milestone E.
 
-- **The image runs the Rust server alone**: `reg-meta serve` with the baked DB pair and
-  the steward branding, no uvicorn and no Python at runtime. The Dockerfile has three
-  stages: the `regmeta-db` bake (Debian slim with `curl` and `zstd`: download the
-  release assets, verify each against the SHA-256 digest GitHub records for it, unpack),
-  a pinned Rust stage building `reg-meta`, and a Debian slim runtime with `curl` for the
-  smoke gate. The image serves the API and `/mcp` only; the SWECOV edge worker serves
-  the SPA, which its `container-build.yml` edge job builds itself. The Rust server
+- **The image runs the Rust server alone**: `reg-meta serve --db /opt/reg_meta` with one
+  baked DB, no Python or steward branding at runtime. The Dockerfile has three stages:
+  the `regmeta-db` bake (Debian slim with `curl` and `zstd`: download the catalog asset,
+  verify it against the SHA-256 digest GitHub records for it, unpack), a pinned Rust
+  stage building `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate.
+  The image serves the API and `/mcp` only; the existing SWECOV edge worker serves the
+  last old-schema SPA until milestone E restores its deploy jobs. The Rust server
   answers every route the SPA calls. The global image serves `/api` too (the binary has
   no per-route switch, and fly.toml's health check reads `/api/context`); its edge
   worker forwards none of it.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
-  is public. Both workers forward `/mcp` (`ROUTE_MCP`), and `fly.toml` and
-  `fly.swecov.toml` pass `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside
-  the loopback names. `/mcp` and the project POSTs share one rate limit per client
-  address (60 a minute; Cost protection, below). Behind Fly the peer is Fly's proxy, so
-  the worker proves a request came through the edge with a shared secret (`EDGE_TOKEN`
-  on the worker, `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only
-  such a request is keyed on its `CF-Connecting-IP`. Any other request, a direct-origin
-  hit included, is keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A
-  worker without the secret refuses every forward with a `no-store` 503, rather than put
-  every edge client in the proxy's one bucket. After each edge deploy,
-  `container-build.yml` sends `initialize`, `tools/list` and one `search` to that host's
-  public `/mcp`.
+  is public. Both workers forward `/mcp` (`ROUTE_MCP`); the active `fly.toml` passes
+  `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
+  `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
+  Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
+  request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
+  `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
+  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
+  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A worker without the
+  secret refuses every forward with a `no-store` 503, rather than put every edge client
+  in the proxy's one bucket. After each edge deploy, `container-build.yml` sends
+  `initialize`, `tools/list` and one `search` to the global public `/mcp`. SWECOV has no
+  edge deploy until E.
 - **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
   `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/2GB machine in `arn`
   (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
-  is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite pair slowly — keep the OS
-  page cache warm rather than scale to zero (\~$6/mo per app). Config:
-  `reg_webapp/fly.toml` / `reg_webapp/fly.swecov.toml`; `--ha=false` keeps each machine
-  count at one.
-- **Read-only SQLite on the ephemeral rootfs is the right model** — the DB pair is baked
-  into the image and replaced with it. No volume, no LiteFS, nothing persists.
-- **Deploys**: one workflow (`container-build.yml`) owns both origin apps plus the edge
-  workers, scoped by a `changes` paths-filter job. Image-affecting main pushes
+  is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite database slowly — keep
+  the OS page cache warm rather than scale to zero (\~$6/mo per app). Config:
+  `reg_webapp/fly.toml`; `--ha=false` keeps the machine count at one. `fly.swecov.toml`
+  and the three SWECOV image, deploy and edge-deploy jobs are deleted until E; no CI or
+  manual workflow path deploys that app.
+- **Read-only SQLite on the ephemeral rootfs is the right model** — the DB is baked into
+  the image and replaced with it. No volume, no LiteFS, nothing persists.
+- **Deploys**: one workflow (`container-build.yml`) owns the global origin and edge
+  worker, scoped by a `changes` paths-filter job. Image-affecting main pushes
   (Dockerfile COPY surfaces + bake inputs) build, push to `registry.fly.io`
-  (SHA-tagged), and `flyctl deploy --image` each affected origin. The bake build-args
-  are the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` would
-  make the bake layer's buildx cache key insensitive to data-only releases and could
-  even resurrect a stale cached layer after a pinned dispatch) and the SHA-256 digests
-  GitHub records for its catalog and docs assets, which the `schema-guard` job resolves
-  with the tag; the bake has no defaults and refuses an unverified download. The global
-  Fly app uses `FLY_API_TOKEN`; SWECOV uses the separate app-scoped
-  `FLY_API_TOKEN_SWECOV`. The SWECOV image also requires a matching
-  `reg_meta_swecov.db.zst` asset on the resolved `reg_meta/v*` release: the bake fetches
-  that asset and the shared docs asset into `/opt/reg_meta`, and the build fails when
-  the release lacks it (its digest resolves empty; the global image is unaffected). The
-  SWECOV metadata is non-confidential for the current testing steward, so the flavored
-  DB is a public release asset. The bake does no schema admission: the server admits the
-  pair at boot (`--catalog` rejects a DB of another catalog), and the schema guard below
-  keeps a behind-schema asset from being built. Nothing deploys without green CI: a
-  `wait-ci` job polls this commit's ci.yml run and the origin/edge deploy jobs require
-  its success — an image that builds but fails lint/ty/pytest never ships. Each deploy
-  job carries a HEAD-of-main guard (GHA concurrency serializes by build-completion
-  order, not commit order — without the guard an older commit's slow build could
-  overwrite a newer deploy; it also makes non-main dispatches deploy-inert). Because a
-  guarded commit skips, `changes` diffs a push against the last deployed commit, not the
-  push's `before` (#1481): otherwise a served-path push followed by a non-served one
-  before its deploy ran would deploy neither. The last deployed commit is the newest
-  successful main run of the workflow that no later push overlapped (so it finished as
-  HEAD); a failed or overlapped run never counts, which errs toward a redundant
-  redeploy, and no such run in the last 200 counts as everything changed. Dispatching
-  HEAD's run from the skipped job was rejected: it needs `actions: write`, which the
-  workflow does not hold. Two gates guard a bad image: the entrypoint smoke gate (it
-  probes `context`, `search`, docs search and `/mcp` with `curl`, each carrying
-  `__edge_v`, and the container exits non-zero before ever serving when artifact
-  admission or a probe fails) and fly.toml's `/api/context` HTTP check (flyctl reports
-  failure if it never passes). Rollback: `flyctl releases --image` lists history;
-  `flyctl deploy --image <old>` restores in seconds.
+  (SHA-tagged), and `flyctl deploy --image` the global origin. The bake build-args are
+  the RESOLVED newest `reg_meta/v*` tag (never `latest` — a literal `latest` would make
+  the bake layer's buildx cache key insensitive to data-only releases and could even
+  resurrect a stale cached layer after a pinned dispatch) and the SHA-256 digest GitHub
+  records for `reg_meta.db.zst`, which the `schema-guard` job resolves with the tag; the
+  bake has no defaults and refuses an unverified download. The global Fly app uses
+  `FLY_API_TOKEN`. The bake downloads one catalog DB into `/opt/reg_meta`; the server
+  admits it at boot, and the schema guard below blocks a mismatched release. Nothing
+  deploys without green CI: a `wait-ci` job polls this commit's ci.yml run and the
+  origin/edge deploy jobs require its success — an image that builds but fails
+  lint/ty/pytest never ships. Each deploy job carries a HEAD-of-main guard (GHA
+  concurrency serializes by build-completion order, not commit order — without the guard
+  an older commit's slow build could overwrite a newer deploy; it also makes non-main
+  dispatches deploy-inert). Because a guarded commit skips, `changes` diffs a push
+  against the last deployed commit, not the push's `before` (#1481): otherwise a
+  served-path push followed by a non-served one before its deploy ran would deploy
+  neither. The last deployed commit is the newest successful main run of the workflow
+  that no later push overlapped (so it finished as HEAD); a failed or overlapped run
+  never counts, which errs toward a redundant redeploy, and no such run in the last 200
+  counts as everything changed. Dispatching HEAD's run from the skipped job was
+  rejected: it needs `actions: write`, which the workflow does not hold. Two gates guard
+  a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs search and
+  `/mcp` with `curl`, each carrying `__edge_v`, and the container exits non-zero before
+  ever serving when artifact admission or a probe fails) and fly.toml's `/api/context`
+  HTTP check (flyctl reports failure if it never passes). The docs probe searches `lisa`
+  and requires a `doc` field in a hit. Rollback: `flyctl releases --image` lists
+  history; `flyctl deploy --image <old>` restores in seconds.
 - **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
   (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
   (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
@@ -1211,21 +1174,23 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   to fail. Publishing the release auto-dispatches `container-build.yml`
   (`publish_reg_meta.yml`'s `deploy-image` job), which then passes and deploys. A
   `workflow_dispatch` `reg_meta_tag` pin follows the same rule. SWECOV has no deploy job
-  until milestone E.
+  until milestone E. A PR that bumps the constant is expected to be red at
+  `schema-guard` until it merges and its release publishes; the check is not required on
+  main. The maintainer runs the release after the merge; a few hours of disruption at
+  the switch are accepted.
 - **Build/registry economics (#290)**: the reg_meta DB bake lives in its own Dockerfile
   stage (`regmeta-db`) that copies nothing from the build context, so its cache key is
-  the base image and its build args (tag, flavor, digests) — app-code edits reuse the
-  cached DB layer instead of re-downloading the release pair, and an asset re-uploaded
-  under an existing tag changes its digest and rebakes. PR builds neither `load` the
-  image into the runner's docker (nothing runs it; all gates execute during the build)
-  nor write GHA buildx cache (PR-scoped cache is unreadable from main and would only
-  evict useful entries from the repo's 10 GB pool); PRs still read main's cache. Every
-  pushed tag is an immutable rollback handle: `workflow_dispatch` rebuilds on an
-  existing HEAD get a `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy
-  prune step keeps the newest 10 tags and deletes older manifests via the registry v2
-  DELETE (supported by Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age
-  is read from the image config's `.created`, and a digest shared with any kept tag is
-  never deleted).
+  the base image and its build args (tag, digest) — app-code edits reuse the cached DB
+  layer instead of re-downloading the catalog, and an asset re-uploaded under an
+  existing tag changes its digest and rebakes. PR builds neither `load` the image into
+  the runner's docker (nothing runs it; all gates execute during the build) nor write
+  GHA buildx cache (PR-scoped cache is unreadable from main and would only evict useful
+  entries from the repo's 10 GB pool); PRs still read main's cache. Every pushed tag is
+  an immutable rollback handle: `workflow_dispatch` rebuilds on an existing HEAD get a
+  `-<run_id>` suffix instead of overwriting `:sha`. A post-deploy prune step keeps the
+  newest 10 tags and deletes older manifests via the registry v2 DELETE (supported by
+  Fly — verified live 2026-06-11; buildx pushes OCI indexes, so age is read from the
+  image config's `.created`, and a digest shared with any kept tag is never deleted).
 - **Cloudflare zones**: `reg-meta.vqv.uk` (zone vqv.uk, global catalog MCP) and
   `data.swecov.se` (zone swecov.se, SWECOV flavor), orange-cloud A/AAAA → each
   hostname's matching Fly app shared IPv4 + dedicated IPv6, plus `_fly-ownership` TXT
@@ -1239,7 +1204,8 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   anything else with a `no-store` 404. `wrangler.swecov.jsonc` is a static-assets worker
   on `data.swecov.se/*` serving the SPA `dist/` with `single-page-application` deep-link
   fallback. Separate Worker names give each hostname its own `EDGE_TOKEN` and
-  `DEPLOY_VERSION`, deployed after its own Fly origin. On the SPA worker, origin paths
+  `DEPLOY_VERSION`. Only the global worker deploys until E; the following SPA cache
+  configuration describes the unchanged SWECOV worker. On the SPA worker, origin paths
   (`/api/*`, `/openapi.json` and `/mcp`) are `run_worker_first` + `fetch(request)`
   passthrough to the incoming hostname's zone origin (Fly), so the origin
   ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
@@ -1272,25 +1238,13 @@ it. `data.swecov.se` serves SWECOV's catalog, SPA and MCP both.
   JSON against a freshly deployed SPA; the #317 defensive-rendering rule (SPA tolerates
   one cache generation of payload skew on additive fields) stays in force regardless,
   for clients holding *browser*-cached payloads (catalog + search browser TTL is 60s;
-  doc-library is 86400s — both unversioned). Deploys: the `edge-deploy-swecov` job in
-  `container-build.yml` rebuilds the SPA (bun pinned to ci.yml's frontend job — bump
-  together) and runs `wrangler deploy` on main pushes touching the SPA, the edge worker,
-  the committed `openapi.json`, or the image surface (cache generation, above); the
-  global `edge-deploy` job deploys the MCP-only worker on the same pushes and checks
-  first that the token can see zone vqv.uk (`CLOUDFLARE_API_TOKEN` repo secret, "Edit
-  Cloudflare Workers" template scoped to the account, swecov.se and vqv.uk). Each job
-  `needs:` its origin deploy — on a contract-changing push the SPA never goes live
-  before the origin serves the new endpoints (deploy-skew guard; skew 404s are NOT
-  negatively cached: the Cache Rule's Edge TTL is "bypass if no cache-control", and the
-  origin only stamps 200s). After each edge deploy a probe asserts a catalog read
-  returns `CF-Cache-Status: HIT` with a young `Age` (a stale `Age` means cache-key
-  versioning broke) and an edge 304 — the #220 gate as a standing regression check
-  against silent Cache Rule / zone drift. It reads `/api/search`, the cacheable Rust
-  route (`/api/context` is `no-cache`). Manual fallback: build the SPA, then
-  `wrangler deploy` with a FRESH `--var DEPLOY_VERSION:...` (exact command in
-  `wrangler.swecov.jsonc`'s header — the config's literal `"dev"` default must not
-  ship). After the global edge deploy, only the `/mcp` smoke runs: there is no SPA or
-  `/api` to probe on reg-meta.vqv.uk.
+  doc-library is 86400s — both unversioned). Deploys: the global `edge-deploy` job
+  deploys the MCP-only worker on matching pushes and checks first that the token can see
+  zone vqv.uk (`CLOUDFLARE_API_TOKEN` repo secret). It needs the global origin deploy
+  and runs the public `/mcp` smoke afterward; there is no public SPA or `/api` to probe
+  on reg-meta.vqv.uk. SWECOV's `edge-deploy-swecov` job is deleted until E, so the SPA
+  and its existing cache generation remain untouched. Its cache probes and manual deploy
+  path must be restored with its deployment in E.
 - **Zone rules (dashboard, free plan, zone swecov.se)**: a Cache Rule making `/api/*` on
   the hostname cache-eligible (Cloudflare never caches extensionless API paths by
   default, even with `Cache-Control: public` — without the rule every read is

@@ -9,7 +9,7 @@ case's arm (`GET /api/search?q=&type=&limit=`) and reports whether the case's
 This is a MAINTAINER tool, not a CI test: it needs a server over a real catalog (the
 synthetic test fixtures don't carry catalog-scale content), so it is a `scripts/`
 runner rather than a `tests/` module. Start the server first, for example
-``reg-meta serve --db <dir> --catalog global --stewards reg_webapp/stewards --port 8001``.
+``reg-meta serve --db <dir> --port 8001``.
 
 `intended` grammar: an FQID (``scb/iot``, ``class/icd-10-se``) for a leaf result, or
 ``group:<key>`` for a folded concept-group row.
