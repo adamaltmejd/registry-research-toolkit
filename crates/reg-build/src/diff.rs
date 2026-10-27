@@ -102,6 +102,8 @@ impl Section {
         if self.groups.iter().all(|(_, g)| g.is_empty()) {
             lines.push("no change".to_owned());
         }
+        // The cap is per section: the groups share one budget.
+        let mut left = limit;
         for (name, items) in self.groups.iter().filter(|(_, g)| !g.is_empty()) {
             let pad = if name.is_empty() {
                 ""
@@ -109,11 +111,13 @@ impl Section {
                 lines.push(format!("{name}:"));
                 "  "
             };
-            for item in items.iter().take(limit) {
+            let shown = items.len().min(left);
+            for item in &items[..shown] {
                 lines.extend(item.text.lines().map(|line| format!("{pad}{line}")));
             }
-            if items.len() > limit {
-                lines.push(format!("{pad}… and {} more", items.len() - limit));
+            left -= shown;
+            if items.len() > shown {
+                lines.push(format!("{pad}… and {} more", items.len() - shown));
             }
         }
         lines.join("\n") + "\n"
@@ -786,29 +790,54 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
 
 /// Provider and register names, descriptions and urls, keyed by pid.
 fn registers(p: &Pair) -> Res<Section> {
-    let load = |conn: &Connection| -> Res<BTreeMap<String, String>> {
+    // Fields stay separate (and NULL apart from text), so no value can mimic another.
+    type Fields = Vec<(&'static str, Option<String>)>;
+    let load = |conn: &Connection| -> Res<BTreeMap<(&'static str, String), Fields>> {
         let providers = query(
             conn,
-            "SELECT 'provider ' || p.pid, n.body || ' | ' || coalesce(p.url, '-')
-             FROM provider p JOIN text n ON n.id = p.name_text",
-            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+            "SELECT p.pid, n.body, p.url FROM provider p JOIN text n ON n.id = p.name_text",
+            |r| {
+                Ok((
+                    ("provider", r.get::<_, String>(0)?),
+                    vec![("name", r.get(1)?), ("url", r.get(2)?)],
+                ))
+            },
         )?;
         let registers = query(
             conn,
-            "SELECT 'register ' || r.pid, n.body || ' | ' || coalesce(d.body, '-')
-             FROM register r JOIN text n ON n.id = r.name_text
+            "SELECT r.pid, n.body, d.body FROM register r
+             JOIN text n ON n.id = r.name_text
              LEFT JOIN text d ON d.id = r.description_text",
-            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+            |r| {
+                Ok((
+                    ("register", r.get::<_, String>(0)?),
+                    vec![("name", r.get(1)?), ("description", r.get(2)?)],
+                ))
+            },
         )?;
         Ok(providers.into_iter().chain(registers).collect())
     };
     let (old, new) = (load(&p.old)?, load(&p.new)?);
+    let render = |f: Option<&Fields>| {
+        f.map_or_else(
+            || "(absent)".to_owned(),
+            |f| {
+                f.iter()
+                    .map(|(k, v)| format!("{k}={v:?}"))
+                    .collect::<Vec<_>>()
+                    .join(" ")
+            },
+        )
+    };
+    let object = |f: Option<&Fields>| {
+        f.map(|f| Value::Object(f.iter().map(|(k, v)| ((*k).to_owned(), json!(v))).collect()))
+    };
     let items = changed(&old, &new)
         .into_iter()
-        .map(|(key, o, n)| {
+        .map(|((kind, pid), o, n)| {
             Item::new(
-                json!({"key": key, "old": o, "new": n}),
-                format!("{key}: {} → {}", show(o), show(n)),
+                json!({"kind": kind, "pid": pid, "old": object(o), "new": object(n)}),
+                format!("{kind} {pid}: {} → {}", render(o), render(n)),
             )
         })
         .collect();
