@@ -62,12 +62,16 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
     // First pass: value sets, so the second pass can resolve names to their hashes.
     let mut records = Vec::new();
     let mut by_name: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let mut orphaned: BTreeMap<&str, usize> = BTreeMap::new();
     for (path, n, locator, object) in &lines {
         if object.get("kind").and_then(Value::as_str) != Some("value_set") {
             continue;
         }
-        let set = value_set(object, locator.clone())
+        let (set, dropped) = value_set(object, locator.clone())
             .map_err(|m| error(path, format!("line {n}: {m}")))?;
+        if dropped > 0 {
+            *orphaned.entry(path).or_default() += dropped;
+        }
         for name in &set.names {
             by_name
                 .entry(name.clone())
@@ -76,6 +80,11 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
         }
         records.push(Record::ValueSet(set));
     }
+
+    out.warnings
+        .extend(orphaned.into_iter().map(|(path, count)| {
+            format!("{path}: {count} items name a parent the list does not hold (dropped)")
+        }));
 
     // Second pass: every other record, its value-set names replaced by hashes.
     let mut parsed = Vec::new();
@@ -179,7 +188,7 @@ fn locator_value(locator: &Locator) -> Value {
 
 /// The value set a `value_set` line states. It cannot go through `Record`, which
 /// requires the `hash` this computes.
-fn value_set(object: &Map<String, Value>, locator: Locator) -> Result<ValueSet, String> {
+fn value_set(object: &Map<String, Value>, locator: Locator) -> Result<(ValueSet, usize), String> {
     if object.contains_key("hash") {
         return Err("hash is assigned by the reader".to_owned());
     }
@@ -196,9 +205,9 @@ fn value_set(object: &Map<String, Value>, locator: Locator) -> Result<ValueSet, 
         None => BTreeSet::new(),
         Some(names) => serde_json::from_value(names.clone()).map_err(|e| format!("names: {e}"))?,
     };
-    let mut set = ValueSet::new(items, None, locator);
+    let (mut set, dropped) = ValueSet::counted(items, None, locator);
     set.names = names;
-    Ok(set)
+    Ok((set, dropped))
 }
 
 /// The hash of the one value set named `name`.
