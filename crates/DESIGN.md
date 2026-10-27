@@ -425,6 +425,16 @@ tracks the milestones. This section holds the design decisions that outlive the 
   runs it on the staged file before replacing the output, so conformance and the release
   skill call the same authority. A previous file of another schema major is not
   comparable.
+- **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
+  variable-to-names direction.
+- Code search rows: one row per distinct (code, label) pair, deferred to a follow-up PR
+  (C-10 ruling, measured 1.48 GB at one row per item).
+- **Search keeps diacritics.** The new catalog's `search` index holds the text as
+  written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
+  `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
+  for it; the reader folds queries with `reg_core::normalized_search_query` (case and
+  whitespace only). The `fold_search` paragraph under "Search" below describes the old
+  indexes.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

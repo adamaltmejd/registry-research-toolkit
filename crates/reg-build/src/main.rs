@@ -22,6 +22,7 @@
 
 mod diff;
 mod emit;
+mod search;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};

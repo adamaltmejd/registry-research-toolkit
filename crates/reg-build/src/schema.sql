@@ -516,6 +516,7 @@ CREATE TABLE alias (
   kind        TEXT NOT NULL CHECK (kind IN ('delivered','curated')),
   PRIMARY KEY (fold_id, variable_id)
 ) STRICT, WITHOUT ROWID;
+CREATE INDEX alias_variable ON alias(variable_id);
 
 -- Search: one row per searchable entity; rowid shared with the FTS index.
 -- A 'code' row names a value set (a classification version's or a provider's) and a
