@@ -841,7 +841,7 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
 fn variable_locators(
     records: &[Record],
     ledger: &Ledger,
-    assignments: &BTreeMap<Locator, String>,
+    assignments: &BTreeMap<crate::OccurrenceKey, String>,
 ) -> Result<BTreeMap<String, BTreeSet<Locator>>, String> {
     let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments)?;
     let mut variables: BTreeMap<String, BTreeSet<Locator>> = BTreeMap::new();
@@ -868,7 +868,7 @@ pub fn reference(
     records: &[Record],
     ledger: &Ledger,
     variable: Option<&str>,
-    assignments: &BTreeMap<Locator, String>,
+    assignments: &BTreeMap<crate::OccurrenceKey, String>,
 ) -> Result<Vec<SourcePremise>, String> {
     let view = sources(records, ledger);
     let variables = if variable.is_some() {
@@ -1162,7 +1162,7 @@ pub fn resolve(
     ledger: &Ledger,
     statements: &[&Statement],
     references: &BTreeMap<String, Vec<SourcePremise>>,
-    assignments: &BTreeMap<Locator, String>,
+    assignments: &BTreeMap<crate::OccurrenceKey, String>,
 ) -> Vec<Result<ResolvedStatement, String>> {
     if statements.is_empty() {
         return Vec::new();

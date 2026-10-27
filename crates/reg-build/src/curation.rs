@@ -64,7 +64,7 @@ fn references(
     records: &[Record],
     statements: &[&LocatedStatement],
     classifications: &[reg_resolve::curation::apply::Classification],
-    variables: &BTreeMap<reg_frame::Locator, String>,
+    variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -191,7 +191,7 @@ pub(super) struct Applied {
     pub statements: Vec<crate::emit::StatementRow>,
     pub overrides: Vec<reg_resolve::provenance::Claim>,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
-    pub variables: BTreeMap<reg_frame::Locator, String>,
+    pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> u8 {
@@ -453,15 +453,7 @@ fn run_selected(
                     return Ok(rerun);
                 }
             };
-            if let reg_frame::statement::Statement::Set { fields, .. } = &statement.statement
-                && let Some(variable) = &fields.variable
-            {
-                for subject in &premise.subjects {
-                    result
-                        .variables
-                        .insert(subject.locator.clone(), variable.clone());
-                }
-            }
+            result.variables.extend(applied.assignments);
             evaluated.push((statement, premise.clone()));
             premises
                 .entry((provider, register))

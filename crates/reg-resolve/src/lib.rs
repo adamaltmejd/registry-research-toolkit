@@ -53,6 +53,37 @@ use gaps::gaps;
 pub use ledger::Ledger;
 use ledger::assign_ids;
 
+/// One documented occurrence, rather than every row expanded from one locator.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OccurrenceKey {
+    provider: String,
+    register: String,
+    table: String,
+    release: Option<String>,
+    column: String,
+    source_key: String,
+    from: Option<String>,
+    to: Option<String>,
+    locator: Locator,
+}
+
+impl OccurrenceKey {
+    #[must_use]
+    pub fn new(row: &Occurrence, locator: &Locator) -> Self {
+        Self {
+            provider: row.provider.clone(),
+            register: row.register.clone(),
+            table: row.table.clone(),
+            release: row.release.clone(),
+            column: row.column.clone(),
+            source_key: row.source_key.clone(),
+            from: row.from.clone(),
+            to: row.to.clone(),
+            locator: locator.clone(),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct Resolved {
     /// The register, named: its handle when the source gives no name.
@@ -209,7 +240,7 @@ pub fn resolve(
     records: &[Record],
     ledger: &Ledger,
     valuesets: &BTreeMap<&str, &ValueSet>,
-    assignments: &BTreeMap<Locator, String>,
+    assignments: &BTreeMap<OccurrenceKey, String>,
 ) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
@@ -574,7 +605,11 @@ pub fn resolve(
     let assignment = |row: &Occurrence| -> Result<Option<&str>, String> {
         let values = std::iter::once(&row.locator)
             .chain(&row.also)
-            .filter_map(|at| assignments.get(at).map(String::as_str))
+            .filter_map(|at| {
+                assignments
+                    .get(&OccurrenceKey::new(row, at))
+                    .map(String::as_str)
+            })
             .collect::<BTreeSet<_>>();
         if values.len() > 1 {
             return Err("conflicting variable assignments on one occurrence".into());

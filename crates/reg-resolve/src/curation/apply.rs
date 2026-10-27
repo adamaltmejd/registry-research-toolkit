@@ -40,6 +40,7 @@ pub struct Applied {
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
+    pub assignments: BTreeMap<crate::OccurrenceKey, String>,
 }
 
 /// Define an asserted code list before applying occurrences that consume its hash.
@@ -164,19 +165,21 @@ fn decode(value: Value) -> Result<Record, String> {
     serde_json::from_value(value).map_err(|e| format!("asserted frame: {e}"))
 }
 
+fn table_handles(records: &[Record]) -> impl Iterator<Item = &str> {
+    records.iter().filter_map(|record| match record {
+        Record::Table(table) => Some(table.table.as_str()),
+        Record::Occurrence(occurrence) => Some(occurrence.table.as_str()),
+        Record::Release(release) => Some(release.table.as_str()),
+        _ => None,
+    })
+}
+
 pub(super) fn table_handle(
     records: &[Record],
     ledger: &Ledger,
     slug: &str,
 ) -> Result<String, String> {
-    let candidates: BTreeSet<_> = records
-        .iter()
-        .filter_map(|r| match r {
-            Record::Table(t) => Some(t.table.as_str()),
-            Record::Occurrence(o) => Some(o.table.as_str()),
-            Record::Release(r) => Some(r.table.as_str()),
-            _ => None,
-        })
+    let candidates: BTreeSet<_> = table_handles(records)
         .filter(|handle| {
             if handle.is_empty() {
                 let register = records.iter().find_map(|r| match r {
@@ -251,6 +254,7 @@ pub fn apply(
         records: records.to_vec(),
         changes: Vec::new(),
         classifications: Vec::new(),
+        assignments: BTreeMap::new(),
     };
     match statement {
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
@@ -260,9 +264,7 @@ pub fn apply(
                 .map(|target| table_handle(records, ledger, target))
                 .transpose()?;
             if let Some(target) = &target_handle
-                && !records
-                    .iter()
-                    .any(|r| matches!(r, Record::Table(t) if t.table == *target))
+                && !table_handles(records).any(|handle| handle == target)
             {
                 return Err("set table requires an existing table; assert the table first".into());
             }
@@ -351,6 +353,10 @@ pub fn apply(
                     }
                 }
                 if let Some(variable) = &fields.variable {
+                    out.assignments.insert(
+                        crate::OccurrenceKey::new(row, &row.locator),
+                        variable.clone(),
+                    );
                     let value = tree(&Record::Occurrence(row.clone()));
                     out.changes.push(change(
                         &value,
