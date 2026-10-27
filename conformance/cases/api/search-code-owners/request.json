@@ -1,14 +1,12 @@
 {
-  "kind": "catalog",
-  "fixture": "many-code-owners",
+  "note": "(9, Okänd) is in the three referenced value sets sexkod, civkod and boform. Fails if a code hit is per value set rather than per (code, label) pair, or if `value_set_count` is not 3.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Shared choice",
-        "type": "register_value",
-        "limit": 1
+        "q": "okänd"
       }
     }
   ]

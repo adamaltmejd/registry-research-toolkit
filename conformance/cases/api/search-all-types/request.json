@@ -1,13 +1,20 @@
 {
-  "kind": "catalog",
-  "fixture": "search-ranking",
+  "note": "One row of each kind holds `kust` once, in its label, in a row of five tokens, so bm25 ties and kind's text order decides (DESIGN.md Search 3). Fails if a kind is missing from an untyped search, if kinds order other than code, document, register, table, variable, or if a hit's fields differ from rule 6 (step 0: the document matched only by its title has `heading`/`page` null; step 1: matched by its second section, that section's heading).",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "kon",
-        "limit": 5
+        "q": "kust"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "beskrivning",
+        "type": "document"
       }
     }
   ]

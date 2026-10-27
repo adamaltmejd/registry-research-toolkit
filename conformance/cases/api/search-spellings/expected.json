@@ -1,0 +1,24 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "type": "variable",
+          "fqid": "demo/ha/bostadsort",
+          "name": "Hemort",
+          "register_name": "Hälsoregistret",
+          "definition": null,
+          "spellings": [
+            "bostadsort",
+            "bostort"
+          ],
+          "period": {
+            "start": "2019-01-01",
+            "end": "2021-01-01"
+          }
+        }
+      ]
+    }
+  }
+]

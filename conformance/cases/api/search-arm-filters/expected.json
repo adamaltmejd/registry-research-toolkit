@@ -2,65 +2,26 @@
   {
     "status": 200,
     "json": {
+      "/data/items/*/type": [
+        "variable"
+      ],
       "/data/items/*/fqid": [
-        "class/aset"
+        "demo/hc/kv"
       ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items": []
+      "/data/items": [],
+      "/data/next_cursor": null
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items": []
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": [
-        "R3",
-        "R1"
-      ],
-      "/data/items/*/code_system": [
-        "ASET",
-        "ASET"
-      ],
-      "/data/items/0/classification_count": 1,
-      "/data/items/0/classifications/*/fqid": [
-        "class/aset"
-      ],
-      "/data/items/0/variables/*/fqid": [
-        "scb/example/v2",
-        "scb/example/v1",
-        "scb/example/v3"
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": [
-        "R2",
-        "R3",
-        "R1",
-        "R4",
-        "R5",
-        "R7",
-        "R70"
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/code": [
-        "R6"
-      ]
+      "/data/items": [],
+      "/data/next_cursor": null
     }
   }
 ]

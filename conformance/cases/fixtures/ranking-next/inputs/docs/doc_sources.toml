@@ -1,0 +1,5 @@
+licence = "CC0-1.0"
+
+[sources.kust]
+url = "https://example.org/kust"
+title = "Kust"

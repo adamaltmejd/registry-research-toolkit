@@ -201,12 +201,7 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         None => None,
     };
     let limit = limit(params)?;
-    // Every request parameter but `cursor` and `limit`, sorted by name.
-    let context = ["q", "register"]
-        .iter()
-        .filter_map(|name| params.get(name).map(|value| format!("{name}={value}")))
-        .collect::<Vec<_>>()
-        .join("&");
+    let context = cursor::context(params);
     let offset = match params.get("cursor") {
         Some(cursor) => {
             cursor::decode(cursor, server.catalog.generation(), &context, SEARCH_DEPTH)?.0

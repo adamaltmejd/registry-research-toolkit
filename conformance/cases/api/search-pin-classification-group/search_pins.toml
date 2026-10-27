@@ -1,4 +1,0 @@
-[[pin]]
-query = "sunx"
-type = "classification"
-fqids = ["class/sunx2020"]

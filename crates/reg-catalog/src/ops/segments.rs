@@ -117,18 +117,6 @@ pub struct Override {
     source_value: Option<String>,
 }
 
-/// The cursor `context`: every request parameter but `cursor` and `limit`, as
-/// `name=value`, sorted by name.
-pub(super) fn cursor_context(params: &Params) -> String {
-    params
-        .values
-        .iter()
-        .filter(|(name, _)| !matches!(**name, "cursor" | "limit"))
-        .flat_map(|(name, values)| values.iter().map(move |value| format!("{name}={value}")))
-        .collect::<Vec<_>>()
-        .join("&")
-}
-
 fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect()?;
     let given = params["ref"];
@@ -147,7 +135,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         let (_, position) = cursor::decode(
             token,
             server.catalog.generation(),
-            &cursor_context(params),
+            &cursor::context(params),
             usize::MAX,
         )?;
         let (start, table) = position
@@ -168,7 +156,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
         rows.last().map(|(_, _, _, (start, table))| {
             cursor::encode(
                 server.catalog.generation(),
-                &cursor_context(params),
+                &cursor::context(params),
                 limit,
                 &format!("{start}\u{1f}{table}"),
             )

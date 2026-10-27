@@ -2,14 +2,10 @@
   {
     "status": 200,
     "json": {
-      "/data/items": []
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/fqid": [
-        "scb/terms/grade"
+      "/data/items/*/type": [
+        "register",
+        "table",
+        "variable"
       ]
     }
   },
@@ -17,7 +13,7 @@
     "status": 200,
     "json": {
       "/data/items/*/fqid": [
-        "scb/terms/grade"
+        "demo/ha/kon"
       ]
     }
   },
@@ -25,14 +21,9 @@
     "status": 422,
     "json": {
       "/error/code": "invalid_period",
-      "/error/fields/parameter": "period"
-    }
-  },
-  {
-    "status": 422,
-    "json": {
-      "/error/code": "invalid_period",
-      "/error/fields/parameter": "period"
+      "/error/fields": {
+        "parameter": "period"
+      }
     }
   }
 ]

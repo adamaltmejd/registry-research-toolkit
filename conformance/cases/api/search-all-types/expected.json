@@ -2,15 +2,71 @@
   {
     "status": 200,
     "json": {
-      "/data/items/*/type": [
-        "variable",
-        "group",
-        "register"
+      "/data/items": [
+        {
+          "type": "code",
+          "code": "K9",
+          "label": "Kust och skärgård nord",
+          "value_set_count": 1
+        },
+        {
+          "type": "document",
+          "doc": "2306046c9eeda3195b1675eff105d58ead5ee785ce76942c661b192ac85aa956",
+          "title": "Kust",
+          "heading": null,
+          "page": null
+        },
+        {
+          "type": "register",
+          "fqid": "demo/hc",
+          "name": "Kust",
+          "description": "Om hav.",
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          }
+        },
+        {
+          "type": "table",
+          "fqid": "demo/hc/tk",
+          "name": "Kust",
+          "register_name": "Kust",
+          "role": "data",
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          }
+        },
+        {
+          "type": "variable",
+          "fqid": "demo/hc/kv",
+          "name": "Kust",
+          "register_name": "Kust",
+          "definition": null,
+          "spellings": [
+            "kv"
+          ],
+          "period": {
+            "start": "2019-01-01",
+            "end": "2020-01-01"
+          }
+        }
       ],
-      "/data/items/0/fqid": "scb/lisa/gender",
-      "/data/items/1/key": "kontroll",
-      "/data/items/2/fqid": "scb/konj",
       "/data/next_cursor": null
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items": [
+        {
+          "type": "document",
+          "doc": "2306046c9eeda3195b1675eff105d58ead5ee785ce76942c661b192ac85aa956",
+          "title": "Kust",
+          "heading": "Innehåll",
+          "page": null
+        }
+      ]
     }
   }
 ]

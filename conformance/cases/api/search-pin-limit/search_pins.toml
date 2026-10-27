@@ -1,4 +1,0 @@
-[[pin]]
-query = "example"
-type = "register"
-fqids = ["scb/lisa"]

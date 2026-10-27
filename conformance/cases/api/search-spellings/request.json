@@ -1,0 +1,13 @@
+{
+  "note": "`BOSTORT` was renamed `BOSTADSORT` in 2020 under one source key. Fails if the former spelling no longer finds the variable (spellings are in the `name` column), or if `spellings` is not both `alias` folds, sorted.",
+  "fixture": "ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "bostort"
+      }
+    }
+  ]
+}

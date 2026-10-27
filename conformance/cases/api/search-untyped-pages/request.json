@@ -1,21 +1,21 @@
 {
-  "kind": "catalog",
-  "fixture": "search-ranking",
+  "note": "The five `kust` hits, one per kind, paged by two. Fails if offset paging over the untyped order skips, repeats or reorders a hit across pages, or if the last page has a `next_cursor`.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Q90",
-        "limit": 1
+        "q": "kust",
+        "limit": 2
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Q90",
-        "limit": 1
+        "q": "kust",
+        "limit": 2
       },
       "cursor_from": [
         0,
@@ -26,8 +26,8 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Q90",
-        "limit": 1
+        "q": "kust",
+        "limit": 2
       },
       "cursor_from": [
         1,
@@ -38,13 +38,9 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Q90",
-        "limit": 1
-      },
-      "cursor_from": [
-        2,
-        "/data/next_cursor"
-      ]
+        "q": "kust",
+        "limit": 10
+      }
     }
   ]
 }

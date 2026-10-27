@@ -1,5 +1,389 @@
 [
   {
+    "name": "search",
+    "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`.",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "period": {
+          "type": "string"
+        },
+        "q": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "register",
+            "table",
+            "variable",
+            "classification",
+            "code",
+            "document"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "q"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "SearchHit": {
+          "description": "`shape.SearchHit`: one hit, tagged by its kind.",
+          "oneOf": [
+            {
+              "properties": {
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "type": {
+                  "enum": [
+                    "register"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "description",
+                "period",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "table"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "register_name",
+                "role",
+                "period",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The label.",
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "register_name": {
+                  "type": "string"
+                },
+                "spellings": {
+                  "description": "The folded names it was delivered under, sorted.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "type": {
+                  "enum": [
+                    "variable"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "register_name",
+                "definition",
+                "spellings",
+                "period",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "family": {
+                  "type": "string"
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "classification"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "family",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "description": "One distinct (code, label) pair, not a value set; its value sets are\n`values?code=&label=`.",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "code"
+                  ],
+                  "type": "string"
+                },
+                "value_set_count": {
+                  "description": "The value sets some segment references that hold the pair.",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "code",
+                "label",
+                "value_set_count",
+                "type"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "doc": {
+                  "description": "The document's hash.",
+                  "type": "string"
+                },
+                "heading": {
+                  "description": "The best-matching section's heading; `null` when no section matches.",
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "page": {
+                  "format": "int64",
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "document"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "doc",
+                "title",
+                "heading",
+                "page",
+                "type"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "SearchPage": {
+          "description": "`Page<SearchHit>`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/SearchHit"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/SearchPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "show",
     "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
     "inputSchema": {

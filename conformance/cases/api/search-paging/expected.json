@@ -3,7 +3,7 @@
     "status": 200,
     "json": {
       "/data/items/*/fqid": [
-        "scb/example/value"
+        "demo/ha/tv"
       ]
     }
   },
@@ -11,9 +11,40 @@
     "status": 200,
     "json": {
       "/data/items/*/fqid": [
-        "scb/example/second"
+        "demo/ha/va"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/ha/vb"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/ha/vc"
       ],
       "/data/next_cursor": null
+    },
+    "members": {
+      "steps": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "pointer": "/data/items/*/fqid",
+      "equals": [
+        "demo/ha/tv",
+        "demo/ha/va",
+        "demo/ha/vb",
+        "demo/ha/vc"
+      ]
     }
   }
 ]
