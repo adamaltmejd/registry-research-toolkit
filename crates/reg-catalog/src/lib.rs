@@ -20,7 +20,7 @@ pub use docs::Docs;
 pub use error::{Code, Error, Spec};
 
 /// `contract_version` in `conformance/api/operations.toml`.
-pub const CONTRACT_VERSION: &str = "4.0.0";
+pub const CONTRACT_VERSION: &str = "5.0.0";
 /// The schema gate: the artifact's major must equal this major and its minor be at
 /// least this minor.
 pub const SCHEMA: (u32, u32) = (12, 3);

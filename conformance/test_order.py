@@ -22,7 +22,7 @@ import re
 from typing import TYPE_CHECKING
 
 import pytest
-from http_cases import CASES, artifact_env, cached_case_artifact
+from http_cases import CASES, artifact_env, cached_case_artifact, is_parked
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -41,6 +41,8 @@ def test_order_manifest_or_located_finding(case: Path, http_servers) -> None:
     # order, rendering, provenance, an absent `partition` spelled `null`), when
     # `order`'s `data` is not those bytes' document, or when a blocked order stops
     # refusing on both routes with these located findings.
+    if is_parked(case):
+        pytest.skip("parked: conformance/PARKED.toml")
     request = json.loads((case / "request.json").read_text())
     kind = request["artifact"]
     path = cached_case_artifact({"fixture": request["fixture"], "kind": kind})

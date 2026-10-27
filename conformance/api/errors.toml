@@ -20,7 +20,8 @@
 # corrupt_concept_group_source (artifact invariants, so internal_error);
 # inventory_* codes (build-side, stay in reg_meta_build).
 # Order finding codes and project issue codes are data inside `order_blocked` and
-# `validate` results, owned by the project validator (`reg-core`), not error codes.
+# `validate` results, owned by the project validator (`reg-core`) and the order check,
+# not error codes.
 
 [[code]]
 code = "invalid_parameter"
@@ -28,8 +29,11 @@ class = "usage"
 surface = "operation"
 status = 422
 fields = ["parameter"]
-note = """An unknown, missing, mistyped or out-of-range parameter. Out-of-range `limit` \
-is an error, not today's silent clamp; unknown parameters are errors, not ignored."""
+note = """An unknown, missing, mistyped or out-of-range parameter, and a pair the \
+operation takes exactly one of (`values`: `value_set`, `classification` or `code`; \
+`label` without `code`). \
+Out-of-range `limit` is an error, not a silent clamp; unknown parameters are errors, \
+not ignored."""
 
 [[code]]
 code = "invalid_ref"
@@ -37,7 +41,7 @@ class = "usage"
 surface = "operation"
 status = 422
 fields = ["ref"]
-note = "A malformed FQID, or one of a kind the operation does not take."
+note = "A malformed public id, or one of a kind the operation does not take."
 
 [[code]]
 code = "invalid_period"
@@ -53,14 +57,6 @@ surface = "operation"
 status = 422
 
 [[code]]
-code = "scope_unavailable"
-class = "usage"
-surface = "operation"
-status = 422
-fields = ["scope"]
-note = "`holdings` on a catalog (non-steward) artifact."
-
-[[code]]
 code = "project_invalid"
 class = "usage"
 surface = "operation"
@@ -74,13 +70,32 @@ class = "not_found"
 surface = "operation"
 status = 404
 fields = ["ref"]
-note = "`ref` is the requested ref or identifier. Absent from holdings but present in reference is not_found under scope=holdings."
+note = "`ref` is the requested ref or identifier (a document hash for `docs_get`, a value-set hash for `values`). A `values` call by `code` that matches no value set is an empty page, not `not_found`."
+
+[[code]]
+code = "retired_ref"
+class = "not_found"
+surface = "operation"
+status = 404
+fields = ["ref", "kind", "retired_in", "reason"]
+note = """`ref` is in `ident_retired`: `retired_in` is the catalog_version that retired \
+it, `reason` is merged, split or withdrawn. No successor is named or followed."""
+
+[[code]]
+code = "table_is_register"
+class = "usage"
+surface = "operation"
+status = 422
+fields = ["ref", "tables"]
+note = """`ref` names a register that has named tables, not a table. `tables` is the \
+register's table ids ([fqid]), so the next call can be exact."""
 
 [[code]]
 code = "docs_unavailable"
 class = "not_found"
 surface = "operation"
 status = 404
+note = "The catalog has no documents."
 
 [[code]]
 code = "ambiguous_ref"
@@ -104,7 +119,7 @@ class = "order_blocked"
 surface = "operation"
 status = 422
 fields = ["findings"]
-note = "`findings` is today's [{code, message, source, variable, period}], with message rendered from fields."
+note = "`findings` is every order finding at once, as [Issue]; the blocking ones have level `error`."
 
 [[code]]
 code = "catalog_unavailable"
@@ -153,23 +168,3 @@ surface = "startup"
 exit = 10
 fields = ["schema_version", "supported"]
 
-[[code]]
-code = "catalog_unpublishable"
-class = "unavailable"
-surface = "startup"
-exit = 10
-
-[[code]]
-code = "catalog_mismatch"
-class = "unavailable"
-surface = "startup"
-exit = 10
-fields = ["configured", "artifact"]
-note = "The configured catalog (`--catalog NAME`) names another artifact kind or steward."
-
-[[code]]
-code = "doc_schema_incompatible"
-class = "unavailable"
-surface = "startup"
-exit = 10
-note = "A docs database is present but incompatible; an absent one is docs_unavailable per request."
