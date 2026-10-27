@@ -474,7 +474,6 @@ jobs:
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: reg-meta.vqv.uk
-        run: &public-mcp-smoke |
         run: |
           rpc() {
             curl -sfS "https://$EDGE_HOST/mcp" \
