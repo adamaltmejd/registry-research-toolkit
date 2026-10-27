@@ -1,4 +1,5 @@
 # Public ids of scb/r302 (today's scb/hogutbildades-arbetsmarknad), from the slug pins at fe08cf2a9.
+public = "hogutbildades-arbetsmarknad"
 [tables]
 
 [variables]

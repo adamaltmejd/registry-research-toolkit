@@ -1,4 +1,5 @@
 # Public ids of scb/r189 (today's scb/grundskola-ak9), from the slug pins at fe08cf2a9.
+public = "grundskola-ak9"
 [tables]
 "Grundskolan: betyg åk 9" = "grundskolan-betyg-ak9"
 

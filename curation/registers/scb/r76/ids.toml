@@ -1,4 +1,5 @@
 # Public ids of scb/r76 (today's scb/bylbbs), from the slug pins at fe08cf2a9.
+public = "bylbbs"
 [tables]
 "Bygglov för bostäder och lokaler" = "bygglov-for-bostader"
 "Nybyggnad av bostäder" = "nybyggnad-av-bostader"

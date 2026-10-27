@@ -1,4 +1,5 @@
 # Public ids of scb/r379 (today's scb/annan-pedagogisk-verksamhet), from the slug pins at fe08cf2a9.
+public = "annan-pedagogisk-verksamhet"
 [tables]
 "Barn - individ" = "barn-individ"
 "Personal - individ" = "personal-individ"

@@ -1,4 +1,5 @@
 # Public ids of scb/r168 (today's scb/fek), from the slug pins at fe08cf2a9.
+public = "fek"
 [tables]
 "FEK Preliminära data (FE)" = "fek-preliminara-data-fe"
 "FEK Slutdata (Investeringar per kommun)" = "fek-slutdata-investeringar-per-kommun"

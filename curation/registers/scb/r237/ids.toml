@@ -1,4 +1,5 @@
 # Public ids of scb/r237 (today's scb/ulf), from the slug pins at fe08cf2a9.
+public = "ulf"
 [tables]
 "Individer 16 år och uppåt (ULF)" = "individer-16plus-ulf"
 "Individer 16-74 år (ULF)" = "individer-16-74-ar-ulf"

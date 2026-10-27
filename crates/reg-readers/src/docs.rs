@@ -1,6 +1,7 @@
-//! Documents the source publishes about its registers: a directory of parsed markdown
-//! texts, or a list of PDFs pinned by hash. Frontmatter key names and the two metadata
-//! file names come from `curation/readers/docs.toml`.
+//! Documents the source publishes about its registers, in two input formats, one reader
+//! each: [`markdown`] (a directory of parsed markdown texts, configured by
+//! `curation/readers/markdown.toml`) and [`pdf_list`] (a list of PDFs pinned by hash,
+//! configured by `curation/readers/pdf-list.toml`).
 //!
 //! A document's subject is stated in source coordinates and resolved by the link stage:
 //! a markdown document whose frontmatter names a variable is about that variable of the
@@ -9,9 +10,9 @@
 //! whose handle is its list key. A subject that matches nothing leaves the document
 //! searchable, and the link stage warns.
 //!
-//! A directory holding the document-list file is a list; any other is markdown, one
-//! document per `*.md` in file-name order, with a licence and original URL looked up in
-//! the sources file by the frontmatter `source` (one trailing `.md` stripped).
+//! Markdown is one document per `*.md` in file-name order, with a licence and original
+//! URL looked up in the sources file by the frontmatter `source` (one trailing `.md`
+//! stripped).
 
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -22,12 +23,10 @@ use sha2::{Digest, Sha256};
 
 use crate::{ReadError, ReadOutput, config, error, name_key};
 
-/// `curation/readers/docs.toml`.
+/// `curation/readers/markdown.toml`.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-pub struct Config {
-    /// The document-list file's name.
-    related: String,
+pub struct MarkdownConfig {
     /// The sources file's name: each document's original URL, and the licence of the
     /// markdown derived from them.
     sources: String,
@@ -43,7 +42,23 @@ struct Frontmatter {
     source: String,
 }
 
-impl Config {
+impl MarkdownConfig {
+    /// # Errors
+    /// An unreadable or invalid config file.
+    pub fn load(path: &Path) -> Result<Self, ReadError> {
+        config(path)
+    }
+}
+
+/// `curation/readers/pdf-list.toml`.
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PdfListConfig {
+    /// The document-list file's name.
+    list: String,
+}
+
+impl PdfListConfig {
     /// # Errors
     /// An unreadable or invalid config file.
     pub fn load(path: &Path) -> Result<Self, ReadError> {
@@ -101,34 +116,17 @@ fn yes() -> bool {
     true
 }
 
-/// Read the documents under `rel`: a list when it holds the list file, else markdown
-/// about `register` of `provider`.
+/// Read the markdown documents under `rel`, about `register` of `provider`.
 ///
 /// # Errors
-/// An unreadable directory or metadata file, markdown whose frontmatter does not close
-/// or that has no sources licence, a listed file that is absent (and required), unsafe
-/// or does not match its pinned hash and size, or markdown with no register to be about.
-pub fn read(
-    root: &Path,
-    rel: &str,
-    provider: &str,
-    register: Option<&str>,
-    config: &Config,
-) -> Result<ReadOutput, ReadError> {
-    if root.join(rel).join(&config.related).is_file() {
-        list(root, rel, provider, config)
-    } else {
-        let register = register.ok_or_else(|| error(rel, "markdown documents need a register"))?;
-        markdown(root, rel, provider, register, config)
-    }
-}
-
-fn markdown(
+/// An unreadable directory or sources file, markdown whose frontmatter does not close or
+/// that has no sources licence.
+pub fn markdown(
     root: &Path,
     rel: &str,
     provider: &str,
     register: &str,
-    config: &Config,
+    config: &MarkdownConfig,
 ) -> Result<ReadOutput, ReadError> {
     let dir = root.join(rel);
     let sources_path = format!("{rel}/{}", config.sources);
@@ -206,17 +204,28 @@ fn markdown(
     Ok(out)
 }
 
-fn list(root: &Path, rel: &str, provider: &str, config: &Config) -> Result<ReadOutput, ReadError> {
-    let list_path = format!("{rel}/{}", config.related);
+/// Read the PDFs the list file under `rel` pins, each about the register its list key
+/// names.
+///
+/// # Errors
+/// A missing or invalid list file, a listed file that is absent (and required), unsafe
+/// or does not match its pinned hash and size.
+pub fn pdf_list(
+    root: &Path,
+    rel: &str,
+    provider: &str,
+    config: &PdfListConfig,
+) -> Result<ReadOutput, ReadError> {
+    let list_path = format!("{rel}/{}", config.list);
     let list: List = config_at(root, &list_path)?;
     let mut out = ReadOutput::default();
-    out.files.push(list_path);
+    out.files.push(list_path.clone());
     let mut records = Vec::new();
     for (handle, register) in list.register {
         for entry in register.document {
             if entry.filename.contains(['/', '\\']) || entry.filename.starts_with('.') {
                 return Err(error(
-                    &format!("{rel}/{}", config.related),
+                    &list_path,
                     format!(
                         "{handle}: filename {:?} is not a bare file name",
                         entry.filename
@@ -281,6 +290,8 @@ fn config_at<T: serde::de::DeserializeOwned>(root: &Path, rel: &str) -> Result<T
     toml::from_str(&text).map_err(|e| error(rel, e.to_string()))
 }
 
+// simplify: a hand-rolled reader of the flat frontmatter the LISA markdown carries; use a
+// YAML crate if frontmatter from another source appears.
 /// The frontmatter's `key: value` pairs (a quoted value unquoted, a wrapped or block
 /// scalar folded to one line; list items are not read) and the body after it. No
 /// opening `---` line is no frontmatter.

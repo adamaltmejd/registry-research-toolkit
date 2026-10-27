@@ -1,4 +1,5 @@
 # Public ids of scb/r375 (today's scb/foretagsstatistik), from the slug pins at fe08cf2a9.
+public = "foretagsstatistik"
 [tables]
 "FS Slutdata (företagsenhet resultaträkning)" = "fs-slutdata-resultatrakning"
 "FS Slutdata (företagsenhet)" = "fs-slutdata-foretagsenhet"

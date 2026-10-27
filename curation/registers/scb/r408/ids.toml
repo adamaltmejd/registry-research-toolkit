@@ -1,4 +1,5 @@
 # Public ids of scb/r408 (today's scb/anst), from the slug pins at fe08cf2a9.
+public = "anst"
 [tables]
 "Anställningar, LAPS" = "anstallningar-laps"
 "Anställningar, grund" = "anstallningar-grund"
