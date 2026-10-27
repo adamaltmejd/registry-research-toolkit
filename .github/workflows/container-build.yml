@@ -456,12 +456,10 @@ jobs:
             'https://api.cloudflare.com/client/v4/zones?name=vqv.uk' | jq '.result | length')
           [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone vqv.uk: add vqv.uk to the token's Zone Resources" >&2; exit 1; }
       # wrangler reads CLOUDFLARE_API_TOKEN from the env; exact-pinned so no
-      # wrangler release lands unreviewed. The DEPLOY_VERSION expression mirrors
-      # IMAGE_TAG: dispatch runs get a -<run_id> suffix.
+      # wrangler release lands unreviewed.
       - if: steps.head.outputs.skip != 'true'
         run: >-
           bunx wrangler@4.152.0 deploy --config reg_webapp/edge/wrangler.jsonc
-          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
