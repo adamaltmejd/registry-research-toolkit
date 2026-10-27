@@ -176,11 +176,20 @@ pub struct ValueSet {
 
 impl ValueSet {
     /// The value set of `items` (sorted by code, the canonical order), addressed by
-    /// the SHA-256 of their canonical JSON. Duplicate codes keep the first label.
+    /// the SHA-256 of their canonical JSON. Duplicate codes keep the first label. A
+    /// parent that is not an item's code is dropped: the catalog holds a parent only as
+    /// an item's ordinal, so the address must be of what the file can hold (a source
+    /// naming a chapter code without listing it, e.g. ks87-p, loses that link).
     #[must_use]
     pub fn new(mut items: Vec<Item>, name: Option<String>, locator: Locator) -> Self {
         items.sort_by(|a, b| a.code.cmp(&b.code));
         items.dedup_by(|b, a| a.code == b.code);
+        let codes: BTreeSet<String> = items.iter().map(|i| i.code.clone()).collect();
+        for item in &mut items {
+            if item.parent.as_ref().is_some_and(|p| !codes.contains(p)) {
+                item.parent = None;
+            }
+        }
         let hash = hex(&Sha256::digest(canonical_line(&items)));
         Self {
             hash,
