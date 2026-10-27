@@ -25,7 +25,7 @@ use reg_catalog::hex;
 use reg_catalog::ops::{Cache, Server};
 use sha2::{Digest, Sha256};
 
-use crate::{EDGE_VERSION_PARAM, VERSION};
+use crate::VERSION;
 
 /// The SHA-256 the image computed over the served binary and database
 /// (`reg_webapp/Dockerfile`); unset, `serve` hashes them itself at boot.
@@ -71,21 +71,13 @@ impl Validators {
     }
 
     /// The strong `ETag` of a GET of `uri`: the boot token and the request's path and
-    /// query, without the edge's cache-generation parameter (an edge redeploy must
-    /// not invalidate a browser's copy of an unchanged answer).
+    /// query.
     fn etag(&self, uri: &Uri) -> String {
-        let query = uri
-            .query()
-            .unwrap_or_default()
-            .split('&')
-            .filter(|pair| pair.split('=').next() != Some(EDGE_VERSION_PARAM))
-            .collect::<Vec<_>>()
-            .join("&");
         let digest = Sha256::new()
             .chain_update(self.token)
             .chain_update(uri.path())
             .chain_update("?")
-            .chain_update(query)
+            .chain_update(uri.query().unwrap_or_default())
             .finalize();
         format!("\"{}-{}\"", self.head, hex(&digest[..8]))
     }
