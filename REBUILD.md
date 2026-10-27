@@ -320,6 +320,105 @@ The full SCB read is a heavy run.
   classified;
 - the maintainer approves the switch release.
 
+**Outcome.** Exits 1 and 2 pass; exit 3, the maintainer's switch-release approval, is
+pending on this PR's approval sheet. The recorded full real-seed build at `5380260f`
+(after #1992 and #1993) took 108 s, peaked at 7.1 GB RSS and produced a 663 MB catalog;
+`reg-build verify` exited 0. Its `meta.generation` is
+`0967d0cb920fbfb43de5e5562c72a01d93acb5d0662d11b13aec4ee8c9624507`, identical to the
+build at `110134aa` (#1990): byte-identical output across reader-only changes.
+
+- Exit 1: release-tier conformance using `gate.py release`'s flags against that real
+  artifact passed, 4 of 4 (`-m release`). The synthetic suite in `g0 rust` passed at
+  #1993: 194 passed, 2 skipped. Classifications remain dark until D; holdings and
+  steward cases return in E.
+- Exit 2: `scripts/rebuild_compare.py orders` against 0.64.0, n=20 for each of seeds 0
+  and 1, covered 40 sampled register cases (39 distinct registers). Every defect class
+  has zero rows on both seeds. Diagnosis found no builder defect in either seed; #1990
+  and #1992 fixed the comparator over nine review rounds.
+
+Seed 0 (`.local/rebuild-c/rc/orders-0/summary.md`, Classes):
+
+  | class                | rows | refusals | register-only records | registers | owner      |
+  | -------------------- | ---: | -------: | --------------------: | --------: | ---------- |
+  | blocked window       | 4211 |        6 |                     0 |         6 | intended   |
+  | preliminary data     |    0 |        0 |                     0 |         0 | intended   |
+  | old blocked          |    0 |        0 |                     0 |         0 | intended   |
+  | identity change      |    0 |        0 |                     0 |         0 | intended   |
+  | old curation         |    1 |        0 |                     0 |         1 | D curation |
+  | unplaced release     |    0 |        0 |                     0 |         0 | D curation |
+  | clipped period       |    0 |        0 |                     0 |         0 | intended   |
+  | form boundary        |   99 |        0 |                     0 |         5 | intended   |
+  | spelling             |   13 |        0 |                     0 |         5 | intended   |
+  | representation only  |    0 |        0 |                     0 |         0 | intended   |
+  | table split or merge |    0 |        0 |                     0 |         0 | defect     |
+  | missing in new       |    0 |        0 |                     0 |         0 | defect     |
+  | missing in old       |    0 |        0 |                     0 |         0 | defect     |
+  | other                |    0 |        0 |                     0 |         0 | defect     |
+
+Seed 1 (`.local/rebuild-c/rc/orders-1/summary.md`, Classes):
+
+  | class                | rows | refusals | register-only records | registers | owner      |
+  | -------------------- | ---: | -------: | --------------------: | --------: | ---------- |
+  | blocked window       | 3437 |        6 |                     0 |         6 | intended   |
+  | preliminary data     |    0 |        0 |                     0 |         0 | intended   |
+  | old blocked          |    0 |        0 |                     0 |         0 | intended   |
+  | identity change      |  330 |        0 |                     0 |         4 | intended   |
+  | old curation         |  606 |        0 |                     0 |         2 | D curation |
+  | unplaced release     |   33 |        0 |                     0 |         1 | D curation |
+  | clipped period       |    0 |        0 |                     0 |         0 | intended   |
+  | form boundary        |  833 |        0 |                     0 |         7 | intended   |
+  | spelling             |   77 |        0 |                     0 |         6 | intended   |
+  | representation only  |    0 |        0 |                     0 |         0 | intended   |
+  | table split or merge |    0 |        0 |                     0 |         0 | defect     |
+  | missing in new       |    0 |        0 |                     0 |         0 | defect     |
+  | missing in old       |    0 |        0 |                     0 |         0 | defect     |
+  | other                |    0 |        0 |                     0 |         0 | defect     |
+
+- Blocked window: the new order refuses an ambiguous window with genuine rival SCB
+  variables; D curation, per the maintainer's ruling of 2026-10-27.
+- Identity change: the same column and days appear under a different variable id.
+- Old curation: rows the old catalog has from its curated layer (period families and
+  errata); carried over in D.
+- Unplaced release: undated LISA releases (Avlidna, Födelseland, In- och utvandrade)
+  remain unplaced; D.
+- Form boundary: the new order splits at type or value-set changes.
+- Spelling: latest spelling within a resolved run versus historical case.
+
+Whole-catalog sizing found 3,788 ambiguous data segments in 99 of 291 registers; a
+full-register order on any of those 99 refuses. Of the segments, 3,385 involve different
+SCB VarIds claiming one column. Blocking only the actual overlap still leaves all 99
+registers; exempting same-VarId type-only disagreements leaves 93. These are sizing
+estimates, not executed order requests; both changes are deferred to D. Sources:
+`.local/rebuild-c/runs/diag-orders-1.txt`, `diag-orders-2.txt` and
+`ambiguity-sizing-1.txt`.
+
+The remaining C checklist:
+
+- B2 shipped: value-set audit #1968, fixes and ValidTo rule #1970/#1971, recheck #1974,
+  marker-row resolution #1975/#1976; buckets and r118 checks are recorded above.
+- B3 shipped: #1957 slimmed `Report` to the ledger lists and `split_keys`.
+- B4 shipped: #1957 moved gaps/cadence/stretch to `gaps.rs` and ids/anchors to
+  `ledger.rs`.
+- Blank codes render and are searchable in the reader (#1981/#1984); SPA rendering
+  remains E, with the v4 SPA archived by #1991.
+- Link stage shipped: cross-register links, Timeseries events and notices #1960; search
+  and code search #1958/#1962; parsed documents #1964. Tags did not ship: they need D
+  curation, as do sets.
+- `reg-catalog` rewrite shipped: v5 contract #1963, admission #1973, operations
+  #1978–#1985; contract sign-off is pending on the approval sheet.
+- Logical order check shipped in #1985: ambiguity blocks, preliminary-only coverage
+  warns and final wins; edition/qualifier selection remains deferred after curation.
+- Conformance moved off `reg_meta_build` in #1969; `reg-build verify` owns artifact
+  invariants (#1953), with harness cleanup in #1993. Holdings/steward cases await E.
+- Documents in one catalog file shipped in #1964/#1973/#1983; the separate docs DB and
+  reader gate are gone.
+- Release/container schema plumbing and the release skill shipped in #1986/#1989, with
+  deployment cleanup in #1993.
+- Rust `dbdiff` shipped as `reg-build diff` in #1955; post-switch releases compare with
+  their predecessor. The switch has no comparable v4 predecessor.
+- Server switch has not happened. Plumbing shipped in #1986/#1993; approval, merge,
+  switch release and deployment remain. SWECOV stays on 0.64.0 until E.
+
 ### D: curation carry-over
 
 - **Release model.** Investigate whether a release as period plus description, with an
@@ -327,6 +426,13 @@ The full SCB read is a heavy run.
   stay optional and are never synthesized as placeholders for tables without one.
   Edition or qualifier selection in orders, if still needed, is designed together with
   this model.
+
+- **Ambiguity candidates from C** (not implemented):
+  - block only the actual overlap, instead of the whole ambiguous run; sizing still
+    leaves 99 registers with ambiguity;
+  - exempt same-VarId type-only disagreements while retaining label/value-set and
+    rival-variable blocking; sizing leaves 93 registers;
+  - revisit whether the rival check should mark the whole run or only its overlap.
 
 - **F1 `domain-change` rule**: it is not emitted when only the classification version
   differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
