@@ -192,7 +192,7 @@ fn sql(scope: &str) -> String {
            LEFT JOIN spelling sp ON sp.id = oc.spelling_id
            LEFT JOIN text rn ON rn.id = rl.name_text
          WHERE ({scope})
-           AND (:table IS NULL OR st.id = :table)
+           AND (:table IS NULL OR COALESCE(st.id, tb.id) = :table)
            AND (:lo IS NULL OR f.start IS NULL OR (f.start < :hi AND :lo < f.end))
            AND (:code IS NULL OR f.code = :code
                 OR substr(f.code, 1, length(:code) + 1) = :code || ':')
