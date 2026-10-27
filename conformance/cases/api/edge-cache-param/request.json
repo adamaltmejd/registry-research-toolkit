@@ -1,14 +1,13 @@
 {
   "note": "Step 1 fails if `__edge_v` reaches the validator or the 304 loses its headers; step 2 if a stale tag is answered 304; step 3 if the validators wrap the method-not-allowed fallback, answering another method 304, not 405.",
-  "fixture": "reader/logical",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Valø",
+        "q": "vikt",
         "type": "variable",
-        "scope": "reference",
         "__edge_v": "deploy-1"
       }
     },
@@ -16,9 +15,8 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Valø",
+        "q": "vikt",
         "type": "variable",
-        "scope": "reference",
         "__edge_v": "deploy-2"
       },
       "etag_from": 0
@@ -27,9 +25,8 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Valø",
+        "q": "vikt",
         "type": "variable",
-        "scope": "reference",
         "__edge_v": "deploy-2"
       },
       "if_none_match": "W/\"0.0.0-global-stale\""
@@ -37,14 +34,13 @@
     {
       "operation": "search",
       "path": "/api/search",
-      "method": "DELETE",
       "query": {
-        "q": "Valø",
+        "q": "vikt",
         "type": "variable",
-        "scope": "reference",
         "__edge_v": "deploy-2"
       },
-      "etag_from": 0
+      "etag_from": 0,
+      "method": "DELETE"
     }
   ]
 }

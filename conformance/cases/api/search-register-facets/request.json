@@ -1,46 +1,37 @@
 {
-  "note": "Counts come from the fixture: Value matches all four variables, of which scb/example's value and second are held, reference is unheld and sos/unheld is unheld; for 'Example reference' the register name supplies 'example' and only the reference variable's own text supplies 'reference'. Fails if the facet drifts from the variable arm's matching: holdings counting an unheld variable or dropping a held one, reference dropping an unheld register, or the multi-token register-context admission being skipped (0 rows) or loosened to any token (3 in scb/example, 1 in sos/unheld). The register-scoped step lists scb/example's three Value matches in reference (reference, second, value) and drops sos/unheld; it fails if `register` stops restricting the list or the listed ids drift from the counted admission. The `limit` step lists scb/example's first two matches (reference, second) while still counting three, and sos/unheld's one: it fails if `limit` cuts the count instead of the list, or the cut drifts from FQID order.",
-  "fixture": "reader",
+  "note": "`inkomst` matches two variables in ha and one in hb. Step 0 fails if `register` lists another register, cuts its variables or adds `name`; step 1 if `limit` does not cut each register's variables while counting them all, or omits `name`; step 2 if a mode with neither adds `name` or `variables`; step 3 if a variable ref is taken as a register.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search_facets",
       "path": "/api/search/facets",
       "query": {
-        "q": "Value"
+        "q": "inkomst",
+        "register": "demo/ha",
+        "limit": 1
       }
     },
     {
       "operation": "search_facets",
       "path": "/api/search/facets",
       "query": {
-        "q": "Value",
-        "scope": "reference"
+        "q": "inkomst",
+        "limit": 1
       }
     },
     {
       "operation": "search_facets",
       "path": "/api/search/facets",
       "query": {
-        "q": "Example reference",
-        "scope": "reference"
+        "q": "inkomst"
       }
     },
     {
       "operation": "search_facets",
       "path": "/api/search/facets",
       "query": {
-        "q": "Value",
-        "scope": "reference",
-        "register": "scb/example"
-      }
-    },
-    {
-      "operation": "search_facets",
-      "path": "/api/search/facets",
-      "query": {
-        "q": "Value",
-        "scope": "reference",
-        "limit": 2
+        "q": "inkomst",
+        "register": "demo/ha/ink"
       }
     }
   ]

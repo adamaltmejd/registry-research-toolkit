@@ -1,50 +1,37 @@
 {
-  "fixture": "reader/var-id-bands",
-  "kind": "catalog",
+  "note": "Step 0 fails if `register` keeps another register's rows, keeps a code row (no register) or drops the document linked to hc (DESIGN.md Search 4); step 1 if a table ref is taken as a register; step 2 if a bare name shared by two variables is not ambiguous; step 3 if an unknown register is not `not_found`.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "value",
-        "type": "variable",
-        "register": "scb/bands"
+        "q": "kust",
+        "register": "demo/hc"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "value",
-        "type": "variable",
-        "register": "band fixture"
+        "q": "kust",
+        "register": "demo/hc/tk"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "value",
-        "type": "variable",
-        "register": "nonesuch"
+        "q": "kust",
+        "register": "kon"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "value",
-        "type": "variable",
-        "register": "scb/Bands"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "value",
-        "type": "variable",
-        "register": "scb/bands/scb-value"
+        "q": "kust",
+        "register": "demo/nope"
       }
     }
   ]

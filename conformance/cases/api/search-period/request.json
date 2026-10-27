@@ -1,50 +1,29 @@
 {
-  "fixture": "reader/cli-periods",
-  "kind": "catalog",
+  "note": "Step 0 fails if a code or document row (no span) survives a period filter; step 1 if hb's `kon` (2021) is kept for 2019 or ha's (2019-2020) dropped; step 2 if a period outside the grammar is not `invalid_period`.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Grade",
-        "type": "variable",
-        "period": "2016"
+        "q": "kust",
+        "period": "2019"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Grade",
-        "type": "variable",
-        "period": "2018-12"
+        "q": "kon",
+        "period": "2019"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Grade",
-        "type": "variable",
-        "period": "2030"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "Grade",
-        "type": "variable",
-        "period": "2019-13"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "Grade",
-        "type": "variable",
-        "period": "2020..2019"
+        "q": "kust",
+        "period": "20x9"
       }
     }
   ]

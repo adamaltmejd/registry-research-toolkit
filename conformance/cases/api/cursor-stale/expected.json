@@ -1,20 +1,27 @@
 [
   {
-    "status": 200
+    "status": 200,
+    "json": {
+      "/data/items/*/fqid": [
+        "demo/ha/tv"
+      ]
+    }
   },
   {
     "status": 409,
     "json": {
-      "/error/code": "stale_cursor",
-      "/error/fields/generation": "4d0c918a3737c3696cc3725ab6e9e637d4c4e1fcd62f60807ec879a0d1f3f2a6"
+      "/error/code": "stale_cursor"
+    },
+    "keys": {
+      "/error/fields": [
+        "generation"
+      ]
     }
   },
   {
-    "status": 200,
+    "status": 422,
     "json": {
-      "/data/items/*/fqid": [
-        "scb/example/second"
-      ]
+      "/error/code": "invalid_cursor"
     }
   }
 ]

@@ -1,19 +1,12 @@
 {
-  "fixture": "reader",
+  "note": "Each step fails if the request is answered rather than refused with `invalid_parameter` naming the parameter: `limit` 0 and 201, an enum value outside `type`, no `q`, a 201-character `q`, an unknown parameter and a `q` with a NUL.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
-        "scope": "global"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "Value",
+        "q": "vikt",
         "limit": 0
       }
     },
@@ -21,7 +14,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
+        "q": "vikt",
         "limit": 201
       }
     },
@@ -29,7 +22,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
+        "q": "vikt",
         "type": "bogus"
       }
     },
@@ -49,8 +42,15 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
+        "q": "vikt",
         "years": "2015"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "vi\u0000kt"
       }
     }
   ]
