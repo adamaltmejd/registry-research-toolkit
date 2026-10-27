@@ -8,6 +8,9 @@ that identity against `--catalog` (`reg-meta serve`). It does not load an invent
 reconstruct holdings at runtime. See `reg_webapp/DESIGN.md` → *Compiled artifact
 identity and read scope* and `reg_meta_build/DESIGN.md` for the compiler contract.
 
+The hosted SWECOV app is not deployed until milestone E, and `--catalog` is the old
+binary's flag (the v4 `reg-meta serve` has none).
+
 `logo.svg` is Font Awesome Free 6.7.2 `virus-covid` (solid), CC BY 4.0
 (<https://fontawesome.com/license/free>), the glyph swecov.se uses, drawn in the `text`
 colour.

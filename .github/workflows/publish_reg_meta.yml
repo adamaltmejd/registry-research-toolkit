@@ -18,19 +18,20 @@ jobs:
     uses: ./.github/workflows/ci.yml
 
   # Post-release check of this release's DB assets: conformance against the global
-  # and SWECOV artifacts, served by the Rust server (integration.yml). Inherits the
+  # artifact, served by the Rust server (integration.yml). SWECOV has no artifact or
+  # deploy path until milestone E (REBUILD.md). Inherits the
   # reg_meta/v* gate via `needs: ci` (a skipped `ci` skips it), so it never fires for
   # reg_meta_build/v* releases.
   integration:
     needs: ci
     uses: ./.github/workflows/integration.yml
 
-  # Self-clearing deploy (#448): a reg_meta release can ship the DB asset an
-  # already-merged schema bump was waiting on — the schema-bump's main-push
-  # build-image went green-skipped, deferring the origin deploy. Publishing the
-  # release fires THIS workflow, not container-build.yml, so without this the
-  # origin would sit on the pre-bump image until the next image-affecting push or
-  # a manual dispatch. Dispatch container-build.yml on main so it re-resolves the
+  # Deploy after a release: a reg_meta release can ship the DB asset an
+  # already-merged schema bump was waiting on. container-build.yml's schema-guard
+  # fails closed (red, nothing deploys) while the newest release's schema differs
+  # from main's. Publishing the release fires THIS workflow, not container-build.yml,
+  # so without this the origin would sit on the old image until the next
+  # image-affecting push or a manual dispatch. Dispatch container-build.yml on main so it re-resolves the
   # newest reg_meta/v* release (now this one), rebakes its asset, and deploys.
   # Reuses container-build's workflow_dispatch path (everything-changed, run_id-
   # suffixed image tag, HEAD guards). workflow_dispatch is the documented
