@@ -1096,7 +1096,8 @@ Source:
 
 `edition` selects, in every window of the source's period where a release of that
 edition exists, that release's occurrences. Elsewhere the primary edition serves. Naming
-an edition that no release of the table has in the period is `edition_not_found`.
+an edition that no release of the serving tables has over a period item is
+`edition_not_found` for that item.
 
 Binding and panel:
 
