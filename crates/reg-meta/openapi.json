@@ -5,6 +5,120 @@
     "version": "0"
   },
   "paths": {
+    "/api/catalog": {
+      "get": {
+        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+        "operationId": "show_without_ref",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Show"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog/{ref}": {
+      "get": {
+        "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+        "operationId": "show",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Show"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/context": {
       "get": {
         "description": "The catalog's identity and headline counts, for the SPA.",
@@ -23,6 +137,80 @@
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/Context"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/resolve": {
+      "get": {
+        "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
+        "operationId": "resolve",
+        "parameters": [
+          {
+            "name": "columns",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 200
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Resolved"
                     },
                     "meta": {
                       "$ref": "#/components/schemas/Meta"
@@ -164,6 +352,33 @@
               "string",
               "null"
             ]
+          }
+        }
+      },
+      "Population": {
+        "type": "object",
+        "description": "One population a release states (`shape.Release.populations`).",
+        "required": [
+          "name",
+          "definition",
+          "ref_day"
+        ],
+        "properties": {
+          "definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "ref_day": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The ISO day the population is stated for."
           }
         }
       },
@@ -437,6 +652,554 @@
           }
         },
         "additionalProperties": false
+      },
+      "Release": {
+        "type": "object",
+        "description": "`shape.Release`: a delivery of a table.",
+        "required": [
+          "name",
+          "period",
+          "edition",
+          "qualifier",
+          "primary",
+          "parse_state",
+          "populations"
+        ],
+        "properties": {
+          "edition": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parse_state": {
+            "type": "string"
+          },
+          "period": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Period",
+                "description": "`null` when the release is unparsed."
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "populations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Population"
+            }
+          },
+          "primary": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "`null` when the release is unparsed."
+          },
+          "qualifier": {
+            "type": "string"
+          }
+        }
+      },
+      "Resolved": {
+        "type": "object",
+        "description": "`{columns: [ResolvedColumn]}`.",
+        "required": [
+          "columns"
+        ],
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResolvedColumn"
+            }
+          }
+        }
+      },
+      "ResolvedColumn": {
+        "type": "object",
+        "description": "`shape.ResolvedColumn`: a requested column and the variables it names.",
+        "required": [
+          "column",
+          "status",
+          "matches"
+        ],
+        "properties": {
+          "column": {
+            "type": "string",
+            "description": "As asked."
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResolvedMatch"
+            }
+          },
+          "status": {
+            "type": "string",
+            "description": "`matched` for one variable, `ambiguous` for several, `unmatched` for none."
+          }
+        }
+      },
+      "ResolvedMatch": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "register",
+          "alias"
+        ],
+        "properties": {
+          "alias": {
+            "type": "string",
+            "description": "`delivered` or `curated`."
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "description": "The variable's label."
+          },
+          "register": {
+            "type": "string",
+            "description": "The register's fqid."
+          }
+        }
+      },
+      "Show": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "providers",
+              "kind"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "root"
+                ]
+              },
+              "providers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowProviderRef"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "registers",
+              "kind"
+            ],
+            "properties": {
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "provider"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "registers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowRegisterRef"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "description",
+              "period",
+              "tables",
+              "variables",
+              "unplaced",
+              "kind"
+            ],
+            "properties": {
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "register"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period"
+              },
+              "tables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowTable"
+                }
+              },
+              "unplaced": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The literal names of the releases the reader could not place in time."
+              },
+              "variables": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowVariableRef"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "description",
+              "register",
+              "role",
+              "implicit",
+              "timeless",
+              "unit_type",
+              "cadence",
+              "spans",
+              "releases",
+              "row_keys",
+              "kind"
+            ],
+            "properties": {
+              "cadence": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "implicit": {
+                "type": "boolean"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "table"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "register": {
+                "type": "string",
+                "description": "The register's fqid."
+              },
+              "releases": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Release"
+                }
+              },
+              "role": {
+                "type": "string"
+              },
+              "row_keys": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowRowKey"
+                }
+              },
+              "spans": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Period"
+                }
+              },
+              "timeless": {
+                "type": "boolean"
+              },
+              "unit_type": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "definition",
+              "register",
+              "period",
+              "unit_types",
+              "texts",
+              "spellings",
+              "tables",
+              "kind"
+            ],
+            "properties": {
+              "definition": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "variable"
+                ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period"
+              },
+              "register": {
+                "type": "string",
+                "description": "The register's fqid."
+              },
+              "spellings": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSpelling"
+                }
+              },
+              "tables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The fqids of the tables the variable has segments in."
+              },
+              "texts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowText"
+                }
+              },
+              "unit_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back."
+      },
+      "ShowProviderRef": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowRegisterRef": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          }
+        }
+      },
+      "ShowRowKey": {
+        "type": "object",
+        "description": "A segment of the table that holds its rows' key.",
+        "required": [
+          "fqid",
+          "spelling",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "spelling": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowSpelling": {
+        "type": "object",
+        "description": "A folded name the variable is known by.",
+        "required": [
+          "spelling",
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "description": "`delivered` or `curated`."
+          },
+          "spelling": {
+            "type": "string"
+          }
+        }
+      },
+      "ShowTable": {
+        "type": "object",
+        "description": "A register's table; the implicit one has the register's fqid.",
+        "required": [
+          "fqid",
+          "name",
+          "role",
+          "implicit",
+          "timeless",
+          "unit_type",
+          "cadence",
+          "period"
+        ],
+        "properties": {
+          "cadence": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fqid": {
+            "type": "string"
+          },
+          "implicit": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "role": {
+            "type": "string"
+          },
+          "timeless": {
+            "type": "boolean"
+          },
+          "unit_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "ShowText": {
+        "type": "object",
+        "description": "One run of a variable's descriptive text.",
+        "required": [
+          "period",
+          "label",
+          "definition",
+          "operational_definition",
+          "unit"
+        ],
+        "properties": {
+          "definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "operational_definition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "ShowVariableRef": {
+        "type": "object",
+        "required": [
+          "fqid",
+          "name",
+          "period"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          }
+        }
       },
       "Sizes": {
         "type": "object",

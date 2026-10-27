@@ -1,0 +1,7 @@
+{
+  "note": "Fails if a table's releases stop listing the unparsed one last with a null period and primary, its row keys drop the Lopnr segment (or leak the other table's), or its spans are not the table's coverage.",
+  "fixture": "entities",
+  "requests": [
+    {"operation": "show", "path": "/api/catalog/demo/reg2/ind"}
+  ]
+}
