@@ -1209,6 +1209,16 @@ pub fn resolve(
                             "table and variable fields require an occurrence selector".into()
                         );
                     }
+                    if values.variable.is_some()
+                        && matches
+                            .iter()
+                            .any(|m| view[m.source].text("spelling") == Some(""))
+                    {
+                        return Err(
+                            "set variable cannot target a gap marker; ack the finding instead"
+                                .into(),
+                        );
+                    }
                     if let Some(variable) = &values.variable
                         && variable != "none"
                         && !ledger.variables.contains_key(variable)
