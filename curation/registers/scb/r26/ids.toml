@@ -1,4 +1,5 @@
 # Public ids of scb/r26 (today's scb/rams), from the slug pins at fe08cf2a9.
+public = "rams"
 [tables]
 "Arbetsställen" = "arbetsstallen"
 "Företag" = "foretag"

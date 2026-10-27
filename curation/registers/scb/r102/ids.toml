@@ -1,4 +1,5 @@
 # Public ids of scb/r102 (today's scb/gymnasieskola-betyg), from the slug pins at fe08cf2a9.
+public = "gymnasieskola-betyg"
 [tables]
 "Avgångna från Waldorf och International Baccalaureate (IB)" = "avgangna-fran-waldorf"
 "Avgångna, sent inkomna uppgifter, 1997-2002" = "avgangna-sent-inkomna"

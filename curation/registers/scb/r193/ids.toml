@@ -1,4 +1,5 @@
 # Public ids of scb/r193 (today's scb/grundskola-elever), from the slug pins at fe08cf2a9.
+public = "grundskola-elever"
 [tables]
 "Individregister" = "individregister"
 

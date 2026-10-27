@@ -1,4 +1,5 @@
 # Public ids of scb/r360 (today's scb/korstrackor), from the slug pins at fe08cf2a9.
+public = "korstrackor"
 [tables]
 
 [variables]

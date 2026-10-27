@@ -1,4 +1,5 @@
 # Public ids of scb/r29 (today's scb/linda), from the slug pins at fe08cf2a9.
+public = "linda"
 [tables]
 "Lindaurval inkl. familjemedlemmar - lön" = "lindaurval-familjemedlemmar-lon"
 "Panelurval av befolkningen inkl. familjemedlemmar" = "panelurval-befolkningen"

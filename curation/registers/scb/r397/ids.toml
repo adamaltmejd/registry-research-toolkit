@@ -1,4 +1,5 @@
 # Public ids of scb/r397 (today's scb/stuv), from the slug pins at fe08cf2a9.
+public = "stuv"
 [tables]
 "Deltagare i studieförbundens verksamhet" = "deltagare"
 "Studieförbund (STUV) 2012 - 2019" = "studieforbund-stuv-2012"

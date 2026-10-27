@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "d7b53cf573df9dcbcf232a5cb053aefb2d3e3a55"
+commit = "9186fcbceeb2283a50c7f684764869e4dda5765e"
 
 [[provider]]
 pid = "scb"
@@ -98,7 +98,7 @@ provider = "scb"
 # register is its handle; D's `bind` joins that to the export's LISA register.
 [[input]]
 name = "lisa-docs"
-reader = "docs"
+reader = "markdown"
 path = "catalog/docs/markdown/lisa"
 provider = "scb"
 register = "lisa-workbook"
@@ -106,7 +106,7 @@ register = "lisa-workbook"
 # PDFs pinned by hash in related_documents.toml; their subjects are the list's register keys.
 [[input]]
 name = "related-docs"
-reader = "docs"
+reader = "pdf-list"
 path = "catalog/docs/related"
 provider = "scb"
 

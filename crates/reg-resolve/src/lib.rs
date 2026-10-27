@@ -30,13 +30,16 @@
 //! - **Ids.** The ledger maps each public id to anchor occurrences; a variable no
 //!   anchor reaches gets a proposed id from its folded spelling.
 
+mod f1;
 mod gaps;
 mod ledger;
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, fold_identity, intersect, merge, next_iso_day, prev_iso_day};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table};
+use reg_frame::{
+    Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
+};
 use serde::Serialize;
 
 use gaps::gaps;
@@ -47,6 +50,9 @@ use ledger::assign_ids;
 pub struct Resolved {
     /// The register, named: its handle when the source gives no name.
     pub register: Register,
+    /// The register's public name: the ledger's `public`, else its handle. Handles key
+    /// ledgers, links and locators; only published ids use this.
+    pub public: String,
     /// The hull of its dated tables' coverage; open when every table is timeless.
     pub coverage: Interval,
     pub tables: Vec<ResolvedTable>,
@@ -102,6 +108,8 @@ pub struct Segment {
     pub period: Interval,
     pub spelling: String,
     pub dtype: Option<String>,
+    /// The one length the covering occurrences state, when they state exactly one.
+    pub length: Option<i64>,
     pub valueset: Option<String>,
     pub coded: &'static str,
     pub sensitive: Option<bool>,
@@ -180,7 +188,7 @@ pub struct Report {
 }
 
 /// Resolve one register from its records (the register, its tables, releases and
-/// occurrences) and its ledger.
+/// occurrences), its ledger and the frame's value sets by hash (F1 compares their codes).
 ///
 /// # Errors
 /// No register record or two, no occurrence, a release stated twice, an occurrence of
@@ -190,7 +198,11 @@ pub struct Report {
 /// # Panics
 /// Never: every variable is built from at least one used occurrence.
 #[allow(clippy::too_many_lines)]
-pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> {
+pub fn resolve(
+    records: &[Record],
+    ledger: &Ledger,
+    valuesets: &BTreeMap<&str, &ValueSet>,
+) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
         .filter_map(|r| match r {
@@ -739,6 +751,19 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
                     period,
                     spelling: o.column.clone(),
                     dtype: agreed(|f| &f.1),
+                    length: {
+                        let lengths: BTreeSet<i64> = covering
+                            .iter()
+                            .filter_map(|&i| resolved[i].occurrence.length)
+                            .collect();
+                        if lengths.len() > 1 {
+                            conflicts.insert("length".to_owned());
+                        }
+                        match lengths.into_iter().collect::<Vec<_>>()[..] {
+                            [n] => Some(n),
+                            _ => None,
+                        }
+                    },
                     valueset: agreed(|f| &f.2),
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
@@ -901,6 +926,15 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         }
     }
 
+    f1::changes(
+        &variables,
+        &resolved,
+        &tables,
+        &releases,
+        valuesets,
+        &mut findings,
+    );
+
     // Gap markers: on their key's variable when the key is one variable. A key
     // documented only without a column is no variable (F5).
     let mut key_variables: BTreeMap<&str, BTreeSet<usize>> = BTreeMap::new();
@@ -982,7 +1016,15 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         (Some(lo), Some(hi)) => (lo.clone(), hi.clone()),
         _ => (OPEN_START.to_owned(), OPEN_END.to_owned()),
     };
+    let public = match &ledger.public {
+        Some(public) if !reg_core::is_slug(public) => {
+            return Err(format!("ledger public name {public:?} is not a slug"));
+        }
+        Some(public) => public.clone(),
+        None => register.register.clone(),
+    };
     Ok(Resolved {
+        public,
         register,
         coverage,
         tables,
@@ -1064,6 +1106,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
         && (
             a.state,
             &a.dtype,
+            a.length,
             &a.valueset,
             a.coded,
             a.sensitive,
@@ -1072,6 +1115,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
         ) == (
             b.state,
             &b.dtype,
+            b.length,
             &b.valueset,
             b.coded,
             b.sensitive,

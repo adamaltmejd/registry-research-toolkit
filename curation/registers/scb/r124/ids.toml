@@ -1,4 +1,5 @@
 # Public ids of scb/r124 (today's scb/arbetsorsakade-besvar), from the slug pins at fe08cf2a9.
+public = "arbetsorsakade-besvar"
 [tables]
 "Arbetsorsakade besvär 2001-2016" = "arbetsorsakade-besvar"
 "Arbetsorsakade besvär fr.om. 2018" = "arbetsorsakade-besvar-2018"

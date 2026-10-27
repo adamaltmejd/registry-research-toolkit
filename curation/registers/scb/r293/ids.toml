@@ -1,4 +1,5 @@
 # Public ids of scb/r293 (today's scb/statliga-anslag-fou), from the slug pins at fe08cf2a9.
+public = "statliga-anslag-fou"
 [tables]
 
 [variables]
