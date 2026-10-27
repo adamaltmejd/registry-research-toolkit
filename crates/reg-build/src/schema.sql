@@ -217,6 +217,7 @@ CREATE TABLE vs_item (
   sentinel    INTEGER NOT NULL DEFAULT 0 CHECK (sentinel IN (0,1)),  -- "unknown" etc.
   PRIMARY KEY (valueset_id, ord)
 ) STRICT, WITHOUT ROWID;
+CREATE INDEX vs_item_code ON vs_item(code_text, label_text);
 
 -- Per-code validity dates are applied at read time and not stored (design D30).
 
@@ -519,21 +520,22 @@ CREATE TABLE alias (
 CREATE INDEX alias_variable ON alias(variable_id);
 
 -- Search: one row per searchable entity; rowid shared with the FTS index.
--- A 'code' row names a value set (a classification version's or a provider's) and a
--- code; sort_key breaks bm25 ties deterministically (pid, or 'vs:<hash>#code').
+-- A 'code' row is a distinct (code, label) pair of the referenced value sets; their
+-- value sets are found through vs_item_code. sort_key breaks bm25 ties
+-- deterministically (pid, or 'code' U+001F 'label').
 CREATE TABLE search_item (
   id          INTEGER PRIMARY KEY,
   kind        TEXT NOT NULL CHECK (kind IN ('register','table','variable','set','classification','code','document')),
   entity_id   INTEGER,                    -- NULL for 'code'
-  valueset_id INTEGER REFERENCES valueset(id),  -- 'code' only
   code_text   INTEGER REFERENCES text(id),      -- 'code' only
+  label_text  INTEGER REFERENCES text(id),      -- 'code' only; NULL when the item has no label
   register_id INTEGER REFERENCES register(id),
   start       INTEGER,                    -- coverage hull, for the period filter
   end         INTEGER,
   sort_key    TEXT NOT NULL UNIQUE,
-  CHECK ((kind = 'code') = (valueset_id IS NOT NULL)),
   CHECK ((kind = 'code') = (code_text IS NOT NULL)),
-  CHECK ((kind = 'code') = (entity_id IS NULL))
+  CHECK ((kind = 'code') = (entity_id IS NULL)),
+  CHECK (kind = 'code' OR label_text IS NULL)
 ) STRICT;
 
 CREATE VIRTUAL TABLE search USING fts5(
