@@ -38,7 +38,7 @@ pub(crate) fn changes(
 
     for (v, variable) in variables.iter().enumerate() {
         // Segments are held per table, in period order.
-        for pair in variable.segments.windows(2) {
+        for (i, pair) in variable.segments.windows(2).enumerate() {
             let (a, b) = (&pair[0], &pair[1]);
             if a.table != b.table || a.state == "ambiguous" || b.state == "ambiguous" {
                 continue;
@@ -55,12 +55,20 @@ pub(crate) fn changes(
                 );
             }
             if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" {
+                // A segment that states no set but whose occurrence states one set per
+                // population is split, not emptied.
+                let split = b.valueset.is_none()
+                    && resolved.iter().any(|r| {
+                        r.variable == Some(v)
+                            && r.segment == Some(i + 1)
+                            && !r.occurrence.population_valuesets.is_empty()
+                    });
                 push(
                     v,
                     "F1:domain-change",
                     Some(a.table),
                     day,
-                    format!("{} in {table}", domain(a, b, valuesets)),
+                    format!("{} in {table}", domain(a, b, valuesets, split)),
                 );
             }
         }
@@ -86,7 +94,7 @@ pub(crate) fn changes(
                 ),
             ]
             .into_iter()
-            .filter(|(_, old, new)| old != new)
+            .filter(|(_, old, new)| fold(old.as_ref()) != fold(new.as_ref()))
             .map(|(name, old, new)| {
                 let how = match (old, new) {
                     (None, _) => "added",
@@ -114,9 +122,10 @@ pub(crate) fn changes(
             }
         }
 
-        // Population: the primary releases carrying the variable, per table, in period
-        // order; undated releases and releases without populations are skipped.
-        let mut carriers: BTreeMap<usize, BTreeSet<usize>> = BTreeMap::new();
+        // Population: the primary releases carrying the variable, per delivery (table and
+        // qualifier) in period order, so same-period deliveries are never compared;
+        // undated releases and releases without populations are skipped.
+        let mut carriers: BTreeMap<(usize, Option<String>), BTreeSet<usize>> = BTreeMap::new();
         for r in resolved {
             if r.variable == Some(v)
                 && r.status == "used"
@@ -125,10 +134,13 @@ pub(crate) fn changes(
                 && !releases[x].release.populations.is_empty()
                 && placed(&releases[x].release).is_some()
             {
-                carriers.entry(r.table).or_default().insert(x);
+                carriers
+                    .entry((r.table, releases[x].release.qualifier.clone()))
+                    .or_default()
+                    .insert(x);
             }
         }
-        for (t, set) in carriers {
+        for ((t, _), set) in carriers {
             let mut ordered: Vec<&ResolvedRelease> = set.iter().map(|&x| &releases[x]).collect();
             ordered.sort_by_key(|x| {
                 (
@@ -155,6 +167,11 @@ pub(crate) fn changes(
     }
 }
 
+/// A definition compares under the fold labels use: case and spacing.
+fn fold(text: Option<&String>) -> Option<String> {
+    text.map(|t| label_key(t))
+}
+
 fn names(x: &ResolvedRelease) -> BTreeSet<&str> {
     x.release
         .populations
@@ -173,7 +190,10 @@ fn shape(s: &Segment) -> String {
 }
 
 /// The codes a pair of value sets add, drop and relabel; a missing set has no codes.
-fn domain(a: &Segment, b: &Segment, valuesets: &BTreeMap<&str, &ValueSet>) -> String {
+fn domain(a: &Segment, b: &Segment, valuesets: &BTreeMap<&str, &ValueSet>, split: bool) -> String {
+    if split {
+        return "one set → per-population sets".to_owned();
+    }
     let codes = |s: &Segment| -> BTreeMap<&str, Option<&str>> {
         s.valueset
             .as_deref()

@@ -108,7 +108,7 @@ pub struct Segment {
     pub period: Interval,
     pub spelling: String,
     pub dtype: Option<String>,
-    /// Stated only where the covering occurrences agree on it.
+    /// The one length the covering occurrences state, when they state exactly one.
     pub length: Option<i64>,
     pub valueset: Option<String>,
     pub coded: &'static str,
@@ -752,14 +752,16 @@ pub fn resolve(
                     spelling: o.column.clone(),
                     dtype: agreed(|f| &f.1),
                     length: {
-                        let lengths: BTreeSet<Option<i64>> = covering
+                        let lengths: BTreeSet<i64> = covering
                             .iter()
-                            .map(|&i| resolved[i].occurrence.length)
+                            .filter_map(|&i| resolved[i].occurrence.length)
                             .collect();
-                        if lengths.len() == 1 {
-                            lengths.into_iter().next().flatten()
-                        } else {
-                            None
+                        if lengths.len() > 1 {
+                            conflicts.insert("length".to_owned());
+                        }
+                        match lengths.into_iter().collect::<Vec<_>>()[..] {
+                            [n] => Some(n),
+                            _ => None,
                         }
                     },
                     valueset: agreed(|f| &f.2),
