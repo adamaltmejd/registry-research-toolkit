@@ -120,7 +120,7 @@ pub(crate) fn hull(spans: &[reg_core::Interval]) -> (i64, i64) {
 }
 
 pub(crate) fn pid_of_register(r: &Resolved) -> String {
-    format!("{}/{}", r.register.provider, r.register.register)
+    format!("{}/{}", r.register.provider, r.public)
 }
 
 pub(crate) fn pid_of_table(r: &Resolved, t: usize) -> String {

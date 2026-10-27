@@ -1,4 +1,5 @@
 # Public ids of scb/r304 (today's scb/fritidshem), from the slug pins at fe08cf2a9.
+public = "fritidshem"
 [tables]
 "Anpassad grundskola" = "anpassad-grundskola"
 "Grundskola" = "grundskola"

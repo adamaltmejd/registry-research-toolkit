@@ -47,6 +47,9 @@ use ledger::assign_ids;
 pub struct Resolved {
     /// The register, named: its handle when the source gives no name.
     pub register: Register,
+    /// The register's public name: the ledger's `public`, else its handle. Handles key
+    /// ledgers, links and locators; only published ids use this.
+    pub public: String,
     /// The hull of its dated tables' coverage; open when every table is timeless.
     pub coverage: Interval,
     pub tables: Vec<ResolvedTable>,
@@ -982,7 +985,15 @@ pub fn resolve(records: &[Record], ledger: &Ledger) -> Result<Resolved, String> 
         (Some(lo), Some(hi)) => (lo.clone(), hi.clone()),
         _ => (OPEN_START.to_owned(), OPEN_END.to_owned()),
     };
+    let public = match &ledger.public {
+        Some(public) if !reg_core::is_slug(public) => {
+            return Err(format!("ledger public name {public:?} is not a slug"));
+        }
+        Some(public) => public.clone(),
+        None => register.register.clone(),
+    };
     Ok(Resolved {
+        public,
         register,
         coverage,
         tables,

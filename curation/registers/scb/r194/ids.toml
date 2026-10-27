@@ -1,4 +1,5 @@
 # Public ids of scb/r194 (today's scb/skolvasendet-kostnader), from the slug pins at fe08cf2a9.
+public = "skolvasendet-kostnader"
 [tables]
 
 [variables]

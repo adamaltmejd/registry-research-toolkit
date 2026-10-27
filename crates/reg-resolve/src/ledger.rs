@@ -14,6 +14,9 @@ use crate::{Report, ResolvedOccurrence, ResolvedTable, Variable, slugify};
 #[derive(Debug, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Ledger {
+    /// The register's public name, the segment after its provider in every id; absent,
+    /// its handle.
+    pub public: Option<String>,
     #[serde(default)]
     pub tables: BTreeMap<String, String>,
     #[serde(default)]

@@ -1,4 +1,5 @@
 # Public ids of scb/r330 (today's scb/aktieagarstatistik), from the slug pins at fe08cf2a9.
+public = "aktieagarstatistik"
 [tables]
 
 [variables]
