@@ -680,6 +680,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             register: &register_id,
             table: &table_id,
             variable: &variable_id,
+            valueset: &valueset_id,
         },
     )?;
     for (i, item) in search.iter().enumerate() {
