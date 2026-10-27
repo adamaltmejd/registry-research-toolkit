@@ -32,6 +32,8 @@
 //! - **Ids.** The ledger maps each public id to anchor occurrences; a variable no
 //!   anchor reaches gets a proposed id from its folded spelling.
 
+pub mod curation;
+
 mod f1;
 mod gaps;
 mod ledger;

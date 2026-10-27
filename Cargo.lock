@@ -961,6 +961,7 @@ dependencies = [
  "reg-core",
  "reg-frame",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

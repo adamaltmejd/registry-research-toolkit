@@ -222,11 +222,31 @@ spelling and type. A D `set` states those.
 - The pure model and address grammar live in `reg-frame`, shared by readers and resolve;
   `reg-frame` uses `reg-core` for periods and folds. The TOML loader stays in
   `reg-readers`, so no new crate or reader dependency is needed in resolve.
-- D-1 loads and validates statements before `reg-build build` reads inputs. It does not
-  apply statements or write a premise lock. With no statement files, the existing
-  artifact path and bytes are unchanged; CI's two-build determinism check still runs.
-- Each statement's premise is recorded in a generated `curation.lock`. When the source
-  changes under a statement, the build refuses it at its file and line.
+- The loader validates statements before `reg-build build` reads inputs. D-2 resolves
+  selectors and checks premises, without applying statements; application is D-3. With
+  no statements, artifact bytes are unchanged and no lock is written. CI builds the
+  synthetic fixture twice and compares bytes.
+- Selectors read an immutable source view: the frame plus asserted facts, after binding.
+  D-2 accepts the frame at that boundary; D-3a supplies its bound/asserted output there.
+  Other statement outputs never enter selector resolution. Occurrence periods intersect
+  the selector scope; spellings fold and guards compare source values. A match is a set
+  of source locators, including merged-row locators.
+- `curation.lock` is generated canonical JSON (via `reg-frame::canonical_line`), with
+  `version = 1` and a `statements` object keyed by normalized statement identity. Each
+  premise stores sorted `subjects` and `objects`: source locators and the source values
+  of overridden and dependent fields, including guards and source coordinates. Missing
+  source values are JSON null. No lock is written for an empty register.
+- Builds recompute premises. Empty or ambiguous selectors, overlapping overrides of one
+  field on one subject and period, missing/changed premises, and assertions now stated
+  by the source are refusals. Diagnostics name the statement file and line; ambiguity
+  lists candidate guards, overlaps name both locations, and changed premises show
+  old/new values. Release builds fail; dev builds skip refused statements and report
+  them. A `set` equal to its source is a redundant-set finding, not a refusal.
+- `reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]` records
+  reviewed premises (all registers by default; names may be `provider/register` or
+  register directory names). It refuses invalid selectors and conflicts before writing
+  any lock. Builds only check locks; they never accept changed premises automatically.
+  The lock diff belongs in the PR changing the statements.
 - Every published value has one provenance: source, rule or curated, with curated over
   rule over source. Losing values are kept as evidence.
 - Rules never merge across keys, bind classifications or enrich; those are always
@@ -288,10 +308,9 @@ spellings, expanded braces and sorted guards and period tokens before hashing.
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
 normalized statements within a register are refused at the file and statement line.
-Matching, empty matches, ambiguity, precedence conflicts and premise validation belong
-to the later resolve/lock stages: selectors will resolve against source facts after
-`bind` and `assert`, never against other overrides. Curated values take precedence over
-rules and sources; two overlapping curated overrides will be refused at both locations.
+Matching and premise validation live in `reg-resolve`; lock IO and located diagnostics
+live in `reg-build`. Curated values take precedence over rules and sources; two
+overlapping curated overrides are refused at both locations.
 
 **Value sets, populations and series.**
 

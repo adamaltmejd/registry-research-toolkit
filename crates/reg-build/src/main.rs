@@ -4,6 +4,7 @@
 //! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
+//! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]
 //! reg-build verify FILE [--previous FILE]
 //! reg-build diff OLD NEW [--json] [-n N]
 //! ```
@@ -21,6 +22,7 @@
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
 //! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
+mod curation;
 mod diff;
 mod docs;
 mod emit;
@@ -64,6 +66,7 @@ struct Args {
     report: Option<PathBuf>,
     catalog_version: String,
     release: bool,
+    registers: Vec<String>,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
@@ -73,6 +76,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
     let (mut inputs, mut curation, mut out, mut assets, mut report, mut version) =
         (None, None, None, None, None, None);
     let mut release = false;
+    let mut registers = Vec::new();
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--inputs" => &mut inputs,
@@ -85,21 +89,31 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
                 release = true;
                 continue;
             }
+            other if command == "lock" && !other.starts_with('-') => {
+                registers.push(other.to_owned());
+                continue;
+            }
             other => return Err(format!("unknown flag {other:?}")),
         };
         *slot = Some(args.next().ok_or(format!("{flag} needs a value"))?);
     }
     let need =
         |v: Option<String>, flag: &str| v.map(PathBuf::from).ok_or(format!("{flag} is required"));
+    let out = if command == "lock" {
+        PathBuf::new()
+    } else {
+        need(out, "--out")?
+    };
     Ok(Args {
         command,
         inputs: need(inputs, "--inputs")?,
         curation: need(curation, "--curation")?,
-        out: need(out, "--out")?,
+        out,
         assets: assets.map(PathBuf::from),
         report: report.map(PathBuf::from),
         catalog_version: version.unwrap_or_else(|| "dev".to_owned()),
         release,
+        registers,
     })
 }
 
@@ -195,13 +209,21 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
 
 #[allow(clippy::too_many_lines)]
 fn build(args: &Args) -> Result<(), String> {
-    // D-1 validates authoring only; application and premise locking follow in D-2/D-3.
-    reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
+    let curation_findings = curation::run(
+        &args.curation,
+        &statements,
+        &outputs,
+        false,
+        &[],
+        args.release,
+    )?;
 
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
+    warnings.extend(curation_findings);
     for (input, output) in manifest.input.iter().zip(&outputs) {
         // A release asset is its pin (the reader verified it); its locators name
         // archive members, not files under the inputs root.
@@ -417,6 +439,21 @@ fn build(args: &Args) -> Result<(), String> {
     emit::write(&catalog, &args.out)
 }
 
+fn lock(args: &Args) -> Result<(), String> {
+    let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
+    let outputs = read_all(args, &manifest)?;
+    curation::run(
+        &args.curation,
+        &statements,
+        &outputs,
+        true,
+        &args.registers,
+        true,
+    )?;
+    Ok(())
+}
+
 /// `verify FILE [--previous FILE]`, after the command word.
 fn parse_verify(
     mut args: impl Iterator<Item = String>,
@@ -450,6 +487,7 @@ fn main() -> ExitCode {
         parse_args(args).and_then(|args| match args.command.as_str() {
             "read" => read(&args),
             "build" => build(&args),
+            "lock" => lock(&args),
             other => Err(format!("unknown command {other:?}")),
         })
     };
