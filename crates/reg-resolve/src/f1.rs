@@ -45,10 +45,11 @@ pub(crate) fn changes(
             }
             let day = b.period.0.as_str();
             let table = table_name(a.table);
-            // A length counts only when both sides state one: an unstated or conflicting
-            // length (F6 records the conflict) is not a change of type.
+            // A dtype or length counts only when both sides state one: an unstated or
+            // conflicting value (F6 records the conflict) is not a change of type.
+            let dtypes_differ = matches!((&a.dtype, &b.dtype), (Some(x), Some(y)) if x != y);
             let lengths_differ = matches!((a.length, b.length), (Some(x), Some(y)) if x != y);
-            if a.dtype != b.dtype || lengths_differ {
+            if dtypes_differ || lengths_differ {
                 push(
                     v,
                     "F1:type-change",
