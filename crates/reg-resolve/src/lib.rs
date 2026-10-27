@@ -374,6 +374,14 @@ pub fn resolve(
             ));
         }
     };
+    // Freeze default identities, ledger ids and marker membership before changing rows.
+    let defaults = if assignments.keys().any(|key| {
+        key.identity.provider == register.provider && key.identity.register == register.register
+    }) {
+        Some(resolve(records, ledger, valuesets, &BTreeMap::new())?)
+    } else {
+        None
+    };
     let mut report = Report::default();
     let mut findings = Vec::new();
     let occurrences: Vec<&Occurrence> = records
@@ -739,22 +747,14 @@ pub fn resolve(
         }
         Ok(value)
     };
-    for row in &mut resolved {
-        if !matches!(row.status, "unplaced" | "gap_marker")
-            && assignment(&row.occurrence)? == Some("none")
-        {
-            row.status = "withheld";
-        }
-    }
-
     // Identity: a key splits by fold when two folds overlap anywhere in the register,
     // among used rows. Shadowing leaves a worse edition's row only where the primary
     // lacks its key, so a preliminary and a final edition of one period never split it.
-    let mut by_key: BTreeMap<&str, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
+    let mut by_key: BTreeMap<String, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
     for r in &resolved {
         if r.status == "used" {
             by_key
-                .entry(r.occurrence.source_key.as_str())
+                .entry(r.occurrence.source_key.clone())
                 .or_default()
                 .entry(fold_identity(&r.occurrence.column))
                 .or_default()
@@ -771,7 +771,7 @@ pub fn resolve(
             })
         });
         if overlaps {
-            split.insert(*key);
+            split.insert(key.clone());
         }
     }
     report.split_keys = split.len();
@@ -784,51 +784,43 @@ pub fn resolve(
         };
         (key, sub)
     };
-    let targets = resolved
-        .iter()
-        .map(|row| assignment(&row.occurrence))
-        .collect::<Result<BTreeSet<_>, _>>()?
-        .into_iter()
-        .flatten()
-        .filter(|id| *id != "none")
-        .collect::<BTreeSet<_>>();
-    let mut anchor_groups = BTreeMap::<&str, BTreeSet<(String, String)>>::new();
-    for row in &resolved {
-        if !matches!(row.status, "used" | "shadowed" | "rejected") {
-            continue;
-        }
-        for id in &targets {
-            let anchors = ledger
-                .variables
-                .get(*id)
-                .ok_or_else(|| format!("variable {id:?} is not a ledger slug"))?;
-            if ledger::matches_anchor(id, anchors, row, &tables[row.table].table.table)? {
-                anchor_groups
-                    .entry(*id)
-                    .or_default()
-                    .insert(default_identity(row));
-            }
-        }
-    }
-    let mut anchored = BTreeMap::new();
-    for (id, groups) in anchor_groups {
-        if let Some(group) = groups.into_iter().next() {
-            anchored.entry(group).or_insert(id);
-        }
-    }
     let mut variable_keys: BTreeMap<(String, String, bool), Vec<usize>> = BTreeMap::new();
-    for (i, r) in resolved.iter().enumerate() {
+    for (i, r) in resolved.iter_mut().enumerate() {
+        let chosen = assignment(&r.occurrence)?;
+        if chosen.is_none()
+            && let Some(defaults) = &defaults
+        {
+            r.status = defaults.occurrences[i].status;
+        }
         if !matches!(r.status, "used" | "shadowed" | "rejected") {
             continue;
         }
-        let (key, sub) = default_identity(r);
-        let chosen = assignment(&r.occurrence)?
-            .or_else(|| anchored.get(&(key.clone(), sub.clone())).copied());
-        let identity = chosen.map_or_else(
-            || (key, sub, false),
-            |id| (id.to_owned(), String::new(), true),
-        );
+        let identity = if let Some(defaults) = &defaults {
+            match chosen {
+                Some("none") => {
+                    r.status = "withheld";
+                    continue;
+                }
+                Some(id) => (id.to_owned(), String::new(), true),
+                None => {
+                    let Some(v) = defaults.occurrences[i].variable else {
+                        continue;
+                    };
+                    (defaults.variables[v].slug.clone(), String::new(), true)
+                }
+            }
+        } else {
+            let (key, sub) = default_identity(r);
+            (key, sub, false)
+        };
         variable_keys.entry(identity).or_default().push(i);
+    }
+    if defaults.is_some()
+        && variable_keys
+            .values()
+            .any(|members| !members.iter().any(|&i| resolved[i].status == "used"))
+    {
+        return Err("set variable would leave a variable without a used occurrence".into());
     }
     // A variable needs a used occurrence. One documented only outside its tables'
     // coverage is withheld, with its T1 notices.
@@ -1226,7 +1218,15 @@ pub fn resolve(
             continue;
         }
         let key = r.occurrence.source_key.as_str();
-        if let Some(vs) = key_variables.get(key)
+        if let Some(defaults) = &defaults {
+            if let Some(v) = defaults.occurrences[i].variable {
+                let slug = &defaults.variables[v].slug;
+                let target = variables.iter().position(|v| v.slug == *slug).ok_or_else(|| {
+                    format!("set variable would orphan gap marker for {slug:?}; ack the finding instead")
+                })?;
+                marker_variable.push((i, target));
+            }
+        } else if let Some(vs) = key_variables.get(key)
             && vs.len() == 1
         {
             marker_variable.push((i, *vs.first().expect("one")));
@@ -1273,6 +1273,14 @@ pub fn resolve(
     let gaps = gaps(&mut tables, &releases, &variables, &resolved);
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
+    if let Some(defaults) = &defaults {
+        for variable in &mut variables {
+            if defaults.report.unminted.contains(&variable.slug) {
+                variable.pinned = false;
+                report.unminted.push(variable.slug.clone());
+            }
+        }
+    }
 
     let dated: Vec<&Interval> = tables
         .iter()

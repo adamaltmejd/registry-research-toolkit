@@ -1227,6 +1227,11 @@ pub fn resolve(
                                 .into(),
                         );
                     }
+                    if values.variable.as_deref().is_some_and(|v| v != "none")
+                        && matches.iter().any(|m| view[m.source].period.is_none())
+                    {
+                        return Err("set variable cannot target an unplaced occurrence".into());
+                    }
                     if let Some(variable) = &values.variable
                         && variable != "none"
                         && !ledger.variables.contains_key(variable)

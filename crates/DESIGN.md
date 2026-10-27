@@ -242,8 +242,10 @@ spelling and type. A D `set` states those.
   fills an occurrence whose source states no set; replacement needs `set`. Existing
   facts remain assertion refusals. Classification versions of a family cannot overlap.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
-  withholds the selected occurrences. Other `set` fields wait for D-3b; `link` and `ack`
-  application wait for D-3c. Their selectors and premises are checked now.
+  withholds the selected occurrences. An explicit `set variable` changes the variable of
+  exactly the selected occurrences; every unselected occurrence resolves as if the
+  statement were absent. Other `set` fields wait for D-3b; `link` and `ack` application
+  wait for D-3c. Their selectors and premises are checked now.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination

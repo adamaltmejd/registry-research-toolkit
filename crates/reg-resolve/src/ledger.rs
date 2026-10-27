@@ -57,33 +57,6 @@ impl<'a> Anchor<'a> {
     }
 }
 
-/// Whether an occurrence reaches a ledger id's anchors during explicit assignment.
-pub(crate) fn matches_anchor(
-    id: &str,
-    anchors: &[String],
-    row: &ResolvedOccurrence,
-    table: &str,
-) -> Result<bool, String> {
-    for text in anchors {
-        let anchor = Anchor::parse(text)
-            .ok_or_else(|| format!("ledger id {id:?}: anchor {text:?} names no day"))?;
-        if anchor.table == table
-            && anchor.spelling == fold_identity(&row.occurrence.column)
-            && anchor
-                .key
-                .is_none_or(|key| key == row.occurrence.source_key)
-            && anchor.day.is_none_or(|day| {
-                row.period
-                    .as_ref()
-                    .is_some_and(|p| p.0.as_str() <= day && day <= p.1.as_str())
-            })
-        {
-            return Ok(true);
-        }
-    }
-    Ok(false)
-}
-
 /// Ledger ids onto variables by anchor; proposed ids for the rest.
 pub(crate) fn assign_ids(
     variables: &mut [Variable],
