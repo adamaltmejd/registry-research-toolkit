@@ -683,42 +683,46 @@ fn editions(
 ) -> Result<Vec<(String, Interval, String)>, Error> {
     let mut found = Vec::new();
     let table = serving.first().map_or("", |s| s.table.pid.as_str());
-    let exists = |column: &str, value: &str, item: &Interval| -> Result<bool, Error> {
-        for s in serving {
-            for (lo, hi) in &overlap(&s.requested, std::slice::from_ref(item)) {
-                let hit: Option<i64> = conn
-                    .query_row(
-                        &format!(
-                            "SELECT 1 FROM release WHERE table_id = ?1 AND {column} = ?2
-                               AND start IS NOT NULL AND start <= ?3 AND end > ?4 LIMIT 1"
-                        ),
-                        rusqlite::params![s.table.id, value, day(hi), day(lo)],
-                        |row| row.get(0),
-                    )
-                    .optional()?;
-                if hit.is_some() {
-                    return Ok(true);
+    let exists =
+        |edition: Option<&str>, qualifier: Option<&str>, item: &Interval| -> Result<bool, Error> {
+            for s in serving {
+                for (lo, hi) in &overlap(&s.requested, std::slice::from_ref(item)) {
+                    let hit: Option<i64> = conn
+                        .query_row(
+                            "SELECT 1 FROM release WHERE table_id = ?1
+                           AND (?2 IS NULL OR edition = ?2) AND (?3 IS NULL OR qualifier = ?3)
+                           AND start IS NOT NULL AND start <= ?4 AND end > ?5 LIMIT 1",
+                            rusqlite::params![s.table.id, edition, qualifier, day(hi), day(lo)],
+                            |row| row.get(0),
+                        )
+                        .optional()?;
+                    if hit.is_some() {
+                        return Ok(true);
+                    }
                 }
             }
-        }
-        Ok(false)
-    };
+            Ok(false)
+        };
     for item in items {
         if let Some(edition) = source.edition
-            && !exists("edition", edition.as_str(), item)?
+            && !exists(Some(edition.as_str()), source.qualifier.as_deref(), item)?
         {
+            let within = source
+                .qualifier
+                .as_ref()
+                .map_or_else(String::new, |q| format!(" with qualifier {q:?}"));
             found.push((
                 format!("/sources/{index}/edition"),
                 item.clone(),
                 format!(
-                    "{table} has no {} release over {}.",
+                    "{table} has no {} release{within} over {}.",
                     edition.as_str(),
                     span(server, item)
                 ),
             ));
         }
         if let Some(qualifier) = &source.qualifier
-            && !exists("qualifier", qualifier, item)?
+            && !exists(None, Some(qualifier), item)?
         {
             found.push((
                 format!("/sources/{index}/qualifier"),

@@ -20,11 +20,11 @@
         "edition_not_found",
         "ambiguous_window",
         "ambiguous_window",
+        "ambiguous_window",
         "edition_disagreement",
-        "form_change",
         "ambiguous_window"
       ],
-      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "warning", "error", "error", "error", "error", "warning", "info", "error"],
+      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "warning", "error", "error", "error", "error", "error", "warning", "error"],
       "/data/issues/*/path": [
         "/sources/0/table",
         "/sources/1/bindings/0",
@@ -40,8 +40,8 @@
         "/sources/10/bindings/0",
         "/sources/11/bindings/0",
         "/sources/12/edition",
+        "/sources/12/bindings/0",
         "/sources/13/bindings/0",
-        "/sources/14/bindings/0",
         "/sources/14/bindings/0",
         "/sources/14/bindings/0",
         "/sources/15/bindings/0"
@@ -61,8 +61,8 @@
         "release-conflict",
         "chain",
         "edition-item",
+        "edition-item",
         "release-rival",
-        "release-forms",
         "release-forms",
         "release-forms",
         "release-label"
@@ -124,11 +124,11 @@
         {"start": "2018-01-01", "end": "2019-01-01"},
         {"start": "2019-01-01", "end": "2020-01-01"},
         {"start": "2019-01-01", "end": "2020-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"},
         {"start": "2021-01-01", "end": "2022-01-01"},
-        {"start": "2022-01-01", "end": "2022-07-01"},
-        {"start": "2022-01-01", "end": "2022-07-01"},
         {"start": "2022-01-01", "end": "2023-01-01"},
-        {"start": "2024-01-01", "end": "2024-07-01"}
+        {"start": "2022-01-01", "end": "2022-07-01"},
+        {"start": "2024-01-01", "end": "2025-01-01"}
       ],
       "/data/issues/*/successor_fqid": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]
     }
