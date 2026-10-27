@@ -6,7 +6,7 @@ bundles three skills:
 
   | Component                    | Purpose                                                                                                                                                   |
   | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `catalog` MCP server         | The hosted register metadata catalog: `https://reg-meta.vqv.uk/mcp` (every register) by default, or SWECOV's holdings (below).                            |
+  | `catalog` MCP server         | The hosted register metadata catalog, the global catalog: `https://reg-meta.vqv.uk/mcp`.                                                                  |
   | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                            |
   | `register-project`           | Skill, loaded on demand: drafting a `project_data.json`, and answering questions about a project.                                                         |
   | `register-research-scaffold` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution and the toolkit's export gate as its release stage. |
@@ -37,31 +37,13 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
 
-## SWECOV's catalog
-
-SWECOV's catalog answers from what SWECOV holds, at `https://data.swecov.se/mcp`.
-
-- **Claude Code:** set the plugin's `catalog_url` setting (asked when the plugin is
-  enabled, and in `/config`) to `https://data.swecov.se/mcp`.
-
-- **Codex:** the plugin also declares a `swecov` server, off by default. Turn it on in
-  `~/.codex/config.toml`:
-
-  ```toml
-  [plugins."microdata-tools-se@registry-research-toolkit".mcp_servers.swecov]
-  enabled = true
-  ```
-
-  The `enabled` field of a plugin's MCP server is read from Codex's source, not its
-  documentation; recheck it after a Codex upgrade.
-
 ## Local catalog
 
 To query the catalog without the hosted server, run it locally over stdio with
-`reg-meta mcp --db <dir>`, where `<dir>` holds an unpacked `reg_meta.db` (and optionally
-`reg_meta_docs.db`). The `reg-meta` binary for macOS arm64 and Linux x86_64 and the
-catalog DBs ship on each `reg_meta/v*` GitHub release; the download, SHA-256 check and
-`zstd` unpack recipe is in the [repository README's Local server
+`reg-meta mcp --db <dir>`, where `<dir>` holds an unpacked `reg_meta.db`. The `reg-meta`
+binary for macOS arm64 and Linux x86_64 and the catalog DBs ship on each `reg_meta/v*`
+GitHub release; the download, SHA-256 check and `zstd` unpack recipe is in the
+[repository README's Local server
 section](https://github.com/adamaltmejd/registry-research-toolkit#local-server).
 
 Then register the local server with your agent host, for example:
@@ -78,7 +60,7 @@ hosted server.
 
 The toolkit targets Swedish register-based work generally — research, report writing,
 statistics production — not only MONA. The catalog holds structural metadata (registers,
-variables, value codes, classifications, documentation), not microdata.
+variables, value codes, documentation), not microdata.
 
 ## Personal data
 

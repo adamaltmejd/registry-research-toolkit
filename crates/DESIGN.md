@@ -5,9 +5,10 @@ interval algebra, the project contract), `reg-catalog` (the reader and its opera
 set) and `reg-meta` (the `serve` and `mcp` run modes), plus the design of the builder
 that replaces `reg_meta_build` ("The catalog builder"). The project contract has its own
 note, [reg-core/DESIGN.md](reg-core/DESIGN.md). The artifact these crates read is built
-by `reg_meta_build` ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)), which
-also owns the resolver, holdings compilation and the inventory TOML. Cross-package
-topology is in [../ARCHITECTURE.md](../ARCHITECTURE.md).
+by `reg-build` ("The catalog builder"); `reg_meta_build`
+([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)) stays until milestone F.
+Holdings are not compiled into it: they return in milestone E. Cross-package topology is
+in [../ARCHITECTURE.md](../ARCHITECTURE.md).
 
 The operation names, parameters, result shapes and routes are
 `conformance/api/operations.toml`; error codes with their classes and HTTP statuses are
@@ -92,10 +93,10 @@ prose is rendered from templates. Goldens assert codes and fields, so no languag
 ## Crates and run modes
 
 ```text
-reg_meta_build (Python): base build → derive        uses reg-core-py
+reg-build: readers → frame → resolve → emit         uses reg-core
                  │
                  ▼
-reg_meta.db (+ reg_meta_docs.db), immutable
+reg_meta.db (documents inside), immutable
                  │
 reg-catalog: one operation set
         ┌────────┴─────────┐
@@ -109,14 +110,13 @@ SPA (React) + reg-core-wasm
 - `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data
   types and the structural validator, error codes. Compiles natively, as a Python
   extension (`reg-core-py`, PyO3 via maturin) and to WASM (`reg-core-wasm`).
-- `reg-catalog`: the reader. Opens and admits an artifact, owns scope as reader state,
-  and defines the operation set: one function per operation, typed parameters and
-  results with JSON Schemas. Search (one ranking), order materialization and project
-  semantic validation live here.
+- `reg-catalog`: the reader. Opens and admits an artifact and defines the operation set:
+  one function per operation, typed parameters and results with JSON Schemas. Search
+  (one ranking), the logical order and project semantic validation live here.
 - `reg-meta`: the binary, with run modes only. `serve` is the HTTP API (axum + utoipa;
   early `ETag` revalidation, body-size limit and rate limit as tower layers) plus the
   remote MCP endpoint over streamable HTTP. `mcp` is MCP over stdio against a local
-  catalog, for offline use and private steward catalogs. There is no query CLI.
+  catalog, for offline use. There is no query CLI.
 - `reg-core-py`: the PyO3 module the build imports. Its uv `cache-keys` cover the Rust
   sources, because uv otherwise rebuilds a path dependency only on a `pyproject.toml`
   change.
@@ -541,18 +541,20 @@ order is `POST /api/project/order` or the `order` tool.
 
 Rules:
 
-- **JSON only, `{data, meta}` on every success**, except raw-bytes downloads (document
-  PDFs, the order manifest file), which carry their media type and have a JSON operation
-  for their metadata. `meta` holds the contract version, catalog generation and scope,
-  so an agent always knows which catalog answered.
+- **JSON only, `{data, meta}` on every success**, except raw-bytes downloads (the
+  document file), which carry their media type and have a JSON operation for their
+  metadata. `meta` is `contract_version`, `generation` and `catalog_version`, so an
+  agent always knows which catalog answered.
 - **Deterministic responses.** `meta` carries no timing; the same request on the same
   catalog returns the same bytes, and goldens compare raw output.
-- **A ref is an FQID or a bare name.** A bare name is a register, variable or
-  classification name, matched case-insensitively (`fold_identity`), so a slug matches
-  only where it is also the name. A unique name resolves; an ambiguous one returns the
-  candidates with their FQIDs as `ambiguous_ref`, so the next call can be exact.
+- **A ref is an FQID or a bare name.** A bare name resolves through `ident.pid`, then
+  `name_fold` (case-insensitive, `fold_identity`), then `ident_retired`, which answers
+  `retired_ref`. A slug matches only where it is also the name. A unique name resolves;
+  an ambiguous one returns the candidates with their FQIDs as `ambiguous_ref`, so the
+  next call can be exact.
 - **`show` plus facet operations.** `show(ref)` returns a summary for any kind; separate
-  operations fetch the heavy parts (states, values, lineage, graph, coverage).
+  operations fetch the heavy parts: `segments`, `findings`, `values`, `graph`,
+  `coverage` and `schema`/`diff`.
 - **One time filter, `period`**, in `reg-core`'s grammar (`2019`, `2015..2019`,
   `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes `from` and `to` in the
   same grammar.
@@ -561,32 +563,28 @@ Rules:
   a plain array. Cursors bind to the generation, so a stale cursor fails loudly. No
   offsets.
 - **One parameter per concept and one result shape per operation**, independent of
-  result count. `scope` is valid on every read.
+  result count.
 - **Errors** are `{error, meta}` with
   `error = {code, class, message, remediation, fields}`; MCP returns the same document
   as a tool error.
-- **Order manifests keep their bytes.** `order` returns `{data: manifest, meta}`; the
-  download route serves the exact manifest bytes.
 - **Few, coarse MCP tools**, about ten, because every tool's schema occupies agent
   context. Fine-grained HTTP routes for the SPA map onto the same operations.
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
 **Hosted MCP.** `serve` exposes the global catalog's `/mcp` at reg-meta.vqv.uk, so
 agents need no install and no 1.2 GB download. `/mcp` and every POST share one rate
-limit per client address, sized for tool calls (`reg-meta/src/limit.rs`). A steward
-catalog is served over hosted MCP when its artifact is already public, as SWECOV's is
-(data.swecov.se); a private steward catalog stays on local `reg-meta mcp`. A published
+limit per client address, sized for tool calls (`reg-meta/src/limit.rs`). A published
 server admits its MCP host (`--public-host`).
 
-**Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). Ordering happens
-in a steward webapp; `show`'s root names none. The `order` tool stays: researchers
-describe data they already hold on MONA as a `project_data.json`, and the mock-data
-tools need the binding → table/column layout it computes.
+**Hosted MCP has no webapp handoff** (maintainer, 2026-10-20, #1709). Holdings and
+ordering return in milestone E; `show`'s root names no webapp. The `order` tool stays:
+researchers describe data they already hold on MONA as a `project_data.json`, and it
+returns the logical order.
 
 ## A provider-neutral substrate
 
 The catalog is the identifier and object-model substrate every downstream artifact
-references: `project_data.json`, the HTTP API and MCP tools, the order manifest. Their
+references: `project_data.json`, the HTTP API and MCP tools, the logical order. Their
 contract is only as stable as the identifier scheme, so the model is built to outlast
 any one provider's vocabulary.
 
@@ -599,311 +597,46 @@ readers see one shape and need no provider conditionals. The provider is a query
 attribute, not a code path.
 
 An earlier scheme baked SCB's CSV vocabulary and yearly cadence into the model, which
-broke when Socialstyrelsen and Försäkringskassan arrived. The current model removes
-those assumptions: a two-level variable model, a three-segment binding FQID with no
-variant or period slot, variable-grain edges, and build-time triage that normalizes
+broke when Socialstyrelsen and Försäkringskassan arrived. The v4 model removes those
+assumptions: registers own tables, variables are register-scoped, a variable's history
+is its segments (one form of the variable in one table over a period), and ids have no
+variant or period slot. The relations between entities (`relation`) and the notices and
+review items (`finding`) are rows of their own, and build-time resolution normalizes
 provider oddities into the universal shape.
-
-## Two-level variable model
-
-What SCB and SOS each publish as a "variable" entangles two facts, so it is split into
-exactly two levels:
-
-- **`variable`**: the addressable variable, the thing an FQID names. It holds the
-  register-unique slug and the shared facts (`name`, `definition`, `description`,
-  `measurement_unit`, `is_sensitive`, `is_identifier`, stable source attribution). A
-  text that varies across deliveries stays NULL here and is kept at state grain.
-- **`variable_state`**: the per-delivery shape. A variable has one or more states; each
-  carries a variant coordinate, explicit delivery scope, data type, length, value set
-  and version label. The value set anchors state identity: SCB's low-trust per-delivery
-  type and length do not split a state when a value set is present.
-
-Dated states have `period_scope = "intervals"` and two ISO bounds. A source-documented
-independent table has `period_scope = "year_independent"`, NULL bounds and no
-availability claim; calendar-year selection excludes it, and selecting it needs an
-explicit concrete variant and the whole `_default` period. One variable and variant
-cannot mix dated and year-independent states. Birth, migration or classification dates
-never supply a delivery range. `pooled` marks a state spanning a pooled multi-year
-edition with no annual coverage: one state over the whole range, and consumers must not
-infer annual availability inside it. A state's `provenance` is NULL when its facts are
-the provider's own: an ordinary provider-documented interval, including one a curation
-entry only routed (to a variable, variant or edition), since routing claims no fact.
-Otherwise it names who curated a fact: an `errata:<class>` or `curated:<kind>` head
-followed by the entry's source locators and storage-type facts, a steward row, or
-`inferred:resolution-gap`; several blocks join, sorted, with a blank line. The SPA
-parses the `curated:matrix-answer` block's `Document:`, `SHA256:` and `Pages:` lines
-(`reg_webapp/frontend/src/lib/curated_source.ts`), so changing that shape is a contract
-change. It never carries curator evidence, rationale or a curation case pointer, which
-stay in the build report (#1708). It stays at state grain so one corrected edition never
-relabels a neighboring window.
-
-A state is as long as its facts allow (#1296 2d). Resolution cuts a column wherever the
-set of active source editions or code lists changes, and the builder then merges a run
-of day-adjacent states on one variant, delivery column and value-set version whose facts
-are all identical (value set and version label, classification links, data type and
-length, texts, provenance, pooled flag; population is a variant fact) into one state
-over the run. A gap or any differing fact keeps states apart, and an open-ended state
-never joins a closed run (readers count it as its opening year only), so windows and
-coverage are unchanged. The merged state keeps its earliest segment's `valid_from` and
-so its `state_id`; the IDs of the segments it absorbed no longer resolve.
-
-**The variant is a coordinate, not an identity level.** A variant (SCB
-`registervariant`, SOS `deldatamängd`) is a delivery coordinate. "Kön in LISA" is one
-variable however many variants deliver it; the same variable in variant A or B, or in
-year X or Y, is a different state, not a different identity. The variable is the FQID
-target, and variant and period select among its states.
-
-Variant-less registers (Socialstyrelsen LSS, BU, SOL) get one synthesized `_default`
-variant row, a real row that every state references. Because the variant is not an FQID
-segment, `_default` never appears in a binding FQID.
-
-**Keys.** The natural key is `(register_id, slug)`. It stays unique after a triage split
-puts several variables under one source key, because siblings get distinct slugs. The
-provider key (SCB `var_id`, the SOS merged name) is a non-unique join hint. A synthetic
-`variable_id` keeps the state FK single-column and edges stable as the natural key's
-provider-specific shape varies. Variable formation is the adapter's; the build design
-note describes it. The normative DDL is `reg_meta_build/db.py`.
-
-### Why two levels, not three
-
-The decision is empirical, measured on the production SCB catalog and the 13
-Socialstyrelsen workbooks at the 2026-05-22 design lock. Re-run it if the data drifts.
-An earlier draft made the variant part of identity (a four-segment FQID) and recovered
-`var_id` reuse with `(N choose 2)` auto-emitted `same_as` edges. The data refuted it:
-
-  | Question                                                         | Finding                                                                | Implication                                    |
-  | ---------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------- |
-  | How many SCB `(register, var)` pairs appear in several variants? | 78.9% appear in exactly one.                                           | Variant identity is degenerate for 4 in 5.     |
-  | What differs across variants in the same year?                   | 4.3% of pairs diverge at all, mostly column name or grain.             | Triage resolves it; the variant never decides. |
-  | Variant or period: which differentiates more?                    | 43% of multi-period `(variable × variant)` cells drift across periods. | Period is the axis, and it lives on the state. |
-  | SOS: do code sets differ by deldatamängd?                        | No variable has a deldatamängd-specific code list.                     | The deldatamängd carries no identity.          |
-  | SOS: do codes vary by period?                                    | 35% of code rows carry period ranges.                                  | Again, period is the axis.                     |
-
-The 4.3% (pair grain) and 43% (cell grain) are deliberately at different grains; the
-point is the contrast. Coalescing by shape shrank about 515K instance rows to about 104K
-states. Free-text fields are unreliable for identity: comparing SOS `Värdemängd` prose
-suggested about 50% divergence, which the structured code lists refuted. Identity
-decisions anchor on structured code data, never prose.
 
 ## FQID grammar
 
 Every entity has a fully qualified identifier: a `/`-separated string whose kind follows
 from its segment count and the `class/` prefix alone. `reg-core` owns the grammar
-(`grammar.rs`).
+(`grammar.rs`, oracle `conformance/cases/grammar/`); the catalog assigns the ids
+(ledgers under `curation/`) and resolves a ref to an entity
+([REBUILD.md](../REBUILD.md)).
 
-  | Segments            | Form                           | Kind                            |
-  | ------------------- | ------------------------------ | ------------------------------- |
-  | 1                   | `<provider>`                   | provider                        |
-  | 2                   | `<provider>/<register>`        | register                        |
-  | 3                   | `<provider>/<register>/<slug>` | variable binding (the variable) |
-  | 2, leading `class/` | `class/<slug>`                 | classification                  |
-  | 3, leading `class/` | `class/<family>/<version>`     | classification version          |
+- 1 segment is a provider, 2 a register, 3 a table or a variable (a register's implicit
+  table has the register's 2-part id).
+- A leading `class/` marks a classification (`class/<slug>`) or a version
+  (`class/<family>/<version>`). `class` is reserved as a slug everywhere, and so is
+  `group`, the first segment of the group refs the grammar still reserves.
+- A slug is lowercase ASCII kebab-case, `^[a-z](?:-?[a-z0-9])*$`; a class version may
+  start with a digit.
+- Time is context, not identity: no id has a period slot. The period grammar is `YYYY`,
+  `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `LAYYYY` (July of `YYYY` through June of
+  the next year), `YYYY-Q[1-4]`, `YYYY-H[12]`, years 1900–2099, plus a `from..to` range.
+  Each value has exactly one spelling.
+- HTTP routes put the operation before the ref (`/api/segments/{ref}`), so no slug can
+  shadow a route.
 
-```text
-scb/lisa/kon          variable binding
-sos/lss/insatstyp     variable binding in a variant-less register
-class/sun2020         classification, vintage in the slug
-```
-
-- **No variant slot.** A variant is browsed as a sub-resource of its register and passed
-  as a coordinate, never addressed by a path, so `scb/lisa/x` is always a variable.
-- **No period slot.** A definition that changes over time is several states with
-  validity ranges, not several FQIDs. Time is context, not identity. The period grammar
-  is `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `LAYYYY` (July of `YYYY`
-  through June of the next year), `YYYY-Q[1-4]`, `YYYY-H[12]`, years 1900–2099, plus a
-  `from..to` range. Each value has exactly one spelling.
-- **A class version is lowercase `[a-z0-9][a-z0-9-]*`.** Versions are years and editions
-  (`class/sun/2020`, `class/sni/2007`), so a digit may lead; the family is a slug.
-- **Classification vintage is in the slug.** SUN 2020 is `class/sun2020`; ICD-10 and
-  ICD-11 are distinct classifications. Each vintage is its own normative document.
-- **No `@version` suffix.** Co-delivered parallel codings (SNI92 and SNI2007 in a
-  transition year) are overlapping states of one variable, discriminated by
-  `value_set_version_label` and by delivery column. A project picks one with
-  `Binding.representation`, not an FQID pin.
-
-A slug is lowercase ASCII kebab-case: `^[a-z](?:-?[a-z0-9])*$`. `class` is reserved
-everywhere, so the classification prefix stays unambiguous. `group` is reserved as a
-first segment, because group refs (`group/<provider>/<register>/<key>`) start with it.
-`_default` is the variant-less coordinate and never a slug. HTTP routes put the
-operation before the ref (`/api/states/{ref}`), so no slug can shadow a route.
-
-Slugs come from the latest delivery-column alias. A rename between editions produces a
-new slug for the later editions unless a curator links them; a rename is a new variable
-by default. How often curators review renames is undecided.
-
-## Edges and lineage
-
-All relationship edges are variable grain: there is nothing below the variable to anchor
-an edge on, and the edge triple `(provider, register, variable)` is the binding FQID.
-
-- **`same_as`**: symmetric cross-register or cross-provider equivalence, curated only,
-  never auto-derived. Within-register `var_id` reuse is the variable itself. The writer
-  requires both endpoints to be live, so a lookup never needs to follow an edge.
-- **`replaced_by`**: directional succession. Registers, variables and classification
-  editions each have one. The writer requires both endpoints to be live, so a ref to an
-  entity the catalog does not hold is `not_found`; the reader never redirects it to a
-  successor.
-- **Representation succession**: curated `representation_replaced_by` rows record a
-  column rename within a variable, optionally scoped to one variant.
-
-Same-concept grain, vintage or coding changes within one variable appear in no edge
-table; they fold into one variable at build time. A concept SCB re-mints under a new
-`var_id` is a different variable, so its continuation is a `replaced_by` edge even when
-only the `var_id` changed. Lineage (`variable_state_lineage`) is the state-grain edge
-from a composite register's column to its source register's state, with the validity
-intersection; build warnings explain the edges it could not settle. Composite registers
-(LISA, FRIDA, LINDA, STATIV) record a stable source on the variable and a varying one on
-the state; unresolved sources remain raw text.
-
-## One spelling per delivery column
-
-One delivery column can be spelled several ways: the state's spelling and the alias
-history's (`fastigheter` windows IDVE, IdVe and idve over one column). They fold
-together under `fold_identity` (Unicode lowercase, no normalization; `reg-core`), the
-same rule the build validates `variable_alias ⊇ state columns` with. So a column's
-identity is its fold, and its name is one representative: the state's own spelling where
-a state names the column, else the lowest by byte order. Lowest, not first seen, because
-first seen would depend on a query plan. The build stores the representative as
-`canonical_column`, and every reader that names a column uses it.
-
-## Compiled states and request-time rules
-
-The resolver lives in the build: derive compiles every representation the resolver can
-emit into `expanded_state`, and its column projection into `resolver_column` (the build
-design note has the rules). The reader applies only what depends on the request.
-
-**Window fallback.** For a requested interval, a state with a `base_fallback` row emits
-its `source_window` and `coded_window` rows that overlap the request, or the base when
-none does. Its overlapping `curated_window` rows are always added. A `base` row is
-always emitted. Without a requested period every row but `base_fallback` is emitted.
-Several representations at one period are normal, not an edge case: several variants
-deliver the variable, a range crosses a transition, or co-delivered value-set versions
-overlap (SNI92 and SNI2007 in a transition year). Reads return a list, and ambiguity is
-the caller's to narrow with a variant or representation, never an error. This is what
-lets a monthly family answer `2024-03` with the March column, `2024` with all twelve,
-and a gap month with the annual state.
-
-**Warning attribution.** A warning `w` applies to an emitted representation `e` with
-bounds `[lo, hi]`, after held and requested clipping, exactly when:
-
-- `w.variable_id = e.variable_id` and `w.register_id` is the variable's register;
-- `w.register_variant_id IS NULL` or equals `e.register_variant_id`;
-- `w.delivery_column_name IS NULL`, or `fold_identity(w.delivery_column_name)` equals
-  `fold_identity(e.canonical_column)`; a representation without a column gets only
-  column-less warnings;
-- `w.valid_from IS NULL` or (`hi` is not NULL and `w.valid_from <= hi`), and
-  `w.valid_to IS NULL` or (`lo` is not NULL and `w.valid_to >= lo`). The comparison is
-  exact, so a year-independent representation gets only unbounded warnings.
-
-This is evaluated per request rather than compiled: a link table measured over 2.2M rows
-keyed by 64-character ids, larger than every other derived table together, while one
-variable's warnings read in about 1 ms. A join through the source state alone would leak
-or drop warnings. Holdings scope adds nothing: clipping to held periods already implies
-the held-mapping predicate.
-
-A state narrowed to a held or requested window re-derives every window-derived field
-(`period_token`, `warning_ids`) from that window. `pooled` stays the source fact.
-
-**Co-delivered representations.** Checked per-column windows (`column_metadata` or
-coding `per_column`) carry their own type, length, definitions, names and coding, and
-override the base even when NULL: an absent column fact never borrows a sibling's. Each
-such window has its own value-set id and classification links, so a missing override
-never borrows the shared state's domain. Shared windows inherit the base. A window's
-identity is `(state_id, delivery_column_name, valid_from)`, so several windows can share
-one state. None of this asserts that two source editions are statistically comparable.
-
-## Data warnings
-
-User-facing source limitations and explicit interpretation assumptions are catalog data;
-build-side bookkeeping codes (identity and lineage resolution, set-aside validity,
-curator rationale) stay in the build report only. A warning keeps its severity, summary,
-explanation, diagnostic SHA-256, source references, acknowledgement and supplied
-delivery bounds; its id is the SHA-256 of its canonical content. Full diagnostic text
-stays in the build ledger. A warning attaches to a state only when its source references
-positively witness the state's coordinates and dates; unknown and year-independent
-states never acquire dated warnings through an invented interval.
-
-Registers and variables expose complete warnings. States carry `warning_ids`, so long
-text is not repeated across annual states. A `data_warning` row stores each coordinate
-once, as an ID column, shares summary and detail text through `data_warning_text`, and
-is clustered by (register, variable); the reader rebuilds the warning from the row.
-Warnings inform interpretation; they never change source values or block selection.
-Builder accounting such as "temporally unassessed" range editions is not a warning.
-
-## Read scope and artifact admission
+## Artifact admission
 
 A server or MCP process serves one artifact, chosen at start with `--db DIR` (the file
-is `DIR/reg_meta.db`). Admission is exact: a supported schema version, every required
-manifest key present and a `generation_id` of 64 hex digits. Anything else, a missing
-key or a malformed `generation_id` included, is `schema_incompatible` (`schema_version`
-is the file's value, or `null`), and the process fails before serving, with no fallback.
-The file is opened read-only and `immutable=1`: published files are replaced by rename,
-never changed in place. The docs database beside it is optional; only docs operations
-need it.
-
-**Three layers.** `reference` is everything in the catalog; `holdings` is what the
-steward holds; a project is what one user has: a `project_data.json`, ordered from the
-holdings or, with a `global_fallback` manifest, describing data the researcher already
-holds (nothing orders it). The project layer is the user's file: the server stores none,
-and checks one only when it is posted to validate or order (the SPA runs the structural
-layer client-side first). Validation and order answer for the catalog that serves them,
-so a project is checked on its own steward's server: another catalog's answer differs
-without failing.
-
-A steward artifact defaults to `holdings` scope, a catalog artifact to `reference`;
-explicit `holdings` on a catalog is `scope_unavailable`. Reference means every node of
-the selected generation, steward-only metadata included. Scope is reader state, valid on
-every read.
-
-  | Node kind              | Holdings predicate                                                                                                           | Reference                                 |
-  | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-  | Provider               | At least one admitted descendant register.                                                                                   | All providers.                            |
-  | Register               | At least one admitted variable binding at a mapped variant.                                                                  | All registers and variants.               |
-  | Variable binding/state | An explicit mapping under this register; a selected variant or representation must match it. Output narrows to held periods. | Full history, subject to request filters. |
-
-Membership uses the authored variable and variant and the canonical representation.
-Possession is physical: a table that maps a `(variable, variant)` under one
-representation also serves each other spelling of it SCB did not deliver beside that
-one, over its held periods, so SCB's per-year spelling never subtracts held years
-(`Doda_20241231`'s `DodDatum` column holds `dodsdatum` through SCB's 1998–2023
-`DodDat`). Where SCB delivered both spellings at once, where one table maps the variable
-under several representations, or where the table has another column named for that
-spelling (identity fold; mapped elsewhere or unmapped, that column holds it), the
-spelling must match the column. `held::serves` is the one predicate every holdings read
-and the order use; the builder's derived holdings rows (`browse_delivery`,
-coded-variable counts) repeat it, and its one-to-one rule places every spelling it
-serves, so a second location claiming such a cell is refused at build time
-(`inventory_cell_conflict`). One limit stays: a table mapping `R` claims both `X` and
-`Y` in a year SCB delivered `X` and `Y` side by side but not `R`, though its one column
-holds at most one of them; the order then emits that column for both. A `same_as` edge
-never grants possession of a different binding. Unknown-scope tables and unmapped
-columns admit nothing. An interval holding contributes only the intersection of its
-periods with the request and the resolved states; a year-independent holding needs
-year-independent states, never invented dates. Discovery may union admitted variants for
-a binding; variant-specific reads, validation and order never do. Coverage keeps
-disjoint intervals and does not promise orderability.
-
-The predicate applies before counts, grouping and pagination, so no page is backfilled.
-Cursors bind to the query, its filters, the scope and the generation; a changed context
-rejects continuation. An unheld direct ref is `not_found` in holdings; reference scope
-can inspect the same node without making it selectable.
-
-Exceptions: classifications, value sets, codes, documents and lineage stay reference in
-either scope, but a variable-owned read still needs an admitted owner in holdings. A
-held graph can show reference neighbors that are not selectable. Register warnings in
-holdings show register-wide warnings and those of admitted bindings. A dated warning in
-holdings reads as held (#1900): a variable's window is clipped to the held periods of
-its variable at its variant and representation (`held::periods` per state of that
-spelling over the state's own bounds, the same periods `states` clips to), a
-register-wide one to the register's held span (the requested variant's when the request
-names one; a register-wide warning has no variant of its own), and becomes the hull of
-what remains, so the warning keeps one row and its id; a warning wholly outside them, or
-whose clipped window misses the requested period, is dropped. The held periods are read
-per state, not over the warning's window: a renamed column's warning (SCB's `DodDat`
-held through a `DodDatum` mapping) would otherwise find none wherever the window also
-covers years the mapped spelling was delivered, and stay unclipped. A warning without a
-window, or one whose cell is held in no dated table, has nothing to clip against and
-stays as stored. Validation and order take no scope; they use the artifact's kind.
+is `DIR/reg_meta.db`, documents included). Admission is exact: `meta.schema_version`
+equals `reg_core::CATALOG_SCHEMA_VERSION`, every required `meta` key is present and
+`generation_id` is 64 lowercase hex digits. Anything else is `schema_incompatible`
+(`schema_version` is the file's value, or `null`), and the process fails before serving,
+with no fallback. The file is opened read-only and `immutable=1`: published files are
+replaced by rename, never changed in place. There is no read scope and no second
+database. A project is the user's file: the server stores none and checks one only when
+it is posted to `validate` or `order`. Holdings return in milestone E.
 
 ## The logical order
 
@@ -1201,234 +934,54 @@ full-text fallback and no scoring. It maps known headers; it is not discovery.
 
 ## Value sets and classifications
 
-**Value sets are year-projected.** SCB's value-set export is the union of every code
-that ever applied; its validity file is the temporal filter. Each state carries only the
-codes valid in its era. Projection is year-precision on purpose: SCB metadata is annual
-and sub-year bounds are administrative artifacts. The union is discarded, so there is no
-"valid at" query. Value sets are content-addressed (`member_hash` over sorted
-`(code, label)` pairs) and shared; a NULL `value_set_id` means the state has no codes. A
-state can return a summary instead of its members: the count and, when the codes are a
-dense integer run whose labels restate them, the span, so an age coding reads as `0-110`
-rather than a 111-row table.
+A value set is content-addressed: its hash covers the sorted `(code, label)` items, so
+segments that deliver the same codes share one set, and a segment with no value set has
+`value_set: null`. `values` reads a set by its hash, or lists the sets holding a code
+and label. The blank code `""` is an item like any other. Classifications (versions,
+codes, correspondences) are not served until curation lands in milestone D; the `class/`
+grammar and the `classification` parameters stay reserved for it.
 
-**Classifications** (SUN 2000, SSYK 2012, SNI 2007, LKF, ...) are first-class.
-`classification_code` holds only published canonical codes; codes merely observed in
-data are not attached to the classification. The link is on the state, not the variable:
-`Utbildningsnivå` uses SUN 2000 through 2018 and SUN 2020 from 2019, and per-state links
-keep the two code systems apart. A state can declare several books. Its conformance
-(`conforming`, or `extended` with source extensions) is recorded per book, separating
-substantive nonstandard codes from known sentinel codes. Source labels stay intact, and
-local extensions never become official members. Unknown or ambiguous references stay
-unresolved.
+## Sets and tags
 
-Succession is `classification_replaced_by`. A future-dated edge becomes active only when
-the manifest's succession as-of year reaches it; currentness and the terminal that
-classification search follows use the same policy. `supersedes` and `superseded_by` are
-projections of the active edges, and a predecessor can fan out (`sun1996` → the 2000
-nivå, inriktning and grupp editions). A code's `level` is the length of an all-digit
-code; codes without prefix hierarchy (ICD-10, ATC) keep `level` NULL. The code tree is a
-separate fact: a code may name its parent in the same book (`parent_code_id`, #1297),
-only where the source delivers one, so the reader never infers a tree from levels or
-prefixes. `values` with `parent` pages one level of that tree (`parent=` the roots,
-`parent=<code>` its children) and gives every code a `child_count`, null in a book
-without a tree, so a client fetches a subtree only when a reader opens it. A filter
-(`q`) reads the book flat, because a match's ancestors are not matches.
+Neither is built in the v4 catalog yet (milestone D builds them); the maintainer rulings
+stand.
 
-## Concept groups and tags
+**A set** (formerly a concept group) lies within one register and is the single-register
+picking unit: one concept in one register, gathering what a researcher looking for it
+there should find in one place. A set never spans registers, and finding a concept
+across registers is a tag's job. It is presentation only, never an id kind, a binding or
+an order key.
 
-**A variable concept group is one concept in one register.** It gathers everything a
-researcher looking for that concept in that register should find in one place: the
-variants that differ by unit, household definition, coexisting definitions or source,
-and the source's own components of the concept. To the user the group is the variable.
-The group page is its members' variable page: they pick columns there, and a member's
-own URL opens it focused on that member. A group never spans registers: disposable
-income in IoT and disposable income in LISA are two groups, and finding the concept
-across registers is a tag's job. A group ref (show `group`, schema `group`, graph
-`group_key`, a search group hit) names only a group whose member row for the variable is
-in scope; under holdings, a variable grouped only in reference reads as ungrouped.
+A set is warranted when one register has two or more variables that are each an amount
+(or a coding) of the same concept for some unit under some definition. A component the
+source names as part of the concept counts, and so does a quantity computed from it (a
+ratio to the median, a weight, a cost-adjusted remainder). An input to the concept stays
+out: gross income goes into disposable income but is not a quantity of it. A lone
+variable gets no set.
 
-Machine-folded families are the narrowest case of the same rule: month-suffixed families
-(`agi1lonfinkjan`…`agi1lonfinkdec`), split-sibling coding successions
-(`sun2000inr`/`sun2020inr`). A group has ordered axes (stable `name`, curated `label`)
-and members with per-axis facets; a variable can be several members of one group, one
-per delivery column. Groups are presentation only: never an FQID kind, a binding, an
-order key or a stats key. Picking on the group page adds member variables and their
-delivery columns to the order; the order never names the group. Identity-level folding
-by classification family was tried and dropped after 195 measured over-folds; because
-grouping is presentation, a wrong group is a cosmetic bug, not identity corruption. A
-variable or classification belongs to at most one variable group. Classification
-umbrella groups (`group:sun`, `group/class/<key>`) are exempt from the single-register
-rule: they gather classifications, which are not register-scoped.
-
-Classification vintages are not grouped: editions are a temporal succession, not a
-parallel facet. Variable definition vintages that succeed each other are likewise not
-grouped as a facet (see the worked example). Curated classification umbrella groups
-(`group:sun`: the three SUN 2020 dimensions plus the version-independent nivå
-aggregates) have no axes; their members are distinct classifications.
-
-### Group rubric
-
-**When a group is warranted.** One register has two or more variables that are each an
-amount (or a coding) of the same concept for some unit under some definition. A
-component the source names as part of the concept counts: SCB's "Delkomponent till
-disponibel inkomst" is the individual's share that sums to the family total. So does a
-quantity computed from the concept: a ratio to the median, a median, a weight, a cost or
-a housing-adjusted remainder. A researcher looking for the concept should find these
-beside the amounts, so they join the group under the `matt` axis (below). An input to
-the concept stays out: gross income (`cbrutto`, `bruttoinkomst-familj`) goes into
-disposable income but is not a quantity of it, so it belongs to its own concept in the
-same register. A lone variable gets no group; the builder withholds a group with fewer
-than two supported members.
-
-**Narrower groups are absorbed.** A variable belongs to at most one group, so when the
-concept group is curated, any narrower group inside it (machine-folded or curated)
-becomes part of it rather than sitting beside it.
-
-**Axes come from what this register's members vary on.** Name each axis by the variation
-(`enhet`, `hushallsbegrepp`, `kapitalvinst`, `kalla`, `matt`, and `definition` only
-where definitions coexist in the same years). `matt` ("mått") says what kind of quantity
-the member is: `belopp` for the concept itself, otherwise `andel`, `median`, `vikt` or
-`justerat` (adjusted for a cost). It is a new axis because `enhet` already means the
-unit of observation (individual, family, consumption unit) and `kalla` the data source;
-neither covers "an amount of the concept" versus "something computed from it". A
-register declares `matt` only when it holds a computed member, as with any axis.
-Definition vintages that succeed one another are not an axis; they ride the period
-slider and `replaced_by`. Every member supplies every axis, with `na` where the axis
-does not apply. An axis that does not vary within the register is not declared, so the
-same concept can carry different axes in different registers.
-
-**Naming.** The key is the concept's slug, without unit, vintage or source qualifiers:
-`disponibel-inkomst`, not `disponibel-inkomst-familj-2004`. The label is the concept's
-plain Swedish name, `Disponibel inkomst`. Facet values never go into the key or the
-label. The same concept takes the same key in every register, so
-`group/scb/iot/disponibel-inkomst` and `group/scb/lisa/disponibel-inkomst` read as
-twins.
-
-### Tags
-
-**Tags** are a curated thematic vocabulary across providers and registers, so a
-researcher can find "a measure of income" without knowing the register. One global
-vocabulary and one membership table; a membership names exactly one register or one
-variable, and a variable membership can be starred with a one-line rationale. Tags are a
-discovery overlay and leave identity untouched.
-
-**Tags are search-only.** They are meant for search: finding variables by topic across
-registers. Tag search is not built yet (`ops/search.rs` has no tag arm and the SPA only
-displays tags); it is tracked in #1794's later steps. A variable page never lists the
-other variables that share its tags. A group shows the union of its members' tags as its
-own labels, and untagged siblings inherit the group's tags as neutral memberships; that
-labels the group and lists no co-tagged variables.
-
-**A tag is broad.** It names a topic a researcher types before knowing which register
-holds it (`income`, `transfers`, `employment`, `education`), and it has members in
-several registers. A term that would only list one register's variables, or one
-concept's variants, is a group, not a tag. Comparing one concept across registers uses
-the broad tag: one starred member per register, each note saying how it differs (unit,
-definition vintage, population).
-
-The vocabulary is broad: `earned-income` folded into `income`, and
-`economic-assistance-amount` and `economic-assistance-months` into `transfers`, with
-their starred members and notes (#1794).
-
-### Worked example: disposable income
-
-Each register below gets one `disponibel-inkomst` group.
-
-- **IoT** has it: 49 members, components included, axes `enhet`, `hushallsbegrepp`,
-  `kapitalvinst`, `definition` and `nordisk-lon`. This reverses #1872, which kept IoT at
-  three axes with the 1991/2004 vintage off them: both definitions are delivered side by
-  side in 2005-2024, so a user must choose one in the picker. Every 2004-definition
-  column is co-delivered with its 1991 twin from its first year through 2024
-  (`CDISP`/`CDISP04` 2005-2024), and `succession-candidates` reported each of the seven
-  `replaced_by` edges between them as contradicted, so the edges were removed. The
-  `definition` values read as SCB labels them: "1991 års definition", "2004 års
-  definition" and "Före 1991". The pre-1991 `DIN*` columns share `fore-1991`, and some
-  of them overlap in time (`DIN86`/`DIN88K` in 1990, the `DINPP` family 1981-1987).
-  `hushallsbegrepp` = `hushall` is SCB's register household in both IoT and LISA, not
-  HEK's kosthushåll. `nordisk-lon` holds the #1302 `_INKLGP` columns (2015-2019,
-  including wage earned in another Nordic country) beside their base twins, which
-  include that wage only from income year 2020.
-- **LISA** has the DispInk family: individual component, family and household total, per
-  consumption unit, and individualised from family, with axes `enhet`, `hushallsbegrepp`
-  and `definition` (1991, 2004). `DispInkKE` and its 2004 twin `DispInkKE04` are
-  co-delivered 2005-2023, so the definitions coexist. LISA's `DispInk*_INKLGP` columns
-  are not yet curated as variables, so LISA has no `nordisk-lon` axis.
-- **FASIT** has two machine-folded pairs, each a TRIF copy beside the FASIT-derived
-  variable. The group absorbs both, adds the household, per-unit and
-  alternating-residence variables, and declares a `kalla` axis (TRIF, FASIT). The weight
-  `bsockvh` ("Justeringsfaktor för disponibel inkomst") is computed from the concept, so
-  it joins under `matt` = `vikt`.
-- **LINDA** has a machine-folded `delkomponent-disponibel-inkomst` group (12 source
-  fields). The group absorbs it and adds `cdispl`, the 2004 component and the family
-  total `cdisplh`.
-- **HEK** has none. The group takes the individual components, the household and family
-  per-unit amounts and the variants excluding capital gains. Konsumtionsutrymme
-  (`cdisp3z`, `cdisp3pz`, `cdisp3kz`: disposable income minus housing cost) is computed
-  from the concept and joins under `matt` = `justerat`. The inputs `cbrutto` and
-  `bruttoinkomst-familj` stay out.
-
-HEK's housing-adjusted `CDISPBOZ` and `CDISPKENZ` are still amounts of disposable income
-under a stated adjustment, so they join under their own axis value, `matt` = `justerat`,
-beside konsumtionsutrymme; the plain amounts carry `belopp`. Barnregistret's
-`andel-av-median` is a ratio to the national median, so it joins Barnregistret's own
-disposable-income group as `matt` = `andel`. It never joins another register's group:
-groups are single-register. Barnregistret's catalog entries hold no disposable-income
-amount beside it (`andelmediana` is its only computed sibling), so that group exists
-only if it reaches two supported members; otherwise the builder withholds it and the
-variable stays ungrouped. Cross-register discovery of disposable income goes through
-`income`, with one starred member per register.
+**A tag** is a curated thematic vocabulary across providers and registers, so a
+researcher can find "a measure of income" without knowing the register. A tag is broad:
+a topic typed before knowing which register holds it (`income`, `transfers`,
+`employment`), with members in several registers. A term that would only list one
+register's variables is a set. Tags are search-only: they discover and never touch
+identity, and a variable page does not list the variables sharing its tags (#1794).
 
 ## Relationship graph
 
-The graph operation returns topology plus the predicates that shape it, so the SPA
-renders it as-is and never assembles graph semantics. It composes the existing reads
-(succession, groups, classification chains) rather than querying again.
-
-- **Nodes.** One per variable, carrying its state history, or one per classification
-  edition. A variable node carries its group key (namespaced `provider/register/key`,
-  since group keys are only register-unique), its facets in that group and the group
-  label. There is no group node. An edition carries a point `version_year` (its own
-  vintage, not its supersession year) and `is_current`, so time semantics live on the
-  node.
-- **One edge kind**, `succession`, predecessor to successor. Curated representation
-  renames are succession edges carrying source and target column and optional variant.
-  `same_as` is resolved away; lineage and source register are node metadata. Each edge
-  has a stable id that is also its dedup key.
-- **Representation runs.** Consecutive states sharing `representation_run_id` render as
-  one cell. A run ends at a change of variant or period scope, or between two distinct
-  states at a change of value set, version label, classifications or delivery column.
-  Raw `data_type` and `data_length` never end a run: they are low-trust passthrough that
-  the build's value-set-anchored fold already blanks. Windows sharing one state are one
-  representation under several columns, not a boundary.
-- **Empty graph means don't render.** A lone variable with no succession, no group
-  siblings and one run, or a lone edition with no chain and no group, returns no nodes.
-- **Group ⇄ member.** A member ref roots the graph on its group's members in scope, with
-  `focus_id` on the member; a group ref roots on the members with no focus. A member
-  page and its group page therefore show the same union. A classification edition adds
-  the groups of every edition on its chain, so an older edition shows the family its
-  successor belongs to.
+`graph` returns the `relation` edges where the ref is the subject or the object, so the
+SPA renders the topology as-is. A relation has a `kind`: `continues` (a successor takes
+over, with the day it starts), `derived_from` (the lineage), `equivalent` and
+`label_of`. `kind` narrows the edges. A lone entity with no relations returns no edges.
 
 ## Documentation and what is not in the catalog
 
-The catalog answers "what variables exist and what shape they have". Two siblings answer
-the rest:
-
-- **The docs database** (`reg_meta_docs.db`, its own schema version) holds register
-  documentation and rehostable related documents: quality narratives, time-series
-  breaks, legal text. Docs key on register and variable names, not storage ids, so the
-  two databases update independently. A document's binary is served by its own download,
-  never inlined in browse responses.
-- **The provenance database**, maintainer-only and never shipped, holds build artifacts:
-  approval dates, delivery metadata, checksums, raw provider ids.
+The catalog answers "what variables exist and what shape they have". Register
+documentation (quality narratives, time-series breaks, legal text) is in the same
+database, as catalog tables, and a document's binary is served by its own download. The
+provenance database, maintainer-only and never shipped, holds build artifacts: approval
+dates, delivery metadata, checksums, raw provider ids.
 
 Localization is deferred: one canonical text per field, in the provider's language.
-
-**Sensitivity flags stay in the catalog** as `variable.is_sensitive` and
-`is_identifier`. They are MONA-critical and belong to the variable, not to how a variant
-delivers it. `is_identifier` is broad: it marks every identity column that is
-pseudonymized at delivery (`PersonNr`, `PersonNrMor`, `PersonNrSambo`, ...), unlike the
-narrower variant `panel_entity_key`, which names the subject. Consumers that need "is
-this pseudonymized" key off `is_identifier`.
 
 Population and object type are read-only metadata under a register version, not entities
 and not FQID kinds.
@@ -1465,17 +1018,13 @@ equivalence and extend no availability.
 The normative definitions are the DDL in `reg_meta_build/db.py`; this records the
 cross-provider meanings.
 
-  | Term                    | Meaning                                                                                                                        |
-  | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-  | variable                | The addressable variable and FQID target: identity `(provider, register, slug)`, one or more states.                           |
-  | variant                 | A `register_variant` row (SCB `registervariant`, SOS `deldatamängd`): a delivery coordinate, not an FQID kind.                 |
-  | variable state          | Per-delivery shape: variant, validity, type, length, value set, version label. The unit of resolution at a variant and period. |
-  | binding                 | A three-segment FQID naming a variable, and a project's use of it.                                                             |
-  | representation          | One delivery column of a variable, named by its canonical spelling.                                                            |
-  | same_as                 | Curated symmetric equivalence between variables in different registers or providers.                                           |
-  | classification          | A named versioned vocabulary, `class/<slug>` with the vintage in the slug.                                                     |
-  | value_set               | A content-addressed code list on a state.                                                                                      |
-  | value_set_version_label | The state discriminator that lets co-delivered value-set versions overlap. `''` when there is none.                            |
+  | Term           | Meaning                                                                                                |
+  | -------------- | ------------------------------------------------------------------------------------------------------ |
+  | variable       | The addressable variable and FQID target: identity `(provider, register, slug)`, one or more segments. |
+  | binding        | A project's use of a variable, named by its FQID.                                                      |
+  | same_as        | Curated symmetric equivalence between variables in different registers or providers.                   |
+  | classification | A named versioned vocabulary, `class/<slug>` with the vintage in the slug.                             |
+  | value_set      | A content-addressed code list on a segment.                                                            |
 
 Column names are universal English; values stay provider-native. SCB's Swedish columns
 map as follows:

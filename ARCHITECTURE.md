@@ -34,47 +34,31 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 
 ### Data stewards
 
-The central multi-tenancy axis. Some research organizations re-license registry data
-from their own warehouses instead of each project going through SCB directly:
-
-- **global** — the full multi-agency catalog, served over MCP only (#1709). Its `order`
-  answers in `global_fallback` mode (canonical columns, no steward table) to describe
-  data a researcher already holds; no channel receives it.
-- **ifau** — the subset in IFAU's warehouse.
-- **swecov** — the subset in the SWECOV research program.
-
-One codebase, steward-scoped views: same UX, different holdings. A steward's order is an
-extract from its own holdings: the researcher sends `order.json` through the steward's
-request channel and a data manager runs the MONA extract runner (`reg_mona_runner/`)
-inside MONA. The compiled-holdings contract below gives each steward one
-self-identifying SQLite artifact containing full reference metadata plus its physical
-holdings. TOML inventory and policy are accepted builder inputs; readers do not load
-them. SWECOV proves the first cut; IFAU delivery authoring remains outside it. See
-[`reg_meta_build/DESIGN.md`](reg_meta_build/DESIGN.md) § "Steward extension" and
-[`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md) for the build and runtime boundaries.
+Some research organizations re-license registry data from their own warehouses instead
+of each project going through SCB directly. SWECOV's hosted catalog stays on the last
+old-schema release until milestone E ([REBUILD.md](REBUILD.md) §C). The global server,
+served over MCP only (#1709), has no holdings: its `order` returns the logical order of
+a project, and nothing receives it.
 
 ## What the toolkit is
 
-A web application (Rust server + React SPA), designed for three steward-scoped flavours
-off one image, that lets researchers browse a catalog, author a per-project variable
-list, and export it as a data order. The HTTP API (which the SPA uses) and the MCP tools
-are equal surfaces over the same `reg-catalog` operations. The SPA validates the draft
-automatically on every edit.
+A web application (Rust server + React SPA) that lets researchers browse a catalog,
+author a per-project variable list, and export it as a data order. The reader serves the
+v4 catalog and the logical order; the physical manifest and the runner's input return
+with milestone E. The HTTP API (which the SPA uses) and the MCP tools are equal surfaces
+over the same `reg-catalog` operations. The SPA validates the draft automatically on
+every edit.
 
 The unifying research-intent artifact is **`project_data.json`** — written by the webapp
-and consumed by the shared materializer above, whose manifest the MONA extract runner
-reads. Its schema and structural validator are `reg-core`'s
-([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). It deliberately does not
-encode physical filenames or SQL tables. Compiled physical holdings
-(`table + edition → literal columns → zero-or-more explicit logical mappings`) join a
-project and query-time catalog resolution to produce one normalized, versioned JSON
-order manifest for web and MCP, with no per-steward export template. The materializer
-reads the selected compiled artifact for `global`/`swecov`; inventory remains a builder
-input.
+and checked against the catalog by the order check. Its schema and structural validator
+are `reg-core`'s ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). It
+deliberately does not encode physical filenames or SQL tables: the order check turns a
+project and the catalog into the logical order (per source, the table, period and
+spelling), which names no files.
 
 Coverage is browse/search the catalog → choose variables and periods → automatic
-validation → the versioned JSON order manifest. Population definition (a predicate over
-base registers, executed only inside MONA) is deliberately out of scope.
+validation → the logical order. Population definition (a predicate over base registers,
+executed only inside MONA) is deliberately out of scope.
 
 ## Package layout
 
@@ -209,46 +193,20 @@ digest, staging and eviction helpers it shares with the conformance fixture cach
 in `scripts/keyed_cache.py`. The builder persists its resolve phase, so the cache reuses
 a resolved bundle and reruns only materialization.
 
-### Catalog artifact identity and read scope
+### Catalog artifact identity
 
-**Compiled-holdings contract.** A publishable `reg_meta.db` identifies itself through
-`import_manifest.catalog_artifact_kind`: `catalog` for a global reference artifact,
-`steward` for reference metadata plus that steward's compiled holdings. Both use the
-same schema. A steward installation needs no separate global DB to inspect unheld
-metadata. The optional sibling `reg_meta_docs.db` remains separately paired; full
-document content is outside the single-file guarantee. Diagnostic/incomplete artifacts
-remain nonpublishable and fail runtime admission.
+A publishable `reg_meta.db` is one file: the catalog and its documents. The reader
+admits it exactly: `meta.schema_version` equals `reg_core::CATALOG_SCHEMA_VERSION`,
+every required `meta` key is present and `generation_id` is 64 lowercase hex digits;
+anything else is `schema_incompatible` and fails before serving
+([`crates/DESIGN.md`](crates/DESIGN.md) → "Artifact admission"). There is no read scope,
+no second database and no `REG_WEBAPP_STEWARD`.
 
-Identity stays in `import_manifest`, including `generation_id`; a steward also records
-`steward`, `base_db_sha256`, `base_generation_id`, `holdings_input_commit`,
-`holdings_manifest_sha256` and `steward_spec_sha256` (the committed
-`reg_webapp/stewards/<id>/` spec the holdings were decided by). Generation identity
-hashes canonical semantic inputs and the schema version, not output bytes, timestamps or
-host paths. Builder revision, accepted public pins and curation digest participate;
-steward identity additionally includes its base generation, accepted holdings pins, spec
-and accounting digest. The exact base file digest is byte-level provenance only and does
-not enter generation identity. Publish the final file SHA-256 separately. The builder
-design specifies the digest encoding. Search cursors and `OrderProvenance` use
-`generation_id` instead of `import_date`; HTTP read identities include generation and
-scope. Import time may remain display data.
-
-Read scope defaults to `holdings` on a steward artifact and `reference` on a catalog
-artifact; explicit `holdings` on a catalog artifact errors. The holdings predicate
-applies to provider, register and variable binding/state nodes, using the same compiled
-mapping membership before counts, groups or pagination. Classifications, value sets,
-documents and lineage stay reference metadata. Query-time resolution intersects physical
-periods with applicable states; no resolved segments are compiled. Unknown-scope
-holdings remain physical evidence, cannot admit logical nodes and cannot be ordered. The
-public-surface rules and exceptions live in `crates/DESIGN.md` → "Read scope and
-artifact admission".
-
-The reader and webapp open the selected artifact read-only and validate its identity.
-`REG_WEBAPP_STEWARD` must equal its manifest steward; unset/global selects the `catalog`
-kind, not an implicit fallback for a named steward. Orders use `order`
-(`crates/reg-catalog/src/ops/order.rs`) and the artifact's kind, independent of browse
-scope. Accepted inventory/policy/raw-census accounting is a build gate with counts and
-digests in the manifest; exclusions and lookups are not runtime holdings. Failures leave
-prior artifacts and accepted inputs unchanged.
+Generation identity hashes canonical semantic inputs and the schema version, not output
+bytes, timestamps or host paths; builder revision, accepted public pins and the curation
+digest participate. Publish the final file SHA-256 separately. Search cursors and the
+logical order use `generation_id`, and HTTP read identities include it. The reader opens
+the file read-only. Failures leave prior artifacts and accepted inputs unchanged.
 
 ## Export gate
 
@@ -279,10 +237,10 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   (There is no `make` target — drift is a failing test, not a Makefile step.)
 - **Performance budget (v1 targets, not yet CI-enforced).** Starting points: the catalog
   reads the Rust server answers (`/api/catalog/*` and the facets
-  `/api/{states,warnings,values,graph,lineage}/*`) p95 ≤ 200 ms (cache miss);
+  `/api/{segments,findings,values,graph}/*`) p95 ≤ 200 ms (cache miss);
   `/api/project/validate` and `/api/project/order` p95 ≤ 1 s; representative broad
-  all-scope `/api/search` cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s.
-  Search correctness and latency are origin properties: edge hits do not substitute for
+  `/api/search` cache-miss p95 ≤ 500 ms and browser-cold search LCP < 2.5 s. Search
+  correctness and latency are origin properties: edge hits do not substitute for
   cold-origin evidence. Classification/value-set initial responses must be bounded by
   bucket/page limits rather than total code cardinality, and cold/repeat rendered routes
   target CLS < 0.1. The 200-column load-test fixture is committed
@@ -320,18 +278,13 @@ This is the complete list of boundaries a test may assert at.
   | Builder CLI → JSON                       | request → expected JSON cases in `reg_meta_build/tests/cases/cli/`                                                   |
   | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB                 |
   | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust and TS consumers                                             |
-  | Project + artifact → order manifest      | byte-identical `order.json` goldens, `order` data identical to its download                                          |
-  | Order manifest → MONA extract            | order goldens + fixture SQL rows → expected CSVs and `run_log.csv`; a refusal's exit code and `error_log.csv` code   |
+  | Project + artifact → logical order       | the order cases in `conformance/cases/order/`: project + fixture → expected logical order or `order_blocked`         |
   | Candidate output → export gate result    | `reg_export_gate/tests/cases/`: schema, policy and candidate folder → pass and receipt, or refusal code and findings |
   | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                           |
-  | Curation + steward storage → findings    | `derived/storage_type_findings.tsv`: fixture → `expected.tsv` in `reg_meta_build/tests/cases/steward_storage/`       |
   | FQID / period grammars, interval algebra | Hypothesis properties + round-trip snapshots                                                                         |
   | Real artifact ↔ accepted inputs          | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings                |
   | Frontend                                 | rendered DOM, the accessibility tree and the codegen'd API types                                                     |
   | Repository tooling (`scripts/tests`)     | the tool's own contract: skill discovery, a lint's verdict                                                           |
-
-Compiled holdings admission, scoped browse/search and selection guards are pinned
-through source-built request/expected corpora in `conformance/cases/`.
 
 ### Tiers
 
@@ -420,19 +373,16 @@ These rules keep them coupled only through released artifacts.
 
 Every tier runs `conformance/` at the repository root, always against the Rust server
 (`--server-cmd` is required). Thin loaders run its readable cases against it: HTTP and
-MCP responses, order manifests, server startup and project validation. Cases assert
+MCP responses, logical orders, server startup and project validation. Cases assert
 domain outputs or located errors, not object internals or query implementation. Product
 adapters are not added solely for testing. Fixture-bound cases always use their named
 source-built synthetic artifacts, including in a tier 3 run. Artifact-parametrized
-checks default to session-built catalog/steward artifacts and use exactly
-`--artifact-dir` under tier 3. They derive expectations from artifact content or
-artifact/HTTP agreement, never real-identifier goldens.
+checks default to session-built catalog artifacts and use exactly `--artifact-dir` under
+tier 3. They derive expectations from artifact content or artifact/HTTP agreement, never
+real-identifier goldens.
 
-Order comparisons across routes and repeated runs use raw bytes, including provenance;
-no volatile fields are removed, and key/list order remains observable. Existing scope
-accounting covers tables and columns; no manifest count contract yet exists for
-mappings, periods or unmapped reasons. Catalog artifacts permit global fallback orders;
-steward reference visibility does not grant orderability. The existing
+Order comparisons across routes and repeated runs use raw bytes; no volatile fields are
+removed, and key/list order remains observable. The existing
 `crates/reg-core/tests/project/corpus/` serves its Rust and TS consumers.
 
 Private imports, internal patches and oversized test modules are gated by repo lints

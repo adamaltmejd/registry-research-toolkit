@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server, project_data.json order drafting, and a research-project scaffold whose outputs leave MONA through the toolkit export gate.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
@@ -14,7 +14,7 @@
     "catalog_url": {
       "type": "string",
       "title": "Catalog MCP URL",
-      "description": "The catalog the agent answers from: https://reg-meta.vqv.uk/mcp (every register) or https://data.swecov.se/mcp (SWECOV's holdings).",
+      "description": "The catalog the agent answers from: the global catalog at https://reg-meta.vqv.uk/mcp.",
       "default": "https://reg-meta.vqv.uk/mcp",
       "required": false
     }
