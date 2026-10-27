@@ -1,18 +1,11 @@
 {
-  "note": "Fails if a bare register name two registers share stops answering ambiguous_ref, or a register FQID with no documents stops answering an empty page.",
-  "fixture": "reader/var-id-bands",
-  "kind": "catalog",
-  "docs": "docs",
+  "note": "Fails if a bare name two entities share (the table handle t of both registers) stops answering ambiguous_ref with both candidates, or the register filter guesses one.",
+  "fixture": "documents",
   "requests": [
     {
       "operation": "docs_search",
       "path": "/api/docs/search",
-      "query": {"register": "band fixture"}
-    },
-    {
-      "operation": "docs_search",
-      "path": "/api/docs/search",
-      "query": {"register": "scb/bands"}
+      "query": {"register": "t"}
     }
   ]
 }

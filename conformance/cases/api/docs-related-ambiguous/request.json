@@ -1,9 +1,7 @@
 {
-  "fixture": "reader/var-id-bands",
-  "kind": "catalog",
-  "docs": "docs",
+  "note": "Fails if docs_related guesses one entity for a bare name two entities share (the table handle t of both registers) instead of answering ambiguous_ref with both candidates.",
+  "fixture": "documents",
   "requests": [
-    {"operation": "docs_related", "path": "/api/docs/related/band%20fixture"},
-    {"operation": "docs_related", "path": "/api/docs/related/scb/bands"}
+    {"operation": "docs_related", "path": "/api/docs/related/t"}
   ]
 }

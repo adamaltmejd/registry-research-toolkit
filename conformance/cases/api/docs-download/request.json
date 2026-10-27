@@ -1,20 +1,14 @@
 {
-  "fixture": "reader",
-  "docs": "docs",
+  "note": "Fails if the file route stops serving a pdf document's stored bytes unchanged as application/pdf shown inline, or serves a parsed document (it has no file) instead of answering not_found.",
+  "fixture": "documents",
   "requests": [
-    {"operation": "docs_related", "path": "/api/docs/related/scb/example"},
     {
-      "operation": "docs_related",
-      "path": "/api/docs/file/scb/example/Bilaga%20f%C3%B6r%20register.pdf"
+      "operation": "docs_get",
+      "path": "/api/docs/file/ded2102f44a3d07016204a60b6d50cea2dec8c8d0d891342cacc3b1da39bbdb9"
     },
     {
-      "operation": "docs_related",
-      "path": "/api/docs/file/scb/example/Bilaga%20f%C3%B6r%20register.pdf",
-      "etag_from": 1
-    },
-    {
-      "operation": "docs_related",
-      "path": "/api/docs/file/scb/example/missing.pdf"
+      "operation": "docs_get",
+      "path": "/api/docs/file/630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f"
     }
   ]
 }

@@ -1,0 +1,12 @@
+# The documents fixture: two registers, `dok` with two documents and `utan` with none.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"
