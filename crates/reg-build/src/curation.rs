@@ -303,6 +303,7 @@ fn run_selected(
     let mut pending = Vec::new();
     let mut findings = Vec::new();
     let mut refusals = Vec::new();
+    let mut conflicts = BTreeSet::new();
     let mut locks = BTreeMap::new();
     let mut premises = BTreeMap::<_, BTreeMap<_, _>>::new();
     for (provider, register) in groups.keys() {
@@ -501,8 +502,38 @@ fn run_selected(
             records.retain(|r| !before.contains(r));
             records.extend(applied.records);
         }
+        if stage == 3 {
+            for ((provider, register), (_, ledger, _)) in &locks {
+                let assignments = evaluated
+                    .iter()
+                    .filter(|(s, _)| {
+                        s.provider.as_str() == provider.as_str()
+                            && s.register.as_str() == register.as_str()
+                            && matches!(&s.statement, reg_frame::statement::Statement::Set { fields, .. } if fields.variable.is_some())
+                    })
+                    .collect::<Vec<_>>();
+                if assignments.is_empty() {
+                    continue;
+                }
+                let source = records
+                    .iter()
+                    .filter(|r| belongs(r, provider, register))
+                    .cloned()
+                    .collect::<Vec<_>>();
+                if let Err(error) =
+                    reg_resolve::curation::validate_assignments(&source, ledger, &result.variables)
+                {
+                    for (statement, _) in assignments {
+                        conflicts.insert(publication_identity(statement));
+                        refusals.push(format!("{}: {error}", location(statement)));
+                    }
+                }
+            }
+            if !conflicts.is_empty() {
+                break;
+            }
+        }
     }
-    let mut conflicts = BTreeSet::new();
     let indices = evaluated
         .iter()
         .enumerate()

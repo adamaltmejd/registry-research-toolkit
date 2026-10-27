@@ -1093,7 +1093,7 @@ pub fn resolve(
         });
     }
     // Evaluate the exemption on final segments, after adjacent components have joined.
-    // Each variable already has one source key; no segment boundaries change here.
+    // Assignments can merge keys; this exemption applies only within one source key.
     let mut segment_occurrences: BTreeMap<(usize, usize), Vec<&ResolvedOccurrence>> =
         BTreeMap::new();
     for r in resolved.iter().filter(|r| r.status == "used") {
@@ -1113,9 +1113,10 @@ pub fn resolve(
             && forms
                 .iter()
                 .all(|f| f.label == first.label && f.valueset == first.valueset)
-            && own
-                .iter()
-                .all(|r| fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling))
+            && own.iter().all(|r| {
+                r.occurrence.source_key == own[0].occurrence.source_key
+                    && fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling)
+            })
         {
             segment.state = if own.iter().all(|r| r.preliminary) {
                 "preliminary"

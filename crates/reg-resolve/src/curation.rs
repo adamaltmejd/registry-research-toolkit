@@ -790,6 +790,18 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
     }
 }
 
+/// Validate the complete assignment phase with the same rules as catalog resolution.
+///
+/// # Errors
+/// Assignments that cannot preserve valid occurrence membership.
+pub fn validate_assignments(
+    records: &[Record],
+    ledger: &Ledger,
+    assignments: &BTreeMap<crate::OccurrenceKey, String>,
+) -> Result<(), String> {
+    crate::resolve(records, ledger, &BTreeMap::new(), assignments).map(|_| ())
+}
+
 fn variable_members(
     records: &[Record],
     ledger: &Ledger,
