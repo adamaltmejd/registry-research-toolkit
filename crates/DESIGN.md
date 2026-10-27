@@ -423,8 +423,10 @@ tracks the milestones. This section holds the design decisions that outlive the 
   check: integrity, the schema's post-write queries, each value set's items hashing to
   its address, and with `--previous` the id rules against the previous release. `emit`
   runs it on the staged file before replacing the output, so conformance and the release
-  skill call the same authority. A previous file of another schema major is not
-  comparable.
+  skill call the same authority. The schema version is
+  `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
+  `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
+  other version is not comparable.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - Code search rows: one row per distinct (code, label) pair, deferred to a follow-up PR
