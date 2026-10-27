@@ -268,7 +268,7 @@ GROUPED_COUNTS = [
         "occurrences",
         f"occurrence x {VIA_TABLE}",
         "x.status",
-        ["used", "shadowed", "gap_marker", "rejected", "unplaced"],
+        ["used", "shadowed", "withheld", "gap_marker", "rejected", "unplaced"],
     ),
     ("segments", f"segment x {VIA_TABLE}", "x.state", ["ambiguous", "preliminary"]),
     (
