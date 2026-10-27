@@ -253,9 +253,7 @@ impl Statement {
             }
             _ => {}
         }
-        crate::hex(&Sha256::digest(
-            serde_json::to_vec(&normalized).expect("statement content serializes without floats"),
-        ))
+        crate::hex(&Sha256::digest(crate::canonical_line(&normalized)))
     }
 }
 

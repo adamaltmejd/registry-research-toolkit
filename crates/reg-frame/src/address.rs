@@ -125,22 +125,33 @@ impl FromStr for Address {
             });
         }
         let text = text.trim();
-        let (head, guards) = match split_keyword(text, "where") {
+        let (table, rest) = text
+            .split_once(':')
+            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
+        let table = table.trim();
+        let rest = rest.trim_start();
+        let end = rest
+            .find(|c: char| c.is_whitespace() || c == '@')
+            .unwrap_or(rest.len());
+        let (spelling, suffix) = rest.split_at(end);
+        let (scope, guards) = match split_keyword(suffix, "where") {
             Some((_, guards)) if guards.trim().is_empty() => {
                 return Err("where needs a guard".to_owned());
             }
             Some(parts) => parts,
-            None => (text, ""),
+            None => (suffix, ""),
         };
         let guards = parse_guards(guards)?;
-        let (head, periods) = match head.split_once('@') {
-            Some((head, periods)) => (head.trim(), Some(periods.trim().parse()?)),
-            None => (head.trim(), None),
+        let periods = match scope.trim() {
+            "" => None,
+            scope => Some(
+                scope
+                    .strip_prefix('@')
+                    .ok_or("after the spelling, expected @period-set or where guards")?
+                    .trim()
+                    .parse()?,
+            ),
         };
-        let (table, spelling) = head
-            .split_once(':')
-            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
-        let (table, spelling) = (table.trim(), spelling.trim());
         if spelling.contains([':', '/']) {
             return Err(RELEASE_SELECTOR.to_owned());
         }
