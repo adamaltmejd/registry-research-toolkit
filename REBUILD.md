@@ -176,7 +176,56 @@ The full SCB read is a heavy run.
     74 only in the new one). Take about 30 of the 920 plus the 70 and bucket them by
     cause: the ValidDates filter or its whole-set fallback; curation in the old catalog;
     a reused ItemId's dates; other. Record the buckets here. Re-open a rule only if a
-    bucket is large and wrong. Also check r118 kommun codes 0197 and 0199 per segment;
+    bucket is large and wrong. Also check r118 kommun codes 0197 and 0199 per segment.
+    - **Outcome**, from a full build at c0be3db37 against 0.64.0. The comparison now
+      gives 924 "codes differ", 75 only in old and 79 only in new. Buckets: (a) the
+      ValidDates filter, (b) the whole-set fallback, (c) curation in old, (d) a reused
+      ItemId's dates, (e) other, (f) a source error for a D `set`.
+    - "codes differ", 30 sampled with seed 0: 9 (a), 13 (d), 1 (b), 1 (c), 6 (e).
+      - Of the 9 (a), 4 drops are right: code 86 and the historical kommuner end before
+        the release, and Europabolag starts after it.
+      - The other 5 (a) and all 13 (d) are wrong. Each drops real answer codes (Ja, Nej,
+        Vet ej, grades A-F, kommun 0114) because their ItemIds are dated only from
+        2008-2014, after the release. These dates record when the item entered the
+        metadata, not when the code was valid.
+      - The filter guards against this only when no item is kept. Here a sentinel such
+        as "." or "Uppgift saknas" carries an older date and is kept.
+      - The 6 (e) are 4 columns that one catalog merges and the other splits, 1
+        ambiguous segment, and 1 code (Nej) the old build left out.
+    - Only in old, all 75: (e).
+      - 56 are ambiguous segments (F2): the occurrences state different sets, so the
+        segment keeps none and the comparison, which reads segments, sees no codes. In 5
+        of these the date filter causes the disagreement.
+      - 2 are population alternatives (F6), 6 are CVIDs holding only an uncoded marker,
+        5 are CVIDs with no rows in `Vardemangder`, and 6 are SOS transcriptions that
+        state no set. In 10 of these 11 SCB cases the old variable merged another
+        column's set.
+      - #1949 tag: 5 involve a reused ItemId's interval, all among the F2 cases. In the
+        2 `studiekommun` cases the dates end before the release and the drop is right;
+        in `avslutunderaret` and `terminstuderande` (ht, vt) they start after it and it
+        is wrong. A filter drop never empties a set (the fallback), so the ruling's
+        evidence is in "codes differ", not here.
+    - Only in new, 79: 49 (c), 17 (b), 13 (e).
+      - (c) is the old `errata:steward-holdings`, `curated:representations` and
+        `curated:coding.uncoded`.
+      - (b) is 16 undated ULF sets and one r235 set, which the old build dropped.
+      - (e) is 9 SOS transcriptions, 3 free-text marker sets (`Alfanumerisk`,
+        `Kontinuerlig`) missing from the reader's uncoded list, and 1 Ja/Nej set the old
+        build left out.
+    - r118: the "Taxeringsår 2013" delivery names CVID 320512, the 21 Län codes, which
+      is bucket (f). F1 `domain-change` is not raised there, because the resolver emits
+      no `domain-change` finding at all.
+    - r118 `kommun` has no segment from 2017 on. All seven "Deklarationsår YYYY
+      (beskattningsår YYYY-1)" deliveries (2014-2020) are unparsed, so every r118
+      variable ends in 2013. 0197 and 0199 are open-ended in the 2017, 2018 and 2021 LKF
+      sets those deliveries name, so the cause is the delivery-name grammar, not a
+      value-set rule.
+    - Verdict: one bucket is large and wrong. The filter's start dates, which record
+      metadata entry rather than code validity, drop real codes in 18 of the 30 sampled
+      cases (13 on reused ItemIds, 5 on single-use ones; about 550 of the 924 by
+      extrapolation). Reuse widens it. This re-opens D30 and the #1949 ruling and is
+      escalated to the tracker. The rule is not changed here. The per-case table is in
+      the PR that recorded it;
   - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
     (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
     the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
