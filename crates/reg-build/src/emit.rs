@@ -3,8 +3,8 @@
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
 //! It fills the identity, coverage, release, variable, segment, occurrence, gap,
-//! value-set, relation, finding and search tables (`search.rs`); classifications,
-//! documents and curation statements stay empty.
+//! value-set, relation, finding, document and search tables (`search.rs`);
+//! classifications and curation statements stay empty.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -12,6 +12,7 @@ use std::path::Path;
 use reg_frame::ValueSet;
 use reg_resolve::{Resolved, Subject};
 
+use crate::docs::Document;
 use crate::link::{self, Entity};
 use rusqlite::Connection;
 use rusqlite::types::{ToSql, ToSqlOutput};
@@ -48,6 +49,9 @@ pub struct Catalog {
     /// The link stage's output (`link.rs`).
     pub relations: Vec<link::Relation>,
     pub notices: Vec<link::Notice>,
+    /// Documents in hash order; a document's id is its position, from 1.
+    pub docs: Vec<Document>,
+    pub doc_links: Vec<link::DocLink>,
 }
 
 /// A cell before interning: text, folded names and spellings are resolved to row ids
@@ -57,6 +61,7 @@ enum Cell {
     Null,
     Int(i64),
     Str(String),
+    Blob(Vec<u8>),
     Text(String),
     Fold(String),
     Spelling(String),
@@ -67,6 +72,7 @@ enum Value {
     Null,
     Int(i64),
     Str(String),
+    Blob(Vec<u8>),
 }
 
 impl ToSql for Value {
@@ -75,6 +81,7 @@ impl ToSql for Value {
             Value::Null => Ok(ToSqlOutput::from(rusqlite::types::Null)),
             Value::Int(i) => Ok(ToSqlOutput::from(*i)),
             Value::Str(s) => Ok(ToSqlOutput::from(s.as_str())),
+            Value::Blob(b) => Ok(ToSqlOutput::from(b.as_slice())),
         }
     }
 }
@@ -756,12 +763,79 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
     }
 
+    // Documents. A section's id is its position in (document, ord) order.
+    let mut sections = Vec::new();
+    for (d, document) in catalog.docs.iter().enumerate() {
+        let doc = &document.doc;
+        rows.push(
+            "doc",
+            vec![
+                Cell::Int(id(d)),
+                Cell::Str(doc.hash.clone()),
+                Cell::Str(doc.kind.clone()),
+                Cell::Text(doc.title.clone()),
+                Cell::Str(doc.licence.clone()),
+                Cell::Int(i64::try_from(doc.bytes).map_err(|e| e.to_string())?),
+                opt_str(doc.url.as_ref()),
+                Cell::Int(id(input_of(&doc.locator)?)),
+                document.content.clone().map_or(Cell::Null, Cell::Blob),
+            ],
+        );
+        for (ord, section) in doc.sections.iter().enumerate() {
+            let section_id = id(sections.len());
+            sections.push(section);
+            rows.push(
+                "doc_section",
+                vec![
+                    Cell::Int(section_id),
+                    Cell::Int(id(d)),
+                    Cell::Int(count(ord)),
+                    opt_str(section.heading.as_ref()),
+                    opt_int(section.page.map(i64::from)),
+                    Cell::Str(section.body.clone()),
+                ],
+            );
+        }
+    }
+    // doc_link rows in primary-key order; a document's first row names the register its
+    // search row carries.
+    let mut doc_links: Vec<_> = catalog
+        .doc_links
+        .iter()
+        .map(|l| {
+            let register = register_id[&pid_of_register(&catalog.registers[l.subject.register()])];
+            (
+                id(l.doc),
+                l.subject.kind(),
+                row_of(l.subject),
+                l.page,
+                register,
+            )
+        })
+        .collect();
+    doc_links.sort_unstable();
+    let mut doc_register = BTreeMap::new();
+    for &(doc, kind, subject, page, register) in &doc_links {
+        doc_register.entry(doc).or_insert(register);
+        rows.push(
+            "doc_link",
+            vec![
+                Cell::Int(doc),
+                Cell::Str(kind.into()),
+                Cell::Int(subject),
+                Cell::Int(i64::from(page)),
+                Cell::Str("source".into()),
+            ],
+        );
+    }
+
     let search = crate::search::items(
         catalog,
         &crate::search::Ids {
             register: &register_id,
             table: &table_id,
             variable: &variable_id,
+            doc_register: &doc_register,
         },
     )?;
     for (i, item) in search.iter().enumerate() {
@@ -882,6 +956,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Null => Value::Null,
                         Cell::Int(i) => Value::Int(*i),
                         Cell::Str(s) => Value::Str(s.clone()),
+                        Cell::Blob(b) => Value::Blob(b.clone()),
                         Cell::Text(s) => Value::Int(text_id[s.as_str()]),
                         Cell::Fold(s) => Value::Int(fold_id[s.as_str()]),
                         Cell::Spelling(s) => Value::Int(spelling_id[s.as_str()]),
@@ -920,6 +995,19 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
     }
     tx.execute("INSERT INTO search(search) VALUES ('optimize')", [])
+        .map_err(sql)?;
+    // External-content FTS5 over doc_section, in rowid order.
+    {
+        let mut insert = tx
+            .prepare("INSERT INTO doc_fts(rowid, heading, body) VALUES (?1, ?2, ?3)")
+            .map_err(sql)?;
+        for (i, section) in sections.iter().enumerate() {
+            insert
+                .execute((id(i), &section.heading, &section.body))
+                .map_err(|e| format!("doc_fts: {e}"))?;
+        }
+    }
+    tx.execute("INSERT INTO doc_fts(doc_fts) VALUES ('optimize')", [])
         .map_err(sql)?;
     tx.commit().map_err(sql)?;
     db.execute_batch("ANALYZE;").map_err(sql)?;

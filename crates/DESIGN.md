@@ -458,6 +458,22 @@ tracks the milestones. This section holds the design decisions that outlive the 
   A malformed link or notice (an unknown kind, an endpoint without exactly one register
   reference) is refused at its locator. In frame JSONL a link's kind is written
   `relation`, since the record tag owns `kind`.
+- **Documents: `doc.content` (plan decision C-7).** A `pdf` document stores its bytes in
+  `doc.content`, which deviates from schema.md. The PDFs' only URL is the mikrometadata
+  UI, not the file, so the file download needs the bytes; a `parsed` document has none.
+  A CHECK ties `content` to `kind = 'pdf'`, and `verify` re-hashes it against the
+  document's content hash. Measured on the six PDFs: 7,884,120 B (5,324,468 B at
+  `zstd -19`). The build was 630,218,752 B (112,422,605 B at `-19`, 166,077,411 B at
+  `-3`), so with the PDFs the `-19` artifact is about 117.7 MB, past schema §5.2's
+  90-115 MB. The Operator ruled on 2026-10-27 to keep `doc.content` in the catalog at
+  that size and informed the maintainer. If the maintainer objects, §5.2's sidecar lever
+  is the fallback: PDFs outside the database.
+- **Documents: metadata and subjects (plan decision C-8).** Document metadata
+  (`related_documents.toml`: title, licence, fetched, URL) lives beside the PDFs in the
+  inputs repository, pinned like any input. The reader states each subject in source
+  coordinates (a register handle or name); the link stage resolves it against the
+  published ids. An unresolved subject is a `link:` warning counted as
+  `doc_subject_unresolved` in the build report, and the document stays searchable.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,

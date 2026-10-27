@@ -461,7 +461,9 @@ CREATE TABLE doc (
   licence    TEXT NOT NULL,
   bytes      INTEGER NOT NULL,
   url        TEXT,
-  input_id   INTEGER REFERENCES input(id)
+  input_id   INTEGER REFERENCES input(id),
+  content    BLOB,                        -- the original bytes, pdf only (crates/DESIGN.md C-7)
+  CHECK ((kind = 'pdf') = (content IS NOT NULL))
 ) STRICT;
 
 CREATE TABLE doc_section (

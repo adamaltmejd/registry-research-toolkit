@@ -244,6 +244,47 @@ pub struct Notice {
     pub locator: Locator,
 }
 
+/// One section of a parsed document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSection {
+    pub heading: Option<String>,
+    pub page: Option<u32>,
+    pub body: String,
+}
+
+/// What a document is about, as the source names it; `page` 0 is the whole document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSubject {
+    pub endpoint: Endpoint,
+    pub page: u32,
+}
+
+/// A document the source publishes about its registers: a parsed text or a PDF.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Doc {
+    /// SHA-256 (lowercase hex) of the original file's bytes.
+    pub hash: String,
+    /// `parsed` or `pdf`.
+    pub kind: String,
+    pub title: String,
+    pub licence: String,
+    /// The original file's size.
+    pub bytes: u64,
+    /// Where the original is published, when it has a URL of its own.
+    pub url: Option<String>,
+    /// `parsed` only, in order. Empty for `pdf`.
+    #[serde(default)]
+    pub sections: Vec<DocSection>,
+    /// `pdf` only: the bytes as lowercase hex ([`hex`]), so the frame stays JSONL.
+    pub content: Option<String>,
+    #[serde(default)]
+    pub subjects: Vec<DocSubject>,
+    pub locator: Locator,
+}
+
 /// One frame record.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -255,6 +296,7 @@ pub enum Record {
     Occurrence(Occurrence),
     Link(Link),
     Notice(Notice),
+    Doc(Doc),
 }
 
 /// A reader's whole output for one input: its records, sorted.
@@ -294,6 +336,25 @@ pub fn canonical_line<T: Serialize>(value: &T) -> String {
     let mut tree = serde_json::to_value(value).expect("frame records serialize");
     tree.sort_all_objects();
     tree.to_string()
+}
+
+/// The bytes of lowercase hex `text`, or `None` when it is not hex (odd length, a
+/// non-hex character, uppercase).
+#[must_use]
+pub fn unhex(text: &str) -> Option<Vec<u8>> {
+    let digit = |b: u8| match b {
+        b'0'..=b'9' => Some(b - b'0'),
+        b'a'..=b'f' => Some(b - b'a' + 10),
+        _ => None,
+    };
+    let bytes = text.as_bytes();
+    if !bytes.len().is_multiple_of(2) {
+        return None;
+    }
+    bytes
+        .chunks(2)
+        .map(|pair| Some((digit(pair[0])? << 4) | digit(pair[1])?))
+        .collect()
 }
 
 /// Lowercase hex of `bytes`.
