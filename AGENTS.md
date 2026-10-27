@@ -146,8 +146,9 @@ below are what an agent must follow when writing, changing or deleting a test. T
   boundary moved and the design note says so.
 - **Determinism is a tested property**: byte-identical rebuilds and serializations;
   Hypothesis for grammars and interval algebra.
-- **Structural validation has one authority.** `validate_built_db` owns artifact
-  invariants; tests run it on the synthetic artifact, they do not re-derive its checks.
+- **Structural validation has one authority.** `reg-build verify` owns the published
+  catalog's invariants (`validate_built_db` the old builder's, until F); tests run it on
+  the synthetic artifact, they do not re-derive its checks.
 - **A bug fix adds a regression case to the owning corpus only when no existing case
   fails on the pre-fix code**: extend or strengthen that behavior's case rather than a
   helper test. The new or strengthened case must fail on the pre-fix code.

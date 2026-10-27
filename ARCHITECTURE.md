@@ -88,8 +88,7 @@ registry-research-toolkit/
     frontend/       # React 19 + React Aria Components + Vite (bun)
     edge/           # edge workers: global is MCP-only, swecov also serves the SPA
     stewards/
-      global/       # steward.json + logo.svg only (full universe)
-      swecov/       # steward.json + logo.svg (compiled holdings artifact)
+      swecov/       # the old builder's inventory, retained until milestone E
 ```
 
 Dependency graph (acyclic):
@@ -107,7 +106,7 @@ reg_export_gate → its schemas and policies (files, offline inside MONA; no cod
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
-crate version, the DB assets and the `reg-meta` binaries for macOS arm64 and Linux
+crate version, the catalog asset and the `reg-meta` binaries for macOS arm64 and Linux
 x86_64. `reg_meta_build` is tagged (`reg_meta_build/v*`) but not published: it depends
 on the workspace-only `reg-core-py` and runs from a maintainer checkout. The webapp
 ships as a container image built from the newest `reg_meta/v*` release's assets.
@@ -116,10 +115,10 @@ ships as a container image built from the newest `reg_meta/v*` release's assets.
 
 - **Runtime vs builder** — the Rust runtime reads; the Python builder writes. They have
   different deps, cadence and operators, and share only the artifact contract and
-  `reg-core` (through `reg-core-py`). The built SQLite DBs (`reg_meta.db` plus the
-  smaller `reg_meta_docs.db`) are distributed as `.zst`-compressed **GitHub release
-  artifacts** on `reg_meta/v*` tags, fetched with `curl`, SHA-256 verification and
-  `zstd`. See [`crates/DESIGN.md`](crates/DESIGN.md) for the runtime and
+  `reg-core` (through `reg-core-py`). The built SQLite catalog (`reg_meta.db`, documents
+  included) is distributed as one `reg_meta.db.zst` **GitHub release artifact** on
+  `reg_meta/v*` tags, fetched with `curl`, SHA-256 verification and `zstd`. See
+  [`crates/DESIGN.md`](crates/DESIGN.md) for the runtime and
   [`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md) for the project contract.
 - **Compile, don't resolve.** The artifact is immutable and rebuilt on every release, so
   anything that is a pure function of it is computed once by the build's derive step
@@ -297,7 +296,7 @@ This is the complete list of boundaries a test may assert at.
    not one: it requires the Rust server (`--server-cmd`). The `rust` job's 6-minute
    timeout covers `crates/` and the gate's `rust` and `release` steps
    (`scripts/gate.py`: the workspace build, the whole conformance suite against the Rust
-   server, then only the `release`-marked admission checks on the synthetic steward
+   server, then only the `release`-marked admission checks on the synthetic catalog
    artifact), with room for a cold rust-cache and its save. The `lint` job runs
    `gate.py lint` (ruff, panache, ty). The `reg-webapp-frontend` job has a 6-minute
    timeout and includes the codegen drift check; the OpenAPI snapshot is a
@@ -311,15 +310,13 @@ This is the complete list of boundaries a test may assert at.
    artifact before execution; incompatible or non-publishable artifacts fail, never
    silently skip. The artifact checks compare manifest accounting, sampled
    browse/search/validate agreement, repeated search/order bytes, order/download
-   identity and located refusal. CI runs them against both published global catalog and
-   SWECOV steward assets in independent `integration.yml` jobs. Published schema drift
-   is a release-drift failure. Accepted-private-input census additionally requires
-   explicit `--holdings-input=/path/to/accepted-candidate`; mismatched commit/manifest,
-   dirty input, missing members and wrong paths fail admission. Full HTTP variable-node
-   admission comparison and deterministic stratified artifact/HTTP binding agreement
-   derive requests from the artifact. Pinned historical baseline acceptance, exhaustive
-   representative resolution, performance and rendered checks remain separate maintainer
-   work.
+   identity and located refusal. CI runs them against the single published catalog asset
+   in `integration.yml`; the SWECOV integration job is deleted until milestone E, and
+   there is no separate docs asset. Published schema drift is a release-drift failure.
+   Full HTTP variable-node admission comparison and deterministic stratified
+   artifact/HTTP binding agreement derive requests from the artifact. Pinned historical
+   baseline acceptance, exhaustive representative resolution, performance and rendered
+   checks remain separate maintainer work.
 
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
 from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
@@ -360,9 +357,11 @@ These rules keep them coupled only through released artifacts.
    deploys on push to main: `container-build.yml` bakes the newest release's assets.
 2. **Derived tables and schema.** A derived-table change ships only with the next
    release, because deploys bake released databases without deriving. Core-DDL changes
-   the reader needs are batched into the next builder content release. The reader gate
-   (`SCHEMA` in `crates/reg-catalog/src/lib.rs`) never runs ahead of a released asset
-   outside that batch.
+   the reader needs are batched into the next builder content release. The reader admits
+   only `reg_core::CATALOG_SCHEMA_VERSION` exactly. The deploy guard compares that
+   constant with the newest release's and fails closed on a mismatch or absence. After a
+   schema bump merges, deployments wait until the maintainer publishes its matching
+   release; a gap is allowed.
 3. **`reg-core` edits** invalidate the builder's prepare, build and resolve keys. Batch
    them just before a planned real-seed build. A prepare-key miss never forces a
    re-prepare: an accepted prepared root can be reused.

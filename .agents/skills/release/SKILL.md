@@ -3,8 +3,8 @@ name: release
 description: >-
   Registry Research Toolkit release workflow. Use when the user explicitly asks to run
   the release workflow, bump and release reg_meta (the `reg-meta` crate and its DB
-  assets) or reg_meta_build, create package tags/releases, upload reg_meta DB assets, or
-  monitor the release workflows. Usage: /release [package] <patch|minor|major>
+  asset) or reg_meta_build, create package tags/releases, upload the reg_meta DB asset,
+  or monitor the release workflows. Usage: /release [package] (patch|minor|major)
 ---
 
 # Release pipeline
@@ -24,8 +24,8 @@ draft or tag already exists, follow Error recovery first.
   | reg_meta       | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`)                                  | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
   | reg_meta_build | `reg_meta_build/pyproject.toml`, `reg_meta_build/src/reg_meta_build/__init__.py` | none (tag and GitHub release only)                                                          |
 
-A `reg_meta/v*` release carries the three DB assets (step 8) and the `reg-meta` binaries
-(step 10). A `reg_meta_build/v*` release is a tag with no assets.
+A `reg_meta/v*` release carries one DB asset, `reg_meta.db.zst` (step 8) and the
+`reg-meta` binaries (step 10). A `reg_meta_build/v*` release is a tag with no assets.
 
 ## Validation
 
@@ -43,9 +43,10 @@ A `reg_meta/v*` release carries the three DB assets (step 8) and the `reg-meta` 
 
    - Several packages changed: release them sequentially, each with its own commit, tag
      and release.
-   - **Also compare `reg_meta_build/` since the last `reg_meta/v*` tag**: builder
-     content that changes the built DBs (curated TOMLs, `sources/`, `db.py`) needs a
-     `reg_meta` release to refresh the asset.
+   - **Also compare the builder and inputs since the last `reg_meta/v*` tag**: catalog
+     content or schema changes under `crates/reg-build/`, `crates/reg-resolve/`,
+     `crates/reg-readers/`, `crates/reg-frame/`, `curation/` (including the inputs pin)
+     need a `reg_meta` release to refresh the asset.
    - Nothing changed: say there is nothing to release.
 
 3. Anything still ambiguous: stop and ask. **A major bump needs explicit confirmation**
@@ -68,21 +69,20 @@ linked inline; append `(HT @username)` to a non-owner's bullet
 - reg_meta_build: `version` in `reg_meta_build/pyproject.toml` and `__version__` in
   `reg_meta_build/src/reg_meta_build/__init__.py`, then `uv lock`.
 
-**reg_meta only — schema version check.** Each schema has a builder constant and a
-reader gate that move together:
+**reg_meta only — schema version check.** Compare the DDL and the single version
+authority with the previous release:
 
-  | Schema  | Builder constant                                                      | Rust reader gate                                 |
-  | ------- | --------------------------------------------------------------------- | ------------------------------------------------ |
-  | catalog | `SCHEMA_VERSION` in `reg_meta_build/src/reg_meta_build/db.py`         | `SCHEMA` in `crates/reg-catalog/src/lib.rs`      |
-  | docs    | `DOC_SCHEMA_VERSION` in `reg_meta_build/src/reg_meta_build/doc_db.py` | `DOC_SCHEMA` in `crates/reg-catalog/src/docs.rs` |
+```sh
+git diff <prev-tag>..HEAD -- crates/reg-build/src/schema.sql crates/reg-core/src/lib.rs
+```
 
-Run
-`git diff <tag>..HEAD -- reg_meta_build/src/reg_meta_build/db.py reg_meta_build/src/reg_meta_build/doc_db.py crates/reg-catalog/src/`
-and check for DDL changes and reader reads of new tables or columns. A schema change
-lands with its bump (major: renamed/removed tables or columns, changed semantics; minor:
-new columns the reader reads) in the PR that makes it; if one was missed, stop and land
-it through a reviewed PR first. A schema bump forces fresh DB assets in step 8 and
-usually a `reg_meta_build` release, which goes first.
+If `schema.sql` changed, `reg_core::CATALOG_SCHEMA_VERSION` must have changed in the
+same release, and vice versa. The reader admits on exact equality, without a major/minor
+compatibility rule. If a paired change is missing, stop and land it through a reviewed
+PR first. A bump's PR and subsequent main pushes are expected to be red at
+`schema-guard` until the matching release publishes; that check is not required on main.
+Merge first, then release when the maintainer runs it. A gap is allowed; the guard
+blocks deployment throughout it.
 
 ### 4. Gate the committed bump
 
@@ -92,8 +92,8 @@ Create step 5's bump commit locally, then run:
 uv run --no-project scripts/gate.py all
 ```
 
-On the **committed** tree (the builder's clean-tree guard fails strict builds
-otherwise); push only when green, and re-run after a rebase. `Operation not permitted`
+Run on the **committed** tree so checks and release evidence name one revision; push
+only when green, and re-run after integrating source changes. `Operation not permitted`
 on `deps/*.d` means a shared `sccache` wrapper: run with
 `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
 
@@ -128,193 +128,115 @@ gh release create <package>/vX.Y.Z --draft --target "$target" --title "<package>
 
 ### 8. Build and upload release assets (reg_meta only)
 
-**Every release carries all three DB assets before it is published.**
-`container-build.yml` bakes the newest `reg_meta/v*` release's `reg_meta.db.zst` and
-`reg_meta_docs.db.zst` into the public catalog image and `reg_meta_swecov.db.zst` into
-the SWECOV image (`data.swecov.se`); a missing asset breaks that image build. Each asset
-is either **built fresh** (8a/8b/8c conditions) or **copied forward** (8d). Never skip
-one.
+Every release builds one fresh asset, `reg_meta.db.zst`, with documents inside the
+catalog. There is no separate docs asset and no copying an asset from an older release.
 
-The main build needs a complete accepted prepared root with its exact acceptance commit
-and top-level `manifest.json` SHA-256; follow the [build-db skill](../build-db/SKILL.md)
-if those are unavailable. Never mix inputs from different checkouts or edit an accepted
-root in place.
+**C-13 supersedes the old standing requirement until E:** no `reg_meta_swecov.db.zst` is
+produced; SWECOV's hosted app stays on its last old-schema image, untouched, with no
+build, integration or deploy path (`fly.swecov.toml` and its image, deploy and edge jobs
+are deleted). Local binaries released after the switch cannot read SWECOV's old DB;
+SWECOV users retain the last old binary until E. Include this in the release notes.
 
-#### 8a. Main DB asset (`reg_meta.db.zst`)
+#### 8a. Build the catalog
 
-Build fresh if **any** is true:
+Use an inputs worktree at the exact repository and commit in `curation/inputs.toml`.
+Check its HEAD and clean status before building; never edit the pinned inputs in place
+or mix files from different revisions. For every input with a `release` field, fetch its
+pinned asset beforehand to `<assets>/<release>/<path>`:
 
-- The catalog schema version was bumped since the prior release.
-- The release is a **major** bump.
-- `git log <prev reg_meta tag>..HEAD -- reg_meta_build/ ':(exclude)reg_meta_build/docs/'`
-  is non-empty (builder content changes DB bytes without a schema bump). Even a cosmetic
-  hit builds fresh.
+```sh
+gh release download <input-release> --repo <inputs-repo> --pattern <input-path> --dir <assets>/<input-release>
+```
 
-Otherwise copy forward (8d). Ship the full global catalog only: no `--registers` subset,
-no diagnostic build. Build once, strict, at the committed bump through the real-seed
-cache (build-db skill, "Reuse a cached output first"). The resolve key leaves out
-version numbers, so a candidate's resolve bundle makes this a phased run, and the result
-is the asset. A build whose result is not `complete` and `publication_ready` must not
-ship:
+The reader verifies the manifest's SHA-256. Keep the source revision, inputs commit,
+manifest, build report and subsequent check outputs in the release evidence directory.
+Use the full manifest: no register subset or diagnostic artifact.
 
 ```sh
 set -euo pipefail
-prepared="/absolute/path/to/accepted-prepared"
-prepared_commit="EXACT_PREPARED_ACCEPTANCE_SHA"
-prepared_manifest_sha256="EXACT_TOP_LEVEL_PREPARED_SHA256"
-uv run --no-project scripts/real_seed_cache.py build --prepared "$prepared" \
-  --input-commit "$prepared_commit" \
-  --input-manifest-sha256 "$prepared_manifest_sha256" > build-release.json
-uv run python -c 'import json,sys; s=json.load(open(sys.argv[1])); assert s["status"] == "complete" and s["publication_ready"] is True' build-release.json
-db="$(uv run python -c 'import json,sys; print(json.load(open(sys.argv[1]))["database"])' build-release.json)"
-zstd -3 -T0 "$db" -o reg_meta.db.zst
-gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
-rm reg_meta.db.zst
+inputs=/absolute/path/to/pinned-inputs-worktree
+assets=/absolute/path/to/pinned-release-assets
+evidence=/absolute/path/to/release-evidence
+version=X.Y.Z
+mkdir -p "$evidence/catalog"
+cargo build --workspace --locked
+target/debug/reg-build build --inputs "$inputs" --assets "$assets" \
+  --curation curation --out "$evidence/catalog/reg_meta.db" \
+  --catalog-version "$version" --report "$evidence/build-report.json"
 ```
 
-Keep `build-release.json` (it names the cached `report`) and the input pins as release
-evidence; confirm every expected global provider is present.
-
-#### 8b. Doc DB asset (`reg_meta_docs.db.zst`)
-
-Build fresh if **any** is true:
-
-- The docs schema version was bumped since the prior release.
-- `git diff <tag>..HEAD -- reg_meta_build/related_documents.toml reg_meta_build/doc_sources.toml`
-  is non-empty.
-- `catalog/docs/` in `adamaltmejd/registry-catalog-inputs` changed since the commit the
-  prior docs asset was built from (markdown or a related-document PDF added, replaced or
-  refetched).
-- The release is a **major** bump.
-
-Otherwise copy forward (8d). If a new SCB PDF must be converted first, the recipe is the
-docstring of `scripts/parse_lisa_docs.py`.
-
-Both inputs live in the private inputs repo: the markdown under `catalog/docs/markdown/`
-and the related-document PDFs under `catalog/docs/related/<register>/`. Run against a
-worktree of that repo at an exact pinned commit (build-db skill, "Select inputs") and
-record the commit as release evidence. `build-docs` refuses
-(`related_documents_binary_missing`) when a required PDF in `related_documents.toml` is
-absent under `--related-docs-dir`.
+`--out` is a database filename, not a directory. **The switch release and every release
+until D's minting omit `--release`** (C-14): unminted variables publish under proposed
+ids, which may change in D. D restores the refusal; after minting use `--release`.
+Record the build report's total unminted count in the release notes:
 
 ```sh
-set -euo pipefail
-inputs=<worktree of registry-catalog-inputs at the pinned commit>
-docs_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_docs.XXXXXX")"
-uv run reg-meta-build --db "$docs_dir" build-docs \
-  --docs-dir "$inputs/catalog/docs/markdown" \
-  --related-docs-dir "$inputs/catalog/docs/related"
-zstd -3 -T0 "$docs_dir/reg_meta_docs.db" -o reg_meta_docs.db.zst
-gh release upload reg_meta/vX.Y.Z reg_meta_docs.db.zst
-rm -rf "$docs_dir" reg_meta_docs.db.zst
+uv run python -c 'import json,sys; r=json.load(open(sys.argv[1])); print(sum(len(v["unminted"]) for v in r["registers"].values()))' "$evidence/build-report.json"
 ```
 
-#### 8c. SWECOV compiled steward asset (`reg_meta_swecov.db.zst`)
+Read the report's warnings and confirm all expected providers and inputs are present.
 
-The compiled steward artifact `reg-meta serve --catalog swecov` reads. Runs on **every**
-reg_meta release.
+#### 8b. Verify the artifact
 
-Build fresh if **any** is true:
-
-- 8a rebuilt the main DB (the steward artifact is built on top of it).
-- `git diff <prev reg_meta tag>..HEAD -- reg_meta_build/fqid_slugs/swecov/ reg_webapp/stewards/swecov/`
-  is non-empty, or the accepted holdings pins (commit, manifest, providers, inventory,
-  census, storage export) changed.
-- The release is a **major** bump.
-- The immediately-previous release lacks `reg_meta_swecov.db.zst`.
-
-Otherwise copy forward (8d) **only from the immediately-previous release**, after
-checking its base generation and holdings pins still match; else rebuild.
-
-The base is **this release's** main asset, fetched: from the draft `reg_meta/vX.Y.Z` if
-8a rebuilt it, else from `reg_meta/v<prev>` (8d runs after 8c). The private holdings
-candidate and its pins come from the reviewed acceptance evidence: `accepted_holdings`
-is the `swecov/` folder of a worktree of `adamaltmejd/registry-catalog-inputs` at
-`holdings_commit` (build-db skill, "Select inputs"). After publishing, tag that commit
-`swecov/accepted-reg_meta-X.Y.Z` in the inputs repository and push the tag.
-
-The candidate pins the global it was generated against (`global_db_sha256`) and the spec
-(`steward_spec_sha256`); `extend-db` refuses a base or committed spec that differs
-(`extend_base_db_mismatch`, `extend_steward_spec_mismatch`). So any release whose global
-bytes change (8a rebuilt the main DB), or whose `reg_webapp/stewards/swecov/` changed,
-must first **regenerate** the inventory against this release's main asset (build-db
-skill, "Private SWECOV extension"), **accept** the fresh candidate in the inputs
-repository, then **extend**. A held candidate from the previous release extends only an
-unchanged global and spec.
+For every release after the switch, download the immediately previous published
+release's `reg_meta.db.zst`, verify its compressed SHA-256 against GitHub's asset
+digest, and decompress it into a separate evidence directory. Never substitute an older
+release or a synthetic artifact. Run the single validation authority:
 
 ```sh
-set -euo pipefail
-main_src="reg_meta/vX.Y.Z"   # or reg_meta/v<prev> when 8a copies forward
-: "${accepted_holdings:?clean accepted private candidate required}"
-: "${holdings_commit:?full accepted input commit required}"
-: "${holdings_manifest_sha256:?full accepted input manifest SHA-256 required}"
-base_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_base.XXXXXX")"
-gh release download "$main_src" --pattern reg_meta.db.zst --dir "$base_dir"
-zstd -d "$base_dir/reg_meta.db.zst" -o "$base_dir/reg_meta.db"
-flav_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_swecov.XXXXXX")"
-uv run reg-meta-build --db "$flav_dir" extend-db \
-  --base-db "$base_dir/reg_meta.db" \
-  --steward swecov \
-  --holdings-input "$accepted_holdings" \
-  --input-commit "$holdings_commit" \
-  --input-manifest-sha256 "$holdings_manifest_sha256"
-db="$flav_dir/reg_meta.db"
-# extend-db writes WAL; ship a self-contained single file.
-uv run python -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute('PRAGMA wal_checkpoint(TRUNCATE)'); c.execute('PRAGMA journal_mode=DELETE'); c.commit(); c.close()" "$db"
-zstd -3 -T0 "$db" -o reg_meta_swecov.db.zst
-gh release upload reg_meta/vX.Y.Z reg_meta_swecov.db.zst
-rm -rf "$base_dir" "$flav_dir" reg_meta_swecov.db.zst
+target/debug/reg-build verify "$evidence/catalog/reg_meta.db" --previous <previous-release-dir>/reg_meta.db
 ```
 
-Before uploading, check the manifest and report: a complete, publishable `steward`
-artifact naming `swecov`, with the expected base generation, pins and builder commit.
-The holdings candidate is maintainer-local: if a fresh build is required and it is
-absent, **stop and do not publish**; ask the maintainer to upload the asset.
+The switch release has no v4 predecessor: run `verify` without `--previous` and state
+that exception in its notes. From the next release on, `--previous` is required. A
+verification failure stops publication. The current verifier requires the previous DB to
+have the same schema version; a future schema bump that makes it incomparable needs a
+reviewed procedure change before release, not an unrecorded skip.
 
-#### 8d. Copy-forward for assets not rebuilt
+#### 8c. Review the catalog diff
 
-`<prev>` is the newest `reg_meta/v*` release carrying the asset (check with
-`gh release view reg_meta/v<prev> --json assets`). Run from the repo root:
+Except for the switch release, compare with that same previous DB and retain the full
+JSON output in the evidence directory:
 
 ```sh
-set -euo pipefail
-asset="<asset-name>"   # reg_meta.db.zst, reg_meta_docs.db.zst, or reg_meta_swecov.db.zst
-cf_dir="$(mktemp -d "${TMPDIR:-/tmp}/reg_meta_cf.XXXXXX")"
-gh release download reg_meta/v<prev> --pattern "$asset" --clobber --dir "$cf_dir"
-gh release upload reg_meta/vX.Y.Z "$cf_dir/$asset"
-rm -rf "$cf_dir"
+target/debug/reg-build diff <previous-release-dir>/reg_meta.db "$evidence/catalog/reg_meta.db"
+target/debug/reg-build diff <previous-release-dir>/reg_meta.db "$evidence/catalog/reg_meta.db" --json > "$evidence/catalog-diff.json"
 ```
 
-#### 8e. Verify before publishing
+Exit 0 means no changes, 1 means differences to review, and 2 means an error that stops
+the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
+the diff, confirms only intended changes, and puts its summary in the release notes. For
+the switch release, skip this comparison because there is no v4 predecessor; record
+`x-compare-orders` and `x-real-conformance` as its evidence instead.
 
-All three assets on the draft, each with one SHA-256 digest:
+#### 8d. Run conformance against the new artifact
+
+Use the release tier's command from `scripts/gate.py`, pointed at the new catalog:
 
 ```sh
+uv run python -m pytest conformance -q -n auto -m release --run-release \
+  --artifact-dir="$evidence/catalog" \
+  --server-cmd='target/debug/reg-meta serve --db {db} --port {port} --write-limit 100000'
+```
+
+`gate.py release` itself selects a synthetic artifact and accepts no artifact override;
+that run does not validate the release DB. A red artifact run stops publication.
+
+#### 8e. Compress, checksum and upload to the draft
+
+After verification, diff review and conformance pass:
+
+```sh
+zstd -19 "$evidence/catalog/reg_meta.db" -o "$evidence/reg_meta.db.zst"
+shasum -a 256 "$evidence/reg_meta.db.zst" > "$evidence/reg_meta.db.zst.sha256"
+gh release upload reg_meta/vX.Y.Z "$evidence/reg_meta.db.zst"
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[] | [.name, .digest] | @tsv'
 ```
 
-Then run the release-tier artifact conformance on each new catalog (global and SWECOV),
-downloaded from the draft and decompressed into its own directory, with the conformance
-command the `scripts/gate.py` `release` step runs, pointed at that directory
-(`--run-release --artifact-dir=... --server-cmd=...`; `cargo build --workspace` first).
-A red run stops publication: fix the asset and re-run.
-
-#### 8f. G2: compare the release databases with the pinned release
-
-With the pin still on the previous release, run G1 with the three decompressed draft
-databases from 8e as candidates, so nothing is derived and a schema major can be
-crossed:
-
-```sh
-uv run python -m conformance.differential \
-  --candidate global=<dir>/reg_meta.db \
-  --candidate swecov=<dir>/reg_meta_swecov.db \
-  --candidate docs=<dir>/reg_meta_docs.db
-```
-
-Run from the checkout at the release commit. Every difference beyond the standing
-exceptions must trace to the release's content changes; report the rest and stop
-publication. The paths are read only.
+Require exactly one catalog asset on the draft with a SHA-256 digest matching the local
+compressed file. Keep the checksum with the evidence; the binaries and their checksums
+are uploaded by step 10. Remove disposable downloads after the release, keeping the
+evidence.
 
 ### 9. Publish the draft release
 
@@ -326,9 +248,12 @@ gh release edit reg_meta/vX.Y.Z --draft=false
 
 ### 10. Monitor the release workflow
 
-`publish_reg_meta.yml` runs CI on the tag, artifact conformance on this release's assets
-(`integration.yml`), and dispatches `container-build.yml`, which bakes and deploys them.
-Scope the run lookup to this release; an unfiltered `--limit 1` can match a stale run:
+`publish_reg_meta.yml` runs CI on the tag, global-only artifact conformance
+(`integration.yml`), and dispatches `container-build.yml`, which bakes and deploys the
+catalog. Integration and deployment dispatch both depend on CI, not on each other. The
+deploy guard passes only when the released `CATALOG_SCHEMA_VERSION` equals main's; a
+missing constant or a mismatch blocks deployment. Scope the run lookup to this release;
+an unfiltered `--limit 1` can match a stale run:
 
 ```sh
 git fetch --tags origin
@@ -360,23 +285,23 @@ If one failed, fix the cause on main and upload by hand from the release commit:
 `gh release upload reg_meta/vX.Y.Z reg-meta-<target> reg-meta-<target>.sha256`.
 `gh workflow run publish_reg_meta.yml --ref <branch>` tests the job without a release.
 
-### 11. Verify the deployed artifacts
+### 11. Verify the deployed artifact
 
-`GET /api/context` on `data.swecov.se` must report the generation recorded in step 8,
-with default scope `holdings`. The global catalog has no public `/api`: over
-`https://reg-meta.vqv.uk/mcp`, `show` with no `ref` must carry that generation in its
-`meta` with scope `reference`, and `show` with `scope: "holdings"` must refuse with
-`scope_unavailable`. Spot-check a scoped catalog or search read and a known order, and
-record what the checks exercised. Never regenerate or commit an inventory after
-publication.
+The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, call `show`
+with no `ref`: it must answer and its `meta.catalog_version` must equal the version
+passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
+Record what the checks exercised. SWECOV is untouched until E; do not deploy it.
 
-### 12. Re-pin G1 to the new tag
+## The switch release
 
-Open a PR moving the pin in `conformance/differential/config.toml` to `reg_meta/vX.Y.Z`
-(tag and asset digests from `gh release view reg_meta/vX.Y.Z --json assets`), then run
-`uv run --no-project scripts/gate.py g1` on the committed tree. Report any difference
-beyond the standing exceptions instead of adding one (`conformance/README.md`, "The
-pin").
+The switch release follows the merge of `rebuild-c` into main when the maintainer runs
+it; no immediate release is required. Main is expected to be red at `schema-guard` until
+it publishes, so deployment is blocked during the gap. A few hours of disruption at the
+switch are accepted. The maintainer must first merge the inputs repository's
+`rebuild-c-docs` branch into its main; confirm that the pin in `curation/inputs.toml`
+contains those docs. The minor-or-major bump is decided on the maintainer's sheet, not
+by this skill. Notes name the unminted count and proposed-id caveat, the missing v4
+predecessor and substitute evidence, and the SWECOV old-binary requirement.
 
 ## Error recovery
 
@@ -384,11 +309,12 @@ pin").
 - Draft exists and something fails before publication: delete the draft and tag, fix,
   and restart from the verified bump (step 5).
 - Source changed after draft/tag creation: recreate release and tag from the repaired
-  `origin/main` (steps 5–6), refresh the notes, replace invalidated assets and re-run
+  `origin/main` (steps 5--6), refresh the notes, replace invalidated assets and re-run
   the checks at that revision.
 - Tag already exists for the target version: investigate before proceeding.
-- `build-db` or `build-docs` fails: fix it; never publish without all three assets.
+- A `reg-build` build, verification or conformance failure stops the release: fix it,
+  rebuild with `reg-build`, and repeat steps 8b--8e; never copy an older asset forward.
 - **Once published, never delete, re-cut or re-upload a release's assets.** Deploys and
-  the G1 pin reference the tag and digests. Fix downstream failures in place, or cut a
-  new patch version.
+  release consumers reference the tag and digests. Fix downstream failures in place, or
+  cut a new patch version.
 - Never force-push or amend commits already on main.

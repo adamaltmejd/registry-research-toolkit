@@ -55,8 +55,8 @@ catalog's webapp runs locally only (`reg_webapp/dev/dev.sh`).
 
 Each `reg_meta/v*` release carries a `reg-meta` binary for macOS arm64
 (`aarch64-apple-darwin`) and Linux x86_64 (`x86_64-unknown-linux-gnu`), each with a
-SHA-256 checksum file, and the catalog and documentation DBs. Download the binary for
-your platform and the DBs, verify them, and unpack the DBs into one directory:
+SHA-256 checksum file, and `reg_meta.db.zst`. Download the binary for your platform and
+the catalog, verify them, and unpack the catalog into one directory:
 
 ```bash
 tag=reg_meta/vX.Y.Z
@@ -68,13 +68,11 @@ shasum -a 256 -c "reg-meta-$target.sha256"
 install -m 755 "reg-meta-$target" reg-meta
 mkdir -p catalog
 curl -fsSL -o reg_meta.db.zst "$base/reg_meta.db.zst"
-curl -fsSL -o reg_meta_docs.db.zst "$base/reg_meta_docs.db.zst"
-shasum -a 256 reg_meta.db.zst reg_meta_docs.db.zst   # compare with the release digests
+shasum -a 256 reg_meta.db.zst   # compare with the release digest
 zstd -d reg_meta.db.zst -o catalog/reg_meta.db
-zstd -d reg_meta_docs.db.zst -o catalog/reg_meta_docs.db
 ```
 
-GitHub records each DB asset's SHA-256 digest
+GitHub records the DB asset's SHA-256 digest
 (`gh release view reg_meta/vX.Y.Z --json assets`). On other platforms, build the binary
 from a checkout with a Rust toolchain and copy it next to `catalog`
 (`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
@@ -85,17 +83,18 @@ Then run local stdio MCP:
 ./reg-meta mcp --db catalog
 ```
 
-The HTTP API and `/mcp` (`serve`) need a checkout, because `serve` loads the steward
-branding under `reg_webapp/stewards`. Run it from the checkout root, with `reg-meta` and
-`catalog` placed there:
+Run the HTTP API and `/mcp` with the same binary and catalog directory:
 
 ```bash
-./reg-meta serve --db catalog --stewards reg_webapp/stewards --port 8000
+./reg-meta serve --db catalog --port 8000
 ```
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
 it). The SPA in `reg_webapp/frontend/` runs against it in development; see
 [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
+
+A local binary released after the switch reads only the v4 catalog, so SWECOV users keep
+the last old binary until milestone E.
 
 ## Development
 
