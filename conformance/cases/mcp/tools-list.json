@@ -800,5 +800,359 @@
       ],
       "type": "object"
     }
+  },
+  {
+    "name": "docs",
+    "description": "`operation` names one of these operations; the other arguments are its parameters (`?` marks an optional one).\n- `docs_search` (q?, register?, limit?, cursor?): Search the documents the catalog holds, by the words of their sections; without `q`, list them by title. `register` narrows to the documents linked to a register, its tables or its variables.\n- `docs_get` (doc): A document by its content hash: its metadata, the entities it is about, a 500-character excerpt and, for a parsed document, its full text.\n- `docs_related` (ref): The documents linked to a register, table, variable or classification family, one row per link; a register also takes the documents of its tables and variables.",
+    "inputSchema": {
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "doc": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "limit": {
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "operation": {
+          "enum": [
+            "docs_search",
+            "docs_get",
+            "docs_related"
+          ],
+          "type": "string"
+        },
+        "q": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "DocDetail": {
+          "description": "`shape.DocDetail`.",
+          "properties": {
+            "body": {
+              "description": "The sections joined by a blank line; `null` for a pdf.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "bytes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "doc": {
+              "type": "string"
+            },
+            "excerpt": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "subjects": {
+              "items": {
+                "$ref": "#/$defs/DocSubject"
+              },
+              "type": "array"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "licence",
+            "url",
+            "bytes",
+            "subjects",
+            "excerpt",
+            "body"
+          ],
+          "type": "object"
+        },
+        "DocHit": {
+          "description": "`shape.DocHit`.",
+          "properties": {
+            "doc": {
+              "type": "string"
+            },
+            "heading": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "kind": {
+              "type": "string"
+            },
+            "page": {
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "snippet": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "heading",
+            "page",
+            "snippet"
+          ],
+          "type": "object"
+        },
+        "DocPage": {
+          "description": "`docs_search`'s `Page<DocHit>` with its `total` and `register_ingested`.",
+          "properties": {
+            "items": {
+              "items": {
+                "$ref": "#/$defs/DocHit"
+              },
+              "type": "array"
+            },
+            "next_cursor": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_ingested": {
+              "description": "Whether `register` has any linked document; `null` without `register`.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "total": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "items",
+            "next_cursor",
+            "total",
+            "register_ingested"
+          ],
+          "type": "object"
+        },
+        "DocSubject": {
+          "description": "One entity a document is about (`shape.DocDetail.subjects`).",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "page": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "kind",
+            "fqid",
+            "page"
+          ],
+          "type": "object"
+        },
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "RelatedDocument": {
+          "description": "`shape.RelatedDocument`.",
+          "properties": {
+            "bytes": {
+              "format": "int64",
+              "type": "integer"
+            },
+            "doc": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string"
+            },
+            "licence": {
+              "type": "string"
+            },
+            "page": {
+              "description": "0 = the whole document.",
+              "format": "int64",
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "doc",
+            "title",
+            "kind",
+            "licence",
+            "url",
+            "bytes",
+            "page"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/DocPage"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/DocDetail"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/$defs/RelatedDocument"
+              },
+              "type": "array"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
   }
 ]
