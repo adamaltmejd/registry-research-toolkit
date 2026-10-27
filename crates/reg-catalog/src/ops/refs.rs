@@ -53,7 +53,10 @@ pub(crate) fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
             0 => {}
             1 => return Ok(found.remove(0)),
             n => {
-                let candidates: Vec<String> = found.into_iter().map(|e| e.pid).collect();
+                let candidates = found
+                    .iter()
+                    .map(|e| candidate(conn, e))
+                    .collect::<rusqlite::Result<Vec<_>>>()?;
                 return Err(Error::new(
                     Code::AmbiguousRef,
                     format!("{n} entities are named {value:?}."),
@@ -94,6 +97,30 @@ pub(crate) fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
         format!("Nothing is named {value:?}."),
         vec![value.into()],
     ))
+}
+
+/// An `ambiguous_ref` candidate `{fqid, kind, name}`. A variable's name is its label.
+fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Value> {
+    let table = match e.kind.as_str() {
+        "provider" => "provider",
+        "register" => "register",
+        "table" => "tbl",
+        "variable" => "variable",
+        "class_family" => "class_family",
+        "class_version" => "class_version",
+        _ => "var_set",
+    };
+    let column = if table == "variable" {
+        "label_text"
+    } else {
+        "name_text"
+    };
+    let name: String = conn.query_row(
+        &format!("SELECT x.body FROM {table} t JOIN text x ON x.id = t.{column} WHERE t.id = ?"),
+        [e.id],
+        |row| row.get(0),
+    )?;
+    Ok(serde_json::json!({"fqid": &e.pid, "kind": &e.kind, "name": name}))
 }
 
 /// A table ref: a `tbl.pid`, or a ref that resolves to a table. A register with an

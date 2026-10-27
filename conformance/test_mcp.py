@@ -323,11 +323,15 @@ def test_stdio_session(request, http_servers):
     template = request.config.getoption("--mcp-cmd")
     if template is None:
         pytest.skip("the stdio session runs against --mcp-cmd")
-    if "search" in PARKED["operations"]:
-        pytest.skip("parked: the session calls search (PARKED.toml)")
+    # simplify: the `search` call joins the session once `search` is served (PARKED.toml).
+    calls_search = "search" not in PARKED["operations"]
     env = artifact_env(cached_case_artifact(READER))
     arguments = {"q": "Value", "type": "variable", "limit": 1}
-    expected = http_servers.client(env).get("/api/search", params=arguments)
+    expected = (
+        http_servers.client(env).get("/api/search", params=arguments)
+        if calls_search
+        else None
+    )
     messages = [
         {
             "method": "initialize",
@@ -339,8 +343,14 @@ def test_stdio_session(request, http_servers):
         },
         {"method": "notifications/initialized"},
         {"method": "tools/list"},
-        {"method": "tools/call", "params": {"name": "search", "arguments": arguments}},
     ]
+    if calls_search:
+        messages.append(
+            {
+                "method": "tools/call",
+                "params": {"name": "search", "arguments": arguments},
+            }
+        )
     argv = [word.replace("{db}", env["REG_META_DB"]) for word in shlex.split(template)]
     # Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
     # panic (exit 101, #1326) instead of exiting cleanly.
@@ -371,8 +381,10 @@ def test_stdio_session(request, http_servers):
                 replies.append(json.loads(process.stdout.readline()))
         process.stdin.close()
         assert process.wait(timeout=10) == 0
-    initialize, tools, result = (reply["result"] for reply in replies)
+    initialize, tools, *calls = (reply["result"] for reply in replies)
     assert initialize["serverInfo"]["name"] == "reg-meta"
     assert unparked(tools["tools"]) == unparked(TOOLS)
-    assert result["isError"] is False
-    assert result["structuredContent"] == expected.json()
+    if calls_search:
+        (result,) = calls
+        assert result["isError"] is False
+        assert result["structuredContent"] == expected.json()
