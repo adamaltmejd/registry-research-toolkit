@@ -425,6 +425,19 @@ tracks the milestones. This section holds the design decisions that outlive the 
   runs it on the staged file before replacing the output, so conformance and the release
   skill call the same authority. A previous file of another schema major is not
   comparable.
+- **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
+  its register by handle or by name (`fold_identity` of the trimmed name, which exactly
+  one register must match), then a table, a release or a variable by source key, where a
+  split key gives every piece. A `continues` needs one entity of one kind at each end, a
+  `derived_from` one object and gives a relation per subject piece, and a release end is
+  never a relation (a reader states a succession between releases as a notice). A notice
+  becomes one finding per subject entity, `S0:source-notice` with severity `notice`: an
+  addition to v4 §4.5, which has no source-notice code. Every miss is one `link:`
+  warning, counted as `link_unresolved` in the build report. Name matching is per
+  provider (the index key is `(provider, fold(name))`), so a source text naming another
+  provider's register never matches and is reported unresolved for D to `bind`: that
+  count is not a reader defect. A malformed link or notice (an unknown kind, an endpoint
+  without exactly one register reference) is refused at its locator.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

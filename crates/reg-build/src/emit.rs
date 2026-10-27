@@ -3,14 +3,16 @@
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
 //! It fills the identity, coverage, release, variable, segment, occurrence, gap,
-//! value-set and finding tables; classifications, documents, search and curation
-//! statements stay empty.
+//! value-set, relation and finding tables; classifications, documents, search and
+//! curation statements stay empty.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use reg_frame::ValueSet;
 use reg_resolve::{Resolved, Subject};
+
+use crate::link::{self, Entity};
 use rusqlite::Connection;
 use rusqlite::types::{ToSql, ToSqlOutput};
 
@@ -43,6 +45,9 @@ pub struct Catalog {
     pub valuesets: BTreeMap<String, (ValueSet, BTreeSet<(usize, String)>)>,
     /// A frame file (locator input) → its input index.
     pub file_input: BTreeMap<String, usize>,
+    /// The link stage's output (`link.rs`).
+    pub relations: Vec<link::Relation>,
+    pub notices: Vec<link::Notice>,
 }
 
 /// A cell before interning: text, folded names and spellings are resolved to row ids
@@ -580,6 +585,83 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 (register_row, f.severity, f.message.clone()),
             ));
         }
+    }
+
+    // The link stage's entities, by row id and public id.
+    let row_of = |e: Entity| match e {
+        Entity::Register(ri) => register_id[&pid_of_register(&catalog.registers[ri])],
+        Entity::Table(ri, t) => table_id[&(ri, t)],
+        Entity::Release(ri, x) => release_id[&(ri, x)],
+        Entity::Variable(ri, v) => variable_id[&(ri, v)],
+    };
+    let pid_of = |e: Entity| match e {
+        Entity::Register(ri) => pid_of_register(&catalog.registers[ri]),
+        Entity::Table(ri, t) => pid_of_table(&catalog.registers[ri], t),
+        Entity::Release(ri, x) => {
+            let r = &catalog.registers[ri];
+            let release = &r.releases[x];
+            format!(
+                "{}/{}",
+                pid_of_table(r, release.table),
+                release.release.release
+            )
+        }
+        Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
+    };
+    for notice in &catalog.notices {
+        let r = &catalog.registers[notice.subject.register()];
+        let reg_pid = pid_of_register(r);
+        let period = notice.at.as_deref().map(|at| (start(at), end(at)));
+        findings.push((
+            (
+                reg_pid.clone(),
+                "S0:source-notice",
+                notice.subject.kind(),
+                row_of(notice.subject),
+                period,
+            ),
+            (register_id[&reg_pid], "notice", notice.text.clone()),
+        ));
+    }
+    // Relation ids follow (kind, subject id, object id, at); the entity kinds break the
+    // tie of an implicit table, whose id is its register's.
+    let mut relations: Vec<_> = catalog
+        .relations
+        .iter()
+        .map(|rel| {
+            let at = rel.at.as_deref().map(start);
+            (
+                (
+                    rel.kind,
+                    pid_of(rel.subject),
+                    rel.subject.kind(),
+                    pid_of(rel.object),
+                    rel.object.kind(),
+                    at,
+                ),
+                rel,
+            )
+        })
+        .collect();
+    relations.sort_by(|a, b| a.0.cmp(&b.0));
+    for (i, ((kind, _, subject_kind, _, object_kind, at), rel)) in relations.into_iter().enumerate()
+    {
+        rows.push(
+            "relation",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str(kind.into()),
+                Cell::Str(subject_kind.into()),
+                Cell::Int(row_of(rel.subject)),
+                Cell::Str(object_kind.into()),
+                Cell::Int(row_of(rel.object)),
+                opt_int(at),
+                Cell::Null,
+                Cell::Str("source".into()),
+                Cell::Null,
+                opt_text(rel.note.as_ref()),
+            ],
+        );
     }
     findings.sort();
     for (i, ((_, code, kind, subject, period), (register_row, severity, message))) in
