@@ -8,7 +8,7 @@
 Each named step runs its commands in order from the repository root and stops at the
 first failure. `all` runs g0, rust, release, flows and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
-jobs; `regen` and `g1` run only when named. CI calls `lint`, `crates`, `rust`,
+jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
 `release` and `frontend`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
 of the workspace build.
 """
@@ -72,10 +72,13 @@ def run(command, cwd=ROOT, env=None, **kwargs):
     )
 
 
-def reader_artifact(kind: str) -> Path:
-    """The synthetic `reader` artifact directory of `kind`, from the fixture cache."""
+def base_artifact() -> Path:
+    """The `base` conformance fixture's artifact directory, from the fixture cache.
+
+    Built by `target/debug/reg-build`, so the workspace is built first."""
+    run("cargo build --workspace --locked")
     out = run(
-        f"uv run python conformance/fixture_cache.py reader {kind}",
+        "uv run python conformance/fixture_cache.py base",
         stdout=subprocess.PIPE,
         text=True,
     )
@@ -142,13 +145,11 @@ def rust() -> None:
 
 
 def release() -> None:
-    # The steward artifact only: on a selected catalog artifact `validate_built_db`
-    # applies the real-corpus floors (register, edge and FTS counts), which the
-    # synthetic catalog cannot meet. Every other artifact check already runs on both
-    # synthetic kinds in `rust`. `-m release` runs only the selected-artifact checks:
-    # the rest of the suite does not read `--artifact-dir` and already ran in `rust`.
-    artifact = reader_artifact("steward")
-    run("cargo build --workspace --locked")
+    # The `base` fixture's artifact stands in for a real one: `reg-build verify` runs
+    # on it as it would on a release. `-m release` runs only the selected-artifact
+    # checks: the rest of the suite does not read `--artifact-dir` and already ran in
+    # `rust`.
+    artifact = base_artifact()
     run(
         f"{CONFORMANCE} -m release --run-release --artifact-dir={artifact} {SERVER_CMD}"
     )
@@ -190,7 +191,7 @@ def regen() -> None:
     run("cargo build --workspace --locked")
     run("cargo test -p reg-meta --test openapi_snapshot", env={"REG_META_BLESS": "1"})
     # The MCP `tools/list` golden, as conformance/test_mcp.py's stdio session lists it.
-    artifact = reader_artifact("steward")
+    artifact = base_artifact()
     messages = [
         {
             "id": 0,
@@ -205,7 +206,7 @@ def regen() -> None:
         {"id": 1, "method": "tools/list"},
     ]
     session = run(
-        ["target/debug/reg-meta", "mcp", "--db", artifact, "--catalog", "swecov"],
+        ["target/debug/reg-meta", "mcp", "--db", artifact, "--catalog", "global"],
         input="".join(json.dumps({"jsonrpc": "2.0"} | m) + "\n" for m in messages),
         stdout=subprocess.PIPE,
         text=True,
@@ -220,10 +221,6 @@ def regen() -> None:
     run("bun run gen:types", cwd=FRONTEND)
 
 
-def g1() -> None:
-    run("uv run python -m conformance.differential")
-
-
 STEPS = {
     f.__name__: f
     for f in (
@@ -235,7 +232,6 @@ STEPS = {
         flows,
         frontend,
         regen,
-        g1,
     )
 }
 

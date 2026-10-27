@@ -8,8 +8,7 @@ Recipe for a new case's `order.json` (a content decision, reviewed in the diff;
 never rewritten to make a run pass): first write down, from the project and the
 fixture source alone, the entries and clips the order must hold. Then serve the
 case's artifact
-(`cached_case_artifact({"fixture": request["fixture"], "kind": request["artifact"]})`,
-fixed `FIXTURE_IMPORT_DATE`, so the generation is stable) with `reg-meta serve`,
+(`cached_case_artifact({"fixture": request["fixture"]})`) with `reg-meta serve`,
 capture the body of `POST /api/project/order/manifest` with `request["project"]`,
 and commit it only where it agrees with what you wrote down. A disagreement is a
 server bug or a wrong expectation, never a golden to save.
@@ -44,9 +43,8 @@ def test_order_manifest_or_located_finding(case: Path, http_servers) -> None:
     if is_parked(case):
         pytest.skip("parked: conformance/PARKED.toml")
     request = json.loads((case / "request.json").read_text())
-    kind = request["artifact"]
-    path = cached_case_artifact({"fixture": request["fixture"], "kind": kind})
-    client = http_servers.client(artifact_env(path, kind))
+    path = cached_case_artifact({"fixture": request["fixture"]})
+    client = http_servers.client(artifact_env(path))
     answer = client.post("/api/project/order", json=request["project"])
     download = client.post("/api/project/order/manifest", json=request["project"])
     oracle = case / "order.json"

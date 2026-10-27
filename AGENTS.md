@@ -212,7 +212,6 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   the touched packages' tests, plus the conformance run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
   files; after a rebase, commit the diff separately.
-- `uv run --no-project scripts/gate.py g1` — G1.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
   Operator schedules them with the maintainer.
 - Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.

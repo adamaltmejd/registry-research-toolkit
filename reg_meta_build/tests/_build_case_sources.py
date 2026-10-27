@@ -33,6 +33,7 @@ from _pipeline_catalog_support import (
     write_authored,
     write_delivered,
 )
+from _reader_artifacts import build_inputs_digest, generation_dir
 from _registerinformation_rows import replace_registerinformation_cell, var_row
 from _sos_fixtures import (
     SosRegister,
@@ -41,7 +42,6 @@ from _sos_fixtures import (
     write_sos_input,
 )
 from openpyxl import load_workbook
-from reader_artifacts import build_inputs_digest, generation_dir
 from reg_meta_build.prepared_catalog import (
     ReferenceEvidence,
     open_prepared_catalog_sources,
@@ -283,7 +283,7 @@ def prepared_cache() -> PreparedCache:
     """The prepared inputs shared by the build cases and `catalog`.
 
     They live in a generation of the shared fixture cache, under the reader
-    cache's one location policy (`reader_artifacts.fixture_cache_dir`):
+    cache's one location policy (`_reader_artifacts.fixture_cache_dir`):
     `$REG_FIXTURE_CACHE`, else the system temp directory. Entries are reused across
     sessions, worktrees and xdist workers; a fresh CI runner starts cold.
     """

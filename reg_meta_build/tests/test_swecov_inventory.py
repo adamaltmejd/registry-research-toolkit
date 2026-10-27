@@ -454,7 +454,7 @@ def independent_flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """The committed policy's year-independent flavor table, through the real
     path: `cmd_flavor` (with three punctuation twins added to that table) then
     `extend_db` over a reader base artifact. Returns the flavored DB."""
-    from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+    from _reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
     from reg_meta_build.extend_db import extend_db
 
     tmp_path = tmp_path_factory.mktemp("independent")

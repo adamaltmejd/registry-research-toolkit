@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pytest
-from reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
+from _reader_artifacts import FIXTURE_IMPORT_DATE, build_reader_artifact
 from reg_meta_build.extend_db import (
     extend_db,
 )

@@ -1,8 +1,8 @@
 """Content digests and a keyed on-disk store, shared by the repository's caches.
 
 Three caches use it: `scripts/real_seed_cache.py` (real-seed prepare and build
-outputs), `conformance/differential/cache.py` (the G1 derived copies) and
-`conformance/reader_artifacts.py` (the synthetic fixture artifacts). It is stdlib
+outputs), `conformance/reader_artifacts.py` (the conformance fixture artifacts) and
+`reg_meta_build/tests/_reader_artifacts.py` (the old builder's). It is stdlib
 only and lives with the tooling, so `uv run --no-project` scripts import it directly;
 the test-side caches put `scripts/` on `sys.path` to reach it. Tooling never imports
 test code, so the shared pieces live here and not in a test module.

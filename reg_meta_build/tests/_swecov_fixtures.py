@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 from _extend_db_support import BASE_FIXTURE
-from reader_artifacts import (
+from _reader_artifacts import (
     FIXTURE_IMPORT_DATE,
     build_reader_artifact,
     cached_reader_artifact,

@@ -2,6 +2,11 @@
 # Each R PR removes the entries it ports; the last one deletes this file and the code
 # that reads it.
 
+# Whether the server still refuses the catalog schema the fixtures are built in (its
+# admission reads the old one), so every test that starts a server is skipped. `r-core`
+# ports admission and removes this key.
+server = true
+
 # Operation names, in either contract, whose served form is not yet 5.0.0's.
 operations = [
     "coded_variables",

@@ -49,7 +49,7 @@ def test_inventory_compiles_to_physical_facts(case: Path, tmp_path: Path) -> Non
         ResolvedVariable.model_validate_json(json.dumps(value))
         for value in json.loads((case / request["catalog"]).read_text())
     )
-    # Read as the conformance artifact builder reads it (`reader_artifacts`).
+    # Read as the conformance artifact builder reads it (`_reader_artifacts`).
     books = case / "classifications.json"
     classifications = tuple(
         ResolvedClassification.model_validate_json(json.dumps(value))
