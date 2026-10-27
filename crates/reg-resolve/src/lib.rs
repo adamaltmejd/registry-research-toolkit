@@ -24,6 +24,8 @@
 //! - **Segments.** Per variable and table, maximal runs of one form. A run where the
 //!   variable's own occurrences disagree on label, type or value set, or where another
 //!   variable claims the same folded spelling, is ambiguous (F2).
+//!   A type-only disagreement under one source key and folded spelling instead keeps
+//!   the type unset and raises a segment source-conflict review (F6).
 //! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
 //!   release), and the days inside a variable's hull a release covers without the
 //!   variable's column: documented without a column, or not documented.
@@ -873,6 +875,39 @@ pub fn resolve(
             texts,
         });
     }
+    // Evaluate the exemption on final segments, after adjacent components have joined.
+    // Each variable already has one source key; no segment boundaries change here.
+    let mut segment_occurrences: BTreeMap<(usize, usize), Vec<&ResolvedOccurrence>> =
+        BTreeMap::new();
+    for r in resolved.iter().filter(|r| r.status == "used") {
+        if let (Some(v), Some(s)) = (r.variable, r.segment) {
+            segment_occurrences.entry((v, s)).or_default().push(r);
+        }
+    }
+    let mut type_conflicts = BTreeSet::new();
+    for ((v, s), own) in segment_occurrences {
+        let segment = &mut variables[v].segments[s];
+        if segment.state != "ambiguous" {
+            continue;
+        }
+        let forms: BTreeSet<Form> = own.iter().map(|r| form(r)).collect();
+        let first = forms.first().expect("a segment has a used occurrence");
+        if forms.len() > 1
+            && forms
+                .iter()
+                .all(|f| f.label == first.label && f.valueset == first.valueset)
+            && own
+                .iter()
+                .all(|r| fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling))
+        {
+            segment.state = if own.iter().all(|r| r.preliminary) {
+                "preliminary"
+            } else {
+                "clear"
+            };
+            type_conflicts.insert((v, s));
+        }
+    }
     // Rival claimants: segments of two variables under one folded spelling, in one
     // table, that overlap are both ambiguous.
     let mut by_fold: BTreeMap<(usize, String), Vec<(usize, usize)>> = BTreeMap::new();
@@ -907,6 +942,18 @@ pub fn resolve(
     for (v, variable) in variables.iter().enumerate() {
         let segments = &variable.segments;
         for (s, segment) in segments.iter().enumerate() {
+            if type_conflicts.contains(&(v, s)) {
+                findings.push(Finding {
+                    code: "F6:source-conflict",
+                    severity: "review",
+                    subject: Subject::Segment(v, s),
+                    period: Some(segment.period.clone()),
+                    message: format!(
+                        "{}: its occurrences disagree only on type; type left unset",
+                        segment.spelling
+                    ),
+                });
+            }
             if segment.state == "ambiguous" {
                 findings.push(Finding {
                     code: "F2:ambiguous",
