@@ -160,6 +160,8 @@ fn days(record: &Record) -> Result<(), String> {
             .collect(),
         Record::Occurrence(o) => vec![&o.from, &o.to],
         Record::ValueSet(_) => vec![],
+        Record::Link(l) => vec![&l.at],
+        Record::Notice(n) => vec![&n.at],
     };
     match stated
         .into_iter()

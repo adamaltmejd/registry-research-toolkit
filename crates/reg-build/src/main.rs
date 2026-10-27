@@ -232,9 +232,15 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
     let mut valuesets = BTreeMap::new();
+    // Links and notices cross registers: the link stage reads them, not resolve.
+    let mut links = Vec::new();
     for (i, output) in outputs.iter().enumerate() {
         for record in &output.frame.records {
             let key = match record {
+                Record::Link(_) | Record::Notice(_) => {
+                    links.push(record.clone());
+                    continue;
+                }
                 Record::Register(r) => (r.provider.clone(), r.register.clone()),
                 Record::Table(t) => (t.provider.clone(), t.register.clone()),
                 Record::Release(r) => (r.provider.clone(), r.register.clone()),
