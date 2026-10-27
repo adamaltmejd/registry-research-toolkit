@@ -38,9 +38,38 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
             return Err(format!("post-write check failed:\n{statement}"));
         }
     }
+    schema_version(&db)?;
     valuesets(&db)?;
     if let Some(previous) = previous {
         compare(&db, previous)?;
+    }
+    Ok(())
+}
+
+/// `PRAGMA user_version` and `meta.schema_version` both equal the one constant.
+fn schema_version(db: &Connection) -> Result<(), String> {
+    let sql = |e: rusqlite::Error| e.to_string();
+    let user: i64 = db
+        .query_row("PRAGMA user_version", [], |r| r.get(0))
+        .map_err(sql)?;
+    let meta: Option<String> = db
+        .query_row(
+            "SELECT value FROM meta WHERE key = 'schema_version'",
+            [],
+            |r| r.get(0),
+        )
+        .map(Some)
+        .or_else(|e| match e {
+            rusqlite::Error::QueryReturnedNoRows => Ok(None),
+            e => Err(e),
+        })
+        .map_err(sql)?;
+    let expected = reg_core::CATALOG_SCHEMA_VERSION;
+    if user != i64::from(expected) || meta.as_deref() != Some(expected.to_string().as_str()) {
+        return Err(format!(
+            "schema version: user_version {user}, meta {}, expected {expected}",
+            meta.as_deref().unwrap_or("(none)")
+        ));
     }
     Ok(())
 }
@@ -133,10 +162,9 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
             e => Err(fail(format!("{}: {e}", previous.display()))),
         })
     };
-    let major = |v: &str| v.split('.').next().unwrap_or(v).to_owned();
     let current = version("main")?.ok_or_else(|| "meta has no schema_version".to_owned())?;
     match version("prev")? {
-        Some(p) if major(&p) == major(&current) => {}
+        Some(p) if p == current => {}
         other => {
             return Err(fail(format!(
                 "schema {} is not comparable",

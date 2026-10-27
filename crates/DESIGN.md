@@ -436,8 +436,10 @@ tracks the milestones. This section holds the design decisions that outlive the 
   check: integrity, the schema's post-write queries, each value set's items hashing to
   its address, and with `--previous` the id rules against the previous release. `emit`
   runs it on the staged file before replacing the output, so conformance and the release
-  skill call the same authority. A previous file of another schema major is not
-  comparable.
+  skill call the same authority. The schema version is
+  `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
+  `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
+  other version is not comparable.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a

@@ -299,7 +299,7 @@ fn build(args: &Args) -> Result<(), String> {
     let mut curation = BTreeSet::new();
     tree(&args.curation, "", &mut curation)?;
     let (curation_digest, _) = digest(&args.curation, &curation)?;
-    let schema_version = "4";
+    let schema_version = reg_core::CATALOG_SCHEMA_VERSION.to_string();
     let builder_version = env!("CARGO_PKG_VERSION");
     let sqlite_version = rusqlite::version();
     let mut hasher = Sha256::new();
@@ -317,7 +317,7 @@ fn build(args: &Args) -> Result<(), String> {
     let generation_id = reg_frame::hex(&hasher.finalize());
     let day = |iso| reg_core::iso_day_number(iso).expect("an ISO day");
     let meta = BTreeMap::from([
-        ("schema_version", schema_version.to_owned()),
+        ("schema_version", schema_version),
         ("generation_id", generation_id.clone()),
         ("catalog_version", args.catalog_version.clone()),
         ("builder_version", builder_version.to_owned()),
