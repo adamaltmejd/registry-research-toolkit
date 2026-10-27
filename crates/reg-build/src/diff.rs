@@ -601,23 +601,16 @@ struct HashChange {
 }
 
 /// The segments of a variable that differ only in value-set hash, paired old to new by
-/// everything else. Empty unless every changed segment pairs (a split or merge is not
-/// a code-list change).
+/// everything else. Segments that changed in other ways stay unpaired and are reported
+/// by the variables section alone.
 fn hash_changes(pid: &str, old: &[&Seg], new: &[&Seg]) -> Vec<HashChange> {
     let masked = |s: &Seg| Seg {
         valueset: String::new(),
         ..s.clone()
     };
     let by_mask: BTreeMap<Seg, &Seg> = new.iter().map(|s| (masked(s), *s)).collect();
-    let pairs: Vec<(&Seg, &Seg)> = old
-        .iter()
+    old.iter()
         .filter_map(|o| by_mask.get(&masked(o)).map(|n| (*o, *n)))
-        .collect();
-    if old.is_empty() || pairs.len() != old.len() || pairs.len() != new.len() {
-        return Vec::new();
-    }
-    pairs
-        .into_iter()
         .map(|(o, n)| HashChange {
             pid: pid.to_owned(),
             table: o.table.clone(),
@@ -724,11 +717,9 @@ fn codes(conn: &Connection, wanted: &BTreeSet<String>) -> Res<BTreeMap<String, B
 }
 
 fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
-    let (old, new) = p.maps(
-        "SELECT DISTINCT vs.hash, vs.n_items FROM segment s
-         JOIN valueset vs ON vs.id = s.valueset_id",
-        |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)),
-    )?;
+    let (old, new) = p.maps("SELECT hash, n_items FROM valueset", |r| {
+        Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
+    })?;
     let only = |from: &BTreeMap<String, i64>, other: &BTreeMap<String, i64>| -> Vec<Item> {
         from.iter()
             .filter(|(h, _)| !other.contains_key(*h))
@@ -793,6 +784,37 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
     })
 }
 
+/// Provider and register names, descriptions and urls, keyed by pid.
+fn registers(p: &Pair) -> Res<Section> {
+    let load = |conn: &Connection| -> Res<BTreeMap<String, String>> {
+        let providers = query(
+            conn,
+            "SELECT 'provider ' || p.pid, n.body || ' | ' || coalesce(p.url, '-')
+             FROM provider p JOIN text n ON n.id = p.name_text",
+            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+        )?;
+        let registers = query(
+            conn,
+            "SELECT 'register ' || r.pid, n.body || ' | ' || coalesce(d.body, '-')
+             FROM register r JOIN text n ON n.id = r.name_text
+             LEFT JOIN text d ON d.id = r.description_text",
+            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+        )?;
+        Ok(providers.into_iter().chain(registers).collect())
+    };
+    let (old, new) = (load(&p.old)?, load(&p.new)?);
+    let items = changed(&old, &new)
+        .into_iter()
+        .map(|(key, o, n)| {
+            Item::new(
+                json!({"key": key, "old": o, "new": n}),
+                format!("{key}: {} → {}", show(o), show(n)),
+            )
+        })
+        .collect();
+    Ok(Section::flat("registers", "registers", items))
+}
+
 fn findings(p: &Pair) -> Res<Section> {
     let (old, new) = p.maps("SELECT code, count(*) FROM finding GROUP BY code", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
@@ -833,6 +855,7 @@ fn diff(args: &Args) -> Res<(String, bool)> {
         meta(&pair)?,
         rows(&pair)?,
         ids(&pair)?,
+        registers(&pair)?,
         tables(&pair)?,
         variables,
         valuesets(&pair, &hash_changes)?,

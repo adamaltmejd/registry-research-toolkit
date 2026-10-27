@@ -401,9 +401,9 @@ tracks the milestones. This section holds the design decisions that outlive the 
 **Decisions taken in milestone C.**
 
 - **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
-  natural key (pid, table name, meta key), never by row id, in eight sections: schema
+  natural key (pid, table name, meta key), never by row id, in nine sections: schema
   (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
-  retired), table spans and attributes, per-variable segments, label and definition
+  retired), provider and register names, table names and spans, per-variable segments, label and definition
   runs, value sets (with the codes added and removed where only a segment's value-set
   hash changed), and finding counts per code. Text shows at most `N` (default 20) per
   section; `--json` is complete. Exit 0 when nothing differs, 1 when something does (the
