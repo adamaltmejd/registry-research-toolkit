@@ -28,11 +28,89 @@ use rusqlite::{Connection, OptionalExtension};
 use serde::Serialize;
 use utoipa::ToSchema;
 
-use super::{Operation, Period, Server, iso_day, refs};
+use serde_json::Value;
+
+use super::{Cache, Operation, Param, Params, Period, Server, Type, component, iso_day, refs};
 use crate::{Code, Error};
 
-/// Written by step 03.
-pub const OPERATIONS: &[Operation] = &[];
+pub const OPERATIONS: &[Operation] = &[
+    Operation {
+        name: "validate",
+        paths: &["/api/project/validate"],
+        tool: Some("order"),
+        description: "Validate a project_data.json document: its structural issues, then the \
+            order check's findings at their levels. A 200 even when the project is invalid; \
+            `ok` is true exactly when `order` returns a logical order.",
+        params: &[Param::required("project", Type::Project)],
+        cache: Cache::Revalidate,
+        run: validate,
+        result: component::<Validation>,
+    },
+    Operation {
+        name: "order",
+        paths: &["/api/project/order"],
+        tool: Some("order"),
+        description: "The logical order of a project_data.json document: per binding, each \
+            window's table, period, spelling and form, with the availability clips, the row \
+            keys and the non-blocking findings; or `order_blocked` with every finding.",
+        params: &[Param::required("project", Type::Project)],
+        cache: Cache::Revalidate,
+        run: order,
+        result: component::<LogicalOrder>,
+    },
+];
+
+/// `validate`'s result: `ok` exactly when no issue is an `error`.
+#[derive(Serialize, ToSchema)]
+pub struct Validation {
+    ok: bool,
+    issues: Vec<Issue>,
+}
+
+/// The `project` body as a JSON object.
+fn project(params: &Params) -> Result<Value, Error> {
+    serde_json::from_str::<Value>(params["project"])
+        .ok()
+        .filter(Value::is_object)
+        .ok_or_else(|| Error::invalid_parameter("project"))
+}
+
+/// The structural issues, then (when none is an error) the order check's findings.
+fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
+    let issues: Vec<Issue> = match reg_core::project::check(&project(params)?) {
+        Err(result) => result.issues.into_iter().map(Issue::from).collect(),
+        Ok(project) => match check(server, &project)? {
+            Ok(order) => order.findings,
+            Err(findings) => findings,
+        },
+    };
+    let ok = !issues.iter().any(Issue::blocks);
+    Ok(serde_json::to_value(Validation { ok, issues }).expect("Validation serializes"))
+}
+
+/// The logical order, `project_invalid` with the structural issues, or `order_blocked`
+/// with every finding.
+fn order(server: &Server, params: &Params) -> Result<Value, Error> {
+    let project = reg_core::project::check(&project(params)?).map_err(|result| {
+        let issues: Vec<Issue> = result.issues.into_iter().map(Issue::from).collect();
+        Error::new(
+            Code::ProjectInvalid,
+            format!(
+                "The project is structurally invalid ({} issues).",
+                issues.len()
+            ),
+            vec![serde_json::to_value(issues).expect("issues serialize")],
+        )
+    })?;
+    match check(server, &project)? {
+        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
+        Err(findings) => Err(Error::new(
+            Code::OrderBlocked,
+            format!("The order is blocked by {} findings.", findings.len()),
+            vec![serde_json::to_value(findings).expect("findings serialize")],
+        )),
+    }
+}
 
 /// `shape.Issue`: a project issue or an order finding, located in the project.
 #[derive(Clone, Serialize, ToSchema)]
