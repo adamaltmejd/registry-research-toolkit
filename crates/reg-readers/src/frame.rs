@@ -78,6 +78,7 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
     }
 
     // Second pass: every other record, its value-set names replaced by hashes.
+    let mut parsed = Vec::new();
     for (path, n, _, mut object) in lines {
         let located = |message: String| error(&path, format!("line {n}: {message}"));
         if object.get("kind").and_then(Value::as_str) == Some("value_set") {
@@ -95,12 +96,79 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
                 }
             }
         }
-        let record =
+        let record: Record =
             serde_json::from_value(Value::Object(object)).map_err(|e| located(e.to_string()))?;
-        records.push(record);
+        days(&record).map_err(located)?;
+        parsed.push((path, n, record));
     }
+
+    populations_exist(&parsed)?;
+    records.extend(parsed.into_iter().map(|(_, _, record)| record));
     out.frame = Frame::new(records);
     Ok(out)
+}
+
+/// Refuse a population index its occurrence's release does not state. A hand-written
+/// frame skips what a source reader's input has passed; the build would publish an
+/// orphan `occurrence_population_valueset` row.
+fn populations_exist(parsed: &[(String, usize, Record)]) -> Result<(), ReadError> {
+    let populations: BTreeMap<_, _> = parsed
+        .iter()
+        .filter_map(|(_, _, record)| match record {
+            Record::Release(r) => Some((
+                (&r.provider, &r.register, &r.table, &r.release),
+                r.populations.len(),
+            )),
+            _ => None,
+        })
+        .collect();
+    for (path, n, record) in parsed {
+        let Record::Occurrence(o) = record else {
+            continue;
+        };
+        let stated = o.release.as_ref().map_or(0, |release| {
+            populations
+                .get(&(&o.provider, &o.register, &o.table, release))
+                .copied()
+                .unwrap_or(0)
+        });
+        if let Some(pv) = o
+            .population_valuesets
+            .iter()
+            .find(|pv| pv.population >= stated)
+        {
+            return Err(error(
+                path,
+                format!(
+                    "line {n}: population {} is not a population of the occurrence's release",
+                    pv.population
+                ),
+            ));
+        }
+    }
+    Ok(())
+}
+
+/// Refuse a stated day that is not a calendar date.
+fn days(record: &Record) -> Result<(), String> {
+    let stated: Vec<&Option<String>> = match record {
+        Record::Register(r) => vec![&r.from, &r.to],
+        Record::Table(t) => vec![&t.from, &t.to],
+        Record::Release(r) => [&r.from, &r.to]
+            .into_iter()
+            .chain(r.populations.iter().map(|p| &p.day))
+            .collect(),
+        Record::Occurrence(o) => vec![&o.from, &o.to],
+        Record::ValueSet(_) => vec![],
+    };
+    match stated
+        .into_iter()
+        .filter_map(Option::as_deref)
+        .find(|day| reg_core::iso_day_number(day).is_none())
+    {
+        Some(day) => Err(format!("{day:?} is not an ISO calendar day")),
+        None => Ok(()),
+    }
 }
 
 fn locator_value(locator: &Locator) -> Value {

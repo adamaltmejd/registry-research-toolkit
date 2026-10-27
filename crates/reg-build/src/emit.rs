@@ -15,7 +15,6 @@ use rusqlite::Connection;
 use rusqlite::types::{ToSql, ToSqlOutput};
 
 const SCHEMA: &str = include_str!("schema.sql");
-const CHECKS: &str = include_str!("checks.sql");
 
 /// One row of the input table.
 pub struct InputRow {
@@ -125,7 +124,7 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
     let scratch = out.with_file_name(format!(".{name}.scratch"));
     let staged = out.with_file_name(format!(".{name}.staged"));
     let result = stage(catalog, &scratch, &staged)
-        .and_then(|()| check(&staged))
+        .and_then(|()| crate::verify::catalog(&staged, None))
         .and_then(|()| {
             std::fs::rename(&staged, out).map_err(|e| format!("{}: {e}", out.display()))
         });
@@ -794,33 +793,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     db.execute_batch("ANALYZE;").map_err(sql)?;
     db.execute("VACUUM INTO ?1", [staged.to_string_lossy().as_ref()])
         .map_err(sql)?;
-    Ok(())
-}
-
-/// The schema's post-write checks (`checks.sql`): each must return no rows.
-fn check(path: &Path) -> Result<(), String> {
-    let db = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)
-        .map_err(|e| e.to_string())?;
-    let integrity: String = db
-        .query_row("PRAGMA integrity_check", [], |r| r.get(0))
-        .map_err(|e| e.to_string())?;
-    if integrity != "ok" {
-        return Err(format!("integrity_check: {integrity}"));
-    }
-    let checks = CHECKS
-        .lines()
-        .filter(|line| !line.trim_start().starts_with("--"))
-        .collect::<Vec<_>>()
-        .join("\n");
-    for statement in checks.split(';').map(str::trim).filter(|s| !s.is_empty()) {
-        let mut stmt = db
-            .prepare(statement)
-            .map_err(|e| format!("{statement}: {e}"))?;
-        let mut found = stmt.query([]).map_err(|e| e.to_string())?;
-        if found.next().map_err(|e| e.to_string())?.is_some() {
-            return Err(format!("post-write check failed:\n{statement}"));
-        }
-    }
     Ok(())
 }
 
