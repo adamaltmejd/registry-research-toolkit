@@ -190,9 +190,10 @@ def test_tool_matches_http(http_servers, operation):
             ), f"{name} step {index}"
             if is_error:
                 codes.add(document["error"]["code"])
-    assert codes == {"invalid_parameter", *op.get("errors", [])} - (
-        NO_FIXTURE_PATH_UNTIL_D | PINNED_ONCE
-    )
+    # An exempt code may still be reached (a case can pin `stale_cursor` per operation);
+    # it is only not required.
+    exempt = NO_FIXTURE_PATH_UNTIL_D | PINNED_ONCE
+    assert codes - exempt == {"invalid_parameter", *op.get("errors", [])} - exempt
 
 
 def test_tool_of_several_needs_an_operation(http_servers):
