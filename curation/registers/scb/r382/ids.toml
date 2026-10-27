@@ -1,4 +1,5 @@
 # Public ids of scb/r382 (today's scb/pin), from the slug pins at fe08cf2a9.
+public = "pin"
 [tables]
 "Industrins kapacitetsutnyttjande" = "industrins-kapacitetsutnyttjande"
 "Industrins orderingång och omsättning fr.o.m 2015" = "industrins-orderingang"

@@ -1,4 +1,5 @@
 # Public ids of scb/r91 (today's scb/klp), from the slug pins at fe08cf2a9.
+public = "klp"
 [tables]
 
 [variables]

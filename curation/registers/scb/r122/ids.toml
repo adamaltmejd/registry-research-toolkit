@@ -1,4 +1,5 @@
 # Public ids of scb/r122 (today's scb/aku), from the slug pins at fe08cf2a9.
+public = "aku"
 [tables]
 "AKU 1987 - mars 2005" = "aku-1987-mars-2005"
 "AKU april 2005 - dec 2020" = "aku-april-2005-dec-2020"

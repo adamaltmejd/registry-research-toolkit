@@ -1,5 +1,7 @@
 # Public ids of demo/hush. `gammal` anchors nothing (reported unplaced); DispInk, Kod
-# and Text have none (reported unminted).
+# and Text have none (reported unminted). The register's public name differs from its
+# handle `hush`.
+public = "hushall"
 [tables]
 individ = "individ"
 hushall = "hushall"

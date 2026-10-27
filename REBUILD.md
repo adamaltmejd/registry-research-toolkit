@@ -307,6 +307,10 @@ The full SCB read is a heavy run.
   `link continues` or `assign`; the only way renames under successive keys are found)
   and V1 classification-version proposals (they rank, never bind). F4 `same-text`
   proposals are built when a curator asks.
+- **D's `link`/`reject` resolves the successions the link stage drops**: same-day
+  successors of one table and cycle-closing `continues` edges. Today each is dropped
+  with a warning (all same-day successors; the later-by-locator edge of a cycle); the
+  build report counts them as `succession_dropped`.
 
 - **Release builds refuse unplaced and split ledger ids** once D's curation exists;
   until then they are only counted in the build report.

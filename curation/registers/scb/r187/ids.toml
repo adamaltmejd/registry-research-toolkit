@@ -1,4 +1,5 @@
 # Public ids of scb/r187 (today's scb/konjunkturstatistik-industri), from the slug pins at fe08cf2a9.
+public = "konjunkturstatistik-industri"
 [tables]
 "Industrins lager" = "industrins-lager"
 "Industrins lager 2015-" = "industrins-lager-2015"

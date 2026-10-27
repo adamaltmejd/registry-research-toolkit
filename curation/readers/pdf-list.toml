@@ -1,0 +1,2 @@
+# PDF lists (crates/reg-readers/src/docs.rs): the document-list file beside the PDFs.
+list = "related_documents.toml"

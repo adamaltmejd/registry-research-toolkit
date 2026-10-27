@@ -1,4 +1,5 @@
 # Public ids of scb/r70 (today's scb/gdb), from the slug pins at fe08cf2a9.
+public = "gdb"
 [tables]
 "Adresser" = "adresser"
 "Adresser, fastigheter och koordinater" = "adresser-fastigheter"

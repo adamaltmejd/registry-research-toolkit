@@ -161,8 +161,16 @@ impl Grammar {
             };
         }
         let qualifier = |from: usize, to: usize| {
-            let text =
+            let mut text =
                 name[from..to].trim_matches(|c: char| c.is_whitespace() || ",:-".contains(c));
+            // A parenthesised tail ("… (beskattningsår 2013)") loses its enclosing pair;
+            // a span that starts after the "(" keeps only an unmatched ")".
+            if let Some(inner) = text.strip_prefix('(').and_then(|t| t.strip_suffix(')')) {
+                text = inner;
+            } else if !text.contains('(') {
+                text = text.strip_suffix(')').unwrap_or(text);
+            }
+            let text = text.trim();
             (!text.is_empty()).then(|| text.to_owned())
         };
         // A period, then words.

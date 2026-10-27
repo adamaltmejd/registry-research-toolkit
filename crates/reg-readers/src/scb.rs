@@ -11,9 +11,10 @@
 //! - `Vardemangder.csv`: the value sets, one row per (`CVID`, item); an item
 //!   (`ItemId`) is a code and label of a value-set version (`Värdemängdsversion`) at a
 //!   level. Each row of `Registerinformation` names its `CVID`.
-//! - `VardemangderValidDates.csv`: validity intervals per item. A set whose items are
-//!   all dated keeps those valid in its release's period, unless that leaves none; any
-//!   other set stands whole.
+//! - `VardemangderValidDates.csv`: validity intervals per item. An item whose
+//!   intervals are all closed, the latest `ValidTo` before its release's first day, is
+//!   dropped (`ValidFrom` is ignored); undated items stay, and a set that would be
+//!   left empty stands whole.
 //! - `UnikaRegisterOchVariabler.csv`: per register, variant, variable and column name,
 //!   whether the column is sensitive (always or sometimes) and an identifier.
 //! - `Identifierare.csv`: the `VarId`s that are identifiers wherever they occur.
@@ -390,27 +391,26 @@ pub fn read(
                 hashes.push((population, None));
                 continue;
             }
-            // Validity filters a set only when every item is dated and some item is
-            // kept in a placed release. Otherwise the dates record when items entered the
-            // metadata, not the codes (a 1996 survey's codes "valid from" 2008), and the
-            // whole set stands.
-            let stated: Option<Vec<&Vec<Validity>>> = members
-                .iter()
-                .map(|&m| lists.items[m as usize].id.and_then(|id| validity.get(&id)))
-                .collect();
-            let mut valid: Vec<u32> = match (stated, period) {
-                (Some(stated), Some((lo, hi))) => members
+            // An item drops only when its validity has surely ended: it has dated
+            // intervals, none open, and the latest ValidTo is before the release's
+            // first day. ValidFrom is ignored (it often reads as the metadata entry
+            // date); undated items stay.
+            let mut valid: Vec<u32> = match period {
+                Some((lo, _)) => members
                     .iter()
-                    .zip(stated)
-                    .filter(|(_, intervals)| {
-                        intervals.iter().any(|(from, to)| {
-                            from.as_deref().is_none_or(|f| f <= hi.as_str())
-                                && to.as_deref().is_none_or(|t| t >= lo.as_str())
-                        })
+                    .copied()
+                    .filter(|&m| {
+                        let intervals = lists.items[m as usize]
+                            .id
+                            .and_then(|id| validity.get(&id))
+                            .map_or(&[][..], Vec::as_slice);
+                        let ends: Option<Vec<&str>> =
+                            intervals.iter().map(|(_, to)| to.as_deref()).collect();
+                        ends.and_then(|ends| ends.into_iter().max())
+                            .is_none_or(|latest| latest >= lo.as_str())
                     })
-                    .map(|(&m, _)| m)
                     .collect(),
-                _ => members.to_vec(),
+                None => members.to_vec(),
             };
             if valid.is_empty() && !members.is_empty() {
                 expired += 1;
@@ -904,7 +904,8 @@ fn timeseries(
     Ok(records)
 }
 
-/// An item's validity: inclusive ISO days, unstated where blank.
+/// An item's validity, unstated where blank: `ValidFrom` as exported, `ValidTo` an
+/// inclusive ISO day.
 type Validity = (Option<String>, Option<String>);
 
 /// An occurrence's rows: each one's population (an index into its release's) and CVID.
@@ -932,7 +933,7 @@ fn open<R: Read>(member: R, input: &str) -> Result<(::csv::Reader<R>, Columns<'_
     Ok((reader, Box::new(col)))
 }
 
-/// `ItemId` → its validity, inclusive ISO days, unstated where blank.
+/// `ItemId` → its validity, unstated where blank.
 fn valid_dates(
     archive: &mut zip::ZipArchive<std::fs::File>,
     name: &str,
@@ -957,11 +958,11 @@ fn valid_dates(
             number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemID")))?;
         let day = |c: usize| nonblank(&decode(&record[c]));
         let (lo, hi) = (day(from), day(to));
-        let valid = |d: &Option<String>| {
-            d.as_deref()
-                .is_none_or(|d| reg_core::iso_day_number(d).is_some())
-        };
-        if valid(&lo) && valid(&hi) {
+        // ValidFrom is never compared, so only ValidTo has to be an ISO day.
+        if hi
+            .as_deref()
+            .is_none_or(|d| reg_core::iso_day_number(d).is_some())
+        {
             dates.entry(id).or_insert_with(Vec::new).push((lo, hi));
         } else {
             unreadable += 1;
@@ -969,7 +970,7 @@ fn valid_dates(
     }
     if unreadable > 0 {
         out.warnings.push(format!(
-            "{input}: {unreadable} rows state a validity that is not an ISO day and are skipped; an item with no other row is undated"
+            "{input}: {unreadable} rows state a ValidTo that is not an ISO day and are skipped; an item with no other row is undated"
         ));
     }
     Ok(dates)

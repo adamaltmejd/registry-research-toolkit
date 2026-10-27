@@ -1,4 +1,5 @@
 # Public ids of scb/r239 (today's scb/allmanna-val-nominerade), from the slug pins at fe08cf2a9.
+public = "allmanna-val-nominerade"
 [tables]
 "Kommunfullmäktigeval" = "kommunfullmaktigeval"
 "Regionfullmäktigeval" = "regionfullmaktigeval"

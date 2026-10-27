@@ -1,4 +1,5 @@
 # Public ids of scb/r251 (today's scb/cfl), from the slug pins at fe08cf2a9.
+public = "cfl"
 [tables]
 "Elever" = "elever"
 "Kursdeltagare" = "kursdeltagare"
