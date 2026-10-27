@@ -99,7 +99,8 @@ pub(crate) fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
     ))
 }
 
-/// An `ambiguous_ref` candidate `{fqid, kind, name}`. A variable's name is its label.
+/// An `ambiguous_ref` candidate `{fqid, kind, name}`. A variable's or class version's
+/// name is its label.
 fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Value> {
     let table = match e.kind.as_str() {
         "provider" => "provider",
@@ -110,7 +111,7 @@ fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Valu
         "class_version" => "class_version",
         _ => "var_set",
     };
-    let column = if table == "variable" {
+    let column = if matches!(table, "variable" | "class_version") {
         "label_text"
     } else {
         "name_text"
