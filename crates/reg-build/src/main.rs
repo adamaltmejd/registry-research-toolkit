@@ -277,6 +277,10 @@ fn build(args: &Args) -> Result<(), String> {
         }
     }
 
+    let set_by_hash: BTreeMap<&str, &reg_frame::ValueSet> = valuesets
+        .iter()
+        .map(|(hash, (set, _))| (hash.as_str(), set))
+        .collect();
     let mut resolved = Vec::new();
     let mut report = BTreeMap::new();
     for ((provider, register), records) in &registers {
@@ -286,7 +290,7 @@ fn build(args: &Args) -> Result<(), String> {
         } else {
             reg_resolve::Ledger::default()
         };
-        let r = reg_resolve::resolve(records, &ledger)
+        let r = reg_resolve::resolve(records, &ledger, &set_by_hash)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(

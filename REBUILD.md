@@ -213,8 +213,7 @@ The full SCB read is a heavy run.
         `Kontinuerlig`) missing from the reader's uncoded list, and 1 Ja/Nej set the old
         build left out.
     - r118: the "Taxeringsår 2013" delivery names CVID 320512, the 21 Län codes, which
-      is bucket (f). F1 `domain-change` is not raised there, because the resolver emits
-      no `domain-change` finding at all.
+      is bucket (f). Check that F1 `domain-change` is raised there (c-f1 adds it).
     - r118 `kommun` has no segment from 2017 on. All seven "Deklarationsår YYYY
       (beskattningsår YYYY-1)" deliveries (2014-2020) are unparsed, so every r118
       variable ends in 2013. 0197 and 0199 are open-ended in the 2017, 2018 and 2021 LKF
@@ -342,6 +341,12 @@ The full SCB read is a heavy run.
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
   - LVM `besdatumn`: an `assign`, or a second ledger anchor.
 
+- **Proposals, built before new curation** (review findings that carry a proposed
+  statement, so they need D's statement grammar): F3 continuation proposals (a proposed
+  `link continues` or `assign`; the only way renames under successive keys are found)
+  and V1 classification-version proposals (they rank, never bind). F4 `same-text`
+  proposals are built when a curator asks.
+
 - **D's `link`/`reject` resolves the successions the link stage drops**: same-day
   successors of one table and cycle-closing `continues` edges. Today each is dropped
   with a warning (all same-day successors; the later-by-locator edge of a cycle); the
@@ -378,7 +383,9 @@ The full SCB read is a heavy run.
   - the MONA order file;
   - mock data;
   - today's holdings vocabulary as a checklist: partitions, projections, wide column
-    series, column windows and key-only files.
+    series, column windows and key-only files;
+  - N1 logical-type inference: review findings where it disagrees with the reader's
+    `[types]` map. Its consumers are mock data and output types, which are E's.
 - **Then the build.** SWECOV's holdings run on the new catalog, together with its
   steward catalog, its release asset and physical orders. `reg_mona_runner` reads the
   new order file.

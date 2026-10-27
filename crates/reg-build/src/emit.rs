@@ -471,7 +471,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Int(end(&segment.period.1)),
                         Cell::Spelling(segment.spelling.clone()),
                         opt_str(segment.dtype.as_ref()),
-                        Cell::Null,
+                        opt_int(segment.length),
                         Cell::Null,
                         opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
                         Cell::Null,
