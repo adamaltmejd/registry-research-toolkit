@@ -2,8 +2,35 @@
   {
     "status": 200,
     "json": {
-      "/data/nodes/*/fqid": ["scb/example/value", "scb/example/reference", "scb/example/second"],
-      "/data/focus_id": "scb/example/value"
+      "/data": {
+        "focus": "demo/rel/belopp",
+        "nodes": [
+          {"fqid": "demo/kalla", "kind": "register", "name": "Källregistret"},
+          {"fqid": "demo/rel/belopp", "kind": "variable", "name": "Belopp"}
+        ],
+        "edges": [
+          {
+            "kind": "derived_from",
+            "from": "demo/rel/belopp",
+            "to": "demo/kalla",
+            "at": null,
+            "prov": "source",
+            "caveat": null
+          }
+        ]
+      }
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "focus": "demo/rel/belopp",
+        "nodes": [
+          {"fqid": "demo/rel/belopp", "kind": "variable", "name": "Belopp"}
+        ],
+        "edges": []
+      }
     }
   }
 ]

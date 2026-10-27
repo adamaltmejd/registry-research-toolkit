@@ -1,0 +1,32 @@
+{"kind":"register","provider":"demo","register":"rel","name":"Relationsregistret"}
+{"kind":"table","provider":"demo","register":"rel","table":"gammal","name":"Gammal tabell"}
+{"kind":"table","provider":"demo","register":"rel","table":"ny","name":"Ny tabell"}
+{"kind":"release","provider":"demo","register":"rel","table":"gammal","release":"g2015","name":"Gammal 2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rel","table":"gammal","release":"g2016","name":"Gammal 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rel","table":"gammal","release":"g2017","name":"Gammal 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rel","table":"ny","release":"n2018","name":"Ny 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rel","table":"ny","release":"n2019","name":"Ny 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"rel","table":"ny","release":"n2019p","name":"Ny 2019 prel","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"rel","table":"ny","release":"nx","name":"Ny leverans","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2015","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2016","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2017","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2018","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2019","column":"Lopnr","source_key":"k1","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2015","column":"Inkomst","source_key":"k2","label":"Inkomst före skatt","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2016","column":"Inkomst","source_key":"k2","label":"Inkomst efter skatt","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2017","column":"Inkomst","source_key":"k2","label":"Inkomst efter skatt","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2018","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2019","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2019p","column":"Belopp","source_key":"k3","label":"Belopp","dtype":"decimal"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2018","column":"Inkomst2","source_key":"k4","label":"Inkomst efter skatt, ny","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"ny","release":"n2019","column":"Inkomst2","source_key":"k4","label":"Inkomst efter skatt, ny","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"rel","table":"gammal","release":"g2017","column":"Inkomst","source_key":"k7","label":"Inkomst, dubblett","dtype":"int"}
+{"kind":"register","provider":"demo","register":"kalla","name":"Källregistret"}
+{"kind":"occurrence","provider":"demo","register":"kalla","table":"","column":"X","source_key":"k5","from":"2015-01-01","to":"2019-12-31","label":"X","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"kalla","table":"","column":"Lopnr","source_key":"k6","from":"2015-01-01","to":"2019-12-31","label":"Löpnummer","dtype":"int"}
+{"kind":"link","relation":"continues","subject":{"kind":"table","provider":"demo","register":"rel","table":"ny"},"object":{"kind":"table","provider":"demo","register":"rel","table":"gammal"},"at":"2018-01-01"}
+{"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rel","key":"k4"},"object":{"kind":"variable","provider":"demo","register":"rel","key":"k2"},"note":"Inkomst2 ersätter Inkomst från 2018."}
+{"kind":"link","relation":"derived_from","subject":{"kind":"variable","provider":"demo","register":"rel","key":"k3"},"object":{"kind":"register","provider":"demo","register_name":"Källregistret"}}
+{"kind":"notice","subject":{"kind":"variable","provider":"demo","register":"rel","key":"k2"},"text":"Inkomst mäts före avdrag i äldre leveranser."}
+{"kind":"notice","subject":{"kind":"release","provider":"demo","register":"rel","table":"gammal","key":"g2016"},"text":"Skattebasen ändrades 2016."}
