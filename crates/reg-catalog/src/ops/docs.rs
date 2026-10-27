@@ -214,19 +214,22 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         None => 0,
     };
 
+    // A page never passes the SEARCH_DEPTH-th hit; one extra row tells whether more follow.
+    let take = limit.min(SEARCH_DEPTH - offset);
     let (mut items, total) = hits(
         &conn,
         register,
         (q.is_some(), expression.as_deref()),
-        limit + 1,
+        take + 1,
         offset,
     )?;
-    let next_cursor = (items.len() > limit).then(|| {
-        items.truncate(limit);
+    let more = items.len() > take;
+    items.truncate(take);
+    let next_cursor = (more && offset + take < SEARCH_DEPTH).then(|| {
         cursor::encode(
             server.catalog.generation(),
             &context,
-            offset + limit,
+            offset + take,
             items.last().map_or("", |hit| hit.doc.as_str()),
         )
     });
