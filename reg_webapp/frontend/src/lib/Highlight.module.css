@@ -1,7 +1,0 @@
-.match {
-  background: none;
-  color: inherit;
-  font-weight: var(--heading-weight);
-  text-decoration: underline 2px var(--accent);
-  text-underline-offset: 2px;
-}

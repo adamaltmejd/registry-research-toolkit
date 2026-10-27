@@ -7,7 +7,7 @@ MONA](https://www.scb.se/mona).
   | ----------------------------------- | ----------------------------------------------------------------------------- |
   | [`crates/`](crates/)                | Rust runtime: the `reg-meta` server (HTTP API and MCP) and the catalog reader |
   | [`reg_meta_build`](reg_meta_build/) | Build the catalog DBs from agency exports (Python, maintainer-only)           |
-  | [`reg_webapp`](reg_webapp/)         | Web app (React SPA over the Rust server): catalog browse + project authoring  |
+  | [`reg_webapp`](reg_webapp/)         | Rust server container and hosted MCP edge deployment                          |
   | [`plugins/`](plugins/)              | The `microdata-tools-se` agent plugin                                         |
 
 See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how the packages fit together.
@@ -48,8 +48,8 @@ https://reg-meta.vqv.uk/mcp
 
 SWECOV's catalog, which answers from SWECOV's holdings, is at
 `https://data.swecov.se/mcp`. The agent plugin above does this for you (its catalog URL
-is a setting). SWECOV's catalog is browsable at <https://data.swecov.se>; the global
-catalog's webapp runs locally only (`reg_webapp/dev/dev.sh`).
+is a setting). SWECOV's catalog remains browsable at <https://data.swecov.se> on its
+last old-schema release until milestone E.
 
 ### Local server
 
@@ -90,7 +90,7 @@ Run the HTTP API and `/mcp` with the same binary and catalog directory:
 ```
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
-it). The SPA in `reg_webapp/frontend/` runs against it in development; see
+it). The SPA is archived on `archive/reg-webapp-spa` and returns in milestone E; see
 [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
 
 A local binary released after the switch reads only the v4 catalog, so SWECOV users keep

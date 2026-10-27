@@ -944,10 +944,8 @@ def _check_open_ended_sentinel(
 ) -> None:
     """Open-ended validity windows must use the exact '9999-12-31' sentinel.
 
-    Downstream display code branches on the literal — reg_webapp's catalog
-    routes (`OPEN_ENDED_VALID_TO`) emit `period_token: None` for open
-    windows, and the SPA's `formatWindow`/`windowTitle` hide it the same
-    way. A near-sentinel like '9999-06-30' would slip past both and render
+    Downstream period handling branches on the literal. A near-sentinel
+    like '9999-06-30' would miss the open-ended branch and render
     as a garbage token ('2016-01-01..9999-06-30') instead of an open
     window. The DDL only CHECKs length/ordering, so the validator pins
     exactness: any 9999-prefixed `valid_to` must be the sentinel itself.

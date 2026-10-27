@@ -41,9 +41,3 @@ def python_test_files() -> list[Path]:
         for path in _repo_files("*.py")
         if {"tests", "conformance"} & set(path.relative_to(_ROOT).parts)
     ]
-
-
-@pytest.fixture(scope="session")
-def frontend_test_files() -> list[Path]:
-    """Discover tracked and unignored Vitest files (unit and browser projects)."""
-    return _repo_files("reg_webapp/frontend/src/*.test.ts")

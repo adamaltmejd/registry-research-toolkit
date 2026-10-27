@@ -591,7 +591,7 @@ pub fn openapi(version: &str) -> OpenApi {
     component::<Meta>(&mut components);
     component::<Error>(&mut components);
     // Referenced by no operation (the validate body stays a free object): published
-    // so the SPA's types are generated, not hand-written.
+    // so the plugin's project schema is generated from the server contract.
     component::<reg_core::project::ProjectData>(&mut components);
     let mut paths = PathsBuilder::new();
     for op in all() {

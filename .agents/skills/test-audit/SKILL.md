@@ -78,7 +78,7 @@ first; read through `scripts/gh_issue.py`), never delete it.
 Before pushing, always `uv run python -m pytest <tree> -n auto -q`, where `<tree>` is
 the touched Python package or `scripts/tests`, and conformance, which runs against the
 Rust server (`uv run --no-project scripts/gate.py rust`), plus the tree's own gate step
-(`uv run --no-project scripts/gate.py <step>`): `frontend` for the frontend, `crates`
-for `crates/`. Then compare the wall time with the package budget. Report in the PR
-body, or in the code-cleanup report when run inside that pass: each disposition with its
-boundary, test lines removed beside product lines, suite time before and after.
+(`uv run --no-project scripts/gate.py <step>`): `crates` for `crates/`. Then compare the
+wall time with the package budget. Report in the PR body, or in the code-cleanup report
+when run inside that pass: each disposition with its boundary, test lines removed beside
+product lines, suite time before and after.

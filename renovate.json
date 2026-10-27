@@ -26,27 +26,15 @@
         "(?:uvx --from |\"--from\",\\s*\")(?<depName>[A-Za-z0-9][A-Za-z0-9._-]*)==(?<currentValue>[0-9][^\\s\"'`]*)"
       ],
       "datasourceTemplate": "pypi"
-    },
-    {
-      "description": "wasm-bindgen CLI in workflows; must equal the crate pin in crates/reg-core-wasm/Cargo.toml",
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "tool: wasm-bindgen@(?<currentValue>[0-9][^\\s\"']*)"
-      ],
-      "depNameTemplate": "wasm-bindgen",
-      "datasourceTemplate": "crate"
     }
   ],
   "packageRules": [
     {
-      "description": "Nightly: everything the builder does not load (frontend, root dev deps, Actions, Docker, tool pins), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy, mirrors uv `exclude-newer = false` and bunfig `minimumReleaseAge = 0`); this also lifts config:recommended's npm delay.",
+      "description": "Nightly: everything the builder does not load (root dev deps, Actions, Docker, tool pins), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy, mirrors uv `exclude-newer = false`); this also lifts config:recommended's npm delay.",
       "matchPackageNames": [
         "*"
       ],
-      "groupName": "tools, frontend and CI (nightly)",
+      "groupName": "tools and CI (nightly)",
       "schedule": [
         "before 6am"
       ],
@@ -78,21 +66,7 @@
       ]
     },
     {
-      "description": "wasm-bindgen: the crate pin and both workflow CLI pins move in one PR (a mismatch fails `gen:wasm`).",
-      "matchDepNames": [
-        "wasm-bindgen"
-      ],
-      "groupName": "builder runtime and Rust (weekly)",
-      "schedule": [
-        "before 6am on monday"
-      ],
-      "separateMajorMinor": false,
-      "prBodyNotes": [
-        "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
-      ]
-    },
-    {
-      "description": "Its own weekly PR refreshing uv.lock, Cargo.lock and bun.lock (uv.lock carries the builder's closure). The group name only keeps all lockfiles in that one branch.",
+      "description": "Its own weekly PR refreshing uv.lock and Cargo.lock (uv.lock carries the builder's closure). The group name only keeps all lockfiles in that one branch.",
       "matchUpdateTypes": [
         "lockFileMaintenance"
       ],
@@ -112,29 +86,6 @@
       "enabled": false
     },
     {
-      "description": "Frontend toolchain that must move in step: React and its types, React Aria Components (it pins react-aria/react-stately internally) and the locale plugin built for it, and the Vite, plugin-react and Vitest trio (plugin-react and Vitest each peer on a Vite major).",
-      "matchFileNames": [
-        "reg_webapp/frontend/package.json"
-      ],
-      "matchPackageNames": [
-        "react",
-        "react-dom",
-        "@types/react",
-        "@types/react-dom",
-        "react-aria-components",
-        "@react-aria/optimize-locales-plugin",
-        "vite",
-        "@vitejs/plugin-react",
-        "vitest"
-      ],
-      "groupName": "frontend React and Vite toolchain",
-      "schedule": [
-        "before 6am"
-      ],
-      "separateMajorMinor": false,
-      "minimumReleaseAge": null
-    },
-    {
       "description": "Hold: unicode-normalization must stay on src/case_folding.rs's Unicode version (17.0.0); 0.1.26 moved to Unicode 18 ahead of Rust std. Lift with the `=` pin in crates/reg-core/Cargo.toml when std follows.",
       "matchDatasources": [
         "crate"
@@ -143,16 +94,6 @@
         "unicode-normalization"
       ],
       "allowedVersions": "<=0.1.25"
-    },
-    {
-      "description": "Hold: `typescript` is the JS compiler API openapi-typescript imports (peer ^5.x); TS 7 does not ship it. Type checking already runs TS 7 through the @typescript/native alias. Lift when openapi-typescript supports TS 7. matchDepNames, not matchPackageNames: the @typescript/native alias's packageName is also `typescript`, and it must keep taking 7.x.",
-      "matchFileNames": [
-        "reg_webapp/frontend/package.json"
-      ],
-      "allowedVersions": "<7",
-      "matchDepNames": [
-        "typescript"
-      ]
     }
   ]
 }
