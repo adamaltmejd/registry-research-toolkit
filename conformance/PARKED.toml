@@ -35,6 +35,7 @@ cases = [
     "api/coverage-register",
     "api/coverage-variable",
     "api/diff-register",
+    "api/schema-errors",
     "api/schema-paging",
     # r-segments-values
     "api/states-curated-window",

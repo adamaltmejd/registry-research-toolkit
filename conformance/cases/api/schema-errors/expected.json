@@ -1,0 +1,49 @@
+[
+  {
+    "status": 422,
+    "json": {
+      "/error/code": "table_is_register",
+      "/error/fields/ref": "demo/sp",
+      "/error/fields/tables": ["demo/sp/a", "demo/sp/b"]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_period", "/error/fields/parameter": "period"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_cursor"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "kon",
+      "/error/fields/candidates": [
+        {"fqid": "demo/sp/kon", "kind": "variable", "name": "Kön"},
+        {"fqid": "demo/sp2/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/variable": ["demo/sp/alder", "demo/sp/id", "demo/sp/kon", "demo/sp/lankod", "demo/sp/ort"],
+      "/data/items/*/spelling": ["Alder", "Id", "Kon", "Lan", "Ort"],
+      "/data/items/*/type": ["int", "char", "char", "char", "char"],
+      "/data/items/*/period": [
+        {"start": "2017-01-01", "end": "2018-01-01"},
+        {"start": "2017-01-01", "end": "2018-01-01"},
+        {"start": "2017-01-01", "end": "2018-01-01"},
+        {"start": "2017-01-01", "end": "2018-01-01"},
+        {"start": "2017-01-01", "end": "2018-01-01"}
+      ],
+      "/data/next_cursor": null
+    }
+  }
+]

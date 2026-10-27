@@ -1,42 +1,11 @@
 {
-  "note": "Cursor paging with the page boundary inside the register's one variant (annual): two rows, then the third, and no cursor after it. A cursor answers only the request it was issued for and only on its generation. Fails if a page repeats or skips a row, the last page carries a cursor, or a cursor is accepted with other parameters or on a rebuilt catalog.",
-  "fixture": "reader",
-  "artifacts": {
-    "regenerated": {
-      "identity": {
-        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-      }
-    }
-  },
+  "note": "Schema lines of a register over five pages of two, with the boundaries inside one table (a|a), between a variable's two folded spellings (lankod: Lan, then LanKod) and across tables (a|b). A line is one (table, variable, folded spelling): Alder is one line though it has two segments (type from its latest, char), LanKod is two (Lan, LanKod), Id is two because it is in both tables; a line's period runs from its first start to its last end, across the 2019 gap. Fails if a page repeats or skips a line, lines merge across spellings or split across segments, a period or type is not the group's, or the last page carries a cursor.",
+  "fixture": "spans",
   "requests": [
-    {
-      "operation": "schema",
-      "path": "/api/schema/scb/example",
-      "query": {"scope": "reference", "limit": 2}
-    },
-    {
-      "operation": "schema",
-      "path": "/api/schema/scb/example",
-      "query": {"scope": "reference", "limit": 2},
-      "cursor_from": [0, "/data/next_cursor"]
-    },
-    {
-      "operation": "schema",
-      "path": "/api/schema/scb/example",
-      "query": {"scope": "reference", "limit": 2, "period": "2019"},
-      "cursor_from": [0, "/data/next_cursor"]
-    },
-    {
-      "operation": "schema",
-      "path": "/api/schema/scb/example",
-      "query": {"scope": "reference", "limit": 2},
-      "artifact": "regenerated",
-      "cursor_from": [0, "/data/next_cursor"]
-    },
-    {
-      "operation": "schema",
-      "path": "/api/schema/scb/example",
-      "query": {"limit": 201}
-    }
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [0, "/data/next_cursor"]},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [1, "/data/next_cursor"]},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [2, "/data/next_cursor"]},
+    {"operation": "schema", "path": "/api/schema/demo/sp", "query": {"limit": 2}, "cursor_from": [3, "/data/next_cursor"]}
   ]
 }

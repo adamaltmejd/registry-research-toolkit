@@ -1,12 +1,5 @@
 {
-  "note": "A register's coverage per scope: every year a state of one of its variables spans, per register variant. Reference reads all four variables' 2010..2025 states; holdings reads only what the steward holds, the 2018 and 2019 tables. Twin of cli_scope/availability-reference and availability-holdings. Fails if holdings reads unheld states or periods, a year inside the span is reported as a gap, or the variants lose their years.",
-  "fixture": "reader",
-  "requests": [
-    {
-      "operation": "coverage",
-      "path": "/api/coverage/scb/example",
-      "query": {"scope": "reference"}
-    },
-    {"operation": "coverage", "path": "/api/coverage/scb/example"}
-  ]
+  "note": "A register's coverage: its hull, and per table its spans, gaps and releases. Table a has releases 2017, 2018 and 2020, so its spans are [2017, 2019) and [2020, 2021) with the missing 2019 as a no_release gap; table b is one 2020 release. A register has no columns. Fails if the hull or a span is not half-open, the 2019 gap is lost or given another reason, a release is missing or out of period order, or `columns` stops being null.",
+  "fixture": "spans",
+  "requests": [{"operation": "coverage", "path": "/api/coverage/demo/sp"}]
 }

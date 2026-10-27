@@ -1,25 +1,80 @@
 [
   {
     "status": 200,
-    "json": {"/data/items/*/fqid": ["scb/example/reference", "scb/example/second"]}
+    "json": {
+      "/data/items": [
+        {
+          "table": "demo/sp/a",
+          "variable": "demo/sp/alder",
+          "name": "Ålder",
+          "spelling": "Alder",
+          "type": "char",
+          "length": 3,
+          "value_set": null,
+          "role": "measure",
+          "state": "clear",
+          "period": {"start": "2017-01-01", "end": "2021-01-01"}
+        },
+        {
+          "table": "demo/sp/a",
+          "variable": "demo/sp/id",
+          "name": "Löpnummer",
+          "spelling": "Id",
+          "type": "char",
+          "length": 10,
+          "value_set": null,
+          "role": "row_key",
+          "state": "clear",
+          "period": {"start": "2017-01-01", "end": "2021-01-01"}
+        }
+      ]
+    },
+    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]}
   },
   {
     "status": 200,
-    "json": {"/data/items/*/fqid": ["scb/example/value"], "/data/next_cursor": null}
-  },
-  {
-    "status": 422,
-    "json": {"/error/code": "invalid_cursor"}
-  },
-  {
-    "status": 409,
     "json": {
-      "/error/code": "stale_cursor",
-      "/error/fields/generation": "4d0c918a3737c3696cc3725ab6e9e637d4c4e1fcd62f60807ec879a0d1f3f2a6"
+      "/data/items/*/table": ["demo/sp/a", "demo/sp/a"],
+      "/data/items/*/variable": ["demo/sp/kon", "demo/sp/lankod"],
+      "/data/items/*/spelling": ["Kon", "Lan"],
+      "/data/items/*/period": [
+        {"start": "2017-01-01", "end": "2021-01-01"},
+        {"start": "2017-01-01", "end": "2019-01-01"}
+      ]
     }
   },
   {
-    "status": 422,
-    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "limit"}
+    "status": 200,
+    "json": {
+      "/data/items/*/table": ["demo/sp/a", "demo/sp/a"],
+      "/data/items/*/variable": ["demo/sp/lankod", "demo/sp/ort"],
+      "/data/items/*/spelling": ["LanKod", "Ort"],
+      "/data/items/*/period": [
+        {"start": "2020-01-01", "end": "2021-01-01"},
+        {"start": "2017-01-01", "end": "2018-01-01"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/table": ["demo/sp/a", "demo/sp/b"],
+      "/data/items/*/variable": ["demo/sp/yrke", "demo/sp/antal"],
+      "/data/items/*/spelling": ["Yrke", "Antal"],
+      "/data/items/*/type": ["char", "int"],
+      "/data/items/*/period": [
+        {"start": "2018-01-01", "end": "2021-01-01"},
+        {"start": "2020-01-01", "end": "2021-01-01"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/table": ["demo/sp/b"],
+      "/data/items/*/variable": ["demo/sp/id"],
+      "/data/items/*/role": ["row_key"],
+      "/data/next_cursor": null
+    }
   }
 ]

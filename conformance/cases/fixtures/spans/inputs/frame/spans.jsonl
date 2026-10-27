@@ -1,0 +1,26 @@
+{"kind":"register","provider":"demo","register":"sp","name":"Spannregistret"}
+{"kind":"table","provider":"demo","register":"sp","table":"a","name":"Tabell A"}
+{"kind":"table","provider":"demo","register":"sp","table":"b","name":"Tabell B"}
+{"kind":"register","provider":"demo","register":"sp2","name":"Spannregistret två"}
+{"kind":"table","provider":"demo","register":"sp2","table":""}
+{"kind":"release","provider":"demo","register":"sp","table":"a","release":"a2017","name":"Tabell A 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"sp","table":"a","release":"a2018","name":"Tabell A 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"sp","table":"a","release":"a2020","name":"Tabell A 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"sp","table":"b","release":"b2020","name":"Tabell B 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2017","column":"Id","source_key":"id","label":"Löpnummer","dtype":"char","length":10,"identifier":true}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2018","column":"Id","source_key":"id","label":"Löpnummer","dtype":"char","length":10,"identifier":true}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2020","column":"Id","source_key":"id","label":"Löpnummer","dtype":"char","length":10,"identifier":true}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2017","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int","length":3}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2018","column":"Alder","source_key":"alder","label":"Ålder","dtype":"int","length":3}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2020","column":"Alder","source_key":"alder","label":"Ålder","dtype":"char","length":3}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2017","column":"Lan","source_key":"lan","label":"Län","dtype":"char","length":2}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2018","column":"Lan","source_key":"lan","label":"Län","dtype":"char","length":2}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2020","column":"LanKod","source_key":"lan","label":"Län","dtype":"char","length":2}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2017","column":"Ort","source_key":"ort","label":"Ort","dtype":"char","length":20}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2018","column":"Yrke","source_key":"yrke","label":"Yrke","dtype":"char","length":4}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2020","column":"Yrke","source_key":"yrke","label":"Yrke","dtype":"char","length":4}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2017","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","length":1}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"a","release":"a2020","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","length":1}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"b","release":"b2020","column":"Id","source_key":"id","label":"Löpnummer","dtype":"char","length":10,"identifier":true}
+{"kind":"occurrence","provider":"demo","register":"sp","table":"b","release":"b2020","column":"Antal","source_key":"antal","label":"Antal","dtype":"int","length":5}
+{"kind":"occurrence","provider":"demo","register":"sp2","table":"","column":"Kon","source_key":"kon","label":"Kön","dtype":"char","length":1,"from":"2015-01-01","to":"2016-12-31"}
