@@ -55,14 +55,23 @@ pub(crate) fn changes(
                 );
             }
             if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" {
-                // A segment that states no set but whose occurrence states one set per
+                // A side that states no set but whose occurrence states one set per
                 // population is split, not emptied.
-                let split = b.valueset.is_none()
-                    && resolved.iter().any(|r| {
-                        r.variable == Some(v)
-                            && r.segment == Some(i + 1)
-                            && !r.occurrence.population_valuesets.is_empty()
-                    });
+                let per_population = |side: &Segment, segment: usize| {
+                    side.valueset.is_none()
+                        && resolved.iter().any(|r| {
+                            r.variable == Some(v)
+                                && r.segment == Some(segment)
+                                && !r.occurrence.population_valuesets.is_empty()
+                        })
+                };
+                let split = if per_population(b, i + 1) {
+                    Some("one set → per-population sets")
+                } else if per_population(a, i) {
+                    Some("per-population sets → one set")
+                } else {
+                    None
+                };
                 push(
                     v,
                     "F1:domain-change",
@@ -190,9 +199,14 @@ fn shape(s: &Segment) -> String {
 }
 
 /// The codes a pair of value sets add, drop and relabel; a missing set has no codes.
-fn domain(a: &Segment, b: &Segment, valuesets: &BTreeMap<&str, &ValueSet>, split: bool) -> String {
-    if split {
-        return "one set → per-population sets".to_owned();
+fn domain(
+    a: &Segment,
+    b: &Segment,
+    valuesets: &BTreeMap<&str, &ValueSet>,
+    split: Option<&str>,
+) -> String {
+    if let Some(split) = split {
+        return split.to_owned();
     }
     let codes = |s: &Segment| -> BTreeMap<&str, Option<&str>> {
         s.valueset
