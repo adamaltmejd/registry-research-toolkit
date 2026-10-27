@@ -132,6 +132,12 @@ impl Error {
         )
     }
 
+    /// The error's code.
+    #[must_use]
+    pub fn kind(&self) -> Code {
+        self.kind
+    }
+
     /// The HTTP status (500 for a code without one).
     #[must_use]
     pub fn status(&self) -> u16 {
