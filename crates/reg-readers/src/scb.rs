@@ -17,6 +17,14 @@
 //! - `UnikaRegisterOchVariabler.csv`: per register, variant, variable and column name,
 //!   whether the column is sensitive (always or sometimes) and an identifier.
 //! - `Identifierare.csv`: the `VarId`s that are identifiers wherever they occur.
+//! - `Timeseries.csv`: events (`Handelse`) on one entity (`Entitet`) named by `ID1`, and
+//!   for a succession the entity `ID2` names. The config's `[timeseries]` maps each
+//!   event to a notice or a succession and each entity to its endpoint kind; a
+//!   succession becomes a `continues` link, or, where the config says so (between
+//!   releases), a notice on the newer entity.
+//!
+//! A row's `VariabelRegister_Källa` names the register the variable is derived from:
+//! one `derived_from` link to that register by name per (register, variable, text).
 //!
 //! An occurrence whose rows name different value sets states them per population, as
 //! alternatives where one population's rows disagree; fields other rows disagree on are
@@ -33,8 +41,8 @@ use std::io::Read;
 use std::path::Path;
 
 use reg_frame::{
-    Frame, Item, Locator, Occurrence, Population, PopulationValueSet, Record, Register, Release,
-    Table, ValueSet,
+    Endpoint, Frame, Item, Link, Locator, Notice, Occurrence, Population, PopulationValueSet,
+    Record, Register, Release, Table, ValueSet,
 };
 use serde::Deserialize;
 
@@ -46,6 +54,7 @@ const VARDEMANGDER: &str = "Vardemangder.csv";
 const UNIKA: &str = "UnikaRegisterOchVariabler.csv";
 const IDENTIFIERS: &str = "Identifierare.csv";
 const VALID_DATES: &str = "VardemangderValidDates.csv";
+const TIMESERIES: &str = "Timeseries.csv";
 
 /// `curation/readers/scb.toml`.
 #[derive(Debug, Deserialize)]
@@ -57,6 +66,58 @@ pub struct Config {
     /// text) rather than listing any.
     pub uncoded: BTreeSet<String>,
     pub names: Grammar,
+    pub timeseries: Timeseries,
+}
+
+/// `[timeseries]`: how a `Timeseries.csv` row reads. A row whose event or entity is
+/// not mapped is left out and counted.
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Timeseries {
+    /// `Handelse` → what the row states.
+    pub events: BTreeMap<String, Event>,
+    /// `Entitet` → the entity its ids name.
+    pub entities: BTreeMap<String, Entity>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Event {
+    /// A notice on `ID1`'s entity: `<Handelse>: <Beskrivning>`.
+    Notice,
+    /// `ID1`'s entity takes over from `ID2`'s.
+    Replaces,
+    /// `ID2`'s entity takes over from `ID1`'s.
+    ReplacedBy,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Entity {
+    /// The endpoint kind, which fixes the id space: `register` a `RegisterId`, `table`
+    /// a `RegVarID`, `release` a `RegVerID`, `variable` a `VarId`.
+    pub kind: Kind,
+    /// What a succession between two such entities becomes.
+    pub succession: Succession,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Kind {
+    Register,
+    Table,
+    Release,
+    Variable,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Succession {
+    /// A `continues` link from the newer entity to the older.
+    Link,
+    /// A notice on the newer entity: `continues <older entity's name>`, then the
+    /// description after `: ` when stated.
+    Notice,
 }
 
 impl Config {
@@ -113,6 +174,7 @@ pub fn read(
     let column = col("Kolumnnamn")?;
     let dtype = col("Datatyp")?;
     let length = col("Datalängd")?;
+    let source = col("VariabelRegister_Källa")?;
 
     let mut registers: BTreeMap<String, Register> = BTreeMap::new();
     // (RegisterId, RegVarID) → table; (RegisterId, folded variant name) → RegVarID.
@@ -121,6 +183,8 @@ pub fn read(
     let mut releases: BTreeMap<String, Release> = BTreeMap::new();
     let mut occurrences: BTreeMap<(String, String, String), Occurrence> = BTreeMap::new();
     let mut cvids: BTreeMap<(String, String, String), Rows> = BTreeMap::new();
+    // (register handle, source key, source register text) → its first row.
+    let mut derived: BTreeMap<(String, String, String), Locator> = BTreeMap::new();
     let cvid = col("CVID")?;
     for (i, record) in reader.byte_records().enumerate() {
         let row: Vec<String> = record
@@ -227,6 +291,11 @@ pub fn read(
             }
         });
         let key = format!("v{}", field(var_id, "VarId")?);
+        if let Some(text) = get(source) {
+            derived
+                .entry((handle.clone(), key.clone(), text))
+                .or_insert_with(|| locator.clone());
+        }
         let spelling = row[column].trim().to_owned();
         let literal = get(dtype);
         let occurrence = Occurrence {
@@ -443,6 +512,25 @@ pub fn read(
     out.files.push(vs_input);
     out.files.push(format!("{name}/{VALID_DATES}"));
     flags(&mut archive, name, &registers, &mut occurrences, &mut out)?;
+    let surface = Surface::new(provider, &registers, &tables, &releases, &occurrences);
+    let events = timeseries(&mut archive, name, &config.timeseries, &surface, &mut out)?;
+    let links = derived.into_iter().map(|((register, key, text), locator)| {
+        Record::Link(Link {
+            kind: "derived_from".to_owned(),
+            subject: endpoint(provider, "variable", &register, None, Some(&key)),
+            object: Endpoint {
+                kind: "register".to_owned(),
+                provider: provider.to_owned(),
+                register: None,
+                register_name: Some(text),
+                table: None,
+                key: None,
+            },
+            at: None,
+            note: None,
+            locator,
+        })
+    });
 
     let records = registers
         .into_values()
@@ -451,6 +539,8 @@ pub fn read(
         .chain(releases.into_values().map(Record::Release))
         .chain(by_hash.into_values().map(Record::ValueSet))
         .chain(occurrences.into_values().map(Record::Occurrence))
+        .chain(links)
+        .chain(events)
         .collect();
     out.frame = Frame::new(records);
     Ok(out)
@@ -583,6 +673,249 @@ fn identifiers(
         ));
     }
     Ok(())
+}
+
+/// An endpoint of `provider`'s register `register` (a handle).
+fn endpoint(
+    provider: &str,
+    kind: &str,
+    register: &str,
+    table: Option<&str>,
+    key: Option<&str>,
+) -> Endpoint {
+    Endpoint {
+        kind: kind.to_owned(),
+        provider: provider.to_owned(),
+        register: Some(register.to_owned()),
+        register_name: None,
+        table: table.map(str::to_owned),
+        key: key.map(str::to_owned),
+    }
+}
+
+/// The export's entities by their ids, for `Timeseries`. `RegVarID` and `RegVerID` are
+/// unique across the export; a `VarId` is documented in each register that holds it.
+struct Surface<'a> {
+    provider: &'a str,
+    /// `RegisterId` → register.
+    registers: &'a BTreeMap<String, Register>,
+    /// `RegVarID` → table.
+    tables: BTreeMap<&'a str, &'a Table>,
+    /// `r<RegVerID>` → release.
+    releases: &'a BTreeMap<String, Release>,
+    /// Source key → register handle → the first occurrence's label.
+    variables: BTreeMap<&'a str, BTreeMap<&'a str, Option<&'a str>>>,
+}
+
+impl<'a> Surface<'a> {
+    fn new(
+        provider: &'a str,
+        registers: &'a BTreeMap<String, Register>,
+        tables: &'a BTreeMap<(String, String), Table>,
+        releases: &'a BTreeMap<String, Release>,
+        occurrences: &'a BTreeMap<(String, String, String), Occurrence>,
+    ) -> Self {
+        let mut variables: BTreeMap<&str, BTreeMap<&str, Option<&str>>> = BTreeMap::new();
+        for o in occurrences.values() {
+            variables
+                .entry(o.source_key.as_str())
+                .or_default()
+                .entry(o.register.as_str())
+                .or_insert(o.label.as_deref());
+        }
+        Surface {
+            provider,
+            registers,
+            tables: tables
+                .iter()
+                .map(|((_, vid), t)| (vid.as_str(), t))
+                .collect(),
+            releases,
+            variables,
+        }
+    }
+
+    /// The entities `id` names as `kind`, each with its name: none for an id the export
+    /// does not document, several for a `VarId` documented in several registers.
+    fn ends(&self, kind: Kind, id: &str) -> Vec<(Endpoint, String)> {
+        let p = self.provider;
+        match kind {
+            Kind::Register => self
+                .registers
+                .get(id)
+                .map(|r| {
+                    let name = r.name.clone().unwrap_or_else(|| r.register.clone());
+                    (endpoint(p, "register", &r.register, None, None), name)
+                })
+                .into_iter()
+                .collect(),
+            Kind::Table => self
+                .tables
+                .get(id)
+                .map(|t| {
+                    let end = endpoint(p, "table", &t.register, Some(&t.table), None);
+                    (end, t.table.clone())
+                })
+                .into_iter()
+                .collect(),
+            Kind::Release => self
+                .releases
+                .get(&format!("r{id}"))
+                .map(|r| {
+                    let end = endpoint(p, "release", &r.register, Some(&r.table), Some(&r.release));
+                    (end, r.name.clone())
+                })
+                .into_iter()
+                .collect(),
+            Kind::Variable => {
+                let key = format!("v{id}");
+                self.variables
+                    .get(key.as_str())
+                    .into_iter()
+                    .flatten()
+                    .map(|(register, label)| {
+                        let end = endpoint(p, "variable", register, None, Some(&key));
+                        (end, label.map_or_else(|| key.clone(), str::to_owned))
+                    })
+                    .collect()
+            }
+        }
+    }
+}
+
+/// `Timeseries`: notices and successions, as `[timeseries]` maps them.
+#[allow(clippy::too_many_lines)]
+fn timeseries(
+    archive: &mut zip::ZipArchive<std::fs::File>,
+    name: &str,
+    config: &Timeseries,
+    surface: &Surface,
+    out: &mut ReadOutput,
+) -> Result<Vec<Record>, ReadError> {
+    let input = format!("{name}/{TIMESERIES}");
+    let member = archive
+        .by_name(TIMESERIES)
+        .map_err(|e| error(&input, e.to_string()))?;
+    let (mut reader, col) = open(member, &input)?;
+    let (event, description, entity, id1, id2) = (
+        col("Handelse")?,
+        col("Beskrivning")?,
+        col("Entitet")?,
+        col("ID1")?,
+        col("ID2")?,
+    );
+    let mut records = Vec::new();
+    let mut unmapped: BTreeMap<(&str, String), usize> = BTreeMap::new();
+    let (mut unknown, mut unpaired) = (0, 0);
+    let mut record = ::csv::ByteRecord::new();
+    let mut row = 1;
+    while reader
+        .read_byte_record(&mut record)
+        .map_err(|e| error(&input, e.to_string()))?
+    {
+        row += 1;
+        let text = |c: usize| decode(&record[c]).trim().to_owned();
+        let locator = Locator {
+            input: input.clone(),
+            at: format!("row={row}"),
+        };
+        let (handelse, entitet) = (text(event), text(entity));
+        let (Some(&ev), Some(&en)) = (config.events.get(&handelse), config.entities.get(&entitet))
+        else {
+            if !config.events.contains_key(&handelse) {
+                *unmapped.entry(("Handelse", handelse)).or_default() += 1;
+            }
+            if !config.entities.contains_key(&entitet) {
+                *unmapped.entry(("Entitet", entitet)).or_default() += 1;
+            }
+            continue;
+        };
+        let note = nonblank(&text(description));
+        let first = surface.ends(en.kind, &text(id1));
+        if first.is_empty() {
+            unknown += 1;
+            continue;
+        }
+        if ev == Event::Notice {
+            let body = note.map_or_else(|| handelse.clone(), |n| format!("{handelse}: {n}"));
+            for (subject, _) in first {
+                records.push(Record::Notice(Notice {
+                    subject,
+                    at: None,
+                    text: body.clone(),
+                    locator: locator.clone(),
+                }));
+            }
+            continue;
+        }
+        let second = surface.ends(en.kind, &text(id2));
+        if second.is_empty() {
+            unknown += 1;
+            continue;
+        }
+        let (newer, older) = if ev == Event::Replaces {
+            (first, second)
+        } else {
+            (second, first)
+        };
+        // One entity at each end pairs as stated; a `VarId` documented in several
+        // registers pairs within each register that documents both.
+        let pairs: Vec<_> = if newer.len() == 1 && older.len() == 1 {
+            newer.into_iter().zip(older).collect()
+        } else {
+            newer
+                .iter()
+                .flat_map(|n| {
+                    older
+                        .iter()
+                        .filter(|o| o.0.register == n.0.register)
+                        .map(|o| (n.clone(), o.clone()))
+                })
+                .collect()
+        };
+        if pairs.is_empty() {
+            unpaired += 1;
+        }
+        for ((subject, _), (object, older_name)) in pairs {
+            records.push(match en.succession {
+                Succession::Link => Record::Link(Link {
+                    kind: "continues".to_owned(),
+                    subject,
+                    object,
+                    at: None,
+                    note: note.clone(),
+                    locator: locator.clone(),
+                }),
+                Succession::Notice => Record::Notice(Notice {
+                    subject,
+                    at: None,
+                    text: match &note {
+                        Some(n) => format!("continues {older_name}: {n}"),
+                        None => format!("continues {older_name}"),
+                    },
+                    locator: locator.clone(),
+                }),
+            });
+        }
+    }
+    drop(reader);
+    out.files.push(input.clone());
+    for ((column, value), n) in unmapped {
+        out.warnings.push(format!(
+            "{input}: {n} rows of {column} {value:?}, which [timeseries] does not map; left out"
+        ));
+    }
+    if unknown > 0 {
+        out.warnings.push(format!(
+            "{input}: {unknown} rows name an id Registerinformation does not document as their Entitet; left out"
+        ));
+    }
+    if unpaired > 0 {
+        out.warnings.push(format!(
+            "{input}: {unpaired} successions name variables no register documents both of; left out"
+        ));
+    }
+    Ok(records)
 }
 
 /// An item's validity: inclusive ISO days, unstated where blank.

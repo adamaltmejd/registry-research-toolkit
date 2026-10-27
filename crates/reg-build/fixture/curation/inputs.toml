@@ -5,8 +5,11 @@
 # table (kod). The SCB export (an asset zip under assets/) exercises releases: a final and a preliminary
 # edition of 2020 (Kon shadowed and typed differently, PrelInk only preliminary), a
 # collision (two 2021 deliveries), an unparsed name, a population collapse (2022), gap
-# markers (Alder in 2021; Utbildning, never a column) and a hole (Alder in 2020), and
-# the summary's flags (Kon sometimes sensitive; LopNr an identifier). The LISA list
+# markers (Alder in 2021; Utbildning, never a column) and a hole (Alder in 2020),
+# the summary's flags (Kon sometimes sensitive; LopNr an identifier), Timeseries (a
+# table notice, a mirrored variable succession, a release succession as a notice, an
+# unmapped Entitet and an unknown id) and two source registers (Hushållsregistret and an
+# unknown one). The LISA list
 # exercises a multi-range year cell (Kon), a blank one (Alder), section headings and
 # footnotes, and the sensitivity vocabulary. The frame input is written by hand: two
 # keys on one spelling (Del), final and preliminary editions of one key (Mat), a
@@ -35,7 +38,7 @@ name = "scb"
 reader = "scb"
 release = "fixture"
 path = "scb.zip"
-sha256 = "8713ccc4c7b06d71703ebc4d2f4a9ecc2c4e2ad48c5e6b912c2ea5c6326497b4"
+sha256 = "1ed91ca1d8b69b7f49146ccd7059cc1a08bcbc72ed92779a94e11bb3784fed7a"
 provider = "demo"
 
 [[input]]

@@ -360,7 +360,18 @@ tracks the milestones. This section holds the design decisions that outlive the 
   raise one F6 per key.
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
-  no B table holds. The link stage reads them.
+  no B table holds. `Entitet` fixes what `ID1` and `ID2` are (`Register` a `RegisterId`,
+  `RegisterVariant` a `RegVarID`, `RegisterVersion` a `RegVerID`, `Variabel` a `VarId`;
+  each row's `Namn` is `ID1`'s name). `Tidsseriebrott` and `Avslutad` are a notice on
+  `ID1`'s entity, `<Handelse>: <Beskrivning>`. `Ersätter` (`ID1` takes over from `ID2`)
+  and `Ersatt av` (`ID2` from `ID1`) are a `continues` link from the newer entity, and
+  come in mirrored pairs the link stage folds into one relation; between releases the
+  succession is a notice on the newer one, `continues <older name>`. A `VarId` stands
+  for each register that documents it. The config's `[timeseries]` holds this map;
+  `AktuellVariabel` (its ids name no entity of the export), `Population`, `PopContext`
+  and `VS_Class` are left out and counted, and `FilID` (a document reference, on every
+  row) is left to the documents. A row's `VariabelRegister_Källa` is a `derived_from`
+  link to the register of that name.
 - **The LISA workbook** is its own reader (`lisa`), not the Socialstyrelsen template's:
   a sheet is a table named by the sheet, a data row an occurrence keyed by its folded
   column name, a year cell one occurrence per year or range, and `Känslig1` the
