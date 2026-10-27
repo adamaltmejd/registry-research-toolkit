@@ -8,6 +8,10 @@ SELECT pid FROM register EXCEPT SELECT pid FROM ident WHERE kind='register';
 SELECT pid FROM tbl WHERE implicit = 0 EXCEPT SELECT pid FROM ident WHERE kind='table';
 SELECT pid FROM variable EXCEPT SELECT pid FROM ident WHERE kind='variable';
 SELECT pid FROM ident INTERSECT SELECT pid FROM ident_retired;
+-- A register's bare-name key is its public name (the pid's last segment), not its handle.
+-- Public names are lowercase slugs, so SQL lower() agrees with fold_identity.
+SELECT pid FROM ident WHERE kind = 'register'
+  AND name_fold <> lower(substr(pid, length(rtrim(pid, replace(pid, '/', ''))) + 1));
 
 -- (4) no overlap within (variable, table): one folded spelling at a time
 SELECT id FROM (

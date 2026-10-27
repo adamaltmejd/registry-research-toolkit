@@ -312,7 +312,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str("register".into()),
                 Cell::Int(register_row),
                 Cell::Null,
-                Cell::Str(reg_core::fold_identity(&reg.register)),
+                Cell::Str(reg_core::fold_identity(&r.public)),
             ],
         );
 
