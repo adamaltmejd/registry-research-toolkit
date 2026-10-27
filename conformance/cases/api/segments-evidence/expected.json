@@ -1,0 +1,30 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/evidence": [
+        [
+          {
+            "release": null,
+            "period": {"start": "2018-01-01", "end": "2022-01-01"},
+            "spelling": "Tidig",
+            "label": "Tidig",
+            "source_key": "k3",
+            "status": "used",
+            "locators": [{"input": "frame", "locator": "frame/segments.jsonl:line=13"}],
+            "overrides": [
+              {
+                "field": "period",
+                "value": "2018..2021",
+                "prov": "rule",
+                "statement": null,
+                "rule": "T1",
+                "source_value": "2010..2021"
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  }
+]

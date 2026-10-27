@@ -1,0 +1,13 @@
+# The segments fixture: value sets that change over time, a flag-only boundary, a T1
+# clamp, a preliminary delivery and an ambiguous bare name.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

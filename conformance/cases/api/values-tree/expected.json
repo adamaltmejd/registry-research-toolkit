@@ -1,56 +1,27 @@
 [
   {
     "status": 200,
+    "json": {"/data/items/0/value_set/hash": "ea8b45a7a3bcce09207d4b19c8b62ae680ab5e0d488dbf03cbf1506f55498c9b"}
+  },
+  {
+    "status": 200,
     "json": {
-      "/data/items": [
-        {"code": "A", "label": "Jordbruk, skogsbruk och fiske", "level": null, "is_valid": true, "child_count": 2},
-        {"code": "B", "label": "Utvinning av mineral", "level": null, "is_valid": true, "child_count": 1},
-        {"code": "U", "label": "Okänd verksamhet", "level": null, "is_valid": true, "child_count": 0}
-      ],
-      "/data/total": 3,
-      "/data/next_cursor": null
+      "/data/items/*/code": ["A", "B"],
+      "/data/items/*/child_count": [2, 0],
+      "/data/value_set/hierarchical": true,
+      "/data/value_set/n_items": 4
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items": [
-        {"code": "01", "label": "Jordbruk", "level": 2, "is_valid": true, "child_count": 2},
-        {"code": "02", "label": "Skogsbruk", "level": 2, "is_valid": true, "child_count": 0}
-      ],
-      "/data/total": 2
+      "/data/items/*/code": ["A1", "A2"],
+      "/data/items/*/level": [2, 2],
+      "/data/items/*/parent": ["A", "A"]
     }
   },
   {
     "status": 200,
-    "json": {"/data/items/*/code": ["0111"], "/data/items/*/child_count": [0], "/data/total": 2}
-  },
-  {
-    "status": 200,
-    "json": {"/data/items/*/code": ["0112"], "/data/total": 2, "/data/next_cursor": null}
-  },
-  {
-    "status": 200,
-    "json": {"/data/items/*/code": ["0111"], "/data/total": 1}
-  },
-  {"status": 404, "json": {"/error/code": "not_found", "/error/fields": {"ref": "Z"}}},
-  {
-    "status": 200,
-    "json": {
-      "/data/items": [
-        {"code": "1", "label": "Man", "level": 1, "is_valid": true, "child_count": null},
-        {"code": "2", "label": "Kvinna", "level": 1, "is_valid": true, "child_count": null}
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {"/data/items/*/code": ["1", "2"], "/data/items/*/child_count": [null, null], "/data/total": 2}
-  },
-  {"status": 200},
-  {
-    "status": 200,
-    "json": {"/data/items/*/code": ["0111", "05"]}
-  },
-  {"status": 422, "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "parent"}}}
+    "json": {"/data/items/*/code": ["A1", "A2"]}
+  }
 ]

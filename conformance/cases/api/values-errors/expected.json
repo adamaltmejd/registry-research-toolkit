@@ -1,0 +1,33 @@
+[
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "value_set"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "code"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "label"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "value_set"}
+  },
+  {
+    "status": 404,
+    "json": {
+      "/error/code": "not_found",
+      "/error/fields/ref": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/sg/svar"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "q"}
+  }
+]
