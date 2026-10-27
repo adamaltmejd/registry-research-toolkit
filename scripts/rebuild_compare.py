@@ -781,15 +781,32 @@ def finding_periods(body, code, row, tables, sources):
     return spans
 
 
-def placement_explanations(rows):
-    # Reuse registers' class, projecting away metadata unrelated to placement.
+def placement_explanations(register, catalogs, tables, mappings):
+    # Catalog placements are independent evidence for delivered table movements.
     views = [View(), View()]
-    for view, side in zip(views, rows, strict=True):
-        for table, variable, _, _, spelling in side:
-            view.tables.add(table)
-            view.columns[fold(spelling)].add(variable)
-            view.placed[fold(spelling), variable].add(table)
-            view.labels[variable], view.years[variable] = "", (0, 0)
+    renamed = {(m["table"], m["old"]): m["new"] for m in mappings}
+    for i, (view, catalog) in enumerate(zip(views, catalogs, strict=True)):
+        names = {
+            table: tables[i].get(
+                f"{register}/{table or OLD_IMPLICIT}"
+                if i == 0
+                else f"{register}/{table}"
+                if table
+                else register,
+                table,
+            )
+            for table in catalog.tables
+        }
+        view.tables.update(names.values())
+        for (column, slug), placed in catalog.placed.items():
+            for table in placed:
+                table = names[table]
+                variable = f"{register}/{slug}"
+                if i == 0:
+                    variable = renamed.get((table, variable), variable)
+                view.columns[column].add(variable)
+                view.placed[column, variable].add(table)
+                view.labels[variable], view.years[variable] = "", (0, 0)
     diffs = defaultdict(list)
     compare("", *views, {}, set(), diffs)
     return views, {detail for _, detail in diffs["column in other tables"]}
@@ -853,16 +870,18 @@ def classify_difference(
         return classified
 
     issues = [
-        [
-            i
-            for found in record.get("blocking_issues", {}).get(side, {}).values()
-            for i in found
-        ]
-        for side in ("old", "new")
+        (
+            [i for i in order_findings(body) if i.get("level", "error") == "error"]
+            or [body["error"]]
+        )
+        if "error" in body
+        else []
+        for body in bodies
     ]
     if record["kind"] == "register_only":
         return result("missing in old", "The sampled register has no old counterpart.")
-    if record["kind"] == "refusal":
+    # A refusal suppresses every source: no row on that side proves availability.
+    if record["kind"] == "refusal" or any(issues):
         if (
             rows[0]
             and issues[1]
@@ -882,11 +901,6 @@ def classify_difference(
             "other",
             "No delivered counterpart proves the refusal's cause.",
             review="Operator: inspect both refusal responses.",
-        )
-    if old and issues[1] and all(i["code"] == "ambiguous_window" for i in issues[1]):
-        return result(
-            "blocked window",
-            "Ambiguity blocks this source and suppresses its entire order.",
         )
     if new and (old is None or (old[:2] == new[:2] and old[4] == new[4])):
         previous = [row_days(r) for r in rows[0] if r[:2] == new[:2]]
@@ -910,12 +924,6 @@ def classify_difference(
                 "preliminary data",
                 "Only warned preliminary windows add coverage absent from the old order.",
             )
-    if new and issues[0]:
-        return result(
-            "old blocked",
-            "The old source refused; the new order delivers this row.",
-            review="Operator: determine whether the old refusal was a bug.",
-        )
     if old and (new is None or (old[:2] == new[:2] and old[4] == new[4])):
         removed = uncovered(row_days(old), [row_days(new)] if new else [])
         added = uncovered(row_days(new), [row_days(old)]) if new else []
@@ -966,9 +974,17 @@ def classify_difference(
         views, explanations = placements
         key = fold(row[4]), row[1]
         detail = f"{key[0]}: {sorted(views[0].placed[key])} -> {sorted(views[1].placed[key])}"
-        explained = detail in explanations
+        side = 0 if old else 1
+        explained = (
+            detail in explanations
+            and row[0] in views[side].placed[key]
+            and any(
+                r[1:] == row[1:] and r[0] in views[1 - side].placed[key]
+                for r in other_rows
+            )
+        )
         return result(
-            "table split or merge",
+            "table split or merge" if explained else "other",
             "registers: column in other tables: " + detail
             if explained
             else "An identical row moves tables without a registers placement explanation.",
@@ -1010,7 +1026,7 @@ def classification_summary(records, mappings):
         "",
         "## Classes",
         "",
-        "Precedence: blocked window, preliminary data, old blocked, clipped period, spelling, representation only, table split or merge, missing, other.",
+        "Whole-order refusals take precedence. Otherwise: preliminary data, clipped period, spelling, representation only, table split or merge, missing, other.",
         "Refusal records are counted separately from affected rows. Old refusals and unexplained differences require Operator review.",
         "",
         "| class | rows | refusals | register-only records | registers | owner |",
@@ -1065,6 +1081,8 @@ def orders(args) -> int:
         if not 0 < args.n <= len(candidates):
             raise ValueError(f"--n must be between 1 and {len(candidates)}")
         sampled = random.Random(args.seed).sample(candidates, args.n)
+        providers = {pid.split("/")[0] for pid in sampled}
+        catalog_views = [old_views(old_db, providers), new_views(new_db, providers)]
         old_registers = {
             pid
             for (pid,) in old_db.execute(
@@ -1156,7 +1174,9 @@ def orders(args) -> int:
                 row_sources[0], mapped = map_order_variables(*row_sources)
                 mappings.extend({"register": reg, **m} for m in mapped)
                 rows = [set(side) for side in row_sources]
-                placements = placement_explanations(rows)
+                placements = placement_explanations(
+                    reg, [view[reg] for view in catalog_views], tables, mapped
+                )
 
                 classified = partial(
                     classify_difference,
@@ -1178,7 +1198,7 @@ def orders(args) -> int:
                 differences = list(row_differences(*rows))
                 for old, new in differences:
                     table = (old or new)[0]
-                    source_issues, source_names = {}, {}
+                    source_names = {}
                     for i, side in enumerate(("old", "new")):
                         # A refused side has no entries; locate its corresponding
                         # source by table. Successful successions name their source.
@@ -1194,11 +1214,6 @@ def orders(args) -> int:
                             },
                         )
                         source_names[side] = sorted(sources)
-                        source_issues[side] = {
-                            source: issues
-                            for source, issues in blockers[i].items()
-                            if source is None or source in sources
-                        }
                     emit(
                         classified(
                             evidence
@@ -1206,7 +1221,6 @@ def orders(args) -> int:
                                 "kind": "row",
                                 "old": row_value(old),
                                 "new": row_value(new),
-                                "blocking_issues": source_issues,
                                 "sources": source_names,
                             },
                             old,
