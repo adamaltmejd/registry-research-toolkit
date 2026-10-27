@@ -722,9 +722,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
     }
     let mut db = Connection::open(scratch).map_err(sql)?;
-    db.execute_batch(
-        "PRAGMA journal_mode = OFF; PRAGMA synchronous = OFF; PRAGMA auto_vacuum = NONE;",
-    )
+    db.execute_batch(&format!(
+        "PRAGMA journal_mode = OFF; PRAGMA synchronous = OFF; PRAGMA auto_vacuum = NONE;
+         PRAGMA user_version = {};",
+        reg_core::CATALOG_SCHEMA_VERSION
+    ))
     .map_err(sql)?;
     let statements: Vec<String> = SCHEMA
         .lines()

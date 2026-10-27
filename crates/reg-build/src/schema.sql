@@ -1,7 +1,7 @@
 -- The catalog file, schema v4 (crates/DESIGN.md, "The catalog builder").
 PRAGMA page_size = 4096;
 PRAGMA application_id = 1380271939;      -- 'REGC'
-PRAGMA user_version = 4;                 -- = meta schema_version
+-- user_version: emit sets it from reg_core::CATALOG_SCHEMA_VERSION (= meta schema_version).
 PRAGMA encoding = 'UTF-8';
 
 -- Scalar facts. Required keys: schema_version, generation_id, catalog_version,
