@@ -182,22 +182,32 @@ impl ValueSet {
     /// an item's ordinal, so the address must be of what the file can hold (a source
     /// naming a chapter code without listing it, e.g. ks87-p, loses that link).
     #[must_use]
-    pub fn new(mut items: Vec<Item>, name: Option<String>, locator: Locator) -> Self {
+    pub fn new(items: Vec<Item>, name: Option<String>, locator: Locator) -> Self {
+        Self::counted(items, name, locator).0
+    }
+
+    /// [`ValueSet::new`], and how many items named a parent that was dropped, for a
+    /// reader to report.
+    #[must_use]
+    pub fn counted(mut items: Vec<Item>, name: Option<String>, locator: Locator) -> (Self, usize) {
         items.sort_by(|a, b| a.code.cmp(&b.code));
         items.dedup_by(|b, a| a.code == b.code);
         let codes: BTreeSet<String> = items.iter().map(|i| i.code.clone()).collect();
+        let mut dropped = 0;
         for item in &mut items {
             if item.parent.as_ref().is_some_and(|p| !codes.contains(p)) {
                 item.parent = None;
+                dropped += 1;
             }
         }
         let hash = hex(&Sha256::digest(canonical_line(&items)));
-        Self {
+        let set = Self {
             hash,
             items,
             names: name.into_iter().collect(),
             locator,
-        }
+        };
+        (set, dropped)
     }
 }
 

@@ -1,4 +1,5 @@
 # Public ids of scb/r391 (today's scb/ssv), from the slug pins at fe08cf2a9.
+public = "ssv"
 [tables]
 "Elever" = "elever"
 "Kursdeltagare" = "kursdeltagare-lasar"

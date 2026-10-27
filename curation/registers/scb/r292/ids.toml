@@ -1,4 +1,5 @@
 # Public ids of scb/r292 (today's scb/finansiella-foretag), from the slug pins at fe08cf2a9.
+public = "finansiella-foretag"
 [tables]
 "Indata" = "finansiella-foretag-indata"
 

@@ -1,4 +1,5 @@
 # Public ids of scb/r244 (today's scb/folkomrostningar-valresultat), from the slug pins at fe08cf2a9.
+public = "folkomrostningar-valresultat"
 [tables]
 "Röstberättigade" = "rostberattigade"
 "Valresultat" = "valresultat"

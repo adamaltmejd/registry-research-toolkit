@@ -41,6 +41,7 @@ pub fn read(root: &Path, rel: &str, config: &Config) -> Result<ReadOutput, ReadE
     names.sort();
     let mut out = ReadOutput::default();
     let mut records = Vec::new();
+    let mut orphaned = 0;
     for name in names {
         let path = format!("{rel}/{name}");
         let mut reader =
@@ -68,8 +69,15 @@ pub fn read(root: &Path, rel: &str, config: &Config) -> Result<ReadOutput, ReadE
             input: path.clone(),
             at: String::new(),
         };
-        records.push(Record::ValueSet(ValueSet::new(items, Some(stem), locator)));
+        let (set, dropped) = ValueSet::counted(items, Some(stem), locator);
+        orphaned += dropped;
+        records.push(Record::ValueSet(set));
         out.files.push(path);
+    }
+    if orphaned > 0 {
+        out.warnings.push(format!(
+            "{rel}: {orphaned} items name a parent the list does not hold (dropped)"
+        ));
     }
     out.frame = Frame::new(records);
     Ok(out)

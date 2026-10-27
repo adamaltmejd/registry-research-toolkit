@@ -1,4 +1,5 @@
 # Public ids of scb/r263 (today's scb/bki), from the slug pins at fe08cf2a9.
+public = "bki"
 [tables]
 
 [variables]

@@ -1,4 +1,5 @@
 # Public ids of scb/r369 (today's scb/internationella-foretag), from the slug pins at fe08cf2a9.
+public = "internationella-foretag"
 [tables]
 "Svenska koncerner med dotterbolag i utlandet" = "svenska-koncerner"
 

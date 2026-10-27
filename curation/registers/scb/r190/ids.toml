@@ -1,4 +1,5 @@
 # Public ids of scb/r190 (today's scb/grundskola-prov-ak9), from the slug pins at fe08cf2a9.
+public = "grundskola-prov-ak9"
 [tables]
 "Ämne: NO" = "amne-no"
 "Ämne: SV, ENG, MA" = "amne-sv-eng-ma"

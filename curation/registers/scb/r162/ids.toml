@@ -1,4 +1,5 @@
 # Public ids of scb/r162 (today's scb/lastbilstrafik), from the slug pins at fe08cf2a9.
+public = "lastbilstrafik"
 [tables]
 
 [variables]

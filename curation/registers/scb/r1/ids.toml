@@ -1,4 +1,5 @@
 # Public ids of scb/r1 (today's scb/fdb), from the slug pins at fe08cf2a9.
+public = "fdb"
 [tables]
 "Administrativa arbetsställen" = "administrativa"
 "Arbetsställeenheter" = "arbetsstalleenheter"

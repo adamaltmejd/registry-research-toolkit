@@ -1,4 +1,5 @@
 # Public ids of scb/r395 (today's scb/kapitalvinster), from the slug pins at fe08cf2a9.
+public = "kapitalvinster"
 [tables]
 "Individ" = "individ"
 
