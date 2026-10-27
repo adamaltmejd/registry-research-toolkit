@@ -256,7 +256,7 @@ This is the complete list of boundaries a test may assert at.
   | Project + artifact → logical order           | the order cases in `conformance/cases/order/`: project + fixture → expected logical order or `order_blocked`         |
   | Candidate output → export gate result        | `reg_export_gate/tests/cases/`: schema, policy and candidate folder → pass and receipt, or refusal code and findings |
   | Curation TOML → load or located failure      | committed TOML must load; malformed cases name the locator                                                           |
-  | FQID / period grammars, interval algebra     | Hypothesis properties + round-trip snapshots                                                                         |
+  | FQID / period / address grammars, intervals  | Hypothesis properties + round-trip snapshots                                                                         |
   | Real artifact ↔ accepted inputs              | conformance artifact checks and explicit accepted-input table/cell census, spec and authored mappings                |
   | Repository tooling (`scripts/tests`)         | the tool's own contract: skill discovery, a lint's verdict                                                           |
 

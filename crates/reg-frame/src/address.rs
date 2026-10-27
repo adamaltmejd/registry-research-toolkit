@@ -107,10 +107,16 @@ impl FromStr for Address {
     type Err = String;
 
     fn from_str(text: &str) -> Result<Self, Self::Err> {
+        let (table, rest) = text
+            .trim_start()
+            .split_once(':')
+            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
+        let table = table.trim();
+        let rest = rest.trim_start();
         // A release handle is opaque, including characters that delimit occurrence
         // scopes or guards. Parse it before interpreting any of those characters.
-        if let Some(release) = text.trim_start().strip_prefix("release:") {
-            let (table, handle) = release
+        if table == "release" {
+            let (table, handle) = rest
                 .split_once('/')
                 .ok_or("a release address needs release:<table-slug>/<handle>")?;
             if !reg_core::is_slug(table) || handle.is_empty() {
@@ -124,12 +130,7 @@ impl FromStr for Address {
                 handle: handle.to_owned(),
             });
         }
-        let text = text.trim();
-        let (table, rest) = text
-            .split_once(':')
-            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
-        let table = table.trim();
-        let rest = rest.trim_start();
+        let rest = rest.trim_end();
         let end = rest
             .find(|c: char| c.is_whitespace() || c == '@')
             .unwrap_or(rest.len());
@@ -267,14 +268,18 @@ fn expand(text: &str) -> Result<Vec<String>, String> {
     if body.contains('{') {
         return Err("nested brace lists are not allowed".to_owned());
     }
-    let choices = if let Some((start, end)) = body.split_once("..") {
-        if start.is_empty()
-            || end.is_empty()
-            || !start.bytes().all(|b| b.is_ascii_digit())
-            || !end.bytes().all(|b| b.is_ascii_digit())
-        {
-            return Err("a brace range needs unsigned integer endpoints".to_owned());
+    let range = body.split_once("..").filter(|(start, end)| {
+        !start.is_empty()
+            && !end.is_empty()
+            && start.bytes().all(|b| b.is_ascii_digit())
+            && end.bytes().all(|b| b.is_ascii_digit())
+    });
+    let choices = if body.contains(',') {
+        if body.split(',').any(str::is_empty) {
+            return Err("brace list items must not be empty".to_owned());
         }
+        body.split(',').map(str::to_owned).collect()
+    } else if let Some((start, end)) = range {
         let lo = start.parse::<u32>().map_err(|e| e.to_string())?;
         let hi = end.parse::<u32>().map_err(|e| e.to_string())?;
         if lo > hi || hi - lo >= 10_000 {
@@ -291,10 +296,10 @@ fn expand(text: &str) -> Result<Vec<String>, String> {
             .map(|n| format!("{n:0width$}"))
             .collect::<Vec<_>>()
     } else {
-        if body.split(',').any(str::is_empty) {
+        if body.is_empty() {
             return Err("brace list items must not be empty".to_owned());
         }
-        body.split(',').map(str::to_owned).collect()
+        vec![body.to_owned()]
     };
     let mut result = Vec::new();
     for choice in choices {
