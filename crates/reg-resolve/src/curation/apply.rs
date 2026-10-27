@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, gaps, intersect, merge, next_iso_day, prev_iso_day};
-use reg_frame::address::{Address, Comparison, GuardField};
+use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
 use reg_frame::statement::{AssertFact, BindTarget, Statement};
 use reg_frame::{Locator, OPEN_END, OPEN_START, Record, ValueSet};
 use serde_json::{Value, json};
@@ -40,6 +40,102 @@ pub struct Applied {
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
+}
+
+struct Priority {
+    provider: String,
+    kind: String,
+    period: Option<Interval>,
+    rank: i64,
+}
+
+/// Reviewed source priorities retain their selected intervals. One input row can
+/// contribute different ranks in disjoint scopes without a statement-order winner.
+#[derive(Default)]
+pub struct Priorities {
+    by_locator: BTreeMap<Locator, Vec<Priority>>,
+}
+
+impl Priorities {
+    /// Add the priority of an accepted binding, clipped to its source and subject.
+    pub fn add(&mut self, statement: &Statement, premise: &Premise) {
+        let Statement::Bind {
+            subject,
+            period,
+            priority: Some(rank),
+            ..
+        } = statement
+        else {
+            return;
+        };
+        let scope = binding_scope(period.as_ref(), subject.as_ref());
+        for source in &premise.subjects {
+            let Some(provider) = source.fields.get("provider").and_then(Value::as_str) else {
+                continue;
+            };
+            let Some(kind) = source.fields.get("kind").and_then(Value::as_str) else {
+                continue;
+            };
+            let source_period = source
+                .fields
+                .get("period")
+                .and_then(|p| serde_json::from_value::<Interval>(p.clone()).ok());
+            let periods: Vec<Option<Interval>> = match (&source_period, &scope) {
+                (Some(source), Some(scope)) => scope
+                    .iter()
+                    .filter_map(|p| intersect(source, p))
+                    .map(Some)
+                    .collect(),
+                (None, Some(scope)) => scope.iter().cloned().map(Some).collect(),
+                (_, None) => vec![source_period],
+            };
+            for period in periods {
+                self.by_locator
+                    .entry(source.locator.clone())
+                    .or_default()
+                    .push(Priority {
+                        provider: provider.to_owned(),
+                        kind: kind.to_owned(),
+                        period,
+                        rank: *rank,
+                    });
+            }
+        }
+    }
+
+    fn rank(&self, at: &Locator, value: &Value, period: &Interval) -> i64 {
+        self.by_locator
+            .get(at)
+            .into_iter()
+            .flatten()
+            .filter(|priority| {
+                text(value, "provider") == Some(priority.provider.as_str())
+                    && text(value, "kind") == Some(priority.kind.as_str())
+                    && priority
+                        .period
+                        .as_ref()
+                        .is_none_or(|scope| intersect(scope, period).is_some())
+            })
+            .map(|priority| priority.rank)
+            .max()
+            .unwrap_or(0)
+    }
+}
+
+fn binding_scope(period: Option<&PeriodSet>, subject: Option<&Address>) -> Option<Vec<Interval>> {
+    let scope = period.map(periods);
+    if let Some(Address::Occurrence {
+        periods: Some(period),
+        ..
+    }) = subject
+    {
+        Some(scope.map_or_else(
+            || periods(period),
+            |scope| reg_core::overlap(&scope, &periods(period)),
+        ))
+    } else {
+        scope
+    }
 }
 
 fn tree(record: &Record) -> Value {
@@ -246,7 +342,7 @@ pub fn apply(
     statement: &Statement,
     at: &Locator,
     premise: &Premise,
-    priorities: &BTreeMap<Locator, i64>,
+    priorities: &Priorities,
     source_records: &[Record],
     origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
 ) -> Result<Applied, String> {
@@ -284,24 +380,7 @@ pub fn apply(
             } else {
                 id.clone()
             };
-            let mut scope = period.as_ref().map(periods);
-            if let Some(Address::Occurrence {
-                periods: Some(p), ..
-            }) = subject
-            {
-                scope = Some(match scope {
-                    Some(s) => s
-                        .iter()
-                        .flat_map(|s| {
-                            periods(p)
-                                .iter()
-                                .filter_map(|p| intersect(s, p))
-                                .collect::<Vec<_>>()
-                        })
-                        .collect(),
-                    None => periods(p),
-                });
-            }
+            let scope = binding_scope(period.as_ref(), subject.as_ref());
             let reviewed = |value: &Value| {
                 premise.subjects.iter().any(|p| {
                     (p.locator == locator(value)
@@ -336,15 +415,14 @@ pub fn apply(
                     output.push(record.clone());
                     continue;
                 }
-                if subject.is_some()
-                    && !value["release"].is_null()
+                let unplaced = !value["release"].is_null()
                     && records.iter().any(|r| {
                         matches!(r, Record::Release(r)
                         if value["provider"] == r.provider && value["register"] == r.register
                             && value["table"] == r.table && value["release"] == r.release
                             && (r.from.is_none() || r.to.is_none()))
-                    })
-                {
+                    });
+                if subject.is_some() && unplaced {
                     return Err(
                         "bind cannot move rows from an unplaced release; set its period first"
                             .into(),
@@ -395,7 +473,7 @@ pub fn apply(
                         bound["from"] = json!(selected.0);
                         bound["to"] = json!(selected.1);
                     }
-                    if kind == "occurrence" {
+                    if kind == "occurrence" && !unplaced {
                         check_table_coverage(&bound, &selected, records)?;
                     }
                     // A row moved out of its release becomes its own dated documented
@@ -412,7 +490,7 @@ pub fn apply(
                                 changed,
                                 &bound[changed],
                                 &value[changed],
-                                Some(selected.clone()),
+                                (!unplaced).then(|| selected.clone()),
                             ));
                         }
                     }
@@ -1198,7 +1276,7 @@ fn merge_bound(
     output: &mut Vec<Record>,
     moved: Vec<Record>,
     priority: Option<i64>,
-    priorities: &BTreeMap<Locator, i64>,
+    priorities: &Priorities,
     source_records: &[Record],
     origins: &mut BTreeMap<Locator, BTreeSet<Locator>>,
     changes: &mut Vec<Change>,
@@ -1241,6 +1319,7 @@ fn merge_bound(
         if let Some(index) = existing {
             let old = tree(&output[index]);
             let rank = |v: &Value, field: &str| {
+                let period = span(v, output);
                 let at = locator(v);
                 let mut locators = vec![at.clone()];
                 locators.extend(origins.get(&at).into_iter().flatten().cloned());
@@ -1262,7 +1341,7 @@ fn merge_bound(
                             })
                         })
                     })
-                    .map(|at| priorities.get(at).copied().unwrap_or(0))
+                    .map(|at| priorities.rank(at, v, &period))
                     .max()
                     .unwrap_or(0)
             };

@@ -292,7 +292,7 @@ fn run_selected(
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
         .collect::<Vec<_>>();
-    if statements.is_empty() {
+    if statements.is_empty() && !record {
         return Ok(Applied {
             records,
             ..Applied::default()
@@ -332,7 +332,7 @@ fn run_selected(
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
-    let mut priorities = BTreeMap::new();
+    let mut priorities = reg_resolve::curation::apply::Priorities::default();
     let mut origins = BTreeMap::new();
     for stage in 0..4 {
         // Resolve every group before changing this phase's frame. This makes file
@@ -400,15 +400,7 @@ fn run_selected(
             }
         }
         for (statement, premise, _, _) in &accepted {
-            if let reg_frame::statement::Statement::Bind {
-                priority: Some(priority),
-                ..
-            } = &statement.statement
-            {
-                for source in &premise.subjects {
-                    priorities.insert(source.locator.clone(), *priority);
-                }
-            }
+            priorities.add(&statement.statement, premise);
         }
         if stage == 2 {
             accepted.sort_by_key(|(s, ..)| {
