@@ -749,6 +749,14 @@ pub fn resolve(
                         });
                 }
                 Statement::Assert { fact, .. } => {
+                    if matches!(
+                        fact,
+                        AssertFact::ValueSet { .. } | AssertFact::ClassificationVersion { .. }
+                    ) {
+                        fields.extend(
+                            ["value_set", "population_valuesets", "code_system"].map(str::to_owned),
+                        );
+                    }
                     let values = match fact {
                         AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                             stated_fields(fields)
