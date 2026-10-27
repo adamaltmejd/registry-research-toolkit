@@ -31,7 +31,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from functools import partial
-from itertools import zip_longest
+from itertools import pairwise, zip_longest
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import urlencode
@@ -445,7 +445,7 @@ def project_period(lo: str, hi: str, source: str, adjustments: list):
     return period
 
 
-def new_project(db, register: str, version: str, adjustments: list):
+def new_project(db, register: str, version: str, adjustments: list, omissions: list):
     sources = []
     for tid, pid, timeless, lo, hi in db.execute(
         "SELECT t.id, t.pid, t.timeless, min(s.start), max(s.end) FROM tbl t"
@@ -468,6 +468,9 @@ def new_project(db, register: str, version: str, adjustments: list):
                     "type": binding_type(dtype, identifier, coded == "yes"),
                 },
             )
+        if not bindings:
+            omissions.append(pid)
+            continue
         # A table with no spans uses its stated hull; a refusal stays evidence.
         if lo is None:
             lo, hi = db.execute(
@@ -517,7 +520,16 @@ def old_states(url, variable, variant, period, evidence):
         query["cursor"] = cursor
 
 
-def old_project(db, register: str, version: str, adjustments: list, *, url, evidence):
+def old_project(
+    db,
+    register: str,
+    version: str,
+    adjustments: list,
+    omissions: list,
+    *,
+    url,
+    evidence,
+):
     sources = []
     for tid, slug in db.execute(
         "SELECT t.register_variant_id, t.slug FROM register_variant t"
@@ -566,6 +578,9 @@ def old_project(db, register: str, version: str, adjustments: list, *, url, evid
                 if spelling is not None:
                     binding["representation"] = spelling
                 bindings.setdefault((variable, spelling), binding)
+        if not bindings:
+            omissions.append(f"{register}/{slug}")
+            continue
         sources.append(
             {
                 "name": f"source-{len(sources)}",
@@ -706,15 +721,100 @@ def row_value(row):
     }
 
 
-def row_differences(old, new):
-    # Cancel exact rows first, then pair remaining rows by table/variable in period
-    # order. Pairing is presentation only: all unmatched values remain in evidence.
+def form_boundary(db, table, variable, boundary, tables):
+    """An adjacent catalog type/value-set change, independent of order partitions."""
+    before, after = set(), set()
+    for tid, start, end, dtype, valueset in db.execute(
+        "SELECT t.pid, s.start, s.end, s.dtype, s.valueset_id FROM segment s"
+        " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
+        " WHERE v.pid = ? AND (s.start = ? OR s.end = ?)",
+        (variable, boundary, boundary),
+    ):
+        if tables.get(tid, tid.rsplit("/", 1)[-1]) == table:
+            if end == boundary:
+                before.add((dtype, valueset))
+            if start == boundary:
+                after.add((dtype, valueset))
+    return len(before) == len(after) == 1 and before != after
+
+
+def row_differences(old, new, db, tables):
     groups = defaultdict(lambda: [[], []])
-    for side, rows in enumerate((old - new, new - old)):
+    for side, rows in enumerate((old, new)):
         for row in sorted(rows, key=lambda r: tuple(v or "" for v in r)):
             groups[row[:2]][side].append(row)
-    for key in sorted(groups):
-        yield from zip_longest(*groups[key])
+    for (table, variable), sides in sorted(groups.items()):
+        if sides[0] == sides[1]:
+            continue
+        spans = [[row_days(r) for r in side] for side in sides]
+        equal_coverage = all(
+            not uncovered(span, spans[1 - i]) for i in (0, 1) for span in spans[i]
+        )
+        # Only parallel old case variants can share an aligned slice. Keep other
+        # overlaps and unexplained partitions for the existing classifier.
+        parallel = any(
+            max(row_days(a)[0], row_days(b)[0]) < min(row_days(a)[1], row_days(b)[1])
+            and (i == 1 or a[4].lower() != b[4].lower())
+            for i, side in enumerate(sides)
+            for j, a in enumerate(side)
+            for b in side[j + 1 :]
+        )
+        partitions = [{point for span in side for point in span} for side in spans]
+        extra = partitions[1] - partitions[0]
+        forms = bool(extra) and all(
+            form_boundary(db, table, variable, point, tables) for point in extra
+        )
+        old_splits = partitions[0] - partitions[1]
+        spelling_splits = True
+        for point in old_splits:
+            before = {
+                r[4] for r in sides[0] if row_days(r)[0] < point <= row_days(r)[1]
+            }
+            after = {r[4] for r in sides[0] if row_days(r)[0] <= point < row_days(r)[1]}
+            if before == after or len({name.lower() for name in before | after}) != 1:
+                spelling_splits = False
+                break
+        if old_splits and spelling_splits:
+            spelling_splits = all(latest_spelling(db, r, tables) for r in sides[1])
+        if (
+            equal_coverage
+            and not parallel
+            and (not extra or forms)
+            and (not old_splits or spelling_splits)
+        ):
+            points = sorted(partitions[0] | partitions[1])
+            for lo, hi in pairwise(points):
+                active = [
+                    [r for r in side if row_days(r)[0] <= lo and hi <= row_days(r)[1]]
+                    for side in sides
+                ]
+                if not active[0] and not active[1]:
+                    continue
+                if not active[0] or len(active[1]) != 1:
+                    raise ValueError("equal coverage alignment requires both sides")
+                right = active[1][0]
+                for left in active[0]:
+                    if left == right:
+                        continue
+                    aligned = [
+                        (
+                            table,
+                            variable,
+                            None if lo == -719162 else iso_day(lo),
+                            None if hi == 2932897 else iso_day(hi),
+                            r[4],
+                        )
+                        for r in (left, right)
+                    ]
+                    if aligned[0] == aligned[1] and not forms:
+                        continue
+                    yield *aligned, {"form_boundary": forms}
+            continue
+        unmatched = [
+            [r for r in side if r not in sides[1 - i]] for i, side in enumerate(sides)
+        ]
+        for left, right in zip_longest(*unmatched):
+            yield left, right, None
 
 
 CLASSES = {
@@ -722,6 +822,7 @@ CLASSES = {
     "preliminary data": "intended",
     "old blocked": "intended",
     "clipped period": "intended",
+    "form boundary": "intended",
     "spelling": "intended",
     "representation only": "intended",
     "table split or merge": "defect",
@@ -991,11 +1092,26 @@ def classify_difference(
         and new
         and old[:4] == new[:4]
         and old[4] != new[4]
+        and old[4].lower() == new[4].lower()
         and latest_spelling(dbs[1], new, tables[1])
     ):
         return result(
             "spelling",
-            "The old binding pins its state representation; the new segment uses the resolver's latest used-occurrence spelling.",
+            "Case-only column spelling uses the resolver's latest used-occurrence spelling."
+            + (
+                " Equal coverage also retains catalog type/value-set boundaries."
+                if record.get("alignment", {}).get("form_boundary")
+                else ""
+            ),
+        )
+    if old is not None and new is not None and record.get("alignment") is not None:
+        if old[4] == new[4] and record["alignment"]["form_boundary"]:
+            return result(
+                "form boundary",
+                "Equal covered days; every additional new split has a catalog type/value-set change.",
+            )
+        return result(
+            "other", "Equal coverage has an unexplained partition or spelling change."
         )
     if old and new is None:
         alternatives = {r[4] for r in rows[0] if r[:4] == old[:4]}
@@ -1067,7 +1183,7 @@ def classification_summary(records, mappings):
         "",
         "## Classes",
         "",
-        "Whole-order refusals take precedence. Otherwise: preliminary data, clipped period, spelling, representation only, table split or merge, missing, other.",
+        "Whole-order refusals take precedence. Otherwise: preliminary data, clipped period, spelling, form boundary, representation only, table split or merge, missing, other.",
         "Refusal records are counted separately from affected rows. Old refusals and unexplained differences require Operator review.",
         "",
         "| class | rows | refusals | register-only records | registers | owner |",
@@ -1145,15 +1261,15 @@ def orders(args) -> int:
         summary += [
             "",
             "Periods are half-open ISO days; null endpoints are open/timeless.",
-            "Rows are distinct (table, variable, period, spelling); equal rows cancel first.",
-            "Differing counts pair unmatched rows by table/variable in period order.",
+            "Rows are distinct (table, variable, period, spelling); the equal column counts original exact matches, differing counts aligned slices or remaining unmatched rows.",
+            "Equal coverage aligns by table/variable at shared endpoints when new splits have catalog form evidence; remaining unmatched rows pair in period order.",
             "A blocked order has no partial entries; refusal records are separate from row differences.",
             "Dated requests intersect catalog hulls with the project grammar's 1900–2099 range; adjustments are listed below.",
             "",
             "| register | rows old | rows new | equal | differing | blocked old | blocked new | result |",
             "|---|---:|---:|---:|---:|---:|---:|---|",
         ]
-        adjustments, mappings, classified_records = [], [], []
+        adjustments, omissions, mappings, classified_records = [], [], [], []
         with (args.out / "diff.jsonl").open("w") as output:
 
             def emit(record):
@@ -1192,9 +1308,18 @@ def orders(args) -> int:
                     contexts,
                     strict=True,
                 ):
-                    bounds = []
+                    bounds, omitted = [], []
                     projects.append(
-                        build(db, reg, context["data"]["reg_meta_version"], bounds)
+                        build(
+                            db,
+                            reg,
+                            context["data"]["reg_meta_version"],
+                            bounds,
+                            omitted,
+                        )
+                    )
+                    omissions.extend(
+                        {"side": side, "table": table} for table in omitted
                     )
                     adjustments.extend({"side": side, **bound} for bound in bounds)
                 tables = table_names(*projects)
@@ -1243,15 +1368,16 @@ def orders(args) -> int:
                 }
                 if any(r["error_code"] for r in results):
                     emit(classified(evidence | {"kind": "refusal"}))
-                differences = list(row_differences(*rows))
-                for old, new in differences:
+                differences = list(row_differences(*rows, new_db, tables[1]))
+                for old, new, alignment in differences:
                     table = (old or new)[0]
                     source_names = {}
                     for i, side in enumerate(("old", "new")):
                         # A refused side has no entries; locate its corresponding
                         # source by table. Successful successions name their source.
+                        aligned_row = (old, new)[i]
                         sources = row_sources[i].get(
-                            (old, new)[i],
+                            aligned_row,
                             {
                                 s["name"]
                                 for s in projects[i]["sources"]
@@ -1261,6 +1387,17 @@ def orders(args) -> int:
                                 == table
                             },
                         )
+                        if alignment is not None and aligned_row is not None:
+                            sources = set().union(
+                                *(
+                                    names
+                                    for r, names in row_sources[i].items()
+                                    if r[:2] == aligned_row[:2]
+                                    and r[4] == aligned_row[4]
+                                    and row_days(r)[0] <= row_days(aligned_row)[0]
+                                    and row_days(r)[1] >= row_days(aligned_row)[1]
+                                )
+                            )
                         source_names[side] = sorted(sources)
                     emit(
                         classified(
@@ -1270,6 +1407,11 @@ def orders(args) -> int:
                                 "old": row_value(old),
                                 "new": row_value(new),
                                 "sources": source_names,
+                                **(
+                                    {"alignment": alignment}
+                                    if alignment is not None
+                                    else {}
+                                ),
                             },
                             old,
                             new,
@@ -1288,6 +1430,10 @@ def orders(args) -> int:
                     )
                     + " |"
                 )
+        summary += ["", "## Omitted columnless tables", ""]
+        summary.extend(f"- {o['side']} `{o['table']}`" for o in omissions)
+        if not omissions:
+            summary.append("None.")
         summary += classification_summary(classified_records, mappings)
         write_json(args.out / "variable-map.json", mappings)
         summary += ["", "## Request bound adjustments", ""]
