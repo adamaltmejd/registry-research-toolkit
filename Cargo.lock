@@ -920,6 +920,7 @@ dependencies = [
 name = "reg-frame"
 version = "0.0.0"
 dependencies = [
+ "reg-core",
  "serde",
  "serde_json",
  "sha2",

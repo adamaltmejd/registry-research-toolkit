@@ -95,6 +95,7 @@ Dependency graph (acyclic):
 reg-meta       → reg-catalog → reg-core
 reg-core-py    → reg-core
 reg-build      → reg-resolve, reg-readers → reg-frame, reg-core
+reg-frame      → reg-core
 reg_meta_build → reg-core-py
 reg_webapp     → reg-meta (server container and hosted MCP edge)
 reg_mona_runner → the order manifest (a file, offline inside MONA; no code dependency)
