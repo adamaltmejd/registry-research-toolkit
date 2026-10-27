@@ -1,9 +1,12 @@
 {
-  "note": "Fails if docs_related stops answering a register with every document linked to it or its tables and variables (one row per link, whole-document page 0 and the page of each subject), loses the row fields, or misorders the rows by title, hash and page; or if a table or a variable stops answering its own links only.",
+  "note": "Fails if docs_related stops answering a register with every document linked to it or its tables and variables (one row per link, whole-document page 0 and the page of each subject), loses the row fields, or misorders the rows by title, hash and page; or if a table or a variable stops answering its own links only; or answers an unknown ref other than not_found, a ref outside the public-id grammar other than invalid_ref, or ignores an unknown parameter instead of refusing it.",
   "fixture": "documents",
   "requests": [
     {"operation": "docs_related", "path": "/api/docs/related/demo/dok"},
     {"operation": "docs_related", "path": "/api/docs/related/demo/dok/t"},
-    {"operation": "docs_related", "path": "/api/docs/related/demo/dok/beteckning"}
+    {"operation": "docs_related", "path": "/api/docs/related/demo/dok/beteckning"},
+    {"operation": "docs_related", "path": "/api/docs/related/demo/nope"},
+    {"operation": "docs_related", "path": "/api/docs/related/demo/dok/t/x/y"},
+    {"operation": "docs_related", "path": "/api/docs/related/demo/dok", "query": {"bogus": "1"}}
   ]
 }

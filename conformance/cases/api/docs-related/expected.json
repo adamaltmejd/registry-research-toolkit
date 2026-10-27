@@ -29,5 +29,17 @@
       "/data/*/doc": ["630f3baa6319dc7e9816d5d1e7d0347d412cec411091e7f14f0234b117a5a61f"],
       "/data/*/page": [2]
     }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/dok/t/x/y"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "bogus"}
   }
 ]
