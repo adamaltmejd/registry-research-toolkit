@@ -570,16 +570,17 @@ pub fn apply(
                         let Record::Occurrence(row) = record else {
                             return false;
                         };
-                        context.period(row).as_ref() == Some(&p)
-                            && premise.subjects.iter().any(|source| {
-                                matches_occurrence(
-                                    &source.fields,
-                                    std::slice::from_ref(&source.locator),
-                                    row,
-                                    &tree(record),
-                                    &context,
-                                )
-                            })
+                        context.period(row).is_some_and(|existing| {
+                            !reg_core::overlap(&[existing], std::slice::from_ref(&p)).is_empty()
+                        }) && premise.subjects.iter().any(|source| {
+                            matches_occurrence(
+                                &source.fields,
+                                std::slice::from_ref(&source.locator),
+                                row,
+                                &tree(record),
+                                &context,
+                            )
+                        })
                     }) {
                         return Err(
                             "assert occurrence cannot replace a source occurrence; use set".into(),
