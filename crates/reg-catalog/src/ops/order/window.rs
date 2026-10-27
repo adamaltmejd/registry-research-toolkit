@@ -308,67 +308,20 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let mut pieces = Vec::new();
     let mut by_segment = s.requested.clone();
     if edition.is_some() || qualifier.is_some() {
-        let releases: Vec<(i64, i64, i64)> = scope
+        let releases: Vec<(i64, i64)> = scope
             .conn
-            .prepare(
-                "SELECT id, start, end FROM release
-                 WHERE table_id = ?1 AND start IS NOT NULL
-                   AND (?2 IS NULL OR edition = ?2) AND (?3 IS NULL OR qualifier = ?3)
-                   AND (?2 IS NOT NULL OR is_primary = 1)
-                 ORDER BY start, end, id",
-            )?
+            .prepare(&format!(
+                "SELECT r.start, r.end FROM release r WHERE {SELECTED}"
+            ))?
             .query_map(rusqlite::params![s.table.id, edition, qualifier], |row| {
-                Ok((row.get(0)?, row.get(1)?, row.get(2)?))
+                Ok((row.get(0)?, row.get(1)?))
             })?
             .collect::<rusqlite::Result<_>>()?;
         let windows = overlap(
             &s.requested,
-            &merge(releases.iter().map(|r| interval(r.1, r.2)).collect()),
+            &merge(releases.iter().map(|r| interval(r.0, r.1)).collect()),
         );
-        // simplify: two selected releases over one day (two qualifiers of one edition)
-        // serve it from the first by (start, end, id); revisit when a source names an
-        // edition over qualified releases.
-        let mut taken: Vec<Interval> = Vec::new();
-        let mut occurrences = scope.conn.prepare(&format!(
-            "SELECT x.start, x.end, {FORM},
-                    CASE WHEN g.state = 'ambiguous' THEN 'ambiguous' ELSE 'clear' END,
-                    x.end = ?3
-             FROM occurrence x JOIN spelling sp ON sp.id = x.spelling_id
-               LEFT JOIN segment g ON g.id = x.segment_id
-             WHERE x.variable_id = ?1 AND x.release_id = ?2 AND x.status IN ('used', 'shadowed')
-             ORDER BY x.start, x.end, x.id"
-        ))?;
-        for (release, ..) in &releases {
-            let rows: Vec<Piece> = occurrences
-                .query_map(
-                    rusqlite::params![variable, release, scope.server.open.1],
-                    |row| piece(k, row),
-                )?
-                .collect::<rusqlite::Result<_>>()?;
-            let contested = contested(&rows);
-            for row in rows {
-                for days in gaps(
-                    &overlap(std::slice::from_ref(&row.days), &windows),
-                    taken.clone(),
-                ) {
-                    taken.push(days.clone());
-                    let whole = std::slice::from_ref(&days);
-                    for days in overlap(whole, &contested) {
-                        pieces.push(Piece {
-                            days,
-                            state: "ambiguous".to_owned(),
-                            ..row.clone()
-                        });
-                    }
-                    for days in gaps(whole, contested.clone()) {
-                        pieces.push(Piece {
-                            days,
-                            ..row.clone()
-                        });
-                    }
-                }
-            }
-        }
+        pieces = selected(scope, k, variable, &windows)?;
         by_segment = if qualifier.is_some() {
             Vec::new()
         } else {
@@ -402,21 +355,130 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     Ok(pieces)
 }
 
-/// The days two occurrences of one release cover in different forms. A shadowed
-/// occurrence has no segment to be ambiguous in, so they are found here, before
-/// first-wins subtraction drops the second form.
-fn contested(rows: &[Piece]) -> Vec<Interval> {
-    let mut days = Vec::new();
-    for (i, a) in rows.iter().enumerate() {
-        for b in &rows[i + 1..] {
-            if (&a.spelling, &a.dtype, a.valueset) != (&b.spelling, &b.dtype, b.valueset)
-                && let Some(both) = intersect(&a.days, &b.days)
-            {
-                days.push(both);
+/// The releases of table `?1` a source's edition `?2` and qualifier `?3` select, as
+/// `release r`: that edition (and qualifier), or with a qualifier alone the primary
+/// releases of that qualifier.
+const SELECTED: &str = "r.table_id = ?1 AND r.start IS NOT NULL
+    AND (?2 IS NULL OR r.edition = ?2) AND (?3 IS NULL OR r.qualifier = ?3)
+    AND (?2 IS NOT NULL OR r.is_primary = 1)";
+
+/// The pieces serving table `k`'s selected releases give the variable inside `windows`,
+/// from one pass over their used and shadowed occurrences. Those occurrences have no
+/// segment, so the builder's segment rules (crates/DESIGN.md "Time" and "Identity",
+/// reg-resolve's segments and F2, v4 §4.3-4.6) are applied here before a form is picked:
+/// - a day another variable claims the variable's folded spelling on is ambiguous;
+/// - a day the variable's occurrences give in different forms (spelling, type, value
+///   set) is ambiguous, across releases too: overlapping deliveries of different
+///   periods have no preference;
+/// - sensitivity and identifier are OR-ed over every occurrence covering a day.
+///
+/// Each day then takes its form from the first occurrence covering it, by release
+/// (start, end, id), then occurrence (start, end, id).
+fn selected(
+    scope: &Scope,
+    k: usize,
+    variable: i64,
+    windows: &[Interval],
+) -> Result<Vec<Piece>, Error> {
+    let s = &scope.serving[k];
+    let edition = scope.source.edition.map(reg_core::project::Edition::as_str);
+    let rows: Vec<(i64, i64, Piece)> = scope
+        .conn
+        .prepare(&format!(
+            "SELECT x.start, x.end, {FORM},
+                    CASE WHEN g.state = 'ambiguous' THEN 'ambiguous' ELSE 'clear' END,
+                    x.end = ?4, x.variable_id, sp.fold_id
+             FROM occurrence x JOIN release r ON r.id = x.release_id
+               JOIN spelling sp ON sp.id = x.spelling_id
+               LEFT JOIN segment g ON g.id = x.segment_id
+             WHERE {SELECTED} AND x.status IN ('used', 'shadowed')
+               AND (x.variable_id = ?5 OR sp.fold_id IN (
+                 SELECT s2.fold_id FROM occurrence o2 JOIN spelling s2 ON s2.id = o2.spelling_id
+                 WHERE o2.variable_id = ?5 AND o2.table_id = ?1))
+             ORDER BY r.start, r.end, r.id, x.start, x.end, x.id"
+        ))?
+        .query_map(
+            rusqlite::params![
+                s.table.id,
+                edition,
+                scope.source.qualifier.as_deref(),
+                scope.server.open.1,
+                variable
+            ],
+            |row| Ok((row.get(11)?, row.get(12)?, piece(k, row)?)),
+        )?
+        .collect::<rusqlite::Result<_>>()?;
+    let mut own: Vec<(i64, Piece)> = Vec::new();
+    let mut rivals: Vec<(i64, Interval)> = Vec::new();
+    for (owner, fold, row) in rows {
+        for days in overlap(std::slice::from_ref(&row.days), windows) {
+            if owner == variable {
+                own.push((
+                    fold,
+                    Piece {
+                        days,
+                        ..row.clone()
+                    },
+                ));
+            } else {
+                rivals.push((fold, days));
             }
         }
     }
-    merge(days)
+    let mut ambiguous = Vec::new();
+    for (i, (fold, a)) in own.iter().enumerate() {
+        let forms = own[i + 1..]
+            .iter()
+            .filter(|(_, b)| {
+                (&a.spelling, &a.dtype, a.valueset) != (&b.spelling, &b.dtype, b.valueset)
+            })
+            .map(|(_, b)| &b.days);
+        let claims = rivals.iter().filter(|(f, _)| f == fold).map(|(_, d)| d);
+        ambiguous.extend(forms.chain(claims).filter_map(|d| intersect(&a.days, d)));
+    }
+    let flagged = |test: fn(&Piece) -> bool| {
+        merge(
+            own.iter()
+                .filter(|(_, p)| test(p))
+                .map(|(_, p)| p.days.clone())
+                .collect(),
+        )
+    };
+    let marks: [(_, fn(&mut Piece)); 3] = [
+        (merge(ambiguous), |p| "ambiguous".clone_into(&mut p.state)),
+        (flagged(|p| p.sensitive), |p| p.sensitive = true),
+        (flagged(|p| p.identifier), |p| p.identifier = true),
+    ];
+    let mut pieces = Vec::new();
+    let mut taken: Vec<Interval> = Vec::new();
+    for (_, row) in own {
+        for days in gaps(std::slice::from_ref(&row.days), taken.clone()) {
+            taken.push(days.clone());
+            let mut parts = vec![Piece {
+                days,
+                ..row.clone()
+            }];
+            for (set, mark) in &marks {
+                parts = parts
+                    .into_iter()
+                    .flat_map(|p| {
+                        let whole = std::slice::from_ref(&p.days);
+                        let mut inside: Vec<Piece> = overlap(whole, set)
+                            .into_iter()
+                            .map(|days| Piece { days, ..p.clone() })
+                            .collect();
+                        inside.iter_mut().for_each(mark);
+                        let outside = gaps(whole, set.clone())
+                            .into_iter()
+                            .map(|days| Piece { days, ..p.clone() });
+                        inside.into_iter().chain(outside).collect::<Vec<_>>()
+                    })
+                    .collect();
+            }
+            pieces.extend(parts);
+        }
+    }
+    Ok(pieces)
 }
 
 /// A segment or occurrence row: `start, end`, the [`FORM`] columns, `state` and `open`.
@@ -560,11 +622,12 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
 }
 
 /// `variable_replaced`: an incoming variable `continues` edge whose `at_start` lies
-/// before the request end. Reported, never followed (following waits for D).
+/// before the request end, or that states no `at` (then with no period: no day is
+/// inferred). Reported, never followed (following waits for D).
 fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let requested = hull(scope.requested);
-    let rows: Vec<(String, i64, Option<String>)> = scope
+    let rows: Vec<(String, Option<i64>, Option<String>)> = scope
         .conn
         .prepare(
             "SELECT v.pid, r.at_start, c.body
@@ -572,7 +635,7 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
                LEFT JOIN text c ON c.id = r.caveat_text
              WHERE r.kind = 'continues' AND r.subject_kind = 'variable'
                AND r.object_kind = 'variable' AND r.object_id = ?1
-               AND r.at_start IS NOT NULL AND r.at_start <= ?2
+               AND (r.at_start IS NULL OR r.at_start <= ?2)
              ORDER BY r.at_start, v.pid",
         )?
         .query_map(
@@ -583,18 +646,20 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     Ok(rows
         .into_iter()
         .map(|(successor, at_start, caveat)| {
-            let from = iso_day(at_start).max(requested.0.clone());
-            let days = (from, requested.1.clone());
+            let days = at_start.map(|a| (iso_day(a).max(requested.0.clone()), requested.1.clone()));
+            let from = at_start.map_or_else(
+                || "; the date is not stated".to_owned(),
+                |a| format!(" from {}", iso_day(a)),
+            );
             let caveat = caveat.map_or_else(String::new, |c| format!(": {c}"));
             let mut issue = at.issue(
                 IssueLevel::Warning,
                 "variable_replaced",
                 scope.table,
-                Some(&days),
+                days.as_ref(),
                 format!(
-                    "{} is continued by {successor} from {}{caveat}",
-                    at.variable.pid,
-                    iso_day(at_start)
+                    "{} is continued by {successor}{from}{caveat}",
+                    at.variable.pid
                 ),
             );
             issue.successor_fqid = Some(successor);

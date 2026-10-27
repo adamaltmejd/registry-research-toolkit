@@ -12,7 +12,9 @@
         "form_change",
         "coverage_end_unstated",
         "table_succession_undated",
-        "period_clipped"
+        "period_clipped",
+        "variable_sensitive",
+        "variable_replaced"
       ],
       "/data/issues/*/level": [
         "info",
@@ -23,7 +25,9 @@
         "info",
         "info",
         "info",
-        "info"
+        "info",
+        "warning",
+        "warning"
       ],
       "/data/issues/*/path": [
         "/sources/0/bindings/0",
@@ -34,7 +38,9 @@
         "/sources/3/bindings/0",
         "/sources/4/bindings/0",
         "/sources/5",
-        "/sources/5/bindings/0"
+        "/sources/5/bindings/0",
+        "/sources/6/bindings/0",
+        "/sources/7/bindings/0"
       ],
       "/data/issues/*/source": [
         "flags",
@@ -45,7 +51,9 @@
         "forms",
         "open",
         "undated",
-        "undated"
+        "undated",
+        "release-flags",
+        "replaced-undated"
       ],
       "/data/issues/*/variable": [
         "demo/imp/lopnr",
@@ -56,7 +64,9 @@
         "demo/nam/belopptot",
         "demo/opn/y",
         null,
-        "demo/und/ink"
+        "demo/und/ink",
+        "demo/edt/v",
+        "demo/rep/ny"
       ],
       "/data/issues/*/table": [
         "demo/imp",
@@ -67,7 +77,9 @@
         "demo/nam/a",
         "demo/opn",
         "demo/und/ett",
-        "demo/und/ett"
+        "demo/und/ett",
+        "demo/edt",
+        "demo/rep"
       ],
       "/data/issues/*/period": [
         {"start": "2020-01-01", "end": "2021-01-01"},
@@ -78,7 +90,9 @@
         {"start": "2018-01-01", "end": "2021-01-01"},
         {"start": "2019-01-01", "end": "2020-01-01"},
         {"start": "2018-01-01", "end": "2020-01-01"},
-        {"start": "2018-01-01", "end": "2020-01-01"}
+        {"start": "2018-01-01", "end": "2020-01-01"},
+        {"start": "2023-01-01", "end": "2024-01-01"},
+        null
       ],
       "/data/issues/*/successor_fqid": [
         null,
@@ -89,7 +103,9 @@
         null,
         null,
         "demo/und/tva",
-        null
+        null,
+        null,
+        "demo/rep/nyast"
       ]
     }
   },
