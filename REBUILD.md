@@ -225,7 +225,46 @@ The full SCB read is a heavy run.
       cases (13 on reused ItemIds, 5 on single-use ones; about 550 of the 924 by
       extrapolation). Reuse widens it. This re-opens D30 and the #1949 ruling and is
       escalated to the tracker. The rule is not changed here. The per-case table is in
-      the PR that recorded it;
+      the PR that recorded it.
+    - **After the ValidTo rule** (the tracker's ruling: drop an item only when all its
+      intervals are closed and the latest ValidTo is before the period; ignore
+      ValidFrom), from a full build at bc3e972c5 against 0.64.0.
+      - Counts: "codes differ" 924 → 967, only in old 75 → 19, only in new 79 → 80. Two
+        causes. The comparison now reads the occurrence sets of ambiguous (F2) segments;
+        that empties "only in old" of its 56 F2 cases and adds one to "only in new". The
+        rule moves 604 cases out of "codes differ" (553 to no difference, 51 to the
+        blank code only) and 647 in.
+      - The 30 sampled cases: of the 18 wrong drops, 16 now match and 1 differs only by
+        the blank code. The 18th (ULF `ha1822`) gets back 3 of its 4 codes. Its fourth,
+        `0`, now drops by the new rule, the class below. The 4 right drops: code 86
+        (twice) and the historical kommuner still drop. Europabolag and code 55 are kept
+        for the 1997 release, the cost the ruling named. The other 8 are unchanged (b,
+        c, e), and the F2 case differs only by the blank code.
+      - Only in old: the 56 F2 cases now show 44 no difference, 10 blank code only and 2
+        `studiekommun` codes differ (1,151 → 295, retired kommuner, right). The other 19
+        are unchanged. Only in new: the 79 are unchanged, plus `cfl/kurskod` (an F2
+        segment with 7,177 codes, no set in the old catalog).
+      - The 647 entrants: 646 lose only codes whose every interval is closed and ends
+        before the release. The old "every item dated" and "some overlap" guards kept
+        them, and the ruling removed those guards. 524 lose code `0`, a missing-value
+        sentinel ("Värde saknas", "Okänt värde") whose three ItemIds end in 1993-1994.
+        These are in ULF and the work-related-disorders survey from 2004 on, where `.`
+        "Värde saknas" is open-ended. The rest are retired codes: SU, YU, ZR, TP, kommun
+        1504, sector codes 11 and 15. Under the ruling these are right drops. Whether a
+        sentinel that SCB closed in 1994 should drop from 2004 releases that still list
+        it is for the tracker. The 647th, `ep-val-resultat/riksdagsvalkrets-kod`, loses
+        `02`: its occurrences carry F6 although every population's rows name the same
+        set. That is escalated as a possible resolver defect.
+      - r118 (`scb/taxeringsutfallet`) `kommun`: 0197 and 0199 are absent 2014-2017 and
+        present from the delivery named 2018 (beskattningsår 2017). The 2014-2016
+        deliveries name the LKF 2013 set, and the 2017 delivery the LKF 2016 set. Both
+        sets have 290 items and neither code. From 2018 the LKF 2017, 2018 and 2021 sets
+        hold both, open-ended. This is the source, bucket (f): a D `set` if the
+        2014-2017 data hold them.
+      - Verdict: the ruling's check passes. The wrong drops are gone and the right ones
+        stay. The guards' removal adds one large class, 646 ended codes that are right
+        by the rule, most of them a legacy missing-value sentinel. It is reported to the
+        tracker, not ruled here. The per-case table is in the PR that recorded it;
   - B3: when `reg-catalog` is rewritten, slim the resolve `Report`
     (`crates/reg-resolve/src/lib.rs`, 26 counters) to what the catalog cannot answer:
     the ledger lists and `split_keys`. The comparison script derives the rest with SQL;
