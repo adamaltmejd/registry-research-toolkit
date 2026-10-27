@@ -1,5 +1,634 @@
 [
   {
+    "name": "show",
+    "description": "The summary of a provider, register, table or variable by public id or bare name; without a ref, the catalog's providers.",
+    "inputSchema": {
+      "properties": {
+        "ref": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Period": {
+          "description": "`shape.Period`: a half-open `[start, end)` of ISO days, `null` for an open end.",
+          "properties": {
+            "end": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "type": "object"
+        },
+        "Population": {
+          "description": "One population a release states (`shape.Release.populations`).",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "ref_day": {
+              "description": "The ISO day the population is stated for.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "definition",
+            "ref_day"
+          ],
+          "type": "object"
+        },
+        "Release": {
+          "description": "`shape.Release`: a delivery of a table.",
+          "properties": {
+            "edition": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "parse_state": {
+              "type": "string"
+            },
+            "period": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/Period",
+                  "description": "`null` when the release is unparsed."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "populations": {
+              "items": {
+                "$ref": "#/$defs/Population"
+              },
+              "type": "array"
+            },
+            "primary": {
+              "description": "`null` when the release is unparsed.",
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "qualifier": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "period",
+            "edition",
+            "qualifier",
+            "primary",
+            "parse_state",
+            "populations"
+          ],
+          "type": "object"
+        },
+        "Show": {
+          "description": "`shape.Show`: a summary tagged by `kind`. Every kind but `root` carries the\nresolved `fqid`, so a bare-name request gets the id back.",
+          "oneOf": [
+            {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "root"
+                  ],
+                  "type": "string"
+                },
+                "providers": {
+                  "items": {
+                    "$ref": "#/$defs/ShowProviderRef"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "providers",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "provider"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "registers": {
+                  "items": {
+                    "$ref": "#/$defs/ShowRegisterRef"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "registers",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "register"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "tables": {
+                  "items": {
+                    "$ref": "#/$defs/ShowTable"
+                  },
+                  "type": "array"
+                },
+                "unplaced": {
+                  "description": "The literal names of the releases the reader could not place in time.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "variables": {
+                  "items": {
+                    "$ref": "#/$defs/ShowVariableRef"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "description",
+                "period",
+                "tables",
+                "variables",
+                "unplaced",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "cadence": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "implicit": {
+                  "type": "boolean"
+                },
+                "kind": {
+                  "enum": [
+                    "table"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "register": {
+                  "description": "The register's fqid.",
+                  "type": "string"
+                },
+                "releases": {
+                  "items": {
+                    "$ref": "#/$defs/Release"
+                  },
+                  "type": "array"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "row_keys": {
+                  "items": {
+                    "$ref": "#/$defs/ShowRowKey"
+                  },
+                  "type": "array"
+                },
+                "spans": {
+                  "items": {
+                    "$ref": "#/$defs/Period"
+                  },
+                  "type": "array"
+                },
+                "timeless": {
+                  "type": "boolean"
+                },
+                "unit_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "description",
+                "register",
+                "role",
+                "implicit",
+                "timeless",
+                "unit_type",
+                "cadence",
+                "spans",
+                "releases",
+                "row_keys",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "properties": {
+                "definition": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fqid": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "variable"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "period": {
+                  "$ref": "#/$defs/Period"
+                },
+                "register": {
+                  "description": "The register's fqid.",
+                  "type": "string"
+                },
+                "spellings": {
+                  "items": {
+                    "$ref": "#/$defs/ShowSpelling"
+                  },
+                  "type": "array"
+                },
+                "tables": {
+                  "description": "The fqids of the tables the variable has segments in.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "texts": {
+                  "items": {
+                    "$ref": "#/$defs/ShowText"
+                  },
+                  "type": "array"
+                },
+                "unit_types": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "fqid",
+                "name",
+                "definition",
+                "register",
+                "period",
+                "unit_types",
+                "texts",
+                "spellings",
+                "tables",
+                "kind"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "ShowProviderRef": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name"
+          ],
+          "type": "object"
+        },
+        "ShowRegisterRef": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "period"
+          ],
+          "type": "object"
+        },
+        "ShowRowKey": {
+          "description": "A segment of the table that holds its rows' key.",
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "spelling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "spelling",
+            "period"
+          ],
+          "type": "object"
+        },
+        "ShowSpelling": {
+          "description": "A folded name the variable is known by.",
+          "properties": {
+            "kind": {
+              "description": "`delivered` or `curated`.",
+              "type": "string"
+            },
+            "spelling": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "spelling",
+            "kind"
+          ],
+          "type": "object"
+        },
+        "ShowTable": {
+          "description": "A register's table; the implicit one has the register's fqid.",
+          "properties": {
+            "cadence": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "implicit": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "role": {
+              "type": "string"
+            },
+            "timeless": {
+              "type": "boolean"
+            },
+            "unit_type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "role",
+            "implicit",
+            "timeless",
+            "unit_type",
+            "cadence",
+            "period"
+          ],
+          "type": "object"
+        },
+        "ShowText": {
+          "description": "One run of a variable's descriptive text.",
+          "properties": {
+            "definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "label": {
+              "type": "string"
+            },
+            "operational_definition": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "period",
+            "label",
+            "definition",
+            "operational_definition",
+            "unit"
+          ],
+          "type": "object"
+        },
+        "ShowVariableRef": {
+          "properties": {
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "period"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Show"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
     "name": "graph",
     "description": "The relations around a variable, a table or a register: what it continues or is continued by, what it is derived from, with the day a succession starts and the source's own words about it. `kind=derived_from` is the lineage.",
     "inputSchema": {
@@ -195,6 +824,179 @@
           "properties": {
             "data": {
               "$ref": "#/$defs/Graph"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "data",
+            "meta"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "error": {
+              "$ref": "#/$defs/Error"
+            },
+            "meta": {
+              "$ref": "#/$defs/Meta"
+            }
+          },
+          "required": [
+            "error",
+            "meta"
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "resolve",
+    "description": "Match delivered column names (at most 200) to variables, optionally within one register. A name that matches nothing is reported as unmatched.",
+    "inputSchema": {
+      "properties": {
+        "columns": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 200,
+          "type": "array"
+        },
+        "register": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "columns"
+      ],
+      "type": "object"
+    },
+    "outputSchema": {
+      "$defs": {
+        "Error": {
+          "description": "The error document `{code, class, message, remediation, fields}`.",
+          "properties": {
+            "class": {
+              "type": "string"
+            },
+            "code": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "object"
+            },
+            "message": {
+              "type": "string"
+            },
+            "remediation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "code",
+            "class",
+            "message",
+            "remediation",
+            "fields"
+          ],
+          "type": "object"
+        },
+        "Meta": {
+          "description": "The response `meta` (`shape.Meta`).",
+          "properties": {
+            "catalog_version": {
+              "type": "string"
+            },
+            "contract_version": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contract_version",
+            "generation",
+            "catalog_version"
+          ],
+          "type": "object"
+        },
+        "Resolved": {
+          "description": "`{columns: [ResolvedColumn]}`.",
+          "properties": {
+            "columns": {
+              "items": {
+                "$ref": "#/$defs/ResolvedColumn"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "columns"
+          ],
+          "type": "object"
+        },
+        "ResolvedColumn": {
+          "description": "`shape.ResolvedColumn`: a requested column and the variables it names.",
+          "properties": {
+            "column": {
+              "description": "As asked.",
+              "type": "string"
+            },
+            "matches": {
+              "items": {
+                "$ref": "#/$defs/ResolvedMatch"
+              },
+              "type": "array"
+            },
+            "status": {
+              "description": "`matched` for one variable, `ambiguous` for several, `unmatched` for none.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "column",
+            "status",
+            "matches"
+          ],
+          "type": "object"
+        },
+        "ResolvedMatch": {
+          "properties": {
+            "alias": {
+              "description": "`delivered` or `curated`.",
+              "type": "string"
+            },
+            "fqid": {
+              "type": "string"
+            },
+            "name": {
+              "description": "The variable's label.",
+              "type": "string"
+            },
+            "register": {
+              "description": "The register's fqid.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "fqid",
+            "name",
+            "register",
+            "alias"
+          ],
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "data": {
+              "$ref": "#/$defs/Resolved"
             },
             "meta": {
               "$ref": "#/$defs/Meta"

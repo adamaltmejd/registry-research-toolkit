@@ -2,27 +2,58 @@
   {
     "status": 200,
     "json": {
-      "/data/columns/*/column_name": ["value", "Secret", "VALØRARKIV", "Valuereference", "Missing"],
-      "/data/columns/*/status": ["matched", "matched", "matched", "matched", "no_match"],
-      "/data/columns/0/matches": [
+      "/data/columns": [
         {
-          "fqid": "scb/example/value",
-          "var_id": 44,
-          "variable_name": "Value",
-          "matched_column": "Value",
-          "register": "scb/example"
-        }
-      ],
-      "/data/columns/*/matches/*/matched_column": [["Value"], ["Secret"], ["Valørarkiv"], ["Valuereference"], []],
-      "/data/columns/3/matches/*/fqid": ["scb/example/reference"]
+          "column": "Kon",
+          "status": "ambiguous",
+          "matches": [
+            {"fqid": "demo/reg2/kon", "name": "Kön", "register": "demo/reg2", "alias": "delivered"},
+            {"fqid": "demo/reg3/kon", "name": "Kön", "register": "demo/reg3", "alias": "delivered"}
+          ]
+        },
+        {
+          "column": "KON",
+          "status": "ambiguous",
+          "matches": [
+            {"fqid": "demo/reg2/kon", "name": "Kön", "register": "demo/reg2", "alias": "delivered"},
+            {"fqid": "demo/reg3/kon", "name": "Kön", "register": "demo/reg3", "alias": "delivered"}
+          ]
+        },
+        {
+          "column": "Lopnr",
+          "status": "matched",
+          "matches": [
+            {"fqid": "demo/reg2/lopnr", "name": "Löpnummer", "register": "demo/reg2", "alias": "delivered"}
+          ]
+        },
+        {"column": "Nope", "status": "unmatched", "matches": []}
+      ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/columns/*/status": ["matched", "no_match", "no_match", "no_match", "no_match"],
-      "/data/columns/0/matches/*/matched_column": ["Value"],
-      "/meta/scope": "holdings"
+      "/data/columns/*/column": ["Kon", "KON", "Lopnr", "Nope"],
+      "/data/columns/*/status": ["matched", "matched", "matched", "unmatched"],
+      "/data/columns/0/matches": [
+        {"fqid": "demo/reg2/kon", "name": "Kön", "register": "demo/reg2", "alias": "delivered"}
+      ]
     }
+  },
+  {
+    "status": 409,
+    "json": {"/error/code": "ambiguous_ref", "/error/fields/ref": "kon"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/reg2/ind"}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "columns"}
   }
 ]
