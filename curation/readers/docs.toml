@@ -1,0 +1,9 @@
+# Documents (crates/reg-readers/src/docs.rs): the two metadata files beside the
+# documents, and the markdown frontmatter keys read.
+related = "related_documents.toml"
+sources = "doc_sources.toml"
+
+[frontmatter]
+variable = "variable"
+title = "display_name"
+source = "source"

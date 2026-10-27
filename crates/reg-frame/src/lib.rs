@@ -244,6 +244,47 @@ pub struct Notice {
     pub locator: Locator,
 }
 
+/// One section of a parsed document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSection {
+    pub heading: Option<String>,
+    pub page: Option<u32>,
+    pub body: String,
+}
+
+/// What a document is about, as the source names it; `page` 0 is the whole document.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DocSubject {
+    pub endpoint: Endpoint,
+    pub page: u32,
+}
+
+/// A document the source publishes about its registers: a parsed text or a PDF.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Doc {
+    /// SHA-256 (lowercase hex) of the original file's bytes.
+    pub hash: String,
+    /// `parsed` or `pdf`.
+    pub kind: String,
+    pub title: String,
+    pub licence: String,
+    /// The original file's size.
+    pub bytes: u64,
+    /// Where the original is published, when it has a URL of its own.
+    pub url: Option<String>,
+    /// `parsed` only, in order. Empty for `pdf`.
+    #[serde(default)]
+    pub sections: Vec<DocSection>,
+    /// `pdf` only: the bytes as lowercase hex ([`hex`]), so the frame stays JSONL.
+    pub content: Option<String>,
+    #[serde(default)]
+    pub subjects: Vec<DocSubject>,
+    pub locator: Locator,
+}
+
 /// One frame record.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -255,6 +296,7 @@ pub enum Record {
     Occurrence(Occurrence),
     Link(Link),
     Notice(Notice),
+    Doc(Doc),
 }
 
 /// A reader's whole output for one input: its records, sorted.

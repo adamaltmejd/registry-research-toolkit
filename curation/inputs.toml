@@ -94,6 +94,22 @@ reader = "transcription"
 path = "catalog/source/transcriptions/scb"
 provider = "scb"
 
+# Parsed LISA documents. Their subjects are keyed like the LISA variable list's, so the
+# register is its handle; D's `bind` joins that to the export's LISA register.
+[[input]]
+name = "lisa-docs"
+reader = "docs"
+path = "catalog/docs/markdown/lisa"
+provider = "scb"
+register = "lisa-workbook"
+
+# PDFs pinned by hash in related_documents.toml; their subjects are the list's register keys.
+[[input]]
+name = "related-docs"
+reader = "docs"
+path = "catalog/docs/related"
+provider = "scb"
+
 [[input]]
 name = "sos-lmed"
 reader = "sos-workbook"
