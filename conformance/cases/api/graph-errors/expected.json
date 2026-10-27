@@ -1,0 +1,27 @@
+[
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields": {"ref": "demo/rel/ny/x"}}
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields": {"ref": "demo/nope"}}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields": {"parameter": "kind"}}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields": {
+        "ref": "lopnr",
+        "candidates": [
+          {"fqid": "demo/kalla/lopnr", "kind": "variable", "name": "Löpnummer"},
+          {"fqid": "demo/rel/lopnr", "kind": "variable", "name": "Löpnummer"}
+        ]
+      }
+    }
+  }
+]

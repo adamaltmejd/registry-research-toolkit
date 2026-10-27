@@ -53,7 +53,7 @@ EQUIVALENCE = {
     "segments": ("segments-fields", "segments-filters", "segments-errors"),
     "values": ("values-blank-code", "values-pair", "values-tree", "values-errors"),
     # r-findings-graph
-    "graph": (),
+    "graph": ("graph-succession", "graph-reference-edges", "graph-errors"),
     # r-search
     "search": (),
     # r-docs

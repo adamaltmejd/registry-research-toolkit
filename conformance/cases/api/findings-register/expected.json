@@ -1,0 +1,122 @@
+[
+  {
+    "status": 200,
+    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]},
+    "json": {
+      "/data": [
+        {
+          "code": "S0:source-notice",
+          "severity": "notice",
+          "subject": {
+            "kind": "release",
+            "fqid": null,
+            "table": "demo/rel/gammal",
+            "period": {"start": "2016-01-01", "end": "2017-01-01"},
+            "release": "Gammal 2016",
+            "spelling": null,
+            "value_set": null
+          },
+          "period": null,
+          "message": "Skattebasen ändrades 2016.",
+          "caveat": null
+        },
+        {
+          "code": "F9:unparsed-delivery",
+          "severity": "review",
+          "subject": {
+            "kind": "release",
+            "fqid": null,
+            "table": "demo/rel/ny",
+            "period": null,
+            "release": "Ny leverans",
+            "spelling": null,
+            "value_set": null
+          },
+          "period": null,
+          "message": "delivery \"Ny leverans\" is not placed in time; its columns are unplaced",
+          "caveat": null
+        },
+        {
+          "code": "F7:edition-disagreement",
+          "severity": "review",
+          "subject": {
+            "kind": "release",
+            "fqid": null,
+            "table": "demo/rel/ny",
+            "period": {"start": "2019-01-01", "end": "2020-01-01"},
+            "release": "Ny 2019 prel",
+            "spelling": null,
+            "value_set": null
+          },
+          "period": {"start": "2019-01-01", "end": "2020-01-01"},
+          "message": "delivery \"Ny 2019 prel\" disagrees with the primary edition on the spelling or type of 1 key(s): k3",
+          "caveat": null
+        },
+        {
+          "code": "S0:source-notice",
+          "severity": "notice",
+          "subject": {
+            "kind": "variable",
+            "fqid": "demo/rel/inkomst",
+            "table": null,
+            "period": null,
+            "release": null,
+            "spelling": null,
+            "value_set": null
+          },
+          "period": null,
+          "message": "Inkomst mäts före avdrag i äldre leveranser.",
+          "caveat": null
+        },
+        {
+          "code": "F1:label-drift",
+          "severity": "notice",
+          "subject": {
+            "kind": "variable",
+            "fqid": "demo/rel/inkomst",
+            "table": null,
+            "period": null,
+            "release": null,
+            "spelling": null,
+            "value_set": null
+          },
+          "period": {"start": "2016-01-01", "end": "2016-01-02"},
+          "message": "\"Inkomst före skatt\" → \"Inkomst efter skatt\"",
+          "caveat": null
+        },
+        {
+          "code": "F2:ambiguous",
+          "severity": "review",
+          "subject": {
+            "kind": "segment",
+            "fqid": "demo/rel/inkomst",
+            "table": "demo/rel/gammal",
+            "period": {"start": "2015-01-01", "end": "2018-01-01"},
+            "release": null,
+            "spelling": null,
+            "value_set": null
+          },
+          "period": {"start": "2015-01-01", "end": "2018-01-01"},
+          "message": "Inkomst cannot be placed on one variable form here",
+          "caveat": null
+        },
+        {
+          "code": "F2:ambiguous",
+          "severity": "review",
+          "subject": {
+            "kind": "segment",
+            "fqid": "demo/rel/inkomst-2",
+            "table": "demo/rel/gammal",
+            "period": {"start": "2017-01-01", "end": "2018-01-01"},
+            "release": null,
+            "spelling": null,
+            "value_set": null
+          },
+          "period": {"start": "2017-01-01", "end": "2018-01-01"},
+          "message": "Inkomst cannot be placed on one variable form here",
+          "caveat": null
+        }
+      ]
+    }
+  }
+]

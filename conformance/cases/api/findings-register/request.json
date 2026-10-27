@@ -1,0 +1,7 @@
+{
+  "note": "findings on a register, from fixtures/relations. Seven findings, each a rule in reg-resolve or the link stage: S0:source-notice on release g2016 and on variable Inkomst (reg-build link.rs Notice, emit.rs finding rows; an `at`-less notice has no period; caveat is always null, emit.rs writes NULL), F9:unparsed-delivery on release `Ny leverans` (reg-resolve lib.rs, the F9 push), F7:edition-disagreement on the preliminary release `Ny 2019 prel` (lib.rs, F7 push: Belopp is decimal there, int in the final), F1:label-drift on Inkomst at 2016-01-01 (f1.rs, the day the new label starts, so the one-day period [2016-01-01, 2016-01-02)), and F2:ambiguous on Inkomst's segment and on its rival's (lib.rs, rival claimants; the segment period is the segment's). Order is subject kind (release, variable, segment), then the subject tuple (fqid, table, period start, release; null first), then finding start (null first). Fails if the order drifts (an unplaced release before a placed one, the tax notice before F1 on one variable), if a release subject is keyed by a row id or lacks `table` and `release`, if a segment subject lacks its variable, table and period, or if a finding's period leaks the half-open end as an inclusive day.",
+  "fixture": "relations",
+  "requests": [
+    {"operation": "findings", "path": "/api/findings/demo/rel"}
+  ]
+}

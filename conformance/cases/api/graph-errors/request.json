@@ -1,0 +1,10 @@
+{
+  "note": "graph refusals, from fixtures/relations. A four-segment ref is outside the public-id grammar (invalid_ref, never not_found); a well-formed unknown ref is not_found; a `kind` outside the enum is invalid_parameter naming it; the bare name `lopnr` is shared by a variable of rel and one of kalla (ambiguous_ref lists both). Fails if a malformed ref answers not_found, if an unknown kind is ignored and answers every edge, or if a shared bare name picks one entity.",
+  "fixture": "relations",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/demo/rel/ny/x"},
+    {"operation": "graph", "path": "/api/graph/demo/nope"},
+    {"operation": "graph", "path": "/api/graph/demo/rel/ny", "query": {"kind": "bogus"}},
+    {"operation": "graph", "path": "/api/graph/lopnr"}
+  ]
+}

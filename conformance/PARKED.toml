@@ -12,8 +12,6 @@ operations = [
     "schema",
     # r-segments-values
     # r-findings-graph
-    "findings",
-    "graph",
     # r-search
     "search",
     "search_facets",
@@ -36,12 +34,6 @@ cases = [
     "api/schema-paging",
     # r-segments-values
     # r-findings-graph
-    "api/graph-classification-groups",
-    "api/graph-reference-edges",
-    "api/graph-representation-runs",
-    "api/graph-succession",
-    "api/graph-whole-variable-group",
-    "api/warnings-errors",
     # r-search
     "api/cursor-stale",
     "api/edge-cache-param",
