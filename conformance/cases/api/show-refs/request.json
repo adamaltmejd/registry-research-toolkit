@@ -1,10 +1,11 @@
 {
-  "note": "Fails if a bare unique name stops resolving to its entity's fqid, a bare name two variables share stops being a 409 listing both (pid order), an unknown id stops being a 404, or an id outside the public-id grammar (four segments) stops being a 422.",
+  "note": "Fails if a bare unique name stops resolving to its entity's fqid, a bare name two variables share stops being a 409 listing both (pid order), an unknown id stops being a 404, or an id outside the public-id grammar (four segments) stops being a 422, or an unknown parameter is ignored instead of refused.",
   "fixture": "entities",
   "requests": [
     {"operation": "show", "path": "/api/catalog/hus"},
     {"operation": "show", "path": "/api/catalog/kon"},
     {"operation": "show", "path": "/api/catalog/demo/nope"},
-    {"operation": "show", "path": "/api/catalog/demo/reg2/ind/x"}
+    {"operation": "show", "path": "/api/catalog/demo/reg2/ind/x"},
+    {"operation": "show", "path": "/api/catalog/hus", "query": {"bogus": "1"}}
   ]
 }

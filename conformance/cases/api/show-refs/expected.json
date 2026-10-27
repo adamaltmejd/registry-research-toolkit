@@ -21,5 +21,9 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/reg2/ind/x"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "bogus"}
   }
 ]

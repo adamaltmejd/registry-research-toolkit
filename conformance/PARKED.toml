@@ -6,8 +6,6 @@
 # Contract operations the server does not serve yet.
 operations = [
     # r-show
-    "resolve",
-    "show",
     # r-schema
     "coverage",
     "diff",
@@ -33,13 +31,6 @@ operations = [
 # Case directories under conformance/cases/, relative ("api/states-basic").
 cases = [
     # r-show
-    "api/resolve-columns",
-    "api/show-provider",
-    "api/show-refs",
-    "api/show-register",
-    "api/show-root",
-    "api/show-table",
-    "api/show-variable",
     # r-schema
     "api/coverage-register",
     "api/coverage-variable",

@@ -43,8 +43,8 @@ HEADERS = {
 # tuples when it unparks the operation.
 EQUIVALENCE = {
     # r-show
-    "show": (),
-    "resolve": (),
+    "show": ("show-provider", "show-refs"),
+    "resolve": ("resolve-columns",),
     # r-schema
     "schema": (),
     "diff": (),
