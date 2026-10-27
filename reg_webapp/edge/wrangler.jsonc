@@ -7,17 +7,13 @@
 //
 // Deploy:
 //
-//   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc \
-//     --var DEPLOY_VERSION:"$(git rev-parse HEAD)-manual-$(date +%s)"
+//   bunx wrangler deploy --config reg_webapp/edge/wrangler.jsonc
 {
   // The worker name holds the EDGE_TOKEN secret; renaming it drops the secret.
   "name": "reg-webapp-global-edge",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-01",
-  // DEPLOY_VERSION is stamped onto `/mcp` like any origin-bound URL (src/index.ts);
-  // POSTs are never cached, so here it only marks the deploy. `wrangler deploy`
-  // REPLACES the var set, so pass a fresh value (command above).
-  "vars": { "DEPLOY_VERSION": "dev", "ROUTE_MCP": "true" },
+  "vars": { "ROUTE_MCP": "true" },
   // `wrangler deploy` replaces the worker's routes with this list.
   "routes": [{ "pattern": "reg-meta.vqv.uk/*", "zone_name": "vqv.uk" }],
   "observability": { "enabled": true }

@@ -26,16 +26,6 @@ READY_PATH = "/openapi.json"
 # The line `reg-meta serve` prints on stderr once bound.
 LISTENING = re.compile(rb"^listening on \S+:(\d+)\n", re.MULTILINE)
 SERVER_READY_SECONDS = 120
-# What the server does not yet serve per the contract (PARKED.toml): the comparisons
-# with the served surface leave these out.
-PARKED = tomllib.loads((CASES.parent / "PARKED.toml").read_text())
-
-
-def is_parked(case):
-    """Whether the case directory is listed in `PARKED.toml`."""
-    return case.relative_to(CASES).as_posix() in PARKED["cases"]
-
-
 EXIT_STATUS = {
     code["code"]: code.get("exit")
     for code in tomllib.loads((CASES.parent / "api/errors.toml").read_text())["code"]

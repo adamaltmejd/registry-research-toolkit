@@ -990,42 +990,20 @@ equivalence and extend no availability.
 
 ## Glossary
 
-The normative definitions are the DDL in `reg_meta_build/db.py`; this records the
-cross-provider meanings.
+The normative schema is [`reg-build/src/schema.sql`](reg-build/src/schema.sql). These
+terms describe its cross-provider meanings.
 
   | Term           | Meaning                                                                                                |
   | -------------- | ------------------------------------------------------------------------------------------------------ |
   | variable       | The addressable variable and FQID target: identity `(provider, register, slug)`, one or more segments. |
   | binding        | A project's use of a variable, named by its FQID.                                                      |
-  | same_as        | Curated symmetric equivalence between variables in different registers or providers.                   |
-  | classification | A named versioned vocabulary, `class/<slug>` with the vintage in the slug.                             |
-  | value_set      | A content-addressed code list on a segment.                                                            |
+  | segment        | A maximal run of one form of a variable in one table.                                                  |
+  | equivalent     | A curated symmetric relation between variables in different registers or providers.                    |
+  | classification | A named vocabulary family, `class/<slug>`, with versions at `class/<slug>/<version>`.                  |
+  | valueset       | A content-addressed code list on a segment.                                                            |
 
-Column names are universal English; values stay provider-native. SCB's Swedish columns
-map as follows:
-
-  | SCB Swedish                     | Universal English                  | Lives on                                             |
-  | ------------------------------- | ---------------------------------- | ---------------------------------------------------- |
-  | registernamn                    | name                               | register                                             |
-  | registersyfte                   | purpose                            | register                                             |
-  | registervariantnamn             | name                               | register_variant                                     |
-  | registervariantbeskrivning      | description                        | register_variant                                     |
-  | variabelnamn                    | name, source_name                  | variable (display name; pre-ladder name)             |
-  | variabeldefinition              | definition                         | variable                                             |
-  | variabelbeskrivning             | description                        | variable                                             |
-  | variabeloperationell_definition | operational_definition             | variable; per-column alias windows                   |
-  | variabelregister_kalla          | source_register_text, source_label | variable (interpreted text; resolved display label)  |
-  | mattenhet                       | measurement_unit                   | variable (NULL when the source says "Okänd")         |
-  | datatyp                         | data_type                          | variable_state                                       |
-  | datalangd                       | data_length                        | variable_state (text, may carry precision and scale) |
-  | vardemangdsversion              | value_set_version_label            | variable_state                                       |
-  | värdekod                        | code                               | value_code                                           |
-  | värdebenämning                  | label                              | value_code                                           |
-  | kolumnnamn                      | delivery_column_name               | variable_alias, variable_state                       |
-  | kanslig_variabel(\_ibland)      | is_sensitive                       | variable (both fold into one flag)                   |
-  | identitetsvariabel              | is_identifier                      | variable                                             |
-  | version_forsta / version_sista  | valid_from / valid_to              | variable_state (ISO 8601)                            |
-
-`registerrubrik` and `registervariantrubrik` are dropped as redundant with `name`.
-Register-version descriptions, population and object type ship as read-only metadata;
-approval dates stay provenance-only.
+Column names are universal English; values stay provider-native. Source names and
+spellings are evidence on occurrences; descriptive text varies over time in
+`variable_text`. Type, length, value set, sensitivity and identifier status belong to
+segments. Sensitivity follows the source per segment rather than a variable-wide flag.
+Population metadata belongs to stated releases. Holdings arrive in milestone E.

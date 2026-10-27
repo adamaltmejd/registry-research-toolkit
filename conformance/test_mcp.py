@@ -20,7 +20,6 @@ from urllib.parse import unquote
 import pytest
 from http_cases import (
     CASES,
-    PARKED,
     ServerPool,
     artifact_env,
     cached_case_artifact,
@@ -39,8 +38,7 @@ HEADERS = {
 # Per operation, the `api` cases whose steps of that operation cover a success and
 # every domain error it lists in `operations.toml`. Every `/mcp` request in this
 # module on a worker's server for one artifact draws on one 127.0.0.1 rate bucket (60
-# a minute), so keep each artifact's total well under it. Each R PR fills its own
-# tuples when it unparks the operation.
+# a minute), so keep each artifact's total well under it.
 EQUIVALENCE = {
     # r-show
     "show": ("show-provider", "show-refs"),
@@ -86,19 +84,6 @@ OPERATIONS = {
 }
 
 
-# A tool none of whose operations is served per the contract is left out of the
-# `tools/list` comparison, whichever side lists it.
-SERVED_TOOLS = {
-    op["tool"]
-    for name, op in OPERATIONS.items()
-    if "tool" in op and name not in PARKED["operations"]
-}
-
-
-def unparked(tools):
-    return [tool for tool in tools if tool["name"] in SERVED_TOOLS]
-
-
 def rpc(client, method, params):
     """One JSON-RPC request on `/mcp`; returns the HTTP response."""
     return client.post(
@@ -142,9 +127,7 @@ NO_FIXTURE_PATH_UNTIL_D = {"retired_ref", "classification_version_ambiguous"}
 PINNED_ONCE = {"stale_cursor"}
 
 
-@pytest.mark.parametrize(
-    "operation", [name for name in EQUIVALENCE if name not in PARKED["operations"]]
-)
+@pytest.mark.parametrize("operation", EQUIVALENCE)
 def test_tool_matches_http(http_servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
     # error fields, argument conversion, a POST body as an object argument, the
@@ -229,8 +212,6 @@ def test_array_argument_only_for_an_array_parameter(http_servers):
     # accepts an empty array for one that is (`columns: []`), instead of refusing
     # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
     # empty array, so these have no `api` twin.
-    if {"resolve", "coverage"} & set(PARKED["operations"]):
-        pytest.skip("parked: resolve and coverage are not served (PARKED.toml)")
     client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for tool, arguments, parameter in (
         ("resolve", {"register": [], "columns": ["Value"]}, "register"),
@@ -252,13 +233,13 @@ def test_tools_list_matches_golden(http_servers):
         for item in client.get("/openapi.json").json()["paths"].values()
         for operation in item.values()
     }
-    tools = unparked(rpc(client, "tools/list", {}).json()["result"]["tools"])
-    assert tools == unparked(TOOLS)
+    tools = rpc(client, "tools/list", {}).json()["result"]["tools"]
+    assert tools == TOOLS
     assert sorted(tool["name"] for tool in tools) == sorted(
         {
             op["tool"]
             for name, op in OPERATIONS.items()
-            if name in served and name not in PARKED["operations"] and "tool" in op
+            if name in served and "tool" in op
         }
     )
 
@@ -373,6 +354,6 @@ def test_stdio_session(request, http_servers):
         assert process.wait(timeout=10) == 0
     initialize, tools, result = (reply["result"] for reply in replies)
     assert initialize["serverInfo"]["name"] == "reg-meta"
-    assert unparked(tools["tools"]) == unparked(TOOLS)
+    assert tools["tools"] == TOOLS
     assert result["isError"] is False
     assert result["structuredContent"] == expected.json()

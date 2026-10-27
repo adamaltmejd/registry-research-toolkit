@@ -148,7 +148,6 @@ def base_db_fixture(tmp_path_factory: pytest.TempPathFactory) -> Path:
     return build_reader_artifact(
         tmp_path_factory.mktemp("base"),
         BASE_FIXTURE,
-        "catalog",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
 

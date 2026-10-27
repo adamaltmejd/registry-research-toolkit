@@ -273,10 +273,6 @@ fn json(body: String) -> Response {
     ([(header::CONTENT_TYPE, "application/json")], body).into_response()
 }
 
-/// The edge worker's cache-generation parameter (`reg_webapp/edge/src/index.ts`):
-/// part of the edge cache key, never an operation parameter.
-const EDGE_VERSION_PARAM: &str = "__edge_v";
-
 /// An operation-table route as an axum route: `{ref}` spans segments, so it and the
 /// segments after it are one wildcard, which [`request_params`] splits again.
 fn axum_route(template: &str) -> String {
@@ -286,15 +282,13 @@ fn axum_route(template: &str) -> String {
     )
 }
 
-/// A request's parameters: the path's, named by `template`, then the query's
-/// without the edge's cache parameter. `{ref}` keeps the segments the names after
-/// it leave.
+/// A request's parameters: the path's, named by `template`, then the query's.
+/// `{ref}` keeps the segments the names after it leave.
 fn request_params(
     template: &str,
     path: Vec<(String, String)>,
-    mut query: Vec<(String, String)>,
+    query: Vec<(String, String)>,
 ) -> Vec<(String, String)> {
-    query.retain(|(name, _)| name != EDGE_VERSION_PARAM);
     let Some((_, after)) = template.split_once("{ref}") else {
         return [path, query].concat();
     };

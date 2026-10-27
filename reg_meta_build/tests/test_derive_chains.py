@@ -24,7 +24,7 @@ def test_chain_tables_follow_active_succession_at_the_policy_year():
     # Fails if the terminal walk picks one branch of a split, ignores the policy
     # year (future-dated edges), or a chain or family loses its walk order.
     expected = json.loads((CASE / "expected.json").read_text(encoding="utf-8"))
-    db = cached_reader_artifact(CASE, "catalog")
+    db = cached_reader_artifact(CASE)
     with closing(sqlite3.connect(f"file:{db}?immutable=1", uri=True)) as conn:
         actual = {
             table: [
@@ -38,7 +38,7 @@ def test_chain_tables_follow_active_succession_at_the_policy_year():
 
 def test_rederiving_the_same_base_is_byte_identical(tmp_path: Path):
     # Fails if derive writes chain rows in an order that depends on the run.
-    base = cached_reader_artifact(CASE, "catalog")
+    base = cached_reader_artifact(CASE)
     copies = [tmp_path / "first.db", tmp_path / "second.db"]
     for copy in copies:
         shutil.copyfile(base, copy)
