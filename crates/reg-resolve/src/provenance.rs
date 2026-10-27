@@ -87,6 +87,22 @@ pub fn remap(claims: &mut Vec<Claim>, changes: &[Change], before: &[Record]) {
         if !matches!(change.field.as_str(), "table" | "register" | "release") {
             continue;
         }
+        // A table move can detach a release in the same application. Both changes
+        // carry final coordinates, so follow the pair from its original coordinate.
+        let detached_release = (change.kind == "occurrence" && change.field == "table")
+            .then(|| {
+                changes.iter().find(|other| {
+                    other.field == "release"
+                        && other.kind == change.kind
+                        && other.locator == change.locator
+                        && other.provider == change.provider
+                        && other.register == change.register
+                        && other.table == change.table
+                        && other.release == change.release
+                        && other.period == change.period
+                })
+            })
+            .flatten();
         let old_register = if change.field == "register" {
             change.source_value.clone()
         } else {
@@ -97,7 +113,9 @@ pub fn remap(claims: &mut Vec<Claim>, changes: &[Change], before: &[Record]) {
         } else {
             change.table.clone()
         };
-        let old_release = if change.field == "release" {
+        let old_release = if let Some(detached) = detached_release {
+            detached.source_value.clone()
+        } else if change.field == "release" {
             change.source_value.clone()
         } else {
             change.release.clone()
@@ -175,6 +193,9 @@ pub fn remap(claims: &mut Vec<Claim>, changes: &[Change], before: &[Record]) {
                 "table" => moved.table.clone_from(&change.value),
                 "release" => moved.release.clone_from(&change.value),
                 _ => {}
+            }
+            if detached_release.is_some() {
+                moved.release.clone_from(&change.release);
             }
             by_coordinates
                 .entry(coordinates(&moved))
