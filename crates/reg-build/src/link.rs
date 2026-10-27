@@ -130,6 +130,7 @@ pub fn resolve(registers: &[Resolved], records: &[Record]) -> Result<Linked, Str
             _ => {}
         }
     }
+    successions(&mut relations, &mut linked.warnings);
     linked.relations = relations
         .into_iter()
         .map(|((kind, subject, object, at), (_, note))| Relation {
@@ -145,6 +146,67 @@ pub fn resolve(registers: &[Resolved], records: &[Record]) -> Result<Linked, Str
         .map(|(subject, at, text)| Notice { subject, at, text })
         .collect();
     Ok(linked)
+}
+
+/// A relation by (kind, subject, object, at), with its first link's locator and note.
+type Relations =
+    BTreeMap<(&'static str, Entity, Entity, Option<String>), (Locator, Option<String>)>;
+
+/// Drop the `continues` relations the post-write checks would refuse, each as one
+/// warning: tables that take over from one table on the same day (none is the
+/// successor), then, in locator order, a link that closes a cycle.
+fn successions(relations: &mut Relations, warnings: &mut Vec<String>) {
+    let mut same_day: BTreeMap<(Entity, Option<String>), Vec<_>> = BTreeMap::new();
+    for (key, (locator, _)) in relations.iter() {
+        if key.0 == "continues" && matches!(key.1, Entity::Table(..)) {
+            same_day
+                .entry((key.2, key.3.clone()))
+                .or_default()
+                .push((locator.clone(), key.clone()));
+        }
+    }
+    let mut dropped: Vec<(Locator, &str)> = Vec::new();
+    for mut group in same_day.into_values().filter(|g| g.len() > 1) {
+        group.sort();
+        for (locator, key) in group {
+            relations.remove(&key);
+            dropped.push((locator, "successors of one table on the same day"));
+        }
+    }
+
+    let mut edges: Vec<_> = relations
+        .iter()
+        .filter(|(key, _)| key.0 == "continues")
+        .map(|(key, (locator, _))| (locator.clone(), key.clone()))
+        .collect();
+    edges.sort();
+    let mut kept: BTreeMap<Entity, Vec<Entity>> = BTreeMap::new();
+    for (locator, key) in edges {
+        let (subject, object) = (key.1, key.2);
+        if reaches(&kept, object, subject) {
+            relations.remove(&key);
+            dropped.push((locator, "continues closes a cycle"));
+        } else {
+            kept.entry(subject).or_default().push(object);
+        }
+    }
+    dropped.sort();
+    warnings.extend(dropped.iter().map(|(l, reason)| warning(l, reason)));
+}
+
+/// Whether `to` is reachable from `from` over `edges` (or is `from`).
+fn reaches(edges: &BTreeMap<Entity, Vec<Entity>>, from: Entity, to: Entity) -> bool {
+    let mut seen = BTreeSet::new();
+    let mut stack = vec![from];
+    while let Some(node) = stack.pop() {
+        if node == to {
+            return true;
+        }
+        if seen.insert(node) {
+            stack.extend(edges.get(&node).into_iter().flatten().copied());
+        }
+    }
+    false
 }
 
 fn warning(locator: &Locator, reason: &str) -> String {
