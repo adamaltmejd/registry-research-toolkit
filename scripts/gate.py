@@ -6,7 +6,7 @@
     uv run --no-project scripts/gate.py regen          # then commit the diff
 
 Each named step runs its commands in order from the repository root and stops at the
-first failure. `all` runs g0, rust, release, flows and frontend;
+first failure. `all` runs g0, rust, release and frontend;
 `lint` and `crates` are g0's static checks and Rust part, for CI's `lint` and `rust`
 jobs; `regen` runs only when named. CI calls `lint`, `crates`, `rust`,
 `release` and `frontend`; `flows` runs only locally. Stdlib only: `--no-project` keeps the frontend CI job free
@@ -43,7 +43,8 @@ SERVER_CMD = (
     " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
 )
 MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
-ALL = ("g0", "rust", "release", "flows", "frontend")
+# simplify: frozen on rebuild-c until s-flows, which restores flows here (dev.sh --fixture-db and the webapp-dev fixture are gone).
+ALL = ("g0", "rust", "release", "frontend")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
 # builder"). These words fail `lint` in the other builder crates: providers, their
 # template vocabulary and file formats. Extend the list with each new reader.

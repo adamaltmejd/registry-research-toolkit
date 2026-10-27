@@ -302,18 +302,8 @@ trap 'exit 143' TERM
 # carries the same docs DB, so it is its own cache entry beside the gate's docs-less
 # `reader steward`.
 if [ -n "$fixture_db" ]; then
-	fixture=(fixtures/webapp-dev catalog --docs fixtures/webapp-dev/docs)
-	if [ "${REG_WEBAPP_STEWARD:-global}" != "global" ]; then
-		fixture=(reader steward --docs fixtures/webapp-dev/docs)
-	fi
-	if ! fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py "${fixture[@]}"); then
-		echo "dev: --fixture-db build failed — see output above." >&2
-		exit 1
-	fi
-	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture-db.XXXXXX") || exit 1
-	cp "$(dirname "$fixture_catalog")"/*.db "$fixture_db_dir"/ || exit 1
-	export REG_META_DB="$fixture_db_dir"
-	echo "dev: --fixture-db serving a synthetic catalog from $REG_META_DB" >&2
+	echo "dev: --fixture-db is frozen on rebuild-c until s-flows." >&2
+	exit 1
 fi
 
 # The Rust server needs its catalog directory explicitly: the fixture's, the
