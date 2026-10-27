@@ -26,6 +26,7 @@ import random
 import re
 import sqlite3
 import sys
+import tomllib
 from collections import Counter, defaultdict
 from contextlib import closing
 from dataclasses import dataclass, field
@@ -968,7 +969,110 @@ def latest_spelling(db, row, tables):
     return not uncovered((lo, hi), spans)
 
 
-def curation_evidence(db, register, tables):
+def column_corrections(db, register, tables, records, curation):
+    """Read explicit header errata from the released source; generic tags are insufficient."""
+    if curation is None:
+        return []
+    path = curation / "registers" / (register + ".toml")
+    if not path.is_file():
+        return []
+    source = tomllib.loads(path.read_text())
+    info = source["register"]
+    if f"{info['provider']}/{info['slug']}" != register:
+        raise ValueError(f"{path}: register does not match {register}")
+    variants = {v["native_id"]: v["slug"] for v in source.get("variant", [])}
+    partitions = {
+        p["variable"]: p["columns"]
+        for p in source.get("identity", {}).get("partition", [])
+    }
+    variables = dict(
+        db.execute(
+            "SELECT v.provider_key, v.slug FROM variable v JOIN register r USING (register_id)"
+            " JOIN provider p USING (provider_id) WHERE p.slug || '/' || r.slug = ?"
+            " AND v.provider_key IS NOT NULL",
+            (register,),
+        )
+    )
+    corrections = []
+    for index, entry in enumerate(source.get("errata", {}).get("field", []), 1):
+        if entry.get("field") != "column_name":
+            continue
+        original, corrected = entry["column"], entry["value"]
+        if not any(
+            f.get("name") == "column_name"
+            and f.get("status") == "value"
+            and f.get("value") == original
+            for f in entry.get("expected_fields", [])
+        ):
+            continue
+        native = entry["variable"]
+        if native in partitions:
+            targets = partitions[native]
+            if original not in targets or targets.get(original) != targets.get(
+                corrected
+            ):
+                continue
+            native = targets[original]
+        elif native not in source.get("variable", {}):
+            continue
+        if not native.startswith(info["native_id"] + "."):
+            continue
+        variable = variables.get(native.split(".", 1)[1])
+        slug = variants.get(entry["variant"])
+        if variable is None or slug is None:
+            continue
+        # simplify: only explicit annual edition guards; add other selectors when a comparison needs them.
+        editions, periods = (
+            entry.get("editions", []),
+            entry.get("expected_period_text", {}),
+        )
+        if (
+            not editions
+            or entry.get("expected_records")
+            or not isinstance(periods, dict)
+        ):
+            continue
+        years = [periods.get(edition) for edition in editions]
+        if not all(isinstance(y, str) and re.fullmatch(r"\d{4}", y) for y in years):
+            continue
+        scope = (
+            tables[f"{register}/{slug}"],
+            f"{register}/{variable}",
+            corrected.lower(),
+        )
+        spans = [
+            period_days({"start": a, "end": b})
+            for y in years
+            for a, b in old_periods(y)
+        ]
+        for item in records:
+            if (
+                item["table"],
+                item["variable"],
+                item["column"],
+            ) != scope or "errata:field" not in item["tags"]:
+                continue
+            overlap = [
+                (max(a, c), min(b, d))
+                for a, b in spans
+                for c, d in item["spans"]
+                if max(a, c) < min(b, d)
+            ]
+            if overlap:
+                corrections.append(
+                    item
+                    | {
+                        "spans": overlap,
+                        "header_from": original.lower(),
+                        "tags": {
+                            f"errata:field column_name ({path}#/errata.field/{index})"
+                        },
+                    }
+                )
+    return corrections
+
+
+def curation_evidence(db, register, tables, curation=None):
     """Only published provenance for physical additions/periods/representations."""
     records = []
     families = {}
@@ -1005,6 +1109,7 @@ def curation_evidence(db, register, tables):
             # Aliases inherit only their recorded family's transformation, not
             # arbitrary curation of another spelling of the same variable.
             item["family_spans"] = family
+    records.extend(column_corrections(db, register, tables, records, curation))
     for variable, slug, column, lo, hi, evidence in db.execute(
         "SELECT v.slug, t.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.evidence_json"
         " FROM data_warning w JOIN register r USING (register_id) JOIN provider p USING (provider_id)"
@@ -1092,12 +1197,12 @@ def old_curation(row, curation, *, added=False, family_only=False, counterparts=
             continue
         relevant = item["tags"] & physical_tags
         header = (
-            "errata:field" in item["tags"]
+            "header_from" in item
             and item["variable"] == row[1]
             and (
                 (
                     added
-                    and not same_column
+                    and row[4].lower() == item["header_from"]
                     and any(
                         r[0] == row[0]
                         and r[1] == row[1]
@@ -1112,7 +1217,7 @@ def old_curation(row, curation, *, added=False, family_only=False, counterparts=
                     and any(
                         r[0] == row[0]
                         and r[1] == row[1]
-                        and r[4].lower() != row[4].lower()
+                        and r[4].lower() == item["header_from"]
                         and not uncovered(row_days(row), [row_days(r)])
                         for r in counterparts
                     )
@@ -1121,7 +1226,7 @@ def old_curation(row, curation, *, added=False, family_only=False, counterparts=
         )
         if (same_column and not added and relevant) or header:
             spans.extend(item["spans"])
-            reasons.update({"errata:field"} if header else relevant)
+            reasons.update(item["tags"] if header else relevant)
     if reasons and not uncovered(row_days(row), spans):
         return "; ".join(sorted(reasons))
     return None
@@ -1478,6 +1583,9 @@ def orders(args) -> int:
                 f"catalog {context['data'].get('catalog_version', 'not exposed')}; "
                 f"meta.generation `{context['meta']['generation']}`"
             )
+        summary.append(
+            f"- old curation source: {args.old_curation or 'not supplied; header corrections are unexplained'}"
+        )
         summary += [
             "",
             "Periods are half-open ISO days; null endpoints are open/timeless.",
@@ -1595,7 +1703,9 @@ def orders(args) -> int:
                     bodies=bodies,
                     tables=tables,
                     dbs=(old_db, new_db),
-                    curation=curation_evidence(old_db, reg, tables[0]),
+                    curation=curation_evidence(
+                        old_db, reg, tables[0], args.old_curation
+                    ),
                     unplaced=unplaced_columns(new_db, reg, tables[1]),
                     placements=placements,
                     correspondences=mapped,
@@ -1705,6 +1815,11 @@ def main() -> int:
     for side in ("old", "new"):
         order.add_argument(f"--{side}-url", required=True)
         order.add_argument(f"--{side}-db", required=True, type=Path)
+    order.add_argument(
+        "--old-curation",
+        type=Path,
+        help="released old curation root; required as explicit evidence for header corrections",
+    )
     order.add_argument("--seed", type=int, default=0)
     order.add_argument("--n", type=int, default=20)
     order.add_argument("--provider", nargs="+", default=[])
