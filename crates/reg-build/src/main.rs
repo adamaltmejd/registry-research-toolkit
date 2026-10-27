@@ -195,6 +195,8 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
 
 #[allow(clippy::too_many_lines)]
 fn build(args: &Args) -> Result<(), String> {
+    // D-1 validates authoring only; application and premise locking follow in D-2/D-3.
+    reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
 

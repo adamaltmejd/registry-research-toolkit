@@ -11,6 +11,9 @@
 //! Frames serialize as canonical JSONL: one record per line, keys sorted, no floats,
 //! records sorted. Two pins of one input give two diffable frames.
 
+pub mod address;
+pub mod statement;
+
 use std::collections::BTreeSet;
 
 use serde::{Deserialize, Serialize};

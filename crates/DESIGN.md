@@ -214,12 +214,75 @@ spelling and type. A D `set` states those.
 **Curation.**
 
 - Six statement kinds: `bind`, `assert`, `assign`, `set`, `link` and `ack`.
+- Each register has one optional `curation.toml` beside its `ids.toml`, containing
+  `[[statement]]` tables. One file gives duplicate detection and review a single
+  register-local boundary without a file-order precedence rule. Statements have no
+  hand-written ids: identity is SHA-256 of normalized typed content (including evidence
+  and caveat), excluding the file and line.
+- The pure model and address grammar live in `reg-frame`, shared by readers and resolve;
+  `reg-frame` uses `reg-core` for periods and folds. The TOML loader stays in
+  `reg-readers`, so no new crate or reader dependency is needed in resolve.
+- D-1 loads and validates statements before `reg-build build` reads inputs. It does not
+  apply statements or write a premise lock. With no statement files, the existing
+  artifact path and bytes are unchanged; CI's two-build determinism check still runs.
 - Each statement's premise is recorded in a generated `curation.lock`. When the source
   changes under a statement, the build refuses it at its file and line.
 - Every published value has one provenance: source, rule or curated, with curated over
   rule over source. Losing values are kept as evidence.
 - Rules never merge across keys, bind classifications or enrich; those are always
   curated.
+
+The address grammar is:
+
+```text
+<table>: <spelling> [@<period-set>] [where <field> (=|^=) '<value>' [and ...]]
+var:<id>
+table:<slug>
+```
+
+Tables and ids are catalog slugs; spellings match folded. Brace lists expand literal
+alternatives (`{a,b}`) and inclusive numeric ranges (`jobbink{01..12}`), preserving
+leading zeroes. `<none>` addresses a documented-without-column marker. Expansion is
+limited to 10,000 spellings. Period sets are comma-separated unions of `reg-core`
+periods, with open endpoints (`..2009`, `2019..`) parsed through that same grammar.
+Guards read only source `label`, `type`, `unit` or `key`, with exact or prefix
+comparison; `key` allows equality only. Provider coordinates have slots only in a `bind`
+source handle and a `where key` guard, both opaque strings. Regular expressions are
+refused. Edition (`:edition`) and qualifier (`/qualifier`) selectors are refused
+explicitly: the release model is under investigation (maintainer ruling, 2026-10-27).
+
+All six kinds deny unknown fields. `evidence` is nonblank text (including
+`doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. `caveat` is
+optional user-facing text. Kind-specific content is:
+
+- `bind`: exactly one of `source` (opaque handle) or `subject` (address), a
+  `target = { entity = "register" | "table", id = "slug" }`, optional `period` and
+  integer `priority`;
+- `assert`: `subject` and a `fact` tagged by `entity`: `occurrence` or `table` with
+  `fields`, `release` with `name` and `period`, `value-set` with `items`, or
+  `classification-version` with `family`, `version` and `items`;
+- `assign`: `subject` and `variable` (a ledger slug, or `"none"` to withhold);
+- `set`: `subject`, `fields`, and optional `reject = true` (which may omit `fields`);
+- `link`: `subject`, typed `relation`, `object` (address or catalog FQID) and optional
+  `at` period set;
+- `ack`: `subject`, `finding`, `severity` (`notice` or `review`), and evidence when
+  required.
+
+`fields` is one closed schema: descriptive (`name`, `label`, `definition`, `unit`,
+`description`, `synonyms`); form (`type`, `length`, `format`, `spelling`, `period`,
+`value_set`, `coded`, `sentinels`, `classification`); `coverage`, `notice`; flags and
+roles (`sensitive`, `identifier`, `role`, `temporality`, `unit_type`); grouping (`sets`,
+`tags`). Lists of synonyms, sentinels, sets and tags normalize as sorted sets; asserted
+codes sort by code, while duplicate codes are refused. Addresses normalize folded
+spellings, expanded braces and sorted guards and period tokens before hashing.
+
+The loader reads every register directory in sorted order. Unknown kinds or fields,
+missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
+normalized statements within a register are refused at the file and statement line.
+Matching, empty matches, ambiguity, precedence conflicts and premise validation belong
+to the later resolve/lock stages: selectors will resolve against source facts after
+`bind` and `assert`, never against other overrides. Curated values take precedence over
+rules and sources; two overlapping curated overrides will be refused at both locations.
 
 **Value sets, populations and series.**
 

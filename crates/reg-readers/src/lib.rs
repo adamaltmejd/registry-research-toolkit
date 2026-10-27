@@ -14,6 +14,7 @@
 //! - [`frame`]: the frame as JSONL, written by hand (conformance fixtures).
 
 pub mod classification;
+pub mod curation;
 pub mod docs;
 pub mod frame;
 pub mod lisa;
