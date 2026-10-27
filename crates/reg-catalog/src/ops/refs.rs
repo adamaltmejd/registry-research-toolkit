@@ -8,7 +8,7 @@ use rusqlite::{Connection, OptionalExtension, Row};
 use crate::{Code, Error};
 
 /// A resolved ref: `ident`'s row.
-pub(crate) struct Entity {
+pub struct Entity {
     /// `ident.kind`: `provider`, `register`, `table`, `variable`, ...
     pub kind: String,
     /// The row id in the kind's table.
@@ -33,7 +33,7 @@ fn entity(row: &Row) -> rusqlite::Result<Entity> {
 /// # Errors
 ///
 /// `ambiguous_ref`, `retired_ref`, `invalid_ref` or `not_found`.
-pub(crate) fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
+pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
     if let Some(hit) = conn
         .query_row(
             "SELECT kind, entity_id, pid FROM ident WHERE pid = ?",
@@ -131,7 +131,7 @@ fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Valu
 /// # Errors
 ///
 /// [`resolve`]'s; `table_is_register`; `invalid_ref` for a ref of another kind.
-pub(crate) fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
+pub fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
     let by_pid = |pid: &str| {
         conn.query_row("SELECT id FROM tbl WHERE pid = ?", [pid], |row| row.get(0))
             .optional()
@@ -164,16 +164,7 @@ pub(crate) fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
     }
 }
 
-/// Whether `value` is in the public-id grammar: reg-core's FQID grammar, or a
-/// classification version `class/<family>/<version>`, which that grammar lacks.
+/// Whether `value` is in the public-id grammar (`reg_core::Fqid`).
 fn well_formed(value: &str) -> bool {
-    // simplify: the classification version is spelled here; move it into
-    // `reg_core::Fqid` when reg-core gains `class/<family>/<version>`.
-    match value.strip_prefix("class/") {
-        Some(rest) => {
-            let segments: Vec<&str> = rest.split('/').collect();
-            segments.len() <= 2 && segments.iter().all(|s| reg_core::is_slug(s))
-        }
-        None => value.parse::<Fqid>().is_ok(),
-    }
+    value.parse::<Fqid>().is_ok()
 }

@@ -697,6 +697,7 @@ from its segment count and the `class/` prefix alone. `reg-core` owns the gramma
   | 2                   | `<provider>/<register>`        | register                        |
   | 3                   | `<provider>/<register>/<slug>` | variable binding (the variable) |
   | 2, leading `class/` | `class/<slug>`                 | classification                  |
+  | 3, leading `class/` | `class/<family>/<version>`     | classification version          |
 
 ```text
 scb/lisa/kon          variable binding
