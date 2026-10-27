@@ -2,8 +2,8 @@
 //! register (`crates/DESIGN.md`, "The catalog builder"). A pure function: it sees one
 //! register's records and ledger, never another register's, and reads nothing else.
 //!
-//! It resolves with the default rules only: no statements, no classification binding,
-//! no unit types.
+//! Table moves and assertions prepare its input frame. Explicit variable assignments
+//! enter the identity step; other field overrides are not applied yet.
 //!
 //! - **Periods.** An occurrence of a release takes the release's period; an unplaced
 //!   release leaves its occurrences unplaced. Otherwise an occurrence's unstated bound is
@@ -33,6 +33,7 @@
 //!   anchor reaches gets a proposed id from its folded spelling.
 
 pub mod curation;
+pub mod provenance;
 
 mod f1;
 mod gaps;
@@ -51,6 +52,152 @@ use serde::Serialize;
 use gaps::gaps;
 pub use ledger::Ledger;
 use ledger::assign_ids;
+
+/// The coordinates of one documented occurrence, independent of source location.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OccurrenceIdentity {
+    pub provider: String,
+    pub register: String,
+    pub table: String,
+    pub release: Option<String>,
+    pub column: String,
+    pub source_key: String,
+    pub period: Option<Interval>,
+}
+
+impl OccurrenceIdentity {
+    #[must_use]
+    pub fn new(row: &Occurrence, period: Option<Interval>) -> Self {
+        Self {
+            provider: row.provider.clone(),
+            register: row.register.clone(),
+            table: row.table.clone(),
+            release: row.release.clone(),
+            column: row.column.clone(),
+            source_key: row.source_key.clone(),
+            period,
+        }
+    }
+
+    pub(crate) fn from_fields(fields: &BTreeMap<String, serde_json::Value>) -> Option<Self> {
+        let text = |key| fields.get(key).and_then(serde_json::Value::as_str);
+        (text("kind") == Some("occurrence")).then_some(())?;
+        Some(Self {
+            provider: text("provider")?.into(),
+            register: text("register")?.into(),
+            table: text("table")?.into(),
+            release: text("release").map(str::to_owned),
+            column: text("spelling")?.into(),
+            source_key: text("key")?.into(),
+            period: serde_json::from_value(fields.get("period")?.clone()).ok()?,
+        })
+    }
+}
+
+/// One occurrence and a holder of its source evidence.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OccurrenceKey {
+    pub identity: OccurrenceIdentity,
+    pub locator: Locator,
+}
+
+impl OccurrenceKey {
+    #[must_use]
+    pub fn new(identity: OccurrenceIdentity, locator: &Locator) -> Self {
+        Self {
+            identity,
+            locator: locator.clone(),
+        }
+    }
+}
+
+pub(crate) struct OccurrenceContext<'a> {
+    registers: BTreeMap<(&'a str, &'a str), &'a Register>,
+    tables: BTreeMap<(&'a str, &'a str, &'a str), &'a Table>,
+    releases: BTreeMap<(&'a str, &'a str, &'a str, &'a str), &'a Release>,
+}
+
+impl<'a> OccurrenceContext<'a> {
+    pub(crate) fn new(records: &'a [Record]) -> Self {
+        Self {
+            registers: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Register(r) => Some(((r.provider.as_str(), r.register.as_str()), r)),
+                    _ => None,
+                })
+                .collect(),
+            tables: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Table(t) => Some((
+                        (t.provider.as_str(), t.register.as_str(), t.table.as_str()),
+                        t,
+                    )),
+                    _ => None,
+                })
+                .collect(),
+            releases: records
+                .iter()
+                .filter_map(|r| match r {
+                    Record::Release(r) => Some((
+                        (
+                            r.provider.as_str(),
+                            r.register.as_str(),
+                            r.table.as_str(),
+                            r.release.as_str(),
+                        ),
+                        r,
+                    )),
+                    _ => None,
+                })
+                .collect(),
+        }
+    }
+
+    pub(crate) fn period(&self, row: &Occurrence) -> Option<Interval> {
+        if let Some(release) = &row.release {
+            return self
+                .releases
+                .get(&(
+                    row.provider.as_str(),
+                    row.register.as_str(),
+                    row.table.as_str(),
+                    release.as_str(),
+                ))
+                .and_then(|r| {
+                    r.from
+                        .as_ref()
+                        .zip(r.to.as_ref())
+                        .map(|(a, b)| (a.clone(), b.clone()))
+                });
+        }
+        let table = self.tables.get(&(
+            row.provider.as_str(),
+            row.register.as_str(),
+            row.table.as_str(),
+        ));
+        let register = self
+            .registers
+            .get(&(row.provider.as_str(), row.register.as_str()));
+        Some((
+            row.from
+                .clone()
+                .or_else(|| table.and_then(|t| t.from.clone()))
+                .or_else(|| register.and_then(|r| r.from.clone()))
+                .unwrap_or_else(|| OPEN_START.into()),
+            row.to
+                .clone()
+                .or_else(|| table.and_then(|t| t.to.clone()))
+                .or_else(|| register.and_then(|r| r.to.clone()))
+                .unwrap_or_else(|| OPEN_END.into()),
+        ))
+    }
+
+    pub(crate) fn identity(&self, row: &Occurrence) -> OccurrenceIdentity {
+        OccurrenceIdentity::new(row, self.period(row))
+    }
+}
 
 #[derive(Debug)]
 pub struct Resolved {
@@ -208,6 +355,7 @@ pub fn resolve(
     records: &[Record],
     ledger: &Ledger,
     valuesets: &BTreeMap<&str, &ValueSet>,
+    assignments: &BTreeMap<OccurrenceKey, String>,
 ) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
@@ -225,6 +373,14 @@ pub fn resolve(
                 a.locator.input, a.locator.at, b.locator.input, b.locator.at
             ));
         }
+    };
+    // Freeze default identities, ledger ids and marker membership before changing rows.
+    let defaults = if assignments.keys().any(|key| {
+        key.identity.provider == register.provider && key.identity.register == register.register
+    }) {
+        Some(resolve(records, ledger, valuesets, &BTreeMap::new())?)
+    } else {
+        None
     };
     let mut report = Report::default();
     let mut findings = Vec::new();
@@ -569,14 +725,36 @@ pub fn resolve(
         }
     }
 
+    let occurrence_context = OccurrenceContext::new(records);
+    let assignment = |row: &Occurrence| -> Result<Option<&str>, String> {
+        let values = std::iter::once(&row.locator)
+            .chain(&row.also)
+            .filter_map(|at| {
+                assignments
+                    .get(&OccurrenceKey::new(occurrence_context.identity(row), at))
+                    .map(String::as_str)
+            })
+            .collect::<BTreeSet<_>>();
+        if values.len() > 1 {
+            return Err("conflicting variable assignments on one occurrence".into());
+        }
+        let value = values.into_iter().next();
+        if let Some(value) = value
+            && value != "none"
+            && !ledger.variables.contains_key(value)
+        {
+            return Err(format!("variable {value:?} is not a ledger slug"));
+        }
+        Ok(value)
+    };
     // Identity: a key splits by fold when two folds overlap anywhere in the register,
     // among used rows. Shadowing leaves a worse edition's row only where the primary
     // lacks its key, so a preliminary and a final edition of one period never split it.
-    let mut by_key: BTreeMap<&str, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
+    let mut by_key: BTreeMap<String, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
     for r in &resolved {
         if r.status == "used" {
             by_key
-                .entry(r.occurrence.source_key.as_str())
+                .entry(r.occurrence.source_key.clone())
                 .or_default()
                 .entry(fold_identity(&r.occurrence.column))
                 .or_default()
@@ -593,23 +771,56 @@ pub fn resolve(
             })
         });
         if overlaps {
-            split.insert(*key);
+            split.insert(key.clone());
         }
     }
     report.split_keys = split.len();
-    let mut variable_keys: BTreeMap<(String, String), Vec<usize>> = BTreeMap::new();
-    for (i, r) in resolved.iter().enumerate() {
-        if !matches!(r.status, "used" | "shadowed" | "rejected") {
-            continue;
-        }
-        let key = r.occurrence.source_key.clone();
-        let f = fold_identity(&r.occurrence.column);
+    let default_identity = |row: &ResolvedOccurrence| {
+        let key = row.occurrence.source_key.clone();
         let sub = if split.contains(key.as_str()) {
-            f
+            fold_identity(&row.occurrence.column)
         } else {
             String::new()
         };
-        variable_keys.entry((key, sub)).or_default().push(i);
+        (key, sub)
+    };
+    let mut variable_keys: BTreeMap<(String, String, bool), Vec<usize>> = BTreeMap::new();
+    for (i, r) in resolved.iter_mut().enumerate() {
+        let chosen = assignment(&r.occurrence)?;
+        if chosen.is_none()
+            && let Some(defaults) = &defaults
+        {
+            r.status = defaults.occurrences[i].status;
+        }
+        if !matches!(r.status, "used" | "shadowed" | "rejected") {
+            continue;
+        }
+        let identity = if let Some(defaults) = &defaults {
+            match chosen {
+                Some("none") => {
+                    r.status = "withheld";
+                    continue;
+                }
+                Some(id) => (id.to_owned(), String::new(), true),
+                None => {
+                    let Some(v) = defaults.occurrences[i].variable else {
+                        continue;
+                    };
+                    (defaults.variables[v].slug.clone(), String::new(), true)
+                }
+            }
+        } else {
+            let (key, sub) = default_identity(r);
+            (key, sub, false)
+        };
+        variable_keys.entry(identity).or_default().push(i);
+    }
+    if defaults.is_some()
+        && variable_keys
+            .values()
+            .any(|members| !members.iter().any(|&i| resolved[i].status == "used"))
+    {
+        return Err("set variable would leave a variable without a used occurrence".into());
     }
     // A variable needs a used occurrence. One documented only outside its tables'
     // coverage is withheld, with its T1 notices.
@@ -626,7 +837,7 @@ pub fn resolve(
     // Variables and their segments.
     let mut variables: Vec<Variable> = Vec::new();
     let mut population_keys = BTreeSet::new();
-    for (v, ((key, _), members)) in variable_keys.iter().enumerate() {
+    for (v, ((key, _, assigned), members)) in variable_keys.iter().enumerate() {
         for &i in members {
             resolved[i].variable = Some(v);
         }
@@ -860,9 +1071,13 @@ pub fn resolve(
                 .expect("a variable is used"),
         );
         variables.push(Variable {
-            slug: String::new(),
-            pinned: false,
-            source_key: key.clone(),
+            slug: if *assigned {
+                key.clone()
+            } else {
+                String::new()
+            },
+            pinned: *assigned,
+            source_key: o.source_key.clone(),
             fold: fold_identity(&o.column),
             spellings,
             label: texts.last().map_or_else(
@@ -878,7 +1093,7 @@ pub fn resolve(
         });
     }
     // Evaluate the exemption on final segments, after adjacent components have joined.
-    // Each variable already has one source key; no segment boundaries change here.
+    // Assignments can merge keys; this exemption applies only within one source key.
     let mut segment_occurrences: BTreeMap<(usize, usize), Vec<&ResolvedOccurrence>> =
         BTreeMap::new();
     for r in resolved.iter().filter(|r| r.status == "used") {
@@ -898,9 +1113,10 @@ pub fn resolve(
             && forms
                 .iter()
                 .all(|f| f.label == first.label && f.valueset == first.valueset)
-            && own
-                .iter()
-                .all(|r| fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling))
+            && own.iter().all(|r| {
+                r.occurrence.source_key == own[0].occurrence.source_key
+                    && fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling)
+            })
         {
             segment.state = if own.iter().all(|r| r.preliminary) {
                 "preliminary"
@@ -983,11 +1199,13 @@ pub fn resolve(
     // Gap markers: on their key's variable when the key is one variable. A key
     // documented only without a column is no variable (F5).
     let mut key_variables: BTreeMap<&str, BTreeSet<usize>> = BTreeMap::new();
-    for ((key, _), members) in &variable_keys {
-        key_variables
-            .entry(key.as_str())
-            .or_default()
-            .insert(resolved[members[0]].variable.expect("assigned above"));
+    for members in variable_keys.values() {
+        for &i in members {
+            key_variables
+                .entry(resolved[i].occurrence.source_key.as_str())
+                .or_default()
+                .insert(resolved[i].variable.expect("assigned above"));
+        }
     }
     let columned: BTreeSet<&str> = resolved
         .iter()
@@ -1001,7 +1219,15 @@ pub fn resolve(
             continue;
         }
         let key = r.occurrence.source_key.as_str();
-        if let Some(vs) = key_variables.get(key)
+        if let Some(defaults) = &defaults {
+            if let Some(v) = defaults.occurrences[i].variable {
+                let slug = &defaults.variables[v].slug;
+                let target = variables.iter().position(|v| v.slug == *slug).ok_or_else(|| {
+                    format!("set variable would orphan gap marker for {slug:?}; ack the finding instead")
+                })?;
+                marker_variable.push((i, target));
+            }
+        } else if let Some(vs) = key_variables.get(key)
             && vs.len() == 1
         {
             marker_variable.push((i, *vs.first().expect("one")));
@@ -1048,6 +1274,14 @@ pub fn resolve(
     let gaps = gaps(&mut tables, &releases, &variables, &resolved);
 
     assign_ids(&mut variables, &resolved, &tables, ledger, &mut report)?;
+    if let Some(defaults) = &defaults {
+        for variable in &mut variables {
+            if defaults.report.unminted.contains(&variable.slug) {
+                variable.pinned = false;
+                report.unminted.push(variable.slug.clone());
+            }
+        }
+    }
 
     let dated: Vec<&Interval> = tables
         .iter()

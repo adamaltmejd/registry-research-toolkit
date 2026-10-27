@@ -212,7 +212,7 @@ fn build(args: &Args) -> Result<(), String> {
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
-    let curation_findings = curation::run(
+    let applied = curation::run(
         &args.curation,
         &statements,
         &outputs,
@@ -223,7 +223,7 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
-    warnings.extend(curation_findings);
+    warnings.extend(applied.findings);
     for (input, output) in manifest.input.iter().zip(&outputs) {
         // A release asset is its pin (the reader verified it); its locators name
         // archive members, not files under the inputs root.
@@ -266,39 +266,51 @@ fn build(args: &Args) -> Result<(), String> {
         }
     }
 
+    // Preserve each reader's attribution even when two manifest inputs read the
+    // same file. Curation adds no synthetic manifest inputs.
+    let mut valueset_names = BTreeMap::<String, BTreeSet<(usize, String)>>::new();
+    for (i, output) in outputs.iter().enumerate() {
+        for record in &output.frame.records {
+            if let Record::ValueSet(v) = record {
+                valueset_names
+                    .entry(v.hash.clone())
+                    .or_default()
+                    .extend(v.names.iter().map(|name| (rank[i], name.clone())));
+            }
+        }
+    }
+
     let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
     let mut valuesets = BTreeMap::new();
     // Links and notices cross registers: the link stage reads them, not resolve. So do
     // documents, which are merged by hash first.
     let mut links = Vec::new();
     let mut docs = Vec::new();
-    for (i, output) in outputs.iter().enumerate() {
-        for record in &output.frame.records {
-            let key = match record {
-                Record::Link(_) | Record::Notice(_) => {
-                    links.push(record.clone());
-                    continue;
+    for record in &applied.records {
+        let key = match record {
+            Record::Link(_) | Record::Notice(_) => {
+                links.push(record.clone());
+                continue;
+            }
+            Record::Doc(d) => {
+                docs.push(d.clone());
+                continue;
+            }
+            Record::Register(r) => (r.provider.clone(), r.register.clone()),
+            Record::Table(t) => (t.provider.clone(), t.register.clone()),
+            Record::Release(r) => (r.provider.clone(), r.register.clone()),
+            Record::Occurrence(o) => (o.provider.clone(), o.register.clone()),
+            Record::ValueSet(v) => {
+                let entry = valuesets
+                    .entry(v.hash.clone())
+                    .or_insert_with(|| (v.clone(), BTreeSet::new()));
+                if let Some(names) = valueset_names.get(&v.hash) {
+                    entry.1.extend(names.iter().cloned());
                 }
-                Record::Doc(d) => {
-                    docs.push(d.clone());
-                    continue;
-                }
-                Record::Register(r) => (r.provider.clone(), r.register.clone()),
-                Record::Table(t) => (t.provider.clone(), t.register.clone()),
-                Record::Release(r) => (r.provider.clone(), r.register.clone()),
-                Record::Occurrence(o) => (o.provider.clone(), o.register.clone()),
-                Record::ValueSet(v) => {
-                    let entry = valuesets
-                        .entry(v.hash.clone())
-                        .or_insert_with(|| (v.clone(), BTreeSet::new()));
-                    for name in &v.names {
-                        entry.1.insert((rank[i], name.clone()));
-                    }
-                    continue;
-                }
-            };
-            registers.entry(key).or_default().push(record.clone());
-        }
+                continue;
+            }
+        };
+        registers.entry(key).or_default().push(record.clone());
     }
 
     let set_by_hash: BTreeMap<&str, &reg_frame::ValueSet> = valuesets
@@ -314,7 +326,7 @@ fn build(args: &Args) -> Result<(), String> {
         } else {
             reg_resolve::Ledger::default()
         };
-        let r = reg_resolve::resolve(records, &ledger, &set_by_hash)
+        let r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
@@ -412,6 +424,12 @@ fn build(args: &Args) -> Result<(), String> {
     for &i in &order {
         sorted_inputs.push(by_index[i].take().expect("each input once"));
     }
+    let provenance = reg_resolve::provenance::finalize(
+        &resolved,
+        &valuesets.values().map(|(set, _)| set).collect::<Vec<_>>(),
+        &applied.classifications,
+        &applied.overrides,
+    );
     let catalog = emit::Catalog {
         meta,
         inputs: sorted_inputs,
@@ -423,6 +441,9 @@ fn build(args: &Args) -> Result<(), String> {
         notices: linked.notices,
         docs,
         doc_links: linked.doc_links,
+        statements: applied.statements,
+        provenance,
+        classifications: applied.classifications,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({

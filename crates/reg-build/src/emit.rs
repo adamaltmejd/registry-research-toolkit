@@ -4,12 +4,13 @@
 //!
 //! It fills the identity, coverage, release, variable, segment, occurrence, gap,
 //! value-set, relation, finding, document and search tables (`search.rs`);
-//! classifications and curation statements stay empty.
+//! including curated winners and their statement evidence.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use reg_frame::ValueSet;
+use reg_resolve::provenance::{FinalValue, Origin, Subject as ProvenanceSubject};
 use reg_resolve::{Resolved, Subject};
 
 use crate::docs::Document;
@@ -35,6 +36,15 @@ pub struct ProviderRow {
     pub url: Option<String>,
 }
 
+pub struct StatementRow {
+    pub hash: String,
+    pub kind: String,
+    pub file: String,
+    pub line: usize,
+    pub evidence: String,
+    pub caveat: Option<String>,
+}
+
 /// Everything the file holds, linked.
 pub struct Catalog {
     pub meta: BTreeMap<&'static str, String>,
@@ -52,6 +62,9 @@ pub struct Catalog {
     /// Documents in hash order; a document's id is its position, from 1.
     pub docs: Vec<Document>,
     pub doc_links: Vec<link::DocLink>,
+    pub statements: Vec<StatementRow>,
+    pub provenance: reg_resolve::provenance::Finalized,
+    pub classifications: Vec<reg_resolve::curation::apply::Classification>,
 }
 
 /// A cell before interning: text, folded names and spellings are resolved to row ids
@@ -146,6 +159,51 @@ impl Rows {
     }
 }
 
+fn write_provenance(
+    rows: &mut Rows,
+    subject: &ProvenanceSubject,
+    subject_id: i64,
+    values: &BTreeMap<&ProvenanceSubject, Vec<&FinalValue>>,
+    statements: &BTreeMap<&str, i64>,
+) -> Result<(), String> {
+    let kind = match subject {
+        ProvenanceSubject::Register(_) => "register",
+        ProvenanceSubject::Table(..) => "table",
+        ProvenanceSubject::Release(..) => "release",
+        ProvenanceSubject::Occurrence(..) => "occurrence",
+        ProvenanceSubject::ValueSet(_) => "valueset",
+        ProvenanceSubject::ClassVersion(..) => "class_version",
+    };
+    for value in values.get(subject).into_iter().flatten() {
+        let (prov, statement, rule) = match &value.origin {
+            Origin::Curated(hash) => (
+                "curated",
+                Some(
+                    *statements
+                        .get(hash.as_str())
+                        .ok_or_else(|| format!("unknown curation statement {hash}"))?,
+                ),
+                None,
+            ),
+            Origin::Rule(code) => ("rule", None, Some(*code)),
+        };
+        rows.push(
+            "override",
+            vec![
+                Cell::Str(kind.into()),
+                Cell::Int(subject_id),
+                Cell::Str(value.field.clone()),
+                Cell::Str(prov.into()),
+                opt_int(statement),
+                rule.map_or(Cell::Null, |code| Cell::Str(code.into())),
+                opt_str(value.value.as_ref()),
+                opt_str(value.source_value.as_ref()),
+            ],
+        );
+    }
+    Ok(())
+}
+
 /// Write `catalog` to `out`: build a scratch file next to it, compact it into a staged
 /// file, run the schema's post-write checks on that and only then replace `out`. A
 /// failed build leaves `out` as it was.
@@ -175,6 +233,36 @@ pub fn write(catalog: &Catalog, out: &Path) -> Result<(), String> {
 fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String> {
     let mut rows = Rows::default();
     let sql = |e: rusqlite::Error| e.to_string();
+    let statement_id = sorted_ids(catalog.statements.iter().map(|s| s.hash.as_str()));
+    let mut provenance_by_subject = BTreeMap::<_, Vec<_>>::new();
+    for value in &catalog.provenance.values {
+        provenance_by_subject
+            .entry(&value.subject)
+            .or_default()
+            .push(value);
+    }
+    let curated_locators: BTreeSet<_> = catalog
+        .statements
+        .iter()
+        .map(|s| reg_frame::Locator {
+            input: s.file.clone(),
+            at: format!("line={}", s.line),
+        })
+        .collect();
+    for statement in &catalog.statements {
+        rows.push(
+            "statement",
+            vec![
+                Cell::Int(statement_id[statement.hash.as_str()]),
+                Cell::Str(statement.hash.clone()),
+                Cell::Str(statement.kind.clone()),
+                Cell::Str(statement.file.clone()),
+                Cell::Int(count(statement.line)),
+                Cell::Text(statement.evidence.clone()),
+                opt_text(statement.caveat.as_ref()),
+            ],
+        );
+    }
 
     for (key, value) in &catalog.meta {
         rows.push(
@@ -243,6 +331,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     x.source_key.clone(),
                     x.label.clone(),
                     x.locator.clone(),
+                    // Preserve existing row order; use full source identity on ties.
+                    reg_resolve::OccurrenceIdentity::new(
+                        x,
+                        occ.stated.clone().or_else(|| occ.period.clone()),
+                    ),
                 ),
                 (ri, o),
             ));
@@ -290,6 +383,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         let reg = &r.register;
         let reg_pid = pid_of_register(r);
         let register_row = register_id[&reg_pid];
+        write_provenance(
+            &mut rows,
+            &ProvenanceSubject::Register(ri),
+            register_row,
+            &provenance_by_subject,
+            &statement_id,
+        )?;
         let pid = *provider_id
             .get(reg.provider.as_str())
             .ok_or_else(|| format!("provider {:?} is not in the manifest", reg.provider))?;
@@ -318,6 +418,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
         for (t, table) in r.tables.iter().enumerate() {
             let tid = table_id[&(ri, t)];
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Table(ri, t),
+                tid,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
             let (lo, hi) = hull(&table.spans);
             rows.push(
                 "tbl",
@@ -369,13 +476,23 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             let rid = release_id[&(ri, x)];
             let rel = &release.release;
             let period = rel.from.as_ref().zip(rel.to.as_ref());
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Release(ri, x),
+                rid,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
+            let asserted = curated_locators.contains(&rel.locator);
             rows.push(
                 "release",
                 vec![
                     Cell::Int(rid),
                     Cell::Int(table_id[&(ri, release.table)]),
                     Cell::Str(
-                        if period.is_some() {
+                        if asserted {
+                            "curated"
+                        } else if period.is_some() {
                             "parsed"
                         } else {
                             "unparsed"
@@ -392,8 +509,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_text(rel.description.as_ref()),
                     Cell::Null,
                     Cell::Str(rel.release.clone()),
-                    Cell::Int(id(input_of(&rel.locator)?)),
-                    Cell::Str(format!("{}:{}", rel.locator.input, rel.locator.at)),
+                    if asserted {
+                        Cell::Null
+                    } else {
+                        Cell::Int(id(input_of(&rel.locator)?))
+                    },
+                    if asserted {
+                        Cell::Null
+                    } else {
+                        Cell::Str(format!("{}:{}", rel.locator.input, rel.locator.at))
+                    },
                 ],
             );
             for (ord, population) in rel.populations.iter().enumerate() {
@@ -490,7 +615,19 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         for (o, occ) in r.occurrences.iter().enumerate() {
             let oid = occurrence_id[&(ri, o)];
             let x = &occ.occurrence;
-            let clamped = occ.stated.is_some() && occ.status == "used";
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Occurrence(ri, o),
+                oid,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
+            let override_mask = catalog
+                .provenance
+                .occurrence_masks
+                .get(&(ri, o))
+                .copied()
+                .unwrap_or_default();
             rows.push(
                 "occurrence",
                 vec![
@@ -527,10 +664,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                             .map(|(v, s)| segment_id[&(ri, v, s)]),
                     ),
                     Cell::Str(occ.status.into()),
-                    Cell::Int(if clamped { 1 << 16 } else { 0 }),
+                    Cell::Int(override_mask),
                 ],
             );
             for locator in std::iter::once(&x.locator).chain(&x.also) {
+                if curated_locators.contains(locator) {
+                    continue;
+                }
                 rows.push(
                     "occurrence_locator",
                     vec![
@@ -547,22 +687,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Int(oid),
                         Cell::Int(count(pv.population)),
                         Cell::Int(valueset_id[pv.valueset.as_str()]),
-                    ],
-                );
-            }
-            if clamped {
-                let render = |p: &reg_core::Interval| reg_core::render(std::slice::from_ref(p));
-                rows.push(
-                    "override",
-                    vec![
-                        Cell::Str("occurrence".into()),
-                        Cell::Int(oid),
-                        Cell::Str("period".into()),
-                        Cell::Str("rule".into()),
-                        Cell::Null,
-                        Cell::Str("T1".into()),
-                        opt_str(occ.period.as_ref().map(render).as_ref()),
-                        opt_str(occ.stated.as_ref().map(render).as_ref()),
                     ],
                 );
             }
@@ -702,6 +826,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
     for (hash, (set, names)) in &catalog.valuesets {
         let vid = valueset_id[hash.as_str()];
+        write_provenance(
+            &mut rows,
+            &ProvenanceSubject::ValueSet(hash.clone()),
+            vid,
+            &provenance_by_subject,
+            &statement_id,
+        )?;
         let ord: BTreeMap<&str, usize> = set
             .items
             .iter()
@@ -761,6 +892,75 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 ],
             );
         }
+    }
+
+    let family_id = sorted_ids(catalog.classifications.iter().map(|c| c.family.as_str()));
+    let class_id = sorted_ids(
+        catalog
+            .classifications
+            .iter()
+            .map(|c| (c.family.as_str(), c.version.as_str())),
+    );
+    for (family, family_row) in &family_id {
+        rows.push(
+            "ident",
+            vec![
+                Cell::Str(format!("class/{family}")),
+                Cell::Str("class_family".into()),
+                Cell::Int(*family_row),
+                Cell::Null,
+                Cell::Str(reg_core::fold_identity(family)),
+            ],
+        );
+        rows.push(
+            "class_family",
+            vec![
+                Cell::Int(*family_row),
+                Cell::Str(format!("class/{family}")),
+                Cell::Str("classification".into()),
+                Cell::Text((*family).into()),
+                Cell::Null,
+                Cell::Null,
+            ],
+        );
+    }
+    for class in &catalog.classifications {
+        let cid = class_id[&(class.family.as_str(), class.version.as_str())];
+        rows.push(
+            "ident",
+            vec![
+                Cell::Str(format!("class/{}/{}", class.family, class.version)),
+                Cell::Str("class_version".into()),
+                Cell::Int(cid),
+                Cell::Null,
+                Cell::Str(reg_core::fold_identity(&class.version)),
+            ],
+        );
+        let vid = valueset_id.get(class.valueset.as_str()).ok_or_else(|| {
+            format!(
+                "classification {}/{} names missing value set",
+                class.family, class.version
+            )
+        })?;
+        rows.push(
+            "class_version",
+            vec![
+                Cell::Int(cid),
+                Cell::Int(family_id[class.family.as_str()]),
+                Cell::Str(format!("class/{}/{}", class.family, class.version)),
+                Cell::Text(class.version.clone()),
+                Cell::Int(start(&class.period.0)),
+                Cell::Int(end(&class.period.1)),
+                Cell::Int(*vid),
+            ],
+        );
+        write_provenance(
+            &mut rows,
+            &ProvenanceSubject::ClassVersion(class.family.clone(), class.version.clone()),
+            cid,
+            &provenance_by_subject,
+            &statement_id,
+        )?;
     }
 
     // Documents. A section's id is its position in (document, ord) order.

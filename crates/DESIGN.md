@@ -213,44 +213,57 @@ spelling and type. A D `set` states those.
 
 **Curation.**
 
-- Six statement kinds: `bind`, `assert`, `assign`, `set`, `link` and `ack`.
-- Each register has one optional `curation.toml` beside its `ids.toml`, containing
-  `[[statement]]` tables. One file gives duplicate detection and review a single
-  register-local boundary without a file-order precedence rule. Statements have no
-  hand-written ids: identity is SHA-256 of normalized typed content (including evidence
-  and caveat), excluding the file and line.
-- The pure model and address grammar live in `reg-frame`, shared by readers and resolve;
-  `reg-frame` uses `reg-core` for periods and folds. The TOML loader stays in
-  `reg-readers`, so no new crate or reader dependency is needed in resolve.
-- The loader validates statements before `reg-build build` reads inputs. D-2 resolves
-  selectors and checks premises, without applying statements; application is D-3. With
-  no statements, artifact bytes are unchanged and no lock is written. CI builds the
-  synthetic fixture twice and compares bytes.
-- Selectors read an immutable source view: the frame plus asserted facts, after binding.
-  D-2 accepts the frame at that boundary; D-3a supplies its bound/asserted output there.
-  Other statement outputs never enter selector resolution. Occurrence periods intersect
-  the selector scope; spellings fold and guards compare source values. A match is a set
-  of source locators, including merged-row locators.
-- `curation.lock` is generated canonical JSON (via `reg-frame::canonical_line`), with
-  `version = 1` and a `statements` object keyed by normalized statement identity. Each
-  premise stores sorted `subjects` and `objects`: source locators and the source values
-  of overridden and dependent fields, including guards and source coordinates. Missing
-  source values are JSON null. No lock is written for an empty register.
-- Builds recompute premises. Empty or ambiguous selectors, overlapping overrides of one
-  field on one subject and period, missing/changed premises, and assertions now stated
-  by the source are refusals. Diagnostics name the statement file and line; ambiguity
-  lists candidate guards, overlaps name both locations, and changed premises show
-  old/new values. Release builds fail; dev builds skip refused statements and report
-  them. A `set` equal to its source is a redundant-set finding, not a refusal.
-- `reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]` records
-  reviewed premises (all registers by default; names may be `provider/register` or
-  register directory names). It refuses invalid selectors and conflicts before writing
-  any lock. Builds only check locks; they never accept changed premises automatically.
-  The lock diff belongs in the PR changing the statements.
-- Every published value has one provenance: source, rule or curated, with curated over
-  rule over source. Losing values are kept as evidence.
-- Rules never merge across keys, bind classifications or enrich; those are always
-  curated.
+- Four statement kinds: `assert`, `set`, `link` and `ack`. `bind` and `assign` are gone:
+  the ledger names registers and tables; moving a row or assigning its variable is a
+  field change.
+- Each register has one optional `curation.toml` beside `ids.toml`, containing
+  `[[statement]]` tables. Statements have no hand-written ids. Register-local locks hash
+  normalized typed content, including evidence and caveat but excluding file and line.
+  Publication hashes also include provider and register, preserving separate authoring
+  locations for identical statements in different registers.
+- The typed model and address grammar live in `reg-frame`; the TOML loader lives in
+  `reg-readers`. Matching, conflicts, premise validation, application and provenance
+  belong to `reg-resolve`; `reg-build` owns lock IO and located diagnostics. The emitter
+  writes resolved decisions.
+- `set table = "<slug>"` moves selected whole occurrences to an existing table before
+  default resolution. It does not merge source rows or rank sources. Disagreements at
+  the destination follow the existing F6 and ambiguity rules; a curator corrects the
+  disagreeing field with `set`. A moved release occurrence becomes dated and detached;
+  unplaced releases and population-specific value sets cannot be detached.
+- A selector's period must cover every matched occurrence whole. A partial selection
+  refuses with `selector period cuts occurrence …; select whole occurrences`. No
+  operation splits source occurrences. Selectors read an immutable phase snapshot.
+  Overlapping field changes and a table move that consumes rows another move selects are
+  conflicts at both locations; moves never form a chain.
+- Assertions add source-shaped occurrences, tables, releases, content-addressed value
+  sets or classification versions with curated provenance. Tables and releases precede
+  their consumers. Code lists are defined before occurrences consume their hashes;
+  attachment to selected occurrences follows occurrence creation. A value-set assertion
+  fills an occurrence whose source states no set; replacement needs `set`. Existing
+  facts remain assertion refusals. Classification versions of a family cannot overlap.
+- `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
+  withholds the selected occurrences. An explicit `set variable` changes the variable of
+  exactly the selected occurrences; every unselected occurrence resolves as if the
+  statement were absent. Other `set` fields wait for D-3b; `link` and `ack` application
+  wait for D-3c. Their selectors and premises are checked now.
+- `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
+  as keys. Premises contain sorted `subjects` and `objects`: source locators,
+  coordinates, overridden values, guards and dependent facts, including the destination
+  facts used by table moves. Dependencies are evidence, never extra rows selected for
+  rewriting. Missing or changed premises, empty or ambiguous selectors, and conflicts
+  are located refusals. Release builds fail; dev builds skip refused statements and
+  report them. A `set` equal to the source is a redundant-set finding.
+- `reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]` evaluates
+  every register's statements and records only the requested locks (all by default). It
+  refuses invalid statements before writing any lock; empty selections remove stale
+  locks. Builds check locks and never accept changed premises automatically.
+- Every introduced or moved value carries curated provenance through the existing
+  `statement` and `override` tables, including its statement file, line, evidence and
+  caveat. Paths are relative to the curation root, independent of working directory.
+  Segment evidence returns the file and line for curated winners. Curated values take
+  precedence over rules and sources; losing source values remain evidence. With no
+  statements, the frame and artifact bytes are unchanged.
+- Rules never merge across keys, bind classifications or enrich; those are curated.
 
 The address grammar is:
 
@@ -270,40 +283,36 @@ of `reg-core` periods, with open endpoints (`..2009`, `2019..`) parsed through t
 grammar. Guards read only source `label`, `type`, `unit`, `key` or `release`, with exact
 or prefix comparison; `key` and `release` allow equality only.
 `where release = '<handle>'` compares the release's source handle exactly as recorded in
-the frame. Provider coordinates have slots only in `bind` source handles, `where key`,
-`where release`, and direct release addresses, all opaque strings. A direct release
-address names the release itself, for example to set its period or assert it. Its table
-is a catalog slug; the entire remainder after the first `/` is the source handle,
-preserved without folding or trimming, including `/`, `@` and `where`. It takes no
-additional scope or guards. Regular expressions are refused. Edition and qualifier
-remain release attributes; `:edition` and `/qualifier` address suffixes are unsupported
-syntax and are refused with a message pointing at `where release` (maintainer ruling,
-2026-10-27).
+the frame. Provider coordinates have slots only in `where key`, `where release`, and
+direct release addresses, all opaque strings. A direct release address names the release
+itself, for example to set its period or assert it. Its table is a catalog slug; the
+entire remainder after the first `/` is the source handle, preserved without folding or
+trimming, including `/`, `@` and `where`. It takes no additional scope or guards.
+Regular expressions are refused. Edition and qualifier remain release attributes;
+`:edition` and `/qualifier` address suffixes are unsupported syntax and are refused with
+a message pointing at `where release` (maintainer ruling, 2026-10-27).
 
-All six kinds deny unknown fields. `evidence` is nonblank text (including
+All four kinds deny unknown fields. `evidence` is nonblank text (including
 `doc:<hash>#page=12`); only `ack` with `severity = "notice"` may omit it. `caveat` is
 optional user-facing text. Kind-specific content is:
 
-- `bind`: exactly one of `source` (opaque handle) or `subject` (address), a
-  `target = { entity = "register" | "table", id = "slug" }`, optional `period` and
-  integer `priority`;
 - `assert`: `subject` and a `fact` tagged by `entity`: `occurrence` or `table` with
   `fields`, `release` with `name` and `period`, `value-set` with `items`, or
   `classification-version` with `family`, `version` and `items`;
-- `assign`: `subject` and `variable` (a ledger slug, or `"none"` to withhold);
 - `set`: `subject`, `fields`, and optional `reject = true` (which may omit `fields`);
 - `link`: `subject`, typed `relation`, `object` (address or catalog FQID) and optional
   `at` period set;
 - `ack`: `subject`, `finding`, `severity` (`notice` or `review`), and evidence when
   required.
 
-`fields` is one closed schema: descriptive (`name`, `label`, `definition`, `unit`,
-`description`, `synonyms`); form (`type`, `length`, `format`, `spelling`, `period`,
-`value_set`, `coded`, `sentinels`, `classification`); `coverage`, `notice`; flags and
-roles (`sensitive`, `identifier`, `role`, `temporality`, `unit_type`); grouping (`sets`,
-`tags`). Lists of synonyms, sentinels, sets and tags normalize as sorted sets; asserted
-codes sort by code, while duplicate codes are refused. Addresses normalize folded
-spellings, expanded braces and sorted guards and period tokens before hashing.
+`fields` is one closed schema: coordinates (`table`, `variable`); descriptive (`name`,
+`label`, `definition`, `unit`, `description`, `synonyms`); form (`type`, `length`,
+`format`, `spelling`, `period`, `value_set`, `coded`, `sentinels`, `classification`);
+`coverage`, `notice`; flags and roles (`sensitive`, `identifier`, `role`, `temporality`,
+`unit_type`); grouping (`sets`, `tags`). Lists of synonyms, sentinels, sets and tags
+normalize as sorted sets; asserted codes sort by code, while duplicate codes are
+refused. Addresses normalize folded spellings, expanded braces and sorted guards and
+period tokens before hashing.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
@@ -417,7 +426,7 @@ overlapping curated overrides are refused at both locations.
   its source coordinate (`r<RegisterId>`): ledgers, links, locators and reader config
   key on it. Its public name, the segment in every published id, is the ledger's
   top-level `public` (a slug, unique among the provider's public names and handles),
-  defaulting to the handle; it is neither a D `bind` statement nor reader config (v4
+  defaulting to the handle; it is ledger data, not a statement or reader config (v4
   §2.3: the public id is stable through the ledger; §7 allows ledger entries; audit
   B-1). Rows that differ only by population are one occurrence with every row as a
   locator; the release lists its populations, with a reference day when one date is
@@ -480,16 +489,16 @@ overlapping curated overrides are refused at both locations.
   column name, a year cell one occurrence per year or range, and `Känslig1` the
   sensitivity flag ("I vissa fall" is sensitive, like SCB's `KansligVariabelIbland`).
   Through C its rows stay a register of their own, `scb/lisa-workbook` from the
-  manifest's `register`: attaching its sheets to the export's LISA tables, by period
-  where needed, is D's `bind`, since a workbook column keyed by name beside the export's
-  `v<VarId>` would otherwise be a rival or a second variable. Section headings (group
-  hints) wait for D's sets. Each `Grundregister` cell is a `derived_from` link from the
-  row's variable to each register it names (split at `,`, `;` and line breaks), matched
-  by name, so LISA's abbreviations (`RTB`) stay unresolved until D's `bind`. `Individ`
-  repeats the year-independent columns with blank year cells; the year-less sheet's row
-  stands, so `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables
-  (birth country, deaths, migration) under headings, each keyed by `PersonNr`; the
-  reader keeps the sheet as one table and splitting it is D's `bind`. Labels keep their
+  manifest's `register`. Attachment to the export's LISA tables lands with D-8 (LISA
+  headings); it will add a cross-register destination only if the D-4 converter shows
+  one is needed. Section headings (group hints) wait for D's sets. Each `Grundregister`
+  cell is a `derived_from` link from the row's variable to each register it names (split
+  at `,`, `;` and line breaks), matched by name, so LISA's abbreviations (`RTB`) stay
+  unresolved until D curation resolves them. `Individ` repeats the year-independent
+  columns with blank year cells; the year-less sheet's row stands, so `Individ` keeps
+  its 1990– span. `Individ årsoberoende` holds three tables (birth country, deaths,
+  migration) under headings, each keyed by `PersonNr`; the reader keeps the sheet as one
+  table and any later partition requires whole-occurrence `set table`. Labels keep their
   footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a
   name's own (`SNI92`), and the footnotes are not read.
 - **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
@@ -557,7 +566,7 @@ overlapping curated overrides are refused at both locations.
   `continues` that closes a cycle. Every miss is one `link:` warning, counted as
   `link_unresolved` in the build report. Name matching is per provider (the index key is
   `(provider, fold(name))`), so a source text naming another provider's register never
-  matches and is reported unresolved for D to `bind`: that count is not a reader defect.
+  matches and is reported unresolved for D curation: that count is not a reader defect.
   A malformed link or notice (an unknown kind, an endpoint without exactly one register
   reference) is refused at its locator. In frame JSONL a link's kind is written
   `relation`, since the record tag owns `kind`.

@@ -10,7 +10,7 @@ checks; the design is in [crates/DESIGN.md](crates/DESIGN.md), "The catalog buil
 The port reproduced today's builder byte for byte, including the parts that are wrong: a
 common form that is not common, a delivery coordinate only SCB has, and curation that
 compensates with provider checks. The rebuild starts from a clean-room design instead.
-It has one identity rule for every provider, optional releases and six curation
+It has one identity rule for every provider, optional releases and four curation
 statement kinds. A dry run of its default rules over all of today's metadata (no build)
 sized the result: for example 4,863 split SCB keys, 53,975 SCB variables and 2,590
 ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
@@ -28,8 +28,8 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   attached in D.
 - **Gaps one or two registers hit are curation, not reader code.** From B on, a source
   defect or a reader gap that only one or two registers hit becomes a D statement
-  (`set`, `bind`, `assign`), never a new reader fallback. A reader rule must be general
-  across its format.
+  (`set`, `assert`), never a new reader fallback. A reader rule must be general across
+  its format.
 - **Heavy runs** (the full SCB read, full builds, real-artifact conformance) are
   scheduled by the Operator with the maintainer.
 - **No new tests until cutover.** Proof is the comparison script and the dry-run
@@ -49,7 +49,7 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done        |
   | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done        |
   | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done        |
-  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the six statement kinds                                              | in progress |
+  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | in progress |
   | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —           |
   | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —           |
 
@@ -65,7 +65,7 @@ it. There are no users to protect yet, and one live pipeline is simpler than two
   `reg_meta_build/src/reg_meta_build/port/` plus `reg_meta_build/port/` (the converter,
   its member selector, emitter, equivalence harness and golden check, #1938), with
   `dbdiff`'s `--ignore-file`. The rebuild reads raw inputs, has no prepared stage and
-  has six statement kinds, so none of it is reused. D writes a new converter. The old
+  has four statement kinds, so none of it is reused. D writes a new converter. The old
   converter's selection rules (an exact member, narrowed by `where = { name }` where
   only SCB's VarID separates two families) are its reference, read from git at
   `d51dcf1ce`.
@@ -157,7 +157,7 @@ against 0.64.0:
 The hand check found 65 uncurated keys, not 43, where today's build has more variables;
 the 43 was the dry run's pin-based estimate. None is a true wrong merge:
 
-- one needs a D `assign` (Prisindex 23614: `prodgrpkod` is three code systems);
+- one needs a D `set variable` (Prisindex 23614: `prodgrpkod` is three code systems);
 - in 28, one variable changes definition, classification or name over time, and stays
   one variable with F1;
 - in 17, today's split is an artifact;
@@ -445,17 +445,17 @@ The remaining C checklist:
   differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
   with V1, or every version bump fires a domain-change.
 
-- **A one-shot converter** turns today's 17,299 entries into the six statement kinds,
+- **A one-shot converter** turns today's 17,299 entries into the four statement kinds,
   reading the new frames. It is deleted at F. For the 1,819 identity partitions the dry
   run gives the expected outcome:
 
-  | Outcome      | Entries |
-  | ------------ | ------- |
-  | No statement | 1,461   |
-  | `assign`     | 97      |
-  | Merge        | 55      |
-  | `set`        | 145     |
-  | Regroup      | 61      |
+  | Outcome        | Entries |
+  | -------------- | ------- |
+  | No statement   | 1,461   |
+  | `set variable` | 97      |
+  | Merge          | 55      |
+  | `set`          | 145     |
+  | Regroup        | 61      |
 
   Of the 97 curated splits, 8 are case-only. They are dropped and listed.
 
@@ -465,19 +465,19 @@ The remaining C checklist:
     variable rows run to 2010–2017, so 397 variables are withheld. The source bound is
     wrong; no rule widens a table from its occurrences. `EKB_MANAD`'s clamps are the
     same pattern;
-  - `bind` for table names the variables sheet cites but the tables sheet does not
-    declare: LOVA `A_LOVA_*`, DORS `DORS-COV`, LMED `VARA/LMED`, LSS. The ledger's old
-    table ids move back to the bound tables;
+  - `assert` for tables the variables sheet cites but the tables sheet does not declare
+    (or `set table` onto an existing table): LOVA `A_LOVA_*`, DORS `DORS-COV`, LMED
+    `VARA/LMED`, LSS. The ledger's old table ids name the declared tables;
   - per-occurrence `set identifier = false` where `Kopplingsvariabel` marks a column
     that is not an identifier: LMED `ATC` and `VARUNR`, LVM `BESDATUM`;
   - `set` value set (or `assert`) for the six code lists the reader leaves unbound: BU
     personnummerkvalitet and vartbarn, LMED kon and transtyp, LVM avslut, SOL pomvtrygg;
-  - LVM `besdatumn`: an `assign`, or a second ledger anchor.
+  - LVM `besdatumn`: a `set variable`, or a second ledger anchor.
 
 - **Proposals, built before new curation** (review findings that carry a proposed
   statement, so they need D's statement grammar): F3 continuation proposals (a proposed
-  `link continues` or `assign`; the only way renames under successive keys are found)
-  and V1 classification-version proposals (they rank, never bind). F4 `same-text`
+  `link continues` or `set variable`; the only way renames under successive keys are
+  found) and V1 classification-version proposals (they rank, never bind). F4 `same-text`
   proposals are built when a curator asks.
 
 - **D's `link`/`reject` resolves the successions the link stage drops**: same-day

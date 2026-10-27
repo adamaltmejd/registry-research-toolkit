@@ -134,6 +134,12 @@ pub(crate) fn assign_ids(
                     .map(|&(v, _, _)| v),
             );
         }
+        if variables
+            .iter()
+            .any(|variable| variable.pinned && variable.slug == *id)
+        {
+            continue;
+        }
         if targets.len() > 1 {
             report.split_ids.push(id.clone());
         }

@@ -19,6 +19,31 @@ fn location(statement: &LocatedStatement) -> String {
     format!("{}:{}", statement.path.display(), statement.line)
 }
 
+/// Locks live inside a register; published statements and cross-register processing
+/// need that same scope in their identity, independent of file paths and line numbers.
+fn publication_identity(statement: &LocatedStatement) -> String {
+    statement
+        .statement
+        .scoped_identity(&statement.provider, &statement.register)
+}
+
+fn statement_locator(
+    root: &Path,
+    statement: &LocatedStatement,
+) -> Result<reg_frame::Locator, String> {
+    let file = statement.path.strip_prefix(root).map_err(|_| {
+        format!(
+            "{}: statement is outside curation root {}",
+            statement.path.display(),
+            root.display()
+        )
+    })?;
+    Ok(reg_frame::Locator {
+        input: file.to_string_lossy().into_owned(),
+        at: format!("line={}", statement.line),
+    })
+}
+
 fn belongs(record: &Record, provider: &str, register: &str) -> bool {
     let coordinates = match record {
         Record::Register(r) => (&r.provider, &r.register),
@@ -36,8 +61,10 @@ fn belongs(record: &Record, provider: &str, register: &str) -> bool {
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
 fn references(
     root: &Path,
-    outputs: &[reg_readers::ReadOutput],
+    records: &[Record],
     statements: &[&LocatedStatement],
+    classifications: &[reg_resolve::curation::apply::Classification],
+    variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -48,6 +75,38 @@ fn references(
         })
         .collect::<BTreeSet<_>>();
     for object in objects {
+        if let Ok(reg_core::Fqid::ClassVersion { family, version }) = object.parse() {
+            if let Some(class) = classifications
+                .iter()
+                .find(|c| c.family == family && c.version == version)
+            {
+                let fields = BTreeMap::from([
+                    ("family".into(), serde_json::json!(class.family)),
+                    ("version".into(), serde_json::json!(class.version)),
+                    ("period".into(), serde_json::json!(class.period)),
+                    (
+                        "items".into(),
+                        records
+                            .iter()
+                            .find_map(|r| match r {
+                                Record::ValueSet(v) if v.hash == class.valueset => {
+                                    Some(serde_json::json!(v.items))
+                                }
+                                _ => None,
+                            })
+                            .unwrap_or(serde_json::Value::Null),
+                    ),
+                ]);
+                references.insert(
+                    object.clone(),
+                    vec![reg_resolve::curation::SourcePremise {
+                        locator: class.locator.clone(),
+                        fields,
+                    }],
+                );
+            }
+            continue;
+        }
         let (provider, register, variable) = match object.parse::<reg_core::Fqid>() {
             Ok(reg_core::Fqid::Register { provider, register }) => (provider, register, None),
             Ok(reg_core::Fqid::Variable {
@@ -58,7 +117,7 @@ fn references(
             _ => continue,
         };
         let mut matches = Vec::new();
-        for source in outputs.iter().flat_map(|o| &o.frame.records) {
+        for source in records {
             let Record::Register(source) = source else {
                 continue;
             };
@@ -74,9 +133,8 @@ fn references(
             if ledger.public.as_deref().unwrap_or(&source.register) != register {
                 continue;
             }
-            let records = outputs
+            let records = records
                 .iter()
-                .flat_map(|o| &o.frame.records)
                 .filter(|r| belongs(r, &provider, &source.register))
                 .cloned()
                 .collect::<Vec<_>>();
@@ -84,6 +142,7 @@ fn references(
                 &records,
                 &ledger,
                 variable.as_deref(),
+                variables,
             ));
         }
         if let [Ok(premise)] = &matches[..] {
@@ -124,10 +183,73 @@ fn changes(old: &serde_json::Value, new: &serde_json::Value, path: &str, out: &m
     }
 }
 
-/// Evaluate against an immutable source view. D-3a plugs its bound frame plus
-/// asserted facts in here; no other statement's output may enter this view.
-/// `record` is explicit review acceptance and never used by a build.
-#[allow(clippy::too_many_lines)]
+/// The accepted frame and its curated provenance. No reader output is mutated.
+#[derive(Default)]
+pub(super) struct Applied {
+    pub records: Vec<Record>,
+    pub findings: Vec<String>,
+    pub statements: Vec<crate::emit::StatementRow>,
+    pub overrides: Vec<reg_resolve::provenance::Claim>,
+    pub classifications: Vec<reg_resolve::curation::apply::Classification>,
+    pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
+}
+
+fn phase(statement: &reg_frame::statement::Statement) -> u8 {
+    use reg_frame::statement::{AssertFact, Statement};
+    match statement {
+        Statement::Assert {
+            fact: AssertFact::Table { .. } | AssertFact::Release { .. },
+            ..
+        } => 0,
+        Statement::Set { fields, .. } if fields.table.is_some() => 1,
+        Statement::Assert { .. } => 2,
+        Statement::Set { fields, .. } if fields.variable.is_some() => 3,
+        _ => 4,
+    }
+}
+
+fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, Premise>, String> {
+    if record || !path.try_exists().map_err(|e| e.to_string())? {
+        return Ok(BTreeMap::new());
+    }
+    let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let lock: Lock = serde_json::from_str(&text)
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
+    if lock.version != 1 {
+        return Err(format!(
+            "{}: unsupported premise lock version {}",
+            path.display(),
+            lock.version
+        ));
+    }
+    Ok(lock.statements)
+}
+
+fn checked_premise(
+    statement: &LocatedStatement,
+    premise: &Premise,
+    old: &BTreeMap<String, Premise>,
+    path: &Path,
+) -> Result<(), String> {
+    match old.get(&statement.identity) {
+        None => Err(format!(
+            "premise-missing: no reviewed premise in {}; run reg-build lock",
+            path.display()
+        )),
+        Some(previous) if previous != premise => {
+            let mut diff = Vec::new();
+            changes(
+                &serde_json::to_value(previous).map_err(|e| e.to_string())?,
+                &serde_json::to_value(premise).map_err(|e| e.to_string())?,
+                "premise",
+                &mut diff,
+            );
+            Err(format!("premise-changed:\n  {}", diff.join("\n  ")))
+        }
+        Some(_) => Ok(()),
+    }
+}
+
 pub(super) fn run(
     root: &Path,
     statements: &[LocatedStatement],
@@ -135,25 +257,59 @@ pub(super) fn run(
     record: bool,
     registers: &[String],
     release: bool,
-) -> Result<Vec<String>, String> {
+) -> Result<Applied, String> {
+    run_selected(
+        root,
+        &statements.iter().collect::<Vec<_>>(),
+        outputs,
+        record,
+        registers,
+        release,
+    )
+}
+
+/// Declare parents, move whole occurrences, then add remaining facts. Each phase
+/// evaluates an immutable snapshot before applying accepted statements. Other kinds
+/// see only that resulting source view. `record` is explicit review acceptance.
+#[allow(clippy::too_many_lines)]
+fn run_selected(
+    root: &Path,
+    statements: &[&LocatedStatement],
+    outputs: &[reg_readers::ReadOutput],
+    record: bool,
+    registers: &[String],
+    release: bool,
+) -> Result<Applied, String> {
+    let mut records = outputs
+        .iter()
+        .flat_map(|o| o.frame.records.iter().cloned())
+        .collect::<Vec<_>>();
+    if statements.is_empty() && !record {
+        return Ok(Applied {
+            records,
+            ..Applied::default()
+        });
+    }
+    let mut result = Applied::default();
+    let mut evaluated = Vec::new();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for statement in statements {
         groups
             .entry((&statement.provider, &statement.register))
             .or_default()
-            .push(statement);
+            .push(*statement);
     }
     let mut selected = BTreeSet::new();
     let mut pending = Vec::new();
     let mut findings = Vec::new();
     let mut refusals = Vec::new();
-    for ((provider, register), group) in groups {
+    let mut conflicts = BTreeSet::new();
+    let mut locks = BTreeMap::new();
+    let mut premises = BTreeMap::<_, BTreeMap<_, _>>::new();
+    for (provider, register) in groups.keys() {
         let name = format!("{provider}/{register}");
-        if !registers.is_empty() && !registers.iter().any(|r| r == &name || r == register) {
-            continue;
-        }
         selected.insert(name.clone());
-        selected.insert(register.clone());
+        selected.insert((*register).clone());
         let directory = root.join("registers").join(provider).join(register);
         let path = directory.join("curation.lock");
         let ledger_path = directory.join("ids.toml");
@@ -162,83 +318,306 @@ pub(super) fn run(
         } else {
             reg_resolve::Ledger::default()
         };
-        let records = outputs
-            .iter()
-            .flat_map(|output| &output.frame.records)
-            .filter(|r| belongs(r, provider, register))
-            .cloned()
-            .collect::<Vec<_>>();
-        let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
-        let references = references(root, outputs, &group)?;
-        let evaluations = reg_resolve::curation::resolve(&records, &ledger, &content, &references);
-        let previous = if !record && path.try_exists().map_err(|e| e.to_string())? {
-            let text =
-                std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-            let lock: Lock = serde_json::from_str(&text)
-                .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-            if lock.version != 1 {
-                return Err(format!(
-                    "{}: unsupported premise lock version {}",
-                    path.display(),
-                    lock.version
-                ));
-            }
-            lock.statements
-        } else {
-            BTreeMap::new()
-        };
-        let mut premises = BTreeMap::new();
-        for (statement, evaluation) in group.iter().zip(evaluations) {
-            let at = location(statement);
-            let resolved = match evaluation {
-                Ok(resolved) => resolved,
-                Err(error) => {
-                    refusals.push(format!("{at}: {error}"));
-                    continue;
-                }
+        let old = previous(&path, record)?;
+        locks.insert((provider, register), (path, ledger, old));
+    }
+    for stage in 0..5 {
+        // Evaluate every register, even when recording only selected locks: linked
+        // premises must see the same curated facts as an ordinary build.
+        let mut accepted = Vec::new();
+        for ((provider, register), group) in &groups {
+            let Some((path, ledger, old)) = locks.get(&(provider, register)) else {
+                continue;
             };
-            if !resolved.conflicts.is_empty() {
-                for other in &resolved.conflicts {
-                    refusals.push(format!(
-                        "{at}: curation-overlap: overlapping overrides with {}",
-                        location(group[*other])
-                    ));
-                }
+            let group = group
+                .iter()
+                .copied()
+                .filter(|s| phase(&s.statement) == stage)
+                .collect::<Vec<_>>();
+            if group.is_empty() {
                 continue;
             }
-            if !record {
-                match previous.get(&statement.identity) {
-                    None => {
+            let source = records
+                .iter()
+                .filter(|r| belongs(r, provider, register))
+                .cloned()
+                .collect::<Vec<_>>();
+            let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
+            let references = references(
+                root,
+                &records,
+                &group,
+                &result.classifications,
+                &result.variables,
+            )?;
+            let evaluations = reg_resolve::curation::resolve(
+                &source,
+                ledger,
+                &content,
+                &references,
+                &result.variables,
+            );
+            for (statement, evaluation) in group.iter().zip(evaluations) {
+                let at = location(statement);
+                let resolved = match evaluation {
+                    Ok(r) => r,
+                    Err(e) => {
+                        refusals.push(format!("{at}: {e}"));
+                        continue;
+                    }
+                };
+                if !resolved.conflicts.is_empty() {
+                    for other in &resolved.conflicts {
                         refusals.push(format!(
-                            "{at}: premise-missing: no reviewed premise in {}; run reg-build lock",
-                            path.display()
+                            "{at}: curation-overlap: overlapping overrides with {}",
+                            location(group[*other])
                         ));
-                        continue;
                     }
-                    Some(old) if old != &resolved.premise => {
-                        let mut diff = Vec::new();
-                        changes(
-                            &serde_json::to_value(old).map_err(|e| e.to_string())?,
-                            &serde_json::to_value(&resolved.premise).map_err(|e| e.to_string())?,
-                            "premise",
-                            &mut diff,
-                        );
-                        refusals.push(format!("{at}: premise-changed:\n  {}", diff.join("\n  ")));
-                        continue;
-                    }
-                    Some(_) => {}
+                    continue;
+                }
+                if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
+                {
+                    refusals.push(format!("{at}: {e}"));
+                    continue;
+                }
+                if resolved.redundant {
+                    findings.push(format!("{at}: redundant-set: set equals the source"));
+                }
+                accepted.push((*statement, resolved.premise, provider, register));
+            }
+        }
+        accepted.sort_by_key(|(s, ..)| {
+            use reg_frame::statement::{AssertFact, Statement};
+            let dependency = match &s.statement {
+                Statement::Assert {
+                    fact: AssertFact::Table { .. },
+                    ..
+                } => 0,
+                Statement::Assert {
+                    fact: AssertFact::Release { .. },
+                    ..
+                } => 1,
+                Statement::Assert {
+                    fact: AssertFact::ClassificationVersion { .. },
+                    ..
+                } => 2,
+                Statement::Assert {
+                    fact: AssertFact::Occurrence { .. },
+                    ..
+                } => 3,
+                _ => 4,
+            };
+            (dependency, publication_identity(s))
+        });
+        if stage == 2 {
+            // Code lists are definitions consumed by occurrence assertions. Their
+            // subject attachment follows occurrences, including newly asserted ones.
+            for (statement, ..) in &accepted {
+                let at = statement_locator(root, statement)?;
+                if let Some(set) =
+                    reg_resolve::curation::apply::asserted_value_set(&statement.statement, &at)
+                {
+                    records.push(Record::ValueSet(set));
                 }
             }
-            if resolved.redundant {
-                findings.push(format!("{at}: redundant-set: set equals the source"));
+        }
+        for (statement, premise, provider, register) in accepted {
+            let (_, ledger, _) = &locks[&(provider, register)];
+            let source = records
+                .iter()
+                .filter(|r| belongs(r, provider, register))
+                .cloned()
+                .collect::<Vec<_>>();
+            let locator = statement_locator(root, statement)?;
+            let file = locator.input.clone();
+            let applied = match reg_resolve::curation::apply::apply(
+                &source,
+                ledger,
+                &statement.statement,
+                &locator,
+                &premise,
+            ) {
+                Ok(a) => a,
+                Err(e) => {
+                    let refusal = format!("{}: {e}", location(statement));
+                    if record || release {
+                        refusals.push(refusal);
+                        return Err(refusals.join("\n"));
+                    }
+                    // Refused statements contribute neither facts nor provenance.
+                    let retained = statements
+                        .iter()
+                        .copied()
+                        .filter(|s| publication_identity(s) != publication_identity(statement))
+                        .collect::<Vec<_>>();
+                    let mut rerun =
+                        run_selected(root, &retained, outputs, record, registers, release)?;
+                    rerun
+                        .findings
+                        .push(format!("{refusal} (statement skipped)"));
+                    return Ok(rerun);
+                }
+            };
+            result.variables.extend(applied.assignments);
+            evaluated.push((statement, premise.clone()));
+            premises
+                .entry((provider, register))
+                .or_default()
+                .insert(statement.identity.clone(), premise);
+            if !applied.changes.is_empty() {
+                let value =
+                    serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
+                result.statements.push(crate::emit::StatementRow {
+                    hash: publication_identity(statement),
+                    kind: value["kind"].as_str().expect("statement kind").into(),
+                    file,
+                    line: statement.line,
+                    evidence: value["evidence"]
+                        .as_str()
+                        .expect("required evidence")
+                        .into(),
+                    caveat: value["caveat"].as_str().map(str::to_owned),
+                });
+                result.overrides.extend(applied.changes.iter().map(|c| {
+                    reg_resolve::provenance::Claim {
+                        kind: c.kind.clone(),
+                        locator: c.locator.clone(),
+                        identity: c.identity.clone(),
+                        provider: c.provider.clone(),
+                        register: c.register.clone(),
+                        table: c.table.clone(),
+                        release: c.release.clone(),
+                        period: c.period.clone(),
+                        field: c.field.clone(),
+                        value: c.value.clone(),
+                        source_value: c.source_value.clone(),
+                        statement: publication_identity(statement),
+                    }
+                }));
+                result
+                    .classifications
+                    .extend(applied.classifications.iter().cloned());
             }
-            premises.insert(statement.identity.clone(), resolved.premise);
+            let before = source.into_iter().collect::<BTreeSet<_>>();
+            records.retain(|r| !before.contains(r));
+            records.extend(applied.records);
+        }
+        if stage == 3 {
+            for ((provider, register), (_, ledger, _)) in &locks {
+                let assignments = evaluated
+                    .iter()
+                    .filter(|(s, _)| {
+                        s.provider.as_str() == provider.as_str()
+                            && s.register.as_str() == register.as_str()
+                            && matches!(&s.statement, reg_frame::statement::Statement::Set { fields, .. } if fields.variable.is_some())
+                    })
+                    .collect::<Vec<_>>();
+                if assignments.is_empty() {
+                    continue;
+                }
+                let source = records
+                    .iter()
+                    .filter(|r| belongs(r, provider, register))
+                    .cloned()
+                    .collect::<Vec<_>>();
+                if let Err(error) =
+                    reg_resolve::curation::validate_assignments(&source, ledger, &result.variables)
+                {
+                    for (statement, _) in assignments {
+                        conflicts.insert(publication_identity(statement));
+                        refusals.push(format!("{}: {error}", location(statement)));
+                    }
+                }
+            }
+            if !conflicts.is_empty() {
+                break;
+            }
+        }
+    }
+    let indices = evaluated
+        .iter()
+        .enumerate()
+        .map(|(i, (s, _))| (publication_identity(s), i))
+        .collect::<BTreeMap<_, _>>();
+    let claims = result
+        .overrides
+        .iter()
+        .map(|value| reg_resolve::curation::AppliedClaim {
+            statement: indices[value.statement.as_str()],
+            kind: &value.kind,
+            locator: &value.locator,
+            identity: value.identity.as_ref(),
+            provider: value.provider.as_deref(),
+            register: value.register.as_deref(),
+            table: value.table.as_deref(),
+            release: value.release.as_deref(),
+            field: &value.field,
+            period: value.period.as_ref(),
+        })
+        .collect::<Vec<_>>();
+    let resolved = evaluated
+        .iter()
+        .map(|(s, p)| (&s.statement, p))
+        .collect::<Vec<_>>();
+    for (a, b) in reg_resolve::curation::applied_conflicts(&resolved, &claims) {
+        let (left, right) = (evaluated[a].0, evaluated[b].0);
+        conflicts.insert(publication_identity(left));
+        conflicts.insert(publication_identity(right));
+        refusals.push(format!(
+            "{}: curation-overlap: overlapping overrides with {}",
+            location(left),
+            location(right)
+        ));
+    }
+    for (a, b) in reg_resolve::curation::classification_conflicts(&result.classifications) {
+        let (left, right) = (&result.classifications[a], &result.classifications[b]);
+        for class in [left, right] {
+            if let Some(statement) = result.statements.iter().find(|s| {
+                s.file == class.locator.input && format!("line={}", s.line) == class.locator.at
+            }) {
+                conflicts.insert(statement.hash.clone());
+            }
+        }
+        refusals.push(format!(
+            "{}:{}: curation-overlap: classification version overlaps {}:{}",
+            left.locator.input, left.locator.at, right.locator.input, right.locator.at
+        ));
+    }
+    if !conflicts.is_empty() {
+        if record || release {
+            return Err(refusals.join("\n"));
+        }
+        let retained = statements
+            .iter()
+            .copied()
+            .filter(|s| !conflicts.contains(&publication_identity(s)))
+            .collect::<Vec<_>>();
+        let mut rerun = run_selected(root, &retained, outputs, record, registers, release)?;
+        rerun.findings.extend(
+            refusals
+                .into_iter()
+                .map(|r| format!("{r} (statement skipped)")),
+        );
+        return Ok(rerun);
+    }
+
+    for ((provider, register), (path, _, _)) in locks {
+        if !registers.is_empty()
+            && !registers
+                .iter()
+                .any(|r| r == &format!("{provider}/{register}") || r == *register)
+        {
+            continue;
+        }
+        let reviewed = premises.remove(&(provider, register)).unwrap_or_default();
+        if reviewed.is_empty() {
+            continue;
         }
         pending.push((
             path,
             Lock {
                 version: 1,
-                statements: premises,
+                statements: reviewed,
             },
         ));
     }
@@ -306,5 +685,7 @@ pub(super) fn run(
     for finding in &findings {
         eprintln!("reg-build: {finding}");
     }
-    Ok(findings)
+    result.findings = findings;
+    result.records = records;
+    Ok(result)
 }

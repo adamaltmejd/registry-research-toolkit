@@ -2545,11 +2545,15 @@
             ]
           },
           "statement": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "`{file, line}` of a curated statement; always `null` in C."
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/StatementLocation",
+                "description": "Authoring location of the curated statement."
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "value": {
             "type": [
@@ -3988,6 +3992,22 @@
             "format": "int64"
           },
           "variables": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "StatementLocation": {
+        "type": "object",
+        "required": [
+          "file",
+          "line"
+        ],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "line": {
             "type": "integer",
             "format": "int64"
           }

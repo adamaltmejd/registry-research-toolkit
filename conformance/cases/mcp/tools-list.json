@@ -1189,10 +1189,14 @@
               ]
             },
             "statement": {
-              "description": "`{file, line}` of a curated statement; always `null` in C.",
-              "type": [
-                "object",
-                "null"
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/StatementLocation",
+                  "description": "Authoring location of the curated statement."
+                },
+                {
+                  "type": "null"
+                }
               ]
             },
             "value": {
@@ -1441,6 +1445,22 @@
           "required": [
             "items",
             "next_cursor"
+          ],
+          "type": "object"
+        },
+        "StatementLocation": {
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "line": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "file",
+            "line"
           ],
           "type": "object"
         },
