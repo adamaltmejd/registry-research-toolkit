@@ -141,6 +141,15 @@ def new_views(db: sqlite3.Connection, providers: set[str]) -> dict[str, View]:
         view.years[var] = (min(old[0], span[0]), max(old[1], span[1]))
         if vs is not None:
             view.codes[var] |= items[vs]
+    # A segment whose occurrences disagree (F2) keeps no set; each occurrence keeps its own.
+    for reg, vpid, vs in db.execute(
+        "SELECT r.pid, v.pid, o.valueset_id FROM occurrence o"
+        " JOIN segment s ON s.id = o.segment_id AND s.valueset_id IS NULL"
+        " JOIN variable v ON v.id = s.variable_id JOIN register r ON r.id = v.register_id"
+        " WHERE o.valueset_id IS NOT NULL"
+    ):
+        if reg.split("/")[0] in providers:
+            views[reg].codes[vpid.rsplit("/", 1)[1]] |= items[vs]
     return views
 
 
