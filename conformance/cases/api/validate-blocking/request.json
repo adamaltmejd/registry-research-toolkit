@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a blocking finding stops being an `error` at its located path, or if validate stops reporting every one at once in source order: `table_is_register` (`demo/nam` names a register with tables `a` and `b`), `variable_not_in_table` (`annan` has segments only in `nam/b`), `outside_availability` (`imp` starts in 2018), `ambiguous_window` (two variables claim `Del` in `amb` over 2019), `preliminary_without_edition` (`pre`'s `Mat` for 2020 comes only from a preliminary release), `edition_not_found` (`imp` has final releases only), `period_default_on_dated_table`, `period_on_timeless_table` (`tid` has no dated occurrence, so it is timeless) and `period_not_orderable` (a scalar `{from: 2020, to: 2019}`). Each source binds one variable that raises nothing else. Oracle: the fixture's JSONL, reg-resolve's rules (lib.rs module docs: timeless tables, T2 editions, F2 rival claimants) and logical-order.md §3.",
+  "note": "Fails if a blocking finding stops being an `error` at its located path, or if validate stops reporting every one at once in source order: `table_is_register` (`demo/nam` names a register with tables `a` and `b`), `variable_not_in_table` (`annan` has segments only in `nam/b`), `outside_availability` (`imp` starts in 2018), `ambiguous_window` (two variables claim `Del` in `amb` over 2019), `preliminary_without_edition` (`pre`'s `Mat` for 2020 comes only from a preliminary release), `edition_not_found` (`imp` has final releases only), `period_default_on_dated_table`, `period_on_timeless_table` (`tid` has no dated occurrence, so it is timeless) and `period_not_orderable` (a scalar `{from: 2020, to: 2019}`). Each source binds one variable that raises nothing else, except where noted. Four more sources pin the window and edition edges: `final` does not lift `preliminary_without_edition` (`edt`'s `V` for 2020 is only in a preliminary release beside an unstated primary); two forms of `V` inside the one selected preliminary release for 2018 (`V` int, `W` decimal, both shadowed) are an `ambiguous_window`, not a silent first-wins entry (with the release's F7 `edition_disagreement` warning); `bara`, only in `suc/gammal` (2017), requested for 2019 when `suc/ny` serves, is `outside_availability`, not `variable_not_in_table`; and `edition_not_found` is per period item (`[2019, 2020]` with a preliminary release only in 2020 fails 2019). Oracle: the fixture's JSONL, reg-resolve's rules (lib.rs module docs: timeless tables, T2 editions, F2 rival claimants) and logical-order.md §3.",
   "fixture": "orders",
   "requests": [
     {
@@ -65,6 +65,33 @@
             "table": "demo/imp",
             "period": {"from": 2020, "to": 2019},
             "bindings": [{"variable": "demo/imp/ink", "type": "numeric"}]
+          },
+          {
+            "name": "final-edition",
+            "table": "demo/edt",
+            "period": {"from": 2019, "to": 2020},
+            "edition": "final",
+            "bindings": [{"variable": "demo/edt/v", "type": "numeric"}]
+          },
+          {
+            "name": "release-conflict",
+            "table": "demo/edt",
+            "period": 2018,
+            "edition": "preliminary",
+            "bindings": [{"variable": "demo/edt/v", "type": "numeric"}]
+          },
+          {
+            "name": "chain",
+            "table": "demo/suc/gammal",
+            "period": 2019,
+            "bindings": [{"variable": "demo/suc/bara", "type": "numeric"}]
+          },
+          {
+            "name": "edition-item",
+            "table": "demo/edt",
+            "period": [2019, 2020],
+            "edition": "preliminary",
+            "bindings": [{"variable": "demo/edt/v", "type": "numeric"}]
           }
         ]
       }

@@ -36,10 +36,45 @@ def iso(number: int) -> str:
     return (EPOCH + timedelta(days=number)).isoformat()
 
 
+def serving(db, table_id):
+    """The table and its dated `continues` successors, followed transitively, as
+    (table id, table pid, window start, window end), `None` for an open bound: each
+    day goes to the table whose `at_start` window holds it (crates/DESIGN.md, "The
+    logical order")."""
+    chain, queue = [(None, table_id)], [table_id]
+    seen = {table_id}
+    while queue:
+        rows = db.execute(
+            "SELECT r.subject_id, r.at_start FROM relation r"
+            " JOIN tbl t ON t.id = r.subject_id"
+            " WHERE r.kind = 'continues' AND r.subject_kind = 'table'"
+            " AND r.object_kind = 'table' AND r.object_id = ?"
+            " AND r.at_start IS NOT NULL ORDER BY r.at_start, t.pid",
+            (queue.pop(0),),
+        ).fetchall()
+        for subject, at in rows:
+            if subject not in seen:
+                seen.add(subject)
+                chain.append((at, subject))
+                queue.append(subject)
+    chain.sort(key=lambda link: -1 << 62 if link[0] is None else link[0])
+    ends = [at for at, _ in chain[1:]] + [None]
+    return [
+        (
+            table,
+            db.execute("SELECT pid FROM tbl WHERE id = ?", (table,)).fetchone()[0],
+            at,
+            end,
+        )
+        for (at, table), end in zip(chain, ends, strict=True)
+    ]
+
+
 def census(db_path):
-    """Per sampled table: (pid, project period, bound variable pids, blocked, its
-    segments over the period as (variable, start, end, spelling)), read from the
-    artifact alone; and `meta`'s `open_start`."""
+    """Per sampled table: (pid, project period, bound variable pids, blocked, the
+    segments of the tables serving the period, each clipped to its serving window,
+    as (table pid, variable, start, end, spelling)), read from the artifact alone;
+    and `meta`'s `open_start`."""
     with closing(sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)) as db:
         pids = [row[0] for row in db.execute("SELECT pid FROM tbl ORDER BY pid")]
         step = max(len(pids) // SAMPLE, 1)
@@ -52,6 +87,7 @@ def census(db_path):
             ).fetchone()
             if timeless:
                 period = "_default"
+                lo = hi = None
             else:
                 lo = max(lo, day(FIRST.isoformat()))
                 hi = min(hi, day(LAST.isoformat()) + 1)
@@ -65,23 +101,33 @@ def census(db_path):
                     (table_id, MAX_BINDINGS),
                 )
             ]
-            segments = db.execute(
-                "SELECT v.pid, s.start, s.end, s.state, sp.exact FROM segment s"
-                " JOIN variable v ON v.id = s.variable_id"
-                " JOIN spelling sp ON sp.id = s.spelling_id"
-                " WHERE s.table_id = ?",
-                (table_id,),
-            ).fetchall()
-            if not timeless:
-                segments = [s for s in segments if s[1] < hi and s[2] > lo]
+            segments = []
+            for serving_id, serving_pid, w_lo, w_hi in serving(db, table_id):
+                bounds = [b for b in (lo, w_lo) if b is not None]
+                start = max(bounds) if bounds else None
+                bounds = [b for b in (hi, w_hi) if b is not None]
+                end = min(bounds) if bounds else None
+                for v, s_lo, s_hi, state, exact in db.execute(
+                    "SELECT v.pid, s.start, s.end, s.state, sp.exact FROM segment s"
+                    " JOIN variable v ON v.id = s.variable_id"
+                    " JOIN spelling sp ON sp.id = s.spelling_id"
+                    " WHERE s.table_id = ?",
+                    (serving_id,),
+                ):
+                    s_lo = s_lo if start is None else max(s_lo, start)
+                    s_hi = s_hi if end is None else min(s_hi, end)
+                    if s_lo < s_hi:
+                        segments.append((serving_pid, v, s_lo, s_hi, state, exact))
             # No edition is named, so an ambiguous or preliminary segment blocks, and
             # so does a bound variable with no segment over the period.
-            covered = {s[0] for s in segments}
+            covered = {s[1] for s in segments}
             blocked = any(
-                s[0] in variables and s[3] in ("ambiguous", "preliminary")
+                s[1] in variables and s[4] in ("ambiguous", "preliminary")
                 for s in segments
             ) or any(v not in covered for v in variables)
-            spans = [(v, start, end, exact) for v, start, end, _, exact in segments]
+            spans = [
+                (t, v, s_lo, s_hi, exact) for t, v, s_lo, s_hi, _, exact in segments
+            ]
             tables.append((pid, period, variables, blocked, spans))
         (open_start,) = db.execute(
             "SELECT value FROM meta WHERE key = 'open_start'"
@@ -135,9 +181,9 @@ def test_sampled_whole_table_orders_agree_with_census(artifact_dir, http_servers
                 at = open_start if start is None else day(start)
                 spellings = [
                     exact
-                    for variable, lo, hi, exact in segments
+                    for table, variable, lo, hi, exact in segments
                     if variable == entry["variable"]
-                    and entry["table"] == pid
+                    and table == entry["table"]
                     and lo <= at < hi
                 ]
                 assert spellings == [entry["spelling"]], (

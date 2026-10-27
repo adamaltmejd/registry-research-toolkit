@@ -12,9 +12,14 @@
         "edition_not_found",
         "period_default_on_dated_table",
         "period_on_timeless_table",
-        "period_not_orderable"
+        "period_not_orderable",
+        "preliminary_without_edition",
+        "ambiguous_window",
+        "edition_disagreement",
+        "outside_availability",
+        "edition_not_found"
       ],
-      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error", "error"],
+      "/data/issues/*/level": ["error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "error", "warning", "error", "error"],
       "/data/issues/*/path": [
         "/sources/0/table",
         "/sources/1/bindings/0",
@@ -24,7 +29,12 @@
         "/sources/5/edition",
         "/sources/6/period",
         "/sources/7/period",
-        "/sources/8/period"
+        "/sources/8/period",
+        "/sources/9/bindings/0",
+        "/sources/10/bindings/0",
+        "/sources/10/bindings/0",
+        "/sources/11/bindings/0",
+        "/sources/12/edition"
       ],
       "/data/issues/*/source": [
         "register",
@@ -35,7 +45,12 @@
         "edition",
         "default",
         "timeless",
-        "inverted"
+        "inverted",
+        "final-edition",
+        "release-conflict",
+        "release-conflict",
+        "chain",
+        "edition-item"
       ],
       "/data/issues/*/variable": [
         null,
@@ -46,6 +61,11 @@
         null,
         null,
         null,
+        null,
+        "demo/edt/v",
+        "demo/edt/v",
+        "demo/edt/v",
+        "demo/suc/bara",
         null
       ],
       "/data/issues/*/table": [
@@ -57,7 +77,12 @@
         "demo/imp",
         "demo/imp",
         "demo/tid",
-        "demo/imp"
+        "demo/imp",
+        "demo/edt",
+        "demo/edt",
+        "demo/edt",
+        "demo/suc/gammal",
+        "demo/edt"
       ],
       "/data/issues/*/period": [
         null,
@@ -65,12 +90,17 @@
         {"start": "2010-01-01", "end": "2011-01-01"},
         {"start": "2019-01-01", "end": "2020-01-01"},
         {"start": "2020-01-01", "end": "2021-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
         null,
         null,
         null,
-        null
+        {"start": "2020-01-01", "end": "2021-01-01"},
+        {"start": "2018-01-01", "end": "2019-01-01"},
+        {"start": "2018-01-01", "end": "2019-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"},
+        {"start": "2019-01-01", "end": "2020-01-01"}
       ],
-      "/data/issues/*/successor_fqid": [null, null, null, null, null, null, null, null, null]
+      "/data/issues/*/successor_fqid": [null, null, null, null, null, null, null, null, null, null, null, null, null, null]
     }
   }
 ]

@@ -3,8 +3,9 @@
 //! merged form, is the binding's entries; the window findings come from the segments
 //! the entries cover.
 
+use reg_core::project::Edition;
 use reg_core::project::{Binding, Source};
-use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
+use reg_core::{Interval, IssueLevel, gaps, intersect, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
@@ -24,6 +25,8 @@ pub(super) struct Scope<'a> {
     /// The source's table.
     pub table: &'a str,
     pub serving: &'a [Serving],
+    /// The ids of the source's table and its dated successors (spec 02 rule 4).
+    pub chain: &'a [i64],
     /// Every requested day (inclusive ISO intervals, ascending).
     pub requested: &'a [Interval],
 }
@@ -160,7 +163,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         b,
         variable: &variable,
     };
-    if !in_serving(scope, variable.id)? {
+    if !in_chain(scope, variable.id)? {
         outcome.findings.push(at.issue(
             IssueLevel::Error,
             "variable_not_in_table",
@@ -274,14 +277,15 @@ impl Located<'_> {
     }
 }
 
-/// Whether the variable has a segment in a serving table at all.
-fn in_serving(scope: &Scope, variable: i64) -> Result<bool, Error> {
-    for s in scope.serving {
+/// Whether the variable has a segment anywhere in the succession chain; one there but
+/// not on the requested days is `outside_availability`, not `variable_not_in_table`.
+fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
+    for &table in scope.chain {
         let hit: Option<i64> = scope
             .conn
             .query_row(
                 "SELECT 1 FROM segment WHERE variable_id = ? AND table_id = ? LIMIT 1",
-                [variable, s.table.id],
+                [variable, table],
                 |row| row.get(0),
             )
             .optional()?;
@@ -341,16 +345,27 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
                     |row| piece(k, row),
                 )?
                 .collect::<rusqlite::Result<_>>()?;
+            let contested = contested(&rows);
             for row in rows {
                 for days in gaps(
                     &overlap(std::slice::from_ref(&row.days), &windows),
                     taken.clone(),
                 ) {
                     taken.push(days.clone());
-                    pieces.push(Piece {
-                        days,
-                        ..row.clone()
-                    });
+                    let whole = std::slice::from_ref(&days);
+                    for days in overlap(whole, &contested) {
+                        pieces.push(Piece {
+                            days,
+                            state: "ambiguous".to_owned(),
+                            ..row.clone()
+                        });
+                    }
+                    for days in gaps(whole, contested.clone()) {
+                        pieces.push(Piece {
+                            days,
+                            ..row.clone()
+                        });
+                    }
                 }
             }
         }
@@ -387,6 +402,23 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     Ok(pieces)
 }
 
+/// The days two occurrences of one release cover in different forms. A shadowed
+/// occurrence has no segment to be ambiguous in, so they are found here, before
+/// first-wins subtraction drops the second form.
+fn contested(rows: &[Piece]) -> Vec<Interval> {
+    let mut days = Vec::new();
+    for (i, a) in rows.iter().enumerate() {
+        for b in &rows[i + 1..] {
+            if (&a.spelling, &a.dtype, a.valueset) != (&b.spelling, &b.dtype, b.valueset)
+                && let Some(both) = intersect(&a.days, &b.days)
+            {
+                days.push(both);
+            }
+        }
+    }
+    merge(days)
+}
+
 /// A segment or occurrence row: `start, end`, the [`FORM`] columns, `state` and `open`.
 fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
     Ok(Piece {
@@ -404,9 +436,9 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
     })
 }
 
-/// The window findings: the two blocking kinds (an ambiguous segment; a preliminary one
-/// when the source names no edition) and the flags and open ends, one per run of
-/// adjacent pieces in one table.
+/// The window findings: the two blocking kinds (an ambiguous piece; a preliminary one
+/// unless the source names exactly `"edition": "preliminary"`) and the flags and open
+/// ends, one per run of adjacent pieces in one table.
 fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
     let scope = at.scope;
     let pid = &at.variable.pid;
@@ -427,7 +459,7 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
             format!("{pid} cannot be placed on one form in {t} over {p}; the window needs curation")
         },
     );
-    if scope.source.edition.is_none() {
+    if scope.source.edition != Some(Edition::Preliminary) {
         each(
             &|p| p.state == "preliminary",
             IssueLevel::Error,

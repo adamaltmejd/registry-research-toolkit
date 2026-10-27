@@ -23,7 +23,7 @@ mod window;
 use std::collections::BTreeSet;
 
 use reg_core::project::{ProjectData, Source};
-use reg_core::{Interval, IssueLevel, ValidationIssue, overlap};
+use reg_core::{Interval, IssueLevel, ValidationIssue, merge, overlap};
 use rusqlite::{Connection, OptionalExtension};
 use serde::Serialize;
 use utoipa::ToSchema;
@@ -294,6 +294,10 @@ struct Serving {
 /// table pid, the requested days past the continued table's coverage end).
 type Undated = (String, String, Interval);
 
+/// [`serving`]'s answer: the serving tables, the undated successions the request would
+/// need and the ids of the whole succession chain.
+type Routed = (Vec<Serving>, Vec<Undated>, Vec<i64>);
+
 /// What one source contributes.
 #[derive(Default)]
 struct Checked {
@@ -387,8 +391,8 @@ fn check_source(
         issue.table.clone_from(&table_pid);
         issue
     };
-    let requested = match requested(server, source, table.as_ref()) {
-        Ok(days) => days,
+    let items = match requested(server, source, table.as_ref()) {
+        Ok(items) => items,
         Err((code, message)) => {
             own.push(located(issue(
                 IssueLevel::Error,
@@ -400,7 +404,7 @@ fn check_source(
         }
     };
     let mut checked = Checked::default();
-    let (Some(table), Some(requested)) = (table, requested) else {
+    let (Some(table), Some(items)) = (table, items) else {
         // Every finding at once: the bindings' ids still resolve.
         own.sort_by_key(Issue::key);
         checked.findings = own;
@@ -411,7 +415,8 @@ fn check_source(
         }
         return Ok(checked);
     };
-    let (serving, undated) = serving(server, conn, table, &requested)?;
+    let requested = merge(items.clone());
+    let (serving, undated, chain) = serving(server, conn, table, &requested)?;
     for (successor, continued, past) in undated {
         let mut finding = issue(
             IssueLevel::Info,
@@ -428,11 +433,11 @@ fn check_source(
         finding.successor_fqid = Some(successor);
         own.push(finding);
     }
-    own.extend(
-        editions(conn, index, source, &serving)?
-            .into_iter()
-            .map(|(code, path, message)| located(issue(IssueLevel::Error, code, path, message))),
-    );
+    for (path, days, message) in editions(server, conn, index, source, &serving, &items)? {
+        let mut finding = located(issue(IssueLevel::Error, "edition_not_found", path, message));
+        finding.period = Some(period(server, &days));
+        own.push(finding);
+    }
     own.sort_by_key(Issue::key);
     checked.findings = own;
     let table_pid = table_pid.unwrap_or_default();
@@ -443,6 +448,7 @@ fn check_source(
         source,
         table: &table_pid,
         serving: &serving,
+        chain: &chain,
         requested: &requested,
     };
     for (b, binding) in source.bindings.iter().enumerate() {
@@ -458,15 +464,16 @@ fn check_source(
     Ok(checked)
 }
 
-/// The requested days (`None` when the table did not resolve), or the finding that
-/// refuses the period: `period_not_orderable`, or `_default` anywhere but on a timeless
-/// table and a dated period on one.
+/// The days of each period item (`None` when the table did not resolve; one item, the
+/// open sentinel, for `_default`), or the finding that refuses the period:
+/// `period_not_orderable`, or `_default` anywhere but on a timeless table and a dated
+/// period on one.
 fn requested(
     server: &Server,
     source: &Source,
     table: Option<&Table>,
 ) -> Result<Option<Vec<Interval>>, (&'static str, String)> {
-    let intervals = source.period.intervals().map_err(|reason| {
+    let intervals = source.period.items().map_err(|reason| {
         (
             "period_not_orderable",
             format!("The period is not orderable: {reason}."),
@@ -575,12 +582,14 @@ fn refused(
 /// `at_start` window holds it. Also each undated succession whose successor the request
 /// would need (it reaches past the table's coverage end inside the table's window), as
 /// [`Undated`]; it is not followed (S5): no day is inferred from coverage (v4 §2.1).
+/// Last, the ids of the whole chain (the table and every dated successor), whether or
+/// not it serves a requested day.
 fn serving(
     server: &Server,
     conn: &Connection,
     table: Table,
     requested: &[Interval],
-) -> Result<(Vec<Serving>, Vec<Undated>), Error> {
+) -> Result<Routed, Error> {
     let mut chain = vec![(server.open.0, table)];
     let mut seen = BTreeSet::from([chain[0].1.id]);
     let mut undated = Vec::new();
@@ -611,6 +620,7 @@ fn serving(
         next += 1;
     }
     chain.sort_by_key(|(from, _)| *from);
+    let ids = chain.iter().map(|(_, t)| t.id).collect();
     let ends: Vec<i64> = chain
         .iter()
         .skip(1)
@@ -644,22 +654,24 @@ fn serving(
             });
         }
     }
-    Ok((serving, gone))
+    Ok((serving, gone, ids))
 }
 
-/// `edition_not_found` per source period: the named edition, or qualifier, has no
-/// release of a serving table in the source's period (`(code, path, message)`).
+/// `edition_not_found` per source period item: the named edition, or qualifier, has no
+/// release of a table serving the item that overlaps it (`(path, item, message)`).
 fn editions(
+    server: &Server,
     conn: &Connection,
     index: usize,
     source: &Source,
     serving: &[Serving],
-) -> Result<Vec<(&'static str, String, String)>, Error> {
+    items: &[Interval],
+) -> Result<Vec<(String, Interval, String)>, Error> {
     let mut found = Vec::new();
     let table = serving.first().map_or("", |s| s.table.pid.as_str());
-    let exists = |column: &str, value: &str| -> Result<bool, Error> {
+    let exists = |column: &str, value: &str, item: &Interval| -> Result<bool, Error> {
         for s in serving {
-            for (lo, hi) in &s.requested {
+            for (lo, hi) in &overlap(&s.requested, std::slice::from_ref(item)) {
                 let hit: Option<i64> = conn
                     .query_row(
                         &format!(
@@ -677,26 +689,32 @@ fn editions(
         }
         Ok(false)
     };
-    if let Some(edition) = source.edition
-        && !exists("edition", edition.as_str())?
-    {
-        found.push((
-            "edition_not_found",
-            format!("/sources/{index}/edition"),
-            format!(
-                "{table} has no {} release in the source's period.",
-                edition.as_str()
-            ),
-        ));
-    }
-    if let Some(qualifier) = &source.qualifier
-        && !exists("qualifier", qualifier)?
-    {
-        found.push((
-            "edition_not_found",
-            format!("/sources/{index}/qualifier"),
-            format!("{table} has no release with qualifier {qualifier:?} in the source's period."),
-        ));
+    for item in items {
+        if let Some(edition) = source.edition
+            && !exists("edition", edition.as_str(), item)?
+        {
+            found.push((
+                format!("/sources/{index}/edition"),
+                item.clone(),
+                format!(
+                    "{table} has no {} release over {}.",
+                    edition.as_str(),
+                    span(server, item)
+                ),
+            ));
+        }
+        if let Some(qualifier) = &source.qualifier
+            && !exists("qualifier", qualifier, item)?
+        {
+            found.push((
+                format!("/sources/{index}/qualifier"),
+                item.clone(),
+                format!(
+                    "{table} has no release with qualifier {qualifier:?} over {}.",
+                    span(server, item)
+                ),
+            ));
+        }
     }
     Ok(found)
 }
