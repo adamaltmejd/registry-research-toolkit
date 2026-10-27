@@ -1144,63 +1144,55 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 
 ## Search
 
-Four FTS5 indexes serve search: `register_fts`, `variable_fts`, `classification_fts` and
-`value_code_fts` (the build design note says what they hold). Each stores `fold_search`
-text under `unicode61 remove_diacritics 0`, so the tokenizer only splits and
-`fold_search` (`reg-core`: full case folding, NFKD, combining marks dropped) is the one
-fold, applied to indexed text by the build and to the query by the reader. It matches
-what `unicode61` alone does not: `straße`/`strasse`, `ﬁlm`/`film`, `ＡＢＣ`/`abc`.
-Display text always comes from the base tables. `value_code_fts` is contentless
-(`content=''`): its `label` reads back NULL, so a value hit joins its rowid to
-`value_code` for the code and label, and ranks with `bm25`, which needs the per-row
-sizes the index keeps. The docs index uses the same fold and query builder.
-
+`search` and `search_facets` read one FTS5 index, `search` (columns `name`: pid and
+delivered spellings; `label`: labels; `body`: definitions, descriptions and document
+text), whose rowid is `search_item.id`. The builder indexes raw text under
+`unicode61 remove_diacritics 0`, which folds case only, and the reader applies no fold
+of its own: `lan` does not match `län`. Pins, synonyms and type priors are curation (D).
 A call returns one ranked list; the SPA makes one call per typed group it shows.
 
-Each query token becomes a quoted prefix term, which neutralizes FTS5 operators and
-prefix-matches (`ink` finds `inkomst`). `LIKE` patterns escape `%` and `_`. Arms over
-authored names compare under `fold_identity` on both sides, because SQLite's own case
-folding is ASCII-only; that folds case, not diacritics.
-
-Every token must match (AND), within one row. The variable arm widens that one step: a
-query of two or more tokens also admits a variable whose register's name or purpose
-supplies some tokens and whose own text supplies the rest, so `covid provtagning` finds
-SmiNet's `Provtagningsdatum` though only the register mentions covid. A register token
-alone never lists a register's variables. These context rows rank after every variable
-whose own text matches the whole query, which keep their order; a single-token query
-admits exactly as before. Synonyms and cross-language expansion are #1490.
-
-There are five arms: register, variable, classification, classification code and
-register value. A code-shaped query (three or more characters, at least one digit) also
-matches codes exactly or by prefix, and surfaces the classifications that contain a
-matching code, ranked after name hits. Classifications are catalog-wide and have no
-validity window, so a register or period filter turns the classification arm off.
-
-Ranking and paging rules:
-
-- Pins come first, then one best-bets order: an exact identity match leads, then type
-  priors, then relevance. A researcher typing a whole name ("Kön") gets the variables
-  carrying it first, however many registers share it. A code's identity is its code
-  value, never its label: a value label that happens to name a research concept
-  (`Provtagning`) is an incidental hit and ranks below the variables and registers that
-  match it (#1464), while a code lookup (`C12`) still leads.
-- Every arm takes one bounded candidate prefix of 1,001 rows, folded or not, so later
-  pages cannot reorder earlier ones or turn a consumed leaf into a group row.
-- Prefix and group-label promotion switch off when more than 50 candidates match by
-  identity, so a generic prefix cannot pull hundreds of weak hits forward.
-- Paging stops at depth 1,000; a forged cursor cannot ask for an unbounded prefix, and a
-  researcher at the ceiling refines the query. Cursors bind to the query, filters, scope
-  and generation.
-- Value hits rank by bm25 down-weighted by how many variables share the label, so a
-  generic enum label ranks below a discriminative one; each shown code carries a bounded
-  sample of its owners and their counts.
-
-**Folds.** Before paging, classification editions on one succession chain collapse into
-one `classification_succession` row (the terminal edition, with every edition listed and
-the number hit), then two or more members of one concept group collapse into one group
-row. A lone hit stays a leaf; an old-vintage lone edition carries `terminal_fqid`. Group
-labels also match on their own. Each folded row counts once. The succession fold runs
-first so a collapsed terminal can join a curated umbrella group.
+1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
+   term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
+   inert and `ink` finds `inkomst`. A one-character token is a prefix term too:
+   `prefix = '2 3'` only makes two- and three-character prefixes cheap. `q` over 200
+   characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
+   items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
+   implementation; `docs_search` shares it.
+2. **Rank.** `bm25(search, 10.0, 5.0, 1.0)` (name, label, body), ascending. FTS5 scores
+   a row by its weighted hit count against its whole token count, so a hit weighs most
+   in an id or spelling and least in a definition or document text: a variable labelled
+   `Vikt` ranks above a longer one whose definition says vikt.
+3. **Ties.** Then `search_item.kind` in SQL text order (`classification`, `code`,
+   `document`, `register`, `set`, `table`, `variable`), then `sort_key`, which is
+   unique. Two rows tie on bm25 when the query hits the same weighted count in rows of
+   equal token count.
+4. **Filters**, ANDed with the match. `type` keeps `kind = type`; `classification` is
+   empty until D. `register` resolves through `refs::resolve`; a ref of another kind is
+   `invalid_ref`; it keeps `search_item.register_id = id`, which drops code rows and
+   keeps a document linked to that register (its first linked subject's). `period` keeps
+   `start < e AND s < end` over the row's hull, which drops code and document rows (no
+   span). So `type=code` with `register` or `period` is empty.
+5. **Paging.** Offset paging over that order: fetch `limit + 1` rows at the offset. The
+   cursor's context is every parameter but `cursor` and `limit`, its offset the hits
+   returned so far, its position the last hit's `sort_key`; `depth` is 1000. A page
+   never passes the 1000th hit, and the page that reaches it has `next_cursor: null`.
+6. **Hits**, each tagged `type`, from the row's entity:
+   - register `{fqid, name, description, period}` (`description` `null` when none);
+   - table `{fqid, name, register_name, role, period}`;
+   - variable `{fqid, name, register_name, definition, spellings, period}`: `name` is
+     the label, `spellings` the variable's `alias` folds, sorted;
+   - code `{code, label, value_set_count}`: `label` `null` when the pair has none, the
+     count is of distinct value sets holding the pair that some segment references
+     (`vs_item_code`, `segment_valueset`);
+   - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
+     come from the document's best `doc_fts` section for the same expression
+     (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.
+7. **Facets.** One `GROUP BY register_id` over the match with `kind = 'variable'`,
+   registers in pid order, each `{fqid, variable_matches}`. With `register` (resolved as
+   in 4), only that register, adding `variables`: every matched variable `{fqid, name}`
+   in pid order, `limit` ignored; `registers: []` when none matches. Without it, `limit`
+   adds `name` and the first `limit` matched variables in pid order. With neither,
+   counts only. A key a mode does not list is omitted, never `null`.
 
 `resolve` is different: exact `fold_identity` lookup of delivered column names, no
 full-text fallback and no scoring. It maps known headers; it is not discovery.

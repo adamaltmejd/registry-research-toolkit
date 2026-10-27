@@ -1,32 +1,12 @@
 {
-  "fixture": "reader",
+  "note": "`Bostadsregistret` is only register hb's name. Fails if a register's name is not indexed, or if the register hit's fields differ from rule 6.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
-        "type": "variable",
-        "register": "example"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "Value",
-        "type": "variable",
-        "register": "Unheld"
-      }
-    },
-    {
-      "operation": "search",
-      "path": "/api/search",
-      "query": {
-        "q": "Value",
-        "type": "variable",
-        "register": "Unheld",
-        "scope": "reference"
+        "q": "bostadsregistret"
       }
     }
   ]

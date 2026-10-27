@@ -299,18 +299,6 @@ impl Line {
     }
 }
 
-/// A cursor's request context: every parameter except `cursor` and `limit`, as
-/// `name=value`, sorted by name.
-fn context(params: &Params) -> String {
-    params
-        .values
-        .iter()
-        .filter(|(name, _)| !matches!(**name, "cursor" | "limit"))
-        .flat_map(|(name, values)| values.iter().map(move |v| format!("{name}={v}")))
-        .collect::<Vec<_>>()
-        .join("&")
-}
-
 const SEPARATOR: char = '\u{1f}';
 
 /// A cursor's position: the key of the last line returned.
@@ -330,7 +318,7 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let request = bounds(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
     // The cursor is checked before the ref: a cursor from another generation is stale
     // whatever its ref now resolves to.
-    let context = context(params);
+    let context = cursor::context(params);
     let (offset, after) = match params.get("cursor") {
         Some(token) => {
             let (offset, text) =

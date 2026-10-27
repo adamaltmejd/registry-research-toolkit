@@ -1,64 +1,82 @@
 [
   {
     "status": 200,
-    "headers": {"cache-control": "public, max-age=60, s-maxage=86400, must-revalidate"},
     "json": {
-      "/data/registers": [{"fqid": "scb/example", "variable_matches": 2}],
-      "/meta/scope": "holdings"
+      "/data": {
+        "registers": [
+          {
+            "fqid": "demo/ha",
+            "variable_matches": 2,
+            "variables": [
+              {
+                "fqid": "demo/ha/ink",
+                "name": "Inkomst"
+              },
+              {
+                "fqid": "demo/ha/inkfam",
+                "name": "Familjens inkomst"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/registers": [
-        {"fqid": "scb/example", "variable_matches": 3},
-        {"fqid": "sos/unheld", "variable_matches": 1}
-      ]
+      "/data": {
+        "registers": [
+          {
+            "fqid": "demo/ha",
+            "name": "Hälsoregistret",
+            "variable_matches": 2,
+            "variables": [
+              {
+                "fqid": "demo/ha/ink",
+                "name": "Inkomst"
+              }
+            ]
+          },
+          {
+            "fqid": "demo/hb",
+            "name": "Bostadsregistret",
+            "variable_matches": 1,
+            "variables": [
+              {
+                "fqid": "demo/hb/hhink",
+                "name": "Hushållets inkomst"
+              }
+            ]
+          }
+        ]
+      }
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/registers": [{"fqid": "scb/example", "variable_matches": 1}]
+      "/data": {
+        "registers": [
+          {
+            "fqid": "demo/ha",
+            "variable_matches": 2
+          },
+          {
+            "fqid": "demo/hb",
+            "variable_matches": 1
+          }
+        ]
+      }
     }
   },
   {
-    "status": 200,
+    "status": 422,
     "json": {
-      "/data/registers": [
-        {
-          "fqid": "scb/example",
-          "name": "Example",
-          "variable_matches": 3,
-          "variables": [
-            {"fqid": "scb/example/reference", "name": "Value reference"},
-            {"fqid": "scb/example/second", "name": "Value two"},
-            {"fqid": "scb/example/value", "name": "Value"}
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/registers": [
-        {
-          "fqid": "scb/example",
-          "name": "Example",
-          "variable_matches": 3,
-          "variables": [
-            {"fqid": "scb/example/reference", "name": "Value reference"},
-            {"fqid": "scb/example/second", "name": "Value two"}
-          ]
-        },
-        {
-          "fqid": "sos/unheld",
-          "name": "Unheld",
-          "variable_matches": 1,
-          "variables": [{"fqid": "sos/unheld/unheld", "name": "Unheld value"}]
-        }
-      ]
+      "/error/code": "invalid_ref",
+      "/error/fields": {
+        "ref": "demo/ha/ink"
+      }
     }
   }
 ]

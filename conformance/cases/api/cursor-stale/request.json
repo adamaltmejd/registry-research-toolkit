@@ -1,16 +1,9 @@
 {
-  "note": "Twin of reader/cursor. Fails if a cursor outlives a change of generation (stale_cursor), or if it is refused by an artifact that differs only in import_date, which is not part of the generation.",
-  "fixture": "reader",
+  "note": "Step 1 fails if a cursor outlives a change of generation (ranking-next adds a register) instead of `stale_cursor` naming the current generation; step 2 if a cursor is accepted for a request with another `q`.",
+  "fixture": "ranking",
   "artifacts": {
-    "regenerated": {
-      "identity": {
-        "curation_tree_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
-      }
-    },
-    "reimported": {
-      "identity": {
-        "import_date": "2026-09-01T00:00:00Z"
-      }
+    "next": {
+      "fixture": "ranking-next"
     }
   },
   "requests": [
@@ -18,8 +11,7 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
-        "type": "variable",
+        "q": "vikt",
         "limit": 1
       }
     },
@@ -27,11 +19,10 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
-        "type": "variable",
+        "q": "vikt",
         "limit": 1
       },
-      "artifact": "regenerated",
+      "artifact": "next",
       "cursor_from": [
         0,
         "/data/next_cursor"
@@ -41,11 +32,9 @@
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Value",
-        "type": "variable",
+        "q": "kust",
         "limit": 1
       },
-      "artifact": "reimported",
       "cursor_from": [
         0,
         "/data/next_cursor"

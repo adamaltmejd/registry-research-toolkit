@@ -1042,6 +1042,198 @@
         }
       }
     },
+    "/api/search": {
+      "get": {
+        "description": "Full-text search over registers, tables, variables, value codes and documents, ranked by relevance. Exact column names are `resolve`.",
+        "operationId": "search",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "register",
+                "table",
+                "variable",
+                "classification",
+                "code",
+                "document"
+              ]
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SearchPage"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search/facets": {
+      "get": {
+        "description": "Per register, how many variables a search query matches, for the SPA's register filter.",
+        "operationId": "search_facets",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "register",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data",
+                    "meta"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RegisterFacets"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An error in `api/errors.toml`",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "meta"
+                  ],
+                  "properties": {
+                    "error": {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    "meta": {
+                      "$ref": "#/components/schemas/Meta"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/segments/{ref}": {
       "get": {
         "description": "A variable's segments: its maximal runs of one form per table, in time order, each with its spelling, type, value set, flags and state. With `evidence`, each segment's source occurrences and the rule overrides that changed them.",
@@ -1742,6 +1934,22 @@
             "type": "string"
           },
           "remediation": {
+            "type": "string"
+          }
+        }
+      },
+      "FacetVariable": {
+        "type": "object",
+        "description": "A matched variable: its FQID and label.",
+        "required": [
+          "fqid",
+          "name"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }
@@ -2685,6 +2893,47 @@
         },
         "additionalProperties": false
       },
+      "RegisterFacet": {
+        "type": "object",
+        "description": "One register's matched variables. `name` and `variables` are present only in the\nmodes that list them, never `null`.",
+        "required": [
+          "fqid",
+          "variable_matches"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "variable_matches": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FacetVariable"
+            }
+          }
+        }
+      },
+      "RegisterFacets": {
+        "type": "object",
+        "description": "`search_facets`' result.",
+        "required": [
+          "registers"
+        ],
+        "properties": {
+          "registers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegisterFacet"
+            }
+          }
+        }
+      },
       "RelatedDocument": {
         "type": "object",
         "description": "`shape.RelatedDocument`.",
@@ -2936,6 +3185,243 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SchemaLine"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "SearchHit": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "description",
+              "period",
+              "type"
+            ],
+            "properties": {
+              "description": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "register"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "register_name",
+              "role",
+              "period",
+              "type"
+            ],
+            "properties": {
+              "fqid": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period"
+              },
+              "register_name": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "table"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "register_name",
+              "definition",
+              "spellings",
+              "period",
+              "type"
+            ],
+            "properties": {
+              "definition": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "description": "The label."
+              },
+              "period": {
+                "$ref": "#/components/schemas/Period"
+              },
+              "register_name": {
+                "type": "string"
+              },
+              "spellings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The folded names it was delivered under, sorted."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "variable"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "fqid",
+              "name",
+              "family",
+              "type"
+            ],
+            "properties": {
+              "family": {
+                "type": "string"
+              },
+              "fqid": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "classification"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "description": "One distinct (code, label) pair, not a value set; its value sets are\n`values?code=&label=`.",
+            "required": [
+              "code",
+              "label",
+              "value_set_count",
+              "type"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "code"
+                ]
+              },
+              "value_set_count": {
+                "type": "integer",
+                "format": "int64",
+                "description": "The value sets some segment references that hold the pair."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "doc",
+              "title",
+              "heading",
+              "page",
+              "type"
+            ],
+            "properties": {
+              "doc": {
+                "type": "string",
+                "description": "The document's hash."
+              },
+              "heading": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The best-matching section's heading; `null` when no section matches."
+              },
+              "page": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "format": "int64"
+              },
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "document"
+                ]
+              }
+            }
+          }
+        ],
+        "description": "`shape.SearchHit`: one hit, tagged by its kind."
+      },
+      "SearchPage": {
+        "type": "object",
+        "description": "`Page<SearchHit>`.",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
             }
           },
           "next_cursor": {

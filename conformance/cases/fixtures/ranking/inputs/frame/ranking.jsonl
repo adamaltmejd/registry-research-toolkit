@@ -1,0 +1,47 @@
+# Three registers: ha (2019-2020), hb (2021) and hc (2019).
+{"kind":"register","provider":"demo","register":"ha","name":"Hälsoregistret","description":"Uppgifter om vårdkontakter."}
+{"kind":"register","provider":"demo","register":"hb","name":"Bostadsregistret","description":"Uppgifter om bostäder."}
+{"kind":"register","provider":"demo","register":"hc","name":"Kust","description":"Om hav."}
+{"kind":"table","provider":"demo","register":"ha","table":"ta","name":"Personer"}
+{"kind":"table","provider":"demo","register":"ha","table":"tv","name":"Vikt","description":"Mått."}
+{"kind":"table","provider":"demo","register":"hb","table":"tb","name":"Hushåll"}
+{"kind":"table","provider":"demo","register":"hc","table":"tk","name":"Kust","description":"Rader."}
+{"kind":"release","provider":"demo","register":"ha","table":"ta","release":"a2019","name":"Personer 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"ha","table":"ta","release":"a2020","name":"Personer 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"ha","table":"tv","release":"v2019","name":"Vikt 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"hb","table":"tb","release":"b2021","name":"Hushåll 2021","from":"2021-01-01","to":"2021-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"hc","table":"tk","release":"k2019","name":"Kust 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+# Value sets. (9, Okänd) is in three referenced sets; ("", Uppgift saknas) in one.
+{"kind":"value_set","items":[{"code":"1","label":"Man"},{"code":"2","label":"Kvinna"},{"code":"9","label":"Okänd"}],"names":["sexkod"]}
+{"kind":"value_set","items":[{"code":"G","label":"Gift"},{"code":"O","label":"Ogift"},{"code":"9","label":"Okänd"}],"names":["civkod"]}
+{"kind":"value_set","items":[{"code":"H","label":"Hyresrätt"},{"code":"B","label":"Bostadsrätt"},{"code":"9","label":"Okänd"}],"names":["boform"]}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"},{"code":"","label":"Uppgift saknas"}],"names":["janej"]}
+{"kind":"value_set","items":[{"code":"K9","label":"Kust och skärgård nord"}],"names":["kustkod"]}
+# Sixty (code, label) pairs labelled "Ort NN": a query with more than 50 hits.
+{"kind":"value_set","items":[{"code":"01","label":"Ort 01"},{"code":"02","label":"Ort 02"},{"code":"03","label":"Ort 03"},{"code":"04","label":"Ort 04"},{"code":"05","label":"Ort 05"},{"code":"06","label":"Ort 06"},{"code":"07","label":"Ort 07"},{"code":"08","label":"Ort 08"},{"code":"09","label":"Ort 09"},{"code":"10","label":"Ort 10"},{"code":"11","label":"Ort 11"},{"code":"12","label":"Ort 12"},{"code":"13","label":"Ort 13"},{"code":"14","label":"Ort 14"},{"code":"15","label":"Ort 15"},{"code":"16","label":"Ort 16"},{"code":"17","label":"Ort 17"},{"code":"18","label":"Ort 18"},{"code":"19","label":"Ort 19"},{"code":"20","label":"Ort 20"},{"code":"21","label":"Ort 21"},{"code":"22","label":"Ort 22"},{"code":"23","label":"Ort 23"},{"code":"24","label":"Ort 24"},{"code":"25","label":"Ort 25"},{"code":"26","label":"Ort 26"},{"code":"27","label":"Ort 27"},{"code":"28","label":"Ort 28"},{"code":"29","label":"Ort 29"},{"code":"30","label":"Ort 30"},{"code":"31","label":"Ort 31"},{"code":"32","label":"Ort 32"},{"code":"33","label":"Ort 33"},{"code":"34","label":"Ort 34"},{"code":"35","label":"Ort 35"},{"code":"36","label":"Ort 36"},{"code":"37","label":"Ort 37"},{"code":"38","label":"Ort 38"},{"code":"39","label":"Ort 39"},{"code":"40","label":"Ort 40"},{"code":"41","label":"Ort 41"},{"code":"42","label":"Ort 42"},{"code":"43","label":"Ort 43"},{"code":"44","label":"Ort 44"},{"code":"45","label":"Ort 45"},{"code":"46","label":"Ort 46"},{"code":"47","label":"Ort 47"},{"code":"48","label":"Ort 48"},{"code":"49","label":"Ort 49"},{"code":"50","label":"Ort 50"},{"code":"51","label":"Ort 51"},{"code":"52","label":"Ort 52"},{"code":"53","label":"Ort 53"},{"code":"54","label":"Ort 54"},{"code":"55","label":"Ort 55"},{"code":"56","label":"Ort 56"},{"code":"57","label":"Ort 57"},{"code":"58","label":"Ort 58"},{"code":"59","label":"Ort 59"},{"code":"60","label":"Ort 60"}],"names":["ortkod"]}
+# ha/ta. BOSTORT was renamed BOSTADSORT in 2020: one variable, two spellings.
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"KON","source_key":"kon","label":"Kön","valueset":"sexkod"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"KON","source_key":"kon","label":"Kön","valueset":"sexkod"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"SVAR","source_key":"svar","label":"Svar","valueset":"janej"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"SVAR","source_key":"svar","label":"Svar","valueset":"janej"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"INK","source_key":"ink","label":"Inkomst"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"INK","source_key":"ink","label":"Inkomst"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"INKFAM","source_key":"inkfam","label":"Familjens inkomst"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"INKFAM","source_key":"inkfam","label":"Familjens inkomst"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"ALDERAR","source_key":"alderar","label":"Ålder, år"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"ALDERAR","source_key":"alderar","label":"Ålder, år"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2019","column":"BOSTORT","source_key":"kbo","label":"Hemort"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"ta","release":"a2020","column":"BOSTADSORT","source_key":"kbo","label":"Hemort"}
+# ha/tv: VA and VB tie with the table on "vikt"; VC holds it only in its definition.
+{"kind":"occurrence","provider":"demo","register":"ha","table":"tv","release":"v2019","column":"VA","source_key":"va","label":"Vikt"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"tv","release":"v2019","column":"VB","source_key":"vb","label":"Vikt"}
+{"kind":"occurrence","provider":"demo","register":"ha","table":"tv","release":"v2019","column":"VC","source_key":"vc","label":"Längd","definition":"Vikt i kilo"}
+# hb/tb. KON shares its bare name with ha's.
+{"kind":"occurrence","provider":"demo","register":"hb","table":"tb","release":"b2021","column":"KON","source_key":"kon","label":"Kön","valueset":"sexkod"}
+{"kind":"occurrence","provider":"demo","register":"hb","table":"tb","release":"b2021","column":"CIVIL","source_key":"civil","label":"Civilstånd","valueset":"civkod"}
+{"kind":"occurrence","provider":"demo","register":"hb","table":"tb","release":"b2021","column":"BOFORM","source_key":"boform","label":"Upplåtelseform","valueset":"boform"}
+{"kind":"occurrence","provider":"demo","register":"hb","table":"tb","release":"b2021","column":"FORS","source_key":"fors","label":"Församling","valueset":"ortkod"}
+{"kind":"occurrence","provider":"demo","register":"hb","table":"tb","release":"b2021","column":"HHINK","source_key":"hhink","label":"Hushållets inkomst"}
+# hc: one row of every kind holds "kust" once, in its label, in a row of five tokens.
+{"kind":"occurrence","provider":"demo","register":"hc","table":"tk","release":"k2019","column":"KV","source_key":"kv","label":"Kust","valueset":"kustkod"}
+# The document row is the markdown input docs/kust.md (a frame cannot state a doc).

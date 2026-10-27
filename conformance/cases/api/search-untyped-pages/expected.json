@@ -2,32 +2,39 @@
   {
     "status": 200,
     "json": {
-      "/data/items/*/code": [
-        "Q900"
+      "/data/items/*/type": [
+        "code",
+        "document"
       ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/code": [
-        "Q901"
+      "/data/items/*/type": [
+        "register",
+        "table"
       ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/fqid": [
-        "scb/qreport"
-      ]
+      "/data/items/*/type": [
+        "variable"
+      ],
+      "/data/next_cursor": null
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/fqid": [
-        "class/qset"
+      "/data/items/*/type": [
+        "code",
+        "document",
+        "register",
+        "table",
+        "variable"
       ],
       "/data/next_cursor": null
     }

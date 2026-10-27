@@ -1,21 +1,19 @@
 {
-  "kind": "catalog",
-  "fixture": "code-ranking",
+  "note": "Sixty code hits `Ort NN` that tie on bm25, so `sort_key` orders them. Fails if a search without `limit` does not stop at 50 with a cursor, or if the cursor does not continue at the 51st.",
+  "fixture": "ranking",
   "requests": [
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Bulkval",
-        "type": "classification_code"
+        "q": "ort"
       }
     },
     {
       "operation": "search",
       "path": "/api/search",
       "query": {
-        "q": "Bulkval",
-        "type": "classification_code"
+        "q": "ort"
       },
       "cursor_from": [
         0,

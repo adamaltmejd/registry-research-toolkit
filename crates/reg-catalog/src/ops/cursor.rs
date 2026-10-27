@@ -1,7 +1,25 @@
 //! Cursors: opaque, bound to the catalog generation and to the request they continue
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
+use super::Params;
 use crate::{Code, Error, hex};
+
+/// The cursor context of a request: every parameter but `cursor` and `limit`, sorted
+/// by name, as `name=<hex of the value>` joined by `&`. Hex, because a free-text
+/// value may hold `&` or `=`, which would let two requests share a context.
+pub(super) fn context(params: &Params) -> String {
+    params
+        .values
+        .iter()
+        .filter(|(name, _)| !matches!(**name, "cursor" | "limit"))
+        .flat_map(|(name, values)| {
+            values
+                .iter()
+                .map(move |value| format!("{name}={}", hex(value.as_bytes())))
+        })
+        .collect::<Vec<_>>()
+        .join("&")
+}
 
 #[must_use]
 pub fn invalid(message: &str) -> Error {

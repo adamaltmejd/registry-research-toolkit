@@ -1,0 +1,8 @@
+# Markdown documents (crates/reg-readers/src/docs.rs): the sources file beside the
+# documents, and the frontmatter keys read.
+sources = "doc_sources.toml"
+
+[frontmatter]
+variable = "variable"
+title = "display_name"
+source = "source"
