@@ -170,6 +170,24 @@ tracks the milestones. This section holds the design decisions that outlive the 
 3. **Link and emit.** Cross-register links are checked once over all resolved registers.
    The emitter writes one SQLite file, documents included, and decides nothing.
 
+**Change findings (F1).** Resolve reports what changed in a variable's documentation as
+`notice` findings, one per (variable, sub-kind, table or none, first day of the new
+form), on that day. Neighbours are compared: an `ambiguous` segment is skipped and a gap
+is not a change.
+
+- `F1:type-change`: dtype or length differs between consecutive segments of one table.
+- `F1:domain-change`: the value set differs (NULL included), unless either side is
+  uncoded. The message counts codes added, removed and relabelled.
+- `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs
+  differ. The definition message names the field, never the text.
+- `F1:population-change`: the primary releases carrying the variable, in period order,
+  state different population names. Undated releases and releases without populations
+  are skipped.
+
+V2 (value-set carry across a segment that states none) is a v4 rule not built: on the
+first full build 7 coded segments of 166k sat between two neighbours with one value set,
+spelling and type. A D `set` states those.
+
 **Time.**
 
 - Periods are half-open day intervals with a display grain: year, half, quarter, month,
