@@ -39,48 +39,30 @@ HEADERS = {
 # Per operation, the `api` cases whose steps of that operation cover a success and
 # every domain error it lists in `operations.toml`. Every `/mcp` request in this
 # module on a worker's server for one artifact draws on one 127.0.0.1 rate bucket (60
-# a minute), so keep each artifact's total well under it.
+# a minute), so keep each artifact's total well under it. Each R PR fills its own
+# tuples when it unparks the operation.
 EQUIVALENCE = {
-    "search": (
-        "meta",
-        "invalid-parameters",
-        "search-register",
-        "search-period",
-        "scope-unavailable",
-        "cursor-invalid",
-        "cursor-stale",
-    ),
-    "docs_search": (
-        "docs-search",
-        "docs-search-errors",
-        "docs-search-cursor",
-        "docs-search-ambiguous",
-        "docs-unavailable",
-    ),
-    "docs_get": ("docs-get", "docs-unavailable", "docs-scope-unavailable"),
-    "docs_related": (
-        "docs-related",
-        "docs-related-ambiguous",
-        "docs-unavailable",
-        "docs-scope-unavailable",
-    ),
-    "show": ("show-provider", "show-bare-names"),
-    "values": (
-        "values-classification",
-        "values-state",
-        "values-errors",
-        "values-stale-cursor",
-        "values-tree",
-    ),
-    "graph": ("graph-succession", "graph-unheld", "graph-errors"),
-    "schema": ("schema-paging", "schema-errors"),
-    "diff": ("diff-register", "diff-errors"),
-    "coverage": ("coverage-register", "coverage-errors"),
-    # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
-    # and a repeated scalar as an array.
-    "resolve": ("resolve-columns", "resolve-errors"),
-    "validate": ("validate-unavailable-everywhere", "validate-scope-rejected"),
-    "order": ("order-gap-clipped", "order-errors", "order-scope-rejected"),
+    # r-show
+    "show": (),
+    "resolve": (),
+    # r-schema
+    "schema": (),
+    "diff": (),
+    "coverage": (),
+    # r-segments-values
+    "segments": (),
+    "values": (),
+    # r-findings-graph
+    "graph": (),
+    # r-search
+    "search": (),
+    # r-docs
+    "docs_search": (),
+    "docs_get": (),
+    "docs_related": (),
+    # r-order-check
+    "validate": (),
+    "order": (),
 }
 READER = {"fixture": "base"}
 # The `tools/list` result, schemas included: a change to a tool is a reviewed diff here.

@@ -43,6 +43,9 @@ fn fqid_json(f: &Fqid) -> Value {
         Fqid::Classification { classification } => {
             json!({"kind": "classification", "classification": classification})
         }
+        Fqid::ClassVersion { family, version } => {
+            json!({"kind": "class_version", "family": family, "version": version})
+        }
     }
 }
 

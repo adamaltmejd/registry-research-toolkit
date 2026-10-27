@@ -70,6 +70,12 @@ pub enum Fqid {
     Classification {
         classification: String,
     },
+    /// `class/<family>/<version>`: a classification version (the catalog's
+    /// `class_version.pid`).
+    ClassVersion {
+        family: String,
+        version: String,
+    },
 }
 
 /// The slug grammar: `^[a-z](?:-?[a-z0-9])*$` and not `class`.
@@ -84,6 +90,16 @@ pub fn is_slug(s: &str) -> bool {
             .all(|&c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
 }
 
+/// The class-version segment: `^[a-z0-9][a-z0-9-]*$`. Versions are years and editions
+/// (`2020`, `2007`), so a digit may lead.
+fn is_version_slug(s: &str) -> bool {
+    s.as_bytes()
+        .first()
+        .is_some_and(|c| c.is_ascii_lowercase() || c.is_ascii_digit())
+        && s.bytes()
+            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == b'-')
+}
+
 impl FromStr for Fqid {
     type Err = GrammarError;
 
@@ -94,6 +110,12 @@ impl FromStr for Fqid {
                 [_, slug] if is_slug(slug) => Ok(Self::Classification {
                     classification: slug.to_owned(),
                 }),
+                [_, family, version] if is_slug(family) && is_version_slug(version) => {
+                    Ok(Self::ClassVersion {
+                        family: family.to_owned(),
+                        version: version.to_owned(),
+                    })
+                }
                 _ => Err(GrammarError::InvalidRef),
             };
         }
@@ -130,6 +152,9 @@ impl fmt::Display for Fqid {
             } => write!(f, "{provider}/{register}/{variable}"),
             Self::Classification { classification } => {
                 write!(f, "{CLASSIFICATION_PREFIX}/{classification}")
+            }
+            Self::ClassVersion { family, version } => {
+                write!(f, "{CLASSIFICATION_PREFIX}/{family}/{version}")
             }
         }
     }

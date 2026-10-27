@@ -267,7 +267,7 @@ note = """The documents linked to a register, table, variable or classification 
 [[download]]
 route = "GET /api/docs/file/{doc}"
 media_type = "application/pdf"
-operation = "docs_related"
+operation = "docs_get"
 note = "A `pdf` document's bytes by content hash (`doc.content`). Served inline."
 
 # The shapes `result` names. A result described in words above has its fields fixed by
@@ -426,7 +426,7 @@ source = "string | null; the project source's name"
 variable = "string | null; fqid"
 table = "string | null; fqid"
 period = "Period | null"
-successor_fqid = "string | null; the successor a `variable_replaced` finding names"
+successor_fqid = "string | null; the successor a `variable_replaced` finding names, or the successor table an undated succession names (`table_succession_undated`)"
 
 [shape.LogicalOrder]
 note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples (a clear and a blocked order)."

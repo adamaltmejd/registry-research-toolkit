@@ -697,6 +697,7 @@ from its segment count and the `class/` prefix alone. `reg-core` owns the gramma
   | 2                   | `<provider>/<register>`        | register                        |
   | 3                   | `<provider>/<register>/<slug>` | variable binding (the variable) |
   | 2, leading `class/` | `class/<slug>`                 | classification                  |
+  | 3, leading `class/` | `class/<family>/<version>`     | classification version          |
 
 ```text
 scb/lisa/kon          variable binding
@@ -711,6 +712,8 @@ class/sun2020         classification, vintage in the slug
   is `YYYY`, `YYYY-MM`, `YYYY-MM-DD`, `HTYYYY`/`VTYYYY`, `LAYYYY` (July of `YYYY`
   through June of the next year), `YYYY-Q[1-4]`, `YYYY-H[12]`, years 1900–2099, plus a
   `from..to` range. Each value has exactly one spelling.
+- **A class version is lowercase `[a-z0-9][a-z0-9-]*`.** Versions are years and editions
+  (`class/sun/2020`, `class/sni/2007`), so a digit may lead; the family is a slug.
 - **Classification vintage is in the slug.** SUN 2020 is `class/sun2020`; ICD-10 and
   ICD-11 are distinct classifications. Each vintage is its own normative document.
 - **No `@version` suffix.** Co-delivered parallel codings (SNI92 and SNI2007 in a

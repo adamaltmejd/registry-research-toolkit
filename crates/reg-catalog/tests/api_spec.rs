@@ -78,6 +78,7 @@ fn param_schema(ty: &str) -> Value {
     }
     match ty {
         "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
+        "hash" => json!({"type": "string", "pattern": "^[0-9a-f]{64}$"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
         "boolean" => json!({"type": "boolean"}),
         // At most 200 values: the table's one array, `resolve`'s `columns`.

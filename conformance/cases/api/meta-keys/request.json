@@ -2,6 +2,6 @@
   "note": "Fails if meta, on a success or an error, gains a key (the old scope), loses one, or stops carrying the contract version and the catalog's meta catalog_version.",
   "requests": [
     {"operation": "context", "path": "/api/context"},
-    {"operation": "context", "path": "/api/context", "query": {"scope": "reference"}}
+    {"operation": "context", "path": "/api/context", "query": {"nonsense": "1"}}
   ]
 }

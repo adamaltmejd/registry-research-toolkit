@@ -3,14 +3,16 @@
 
 use crate::{Code, Error, hex};
 
-pub(crate) fn invalid(message: &str) -> Error {
+#[must_use]
+pub fn invalid(message: &str) -> Error {
     Error::new(Code::InvalidCursor, message, vec![])
 }
 
 /// A cursor is the hex of `generation.context.offset.position`: the generation it
 /// was issued on, the request it continues (`context`), where the next page starts
 /// and the position of the row before it.
-pub(crate) fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
+#[must_use]
+pub fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
     hex(format!("{generation}.{context}.{offset}.{position}").as_bytes())
 }
 
@@ -20,7 +22,7 @@ pub(crate) fn encode(generation: &str, context: &str, offset: usize, position: &
 ///
 /// `stale_cursor` for another generation's cursor; `invalid_cursor` for one that
 /// does not decode, continues another request or passes the depth.
-pub(crate) fn decode(
+pub fn decode(
     cursor: &str,
     generation: &str,
     context: &str,

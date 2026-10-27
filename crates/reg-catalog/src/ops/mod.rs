@@ -1,16 +1,28 @@
 //! The operation set. Each operation registers itself in its own file (`context.rs`,
-//! ...), and both transports are generated from the registrations: the HTTP routes and
-//! `/openapi.json` here and in `reg-meta`, and the MCP tools in `reg-meta`. Shared
-//! request pieces live in their own modules: refs (`refs.rs`) and cursors
-//! (`cursor.rs`). An operation or download with a [`Type::Project`] parameter is a POST
+//! `search.rs`, `show.rs`, ...), and both transports are generated from the
+//! registrations: the HTTP routes and `/openapi.json` here and in `reg-meta`, and the
+//! MCP tools in `reg-meta`. Shared request pieces live in their own modules: refs
+//! (`refs.rs`), cursors (`cursor.rs`), result shapes (`shape.rs`) and the FTS5 query
+//! (`fts.rs`). An operation or download with a [`Type::Project`] parameter is a POST
 //! that takes it as the JSON body; every other is a GET.
 
 pub mod body;
 pub mod context;
-#[expect(dead_code, reason = "wave 4's paging operations are its callers")]
-mod cursor;
-#[expect(dead_code, reason = "wave 4's operations are its callers")]
-mod refs;
+pub mod coverage;
+pub mod cursor;
+pub mod docs;
+pub mod findings;
+pub mod fts;
+pub mod graph;
+pub mod order;
+pub mod refs;
+pub mod resolve;
+pub mod schema;
+pub mod search;
+pub mod segments;
+pub mod shape;
+pub mod show;
+pub mod values;
 
 use std::collections::BTreeMap;
 
@@ -33,6 +45,9 @@ pub struct Server {
     pub catalog: Catalog,
     context: context::Context,
     pub version: &'static str,
+    /// `meta` `open_start` and `open_end`: the day numbers a result period renders as
+    /// `null`.
+    open: (i64, i64),
 }
 
 impl Server {
@@ -52,15 +67,20 @@ impl Server {
                 )
             })
         };
-        // simplify: parsed here for `context` only; hold them on `Server` once a
-        // request-time operation renders a `Period`.
         let open = (day("open_start")?, day("open_end")?);
         let context = context::Context::load(&catalog, open, version)?;
         Ok(Self {
             catalog,
             context,
             version,
+            open,
         })
+    }
+
+    /// A result period of the day numbers `[start, end)` (`shape.Period`).
+    #[must_use]
+    pub fn period(&self, start: i64, end: i64) -> Period {
+        Period::new(self.open, start, end)
     }
 }
 
@@ -139,6 +159,8 @@ pub enum Type {
     Limit,
     /// An opaque `next_cursor`.
     Cursor,
+    /// A content hash: 64 lowercase hex digits.
+    Hash,
     Boolean,
     Enum(&'static [&'static str]),
     /// `string[]`: up to [`MAX_ITEMS`] strings, repeated keys over HTTP and a JSON
@@ -275,13 +297,27 @@ impl Operation {
 }
 
 /// Every registered operation.
+///
+/// The order is `operations.toml`'s row order, which fixes the MCP `tools/list` order.
 pub fn all() -> impl Iterator<Item = &'static Operation> {
-    context::OPERATIONS.iter()
+    search::OPERATIONS
+        .iter()
+        .chain(context::OPERATIONS)
+        .chain(show::OPERATIONS)
+        .chain(segments::OPERATIONS)
+        .chain(findings::OPERATIONS)
+        .chain(values::OPERATIONS)
+        .chain(graph::OPERATIONS)
+        .chain(coverage::OPERATIONS)
+        .chain(schema::OPERATIONS)
+        .chain(resolve::OPERATIONS)
+        .chain(order::OPERATIONS)
+        .chain(docs::OPERATIONS)
 }
 
 /// Every registered download.
 pub fn downloads() -> impl Iterator<Item = &'static Download> {
-    std::iter::empty()
+    docs::DOWNLOADS.iter()
 }
 
 /// Every MCP tool with its operations, in registration order.
@@ -343,8 +379,11 @@ const MAX_LIMIT: usize = 200;
 const MAX_ITEMS: usize = 200;
 
 /// `limit` (`operations.toml`): 1 to [`MAX_LIMIT`], default [`DEFAULT_LIMIT`].
-#[expect(dead_code, reason = "wave 4's paging operations are its callers")]
-pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
+///
+/// # Errors
+///
+/// `invalid_parameter` (`limit`) outside that range or not a number.
+pub fn limit(params: &Params) -> Result<usize, Error> {
     params.get("limit").map_or(Ok(DEFAULT_LIMIT), |v| {
         v.parse()
             .ok()
@@ -355,8 +394,11 @@ pub(crate) fn limit(params: &Params) -> Result<usize, Error> {
 
 /// The period parameter `name`, in the FQID/project period grammar; a refusal
 /// names `name`.
-#[expect(dead_code, reason = "wave 4's operations are its callers")]
-pub(crate) fn period(params: &Params, name: &str) -> Result<Option<reg_core::Period>, Error> {
+///
+/// # Errors
+///
+/// `invalid_period` when the value is not in the grammar.
+pub fn period(params: &Params, name: &str) -> Result<Option<reg_core::Period>, Error> {
     params
         .get(name)
         .map(|p| {
@@ -372,11 +414,29 @@ pub(crate) fn period(params: &Params, name: &str) -> Result<Option<reg_core::Per
 }
 
 /// A boolean parameter, `true` or `false` (default false).
-#[expect(dead_code, reason = "wave 4's operations are its callers")]
-pub(crate) fn flag(params: &Params, name: &str) -> Result<bool, Error> {
+///
+/// # Errors
+///
+/// `invalid_parameter` (`name`) for any other value.
+pub fn flag(params: &Params, name: &str) -> Result<bool, Error> {
     match params.get(name).copied() {
         None | Some("false") => Ok(false),
         Some("true") => Ok(true),
+        Some(_) => Err(Error::invalid_parameter(name)),
+    }
+}
+
+/// A `hash` parameter (64 lowercase hex digits); `None` when absent.
+///
+/// # Errors
+///
+/// `invalid_parameter` (`name`) for any other value.
+pub fn hash<'a>(params: &Params<'a>, name: &str) -> Result<Option<&'a str>, Error> {
+    match params.get(name).copied() {
+        None => Ok(None),
+        Some(h) if h.len() == 64 && h.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) => {
+            Ok(Some(h))
+        }
         Some(_) => Err(Error::invalid_parameter(name)),
     }
 }
@@ -418,6 +478,7 @@ fn param_schema(ty: Type) -> RefOr<Schema> {
             .items(string())
             .max_items(Some(MAX_ITEMS))
             .into(),
+        Type::Hash => string().pattern(Some("^[0-9a-f]{64}$")).into(),
         Type::Limit => ObjectBuilder::new()
             .schema_type(Json::Integer)
             .minimum(Some(1))
