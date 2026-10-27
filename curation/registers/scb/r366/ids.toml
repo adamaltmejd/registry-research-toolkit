@@ -1,4 +1,5 @@
 # Public ids of scb/r366 (today's scb/utbildningsanalyser), from the slug pins at fe08cf2a9.
+public = "utbildningsanalyser"
 [tables]
 "Distansundervisning under pandemin, grundskolan" = "distansundervisning-grundskola"
 "Distansundervisning under pandemin, gymnasieskolan" = "distansundervisning-gymnasieskolan"

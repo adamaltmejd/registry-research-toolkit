@@ -315,14 +315,18 @@ tracks the milestones. This section holds the design decisions that outlive the 
 - **Unplaced wins.** A column-less row of an unparsed release is `unplaced`, not a gap
   marker: with no period it marks no gap.
 - **SCB handles.** Source keys are `v<VarId>`, release handles `r<RegVerID>`, table
-  handles the variant's name (unique per register in the export). Register handles are
-  `r<RegisterId>` through C: a register's public name is a D `bind` statement, not
-  reader config, and ledgers live under the `r<RegisterId>` handle. Rows that differ
-  only by population are one occurrence with every row as a locator; the release lists
-  its populations, with a reference day when one date is stated. A label, definition,
-  operational definition, unit, type or length the rows disagree on keeps the first
-  row's as provisional and names the field in the occurrence's `conflicts`, which
-  resolve reports as F6 (source conflict), once per variable.
+  handles the variant's name (unique per register in the export). A register's handle is
+  its source coordinate (`r<RegisterId>`): ledgers, links, locators and reader config
+  key on it. Its public name, the segment in every published id, is the ledger's
+  top-level `public` (a slug, unique among the provider's public names and handles),
+  defaulting to the handle; it is neither a D `bind` statement nor reader config (v4
+  §2.3: the public id is stable through the ledger; §7 allows ledger entries; audit
+  B-1). Rows that differ only by population are one occurrence with every row as a
+  locator; the release lists its populations, with a reference day when one date is
+  stated. A label, definition, operational definition, unit, type or length the rows
+  disagree on keeps the first row's as provisional and names the field in the
+  occurrence's `conflicts`, which resolve reports as F6 (source conflict), once per
+  variable.
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items

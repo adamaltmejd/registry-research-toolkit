@@ -1,4 +1,5 @@
 # Public ids of scb/r411 (today's scb/lor), from the slug pins at fe08cf2a9.
+public = "lor"
 [tables]
 "Lediga jobb (LOR)" = "lediga-jobb-lor"
 "Rekryteringserfarenheter och rekryteringsbehov (LOR)" = "rekryteringserfarenheter"

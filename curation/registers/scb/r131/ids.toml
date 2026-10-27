@@ -1,4 +1,5 @@
 # Public ids of scb/r131 (today's scb/ireg), from the slug pins at fe08cf2a9.
+public = "ireg"
 [tables]
 "Kvartalsomsättning tjänstesektorn" = "kvartalsomsattning-tjanstesektorn"
 "Lagerstatistik för varuhandel och tjänstenäringar" = "lagerstatistik"

@@ -1,4 +1,5 @@
 # Public ids of scb/r135 (today's scb/ivp), from the slug pins at fe08cf2a9.
+public = "ivp"
 [tables]
 "Industrins varuproduktion" = "industrins-varuproduktion"
 "Returråvara" = "returravara"

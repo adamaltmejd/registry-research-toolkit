@@ -1,4 +1,5 @@
 # Public ids of scb/r272 (today's scb/elavtal-byten), from the slug pins at fe08cf2a9.
+public = "elavtal-byten"
 [tables]
 "Omförhandling  och byten av elavtal" = "elavtal-omforhandling-byten"
 

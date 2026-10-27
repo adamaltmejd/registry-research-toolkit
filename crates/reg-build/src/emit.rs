@@ -120,7 +120,7 @@ pub(crate) fn hull(spans: &[reg_core::Interval]) -> (i64, i64) {
 }
 
 pub(crate) fn pid_of_register(r: &Resolved) -> String {
-    format!("{}/{}", r.register.provider, r.register.register)
+    format!("{}/{}", r.register.provider, r.public)
 }
 
 pub(crate) fn pid_of_table(r: &Resolved, t: usize) -> String {
@@ -312,7 +312,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str("register".into()),
                 Cell::Int(register_row),
                 Cell::Null,
-                Cell::Str(reg_core::fold_identity(&reg.register)),
+                Cell::Str(reg_core::fold_identity(&r.public)),
             ],
         );
 

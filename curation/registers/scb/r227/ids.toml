@@ -1,4 +1,5 @@
 # Public ids of scb/r227 (today's scb/infi), from the slug pins at fe08cf2a9.
+public = "infi"
 [tables]
 "Externa kostnader" = "externa-kostnader"
 "Råvaror" = "ravaror"

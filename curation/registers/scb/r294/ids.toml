@@ -1,4 +1,5 @@
 # Public ids of scb/r294 (today's scb/avrinningsomraden), from the slug pins at fe08cf2a9.
+public = "avrinningsomraden"
 [tables]
 
 [variables]

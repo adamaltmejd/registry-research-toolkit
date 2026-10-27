@@ -1,4 +1,5 @@
 # Public ids of scb/r216 (today's scb/fritidshusomraden), from the slug pins at fe08cf2a9.
+public = "fritidshusomraden"
 [tables]
 
 [variables]

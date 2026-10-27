@@ -1,4 +1,5 @@
 # Public ids of scb/r8 (today's scb/fordonsreg), from the slug pins at fe08cf2a9.
+public = "fordonsreg"
 [tables]
 "Bussar" = "bussar"
 "EU-mopeder" = "eu-mopeder"
