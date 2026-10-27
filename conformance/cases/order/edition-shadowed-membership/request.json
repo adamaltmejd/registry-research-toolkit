@@ -1,0 +1,26 @@
+{
+  "note": "Table `a` of `edm` has a final 2019 release that documents k1 as `X` and a preliminary one that documents it as `Y` (shadowed in the primary, since the final release has k1); table `b` has `Y` in a final release. `X` and `Y` therefore split into two variables. With `edition: preliminary` on `demo/edm/a`, `demo/edm/y` is documented in the table by the preliminary selection, so it is placed from it; F7 on the preliminary release, which spells k1 `Y` where the primary spells it `X`, gives one `edition_disagreement` (codex r6 P2). Fails if membership is judged on the primary segments only, which is the pre-fix outcome: `order_blocked` with `variable_not_in_table`, since only a shadowed occurrence ties `Y` to `a`. Oracle: the fixture's JSONL and 00-design §5 (membership: a segment or a selection segment in a chain table) and logical-order.md §3.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "5.0.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/edm/a",
+        "period": {
+          "from": 2019,
+          "to": 2019
+        },
+        "edition": "preliminary",
+        "bindings": [
+          {
+            "variable": "demo/edm/y",
+            "type": "numeric"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -165,3 +165,26 @@
 {"kind":"release","provider":"demo","register":"len","table":"","release":"l2019h","name":"Len 2019H2","from":"2019-07-01","to":"2019-12-31","grain":"half","edition":"final"}
 {"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":2}
 {"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019h","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":3}
+{"kind":"register","provider":"demo","register":"eda","name":"Hel utgåva"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2019","name":"Eda 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2019h","name":"Eda 2019H2","from":"2019-07-01","to":"2019-12-31","grain":"half","edition":"final"}
+{"kind":"release","provider":"demo","register":"eda","table":"","release":"a2020p","name":"Eda 2020 preliminär","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2019h","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
+{"kind":"occurrence","provider":"demo","register":"eda","table":"","release":"a2020p","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"register","provider":"demo","register":"edq","name":"Kvalificerat utgåveregister"}
+{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2019a","name":"Edq 2019 A","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final","qualifier":"A"}
+{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2020a","name":"Edq 2020 A","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"unstated","qualifier":"A"}
+{"kind":"release","provider":"demo","register":"edq","table":"","release":"q2020b","name":"Edq 2020 B","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"unstated","qualifier":"B"}
+{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2019a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2020a","column":"V","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edq","table":"","release":"q2020b","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
+{"kind":"register","provider":"demo","register":"edm","name":"Utgåvemedlemskap"}
+{"kind":"table","provider":"demo","register":"edm","table":"a","name":"Tabell A"}
+{"kind":"table","provider":"demo","register":"edm","table":"b","name":"Tabell B"}
+{"kind":"release","provider":"demo","register":"edm","table":"a","release":"a2019","name":"Edm A 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"edm","table":"a","release":"a2019p","name":"Edm A 2019 preliminär","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"preliminary"}
+{"kind":"release","provider":"demo","register":"edm","table":"b","release":"b2019","name":"Edm B 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"edm","table":"a","release":"a2019","column":"X","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edm","table":"a","release":"a2019p","column":"Y","source_key":"k1","label":"Värde","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"edm","table":"b","release":"b2019","column":"Y","source_key":"k1","label":"Värde","dtype":"int"}
