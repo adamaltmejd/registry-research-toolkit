@@ -50,10 +50,10 @@ EQUIVALENCE = {
     "diff": (),
     "coverage": (),
     # r-segments-values
-    "segments": (),
-    "values": (),
+    "segments": ("segments-fields", "segments-filters", "segments-errors"),
+    "values": ("values-blank-code", "values-pair", "values-tree", "values-errors"),
     # r-findings-graph
-    "graph": (),
+    "graph": ("graph-succession", "graph-reference-edges", "graph-errors"),
     # r-search
     "search": (),
     # r-docs
@@ -132,6 +132,10 @@ def path_arguments(op, path):
 # writes their cases.
 NO_FIXTURE_PATH_UNTIL_D = {"retired_ref", "classification_version_ambiguous"}
 
+# raised only by the shared cursor helper; api/cursor-stale pins it once (triage); not
+# repeated per operation
+PINNED_ONCE = {"stale_cursor"}
+
 
 @pytest.mark.parametrize(
     "operation", [name for name in EQUIVALENCE if name not in PARKED["operations"]]
@@ -192,9 +196,10 @@ def test_tool_matches_http(http_servers, operation):
             ), f"{name} step {index}"
             if is_error:
                 codes.add(document["error"]["code"])
-    assert (
-        codes == {"invalid_parameter", *op.get("errors", [])} - NO_FIXTURE_PATH_UNTIL_D
-    )
+    # An exempt code may still be reached (a case can pin `stale_cursor` per operation);
+    # it is only not required.
+    exempt = NO_FIXTURE_PATH_UNTIL_D | PINNED_ONCE
+    assert codes - exempt == {"invalid_parameter", *op.get("errors", [])} - exempt
 
 
 def test_tool_of_several_needs_an_operation(http_servers):

@@ -1,80 +1,47 @@
 [
   {
     "status": 200,
+    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]},
     "json": {
-      "/data/focus_id": "scb/beta/fodland",
-      "/data/nodes/*/fqid": ["scb/beta/fodland", "scb/alpha/alder", "scb/alpha/kon"],
-      "/data/edges/*/id": [
-        "succession:scb/beta/fodland->scb/alpha/alder",
-        "succession:scb/beta/fodland->scb/alpha/kon",
-        "succession:representation:scb/beta/fodland:FodLandKod:->scb/beta/fodland:FodLand:"
-      ],
-      "/data/edges/2/source_column": "FodLandKod",
-      "/data/edges/2/target_column": "FodLand",
-      "/data/edges/2/label": "Code column renamed",
-      "/data/edges/2/effective_year": 2011
+      "/data": {
+        "focus": "demo/rel/ny",
+        "nodes": [
+          {"fqid": "demo/rel/gammal", "kind": "table", "name": "Gammal tabell"},
+          {"fqid": "demo/rel/ny", "kind": "table", "name": "Ny tabell"}
+        ],
+        "edges": [
+          {
+            "kind": "continues",
+            "from": "demo/rel/ny",
+            "to": "demo/rel/gammal",
+            "at": {"start": "2018-01-01", "end": null},
+            "prov": "source",
+            "caveat": null
+          }
+        ]
+      }
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/family/editions/*/slug": ["icd-9", "icd-10"],
-      "/data/family/editions/*/is_current": [false, true]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/focus_id": "class/icd-9",
-      "/data/nodes/*/id": ["class/icd-9", "class/icd-10"],
-      "/data/nodes/*/is_current": [false, true],
-      "/data/nodes/*/group_key": [null, null],
-      "/data/edges": [
-        {
-          "id": "succession:class/icd-9->class/icd-10",
-          "kind": "succession",
-          "source": "class/icd-9",
-          "target": "class/icd-10",
-          "label": null,
-          "effective_year": 1997,
-          "source_column": null,
-          "target_column": null,
-          "variant": null
-        }
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/focus_id": null,
-      "/data/nodes/*/id": ["class/icd-9", "class/icd-10"],
-      "/data/nodes/*/group_key": ["class/icd", "class/icd"],
-      "/data/nodes/*/group_label": ["ICD", "ICD"]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/items/*/fqid": ["class/icd-10"],
-      "/data/items/0/editions/*/slug": ["icd-10", "icd-9"],
-      "/data/items/0/editions/*/effective_year": [null, 1997]
-    }
-  },
-  {
-    "status": 422,
-    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "scb/alpha"}
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/nodes/*/fqid": ["scb/beta/d-start", "scb/beta/d-left", "scb/beta/d-end", "scb/beta/d-right"],
-      "/data/edges/*/id": [
-        "succession:scb/beta/d-start->scb/beta/d-left",
-        "succession:scb/beta/d-left->scb/beta/d-end",
-        "succession:scb/beta/d-start->scb/beta/d-right",
-        "succession:scb/beta/d-right->scb/beta/d-end"
-      ]
+      "/data": {
+        "focus": "demo/rel/inkomst",
+        "nodes": [
+          {"fqid": "demo/rel/inkomst", "kind": "variable", "name": "Inkomst efter skatt"},
+          {"fqid": "demo/rel/inkomst2", "kind": "variable", "name": "Inkomst efter skatt, ny"}
+        ],
+        "edges": [
+          {
+            "kind": "continues",
+            "from": "demo/rel/inkomst2",
+            "to": "demo/rel/inkomst",
+            "at": null,
+            "prov": "source",
+            "caveat": "Inkomst2 ersätter Inkomst från 2018."
+          }
+        ]
+      }
     }
   }
 ]

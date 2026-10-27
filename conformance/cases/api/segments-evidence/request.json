@@ -1,0 +1,7 @@
+{
+  "note": "Fails if `evidence=true` stops listing a segment's occurrences with their release (null here: Tidig is stated by dates, not a delivery), label, source key, status and locator, or loses the T1 rule override: Tidig states 2010-01-01..2021-12-31 in a table covering 2018-01-01..2021-12-31, so the occurrence is clamped to 2018..2021 and the override records the stated period as `source_value`. The override row is the builder's, `reg-build/src/emit.rs` lines 553-570 (field `period`, rule_code `T1`, value the clamped period and source_value the stated one, both rendered by `reg_core::render`: `2018..2021`, `2010..2021`). `statement` is null for a rule row.",
+  "fixture": "segments",
+  "requests": [
+    {"operation": "segments", "path": "/api/segments/demo/sg/tidig", "query": {"evidence": "true"}}
+  ]
+}

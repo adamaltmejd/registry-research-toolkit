@@ -1,0 +1,10 @@
+{
+  "note": "findings filters, from fixtures/relations. Step 0: variable Inkomst answers its own two findings and its segment's, not its rival's segment (a variable ref reaches finding_subject for the variable and its segments, not the register's). Step 1: `code=F1` keeps F1:label-drift and drops F2:ambiguous and S0:source-notice (a code narrows by prefix up to `:`, so `F1` would not match an `F10` either). Step 2: `period=2015` drops F1 (one day in 2016) and keeps the segment finding that spans 2015 and the notice with no period (no period never filters out). Step 3: on the register, `table=demo/rel/ny` keeps the two releases of ny and drops the notice on gammal's release and every variable and segment finding (a subject without that table drops out). Fails if the register filter on a table keeps a table-less subject, if a period filter drops a finding without a period, if `code` matches by plain prefix, or if a variable ref returns a sibling variable's findings.",
+  "fixture": "relations",
+  "requests": [
+    {"operation": "findings", "path": "/api/findings/demo/rel/inkomst"},
+    {"operation": "findings", "path": "/api/findings/demo/rel/inkomst", "query": {"code": "F1"}},
+    {"operation": "findings", "path": "/api/findings/demo/rel/inkomst", "query": {"period": "2015"}},
+    {"operation": "findings", "path": "/api/findings/demo/rel", "query": {"table": "demo/rel/ny"}}
+  ]
+}

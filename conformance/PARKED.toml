@@ -11,11 +11,7 @@ operations = [
     "diff",
     "schema",
     # r-segments-values
-    "segments",
-    "values",
     # r-findings-graph
-    "findings",
-    "graph",
     # r-search
     "search",
     "search_facets",
@@ -34,25 +30,7 @@ cases = [
     "api/diff-register",
     "api/schema-paging",
     # r-segments-values
-    "api/states-curated-window",
-    "api/states-deliveries",
-    "api/states-fields",
-    "api/states-filters",
-    "api/states-merged",
-    "api/states-paging",
-    "api/states-stale-cursor",
-    "api/states-window-fallback",
-    "api/values-classification",
-    "api/values-stale-cursor",
-    "api/values-state",
-    "api/values-tree",
     # r-findings-graph
-    "api/graph-classification-groups",
-    "api/graph-reference-edges",
-    "api/graph-representation-runs",
-    "api/graph-succession",
-    "api/graph-whole-variable-group",
-    "api/warnings-errors",
     # r-search
     "api/cursor-stale",
     "api/edge-cache-param",
