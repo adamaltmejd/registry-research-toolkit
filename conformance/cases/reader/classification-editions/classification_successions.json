@@ -1,0 +1,17 @@
+[
+  {
+    "predecessor": "ea",
+    "successor": "eb",
+    "effective_year": 2000
+  },
+  {
+    "predecessor": "eb",
+    "successor": "ec",
+    "effective_year": null
+  },
+  {
+    "predecessor": "ed",
+    "successor": "ec",
+    "effective_year": 2010
+  }
+]
