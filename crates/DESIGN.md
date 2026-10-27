@@ -336,8 +336,12 @@ rules and sources; two overlapping curated overrides will be refused at both loc
   starts is refused, located at its source row.
 - **Segments hold whole occurrences.** The variable's overlapping occurrences in one
   table form one segment; adjacent ones of one form join. A segment is ambiguous when
-  its occurrences disagree on label, type or value set, or when another variable claims
-  its folded spelling there. Labels compare ignoring case and spacing.
+  its occurrences disagree on label, type or value set, except a type-only disagreement
+  under one source key and one folded spelling. That exception leaves dtype unset and
+  emits one `F6:source-conflict` review per segment for a D `set`, including when case
+  or length also differs. Labels compare ignoring case and spacing; label and value-set
+  disagreements still block. Another variable claiming its folded spelling in any
+  overlap still makes the whole segment ambiguous, including an exempt segment.
 - **The implicit table** takes its register's id, so `ident` holds that id once, as the
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
