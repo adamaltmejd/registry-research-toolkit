@@ -14,7 +14,7 @@
 {"in": "scb/lisa/kon/x", "error": "invalid_ref", "note": "At most three segments."}
 {"in": "class", "error": "invalid_ref"}
 {"in": "class/", "error": "invalid_ref"}
-{"in": "class/sun/2020", "error": "invalid_ref"}
+{"in": "class/sun/2020", "out": {"kind": "class_version", "family": "sun", "version": "2020"}}
 {"in": "scb/class", "error": "invalid_ref", "note": "`class` is reserved in every slot."}
 {"in": "scb/lisa/class", "error": "invalid_ref"}
 {"in": "group", "error": "invalid_ref", "note": "`group` is reserved as a first segment for group refs (conformance/api/operations.toml, `show`)."}
