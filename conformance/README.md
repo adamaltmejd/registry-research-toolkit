@@ -9,25 +9,32 @@ product imports or internal patches are allowed.
 ```sh
 cargo build --workspace
 uv run --no-project scripts/gate.py rust
-uv run python -m pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
+uv run --no-project scripts/gate.py release
 ```
 
 Every run needs `--server-cmd`: the suite's boundary is the Rust server, and a run
 without it is refused at startup. The sampled projects all come from one address, so the
 template raises the server's write limit (`--write-limit`); the burst case in
-`test_mcp.py` drops the flag and pins the default.
+`test_mcp.py` drops the flag and pins the default. `scripts/gate.py` holds the commands.
 
-The first invocation (the gate's `rust` step, whose command `scripts/gate.py` holds)
-runs the whole suite, with the artifact checks on the synthetic catalog and steward
-artifacts. Fixture-bound cases always build their own named readable source; they never
-substitute the selected real artifact into synthetic value goldens. The second
-invocation runs only the checks on exactly the selected artifact (`-m release`; the
-fixture-bound cases ignore it). Both flags are required for tier 3; the reader rejects
-missing, schema-incompatible and non-publishable artifacts before execution.
+The `rust` step runs the whole suite on the synthetic `base` artifact. The `release`
+step runs only the checks on exactly the selected artifact
+(`-m release --run-release --artifact-dir=…`): `reg-build verify` on it. Both flags are
+required for tier 3. Use the equals form for `--artifact-dir`: pytest discovers roots
+before loading custom options, and a space-separated external directory can select that
+directory's checkout configuration.
 
-Use the equals form for `--artifact-dir`: pytest discovers roots before loading custom
-options, and a space-separated external directory can select that directory's checkout
-configuration. The documented equals form selects the current checkout reliably.
+## Parked cases
+
+`PARKED.toml` lists what the server does not yet serve per the 5.0.0 contract: the
+operations, downloads and error codes, and the case directories whose port is still to
+come. A parked case is skipped. The server flag skips every test that starts a server
+while its admission still reads the old catalog schema. Each R PR removes the entries it
+ports and rewrites their cases over the new fixtures; the last one deletes the file and
+the code that reads it. The parked count is the measure of what is left.
+
+Holdings and steward cases are not parked: they left the corpus (git holds them) and
+return in milestone E, written over the new builder.
 
 ## Case contract
 
@@ -50,43 +57,29 @@ and requires no repeats and exactly the `equals` set.
   | ----------------- | ----------------------------------------------------------------- |
   | order             | HTTP order and download, `order.json` bytes, blocked findings     |
   | api               | HTTP request sequence and status/pointer oracle, startup refusals |
-  | reader            | Readable sources, not independently executed cases                |
-  | fixtures          | HTTP readable sources, not independently executed cases           |
+  | mcp               | The `tools/list` golden                                           |
+  | folds, grammar    | Corpora for the fold and the identifier grammars                  |
+  | fixtures          | Readable sources, not independently executed cases                |
+  | reader            | Old-builder sources the builder's tests still build (see below)   |
 
 ## Out-of-process runner
 
 `--server-cmd` runs the HTTP surfaces above over a real socket. It is a command
-template: `{db}` (the artifact directory), `{catalog}` (`global` or the artifact's
-steward) and `{port}` are substituted in each word; `{port}` is 0, so the kernel picks a
-free port. The runner starts one server per cached artifact from the repository root,
-with `REG_META_DB`, `REG_WEBAPP_STEWARD` and `REG_WEBAPP_STEWARDS_DIR` in its
-environment, reads the bound port from the `listening on ADDR:PORT` line
-`reg-meta serve` prints on stderr, and waits until `GET /openapi.json` answers on it
-(120 s at most). Two listeners cannot share a port, so parallel workers never reach each
-other's servers. It reuses the server for every case on that artifact and stops it at
-session end. A server that exits first fails with its log tail, and a start that fails
-is not retried for later cases on that artifact. Its output goes to
-`servers*/server-N.log` under the pytest base temp. A case's `search_pins` names a pins
-file in its directory that the artifact build stores (fixtures have no pins otherwise);
-an expected `build_error` is that build's located refusal, and such a case sends no
-requests.
-
-The Rust server (`reg-meta serve`), on the whole suite, the `api` corpus and the MCP
-equivalence suite included (part of G0 and CI), and the release-admission command on the
-synthetic steward artifact:
-
-```sh
-uv run --no-project scripts/gate.py rust release
-```
-
-`scripts/gate.py` holds both commands. `release` skips the synthetic catalog artifact:
-on a selected catalog artifact `validate_built_db` applies the real-corpus floors, which
-it cannot meet.
+template: `{db}` (the artifact directory), `{catalog}` (`global`) and `{port}` are
+substituted in each word; `{port}` is 0, so the kernel picks a free port. The runner
+starts one server per cached artifact from the repository root, with `REG_META_DB` and
+`REG_WEBAPP_STEWARD` in its environment, reads the bound port from the
+`listening on ADDR:PORT` line `reg-meta serve` prints on stderr, and waits until
+`GET /openapi.json` answers on it (120 s at most). Two listeners cannot share a port, so
+parallel workers never reach each other's servers. It reuses the server for every case
+on that artifact and stops it at session end. A server that exits first fails with its
+log tail, and a start that fails is not retried for later cases on that artifact. Its
+output goes to `servers*/server-N.log` under the pytest base temp.
 
 `test_mcp.py` (MCP equivalence) sends raw JSON-RPC to `/mcp` on the `--server-cmd`
-server: each `search` step of the `api` cases it names, as a tool call, returns the HTTP
-body as `structuredContent` (an error with `isError`), and those steps cover every error
-`search` lists in `operations.toml`. `tools/list`, over HTTP and stdio, equals the
+server: each step of the `api` cases it names, as a tool call, returns the HTTP body as
+`structuredContent` (an error with `isError`), and those steps cover every error the
+operation lists in `operations.toml`. `tools/list`, over HTTP and stdio, equals the
 golden `cases/mcp/tools-list.json`, and its names are the `tool` of each served
 operation. The server builds each tool's schemas from its OpenAPI entry, so a schema
 change shows as a reviewed diff of that file. The body cap and the rate limit on `/mcp`
@@ -95,38 +88,42 @@ project POSTs while its reads pass; the burst runs on a server of its own. `--mc
 is a command template (`{db}`, `{catalog}`) for one stdio session: initialize, list the
 tools and call `search`. Without `--mcp-cmd` the stdio session skips.
 
-## Fixture cache
+## Fixtures and the fixture cache
 
-Every synthetic artifact is built once through the real pipeline into a cache:
-`$REG_FIXTURE_CACHE`, else `registry-research-toolkit-fixtures` in the system temp
-directory (writable inside agent sandboxes, cleared on reboot). Worktrees and
-pytest-xdist workers share it. The key hashes the fixture source, the shared
-`cases/reader/fixture` defaults, the kind, identity overrides, a case's search pins, the
-`reg_meta_build` sources, the builder, the installed distributions and the Python and
-SQLite versions, so any edit is a new entry. Entries live under
-`generations/<build-inputs digest>/`, are read-only, and `build_reader_artifact` hands a
-mutating case its own copy. A miss builds into a staging directory and renames it into
-place. Creating a generation prunes generations idle for 6 hours, and only those, so a
-returned path stays valid for 6 hours after its last lookup. Deleting the directory
-between runs is safe. The `reg_meta_build` build cases keep their accepted prepared
-inputs in generations of the same cache, under the same rule
-(`reg_meta_build/tests/cases/build/README.md`). CI sets no `REG_FIXTURE_CACHE`, so a
-fresh runner starts both caches cold in its temp directory.
-`uv run python conformance/fixture_cache.py reader catalog` builds one entry and prints
-its path for consumers outside pytest; `--docs <source>` builds the docs DB beside it.
+A fixture is a frame-JSONL input tree under `cases/fixtures/<name>/`: `inputs/` (the
+frame JSONL, and whatever else its readers read) and `curation/` (`inputs.toml` and the
+curation beside it), the shape of `crates/reg-build/fixture`. The harness builds it with
 
-Reader fixtures named `reader` or `reader/<name>` live under `cases/reader`, and ones
-named `fixtures/<name>` under `cases/fixtures`; other named sources live under
-`reg_meta_build/tests/cases/holdings`. HTTP fixture names resolve under `cases/fixtures`
-unless they name a reader source. The shared builder is
-`conformance/reader_artifacts.py`; package tests and the dev server use it too.
-`dev.sh --fixture-db` serves `fixtures/webapp-dev` (catalog + docs), the source the
-browser flows (`gate.py flows`) assert on, or the `reader` steward artifact with
-`REG_WEBAPP_STEWARD`.
+```sh
+target/debug/reg-build build --inputs <fixture>/inputs --curation <fixture>/curation \
+  --out <dir>/reg_meta.db --report <dir>/report.json
+```
 
-A reader source whose `request.json` names a `filler` binding and a `copies` count is
-built with that binding replicated (`replicate_filler`), so a case can rank past a full
-candidate prefix without committing a thousand-row catalog.
+and never runs cargo itself: `scripts/gate.py rust` builds the workspace first. `build`
+verifies what it writes (`reg-build verify`), so a synthetic artifact is checked when it
+is built. `fixtures/base` is the one fixture that builds today: one provider (`demo`),
+one register with one table, two yearly releases, three variables (one with a value set
+whose third item has the blank code) and a label that differs between the years. A
+fixture without `curation/inputs.toml` is an old-builder source (a `catalog.json` tree);
+no case builds one, and the op PRs port the fixtures their cases use.
+
+Every artifact is built once into a cache: `$REG_FIXTURE_CACHE`, else
+`registry-research-toolkit-fixtures` in the system temp directory (writable inside agent
+sandboxes, cleared on reboot). Worktrees and pytest-xdist workers share it. The key
+hashes the fixture tree's file paths and bytes and the `reg-build` binary's bytes, so
+any edit or rebuild is a new entry. Entries live under `generations/<binary digest>/`,
+are read-only, and `build_reader_artifact` hands a mutating case its own copy. A miss
+builds into a staging directory and renames it into place. Creating a generation prunes
+generations idle for 6 hours, and only those, so a returned path stays valid for 6 hours
+after its last lookup. Deleting the directory between runs is safe. CI sets no
+`REG_FIXTURE_CACHE`, so a fresh runner starts cold in its temp directory.
+`uv run python conformance/fixture_cache.py base` builds one entry and prints its path
+for consumers outside pytest.
+
+`cases/reader` and the remaining old-form directories under `cases/fixtures` are sources
+of the old builder (`reg_meta_build`), whose tests still build artifacts from them
+through `reg_meta_build/tests/_reader_artifacts.py` until milestone F deletes the
+builder. Nothing in this suite builds them.
 
 ## API cases
 
@@ -139,23 +136,17 @@ served by the Rust server. They use the HTTP case shape above, with these additi
 - Pointers address the new bodies: `{"data": ..., "meta": ...}` on success and
   `{"error": ..., "meta": ...}` on failure, for example `/data/items/*/fqid`,
   `/data/next_cursor` or `/error/fields/parameter`.
-- `artifacts` maps a name to `{"identity": {...}}`, a second artifact built from the
-  same fixture and kind with those `identity.json` overrides, applied over the fixed
-  import date every case uses (a new generation); a step with `artifact: <name>` is sent
-  to it. The stale-cursor case uses this.
+- `fixture` names a directory under `cases/fixtures` (default `base`).
+- `artifacts` maps a name to a second artifact for the case (it may name its own
+  `fixture`); a step with `artifact: <name>` is sent to it.
 - A startup case sets `serve: {"catalog": <name>}` and optional `manifest` overrides,
-  which are written to `import_manifest` of a private copy after the build (or
+  which are written to `meta` of a private copy after the build (or
   `serve.db: "absent"`, which serves an empty directory instead), and expects
   `{"startup_error": {"code": ...}}`: the template, run with `{catalog}` set to that
   name, prints the error document as the last line of stderr and exits with the code's
   `exit` status in `api/errors.toml`, without listening.
 - A step with `etag_from: N` sends step N's `ETag` as `If-None-Match`, and one with
   `if_none_match` sends that literal header.
-- `docs` names a readable docs source under `cases/fixtures` (markdown under
-  `markdown/<register>/`, `related_documents.toml`, binaries under
-  `related/<register>/`); its `reg_meta_docs.db` is built beside the catalog. A case
-  without it has no docs database. A startup case's `doc_meta` overrides are written to
-  the docs database's `doc_meta`.
 - A download step names the operation whose metadata it downloads (`[[download]]`).
   `test_mcp.py` replays each operation's listed cases as tool calls, the path's
   parameters (by the operation's route) as arguments; download steps and a parameter
@@ -163,97 +154,17 @@ served by the Rust server. They use the HTTP case shape above, with these additi
 
 ## Artifact checks
 
-SQLite integrity, reader admission, deterministic search/order, sampled
-browse/search/validate agreement, order data against its download's bytes, and located
-unheld/unresolved refusal run on both synthetic kinds by default, all on the
-`--server-cmd` server. A real run uses one admitted schema-9 artifact and also runs
-`validate_built_db`, the build's structural authority (foreign keys, manifest identity,
-holdings table/column accounting); synthetic artifacts already pass it when they are
-built. Real identifiers stay in memory and temporary test request files; failure
-messages omit them. Catalog artifacts support global-fallback orders; steward artifacts
-only order compiled holdings regardless of reference browsing.
-
-Complete HTTP register-child membership is compared with an independently derived
-whole-variable admission set. Browse, search, validation and order agreement uses a
-generation-seeded, stratified sample of up to 50 distinct bindings. The public point
-resolver (`states` at the binding's period and variant, reference scope) selects
-applicable native spellings within independently derived physical mappings. Name search
-omits unnamed variables and has a bounded cursor. A sampled binding must appear in its
-name-search traversal unless that traversal consumed the whole 1,000-result depth
-ceiling and every consumed row matches the query exactly. Exact identity matches always
-lead the order, so only a name shared by more bindings than the ceiling holds can push
-one past it. Such a name is unreachable by contract, so search narrowed to the binding's
-register must find it instead. A name longer than the 200-character `q` cap must be
-refused on `q`; the catalog browse checks prove its reachability. The receipt counts the
-refinements and refusals.
-
-`integration.yml` downloads the global catalog and SWECOV steward assets from the
-selected release, verifies each digest and admits its embedded manifest before running
-tier 3. The artifact jobs and native registry-install job run independently; a failed
-artifact gate does not suppress the other artifact run or native install checks.
-Incompatible published assets remain failures until a matching release is available.
-
-Schema-9 manifests do not contain mapping, period or unmapped-reason totals. Comparisons
-of those relation counts to manifest fields cannot run until that contract exists. Exact
-accepted-input table/cell accounting, authored mappings and policy digests run only with
-explicit `--holdings-input` alongside both tier-3 flags:
-
-```sh
-uv run python -m pytest conformance -m release --run-release --artifact-dir=/path/to/steward/catalog --holdings-input=/path/to/accepted-candidate --server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog} --stewards reg_webapp/stewards --port {port} --write-limit 100000' -q
-```
-
-Admission requires a steward artifact, a clean accepted-input Git tree, matching commit
-and manifest pins, and every consumed member's size and digest. A wrong path fails;
-without the option the census check is deselected. Readable synthetic sources exercise
-the same comparison by default. Private identifiers never become repository fixtures or
-failure messages. Exhaustive canonical-representative resolution, pinned historical
-orders, reference dbdiff, performance, cold boot and rendered acceptance remain
-maintainer checks. This suite alone makes no release or deployment acceptance claim.
+`test_artifact.py` runs `reg-build verify` on the selected artifact (`--artifact-dir`),
+the one structural authority over a catalog file, and fails on a non-zero exit printing
+only the first line of its stderr. Synthetic artifacts are verified when they are built.
+The `release` step runs it on the `base` fixture's artifact; a release runs it on the
+artifact it ships. The checks that sample search and order answers against the artifact
+(release tier) return with `r-search` and `r-order-check`, written over the new schema.
 
 ## Verification gates
 
-Three gates, named G0–G2 so they are not confused with the test tiers of
-`ARCHITECTURE.md` ("Tiers", which also has their budgets):
-
-- **G0**, every change: `scripts/gate.py g0` (lint, `cargo test --workspace`, this suite
-  and the touched packages) and `scripts/gate.py rust` (this suite against the Rust
-  server), all on synthetic artifacts.
-- **G1**, at releases: the differential harness on the pinned real artifacts.
-- **G2**, maintainer-run at releases: the G1 harness with the release's own fresh
-  databases as the candidates (`--candidate`, below) in place of derived copies.
-
-**G1** (`uv run --no-project scripts/gate.py g1`, which runs
-`python -m conformance.differential`) compares the pinned release's `reg-meta` server,
-reading the release originals, with the checkout's server reading copies the checkout's
-builder derived from them. It runs on both artifact kinds (the global catalog and the
-SWECOV steward artifact) and both scopes, over generated requests: every register,
-seeded variable samples, holdings strata and the search-eval terms
-(`differential/cases.py`, `differential/served.py`). Both arms run the same server, so
-requests go to both unchanged and answers compare as raw bytes. The baseline is the
-release tag's own code, built in a detached worktree of the tag, never the checkout
-under change, and it never reads a copy derived by the code under change, so a
-regression moved into derive cannot validate itself. Artifacts and the baseline build
-live in a shared cache (`$REG_META_G1_CACHE`); the report goes to
-`<cache>/report/report.json`. Warm runs stay under 5 minutes; a cold run is reported,
-not budgeted.
-
-Each accepted difference is a named semantic exception in `differential/config.toml`,
-scoped by case glob and JSON pointer prefixes, with its reason. A deliberate behavior
-change that diverges from the baseline gets a narrow exception linked to the `api` case
-that pins the new behavior, kept until the next re-pin. `derived-generation` and
-`reader-version` are the standing exceptions: identity differs between originals and
-derived copies, behavior does not.
-
-**G2** runs the same harness with
-`--candidate global=PATH --candidate swecov=PATH --candidate docs=PATH` (all three
-required): the checkout's server reads those databases and nothing is derived, so the
-pinned previous release's server and the new one compare on the assets being released,
-across a schema major too (derive admits only the builder's own major). Without the
-flags the run derives, as G1 does on PRs. The paths are linked into
-`<cache>/candidate/`, never written.
-
-**The pin** is data in `differential/config.toml`: the release tag, each asset's GitHub
-SHA-256 digest (checked as it streams into the cache) and the seed. A re-pin moves it to
-a newer release: run G1 on the old pin and the new one, record any difference as an
-exception or a fix, and edit only that file. Re-pin at each release. G1 is deleted if it
-stops catching anything.
+One gate, named G0 so it is not confused with the test tiers of `ARCHITECTURE.md`
+("Tiers", which also has the budgets): `scripts/gate.py g0` (lint,
+`cargo test --workspace`, and the touched packages) and `scripts/gate.py rust` (this
+suite against the Rust server), all on synthetic artifacts. Each release is checked by
+`reg-build diff` against the previous one.

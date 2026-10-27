@@ -1,4 +1,0 @@
-[[pin]]
-query = "sysselsättning"
-type = "register"
-fqids = ["scb/lisa"]
