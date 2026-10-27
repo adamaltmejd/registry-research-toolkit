@@ -458,6 +458,57 @@ fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
     }
 }
 
+/// Capture raw evidence behind a curated field, including defaults derived from
+/// source facts. Keep derived values out of the source premise.
+fn field_dependencies(fields: &mut BTreeSet<String>) {
+    if fields.contains("classification") || fields.contains("coded") {
+        fields.insert("code_system".into());
+    }
+    if fields.contains("role") {
+        fields.insert("identifier".into());
+    }
+    if fields.contains("coded") || fields.contains("role") {
+        fields.insert("value_set".into());
+    }
+    if fields.contains("value_set") {
+        fields.insert("population_valuesets".into());
+    }
+    if fields.contains("period") {
+        fields.extend(["grain", "name", "from", "to"].map(str::to_owned));
+    }
+    if fields.contains("coverage") {
+        fields.extend(["from", "to"].map(str::to_owned));
+    }
+}
+
+fn states_value_set(source: &Source, items: &[reg_frame::Item], records: &[Record]) -> bool {
+    let populations = source
+        .fields
+        .get("population_valuesets")
+        .and_then(Value::as_array);
+    let hashes = source.text("value_set").into_iter().chain(
+        populations
+            .into_iter()
+            .flatten()
+            .filter_map(|p| p.get("valueset").and_then(Value::as_str)),
+    );
+    let mut expected = items.to_vec();
+    expected.sort();
+    hashes.into_iter().any(|hash| {
+        records.iter().any(|record| {
+            let Record::ValueSet(set) = record else {
+                return false;
+            };
+            if set.hash != hash {
+                return false;
+            }
+            let mut stated = set.items.clone();
+            stated.sort();
+            stated == expected
+        })
+    })
+}
+
 fn effects(statement: &Statement) -> BTreeSet<String> {
     match statement {
         Statement::Set { fields, reject, .. } => {
@@ -725,10 +776,9 @@ pub fn resolve(
             .into_iter()
             .map(str::to_owned)
             .collect();
-            fields.extend(effects(statement));
-            if fields.contains("value_set") {
-                fields.insert("population_valuesets".into());
-            }
+            let mut affected = effects(statement);
+            field_dependencies(&mut affected);
+            fields.extend(affected);
             if let Some(address) = address {
                 dependency_fields(address, &mut fields);
             }
@@ -772,21 +822,12 @@ pub fn resolve(
                         )]),
                     };
                     fields.extend(values.keys().cloned());
-                    if let AssertFact::ValueSet { items } = fact {
-                        let mut expected = items.clone();
-                        expected.sort();
-                        if records.iter().any(|r| match r {
-                            Record::ValueSet(set) => {
-                                let mut stated = set.items.clone();
-                                stated.sort();
-                                stated == expected
-                            }
-                            _ => false,
-                        }) {
-                            return Err(
-                                "redundant assert: the source now states this value set".into()
-                            );
-                        }
+                    if let AssertFact::ValueSet { items } = fact
+                        && matches
+                            .iter()
+                            .any(|m| states_value_set(&view[m.source], items, records))
+                    {
+                        return Err("redundant assert: the source now states this value set".into());
                     }
                     if matches.iter().any(|m| {
                         values
