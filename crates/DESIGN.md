@@ -400,6 +400,15 @@ tracks the milestones. This section holds the design decisions that outlive the 
 
 **Decisions taken in milestone C.**
 
+- **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
+  neutral interchange format that conformance fixtures are written in by hand. The
+  reader assigns every locator (file and line) and computes every value-set hash, so a
+  line states neither, and an occurrence names its value sets. A value set's `names` are
+  the source's version names (v4 D24), which the emitter publishes as `valueset_name`;
+  so a fixture's names are published too and must not be read later as source data. It
+  also refuses a date that is not a calendar day and a population index the occurrence's
+  release does not state, each at its line, since a hand-written frame skips the checks
+  a source reader's input has passed.
 - **Verification.** `reg-build verify FILE [--previous FILE]` is the single artifact
   check: integrity, the schema's post-write queries, each value set's items hashing to
   its address, and with `--previous` the id rules against the previous release. `emit`
