@@ -292,7 +292,10 @@ The full SCB read is a heavy run.
   `conformance/api/operations.toml` and the OpenAPI contract are kept where the model
   allows. Each contract change is reviewed and the SPA types are regenerated.
 - **The order check**, which returns the logical order or its findings. An ambiguous
-  window and an unnamed preliminary window block.
+  window blocks. A window only a preliminary release covers orders with a
+  `preliminary_data` warning; final wins where both exist. Choosing an edition or
+  release per source is deferred until after curation: researchers never want
+  preliminary data when final exists, and curation may remove the need.
 - **The conformance harness moves off `reg_meta_build`.** Fixtures are built by the new
   builder's CLI from readable sources. Artifact validation (the schema invariants) moves
   into `reg-build`, which becomes its single authority. The holdings and steward cases
@@ -315,10 +318,15 @@ The full SCB read is a heavy run.
   new server on the synthetic artifacts and on the real one (the `release` step);
 - random full-register orders are compared with today's server, and the differences
   classified;
-- the SPA flows are green;
 - the maintainer approves the switch release.
 
 ### D: curation carry-over
+
+- **Release model.** Investigate whether a release as period plus description, with an
+  optional `supersedes`, replaces edition and qualifier with fewer concepts. Releases
+  stay optional and are never synthesized as placeholders for tables without one.
+  Edition or qualifier selection in orders, if still needed, is designed together with
+  this model.
 
 - **F1 `domain-change` rule**: it is not emitted when only the classification version
   differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
@@ -408,11 +416,16 @@ The full SCB read is a heavy run.
 - **Then the build.** SWECOV's holdings run on the new catalog, together with its
   steward catalog, its release asset and physical orders. `reg_mona_runner` reads the
   new order file.
+- **The SPA** is rewritten on the v5 API after curation and holdings: the wave-5 work
+  covers shell and search, entity pages, values/graph/docs, project and order, and
+  flows. Until then the SPA is not part of any milestone exit, and its CI job stays
+  frozen on `rebuild-c`.
 
 **Exit:**
 
 - SWECOV's catalog and release asset come from the new stack;
 - the conformance holdings and order cases are green;
+- the SPA flows are green;
 - one real order has run on MONA. The maintainer runs it.
 
 ### F: cutover
