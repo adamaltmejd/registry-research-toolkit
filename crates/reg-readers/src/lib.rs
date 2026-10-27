@@ -8,9 +8,11 @@
 //!   are entered in;
 //! - [`workbook`]: the Socialstyrelsen metadata template (XLSX, through calamine);
 //! - [`scb`]: the SCB metadata export (pipe-delimited CP1252 CSVs);
-//! - [`classification`]: classification CSVs, read as value sets.
+//! - [`classification`]: classification CSVs, read as value sets;
+//! - [`frame`]: the frame as JSONL, written by hand (conformance fixtures).
 
 pub mod classification;
+pub mod frame;
 pub mod lisa;
 pub mod names;
 pub mod scb;
@@ -147,6 +149,7 @@ pub fn read(
         "classification-csv" => in_root().and_then(|()| {
             classification::read(root, &input.path, &classification::Config::load(&config)?)
         }),
+        "frame" => in_root().and_then(|()| frame::read(root, &input.path)),
         other => Err(error(&input.name, format!("unknown reader {other:?}"))),
     }
 }

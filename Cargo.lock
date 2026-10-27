@@ -957,6 +957,7 @@ dependencies = [
  "reg-core",
  "reg-frame",
  "serde",
+ "serde_json",
  "sha2",
  "toml",
  "zip",

@@ -8,7 +8,9 @@
 # markers (Alder in 2021; Utbildning, never a column) and a hole (Alder in 2020), and
 # the summary's flags (Kon sometimes sensitive; LopNr an identifier). The LISA list
 # exercises a multi-range year cell (Kon), a blank one (Alder), section headings and
-# footnotes, and the sensitivity vocabulary.
+# footnotes, and the sensitivity vocabulary. The frame input is written by hand: two
+# keys on one spelling (Del), final and preliminary editions of one key (Mat), a
+# preliminary-only table and populations with their own value sets.
 repo = "fixture"
 commit = "fixture"
 
@@ -41,3 +43,8 @@ reader = "lisa"
 path = "lisa/variabellista.xlsx"
 provider = "demo"
 register = "lisa-workbook"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

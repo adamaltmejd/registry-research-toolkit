@@ -12,7 +12,7 @@
 
 use std::collections::BTreeSet;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 /// The first and last day of open time: an unstated bound, once a stage must name one.
@@ -21,7 +21,8 @@ pub const OPEN_END: &str = "9999-12-31";
 
 /// Where a fact was stated: the input (a path relative to the inputs root) and a
 /// position inside it, both opaque to everything but the reader that wrote them.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Locator {
     pub input: String,
     pub at: String,
@@ -29,7 +30,8 @@ pub struct Locator {
 
 /// A register as its source states it. `register` is the source handle; with no
 /// `bind` statement it is also the catalog slug.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Register {
     pub provider: String,
     pub register: String,
@@ -42,7 +44,8 @@ pub struct Register {
 
 /// A table (a row shape) as its source states it. An empty `table` handle is the
 /// register's one implicit table, used when the source states no tables.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Table {
     pub provider: String,
     pub register: String,
@@ -58,7 +61,8 @@ pub struct Table {
 }
 
 /// A population a release states, in the source's order.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Population {
     pub name: String,
     pub definition: Option<String>,
@@ -69,7 +73,8 @@ pub struct Population {
 /// A delivery of one table as its source states it. Never synthesized. `release` is
 /// the source handle. The reader's name grammar places `name` in time: `from`, `to`
 /// and `grain` are all stated or, for a name it cannot place, all absent.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Release {
     pub provider: String,
     pub register: String,
@@ -85,6 +90,7 @@ pub struct Release {
     pub edition: String,
     /// Words of the name beside its period, which tell same-period deliveries apart.
     pub qualifier: Option<String>,
+    #[serde(default)]
     pub populations: Vec<Population>,
     pub locator: Locator,
 }
@@ -92,7 +98,8 @@ pub struct Release {
 /// A value set an occurrence states for one of its release's populations, when its
 /// rows disagree (`population` indexes [`Release::populations`]). Rows of one
 /// population that name different sets give that population several, as alternatives.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct PopulationValueSet {
     pub population: usize,
     pub valueset: String,
@@ -104,7 +111,8 @@ pub struct PopulationValueSet {
 /// variable id, else the folded name.
 ///
 /// An occurrence of a release takes the release's period and states no bounds.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Occurrence {
     pub provider: String,
     pub register: String,
@@ -125,6 +133,7 @@ pub struct Occurrence {
     /// The content hash of a value set stated in the same frame.
     pub valueset: Option<String>,
     /// Value sets that differ by population, in place of `valueset`.
+    #[serde(default)]
     pub population_valuesets: Vec<PopulationValueSet>,
     /// `false` when the source states the column carries no codes (a number or free
     /// text); unstated otherwise.
@@ -136,14 +145,17 @@ pub struct Occurrence {
     pub identifier: Option<bool>,
     pub locator: Locator,
     /// Other input rows stating the same occurrence, sorted.
+    #[serde(default)]
     pub also: Vec<Locator>,
     /// Fields on which those rows disagree, sorted; the first row's value stands as
     /// provisional, and resolve reports a source conflict (F6).
+    #[serde(default)]
     pub conflicts: Vec<String>,
 }
 
 /// One code of a value set; `parent` is another item's code.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Item {
     pub code: String,
     pub label: Option<String>,
@@ -152,10 +164,12 @@ pub struct Item {
 
 /// A code list as stated, with the names the source gives it. Equal content is one
 /// value set: [`ValueSet::hash`] is its address.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ValueSet {
     pub hash: String,
     pub items: Vec<Item>,
+    #[serde(default)]
     pub names: BTreeSet<String>,
     pub locator: Locator,
 }
@@ -178,7 +192,7 @@ impl ValueSet {
 }
 
 /// One frame record.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Record {
     Register(Register),
