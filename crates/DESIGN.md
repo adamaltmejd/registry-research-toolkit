@@ -380,7 +380,9 @@ tracks the milestones. This section holds the design decisions that outlive the 
   manifest's `register`: attaching its sheets to the export's LISA tables, by period
   where needed, is D's `bind`, since a workbook column keyed by name beside the export's
   `v<VarId>` would otherwise be a rival or a second variable. Section headings (group
-  hints) wait for D's sets, `Grundregister` for C's `derived-from` links. `Individ`
+  hints) wait for D's sets. Each `Grundregister` cell is a `derived_from` link from the
+  row's variable to each register it names (split at `,`, `;` and line breaks), matched
+  by name, so LISA's abbreviations (`RTB`) stay unresolved until D's `bind`. `Individ`
   repeats the year-independent columns with blank year cells; the year-less sheet's row
   stands, so `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables
   (birth country, deaths, migration) under headings, each keyed by `PersonNr`; the
@@ -448,7 +450,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
   provider (the index key is `(provider, fold(name))`), so a source text naming another
   provider's register never matches and is reported unresolved for D to `bind`: that
   count is not a reader defect. A malformed link or notice (an unknown kind, an endpoint
-  without exactly one register reference) is refused at its locator.
+  without exactly one register reference) is refused at its locator. In frame JSONL a
+  link's kind is written `relation`, since the record tag owns `kind`.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

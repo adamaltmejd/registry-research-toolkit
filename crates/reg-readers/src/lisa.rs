@@ -12,6 +12,10 @@
 //! repeats a column of a sheet without years (`Individ`'s year-independent block) is
 //! left to that sheet.
 //!
+//! A sheet with a source register column (`Grundregister`) gives one `derived_from`
+//! link per (sheet, column, register name) its cells state, from the column's variable
+//! to the register of that name.
+//!
 //! Table handles are the sheet names and source keys the folded column name.
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -22,7 +26,7 @@ use reg_frame::{Frame, Locator, Occurrence, Record, Register, Table};
 use serde::Deserialize;
 
 use crate::workbook::{cell, text};
-use crate::{ReadError, ReadOutput, config, error, name_key};
+use crate::{ReadError, ReadOutput, config, derived_from, error, name_key, nonblank};
 
 /// `curation/readers/lisa.toml`.
 #[derive(Debug, Deserialize)]
@@ -42,6 +46,8 @@ struct Headers {
     label: Vec<String>,
     years: Vec<String>,
     sensitive: Vec<String>,
+    /// The register a column is derived from; not every sheet has the column.
+    source_register: Vec<String>,
 }
 
 impl Config {
@@ -52,14 +58,15 @@ impl Config {
     }
 }
 
-/// A data row: its column-name cell's address, column, label, year cell and sensitivity
-/// flag.
+/// A data row: its column-name cell's address, column, label, year cell, sensitivity
+/// flag and source register cell.
 struct Entry {
     at: String,
     column: String,
     label: String,
     years: Option<String>,
     sensitive: Option<bool>,
+    source: Option<String>,
 }
 
 /// A sheet: its title cell and that cell's address, whether it has a year column, and
@@ -77,6 +84,7 @@ struct Sheet {
 /// # Errors
 /// An unreadable workbook, a sheet with no header row, or a sheet `lisa.toml` names
 /// as stating sensitivity that has no sensitivity column.
+#[allow(clippy::too_many_lines)]
 pub fn read(
     root: &Path,
     rel: &str,
@@ -103,6 +111,8 @@ pub fn read(
         .flat_map(|s| s.entries.iter().map(|e| name_key(&e.column)))
         .collect();
     let mut repeated: BTreeMap<String, usize> = BTreeMap::new();
+    // (sheet, source key, source register text) → its first row.
+    let mut derived: BTreeMap<(String, String, String), Locator> = BTreeMap::new();
     let mut records = vec![Record::Register(Register {
         provider: provider.to_owned(),
         register: register.to_owned(),
@@ -135,6 +145,14 @@ pub fn read(
             if sheet.years && entry.years.is_none() && timeless.contains(&name_key(&entry.column)) {
                 *repeated.entry(sheet.name.clone()).or_default() += 1;
                 continue;
+            }
+            // A cell may name several registers, one per line or separated by `,` or `;`.
+            for text in entry.source.iter().flat_map(|s| s.split([',', ';', '\n'])) {
+                if let Some(text) = nonblank(text) {
+                    derived
+                        .entry((sheet.name.clone(), name_key(&entry.column), text))
+                        .or_insert_with(|| at(&entry.at));
+                }
             }
             let periods = bounds(entry.years.as_deref()).unwrap_or_else(|| {
                 out.warnings.push(format!(
@@ -173,6 +191,11 @@ pub fn read(
             }
         }
     }
+    records.extend(
+        derived
+            .into_iter()
+            .map(|((_, key, text), locator)| derived_from(provider, register, key, text, locator)),
+    );
     if !repeated.is_empty() {
         let counts: Vec<String> = repeated.iter().map(|(s, n)| format!("{s} {n}")).collect();
         out.warnings.push(format!(
@@ -215,10 +238,11 @@ fn sheet(
         })
         .ok_or_else(|| error(rel, format!("sheet {name:?}: no header row")))?;
     let col = |aliases: &[String]| rows[header].iter().position(|c| alias(text(c), aliases));
-    let (label, years, sensitive) = (
+    let (label, years, sensitive, source) = (
         col(&config.headers.label),
         col(&config.headers.years),
         col(&config.headers.sensitive),
+        col(&config.headers.source_register),
     );
     if sensitive.is_none() && alias(Some(name.clone()), &config.sensitive_sheets) {
         return Err(error(rel, format!("sheet {name:?}: no sensitivity column")));
@@ -249,6 +273,7 @@ fn sheet(
             label,
             years: cell(row, years),
             sensitive: flag,
+            source: cell(row, source),
         });
     }
     Ok(Sheet {

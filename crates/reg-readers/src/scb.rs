@@ -47,7 +47,7 @@ use reg_frame::{
 use serde::Deserialize;
 
 use crate::names::Grammar;
-use crate::{ReadError, ReadOutput, config, error, nonblank};
+use crate::{ReadError, ReadOutput, config, derived_from, error, nonblank};
 
 const REGISTERINFORMATION: &str = "Registerinformation.csv";
 const VARDEMANGDER: &str = "Vardemangder.csv";
@@ -515,21 +515,7 @@ pub fn read(
     let surface = Surface::new(provider, &registers, &tables, &releases, &occurrences);
     let events = timeseries(&mut archive, name, &config.timeseries, &surface, &mut out)?;
     let links = derived.into_iter().map(|((register, key, text), locator)| {
-        Record::Link(Link {
-            kind: "derived_from".to_owned(),
-            subject: endpoint(provider, "variable", &register, None, Some(&key)),
-            object: Endpoint {
-                kind: "register".to_owned(),
-                provider: provider.to_owned(),
-                register: None,
-                register_name: Some(text),
-                table: None,
-                key: None,
-            },
-            at: None,
-            note: None,
-            locator,
-        })
+        derived_from(provider, &register, key, text, locator)
     });
 
     let records = registers
