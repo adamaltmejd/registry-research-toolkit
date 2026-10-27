@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/sources/0/table",
+      "message": "source 'table' is required"
+    }
+  ]
+}

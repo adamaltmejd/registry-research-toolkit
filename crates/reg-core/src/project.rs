@@ -1,10 +1,8 @@
 //! The `project_data.json` types and their two JSON encodings (`crates/reg-core/DESIGN.md`).
 //!
-//! The types are the retired `reg_schema.project_data` models. They keep the raw spelling
-//! of every value (an int year stays an int, `"2018"` stays a string), and serialize
-//! as Pydantic's `model_dump(mode="json")` does: every optional field present, absent
-//! as `null` (except `extract_format`, omitted when unset), `panels` as `[]`, a bare-string panel member as `{"source": ...}`. That
-//! shape is what [`project_hash`] hashes.
+//! The types keep the raw spelling of every value (an int year stays an int, `"2018"`
+//! stays a string), and serialize every optional field present, absent as `null`, and
+//! `panels` as `[]`. That shape is what [`project_hash`] hashes.
 //!
 //! [`ProjectData::from_value`] is the only way to build a project from JSON: it runs
 //! [`crate::validate_structural`] first, which reports every problem and rejects
@@ -27,7 +25,7 @@ use crate::{
 /// The `project_data.json` contract this runtime reads, exactly. The SPA seeds a new
 /// draft at this version (`reg_webapp/frontend/src/lib/project_data.test.ts` reads it
 /// from here).
-pub const SCHEMA_VERSION: &str = "4.0.0";
+pub const SCHEMA_VERSION: &str = "5.0.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations and the SPA (through
@@ -150,8 +148,8 @@ str_enum!(
     NumericSubtype { Integer = "integer", Double = "double" }
 );
 str_enum!(
-    /// The file format a steward's extract runner writes every file of an order in.
-    ExtractFormat { Dta = "dta", Parquet = "parquet", Csv = "csv" }
+    /// Which release of a table a source asks for where more than one exists.
+    Edition { Final = "final", Unstated = "unstated", Preliminary = "preliminary" }
 );
 
 /// The top-level `project_data.json` document.
@@ -160,10 +158,6 @@ str_enum!(
 #[serde(deny_unknown_fields)]
 pub struct ProjectData {
     pub schema_version: String,
-    /// The deployment the project is ordered from: `global`, or a steward id. Any
-    /// slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it
-    /// to the served artifact's steward.
-    pub steward: String,
     pub reg_meta_version: String,
     pub name: String,
     pub sources: Vec<Source>,
@@ -173,11 +167,6 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub window: Option<StudyWindow>,
-    /// The file format every extracted file is written in; absent means `dta`.
-    // Omitted when unset, so a project that never set it keeps its `project_hash`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub extract_format: Option<ExtractFormat>,
 }
 
 /// [`ProjectData`]'s fields as deserialized, so that `ProjectData` has no public
@@ -186,7 +175,6 @@ pub struct ProjectData {
 #[serde(deny_unknown_fields)]
 struct Fields {
     schema_version: String,
-    steward: String,
     reg_meta_version: String,
     name: String,
     sources: Vec<Source>,
@@ -194,8 +182,6 @@ struct Fields {
     panels: Vec<Panel>,
     #[serde(default)]
     window: Option<StudyWindow>,
-    #[serde(default)]
-    extract_format: Option<ExtractFormat>,
 }
 
 impl ProjectData {
@@ -217,32 +203,33 @@ impl ProjectData {
         let f = Fields::deserialize(value).expect("an accepted project deserializes");
         Ok(Self {
             schema_version: f.schema_version,
-            steward: f.steward,
             reg_meta_version: f.reg_meta_version,
             name: f.name,
             sources: f.sources,
             panels: f.panels,
             window: f.window,
-            extract_format: f.extract_format,
         })
-    }
-
-    /// The format the order's files are written in: [`Self::extract_format`], else Stata.
-    #[must_use]
-    pub fn extract_format(&self) -> ExtractFormat {
-        self.extract_format.unwrap_or(ExtractFormat::Dta)
     }
 }
 
-/// One logical extraction: a register variant, a requested period and its bindings.
+/// One logical extraction: a table, a requested period and its bindings.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSource))]
 #[serde(deny_unknown_fields)]
 pub struct Source {
     pub name: String,
-    /// The 3-part coordinate `<provider>/<register>/<variant>`.
-    pub register_variant: String,
+    /// A table's public id: `<provider>/<register>` for a register's implicit table,
+    /// else `<provider>/<register>/<table>`.
+    pub table: String,
     pub period: SourcePeriod,
+    /// The release of the table asked for; absent asks for the primary edition.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub edition: Option<Edition>,
+    /// The delivery qualifier asked for; absent asks for every qualifier.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub qualifier: Option<String>,
     pub bindings: Vec<Binding>,
 }
 
@@ -265,11 +252,9 @@ pub struct Binding {
     pub date_format: Option<String>,
     #[serde(default)]
     pub datetime_format: Option<String>,
-    /// A classification FQID `class/<slug>`.
+    /// A classification version's public id `class/<family>/<version>`.
     #[serde(default)]
-    pub value_set: Option<String>,
-    #[serde(default)]
-    pub representation: Option<String>,
+    pub classification: Option<String>,
 }
 
 /// A period endpoint as written: an int year or a period-token string (`"_default"`
@@ -557,98 +542,10 @@ impl fmt::Display for SourcePeriod {
 #[serde(deny_unknown_fields)]
 pub struct Panel {
     pub panel_id: String,
-    #[serde(deserialize_with = "members")]
-    #[cfg_attr(feature = "openapi", schema(value_type = Vec<Member>, inline))]
-    pub members: Vec<PanelMember>,
-    #[serde(default)]
-    pub entity_key: Option<EntityKey>,
-    #[serde(default)]
-    pub time_key: Option<TimeKey>,
+    /// Source names.
+    pub members: Vec<String>,
     #[serde(default)]
     pub comment: Option<String>,
-}
-
-/// A panel member; the bare-string shorthand deserializes to `{"source": <name>}`.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectPanelMember))]
-#[serde(deny_unknown_fields)]
-pub struct PanelMember {
-    pub source: String,
-    // An explicit `null` override is `invalid_field_type`: absent inherits.
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub entity_key: Option<EntityKey>,
-    #[serde(default)]
-    #[cfg_attr(feature = "openapi", schema(nullable = false))]
-    pub time_key: Option<TimeKey>,
-}
-
-/// A panel member as written: a source name, or a member object.
-#[derive(Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema))]
-#[serde(untagged)]
-enum Member {
-    Source(String),
-    Member(PanelMember),
-}
-
-fn members<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Vec<PanelMember>, D::Error> {
-    Ok(Vec::<Member>::deserialize(deserializer)?
-        .into_iter()
-        .map(|m| match m {
-            Member::Source(source) => PanelMember {
-                source,
-                entity_key: None,
-                time_key: None,
-            },
-            Member::Member(m) => m,
-        })
-        .collect())
-}
-
-/// A panel's entity key: one column, or a composite.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectEntityKey))]
-#[serde(untagged)]
-pub enum EntityKey {
-    Column(String),
-    Composite(Vec<String>),
-}
-
-/// A panel's time key: one time point, or a composite.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimeKey))]
-#[serde(untagged)]
-pub enum TimeKey {
-    Composite(Vec<TimePoint>),
-    Point(TimePoint),
-}
-
-/// A literal year, a column ref, `{"period": ...}` or `{"range": {...}}`.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimePoint))]
-#[serde(untagged)]
-pub enum TimePoint {
-    Year(i64),
-    Column(String),
-    Literal(LiteralPeriod),
-    Range(TimeRange),
-}
-
-/// `{"period": int | string}`: a literal period, as opposed to a column ref.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectLiteralPeriod))]
-#[serde(deny_unknown_fields)]
-pub struct LiteralPeriod {
-    pub period: PeriodValue,
-}
-
-/// `{"range": {"from": ..., "to": ...}}`: a literal period range.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectTimeRange))]
-#[serde(deny_unknown_fields)]
-pub struct TimeRange {
-    pub range: PeriodRange,
 }
 
 /// The optional study window, in plain int years.

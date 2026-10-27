@@ -1,0 +1,19 @@
+{
+  "schema_version": "5.0.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "minimal_demo",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "table": "scb/lisa",
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical",
+          "classification": "class/sun/2020"
+        }
+      ]
+    }
+  ]
+}

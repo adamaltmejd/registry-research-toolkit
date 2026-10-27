@@ -16,30 +16,28 @@
 //!   in a common year).
 //! - FQID segments are exactly `[A-Za-z0-9_-]+`; Python's `$` also let one trailing
 //!   newline through.
-//! - `"_default"` without a usable `register_variant` is an `invalid_period`; Python
-//!   raised `UnboundLocalError`.
-//! - A non-string `representation` is an `invalid_field_type`; Python let it through
-//!   to fail model construction.
-//! - Composite literal time keys render as their values (`[2018, '2019-H1']`), not as
-//!   Python's internal canonical tuples.
 //! - An int is a JSON integer that fits `i64`.
+//!
+//! `"_default"` is a period like any other here: whether it fits the table is a catalog
+//! rule (`period_default_on_dated_table`).
 
 use serde_json::{Map, Value};
 
-use crate::grammar::{Date, PeriodToken, is_slug};
-use crate::project::{ColumnType, ExtractFormat, IdSubtype, NumericSubtype};
+use crate::grammar::{Date, PeriodToken};
+use crate::project::{ColumnType, Edition, IdSubtype, NumericSubtype};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
-const PROJECT_REQUIRED: [&str; 5] = [
-    "schema_version",
-    "steward",
-    "reg_meta_version",
+const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
+const PROJECT_OPTIONAL: [&str; 2] = ["panels", "window"];
+const SOURCE_KEYS: [&str; 6] = [
     "name",
-    "sources",
+    "table",
+    "period",
+    "edition",
+    "qualifier",
+    "bindings",
 ];
-const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
-const SOURCE_KEYS: [&str; 4] = ["name", "register_variant", "period", "bindings"];
-const BINDING_KEYS: [&str; 9] = [
+const BINDING_KEYS: [&str; 8] = [
     "variable",
     "type",
     "display_name",
@@ -47,11 +45,9 @@ const BINDING_KEYS: [&str; 9] = [
     "numeric_subtype",
     "date_format",
     "datetime_format",
-    "value_set",
-    "representation",
+    "classification",
 ];
-const PANEL_KEYS: [&str; 5] = ["panel_id", "members", "entity_key", "time_key", "comment"];
-const PANEL_MEMBER_KEYS: [&str; 3] = ["source", "entity_key", "time_key"];
+const PANEL_KEYS: [&str; 3] = ["panel_id", "members", "comment"];
 const WINDOW_KEYS: [&str; 2] = ["from", "to"];
 
 /// Fields valid only on one column type, with that type.
@@ -244,15 +240,23 @@ fn fqid_segment(s: &str) -> bool {
             .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 
-/// `<provider>/<register>/<variant or slug>`, the provider not `class`.
+/// `<provider>/<register>/<name>`, the provider not `class`.
 fn three_part(s: &str) -> Option<Vec<&str>> {
     let segs: Vec<&str> = s.split('/').collect();
     (segs.len() == 3 && segs[0] != "class" && segs.iter().all(|s| fqid_segment(s))).then_some(segs)
 }
 
+/// A table's public id: `<provider>/<register>` or `<provider>/<register>/<table>`,
+/// the provider not `class`.
+fn table_parts(s: &str) -> Option<Vec<&str>> {
+    let segs: Vec<&str> = s.split('/').collect();
+    ((2..=3).contains(&segs.len()) && segs[0] != "class" && segs.iter().all(|s| fqid_segment(s)))
+        .then_some(segs)
+}
+
 fn classification_fqid(s: &str) -> bool {
     let segs: Vec<&str> = s.split('/').collect();
-    segs.len() == 2 && segs[0] == "class" && segs.iter().all(|s| fqid_segment(s))
+    segs.len() == 3 && segs[0] == "class" && segs.iter().all(|s| fqid_segment(s))
 }
 
 // --- Periods ------------------------------------------------------------
@@ -287,8 +291,7 @@ fn segment(v: &Value) -> Option<(Date, Date)> {
 
 /// The structural rules of one `Source.period` on its own, with paths relative to
 /// the period (`""`, `/0`): what the project check applies at
-/// `/sources/<i>/period`, less `"_default"`'s need for a concrete `register_variant`,
-/// which is the source's rule. [`crate::project::SourcePeriod::from_value`] runs it.
+/// `/sources/<i>/period`. [`crate::project::SourcePeriod::from_value`] runs it.
 #[must_use]
 pub(crate) fn validate_source_period(period: &Value) -> ValidationResult {
     let mut issues = Issues::default();
@@ -432,41 +435,6 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             );
         }
     }
-    match get(root, "steward") {
-        None => {}
-        Some(Value::String(s)) if is_slug(s) => {}
-        Some(Value::String(s)) => issues.error(
-            "invalid_slug",
-            "/steward".into(),
-            format!(
-                "steward must be a slug (lowercase ASCII kebab-case, not 'class'); got {}",
-                q(s)
-            ),
-        ),
-        Some(_) => issues.error(
-            "invalid_field_type",
-            "/steward".into(),
-            "steward must be a string".into(),
-        ),
-    }
-    match get(root, "extract_format") {
-        None => {}
-        Some(Value::String(s)) if ExtractFormat::parse(s).is_some() => {}
-        Some(Value::String(s)) => issues.error(
-            "invalid_enum_value",
-            "/extract_format".into(),
-            format!(
-                "extract_format must be one of {}; got {}",
-                allowed(ExtractFormat::ALL.iter().map(|v| v.as_str())),
-                q(s)
-            ),
-        ),
-        Some(_) => issues.error(
-            "invalid_field_type",
-            "/extract_format".into(),
-            "extract_format must be a string".into(),
-        ),
-    }
 }
 
 /// The optional study window: a closed `{"from", "to"}` of int years, `to >= from`.
@@ -552,38 +520,24 @@ fn check_source<'a>(
         }
     }
 
-    // The coordinate's provider/register prefix scopes every binding FQID.
-    let rv = required_string(
-        source,
-        "register_variant",
-        base,
-        "source 'register_variant'",
-        issues,
-    );
-    let variant = rv.and_then(three_part);
-    if let (Some(rv), None) = (rv, &variant) {
+    // The table's provider/register prefix scopes every binding FQID.
+    let table = required_string(source, "table", base, "source 'table'", issues);
+    let parts = table.and_then(table_parts);
+    if let (Some(table), None) = (table, &parts) {
         issues.error(
             "invalid_fqid",
-            format!("{base}/register_variant"),
+            format!("{base}/table"),
             format!(
-                "register_variant must be a 3-part variant coordinate \
-                 <provider>/<register>/<variant>; got {}",
-                q(rv)
+                "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got {}",
+                q(table)
             ),
         );
     }
 
-    let period = required(source, "period", base, "source 'period'", issues);
-    if let Some(period) = period {
+    if let Some(period) = required(source, "period", base, "source 'period'", issues) {
         check_period(period, format!("{base}/period"), issues);
-        if period == "_default" && variant.as_ref().is_none_or(|v| v[2] == "_default") {
-            issues.error(
-                "invalid_period",
-                format!("{base}/period"),
-                "year-independent selection requires a concrete register_variant".into(),
-            );
-        }
     }
+    check_edition_and_qualifier(source, base, issues);
 
     let Some(bindings) = required(source, "bindings", base, "source 'bindings'", issues) else {
         return;
@@ -604,7 +558,7 @@ fn check_source<'a>(
         );
         return;
     }
-    let prefix = variant.as_ref().map(|v| &v[..2]);
+    let prefix = parts.as_ref().map(|p| &p[..2]);
     let mut display_names: Vec<(&str, String)> = Vec::new();
     for (j, binding) in bindings.iter().enumerate() {
         let binding_base = format!("{base}/bindings/{j}");
@@ -632,6 +586,39 @@ fn check_source<'a>(
     }
 }
 
+/// The optional source fields: `edition` from its enum, `qualifier` a string, neither
+/// `null` when present.
+fn check_edition_and_qualifier(source: &Map<String, Value>, base: &str, issues: &mut Issues) {
+    for field in ["edition", "qualifier"] {
+        if source.get(field) == Some(&Value::Null) {
+            issues.error(
+                "invalid_field_type",
+                format!("{base}/{field}"),
+                format!("source '{field}' must not be null when present"),
+            );
+        }
+    }
+    match get(source, "edition") {
+        None => {}
+        Some(Value::String(s)) if Edition::parse(s).is_some() => {}
+        Some(Value::String(s)) => issues.error(
+            "invalid_enum_value",
+            format!("{base}/edition"),
+            format!(
+                "edition must be one of {}; got {}",
+                allowed(Edition::ALL.iter().map(|v| v.as_str())),
+                q(s)
+            ),
+        ),
+        Some(_) => issues.error(
+            "invalid_field_type",
+            format!("{base}/edition"),
+            "edition must be a string".into(),
+        ),
+    }
+    optional_string(source, "qualifier", base, "source 'qualifier'", issues);
+}
+
 fn check_binding(
     binding: &Map<String, Value>,
     base: &str,
@@ -656,11 +643,10 @@ fn check_binding(
                     && segs[..2] != *prefix
                 {
                     issues.error(
-                        "fqid_register_variant_mismatch",
+                        "fqid_table_mismatch",
                         format!("{base}/variable"),
                         format!(
-                            "binding FQID prefix {} must equal the source register_variant \
-                             prefix {}",
+                            "binding FQID prefix {} must equal the source table prefix {}",
                             quoted_list(segs[..2].iter().copied()),
                             quoted_list(prefix.iter().copied())
                         ),
@@ -691,30 +677,24 @@ fn check_binding(
         "binding 'display_name'",
         issues,
     );
-    optional_string(
-        binding,
-        "representation",
-        base,
-        "binding 'representation'",
-        issues,
-    );
     check_subtypes(binding, base, column_type, issues);
 
-    match get(binding, "value_set") {
+    match get(binding, "classification") {
         None => {}
-        Some(Value::String(vs)) if classification_fqid(vs) => {}
-        Some(Value::String(vs)) => issues.error(
+        Some(Value::String(pin)) if classification_fqid(pin) => {}
+        Some(Value::String(pin)) => issues.error(
             "invalid_fqid",
-            format!("{base}/value_set"),
+            format!("{base}/classification"),
             format!(
-                "value_set must be a 2-segment classification FQID class/<slug>; got {}",
-                q(vs)
+                "classification must be a 3-segment classification id \
+                 class/<family>/<version>; got {}",
+                q(pin)
             ),
         ),
         Some(_) => issues.error(
             "invalid_field_type",
-            format!("{base}/value_set"),
-            "value_set must be a string".into(),
+            format!("{base}/classification"),
+            "classification must be a string".into(),
         ),
     }
 }
@@ -775,293 +755,30 @@ fn check_subtypes(
     }
 }
 
-// --- Panel keys ---------------------------------------------------------
-
-/// `{"period": int | string}`; the string is not grammar-checked here (a semantic
-/// concern).
-fn literal_period(v: &Value) -> Option<&Value> {
-    let map = v.as_object()?;
-    let period = map.get("period").filter(|_| map.len() == 1)?;
-    (int(period).is_some() || period.is_string()).then_some(period)
-}
-
-/// `{"range": {"from", "to"}}` with valid endpoints, as its raw endpoints.
-fn time_range(v: &Value) -> Option<(&Value, &Value)> {
-    let map = v.as_object()?;
-    let range = map.get("range").filter(|_| map.len() == 1)?;
-    period_range(range)?;
-    Some((&range["from"], &range["to"]))
-}
-
-/// A literal time point as written, so `2018` and `{"period": 2018}` compare equal.
-#[derive(Debug, Clone, PartialEq)]
-enum Literal<'a> {
-    Period(&'a Value),
-    Range(&'a Value, &'a Value),
-}
-
-impl Literal<'_> {
-    fn of(v: &Value) -> Option<Literal<'_>> {
-        if int(v).is_some() {
-            return Some(Literal::Period(v));
-        }
-        if let Some(period) = literal_period(v) {
-            return Some(Literal::Period(period));
-        }
-        time_range(v).map(|(from, to)| Literal::Range(from, to))
-    }
-
-    fn render(&self) -> String {
-        let value = |v: &Value| v.as_str().map_or_else(|| v.to_string(), q);
-        match self {
-            Literal::Period(v) => value(v),
-            Literal::Range(from, to) => format!("{}..{}", value(from), value(to)),
-        }
-    }
-}
-
-/// A literal time key, scalar or composite, for the uniqueness rule.
-#[derive(Debug, Clone, PartialEq)]
-enum LiteralKey<'a> {
-    Scalar(Literal<'a>),
-    Composite(Vec<Literal<'a>>),
-}
-
-fn literal_key(v: &Value) -> Option<LiteralKey<'_>> {
-    match v {
-        Value::Array(items) => items
-            .iter()
-            .map(Literal::of)
-            .collect::<Option<_>>()
-            .map(LiteralKey::Composite),
-        _ => Literal::of(v).map(LiteralKey::Scalar),
-    }
-}
-
-/// What a valid time key holds.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum TimeKind {
-    LiteralScalar,
-    RefScalar,
-    LiteralComposite,
-    RefComposite,
-}
-
-impl TimeKind {
-    fn as_str(self) -> &'static str {
-        match self {
-            Self::LiteralScalar => "literal_scalar",
-            Self::RefScalar => "ref_scalar",
-            Self::LiteralComposite => "literal_composite",
-            Self::RefComposite => "ref_composite",
-        }
-    }
-
-    fn composite(self) -> bool {
-        matches!(self, Self::LiteralComposite | Self::RefComposite)
-    }
-}
-
-/// A composite key as compared across members: column refs, or literal values.
-#[derive(Debug, Clone, PartialEq)]
-enum Composite<'a> {
-    Refs(Vec<&'a str>),
-    Literals(Vec<Literal<'a>>),
-}
-
-impl Composite<'_> {
-    fn render(&self) -> String {
-        match self {
-            Composite::Refs(refs) => quoted_list(refs.iter().copied()),
-            Composite::Literals(literals) => {
-                let items: Vec<String> = literals.iter().map(Literal::render).collect();
-                format!("[{}]", items.join(", "))
-            }
-        }
-    }
-}
-
-/// Whether an entity key is a string or a non-empty array of strings.
-fn check_entity_key(value: &Value, path: &str, issues: &mut Issues) -> bool {
-    match value {
-        Value::String(_) => true,
-        Value::Array(items) if items.is_empty() => {
-            issues.error(
-                "invalid_field_type",
-                path.to_owned(),
-                "entity_key array must be non-empty".into(),
-            );
-            false
-        }
-        Value::Array(items) => {
-            let mut ok = true;
-            for (i, item) in items.iter().enumerate() {
-                if !item.is_string() {
-                    ok = false;
-                    issues.error(
-                        "invalid_field_type",
-                        format!("{path}/{i}"),
-                        "entity_key array elements must be strings".into(),
-                    );
-                }
-            }
-            ok
-        }
-        _ => {
-            issues.error(
-                "invalid_field_type",
-                path.to_owned(),
-                "entity_key must be a string or array of strings".into(),
-            );
-            false
-        }
-    }
-}
-
-/// A time key's kind, or `None` (with an issue) when its shape is invalid. A
-/// composite must be all refs or all literals.
-fn check_time_key(value: &Value, path: &str, issues: &mut Issues) -> Option<TimeKind> {
-    match value {
-        Value::String(_) => Some(TimeKind::RefScalar),
-        Value::Array(items) if items.is_empty() => {
-            issues.error(
-                "invalid_field_type",
-                path.to_owned(),
-                "time_key array must be non-empty".into(),
-            );
-            None
-        }
-        Value::Array(items) => {
-            let mut kinds = Vec::new();
-            for (i, item) in items.iter().enumerate() {
-                if item.is_string() {
-                    kinds.push(TimeKind::RefComposite);
-                } else if Literal::of(item).is_some() {
-                    kinds.push(TimeKind::LiteralComposite);
-                } else {
-                    issues.error(
-                        "invalid_field_type",
-                        format!("{path}/{i}"),
-                        "time_key element must be int, string, {'period': int|str}, or \
-                         {'range': {'from','to'}}"
-                            .into(),
-                    );
-                }
-            }
-            if kinds.len() < items.len() {
-                return None;
-            }
-            if kinds.iter().any(|&k| k != kinds[0]) {
-                issues.error(
-                    "composite_time_key_mixed_kinds",
-                    path.to_owned(),
-                    "composite time_key array must be homogeneous: all column refs or all \
-                     literals"
-                        .into(),
-                );
-                return None;
-            }
-            Some(kinds[0])
-        }
-        _ if Literal::of(value).is_some() => Some(TimeKind::LiteralScalar),
-        Value::Object(_) => {
-            issues.error(
-                "literal_period_invalid",
-                path.to_owned(),
-                "time_key object form must be {'period': int|str} or {'range': {'from','to'}} \
-                 with period-token endpoints"
-                    .into(),
-            );
-            None
-        }
-        _ => {
-            issues.error(
-                "invalid_field_type",
-                path.to_owned(),
-                "time_key must be int, string, {'period': ...}, or an array".into(),
-            );
-            None
-        }
-    }
-}
-
-/// The column refs of a key: the string, or an array's strings.
-fn refs(value: Option<&Value>) -> Vec<&str> {
-    match value {
-        Some(Value::String(s)) => vec![s],
-        Some(Value::Array(items)) => items.iter().filter_map(Value::as_str).collect(),
-        _ => Vec::new(),
-    }
-}
-
 // --- Panels -------------------------------------------------------------
-
-/// A source's display names, for the panel key-ref rule. `complete` is false when any
-/// binding may lack an explicit `display_name` (its default needs the catalog), and
-/// the rule is then skipped.
-struct SourceColumns<'a> {
-    display_names: Vec<&'a str>,
-    complete: bool,
-}
-
-/// Sources by name (the first of a duplicated name), when `/sources` is an array.
-fn source_index(sources: Option<&Value>) -> Option<Vec<(&str, SourceColumns<'_>)>> {
-    let sources = sources?.as_array()?;
-    let mut index: Vec<(&str, SourceColumns<'_>)> = Vec::new();
-    for source in sources.iter().filter_map(Value::as_object) {
-        let Some(name) = source.get("name").and_then(Value::as_str) else {
-            continue;
-        };
-        if index.iter().any(|(n, _)| *n == name) {
-            continue;
-        }
-        let bindings = source.get("bindings").and_then(Value::as_array);
-        let names: Vec<Option<&str>> = bindings
-            .into_iter()
-            .flatten()
-            .map(|b| b.get("display_name").and_then(Value::as_str))
-            .collect();
-        index.push((
-            name,
-            SourceColumns {
-                complete: bindings.is_some() && names.iter().all(Option::is_some),
-                display_names: names.into_iter().flatten().collect(),
-            },
-        ));
-    }
-    Some(index)
-}
-
-/// A member's effective keys: its overrides, or the panel defaults.
-#[derive(Clone)]
-struct Keys<'a> {
-    entity: Option<&'a Value>,
-    entity_path: String,
-    entity_ok: bool,
-    time: Option<&'a Value>,
-    time_path: String,
-    time_kind: Option<TimeKind>,
-    time_overridden: bool,
-}
-
-/// What one panel's members share: the panel defaults and the cross-member
-/// accumulators.
-struct PanelScope<'a> {
-    base: String,
-    defaults: Keys<'a>,
-    composite_entities: Vec<(String, Composite<'a>)>,
-    composite_times: Vec<(String, Composite<'a>)>,
-    // simplify: linear scan; a panel has a handful of members.
-    literal_times: Vec<(LiteralKey<'a>, String)>,
-}
 
 /// Panel-spanning state.
 struct Panels<'a> {
-    /// `None` when `/sources` is not an array, so names cannot resolve.
-    sources: Option<Vec<(&'a str, SourceColumns<'a>)>>,
+    /// The source names, `None` when `/sources` is not an array, so names cannot resolve.
+    sources: Option<Vec<&'a str>>,
     /// Source name to the first panel that references it.
     source_panel: Vec<(&'a str, String)>,
     panel_ids: Vec<(&'a str, usize)>,
+}
+
+/// The source names (a duplicated name once), when `/sources` is an array.
+fn source_names(sources: Option<&Value>) -> Option<Vec<&str>> {
+    let mut names: Vec<&str> = Vec::new();
+    for name in sources?
+        .as_array()?
+        .iter()
+        .filter_map(|source| source.get("name").and_then(Value::as_str))
+    {
+        if !names.contains(&name) {
+            names.push(name);
+        }
+    }
+    Some(names)
 }
 
 fn check_panels(panels: Option<&Value>, sources: Option<&Value>, issues: &mut Issues) {
@@ -1075,14 +792,14 @@ fn check_panels(panels: Option<&Value>, sources: Option<&Value>, issues: &mut Is
         return;
     };
     let mut state = Panels {
-        sources: source_index(sources),
+        sources: source_names(sources),
         source_panel: Vec::new(),
         panel_ids: Vec::new(),
     };
     for (pi, panel) in panels.iter().enumerate() {
         let base = format!("/panels/{pi}");
         match panel.as_object() {
-            Some(panel) => check_panel(panel, base, pi, &mut state, issues),
+            Some(panel) => check_panel(panel, &base, pi, &mut state, issues),
             None => issues.error("invalid_field_type", base, "panel must be an object".into()),
         }
     }
@@ -1090,13 +807,13 @@ fn check_panels(panels: Option<&Value>, sources: Option<&Value>, issues: &mut Is
 
 fn check_panel<'a>(
     panel: &'a Map<String, Value>,
-    base: String,
+    base: &str,
     index: usize,
     state: &mut Panels<'a>,
     issues: &mut Issues,
 ) {
-    check_unexpected_keys(panel, &PANEL_KEYS, &base, "panel", issues);
-    if let Some(id) = required_string(panel, "panel_id", &base, "panel 'panel_id'", issues) {
+    check_unexpected_keys(panel, &PANEL_KEYS, base, "panel", issues);
+    if let Some(id) = required_string(panel, "panel_id", base, "panel 'panel_id'", issues) {
         match state.panel_ids.iter().find(|(p, _)| *p == id) {
             Some((_, first)) => issues.error(
                 "duplicate_panel_id",
@@ -1106,15 +823,9 @@ fn check_panel<'a>(
             None => state.panel_ids.push((id, index)),
         }
     }
-    optional_string(panel, "comment", &base, "panel 'comment'", issues);
-    let entity = get(panel, "entity_key");
-    let entity_path = format!("{base}/entity_key");
-    let entity_ok = entity.is_none_or(|e| check_entity_key(e, &entity_path, issues));
-    let time = get(panel, "time_key");
-    let time_path = format!("{base}/time_key");
-    let time_kind = time.and_then(|t| check_time_key(t, &time_path, issues));
+    optional_string(panel, "comment", base, "panel 'comment'", issues);
 
-    let Some(members) = required(panel, "members", &base, "panel 'members'", issues) else {
+    let Some(members) = required(panel, "members", base, "panel 'members'", issues) else {
         return;
     };
     let Some(members) = members.as_array() else {
@@ -1133,173 +844,23 @@ fn check_panel<'a>(
         );
         return;
     }
-    let mut scope = PanelScope {
-        base,
-        defaults: Keys {
-            entity,
-            entity_path,
-            entity_ok,
-            time,
-            time_path,
-            time_kind,
-            time_overridden: false,
-        },
-        composite_entities: Vec::new(),
-        composite_times: Vec::new(),
-        literal_times: Vec::new(),
-    };
     for (mi, member) in members.iter().enumerate() {
-        let mbase = format!("{}/members/{mi}", scope.base);
-        let Some((source, keys)) = member_keys(member, &mbase, &scope.defaults, issues) else {
-            continue;
-        };
-        collect_keys(&keys, &mbase, &mut scope, issues);
-        if let Some(source) = source {
-            check_member_source(source, member, &mbase, &keys, &scope.base, state, issues);
-        }
-    }
-    // Scalar keys may differ across members; only composites must agree, in order.
-    check_composites(&scope.composite_entities, "entity_key", issues);
-    check_composites(&scope.composite_times, "time_key", issues);
-}
-
-fn check_composites(composites: &[(String, Composite<'_>)], label: &str, issues: &mut Issues) {
-    let Some(((first_path, first), rest)) = composites.split_first() else {
-        return;
-    };
-    for (path, composite) in rest {
-        if composite != first {
-            issues.error(
-                "composite_key_inconsistent",
-                path.clone(),
-                format!(
-                    "composite {label} {} differs from {} at {first_path}",
-                    composite.render(),
-                    first.render()
-                ),
-            );
-        }
-    }
-}
-
-/// A member override: absent inherits the panel default; explicit `null` is an
-/// `invalid_field_type` and also inherits, so the later rules still have a key.
-fn member_override<'a>(
-    member: &'a Map<String, Value>,
-    field: &str,
-    mbase: &str,
-    issues: &mut Issues,
-) -> Option<&'a Value> {
-    if member.get(field) == Some(&Value::Null) {
-        issues.error(
-            "invalid_field_type",
-            format!("{mbase}/{field}"),
-            format!("panel member {} must not be null when present", q(field)),
-        );
-    }
-    get(member, field)
-}
-
-/// A member's source name (if valid) and effective keys, or `None` for a member
-/// that is neither a source name nor an object.
-fn member_keys<'a>(
-    member: &'a Value,
-    mbase: &str,
-    defaults: &Keys<'a>,
-    issues: &mut Issues,
-) -> Option<(Option<&'a str>, Keys<'a>)> {
-    let map = match member {
-        Value::String(source) => return Some((Some(source), defaults.clone())),
-        Value::Object(map) => map,
-        _ => {
-            issues.error(
+        let mbase = format!("{base}/members/{mi}");
+        match member.as_str() {
+            Some(source) => check_member_source(source, &mbase, base, state, issues),
+            None => issues.error(
                 "invalid_field_type",
-                mbase.to_owned(),
-                "panel member must be a string (source name) or an object".into(),
-            );
-            return None;
-        }
-    };
-    check_unexpected_keys(map, &PANEL_MEMBER_KEYS, mbase, "panel member", issues);
-    let source = required_string(map, "source", mbase, "panel member 'source'", issues);
-    let mut keys = defaults.clone();
-    if let Some(entity) = member_override(map, "entity_key", mbase, issues) {
-        keys.entity = Some(entity);
-        keys.entity_path = format!("{mbase}/entity_key");
-        keys.entity_ok = check_entity_key(entity, &keys.entity_path, issues);
-    }
-    if let Some(time) = member_override(map, "time_key", mbase, issues) {
-        keys.time = Some(time);
-        keys.time_path = format!("{mbase}/time_key");
-        keys.time_kind = check_time_key(time, &keys.time_path, issues);
-        keys.time_overridden = true;
-    }
-    Some((source, keys))
-}
-
-/// The panel-wide key rules: a member's composite time key of the panel's composite
-/// kind, composites gathered for the ordering rule, literal time keys unique.
-///
-/// An absent effective key is no structural error: it is inherited from the
-/// variant's panel template, which needs the catalog.
-fn collect_keys<'a>(keys: &Keys<'a>, mbase: &str, scope: &mut PanelScope<'a>, issues: &mut Issues) {
-    let panel_kind = scope.defaults.time_kind;
-    let kind_mismatch = keys.time_overridden
-        && matches!((panel_kind, keys.time_kind), (Some(p), Some(m)) if p.composite() && m.composite() && p != m);
-    if kind_mismatch {
-        issues.error(
-            "time_key_member_kind_mismatch",
-            format!("{mbase}/time_key"),
-            format!(
-                "member composite time_key kind {} must match panel-level kind {}",
-                q(keys.time_kind.map_or("", TimeKind::as_str)),
-                q(panel_kind.map_or("", TimeKind::as_str))
+                mbase,
+                "panel member must be a string (source name)".into(),
             ),
-        );
-    }
-
-    if keys.entity_ok && keys.entity.is_some_and(Value::is_array) {
-        scope
-            .composite_entities
-            .push((keys.entity_path.clone(), Composite::Refs(refs(keys.entity))));
-    }
-    // A kind mismatch is already reported; comparing its refs with literals would
-    // repeat it as an ordering error.
-    if !kind_mismatch && keys.time_kind.is_some_and(TimeKind::composite) {
-        let composite = match keys.time.and_then(literal_key) {
-            Some(LiteralKey::Composite(items))
-                if keys.time_kind == Some(TimeKind::LiteralComposite) =>
-            {
-                Composite::Literals(items)
-            }
-            _ => Composite::Refs(refs(keys.time)),
-        };
-        scope
-            .composite_times
-            .push((keys.time_path.clone(), composite));
-    }
-
-    if let (Some(TimeKind::LiteralScalar | TimeKind::LiteralComposite), Some(key)) =
-        (keys.time_kind, keys.time.and_then(literal_key))
-    {
-        match scope.literal_times.iter().find(|(k, _)| *k == key) {
-            Some((_, first)) => issues.error(
-                "literal_time_key_duplicate",
-                keys.time_path.clone(),
-                format!("literal time_key duplicates the one at {first}"),
-            ),
-            None => scope.literal_times.push((key, keys.time_path.clone())),
         }
     }
 }
 
-/// The member's source: defined in `/sources`, in at most one panel, and holding
-/// the key columns.
+/// The member's source: defined in `/sources`, and in at most one panel.
 fn check_member_source<'a>(
     source: &'a str,
-    member: &Value,
     mbase: &str,
-    keys: &Keys<'_>,
     pbase: &str,
     state: &mut Panels<'a>,
     issues: &mut Issues,
@@ -1310,21 +871,17 @@ fn check_member_source<'a>(
     let Some(sources) = &state.sources else {
         return;
     };
-    let Some((_, columns)) = sources.iter().find(|(n, _)| *n == source) else {
+    if !sources.contains(&source) {
         issues.error(
             "panel_member_unknown_source",
-            if member.is_object() {
-                format!("{mbase}/source")
-            } else {
-                mbase.to_owned()
-            },
+            mbase.to_owned(),
             format!(
                 "panel member references source {} which is not defined in /sources",
                 q(source)
             ),
         );
         return;
-    };
+    }
 
     // At most one panel per source; two members of one panel sharing a source is a
     // different condition.
@@ -1339,43 +896,5 @@ fn check_member_source<'a>(
             ),
         ),
         Some(_) => {}
-    }
-
-    // Skipped when a column's display name is a catalog default.
-    if !columns.complete {
-        return;
-    }
-    let time_refs = match keys.time_kind {
-        Some(TimeKind::RefScalar | TimeKind::RefComposite) => refs(keys.time),
-        _ => Vec::new(),
-    };
-    for (label, code, path, key_refs) in [
-        (
-            "entity_key",
-            "entity_key_unknown_column",
-            &keys.entity_path,
-            refs(keys.entity),
-        ),
-        (
-            "time_key",
-            "time_key_unknown_column",
-            &keys.time_path,
-            time_refs,
-        ),
-    ] {
-        for r in key_refs
-            .into_iter()
-            .filter(|r| !columns.display_names.contains(r))
-        {
-            issues.error(
-                code,
-                path.clone(),
-                format!(
-                    "{label} {} does not match any display_name on source {}",
-                    q(r),
-                    q(source)
-                ),
-            );
-        }
     }
 }

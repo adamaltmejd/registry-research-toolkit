@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/0/table",
+      "message": "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got 'broken'"
+    }
+  ]
+}

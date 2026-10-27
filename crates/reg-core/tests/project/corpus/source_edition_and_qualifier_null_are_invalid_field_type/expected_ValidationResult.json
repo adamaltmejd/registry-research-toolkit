@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/edition",
+      "message": "source 'edition' must not be null when present"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/qualifier",
+      "message": "source 'qualifier' must not be null when present"
+    }
+  ]
+}

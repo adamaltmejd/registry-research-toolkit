@@ -9,12 +9,6 @@
     {
       "level": "error",
       "code": "missing_required_field",
-      "path": "/steward",
-      "message": "required top-level field 'steward' is missing"
-    },
-    {
-      "level": "error",
-      "code": "missing_required_field",
       "path": "/reg_meta_version",
       "message": "required top-level field 'reg_meta_version' is missing"
     },

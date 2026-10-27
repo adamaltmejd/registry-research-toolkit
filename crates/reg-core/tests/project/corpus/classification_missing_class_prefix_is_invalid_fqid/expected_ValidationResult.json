@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_fqid",
+      "path": "/sources/0/bindings/1/classification",
+      "message": "classification must be a 3-segment classification id class/<family>/<version>; got 'sun2020'"
+    }
+  ]
+}
