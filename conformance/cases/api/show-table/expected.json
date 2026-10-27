@@ -1,0 +1,71 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/kind": "table",
+      "/data/fqid": "demo/reg2/ind",
+      "/data/name": "Individer",
+      "/data/description": null,
+      "/data/register": "demo/reg2",
+      "/data/role": "data",
+      "/data/implicit": false,
+      "/data/timeless": false,
+      "/data/unit_type": null,
+      "/data/cadence": "year",
+      "/data/spans": [{"start": "2019-01-01", "end": "2021-01-01"}],
+      "/data/releases": [
+        {
+          "name": "Individer 2019",
+          "period": {"start": "2019-01-01", "end": "2020-01-01"},
+          "edition": "final",
+          "qualifier": "",
+          "primary": true,
+          "parse_state": "parsed",
+          "populations": []
+        },
+        {
+          "name": "Individer 2020",
+          "period": {"start": "2020-01-01", "end": "2021-01-01"},
+          "edition": "final",
+          "qualifier": "",
+          "primary": true,
+          "parse_state": "parsed",
+          "populations": []
+        },
+        {
+          "name": "Individer utkast",
+          "period": null,
+          "edition": "unstated",
+          "qualifier": "",
+          "primary": null,
+          "parse_state": "unparsed",
+          "populations": []
+        }
+      ],
+      "/data/row_keys": [
+        {
+          "fqid": "demo/reg2/lopnr",
+          "spelling": "Lopnr",
+          "period": {"start": "2019-01-01", "end": "2021-01-01"}
+        }
+      ]
+    },
+    "keys": {
+      "/data": [
+        "cadence",
+        "description",
+        "fqid",
+        "implicit",
+        "kind",
+        "name",
+        "register",
+        "releases",
+        "role",
+        "row_keys",
+        "spans",
+        "timeless",
+        "unit_type"
+      ]
+    }
+  }
+]

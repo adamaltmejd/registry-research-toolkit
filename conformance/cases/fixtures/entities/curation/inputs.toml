@@ -1,0 +1,14 @@
+# The entities fixture: two registers of one provider. reg2 has two named tables (ind:
+# yearly releases 2019 and 2020 and one unparsed release; hus: 2020), reg3 has no table
+# records, so its one table is implicit. Kon is a variable of both registers.
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demoleverantören"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

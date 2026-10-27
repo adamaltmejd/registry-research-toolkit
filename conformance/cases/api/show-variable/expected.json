@@ -2,30 +2,48 @@
   {
     "status": 200,
     "json": {
-      "/data": {
-        "kind": "variable",
-        "fqid": "scb/alpha/kon",
-        "name": "Kön",
-        "definition": "Legal sex",
-        "description": null,
-        "operational_definition": null,
-        "measurement_unit": null,
-        "is_sensitive": false,
-        "is_identifier": false,
-        "deprecated": false,
-        "source_register_text": null,
-        "same_as": ["scb/beta/kon"],
-        "group": "group/scb/alpha/person",
-        "tags": [{"slug": "core", "label": "Core", "rank": 2, "starred": false, "note": null}]
-      }
+      "/data/kind": "variable",
+      "/data/fqid": "demo/reg2/inkomstbrutto",
+      "/data/name": "Inkomst efter skatt",
+      "/data/definition": null,
+      "/data/register": "demo/reg2",
+      "/data/period": {"start": "2019-01-01", "end": "2021-01-01"},
+      "/data/unit_types": [],
+      "/data/texts": [
+        {
+          "period": {"start": "2019-01-01", "end": "2020-01-01"},
+          "label": "Inkomst före skatt",
+          "definition": null,
+          "operational_definition": null,
+          "unit": null
+        },
+        {
+          "period": {"start": "2020-01-01", "end": "2021-01-01"},
+          "label": "Inkomst efter skatt",
+          "definition": null,
+          "operational_definition": null,
+          "unit": null
+        }
+      ],
+      "/data/spellings": [
+        {"spelling": "inkomst", "kind": "delivered"},
+        {"spelling": "inkomstbrutto", "kind": "delivered"}
+      ],
+      "/data/tables": ["demo/reg2/ind"]
+    },
+    "keys": {
+      "/data": [
+        "definition",
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register",
+        "spellings",
+        "tables",
+        "texts",
+        "unit_types"
+      ]
     }
-  },
-  {
-    "status": 404,
-    "json": {"/error/code": "not_found", "/error/fields/ref": "scb/alpha/missing"}
-  },
-  {
-    "status": 200,
-    "json": {"/data/same_as": ["scb/alpha/kon"], "/data/group": null, "/data/tags": []}
   }
 ]
