@@ -904,7 +904,8 @@ fn timeseries(
     Ok(records)
 }
 
-/// An item's validity: inclusive ISO days, unstated where blank.
+/// An item's validity, unstated where blank: `ValidFrom` as exported, `ValidTo` an
+/// inclusive ISO day.
 type Validity = (Option<String>, Option<String>);
 
 /// An occurrence's rows: each one's population (an index into its release's) and CVID.
@@ -932,7 +933,7 @@ fn open<R: Read>(member: R, input: &str) -> Result<(::csv::Reader<R>, Columns<'_
     Ok((reader, Box::new(col)))
 }
 
-/// `ItemId` → its validity, inclusive ISO days, unstated where blank.
+/// `ItemId` → its validity, unstated where blank.
 fn valid_dates(
     archive: &mut zip::ZipArchive<std::fs::File>,
     name: &str,
@@ -957,11 +958,11 @@ fn valid_dates(
             number(&record[item]).ok_or_else(|| error(&input, format!("row={row}: ItemID")))?;
         let day = |c: usize| nonblank(&decode(&record[c]));
         let (lo, hi) = (day(from), day(to));
-        let valid = |d: &Option<String>| {
-            d.as_deref()
-                .is_none_or(|d| reg_core::iso_day_number(d).is_some())
-        };
-        if valid(&lo) && valid(&hi) {
+        // ValidFrom is never compared, so only ValidTo has to be an ISO day.
+        if hi
+            .as_deref()
+            .is_none_or(|d| reg_core::iso_day_number(d).is_some())
+        {
             dates.entry(id).or_insert_with(Vec::new).push((lo, hi));
         } else {
             unreadable += 1;
@@ -969,7 +970,7 @@ fn valid_dates(
     }
     if unreadable > 0 {
         out.warnings.push(format!(
-            "{input}: {unreadable} rows state a validity that is not an ISO day and are skipped; an item with no other row is undated"
+            "{input}: {unreadable} rows state a ValidTo that is not an ISO day and are skipped; an item with no other row is undated"
         ));
     }
     Ok(dates)
