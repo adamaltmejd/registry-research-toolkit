@@ -530,7 +530,9 @@ class Converter:
                     outcome = self.partition(entry, rows, at)
                     result["partition"] = outcome
                     if outcome == "No statement":
-                        raise ValueError("default identity already supplies partition")
+                        raise ValueError(
+                            "dry-run projection agrees; resolver identity not certified"
+                        )
                     if outcome == "set":
                         # D11 forbids merging simultaneous spellings. Group for picking.
                         fields = {
@@ -910,7 +912,7 @@ class Converter:
             "| --- | ---: | ---: | --- |",
         ]
         translations = {
-            "No statement": "drop: default identity",
+            "No statement": "skip: projected default identity (not resolver-certified)",
             "set variable": "set variable (case-only splits dropped)",
             "Merge": "set variable onto one ledger id",
             "set": "set sets (simultaneous columns stay distinct)",
