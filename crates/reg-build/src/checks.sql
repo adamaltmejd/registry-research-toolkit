@@ -75,11 +75,6 @@ WHERE o.status = 'unplaced' AND (r.id IS NULL OR r.parse_state <> 'unparsed');
 -- search rows and FTS rows agree (contentless index: compare counts)
 SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_docsize);
 
--- a code row names an existing value-set item with the same code
-SELECT s.id FROM search_item s LEFT JOIN vs_item i
-  ON i.valueset_id = s.valueset_id AND i.ord = s.ord
-WHERE s.kind = 'code' AND (i.valueset_id IS NULL OR i.code_text <> s.code_text);
-
 -- meta has its required keys
 SELECT column1 FROM (VALUES ('schema_version'),('generation_id'),('catalog_version'),
   ('builder_version'),('sqlite_version'),('open_start'),('open_end'),

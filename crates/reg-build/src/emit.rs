@@ -680,7 +680,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             register: &register_id,
             table: &table_id,
             variable: &variable_id,
-            valueset: &valueset_id,
         },
     )?;
     for (i, item) in search.iter().enumerate() {
@@ -690,11 +689,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(id(i)),
                 Cell::Str(item.kind.into()),
                 opt_int(item.entity_id),
-                opt_int(item.valueset_id),
-                item.code
-                    .as_ref()
-                    .map_or(Cell::Null, |c| Cell::Text(c.clone())),
-                opt_int(item.ord),
+                Cell::Null,
+                Cell::Null,
                 opt_int(item.register_id),
                 opt_int(item.span.map(|s| s.0)),
                 opt_int(item.span.map(|s| s.1)),

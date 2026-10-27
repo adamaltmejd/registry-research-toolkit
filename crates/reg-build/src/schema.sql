@@ -527,14 +527,12 @@ CREATE TABLE search_item (
   entity_id   INTEGER,                    -- NULL for 'code'
   valueset_id INTEGER REFERENCES valueset(id),  -- 'code' only
   code_text   INTEGER REFERENCES text(id),      -- 'code' only
-  ord         INTEGER,                    -- 'code' only: the item's vs_item.ord
   register_id INTEGER REFERENCES register(id),
   start       INTEGER,                    -- coverage hull, for the period filter
   end         INTEGER,
   sort_key    TEXT NOT NULL UNIQUE,
   CHECK ((kind = 'code') = (valueset_id IS NOT NULL)),
   CHECK ((kind = 'code') = (code_text IS NOT NULL)),
-  CHECK ((kind = 'code') = (ord IS NOT NULL)),
   CHECK ((kind = 'code') = (entity_id IS NULL))
 ) STRICT;
 

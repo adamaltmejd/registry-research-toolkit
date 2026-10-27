@@ -425,10 +425,10 @@ tracks the milestones. This section holds the design decisions that outlive the 
   runs it on the staged file before replacing the output, so conformance and the release
   skill call the same authority. A previous file of another schema major is not
   comparable.
-- **Schema addition M1.** `search_item.ord` (code rows only, the item's `vs_item.ord`)
-  lets the reader join a code hit to its item; the post-write checks verify the pair.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
+- Code search rows: one row per distinct (code, label) pair, deferred to a follow-up PR
+  (C-10 ruling, measured 1.48 GB at one row per item).
 - **Search keeps diacritics.** The new catalog's `search` index holds the text as
   written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
   `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
