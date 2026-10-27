@@ -1,0 +1,25 @@
+[
+  {
+    "status": 200,
+    "json": {"/data/kind": "table", "/data/fqid": "demo/reg2/hus"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "kon",
+      "/error/fields/candidates": [
+        {"fqid": "demo/reg2/kon", "kind": "variable", "name": "Kön"},
+        {"fqid": "demo/reg3/kon", "kind": "variable", "name": "Kön"}
+      ]
+    }
+  },
+  {
+    "status": 404,
+    "json": {"/error/code": "not_found", "/error/fields/ref": "demo/nope"}
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_ref", "/error/fields/ref": "demo/reg2/ind/x"}
+  }
+]

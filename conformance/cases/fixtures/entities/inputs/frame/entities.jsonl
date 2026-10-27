@@ -1,0 +1,18 @@
+{"kind":"register","provider":"demo","register":"reg2","name":"Andra registret","description":"Register med två tabeller."}
+{"kind":"register","provider":"demo","register":"reg3","name":"Tredje registret"}
+{"kind":"table","provider":"demo","register":"reg2","table":"ind","name":"Individer","cadence":"year"}
+{"kind":"table","provider":"demo","register":"reg2","table":"hus","name":"Hushåll","cadence":"year"}
+{"kind":"value_set","items":[{"code":"1","label":"Man"},{"code":"2","label":"Kvinna"}],"names":["kon"]}
+{"kind":"release","provider":"demo","register":"reg2","table":"ind","release":"i2019","name":"Individer 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"reg2","table":"ind","release":"i2020","name":"Individer 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"reg2","table":"ind","release":"iutkast","name":"Individer utkast","edition":"unstated"}
+{"kind":"release","provider":"demo","register":"reg2","table":"hus","release":"h2020","name":"Hushåll 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2019","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2020","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2019","column":"Kon","source_key":"kon","label":"Kön","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2020","column":"Kon","source_key":"kon","label":"Kön","valueset":"kon"}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2019","column":"Inkomst","source_key":"inkomst","label":"Inkomst före skatt"}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"ind","release":"i2020","column":"InkomstBrutto","source_key":"inkomst","label":"Inkomst efter skatt"}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"hus","release":"h2020","column":"Lopnr","source_key":"lopnr","label":"Löpnummer","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"reg2","table":"hus","release":"h2020","column":"Storlek","source_key":"storlek","label":"Storlek"}
+{"kind":"occurrence","provider":"demo","register":"reg3","table":"","column":"Kon","source_key":"kon","from":"2018-01-01","to":"2020-12-31","label":"Kön","valueset":"kon"}

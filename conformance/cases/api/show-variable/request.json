@@ -1,9 +1,7 @@
 {
-  "fixture": "show",
-  "kind": "catalog",
+  "note": "Fails if a variable's two definition runs collapse into one, its folded spellings stop listing both delivered spellings (Inkomst and InkomstBrutto, sorted), or its tables stop naming the table its segments sit in.",
+  "fixture": "entities",
   "requests": [
-    {"operation": "show", "path": "/api/catalog/scb/alpha/kon"},
-    {"operation": "show", "path": "/api/catalog/scb/alpha/missing"},
-    {"operation": "show", "path": "/api/catalog/scb/beta/kon"}
+    {"operation": "show", "path": "/api/catalog/demo/reg2/inkomstbrutto"}
   ]
 }

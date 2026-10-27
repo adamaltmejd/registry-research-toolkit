@@ -1,8 +1,8 @@
 {
-  "fixture": "show",
-  "kind": "catalog",
+  "note": "Fails if a register stops listing its named tables and variables (pid order, hulls, a variable named by its label), drops an unparsed release's literal name into `unplaced`, or a register without table records stops showing its one implicit table (implicit true, the register's own pid).",
+  "fixture": "entities",
   "requests": [
-    {"operation": "show", "path": "/api/catalog/scb/alpha"},
-    {"operation": "show", "path": "/api/catalog/Alpha"}
+    {"operation": "show", "path": "/api/catalog/demo/reg2"},
+    {"operation": "show", "path": "/api/catalog/demo/reg3"}
   ]
 }

@@ -34,18 +34,11 @@ operations = [
 cases = [
     # r-show
     "api/resolve-columns",
-    "api/show-classification",
-    "api/show-classification-groups",
-    "api/show-classification-variables",
-    "api/show-coverage",
-    "api/show-group-admission",
-    "api/show-groups",
     "api/show-provider",
-    "api/show-provider-coverage",
-    "api/show-provider-register-coverage",
+    "api/show-refs",
     "api/show-register",
     "api/show-root",
-    "api/show-undated-member-coverage",
+    "api/show-table",
     "api/show-variable",
     # r-schema
     "api/coverage-register",

@@ -1,7 +1,7 @@
 {
+  "note": "Fails if `show` without a ref stops answering the root, lists the wrong providers, or the root gains an fqid (the one kind without one).",
+  "fixture": "entities",
   "requests": [
-    {"operation": "show", "path": "/api/catalog"},
-    {"operation": "show", "path": "/api/catalog", "query": {"scope": "reference"}},
-    {"operation": "show", "path": "/api/catalog", "query": {"ref": "scb"}}
+    {"operation": "show", "path": "/api/catalog"}
   ]
 }
