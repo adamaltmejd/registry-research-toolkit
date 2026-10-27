@@ -642,19 +642,11 @@ def old_periods(wire: str):
     return intervals
 
 
-def table_names(old, new):
-    """Apply registers' implicit/sole-table correspondence without mutating views."""
-    old_tables = {
-        s["register_variant"]: (
-            ""
-            if s["register_variant"].endswith("/" + OLD_IMPLICIT)
-            else s["register_variant"].rsplit("/", 1)[1]
-        )
-        for s in old["sources"]
-    }
+def table_names(register: str, old: View, new: View):
+    """Correspond catalog tables, including omitted sources, without mutating views."""
+    old_tables = {f"{register}/{table or OLD_IMPLICIT}": table for table in old.tables}
     new_tables = {
-        s["table"]: ("" if s["table"].count("/") == 1 else s["table"].rsplit("/", 1)[1])
-        for s in new["sources"]
+        f"{register}/{table}" if table else register: table for table in new.tables
     }
     if set(old_tables.values()) == {""} and len(new_tables) == 1:
         new_tables = dict.fromkeys(new_tables, "")
@@ -1012,6 +1004,39 @@ def curation_evidence(db, register, tables):
             # Aliases inherit only their recorded family's transformation, not
             # arbitrary curation of another spelling of the same variable.
             item["family_spans"] = family
+    for variable, slug, column, lo, hi, evidence in db.execute(
+        "SELECT v.slug, t.slug, w.delivery_column_name, w.valid_from, w.valid_to, w.evidence_json"
+        " FROM data_warning w JOIN register r USING (register_id) JOIN provider p USING (provider_id)"
+        " JOIN variable v ON v.variable_id = w.variable_id"
+        " LEFT JOIN register_variant t ON t.register_variant_id = w.register_variant_id"
+        " WHERE p.slug || '/' || r.slug = ? AND w.code = 'unresolved_column_representation'",
+        (register,),
+    ):
+        evidence = json.loads(evidence)
+        acknowledged = evidence.get("acknowledged_by")
+        if (
+            "state" not in evidence.get("withheld_output", [])
+            or "column_name" not in evidence.get("fields", [])
+            or not isinstance(acknowledged, str)
+            or not acknowledged.startswith("curation/")
+        ):
+            continue
+        records.append(
+            {
+                "table": tables[f"{register}/{slug}"] if slug is not None else None,
+                "variable": f"{register}/{variable}",
+                "column": column.lower() if column is not None else None,
+                "spans": [
+                    period_days(
+                        {"start": lo, "end": old_token_bounds(hi)[1] if hi else None}
+                    )
+                ],
+                "tags": {
+                    f"data_warning:unresolved_column_representation; acknowledged by {acknowledged}"
+                },
+                "withheld": True,
+            }
+        )
     return records
 
 
@@ -1045,6 +1070,17 @@ def old_curation(row, curation, *, added=False, family_only=False, counterparts=
     }
     spans, reasons = [], set()
     for item in curation:
+        if item.get("withheld"):
+            if (
+                added
+                and not family_only
+                and item["variable"] == row[1]
+                and item["table"] in (None, row[0])
+                and item["column"] in (None, row[4].lower())
+            ):
+                spans.extend(item["spans"])
+                reasons.update(item["tags"])
+            continue
         if item["table"] != row[0]:
             continue
         same_column = item["column"] == row[4].lower()
@@ -1160,6 +1196,7 @@ def classify_difference(
         and old[0] == new[0]
         and old[2:4] == new[2:4]
         and old[4].lower() == new[4].lower()
+        and alignment.get("supported", False)
     ):
         return result(
             "identity change",
@@ -1179,7 +1216,7 @@ def classify_difference(
         if curated:
             return result(
                 "old curation",
-                "The old catalog's representation/header curation explains the raw counterpart: "
+                "The old catalog's curation or acknowledged withholding explains the raw counterpart: "
                 + curated
                 + ".",
             )
@@ -1477,7 +1514,7 @@ def orders(args) -> int:
                         {"side": side, "table": table} for table in omitted
                     )
                     adjustments.extend({"side": side, **bound} for bound in bounds)
-                tables = table_names(*projects)
+                tables = table_names(reg, *(view[reg] for view in catalog_views))
                 results, blockers, row_sources, bodies = [], [], [], []
                 for i, (side, url) in enumerate(
                     zip(("old", "new"), (args.old_url, args.new_url), strict=True)
