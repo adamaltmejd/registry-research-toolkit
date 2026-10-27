@@ -321,11 +321,13 @@ The full SCB read is a heavy run.
 - the maintainer approves the switch release.
 
 **Outcome.** Exits 1 and 2 pass; exit 3, the maintainer's switch-release approval, is
-pending on this PR's approval sheet. The recorded full real-seed build at `5380260f`
-(after #1992 and #1993) took 108 s, peaked at 7.1 GB RSS and produced a 663 MB catalog;
-`reg-build verify` exited 0. Its `meta.generation` is
-`0967d0cb920fbfb43de5e5562c72a01d93acb5d0662d11b13aec4ee8c9624507`, identical to the
-build at `110134aa` (#1990): byte-identical output across reader-only changes.
+pending on [PR #1994’s approval
+sheet](https://github.com/adamaltmejd/registry-research-toolkit/pull/1994#approval-sheet).
+The recorded full real-seed build at `5380260f` (after #1992 and #1993) took 108 s,
+peaked at 7.1 GB RSS and produced a 663 MB catalog; `reg-build verify` exited 0. Its
+`meta.generation` is `0967d0cb920fbfb43de5e5562c72a01d93acb5d0662d11b13aec4ee8c9624507`,
+identical to the build at `110134aa` (#1990): byte-identical output across reader-only
+changes.
 
 - Exit 1: release-tier conformance using `gate.py release`'s flags against that real
   artifact passed, 4 of 4 (`-m release`). The synthetic suite in `g0 rust` passed at
