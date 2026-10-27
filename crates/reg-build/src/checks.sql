@@ -75,6 +75,10 @@ WHERE o.status = 'unplaced' AND (r.id IS NULL OR r.parse_state <> 'unparsed');
 -- search rows and FTS rows agree (contentless index: compare counts)
 SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_docsize);
 
+-- every code row's (code, label) pair occurs in vs_item (via vs_item_code)
+SELECT id FROM search_item s WHERE kind = 'code' AND NOT EXISTS (
+  SELECT 1 FROM vs_item v WHERE v.code_text = s.code_text AND v.label_text IS s.label_text);
+
 -- meta has its required keys
 SELECT column1 FROM (VALUES ('schema_version'),('generation_id'),('catalog_version'),
   ('builder_version'),('sqlite_version'),('open_start'),('open_end'),
