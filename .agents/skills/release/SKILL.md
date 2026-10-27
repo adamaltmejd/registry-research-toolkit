@@ -289,8 +289,8 @@ If one failed, fix the cause on main and upload by hand from the release commit:
 
 The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, call `show`
 with no `ref`: it must answer and its `meta.catalog_version` must equal the version
-passed in step 8a. Compare `meta.generation_id` with the build report too. Record what
-the checks exercised. SWECOV is untouched until E; do not deploy it.
+passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
+Record what the checks exercised. SWECOV is untouched until E; do not deploy it.
 
 ## The switch release
 
