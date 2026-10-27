@@ -10,7 +10,7 @@ dependencies = [
 [dependency-groups]
 dev = [
   "httpx2>=2.16.0",
-  "hypothesis>=6.170.9",
+  "hypothesis>=6.170.12",
   "jsonschema>=4.26.0",
   "maturin>=1.15.0",
   "pytest>=9.1.1",

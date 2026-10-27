@@ -96,9 +96,9 @@ def lint() -> None:
     # (bump both). Rust formatting is in `crates`.
     run("uv run ruff check")
     run("uv run ruff format --check")
-    run("uvx --from panache-cli==3.17.0 panache format --check .")
-    run("uvx --from panache-cli==3.17.0 panache lint .")
-    run("uvx --from ty==0.0.91 ty check")
+    run("uvx --from panache-cli==3.17.1 panache format --check .")
+    run("uvx --from panache-cli==3.17.1 panache lint .")
+    run("uvx --from ty==0.0.92 ty check")
     provider_vocabulary()
 
 
