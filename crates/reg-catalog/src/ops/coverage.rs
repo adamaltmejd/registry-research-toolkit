@@ -222,7 +222,7 @@ fn columns(
         .into_iter()
         .map(|(spelling, spans)| (merge(spans), spelling))
         .collect();
-    columns.sort();
+    columns.sort_by(|a, b| (a.0[0].0, &a.1).cmp(&(b.0[0].0, &b.1)));
     Ok(columns
         .into_iter()
         .map(|(spans, spelling)| CoverageColumn {

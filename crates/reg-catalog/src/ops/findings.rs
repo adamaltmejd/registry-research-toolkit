@@ -111,22 +111,7 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
         .get("table")
         .map(|t| refs::table(&conn, t))
         .transpose()?;
-    let day = |iso: &str| {
-        reg_core::iso_day_number(iso).ok_or_else(|| {
-            Error::new(
-                Code::InternalError,
-                format!("The period bound {iso:?} is not a day."),
-                vec![],
-            )
-        })
-    };
-    // The period as half-open day numbers: the last day is inclusive.
-    let window = super::period(params, "period")?
-        .map(|p| {
-            let (first, last) = p.iso_bounds();
-            Ok::<_, Error>((day(&first)?, day(&last)? + 1))
-        })
-        .transpose()?;
+    let window = super::days(params, "period")?;
     let code = params.get("code").copied();
 
     let items = conn

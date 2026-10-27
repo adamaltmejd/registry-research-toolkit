@@ -9,7 +9,7 @@ use utoipa::ToSchema;
 
 use super::shape::{self, Release, ValueSetRef};
 use super::{
-    Cache, Operation, Param, Params, Period, Server, Type, component, cursor, flag, limit, period,
+    Cache, Operation, Param, Params, Period, Server, Type, component, cursor, days, flag, limit,
     refs,
 };
 use crate::{Code, Error};
@@ -202,12 +202,10 @@ fn narrowing(
         filter.push("s.table_id = ?".to_owned());
         args.push(Sql::Integer(id));
     }
-    if let Some(requested) = period(params, "period")? {
-        let (first, last) = requested.iso_bounds();
-        let day = |iso: &str| reg_core::iso_day_number(iso).expect("a period bound is a date");
+    if let Some((first, end)) = days(params, "period")? {
         filter.push("s.start < ? AND ? < s.end".to_owned());
-        args.push(Sql::Integer(day(&last) + 1));
-        args.push(Sql::Integer(day(&first)));
+        args.push(Sql::Integer(end));
+        args.push(Sql::Integer(first));
     }
     if let Some(&name) = params.get("value_set_name") {
         filter.push(
