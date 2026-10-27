@@ -327,7 +327,7 @@ struct Index<'a> {
     names: BTreeMap<(&'a str, String), Vec<usize>>,
     tables: BTreeMap<(usize, &'a str), usize>,
     releases: BTreeMap<(usize, &'a str, &'a str), usize>,
-    variables: BTreeMap<(usize, &'a str), Vec<usize>>,
+    variables: BTreeMap<(usize, &'a str), BTreeSet<usize>>,
 }
 
 impl<'a> Index<'a> {
@@ -360,12 +360,14 @@ impl<'a> Index<'a> {
                     .releases
                     .insert((ri, rel.table.as_str(), rel.release.as_str()), x);
             }
-            for (v, variable) in r.variables.iter().enumerate() {
-                index
-                    .variables
-                    .entry((ri, variable.source_key.as_str()))
-                    .or_default()
-                    .push(v);
+            for occurrence in &r.occurrences {
+                if let Some(variable) = occurrence.variable {
+                    index
+                        .variables
+                        .entry((ri, occurrence.occurrence.source_key.as_str()))
+                        .or_default()
+                        .insert(variable);
+                }
             }
         }
         index
