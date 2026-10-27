@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use reg_core::Interval;
 use reg_frame::address::{Address, Comparison, GuardField};
 use reg_frame::statement::{AssertFact, Statement};
-use reg_frame::{Locator, OPEN_END, OPEN_START, Record, ValueSet};
+use reg_frame::{Locator, OPEN_END, OPEN_START, Occurrence, Record, ValueSet};
 use serde_json::{Value, json};
 
 use super::{Premise, periods, stated_fields};
@@ -126,6 +126,38 @@ fn span(value: &Value, records: &[Record]) -> Interval {
             .unwrap_or(OPEN_END)
             .into(),
     )
+}
+
+fn matches_occurrence(
+    fields: &BTreeMap<String, Value>,
+    locators: &[Locator],
+    row: &Occurrence,
+    value: &Value,
+    records: &[Record],
+) -> bool {
+    fields.get("kind").and_then(Value::as_str) == Some("occurrence")
+        && (locators.contains(&row.locator) || row.also.iter().any(|at| locators.contains(at)))
+        && [
+            ("provider", "provider"),
+            ("register", "register"),
+            ("table", "table"),
+            ("release", "release"),
+            ("key", "source_key"),
+            ("spelling", "column"),
+            ("label", "label"),
+            ("type", "dtype"),
+            ("unit", "unit"),
+        ]
+        .iter()
+        .all(|(field, raw)| {
+            fields
+                .get(*field)
+                .is_none_or(|expected| expected == &value[*raw])
+        })
+        && fields.get("period").is_none_or(|expected| {
+            // An unplaced release has no period; its handle supplies the coordinate.
+            expected.is_null() || expected == &json!(span(value, records))
+        })
 }
 
 fn change(
@@ -274,24 +306,13 @@ pub fn apply(
                 };
                 let value = tree(&Record::Occurrence(row.clone()));
                 let selected = premise.subjects.iter().any(|p| {
-                    (p.locator == row.locator || row.also.contains(&p.locator))
-                        && [
-                            ("provider", "provider"),
-                            ("register", "register"),
-                            ("table", "table"),
-                            ("release", "release"),
-                            ("key", "source_key"),
-                            ("spelling", "column"),
-                            ("label", "label"),
-                            ("type", "dtype"),
-                            ("unit", "unit"),
-                        ]
-                        .iter()
-                        .all(|(field, raw)| {
-                            p.fields
-                                .get(*field)
-                                .is_none_or(|expected| expected == &value[*raw])
-                        })
+                    matches_occurrence(
+                        &p.fields,
+                        std::slice::from_ref(&p.locator),
+                        row,
+                        &value,
+                        records,
+                    )
                 });
                 if !selected {
                     continue;
@@ -774,22 +795,7 @@ fn attach_valueset(
             .iter()
             .filter(|m| {
                 let source = &view[m.source];
-                source.text("kind") == Some("occurrence")
-                    && [
-                        ("provider", "provider"),
-                        ("register", "register"),
-                        ("table", "table"),
-                        ("release", "release"),
-                        ("key", "source_key"),
-                        ("spelling", "column"),
-                        ("label", "label"),
-                        ("type", "dtype"),
-                        ("unit", "unit"),
-                    ]
-                    .iter()
-                    .all(|(field, raw)| source.fields.get(*field) == Some(&value[*raw]))
-                    && (source.locators.contains(&o.locator)
-                        || o.also.iter().any(|l| source.locators.contains(l)))
+                matches_occurrence(&source.fields, &source.locators, o, &value, &out.records)
             })
             .collect::<Vec<_>>();
         if matches.is_empty() {
