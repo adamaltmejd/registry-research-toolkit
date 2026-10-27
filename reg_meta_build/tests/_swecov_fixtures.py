@@ -148,7 +148,6 @@ def base_catalog() -> Path:
     """The synthetic global base every flavored DB overlays (read-only, cached)."""
     return cached_reader_artifact(
         BASE_FIXTURE,
-        "catalog",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
 
@@ -349,7 +348,6 @@ def write_global_db(
     return build_reader_artifact(
         directory / "db",
         source,
-        "catalog",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
 

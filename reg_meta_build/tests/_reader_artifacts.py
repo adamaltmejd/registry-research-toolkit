@@ -1,11 +1,11 @@
-"""Readable source contracts through the old builder's catalog writer and holdings
-compiler. The old builder's test support, until milestone F deletes it; the
-conformance harness builds with `reg-build` (`conformance/reader_artifacts.py`)."""
+"""Readable sources through the old builder's catalog writer, until milestone F.
+
+The conformance harness builds with `reg-build` (`conformance/reader_artifacts.py`).
+"""
 
 from __future__ import annotations
 
 import functools
-import hashlib
 import importlib.metadata
 import json
 import os
@@ -17,15 +17,9 @@ import time
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from reg_meta_build.artifact_identity import generation_id
 from reg_meta_build.data_warnings import DataWarning
 from reg_meta_build.db import open_db
-from reg_meta_build.derive import derive_holdings
-from reg_meta_build.doc_db import DOC_DB_FILENAME, build_doc_db, load_related_documents
-from reg_meta_build.holdings_accounting import INVENTORY_ROLE_PATH
-from reg_meta_build.holdings_compile import compile_holdings
 from reg_meta_build.materialize import write_resolved_catalog
-from reg_meta_build.pipeline import load_search_pins  # tests skip private _curation
 from reg_meta_build.resolved_catalog import (
     ResolvedClassification,
     ResolvedClassificationSuccession,
@@ -33,11 +27,7 @@ from reg_meta_build.resolved_catalog import (
     ResolvedVariable,
 )
 from reg_meta_build.resolved_metadata import ResolvedMetadata
-from reg_meta_build.source_evidence import canonical_json, canonical_sha256
-from reg_meta_build.steward_spec import (
-    load_steward_spec,
-    steward_spec_sha256,
-)
+from reg_meta_build.source_evidence import canonical_sha256
 from reg_meta_build.validate import validate_built_db
 
 import reg_meta_build
@@ -55,7 +45,6 @@ if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
 CASES = Path(__file__).resolve().parents[2] / "conformance/cases"
-BUILDER_CASES = CASES.parents[1] / "reg_meta_build/tests/cases/holdings"
 FIXTURE_IMPORT_DATE = json.loads(
     (CASES / "reader/fixture/import_metadata.json").read_text()
 )["import_date"]
@@ -71,94 +60,9 @@ BUILD_PACKAGES = (Path(reg_meta_build.__file__).parent,)
 NATIVE_SOURCES = tuple(CASES.parents[1] / path for path in _NATIVE_SOURCES)
 
 
-def replicate_filler(case: Path, destination: Path) -> Path:
-    """Copy a reader case, expanding its `request.json` filler into copies.
-
-    `request.json` names one `filler` binding of the case's `catalog.json` and a
-    `copies` count; the filler is replaced by that many copies whose slug,
-    provider key and variants carry a `-N` suffix: a variable name is unique within
-    a variant (#1736), so each copy keeps the filler's name in a variant of its
-    own. An optional `held_table` `{id, edition}`
-    also holds every copy: one inventory column and census row per copy, with the
-    holdings policy re-pinned to the expanded census. Returns the expanded source
-    directory.
-    """
-    request = json.loads((case / "request.json").read_text())
-    shutil.copytree(case, destination)
-    catalog = json.loads((case / "catalog.json").read_text())
-    filler = next(
-        variable
-        for variable in catalog
-        if "/".join(
-            (
-                variable["register"]["provider"],
-                variable["register"]["slug"],
-                variable["slug"],
-            )
-        )
-        == request["filler"]
-    )
-    catalog.remove(filler)
-
-    def variant(state: dict, index: int) -> dict:
-        return {
-            "slug": f"{state['variant']['slug']}-{index}",
-            "name": f"{state['variant']['name']} {index}",
-        }
-
-    catalog.extend(
-        {
-            **filler,
-            "slug": f"{filler['slug']}-{index}",
-            "provider_key": f"{filler['provider_key']}-{index}",
-            "states": [
-                {**state, "variant": variant(state, index)}
-                for state in filler["states"]
-            ],
-        }
-        for index in range(request["copies"])
-    )
-    (destination / "catalog.json").write_text(json.dumps(catalog))
-    table = request.get("held_table")
-    if table is not None:
-        state = filler["states"][0]
-        provider, register = filler["register"]["provider"], filler["register"]["slug"]
-        mappings = "".join(
-            f'[[table.column]]\nname = "Copy{index}"\n[[table.column.mapping]]\n'
-            f'register_variant = "{provider}/{register}/{variant(state, index)["slug"]}"\n'
-            f'variable = "{provider}/{register}/{filler["slug"]}-{index}"\n'
-            f'representation = "{state["delivery_column_name"]}"\n'
-            for index in range(request["copies"])
-        )
-        with (destination / "inventory.toml").open("a") as inventory:
-            inventory.write(
-                f'\n[[table]]\nid = "{table["id"]}"\nedition = {table["edition"]}\n'
-                + mappings
-            )
-        census = destination / "census.csv"
-        with census.open("a") as rows:
-            rows.writelines(
-                f"Fixture,,{table['id']},Copy{index},\n"
-                for index in range(request["copies"])
-            )
-        digest = hashlib.sha256(census.read_bytes()).hexdigest()
-        (destination / "scope.toml").write_text(f'census_sha256 = "{digest}"\n')
-    return destination
-
-
 def fixture_source(fixture: str | Path) -> Path:
-    """The readable source directory a fixture name (or path) builds from:
-    `reader`, `reader/<case>` and `fixtures/<case>` under `cases`, any other name
-    under the builder's holdings cases."""
-    return (
-        fixture
-        if isinstance(fixture, Path)
-        else CASES / "reader/fixture"
-        if fixture == "reader"
-        else CASES / fixture
-        if fixture.startswith(("reader/", "fixtures/"))
-        else BUILDER_CASES / fixture
-    )
+    """A fixture path or a source directory under the conformance cases."""
+    return fixture if isinstance(fixture, Path) else CASES / fixture
 
 
 def fixture_cache_dir() -> Path:
@@ -238,29 +142,17 @@ def _live_build_inputs() -> str:
 
 def artifact_key(
     fixture: str | Path,
-    kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
-    search_pins: Path | None = None,
-    docs: Path | None = None,
     build_inputs: str | None = None,
 ) -> str:
-    """Cache key of one synthetic artifact: its sources, options and build inputs.
-
-    Every build also reads the shared `reader/fixture` identity and steward policy
-    fallbacks, so that directory is keyed alongside the named source, and a case's
-    `search_pins` file and `docs` source alongside both.
-    """
+    """Cache key of a synthetic catalog: sources, identity and build inputs."""
     return canonical_sha256(
         {
             "build_inputs": build_inputs or _live_build_inputs(),
             "source": tree_digest(fixture_source(fixture)),
             "defaults": tree_digest(CASES / "reader/fixture"),
-            "kind": kind,
             "identity_overrides": dict(identity_overrides or {}),
-            "search_pins": tree_digest(search_pins) if search_pins else None,
-            # Keyed only when present, so artifacts without docs keep their keys.
-            **({"docs": tree_digest(docs)} if docs else {}),
         }
     )
 
@@ -293,39 +185,26 @@ def generation_dir(build_inputs: str) -> Path:
 
 def cached_reader_artifact(
     fixture: str | Path,
-    kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
-    search_pins: Path | None = None,
-    docs: Path | None = None,
 ) -> Path:
     """Return the cached, read-only `reg_meta.db`, building it on first use.
 
-    `docs` names a readable docs source (`build_docs`); its `reg_meta_docs.db` is
-    built beside the catalog. A source whose `request.json` names a `filler` is
-    expanded first (`replicate_filler`). Entries are immutable: callers that mutate an
-    artifact use `build_reader_artifact`, which copies one. A miss builds into a
-    private staging directory and renames it into place, so concurrent builders of
-    the same key never expose a partial entry; the loser discards its copy.
+    Entries are immutable: callers that mutate an artifact use
+    `build_reader_artifact`, which copies one. A miss builds into a private staging
+    directory and renames it into place, so concurrent builders of the same key
+    never expose a partial entry; the loser discards its copy.
     """
     entry = _generation_dir() / artifact_key(
         fixture,
-        kind,
         identity_overrides=identity_overrides,
-        search_pins=search_pins,
-        docs=docs,
     )
     path = entry / "reg_meta.db"
     if path.exists():
         return path
     source = fixture_source(fixture)
-    with staged(entry) as staging, tempfile.TemporaryDirectory() as expanded:
-        request = source / "request.json"
-        if request.exists() and "filler" in json.loads(request.read_text()):
-            source = replicate_filler(source, Path(expanded) / "source")
-        _build_artifact(staging, source, kind, identity_overrides, search_pins)
-        if docs is not None:
-            build_docs(docs, staging).chmod(0o444)
+    with staged(entry) as staging:
+        _build_artifact(staging, source, identity_overrides)
         (staging / "reg_meta.db").chmod(0o444)
     return path
 
@@ -333,42 +212,21 @@ def cached_reader_artifact(
 def build_reader_artifact(
     directory: Path,
     fixture: str | Path,
-    kind: str,
     *,
     identity_overrides: Mapping[str, str] | None = None,
-    docs: Path | None = None,
 ) -> Path:
-    """Copy the cached artifact (and its docs database, with `docs`) into
-    `directory` as private, writable files."""
-    cached = cached_reader_artifact(
-        fixture, kind, identity_overrides=identity_overrides, docs=docs
-    )
+    """Copy the cached catalog into `directory` as a private, writable file."""
+    cached = cached_reader_artifact(fixture, identity_overrides=identity_overrides)
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / "reg_meta.db"
     shutil.copyfile(cached, path)
-    if docs is not None:
-        shutil.copyfile(cached.parent / DOC_DB_FILENAME, directory / DOC_DB_FILENAME)
     return path
-
-
-def build_docs(source: Path, directory: Path) -> Path:
-    """Build `directory/reg_meta_docs.db` from a readable docs source: markdown
-    under `markdown/<register>/`, `related_documents.toml` and its binaries under
-    `related/<register>/`."""
-    return build_doc_db(
-        source / "markdown",
-        directory,
-        related_documents=load_related_documents(source / "related_documents.toml"),
-        related_docs_dir=source / "related",
-    )
 
 
 def _build_artifact(
     directory: Path,
     source: Path,
-    kind: str,
     identity_overrides: Mapping[str, str] | None,
-    search_pins: Path | None = None,
 ) -> Path:
     identity = json.loads((CASES / "reader/fixture/identity.json").read_text())
     identity.update(identity_overrides or {})
@@ -428,67 +286,7 @@ def _build_artifact(
         classification_successions=successions,
         metadata=metadata,
         data_warnings=warnings,
-        search_pins=load_search_pins(search_pins),
     )
-    if kind == "steward":
-        base_digest = hashlib.file_digest(path.open("rb"), "sha256").hexdigest()
-        candidate = directory / "candidate"
-        spec_dir = directory / "steward-spec"
-        (candidate / "policy").mkdir(parents=True)
-        (candidate / "swecov").mkdir()
-        spec_dir.mkdir(parents=True)
-        for filename, target in (
-            ("inventory.toml", candidate / INVENTORY_ROLE_PATH),
-            ("scope.toml", spec_dir / "scope.toml"),
-        ):
-            item = source / filename
-            fallback = CASES / "reader/fixture" / filename
-            shutil.copyfile(item if item.exists() else fallback, target)
-        census = "swecov/SWECOV_variables_full_fixture.csv"
-        shutil.copyfile(source / "census.csv", candidate / census)
-        # Accounting reads only the census role; the storage export is not
-        # compiled, so a header-only export stands in.
-        storage_export = "swecov/derived/storage_types.csv"
-        (candidate / "swecov/derived").mkdir()
-        shutil.copyfile(
-            CASES / "reader/fixture/storage_types.csv", candidate / storage_export
-        )
-        (candidate / "manifest.json").write_text(
-            json.dumps(
-                {
-                    "roles": {
-                        "census": census,
-                        "storage_export": storage_export,
-                        "inventory": INVENTORY_ROLE_PATH,
-                    }
-                }
-            )
-        )
-        with sqlite3.connect(path) as conn:
-            compiled = compile_holdings(
-                conn, candidate, steward="swecov", spec=load_steward_spec(spec_dir)
-            )
-            manifest = dict(conn.execute("SELECT key, value FROM import_manifest"))
-            manifest.update(
-                catalog_artifact_kind="steward",
-                steward="swecov",
-                base_db_sha256=base_digest,
-                base_generation_id=manifest["generation_id"],
-                holdings_input_commit="e" * 40,
-                holdings_manifest_sha256="f" * 64,
-                steward_spec_sha256=steward_spec_sha256(spec_dir),
-                holdings_accounting_sha256=compiled.accounting.sha256,
-                holdings_accounting_counts=canonical_json(compiled.accounting.counts),
-            )
-            manifest["generation_id"] = generation_id(manifest)
-            conn.executemany(
-                "INSERT OR REPLACE INTO import_manifest VALUES (?, ?)",
-                sorted(manifest.items()),
-            )
-            # As extend-db does once the manifest names the steward.
-            derive_holdings(conn)
-        shutil.rmtree(candidate)
-        shutil.rmtree(spec_dir)
     validation = validate_built_db(path)
     assert validation.passed, validation.format_report()
     open_db(path).close()

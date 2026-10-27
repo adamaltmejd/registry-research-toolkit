@@ -466,7 +466,6 @@ def independent_flavored_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     base_db = build_reader_artifact(
         tmp_path / "base",
         "reader/classification-editions",
-        "catalog",
         identity_overrides={"import_date": FIXTURE_IMPORT_DATE},
     )
     extend_db(
