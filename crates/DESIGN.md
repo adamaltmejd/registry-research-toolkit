@@ -398,6 +398,15 @@ tracks the milestones. This section holds the design decisions that outlive the 
   variable id equals a table id of its register (two cases: today's catalog kept the
   namespaces apart), the table keeps it.
 
+**Decisions taken in milestone C.**
+
+- **Verification.** `reg-build verify FILE [--previous FILE]` is the single artifact
+  check: integrity, the schema's post-write queries, each value set's items hashing to
+  its address, and with `--previous` the id rules against the previous release. `emit`
+  runs it on the staged file before replacing the output, so conformance and the release
+  skill call the same authority. A previous file of another schema major is not
+  comparable.
+
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and
 against random full-register orders, with every difference classified.
