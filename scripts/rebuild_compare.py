@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """rebuild_compare — what users see in the old catalog and the rebuilt one, per register.
 
-    uv run --no-project scripts/rebuild_compare.py <old db> <new db> <report.json> [provider...]
+    uv run --no-project scripts/rebuild_compare.py registers <old db> <new db> <report.json> [provider...]
+    uv run --no-project scripts/rebuild_compare.py orders --old-url URL --new-url URL \
+        --old-db OLD_DB --new-db NEW_DB --out DIR [--seed 0] [--n 20] [--provider P ...]
 
 Temporary (REBUILD.md, milestone A; deleted at F). `<old db>` is a released
 `reg_meta.db`, `<new db>` a `reg-build` catalog and `<report.json>` its build report.
@@ -17,13 +19,21 @@ catalog has one named table compares those two as one.
 
 from __future__ import annotations
 
+import argparse
+import calendar
 import json
+import random
+import re
 import sqlite3
 import sys
 from collections import Counter, defaultdict
+from contextlib import closing
 from dataclasses import dataclass, field
 from datetime import date, timedelta
+from itertools import zip_longest
 from pathlib import Path
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 
 EXAMPLES = 8
 # The old catalog's name for a register's one unnamed table, the new implicit table.
@@ -314,8 +324,13 @@ def counts(db: sqlite3.Connection, providers: set[str]) -> None:
     print("| total | " + " | ".join(totals) + " |")
 
 
-def main() -> int:
-    old_path, new_path, report_path, *wanted = sys.argv[1:]
+def registers(args) -> int:
+    old_path, new_path, report_path, wanted = (
+        args.old_db,
+        args.new_db,
+        args.report_json,
+        args.providers,
+    )
     old_db, new_db = sqlite3.connect(old_path), sqlite3.connect(new_path)
     report = json.loads(Path(report_path).read_text(encoding="utf-8"))["registers"]
     providers = set(wanted) or {
@@ -350,6 +365,505 @@ def main() -> int:
         if len(found) > EXAMPLES:
             print(f"- … {len(found) - EXAMPLES} more")
     return 0
+
+
+def request_json(url: str, project=None, destination: Path | None = None):
+    # HTTP accepts the project itself; the {project: ...} wrapper belongs to MCP.
+    payload = None if project is None else json.dumps(project).encode()
+    request = Request(url, data=payload, headers={"Content-Type": "application/json"})
+    try:
+        response = urlopen(request, timeout=120)
+    except HTTPError as error:
+        response = error
+    with response:
+        raw, status = response.read(), response.code
+    body = json.loads(raw)
+    if destination is not None:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(raw)
+    if "data" not in body and "error" not in body:
+        raise ValueError(f"{url}: HTTP {status} is not an API result")
+    if project is None and (status != 200 or "error" in body):
+        raise ValueError(f"{url}: context failed: HTTP {status}, {body}")
+    return status, body
+
+
+def write_json(path: Path, value) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
+
+
+def binding_type(dtype: str | None, identifier, coded) -> str:
+    # Project types describe output semantics, not the catalog's storage dtype.
+    if identifier:
+        return "id"
+    if coded:
+        return "categorical"
+    token = re.split(r"[ (]", (dtype or "").lower())[0]
+    if token in {
+        "tinyint",
+        "smallint",
+        "int",
+        "integer",
+        "bigint",
+        "hugeint",
+        "decimal",
+        "numeric",
+        "real",
+        "float",
+        "double",
+        "money",
+        "smallmoney",
+        "bit",
+        "heltal",
+        "decimaltal",
+        "numerisk",
+    }:
+        return "numeric"
+    if token in {"datetime", "datetime2", "timestamp", "smalldatetime"}:
+        return "datetime"
+    if token in {"date", "datum"}:
+        return "date"
+    if token in {"identifierare", "uniqueidentifier"}:
+        return "id"
+    return "opaque"
+
+
+def iso_day(day: int) -> str:
+    return (date(1970, 1, 1) + timedelta(days=day)).isoformat()
+
+
+def project_period(lo: str, hi: str, source: str, adjustments: list):
+    # Project grammar has finite bounds even when catalog coverage is open.
+    period = {"from": max(lo, "1900-01-01"), "to": min(hi, "2099-12-31")}
+    if period != {"from": lo, "to": hi}:
+        adjustments.append(
+            {"source": source, "catalog": {"from": lo, "to": hi}, "requested": period}
+        )
+    return period
+
+
+def new_project(db, register: str, version: str, adjustments: list):
+    sources = []
+    for tid, pid, timeless, lo, hi in db.execute(
+        "SELECT t.id, t.pid, t.timeless, min(s.start), max(s.end) FROM tbl t"
+        " JOIN register r ON r.id = t.register_id"
+        " LEFT JOIN tbl_span s ON s.table_id = t.id WHERE r.pid = ?"
+        " GROUP BY t.id ORDER BY t.pid",
+        (register,),
+    ):
+        bindings = {}
+        for var, dtype, identifier, coded in db.execute(
+            "SELECT v.pid, s.dtype, s.identifier, s.coded FROM segment s"
+            " JOIN variable v ON v.id = s.variable_id WHERE s.table_id = ?"
+            " ORDER BY v.pid, s.start",
+            (tid,),
+        ):
+            bindings.setdefault(
+                var,
+                {
+                    "variable": var,
+                    "type": binding_type(dtype, identifier, coded == "yes"),
+                },
+            )
+        # A table with no spans uses its stated hull; a refusal stays evidence.
+        if lo is None:
+            lo, hi = db.execute(
+                "SELECT start, end FROM tbl WHERE id = ?", (tid,)
+            ).fetchone()
+        sources.append(
+            {
+                "name": f"source-{len(sources)}",
+                "table": pid,
+                "period": "_default"
+                if timeless
+                else project_period(iso_day(lo), iso_day(hi - 1), pid, adjustments),
+                "bindings": list(bindings.values()),
+            }
+        )
+    return {
+        "schema_version": "5.0.0",
+        "reg_meta_version": version,
+        "name": "compare-" + register.replace("/", "-"),
+        "sources": sources,
+    }
+
+
+def old_project(db, register: str, version: str, adjustments: list):
+    sources = []
+    for tid, slug in db.execute(
+        "SELECT t.register_variant_id, t.slug FROM register_variant t"
+        " JOIN register r USING (register_id) JOIN provider p USING (provider_id)"
+        " WHERE p.slug || '/' || r.slug = ? ORDER BY t.slug",
+        (register,),
+    ):
+        states = list(
+            db.execute(
+                "SELECT v.slug, s.delivery_column_name, s.data_type, v.is_identifier,"
+                " s.value_set_id, s.valid_from, s.valid_to FROM variable_state s"
+                " JOIN variable v USING (variable_id) WHERE s.register_variant_id = ?"
+                " ORDER BY v.slug, s.valid_from, s.delivery_column_name",
+                (tid,),
+            )
+        )
+        bindings = {}
+        for var, spelling, dtype, identifier, vs, _, _ in states:
+            bindings.setdefault(
+                (var, spelling),
+                {
+                    "variable": f"{register}/{var}",
+                    "representation": spelling,
+                    "type": binding_type(dtype, identifier, vs is not None),
+                },
+            )
+        dated = [(lo, hi) for *_, lo, hi in states if lo is not None]
+        sources.append(
+            {
+                "name": f"source-{len(sources)}",
+                "register_variant": f"{register}/{slug}",
+                "period": project_period(
+                    min(lo for lo, _ in dated),
+                    max(hi for _, hi in dated),
+                    f"{register}/{slug}",
+                    adjustments,
+                )
+                if dated
+                else "_default",
+                "bindings": list(bindings.values()),
+            }
+        )
+    return {
+        "schema_version": "4.0.0",
+        "steward": "global",
+        "reg_meta_version": version,
+        "name": "compare-" + register.replace("/", "-"),
+        "sources": sources,
+    }
+
+
+def old_token_bounds(token: str) -> tuple[str, str | None]:
+    """Old inclusive period token to half-open ISO days (interval.rs::render)."""
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", token):
+        end = (
+            None
+            if token == "9999-12-31"
+            else (date.fromisoformat(token) + timedelta(days=1)).isoformat()
+        )
+        return token, end
+    if token[:2] in {"HT", "VT", "LA"}:
+        y = int(token[2:])
+        if token.startswith("VT"):
+            return f"{y:04}-01-01", f"{y:04}-07-01"
+        if token.startswith("HT"):
+            return f"{y:04}-07-01", f"{y + 1:04}-01-01"
+        return f"{y:04}-07-01", f"{y + 1:04}-07-01"
+    match = re.fullmatch(r"(\d{4})(?:-(\d{2}|Q[1-4]|H[12]))?", token)
+    if not match:
+        raise ValueError(f"unrecognised old manifest period token: {token!r}")
+    y, part = int(match[1]), match[2]
+    month, width = 1, 12
+    if part:
+        width = 3 if part.startswith("Q") else 6 if part.startswith("H") else 1
+        month = (int(part[1:]) - 1) * width + 1 if part[0] in "QH" else int(part)
+    # Validate month/year without constructing year 10000 for the open sentinel.
+    calendar.monthrange(y, month)
+    end_y, end_m = y + (month - 1 + width) // 12, (month - 1 + width) % 12 + 1
+    return f"{y:04}-{month:02}-01", (
+        None if end_y == 10000 else f"{end_y:04}-{end_m:02}-01"
+    )
+
+
+def old_periods(wire: str):
+    if wire == "_default":
+        return [(None, None)]
+    intervals = []
+    for piece in wire.split(","):
+        endpoints = piece.strip().split("..")
+        lo = old_token_bounds(endpoints[0])[0]
+        hi = old_token_bounds(endpoints[-1])[1]
+        intervals.append((None if lo == "0001-01-01" else lo, hi))
+    return intervals
+
+
+def table_names(old, new):
+    """Apply registers' implicit/sole-table correspondence without mutating views."""
+    old_tables = {
+        s["register_variant"]: (
+            ""
+            if s["register_variant"].endswith("/" + OLD_IMPLICIT)
+            else s["register_variant"].rsplit("/", 1)[1]
+        )
+        for s in old["sources"]
+    }
+    new_tables = {
+        s["table"]: ("" if s["table"].count("/") == 1 else s["table"].rsplit("/", 1)[1])
+        for s in new["sources"]
+    }
+    if set(old_tables.values()) == {""} and len(new_tables) == 1:
+        new_tables = dict.fromkeys(new_tables, "")
+    return old_tables, new_tables
+
+
+def order_rows(body, tables, old: bool):
+    rows = defaultdict(set)
+    for entry in body.get("data", {}).get("entries", []):
+        if old:
+            logical = entry["logical"]
+            tid = "/".join(logical[k] for k in ("provider", "register", "variant"))
+            variable = logical["variable"]
+            spelling = entry["physical"]["column"]
+            periods = old_periods(entry["requested_period"])
+        else:
+            tid, variable, spelling = (
+                entry["table"],
+                entry["variable"],
+                entry["spelling"],
+            )
+            periods = [(entry["period"]["start"], entry["period"]["end"])]
+        # A succession may return a table not named by a source.
+        table = tables.get(
+            tid, "" if tid.endswith("/" + OLD_IMPLICIT) else tid.rsplit("/", 1)[1]
+        )
+        for lo, hi in periods:
+            rows[(table, variable, lo, hi, spelling)].add(entry["source"])
+    return dict(rows)
+
+
+def blocking_issues(body, project):
+    error = body.get("error", {})
+    fields = error.get("fields", {})
+    issues = fields.get("findings", fields.get("issues", []))
+    blocked = defaultdict(list)
+    for issue in issues:
+        if issue.get("level", "error") != "error":
+            continue
+        source = issue.get("source")
+        path = issue.get("path", "").split("/")
+        if (
+            source is None
+            and len(path) > 2
+            and path[1] == "sources"
+            and path[2].isdigit()
+        ):
+            source = project["sources"][int(path[2])]["name"]
+        blocked[source].append(issue)
+    if error and not blocked:
+        blocked[None].append(error)
+    return dict(blocked)
+
+
+def row_value(row):
+    if row is None:
+        return None
+    table, variable, start, end, spelling = row
+    return {
+        "table": table,
+        "variable": variable,
+        "period": {"start": start, "end": end},
+        "spelling": spelling,
+    }
+
+
+def row_differences(old, new):
+    # Cancel exact rows first, then pair remaining rows by table/variable in period
+    # order. Pairing is presentation only: all unmatched values remain in evidence.
+    groups = defaultdict(lambda: [[], []])
+    for side, rows in enumerate((old - new, new - old)):
+        for row in sorted(rows, key=lambda r: tuple(v or "" for v in r)):
+            groups[row[:2]][side].append(row)
+    for key in sorted(groups):
+        yield from zip_longest(*groups[key])
+
+
+def orders(args) -> int:
+    with (
+        closing(
+            sqlite3.connect(args.old_db.resolve().as_uri() + "?mode=ro", uri=True)
+        ) as old_db,
+        closing(
+            sqlite3.connect(args.new_db.resolve().as_uri() + "?mode=ro", uri=True)
+        ) as new_db,
+    ):
+        candidates = [
+            pid
+            for (pid,) in new_db.execute("SELECT pid FROM register ORDER BY pid")
+            if not args.provider or pid.split("/")[0] in args.provider
+        ]
+        if not 0 < args.n <= len(candidates):
+            raise ValueError(f"--n must be between 1 and {len(candidates)}")
+        sampled = random.Random(args.seed).sample(candidates, args.n)
+        old_registers = {
+            pid
+            for (pid,) in old_db.execute(
+                "SELECT p.slug || '/' || r.slug FROM register r JOIN provider p USING (provider_id)"
+            )
+        }
+        contexts = [
+            request_json(url.rstrip("/") + "/api/context")[1]
+            for url in (args.old_url, args.new_url)
+        ]
+        args.out.mkdir(parents=True, exist_ok=False)
+        summary = ["# Orders comparison", "", f"Seed: {args.seed}; n: {args.n}.", ""]
+        for side, context in zip(("old", "new"), contexts, strict=True):
+            summary.append(
+                f"- {side}: reg-meta {context['data']['reg_meta_version']}; "
+                f"catalog {context['data'].get('catalog_version', 'not exposed')}; "
+                f"meta.generation `{context['meta']['generation']}`"
+            )
+        summary += [
+            "",
+            "Periods are half-open ISO days; null endpoints are open/timeless.",
+            "Rows are distinct (table, variable, period, spelling); equal rows cancel first.",
+            "Differing counts pair unmatched rows by table/variable in period order.",
+            "A blocked order has no partial entries; refusal records are separate from row differences.",
+            "Dated requests intersect catalog hulls with the project grammar's 1900–2099 range; adjustments are listed below.",
+            "",
+            "| register | rows old | rows new | equal | differing | blocked old | blocked new | result |",
+            "|---|---:|---:|---:|---:|---:|---:|---|",
+        ]
+        adjustments = []
+        with (args.out / "diff.jsonl").open("w") as output:
+
+            def emit(record):
+                output.write(
+                    json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n"
+                )
+
+            for reg in sampled:
+                if reg not in old_registers:
+                    emit(
+                        {
+                            "register": reg,
+                            "kind": "register_only",
+                            "old": None,
+                            "new": reg,
+                        }
+                    )
+                    summary.append(f"| {reg} | 0 | 0 | 0 | 0 | 0 | 0 | only in new |")
+                    continue
+                projects = []
+                for side, build, db, context in zip(
+                    ("old", "new"),
+                    (old_project, new_project),
+                    (old_db, new_db),
+                    contexts,
+                    strict=True,
+                ):
+                    bounds = []
+                    projects.append(
+                        build(db, reg, context["data"]["reg_meta_version"], bounds)
+                    )
+                    adjustments.extend({"side": side, **bound} for bound in bounds)
+                tables = table_names(*projects)
+                results, blockers, rows, row_sources = [], [], [], []
+                for i, (side, url) in enumerate(
+                    zip(("old", "new"), (args.old_url, args.new_url), strict=True)
+                ):
+                    write_json(
+                        args.out / "projects" / reg / f"{side}.json", projects[i]
+                    )
+                    status, body = request_json(
+                        url.rstrip("/") + "/api/project/order",
+                        projects[i],
+                        args.out / "responses" / reg / f"{side}.json",
+                    )
+                    results.append(
+                        {
+                            "status": status,
+                            "error_code": body.get("error", {}).get("code"),
+                        }
+                    )
+                    blockers.append(blocking_issues(body, projects[i]))
+                    row_sources.append(order_rows(body, tables[i], old=i == 0))
+                    rows.append(set(row_sources[-1]))
+                evidence = {
+                    "register": reg,
+                    "results": dict(zip(("old", "new"), results, strict=True)),
+                    "blocking_issues": dict(zip(("old", "new"), blockers, strict=True)),
+                }
+                if any(r["error_code"] for r in results):
+                    emit(evidence | {"kind": "refusal"})
+                differences = list(row_differences(*rows))
+                for old, new in differences:
+                    table = (old or new)[0]
+                    source_issues = {}
+                    for i, side in enumerate(("old", "new")):
+                        # A refused side has no entries; locate its corresponding
+                        # source by table. Successful successions name their source.
+                        sources = {
+                            s["name"]
+                            for s in projects[i]["sources"]
+                            if tables[i][s["register_variant" if i == 0 else "table"]]
+                            == table
+                        }
+                        sources |= row_sources[i].get((old, new)[i], set())
+                        source_issues[side] = {
+                            source: issues
+                            for source, issues in blockers[i].items()
+                            if source is None or source in sources
+                        }
+                    emit(
+                        evidence
+                        | {
+                            "kind": "row",
+                            "old": row_value(old),
+                            "new": row_value(new),
+                            "blocking_issues": source_issues,
+                        }
+                    )
+                blocked_counts = [
+                    len(p["sources"]) if None in b else len(b)
+                    for p, b in zip(projects, blockers, strict=True)
+                ]
+                summary.append(
+                    f"| {reg} | {len(rows[0])} | {len(rows[1])} | {len(rows[0] & rows[1])} | "
+                    f"{len(differences)} | {blocked_counts[0]} | {blocked_counts[1]} | "
+                    + "; ".join(
+                        f"{side}: {r['status']} {r['error_code'] or 'ok'}"
+                        for side, r in zip(("old", "new"), results, strict=True)
+                    )
+                    + " |"
+                )
+        summary += ["", "## Request bound adjustments", ""]
+        summary.extend(
+            f"- {a['side']} `{a['source']}`: {a['catalog']} → {a['requested']}"
+            for a in adjustments
+        )
+        if not adjustments:
+            summary.append("None.")
+        write_json(args.out / "request-bounds.json", adjustments)
+        (args.out / "summary.md").write_text("\n".join(summary) + "\n")
+    print((args.out / "summary.md").read_text(), end="")
+    return 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    reg = commands.add_parser(
+        "registers", help="compare catalog metadata (Markdown on stdout)"
+    )
+    reg.add_argument("old_db")
+    reg.add_argument("new_db")
+    reg.add_argument("report_json")
+    reg.add_argument("providers", nargs="*")
+    reg.set_defaults(run=registers)
+    order = commands.add_parser("orders", help="compare sampled full-register orders")
+    for side in ("old", "new"):
+        order.add_argument(f"--{side}-url", required=True)
+        order.add_argument(f"--{side}-db", required=True, type=Path)
+    order.add_argument("--seed", type=int, default=0)
+    order.add_argument("--n", type=int, default=20)
+    order.add_argument("--provider", nargs="+", default=[])
+    order.add_argument(
+        "--out", type=Path, required=True, help="new directory for evidence"
+    )
+    order.set_defaults(run=orders)
+    args = parser.parse_args()
+    try:
+        return args.run(args)
+    except (OSError, ValueError, sqlite3.Error) as error:
+        parser.exit(1, f"{parser.prog}: {error}\n")
 
 
 if __name__ == "__main__":
