@@ -107,8 +107,9 @@ pub fn label_key(label: &str) -> String {
 }
 
 /// What two overlapping occurrences of one variable must agree on (crates/DESIGN.md
-/// "Time"): more than one distinct form over a day makes it ambiguous. The spelling is
-/// not part of it; the label compares by [`label_key`].
+/// "Segments hold whole occurrences"). Resolve exempts type-only disagreement under
+/// one source key and folded spelling. The spelling is not part of the form; the label
+/// compares by [`label_key`].
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Form {
     pub label: Option<String>,
