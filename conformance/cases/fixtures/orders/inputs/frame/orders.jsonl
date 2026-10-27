@@ -160,3 +160,8 @@
 {"kind":"occurrence","provider":"demo","register":"edt","table":"","release":"u2026b","column":"V","source_key":"k1","label":"Värde","dtype":"decimal"}
 {"kind":"occurrence","provider":"demo","register":"rep","table":"","release":"r2020","column":"Nyast","source_key":"k3","label":"Nyaste kod","dtype":"int"}
 {"kind":"link","relation":"continues","subject":{"kind":"variable","provider":"demo","register":"rep","key":"k3"},"object":{"kind":"variable","provider":"demo","register":"rep","key":"k2"}}
+{"kind":"register","provider":"demo","register":"len","name":"Längdregistret"}
+{"kind":"release","provider":"demo","register":"len","table":"","release":"l2019","name":"Len 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"len","table":"","release":"l2019h","name":"Len 2019H2","from":"2019-07-01","to":"2019-12-31","grain":"half","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":2}
+{"kind":"occurrence","provider":"demo","register":"len","table":"","release":"l2019h","column":"Kod","source_key":"k1","label":"Kod","dtype":"char","length":3}
