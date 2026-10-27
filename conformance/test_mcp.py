@@ -50,8 +50,8 @@ EQUIVALENCE = {
     "diff": (),
     "coverage": (),
     # r-segments-values
-    "segments": (),
-    "values": (),
+    "segments": ("segments-fields", "segments-filters", "segments-errors"),
+    "values": ("values-blank-code", "values-pair", "values-tree", "values-errors"),
     # r-findings-graph
     "graph": (),
     # r-search

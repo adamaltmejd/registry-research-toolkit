@@ -29,5 +29,20 @@
   {
     "status": 422,
     "json": {"/error/code": "invalid_parameter", "/error/fields/parameter": "q"}
+  },
+  {
+    "status": 409,
+    "json": {
+      "/error/code": "ambiguous_ref",
+      "/error/fields/ref": "svar",
+      "/error/fields/candidates": [
+        {"fqid": "demo/sg/svar", "kind": "variable", "name": "Svar"},
+        {"fqid": "demo/sg2/svar", "kind": "variable", "name": "Svar"}
+      ]
+    }
+  },
+  {
+    "status": 422,
+    "json": {"/error/code": "invalid_cursor"}
   }
 ]
