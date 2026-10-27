@@ -41,14 +41,11 @@
 #
 # Leading flag (before the mode), works with every mode:
 #   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
-#                          resolved reg_meta DB: the catalog + docs pair the real
-#                          builder makes from conformance/cases/fixtures/webapp-dev,
-#                          looked up in the shared fixture cache
-#                          (conformance/fixture_cache.py, built on a miss) and exported
-#                          as REG_META_DB. With REG_WEBAPP_STEWARD set, the catalog is
-#                          the synthetic steward artifact (`reader steward`) instead.
-#                          For a container / checkout where no released DB is
-#                          reachable.
+#                          REG_META_DB you name: the reg_meta.db `reg-build` makes
+#                          from conformance/cases/fixtures/webapp-dev, looked up in the
+#                          shared fixture cache (conformance/fixture_cache.py, built on
+#                          a miss) and exported as REG_META_DB. Without the flag,
+#                          REG_META_DB (a directory holding reg_meta.db) is required.
 #
 # smoke/shot run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
@@ -298,20 +295,24 @@ trap 'exit 143' TERM
 # from the conformance fixture cache (shared across checkouts, built on a miss) and is
 # COPIED into a per-session temp dir after the trap: the cache prunes a generation
 # idle for 6 hours, and serving requests does not mark it used, so a long session
-# served straight from the cache would lose its catalog mid-run. The steward artifact
-# carries the same docs DB, so it is its own cache entry beside the gate's docs-less
-# `reader steward`.
+# served straight from the cache would lose its catalog mid-run.
 if [ -n "$fixture_db" ]; then
-	echo "dev: --fixture-db is frozen on rebuild-c until s-flows." >&2
-	exit 1
+	fixture_catalog=$(.venv/bin/python conformance/fixture_cache.py webapp-dev 2>/dev/null) || {
+		echo "dev: building the webapp-dev fixture failed — see 'conformance/fixture_cache.py webapp-dev'." >&2
+		exit 1
+	}
+	fixture_db_dir=$(mktemp -d "${TMPDIR:-/tmp}/reg-webapp-fixture.XXXXXX") || exit 1
+	cp "$fixture_catalog" "$fixture_db_dir/reg_meta.db" || exit 1
+	export REG_META_DB="$fixture_db_dir"
 fi
 
-# The Rust server needs its catalog directory explicitly: the fixture's, the
-# caller's REG_META_DB, or the directory reg_meta resolves by default (XDG).
-# REG_WEBAPP_STEWARD names the catalog.
-rust_db=${REG_META_DB:-$(.venv/bin/python -c 'import reg_meta_build.db; print(reg_meta_build.db.db_path_from_args(None).parent)')}
-target/debug/reg-meta serve --db "$rust_db" --catalog "${REG_WEBAPP_STEWARD:-global}" \
-	--stewards reg_webapp/stewards --port "$rust_port" &
+# The Rust server reads the directory holding reg_meta.db; there is no default.
+if [ -z "${REG_META_DB:-}" ]; then
+	echo "dev: set REG_META_DB to a directory holding reg_meta.db, or pass --fixture-db" >&2
+	exit 1
+fi
+rust_db=$REG_META_DB
+target/debug/reg-meta serve --db "$rust_db" --port "$rust_port" &
 pids+=($!)
 (
 	cd reg_webapp/frontend &&
