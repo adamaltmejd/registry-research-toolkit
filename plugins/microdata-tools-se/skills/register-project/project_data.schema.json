@@ -5,16 +5,11 @@
   "description": "The top-level `project_data.json` document.",
   "required": [
     "schema_version",
-    "steward",
     "reg_meta_version",
     "name",
     "sources"
   ],
   "properties": {
-    "extract_format": {
-      "$ref": "#/$defs/ProjectExtractFormat",
-      "description": "The file format every extracted file is written in; absent means `dta`."
-    },
     "name": {
       "type": "string"
     },
@@ -36,10 +31,6 @@
         "$ref": "#/$defs/ProjectSource"
       }
     },
-    "steward": {
-      "type": "string",
-      "description": "The deployment the project is ordered from: `global`, or a steward id. Any\nslug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it\nto the served artifact's steward."
-    },
     "window": {
       "$ref": "#/$defs/ProjectStudyWindow"
     }
@@ -54,6 +45,14 @@
         "type"
       ],
       "properties": {
+        "classification": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A classification version's public id `class/<family>/<version>`.",
+          "pattern": "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$"
+        },
         "date_format": {
           "type": [
             "string",
@@ -92,21 +91,8 @@
             }
           ]
         },
-        "representation": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
         "type": {
           "$ref": "#/$defs/ProjectColumnType"
-        },
-        "value_set": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "A classification FQID `class/<slug>`."
         },
         "variable": {
           "type": "string",
@@ -126,26 +112,12 @@
         "opaque"
       ]
     },
-    "ProjectEntityKey": {
-      "oneOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      ],
-      "description": "A panel's entity key: one column, or a composite."
-    },
-    "ProjectExtractFormat": {
+    "ProjectEdition": {
       "type": "string",
       "enum": [
-        "dta",
-        "parquet",
-        "csv"
+        "final",
+        "unstated",
+        "preliminary"
       ]
     },
     "ProjectIdSubtype": {
@@ -154,19 +126,6 @@
         "integer",
         "string"
       ]
-    },
-    "ProjectLiteralPeriod": {
-      "type": "object",
-      "description": "`{\"period\": int | string}`: a literal period, as opposed to a column ref.",
-      "required": [
-        "period"
-      ],
-      "properties": {
-        "period": {
-          "$ref": "#/$defs/ProjectPeriodValue"
-        }
-      },
-      "additionalProperties": false
     },
     "ProjectNumericSubtype": {
       "type": "string",
@@ -189,61 +148,15 @@
             "null"
           ]
         },
-        "entity_key": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ProjectEntityKey"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "members": {
           "type": "array",
           "items": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "$ref": "#/$defs/ProjectPanelMember"
-              }
-            ],
-            "description": "A panel member as written: a source name, or a member object."
-          }
+            "type": "string"
+          },
+          "description": "Source names."
         },
         "panel_id": {
           "type": "string"
-        },
-        "time_key": {
-          "oneOf": [
-            {
-              "$ref": "#/$defs/ProjectTimeKey"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      },
-      "additionalProperties": false
-    },
-    "ProjectPanelMember": {
-      "type": "object",
-      "description": "A panel member; the bare-string shorthand deserializes to `{\"source\": <name>}`.",
-      "required": [
-        "source"
-      ],
-      "properties": {
-        "entity_key": {
-          "$ref": "#/$defs/ProjectEntityKey"
-        },
-        "source": {
-          "type": "string"
-        },
-        "time_key": {
-          "$ref": "#/$defs/ProjectTimeKey"
         }
       },
       "additionalProperties": false
@@ -290,10 +203,10 @@
     },
     "ProjectSource": {
       "type": "object",
-      "description": "One logical extraction: a register variant, a requested period and its bindings.",
+      "description": "One logical extraction: a table, a requested period and its bindings.",
       "required": [
         "name",
-        "register_variant",
+        "table",
         "period",
         "bindings"
       ],
@@ -304,15 +217,23 @@
             "$ref": "#/$defs/ProjectBinding"
           }
         },
+        "edition": {
+          "$ref": "#/$defs/ProjectEdition",
+          "description": "The release of the table asked for; absent asks for the primary edition."
+        },
         "name": {
           "type": "string"
         },
         "period": {
           "$ref": "#/$defs/ProjectSourcePeriod"
         },
-        "register_variant": {
+        "qualifier": {
           "type": "string",
-          "description": "The 3-part coordinate `<provider>/<register>/<variant>`."
+          "description": "The delivery qualifier asked for; absent asks for every qualifier."
+        },
+        "table": {
+          "type": "string",
+          "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
         }
       },
       "additionalProperties": false
@@ -346,51 +267,6 @@
         "to": {
           "type": "integer",
           "format": "int64"
-        }
-      },
-      "additionalProperties": false
-    },
-    "ProjectTimeKey": {
-      "oneOf": [
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ProjectTimePoint"
-          }
-        },
-        {
-          "$ref": "#/$defs/ProjectTimePoint"
-        }
-      ],
-      "description": "A panel's time key: one time point, or a composite."
-    },
-    "ProjectTimePoint": {
-      "oneOf": [
-        {
-          "type": "integer",
-          "format": "int64"
-        },
-        {
-          "type": "string"
-        },
-        {
-          "$ref": "#/$defs/ProjectLiteralPeriod"
-        },
-        {
-          "$ref": "#/$defs/ProjectTimeRange"
-        }
-      ],
-      "description": "A literal year, a column ref, `{\"period\": ...}` or `{\"range\": {...}}`."
-    },
-    "ProjectTimeRange": {
-      "type": "object",
-      "description": "`{\"range\": {\"from\": ..., \"to\": ...}}`: a literal period range.",
-      "required": [
-        "range"
-      ],
-      "properties": {
-        "range": {
-          "$ref": "#/$defs/ProjectPeriodRange"
         }
       },
       "additionalProperties": false

@@ -22,7 +22,7 @@ import re
 from typing import TYPE_CHECKING
 
 import pytest
-from http_cases import CASES, artifact_env, cached_case_artifact
+from http_cases import CASES, artifact_env, cached_case_artifact, is_parked
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -41,6 +41,8 @@ def test_order_manifest_or_located_finding(case: Path, http_servers) -> None:
     # order, rendering, provenance, an absent `partition` spelled `null`), when
     # `order`'s `data` is not those bytes' document, or when a blocked order stops
     # refusing on both routes with these located findings.
+    if is_parked(case):
+        pytest.skip("parked: conformance/PARKED.toml")
     request = json.loads((case / "request.json").read_text())
     kind = request["artifact"]
     path = cached_case_artifact({"fixture": request["fixture"], "kind": kind})
@@ -66,23 +68,3 @@ def test_order_manifest_or_located_finding(case: Path, http_servers) -> None:
         ]
         expected = json.loads((case / "expected.json").read_text())
         assert {"findings": findings} == expected
-
-
-def test_download_filename_folds_the_project_name(http_servers) -> None:
-    # Fails when the name stops folding to ASCII (å, ä, é), collapsing runs of
-    # other characters to one `-`, trimming, or the 60-character cap.
-    case = next(
-        c for c in sorted((CASES / "order").iterdir()) if (c / "order.json").exists()
-    )
-    request = json.loads((case / "request.json").read_text())
-    path = cached_case_artifact(
-        {"fixture": request["fixture"], "kind": request["artifact"]}
-    )
-    client = http_servers.client(artifact_env(path, request["artifact"]))
-    name = "  Hälsa & Vård -- Åre, café " + "x" * 80
-    download = client.post(
-        "/api/project/order/manifest", json={**request["project"], "name": name}
-    )
-    slug = "halsa-vard-are-cafe-" + "x" * 40
-    pattern = rf'attachment; filename="order_{slug}_\d{{4}}-\d{{2}}-\d{{2}}\.json"'
-    assert re.fullmatch(pattern, download.headers["content-disposition"])

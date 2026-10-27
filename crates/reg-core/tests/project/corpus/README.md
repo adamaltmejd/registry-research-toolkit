@@ -27,11 +27,11 @@ Every subdirectory is a case. The directory name is the case ID, in lowercase sn
 
 ### `input.json`
 
-A `project_data.json` payload as authored by a researcher or steward (Model A:
-`register_variant` 3-part coordinate + `period`, `bindings` with 3-segment binding
-FQIDs, 2-segment `class/<slug>` value sets). Both well-formed and deliberately malformed
-inputs live here; the case ID says which. The validator reads any JSON value, so a
-payload need not deserialize into the project types.
+A `project_data.json` payload as authored by a researcher (5.0.0: `table` a 2- or 3-part
+public id + `period`, `bindings` with 3-segment binding FQIDs, 3-segment
+`class/<family>/<version>` classification pins). Both well-formed and deliberately
+malformed inputs live here; the case ID says which. The validator reads any JSON value,
+so a payload need not deserialize into the project types.
 
 A string `schema_version` is the current contract version
 (`reg_core::project::SCHEMA_VERSION`), so every input reads as a project the validate

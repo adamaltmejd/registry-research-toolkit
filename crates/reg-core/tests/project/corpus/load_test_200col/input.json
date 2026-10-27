@@ -1,12 +1,11 @@
 {
-  "schema_version": "4.0.0",
-  "steward": "global",
+  "schema_version": "5.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "load_test_200col",
   "sources": [
     {
       "name": "lisa_2015",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": 2015,
       "bindings": [
         {
@@ -19,31 +18,31 @@
           "variable": "scb/lisa/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/lisa/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/lisa/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/lisa/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/lisa/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/lisa/dispink04",
@@ -157,7 +156,7 @@
     },
     {
       "name": "lisa_2016",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": 2016,
       "bindings": [
         {
@@ -170,31 +169,31 @@
           "variable": "scb/lisa/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/lisa/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/lisa/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/lisa/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/lisa/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/lisa/dispink04",
@@ -308,7 +307,7 @@
     },
     {
       "name": "lisa_2017",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": 2017,
       "bindings": [
         {
@@ -321,31 +320,31 @@
           "variable": "scb/lisa/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/lisa/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/lisa/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/lisa/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/lisa/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/lisa/dispink04",
@@ -459,7 +458,7 @@
     },
     {
       "name": "lisa_2018",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": 2018,
       "bindings": [
         {
@@ -472,31 +471,31 @@
           "variable": "scb/lisa/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/lisa/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/lisa/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/lisa/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/lisa/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/lisa/dispink04",
@@ -610,7 +609,7 @@
     },
     {
       "name": "louise_2017",
-      "register_variant": "scb/louise/_default",
+      "table": "scb/louise/_default",
       "period": 2017,
       "bindings": [
         {
@@ -623,31 +622,31 @@
           "variable": "scb/louise/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/louise/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/louise/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/louise/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/louise/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/louise/dispink04",
@@ -761,7 +760,7 @@
     },
     {
       "name": "louise_2018",
-      "register_variant": "scb/louise/_default",
+      "table": "scb/louise/_default",
       "period": 2018,
       "bindings": [
         {
@@ -774,31 +773,31 @@
           "variable": "scb/louise/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/louise/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/louise/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/louise/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/louise/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/louise/dispink04",
@@ -912,7 +911,7 @@
     },
     {
       "name": "rtb_2018",
-      "register_variant": "scb/rtb/_default",
+      "table": "scb/rtb/_default",
       "period": 2018,
       "bindings": [
         {
@@ -925,31 +924,31 @@
           "variable": "scb/rtb/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/rtb/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/rtb/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/rtb/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/rtb/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/rtb/dispink04",
@@ -1063,7 +1062,7 @@
     },
     {
       "name": "rtb_2019",
-      "register_variant": "scb/rtb/_default",
+      "table": "scb/rtb/_default",
       "period": 2019,
       "bindings": [
         {
@@ -1076,31 +1075,31 @@
           "variable": "scb/rtb/kon",
           "type": "categorical",
           "display_name": "Kon",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         },
         {
           "variable": "scb/rtb/sun2000inr",
           "type": "categorical",
           "display_name": "Sun2000inr",
-          "value_set": "class/sun2000"
+          "classification": "class/sun/2000"
         },
         {
           "variable": "scb/rtb/ssyk2012",
           "type": "categorical",
           "display_name": "Ssyk2012",
-          "value_set": "class/ssyk2012"
+          "classification": "class/ssyk/2012"
         },
         {
           "variable": "scb/rtb/ast_sni2007",
           "type": "categorical",
           "display_name": "AstSni2007",
-          "value_set": "class/sni2007"
+          "classification": "class/sni/2007"
         },
         {
           "variable": "scb/rtb/kommun",
           "type": "categorical",
           "display_name": "Kommun",
-          "value_set": "class/kommun2020"
+          "classification": "class/kommun/2020"
         },
         {
           "variable": "scb/rtb/dispink04",
@@ -1216,24 +1215,11 @@
   "panels": [
     {
       "panel_id": "lisa_panel",
-      "entity_key": "Lopnr",
       "members": [
-        {
-          "source": "lisa_2015",
-          "time_key": 2015
-        },
-        {
-          "source": "lisa_2016",
-          "time_key": 2016
-        },
-        {
-          "source": "lisa_2017",
-          "time_key": 2017
-        },
-        {
-          "source": "lisa_2018",
-          "time_key": 2018
-        }
+        "lisa_2015",
+        "lisa_2016",
+        "lisa_2017",
+        "lisa_2018"
       ]
     }
   ]

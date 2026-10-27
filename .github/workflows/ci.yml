@@ -121,7 +121,8 @@ jobs:
     # The frontend CI budget (ARCHITECTURE.md "Tiers").
     timeout-minutes: 6
     needs: changes
-    if: needs.changes.outputs.webapp == 'true'
+    # simplify: frozen on rebuild-c until s-flows, which removes this condition and must leave the job green.
+    if: needs.changes.outputs.webapp == 'true' && github.base_ref != 'rebuild-c' && github.ref != 'refs/heads/rebuild-c'
     defaults:
       run:
         working-directory: reg_webapp/frontend

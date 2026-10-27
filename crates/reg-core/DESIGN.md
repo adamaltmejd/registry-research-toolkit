@@ -12,25 +12,22 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
 
 ## Scope
 
-- **The `project_data.json` shape.** `ProjectData`, `Source`, `Binding`, `Panel`,
-  `PanelMember`, the study `window` and the period and key types. A `Source` carries a
-  three-part `register_variant` coordinate (`provider/register/variant`) and a required
-  `period`; each binding names a three-segment binding FQID in `variable`. The optional
-  top-level `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as
-  an authoring default, and the semantic layer measures a source period against it;
-  absent means the full history.
-- **`Source.register_variant` reaches a family under a dated period** (#1840). The
-  coordinate names a variant; a dated period reaches every member of that variant's
-  succession family (the catalog's `variant_replaced_by` component, such as LISA's
-  `individer-16plus` → `individer-15plus`), and each day is ordered from the one member
-  that delivers it ([../DESIGN.md](../DESIGN.md), "Order manifest", step 1). A
-  `"_default"` period resolves the named variant exactly. The SPA writes the family head
-  (the member with no successor); any member is accepted, so a project still resolves
-  after a later edge is curated and the head moves. Concurrent variants are never a
-  family, so they stay separate sources. A family has no stable id of its own, since its
-  key moves when an edge is added, so the field keeps naming a variant. This crate knows
-  no catalog: the structural shape and rules do not change, only the meaning the
-  semantic layer and the order give it.
+- **The `project_data.json` shape.** `ProjectData`, `Source`, `Binding`, `Panel`, the
+  study `window` and the period types. A `Source` carries a `table` (a table's public
+  id, `provider/register` or `provider/register/table`) and a required `period`; each
+  binding names a three-segment binding FQID in `variable`. The optional top-level
+  `window: {"from": <year>, "to": <year>}` is the study period the SPA uses as an
+  authoring default, and the semantic layer measures a source period against it; absent
+  means the full history.
+- **`edition` and `qualifier`** are optional source fields, not suffixes of the period
+  grammar: `edition` (`final`, `unstated` or `preliminary`) selects, wherever a release
+  of that edition exists in the period, that release, and the primary edition serves
+  elsewhere; `qualifier` selects deliveries by their qualifier, and absent means every
+  qualifier. A preliminary release is orderable only by naming its edition. Both are
+  checked against the catalog by the order check, not here.
+- **A panel is a named grouping of sources** with a comment: its members are source
+  names. The keys a panel needs come from the catalog (a table's row-key segments), not
+  from the document.
 - **`Source.period`** is an int year, a period token, a `{"from", "to"}` range, or a
   finite list of those segments. A list is an interrupted series
   (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`, wire form
@@ -40,56 +37,41 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   sorted and non-overlapping. Adjacency is allowed: rejecting it would need calendar
   adjacency math for no safety gain. Sorted and disjoint keeps the wire form canonical
   and per-segment resolution deterministic. Bare `"_default"` is a separate
-  year-independent selection at a concrete variant, never a list or range member.
+  year-independent selection (a timeless table's period), never a list or range member.
 - **One period per source.** Every column of a source is ordered for the source period,
   and the order clips each column to the years it is delivered inside it. There is no
   per-column period (maintainer, 2026-10-23, #1838; it reverses #1462's
   `Binding.period`): a column first delivered in 2019 under a 2014–2020 source is
   ordered for 2019–2020 by that clip, and a researcher who wants fewer years narrows the
   source. Add a per-column period back only if researchers ask for one.
-- **`extract_format`** (optional, top level): `dta` (absent means this), `parquet` or
-  `csv`, the one format the steward's extract runner writes every file of the order in.
-  It is a project fact, not an order parameter: it is the researcher's choice of
-  analysis tool, saved with the project the SPA edits and re-uploads, covered by the
-  project hash the manifest echoes, and the order operation takes a project and nothing
-  else. A parameter on the order request would be a second input every client (SPA, MCP
-  `order`, a hand-posted JSON) must remember, and a downloaded manifest could no longer
-  be traced to the saved project that made it. It is provider-neutral and says nothing
-  about holdings, so it stays inside the logical contract below; the manifest resolves
-  absence to `dta`, so the runner has no default of its own. Stata is the default
-  because most SWECOV researchers use it, and CSV loses the SQL types (leading-zero
-  codes, dates, large ids) on read; one format per order, because writing several would
-  duplicate every extract on MONA for no reader.
-- **Composite keys.** `entity_key` and `time_key` arrays are in the schema from the
-  start; the validator enforces their ordering and homogeneity.
 - **The structural validator**: every rule checkable from the document alone.
 - **The validation result** (`{ok, issues}`), shared by the structural layer, the
   semantic layer and the SPA. Composition concatenates `issues`.
 
 ## Logical selection, not physical delivery
 
-`project_data.json` records research intent, not steward storage. A `Source` groups
-bindings by logical variant and requested period; `Source.name` is an internal handle
-for panels, never a filename or table. One logical source can resolve to many
-edition-specific physical tables, and one multi-period table can serve several requested
-periods, so a `table` or physical `edition` field on `Source` would conflate two grains.
-The order manifest joins the two worlds ([../DESIGN.md](../DESIGN.md), "Order
-manifest"); this contract stays independent of holdings.
+`project_data.json` records research intent, not storage. A `Source` groups bindings by
+the catalog's table and a requested period; `Source.name` is an internal handle for
+panels, never a filename. The catalog's tables are logical (the same table over many
+years and deliveries), so a `table` names the grain the researcher thinks in, and the
+order check joins it to what is delivered ([../DESIGN.md](../DESIGN.md), "The logical
+order"); this contract stays independent of holdings, and the document has no steward.
 
 Every source carries an explicit period. Dated selections use finite periods. Bare
-`"_default"` selects year-independent data and needs a concrete `register_variant` whose
-last segment is not `_default`; it is not a whole-history request. The SPA may offer the
-study window as a default, but each source persists its own concrete period: adding a
-source defaults to the full available intersection (disjoint segments included), and an
-empty intersection blocks the add rather than inventing a period. Editing the window
-later never rewrites existing sources; a source left disjoint keeps its period and the
-project becomes blocking. Divergence stays visible rather than hidden as inheritance. An
-empty project is a valid draft that cannot be ordered.
+`"_default"` selects a timeless table's data; whether the table is timeless is the
+catalog rule `period_default_on_dated_table`, not a structural one; it is not a
+whole-history request. The SPA may offer the study window as a default, but each source
+persists its own concrete period: adding a source defaults to the full available
+intersection (disjoint segments included), and an empty intersection blocks the add
+rather than inventing a period. Editing the window later never rewrites existing
+sources; a source left disjoint keeps its period and the project becomes blocking.
+Divergence stays visible rather than hidden as inheritance. An empty project is a valid
+draft that cannot be ordered.
 
 ## Closed project root
 
 `ProjectData` is a closed object (decided 2026-07-14). An unknown top-level key is
-`unexpected_field`, as on `Source`, `Binding`, `Panel` and panel members. There is no
+`unexpected_field`, as on `Source`, `Binding` and `Panel`. There is no
 steward-namespaced block and no placeholder `extensions` field. If a real consumer needs
 extension data, add one explicit `extensions` container with a defined owner and
 validation boundary then.
@@ -128,9 +110,8 @@ The crate splits a shape layer from a rule layer:
 
 - **Types** (`project.rs`) are pure shape. They keep each value's raw spelling (an int
   year stays an int, `"2018"` stays a string) and serialize every optional field, absent
-  as `null`, except `extract_format`, which is omitted when unset so a project without
-  it keeps its hash; that encoding is what the project hash covers. Structural rules are
-  not re-encoded as deserialization failures: that would turn the issue-accumulating
+  as `null`; that encoding is what the project hash covers. Structural rules are not
+  re-encoded as deserialization failures: that would turn the issue-accumulating
   contract into a fail-fast one, and every consumer needs the full list.
 - **The structural validator** (`structural.rs`) reads the raw JSON tree, not the types.
   A wrong enum value must surface as an accumulated `invalid_enum_value`, not a
@@ -143,11 +124,10 @@ after acceptance is validator/type drift, not user error. Enum values come from 
 list that defines their serde encoding, so the two cannot disagree.
 
 The optional `openapi` feature derives the types' input-shape schemas (`ProjectData` and
-`Project*`, the bare-string panel member included) and the result's `Validation`,
-`ValidationIssue` and `IssueLevel`. `reg-catalog` enables it and publishes them in
-`openapi.json`, where the SPA's TypeScript types are generated from them; the enum
-schemas come from the same wire list. A doc comment on one of these types is its schema
-description.
+`Project*`) and the result's `Validation`, `ValidationIssue` and `IssueLevel`.
+`reg-catalog` enables it and publishes them in `openapi.json`, where the SPA's
+TypeScript types are generated from them; the enum schemas come from the same wire list.
+A doc comment on one of these types is its schema description.
 
 `ok` is true when no issue is an error. Warnings and infos do not block, so `ok` is not
 a clean bill of health.
@@ -167,54 +147,29 @@ behavior. Semantic cases live with the semantic layer.
 Issue codes are stable: tests pin them, the SPA maps them to UI affordances, and new
 codes are additive.
 
-  | Code                                   | Rule                                                                                                                                                                                                                                                                                                                                             |
-  | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-  | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                                                       |
-  | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                                                          |
-  | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null, a non-string `representation`). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                |
-  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `extract_format` is outside its allowed set.                                                                                                                                                                                                                                                          |
-  | `invalid_slug`                         | `steward` is not a slug (`^[a-z](?:-?[a-z0-9])*$`, not `class`). Any slug is accepted; whether a deployment serves it is the semantic layer's and the order's `steward_mismatch`.                                                                                                                                                                |
-  | `unexpected_field`                     | An unknown key on a closed object, whatever its value.                                                                                                                                                                                                                                                                                           |
-  | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `value_set` is not `class/<slug>`, or a `register_variant` is not `<provider>/<register>/<variant>`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                                                          |
-  | `fqid_register_variant_mismatch`       | A binding's provider and register differ from its source's `register_variant`. The variant lives once, on the source.                                                                                                                                                                                                                            |
-  | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"` at a usable concrete variant, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
-  | `invalid_window`                       | The study window's `to` is before its `from`.                                                                                                                                                                                                                                                                                                    |
-  | `subtype_on_wrong_type`                | A subtype or format field is set on a binding whose `type` does not own it.                                                                                                                                                                                                                                                                      |
-  | `empty_bindings`                       | A source has no bindings.                                                                                                                                                                                                                                                                                                                        |
-  | `duplicate_source_name`                | Two sources share a `name`.                                                                                                                                                                                                                                                                                                                      |
-  | `display_name_collision`               | Two bindings of one source share an explicit `display_name`.                                                                                                                                                                                                                                                                                     |
-  | `duplicate_panel_id`                   | Two panels share a `panel_id`.                                                                                                                                                                                                                                                                                                                   |
-  | `empty_members`                        | A panel has no members.                                                                                                                                                                                                                                                                                                                          |
-  | `literal_period_invalid`               | A literal `time_key` (`{"period": ...}` or `{"range": {"from", "to"}}`) is malformed.                                                                                                                                                                                                                                                            |
-  | `composite_time_key_mixed_kinds`       | A composite `time_key` mixes column refs and literals on one member.                                                                                                                                                                                                                                                                             |
-  | `composite_key_inconsistent`           | Composite `entity_key` or `time_key` tuples are not identically ordered across a panel's members.                                                                                                                                                                                                                                                |
-  | `time_key_member_kind_mismatch`        | A member's composite `time_key` override has a different kind (literal or ref) than the panel's.                                                                                                                                                                                                                                                 |
-  | `literal_time_key_duplicate`           | Two members of one panel have the same literal `time_key`.                                                                                                                                                                                                                                                                                       |
-  | `entity_key_unknown_column`            | An `entity_key` ref matches no `display_name` on the member's source.                                                                                                                                                                                                                                                                            |
-  | `time_key_unknown_column`              | The same, for `time_key` refs.                                                                                                                                                                                                                                                                                                                   |
-  | `source_referenced_by_multiple_panels` | One source appears in two panels.                                                                                                                                                                                                                                                                                                                |
-  | `panel_member_unknown_source`          | A panel member's `source` names no source.                                                                                                                                                                                                                                                                                                       |
+  | Code                                   | Rule                                                                                                                                                                                                                                                                                                                |
+  | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `invalid_root`                         | The root is not an object.                                                                                                                                                                                                                                                                                          |
+  | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                             |
+  | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null, a non-string `qualifier`, a `null` `edition`). An int is a JSON integer that fits `i64`.                                                                                                                                                    |
+  | `invalid_enum_value`                   | `type`, `id_subtype`, `numeric_subtype` or `edition` is outside its allowed set.                                                                                                                                                                                                                                    |
+  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `extract_format`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.0.0).                                                                                                                                |
+  | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `classification` is not `class/<family>/<version>`, or a `table` is not `<provider>/<register>[/<table>]`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                       |
+  | `fqid_table_mismatch`                  | A binding's provider and register differ from its source's `table`. The table lives once, on the source.                                                                                                                                                                                                            |
+  | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"`, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
+  | `invalid_window`                       | The study window's `to` is before its `from`.                                                                                                                                                                                                                                                                       |
+  | `subtype_on_wrong_type`                | A subtype or format field is set on a binding whose `type` does not own it.                                                                                                                                                                                                                                         |
+  | `empty_bindings`                       | A source has no bindings.                                                                                                                                                                                                                                                                                           |
+  | `duplicate_source_name`                | Two sources share a `name`.                                                                                                                                                                                                                                                                                         |
+  | `display_name_collision`               | Two bindings of one source share an explicit `display_name`.                                                                                                                                                                                                                                                        |
+  | `duplicate_panel_id`                   | Two panels share a `panel_id`.                                                                                                                                                                                                                                                                                      |
+  | `empty_members`                        | A panel has no members.                                                                                                                                                                                                                                                                                             |
+  | `source_referenced_by_multiple_panels` | One source appears in two panels.                                                                                                                                                                                                                                                                                   |
+  | `panel_member_unknown_source`          | A panel member's `source` names no source.                                                                                                                                                                                                                                                                          |
 
-The key-ref checks are lenient on purpose: when any binding of a source lacks an
-explicit `display_name`, that source's refs are not matched, because a default name from
-the catalog may satisfy them later and a draft must stay valid while authoring.
-
-**Effective-key presence is not structural.** An omitted `entity_key` or `time_key`
-inherits from the variant's panel template, which needs the catalog, so "no effective
-key" can only be checked once inheritance is materialized. That check is deferred to the
-MONA rebuild. The structural layer never materializes defaults; it only checks shapes.
-
-**Codes other layers emit.** The semantic layer adds `fqid_unresolved`,
-`value_set_missing`, `period_outside_state_validity`,
-`source_period_narrower_than_available`, `binding_state_drifts_within_period`,
-`binding_value_set_version_ambiguous`, `binding_representation_unknown`,
-`deprecated_traversal`, `variable_replaced`, `variable_sensitive`,
-`fqid_outside_steward_catalog` and `representation_outside_steward_catalog`, plus three
-order codes under their own names, `steward_mismatch` (at `/steward`: a document of
-another steward would validate against the wrong holdings), `representation_unresolved`
-and `period_not_orderable` ([../DESIGN.md](../DESIGN.md), "Project semantic
-validation"). The version decision adds `unsupported_schema_version`. All belong to the
-same stable registry.
+**Codes other layers emit.** The order check adds the catalog rules of project document
+5.0.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
+`unsupported_schema_version`. All belong to the same stable registry.
 
 ## One grammar
 

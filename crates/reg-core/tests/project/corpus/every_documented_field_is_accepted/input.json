@@ -1,14 +1,15 @@
 {
-  "schema_version": "4.0.0",
-  "steward": "global",
+  "schema_version": "5.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
-  "window": {"from": 2018, "to": 2019},
-  "extract_format": "parquet",
+  "window": {
+    "from": 2018,
+    "to": 2019
+  },
   "sources": [
     {
       "name": "lisa_2018",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": 2018,
       "bindings": [
         {
@@ -39,20 +40,19 @@
           "variable": "scb/lisa/ssyk",
           "type": "categorical",
           "display_name": "Ssyk4",
-          "value_set": "class/ssyk2012",
-          "representation": "Ssyk4_2012_J16"
+          "classification": "class/ssyk/2012"
         }
-      ]
+      ],
+      "edition": "preliminary",
+      "qualifier": "rev2"
     }
   ],
   "panels": [
     {
       "panel_id": "lisa",
-      "entity_key": "LopNr_PersonNr",
-      "time_key": "AR",
       "comment": "every panel and member field",
       "members": [
-        {"source": "lisa_2018", "entity_key": "LopNr_PersonNr", "time_key": 2018}
+        "lisa_2018"
       ]
     }
   ]

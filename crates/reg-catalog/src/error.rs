@@ -59,6 +59,10 @@ codes! {
         "Fix the listed issues; validate reports them.";
     NotFound "not_found" "not_found" 404 0 ["ref"]
         "Search for the entity and use its FQID.";
+    RetiredRef "retired_ref" "not_found" 404 0 ["ref", "kind", "retired_in", "reason"]
+        "The id was retired and is not redirected; search for the entity that holds its data now.";
+    TableIsRegister "table_is_register" "usage" 422 0 ["ref", "tables"]
+        "Pass one of the listed table ids.";
     DocsUnavailable "docs_unavailable" "not_found" 404 0 []
         "This catalog has no documentation index.";
     AmbiguousRef "ambiguous_ref" "conflict" 409 0 ["ref", "candidates"]

@@ -20,6 +20,7 @@ from urllib.parse import unquote
 import pytest
 from http_cases import (
     CASES,
+    PARKED,
     ServerPool,
     artifact_env,
     cached_case_artifact,
@@ -95,6 +96,19 @@ OPERATIONS = {
 }
 
 
+# A tool none of whose operations is served per the contract is left out of the
+# `tools/list` comparison, whichever side lists it.
+SERVED_TOOLS = {
+    op["tool"]
+    for name, op in OPERATIONS.items()
+    if "tool" in op and name not in PARKED["operations"]
+}
+
+
+def unparked(tools):
+    return [tool for tool in tools if tool["name"] in SERVED_TOOLS]
+
+
 def rpc(client, method, params):
     """One JSON-RPC request on `/mcp`; returns the HTTP response."""
     return client.post(
@@ -128,7 +142,9 @@ def path_arguments(op, path):
     return None
 
 
-@pytest.mark.parametrize("operation", EQUIVALENCE)
+@pytest.mark.parametrize(
+    "operation", [name for name in EQUIVALENCE if name not in PARKED["operations"]]
+)
 def test_tool_matches_http(http_servers, operation):
     # Fails when a tool call's document drifts from the HTTP body (envelope, meta,
     # error fields, argument conversion, a POST body as an object argument, the
@@ -231,13 +247,13 @@ def test_tools_list_matches_golden(http_servers):
         for item in client.get("/openapi.json").json()["paths"].values()
         for operation in item.values()
     }
-    tools = rpc(client, "tools/list", {}).json()["result"]["tools"]
-    assert tools == TOOLS
+    tools = unparked(rpc(client, "tools/list", {}).json()["result"]["tools"])
+    assert tools == unparked(TOOLS)
     assert sorted(tool["name"] for tool in tools) == sorted(
         {
             op["tool"]
             for name, op in OPERATIONS.items()
-            if name in served and "tool" in op
+            if name in served and name not in PARKED["operations"] and "tool" in op
         }
     )
 
@@ -358,6 +374,6 @@ def test_stdio_session(request, http_servers):
         assert process.wait(timeout=10) == 0
     initialize, tools, result = (reply["result"] for reply in replies)
     assert initialize["serverInfo"]["name"] == "reg-meta"
-    assert tools["tools"] == TOOLS
+    assert unparked(tools["tools"]) == unparked(TOOLS)
     assert result["isError"] is False
     assert result["structuredContent"] == expected.json()

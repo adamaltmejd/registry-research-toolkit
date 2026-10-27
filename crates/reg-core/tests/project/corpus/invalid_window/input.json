@@ -1,14 +1,19 @@
 {
-  "schema_version": "4.0.0",
-  "steward": "global",
+  "schema_version": "5.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "study_window_reversed",
-  "window": {"from": 2020, "to": 2010},
+  "window": {
+    "from": 2020,
+    "to": 2010
+  },
   "sources": [
     {
       "name": "par_events",
-      "register_variant": "scb/par/_default",
-      "period": {"from": "2018-01-01", "to": "2020-06-30"},
+      "table": "scb/par/_default",
+      "period": {
+        "from": "2018-01-01",
+        "to": "2020-06-30"
+      },
       "bindings": [
         {
           "variable": "scb/par/lopnr",

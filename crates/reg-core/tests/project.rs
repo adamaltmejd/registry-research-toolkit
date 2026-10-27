@@ -1,8 +1,7 @@
 //! The project types, the structural validator and the project hash against data
 //! oracles: the structural corpus ([`CORPUS`]), the project bodies of
-//! `conformance/cases/{api,order}/`, and the hashes the retired Python reader wrote.
-//! The manifest encoding is pinned by `conformance/test_order.py` (the server's
-//! download against each committed `order.json`).
+//! `conformance/cases/{api,order}/` (4.0.0 bodies there are refused, so they do not
+//! count), and the hashes of accepted corpus projects, computed outside this crate.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -117,9 +116,10 @@ fn name(case: &Path) -> &str {
 
 /// Every project keyed in `tests/project/hashes.json` (file and JSON pointer) is still
 /// accepted, deserializes into [`ProjectData`] and hashes to its recorded value: the
-/// retired Python reader's `reg_meta.order._project_hash` for the entries it wrote.
+/// canonical form built by hand from the field tables of the contract
+/// (sorted keys, absent optionals as `null`, `panels` as `[]`, sha256 of the compact JSON).
 /// Fails when the types drop, add or rename a field, stop writing absent optionals as
-/// `null` or expanding panel-member shorthand, or the canonical encoding changes; and
+/// `null`, or the canonical encoding changes; and
 /// when a keyed project is no longer accepted. A new accepted project needs no entry:
 /// its only source would be the `project_hash` under test.
 #[test]

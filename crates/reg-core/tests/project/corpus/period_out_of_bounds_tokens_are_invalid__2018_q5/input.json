@@ -1,12 +1,11 @@
 {
-  "schema_version": "4.0.0",
-  "steward": "global",
+  "schema_version": "5.0.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "demo",
   "sources": [
     {
       "name": "lisa_2018",
-      "register_variant": "scb/lisa/individer-15plus",
+      "table": "scb/lisa/individer-15plus",
       "period": "2018-Q5",
       "bindings": [
         {
@@ -19,7 +18,7 @@
           "variable": "scb/lisa/kon",
           "display_name": "Kon",
           "type": "categorical",
-          "value_set": "class/sun2020"
+          "classification": "class/sun/2020"
         }
       ]
     }

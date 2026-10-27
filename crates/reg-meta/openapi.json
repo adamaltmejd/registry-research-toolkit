@@ -883,115 +883,6 @@
         }
       }
     },
-    "/api/project/order": {
-      "post": {
-        "description": "Preview the order manifest of a `project_data.json` document: the table and column delivering each binding, clipped where unavailable; a partly undeliverable request is `order_blocked`.",
-        "operationId": "order",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "A project_data.json document"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/OrderManifest"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "An error in `api/errors.toml`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "error",
-                    "meta"
-                  ],
-                  "properties": {
-                    "error": {
-                      "$ref": "#/components/schemas/Error"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/project/order/manifest": {
-      "post": {
-        "description": "`order`'s manifest as the exact manifest bytes, an attachment named `order_<project slug>_<UTC date>.json`.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "description": "A project_data.json document"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "The raw bytes",
-            "content": {
-              "application/json": {}
-            }
-          },
-          "default": {
-            "description": "An error in `api/errors.toml`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "error",
-                    "meta"
-                  ],
-                  "properties": {
-                    "error": {
-                      "$ref": "#/components/schemas/Error"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/project/validate": {
       "post": {
         "description": "Validate a `project_data.json` document (the JSON body; the `project` argument over MCP): every issue, `ok` false when one is an error. To draft a project, use the `register-project` skill of the microdata-tools-se plugin.",
@@ -2261,30 +2152,6 @@
           }
         }
       },
-      "ClipReport": {
-        "type": "object",
-        "description": "An availability clip: the binding asked for `requested_period` and is ordered\nfor `ordered_period`, where it is available.",
-        "required": [
-          "source",
-          "variable",
-          "requested_period",
-          "ordered_period"
-        ],
-        "properties": {
-          "ordered_period": {
-            "type": "string"
-          },
-          "requested_period": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "variable": {
-            "type": "string"
-          }
-        }
-      },
       "CodeClassification": {
         "type": "object",
         "properties": {
@@ -3429,36 +3296,6 @@
           }
         }
       },
-      "LogicalCoordinate": {
-        "type": "object",
-        "description": "The project-side coordinate of an entry.",
-        "required": [
-          "provider",
-          "register",
-          "variant",
-          "variable",
-          "representation"
-        ],
-        "properties": {
-          "provider": {
-            "type": "string"
-          },
-          "register": {
-            "type": "string"
-          },
-          "representation": {
-            "type": "string",
-            "description": "The canonical delivery column the slice resolved to."
-          },
-          "variable": {
-            "type": "string",
-            "description": "The binding's variable FQID."
-          },
-          "variant": {
-            "type": "string"
-          }
-        }
-      },
       "Match": {
         "type": "object",
         "required": [
@@ -3640,216 +3477,6 @@
           }
         }
       },
-      "OrderBlocking": {
-        "type": "object",
-        "description": "One blocking finding of `order_blocked`; `source`, `variable` and `period` say\nwhat it is about, null for a whole-project finding.",
-        "required": [
-          "code",
-          "message",
-          "source",
-          "variable",
-          "period"
-        ],
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "period": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "source": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "variable": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
-      "OrderEntry": {
-        "type": "object",
-        "description": "One resolved binding: what was asked for and what the steward delivers.",
-        "required": [
-          "source",
-          "logical",
-          "requested_period",
-          "physical"
-        ],
-        "properties": {
-          "filter": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OrderRowFilter",
-                "description": "The output file's row filter: its table's period column and the ranges its\nentries request, the same on every entry of the file; absent when the table\ndeclares no period column or the file requests its whole held period."
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "key": {
-            "type": "boolean",
-            "description": "A held row key column of the output file that no binding ordered (its\nvariant's panel entity or time key, [`IS_KEY`]; a linking id comes only when\nordered), carried so every file joins on its row key; absent on an ordered entry."
-          },
-          "logical": {
-            "$ref": "#/components/schemas/LogicalCoordinate"
-          },
-          "physical": {
-            "$ref": "#/components/schemas/PhysicalCoordinate"
-          },
-          "requested_period": {
-            "type": "string",
-            "description": "The days this entry serves: the request clipped by availability, a column\nwindow and a year or month member. It does not choose the output file; the\ntable's edition does."
-          },
-          "source": {
-            "type": "string",
-            "description": "The project source's name."
-          }
-        }
-      },
-      "OrderFilterRange": {
-        "type": "object",
-        "description": "One requested range of a row filter. A bound at the table's held edge cuts\nnothing and is absent, so a range may be open-ended on either side.",
-        "properties": {
-          "from": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The first requested day, `YYYY-MM-DD`; absent from the table's first held day."
-          },
-          "to": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The last requested day, `YYYY-MM-DD`; absent through the table's last held day."
-          }
-        }
-      },
-      "OrderManifest": {
-        "type": "object",
-        "description": "The order manifest: machine-written here, machine-read by the steward-side\nextract system, never hand-edited.",
-        "required": [
-          "version",
-          "extract_format",
-          "provenance",
-          "entries",
-          "clips"
-        ],
-        "properties": {
-          "clips": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClipReport"
-            },
-            "description": "Every availability clip, also when nothing blocked."
-          },
-          "entries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderEntry"
-            },
-            "description": "One per resolved logical-to-physical binding, per source and binding in\ndeclaration order, then by table, edition and column; then each file's\nheld row keys no binding ordered (`key`), by table, variant, edition, member\nindex and column."
-          },
-          "extract_format": {
-            "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The file format the extract runner writes every file in: the project's\n`extract_format`, `dta` when it sets none."
-          },
-          "provenance": {
-            "$ref": "#/components/schemas/OrderProvenance"
-          },
-          "version": {
-            "type": "integer",
-            "format": "int32",
-            "description": "The manifest contract version, 3.",
-            "minimum": 0
-          }
-        }
-      },
-      "OrderProvenance": {
-        "type": "object",
-        "description": "Which project, against which catalog, for which deployment: the manifest is\nself-contained offline.",
-        "required": [
-          "mode",
-          "steward",
-          "project_name",
-          "project_schema_version",
-          "project_reg_meta_version",
-          "project_hash",
-          "catalog_schema_version",
-          "catalog_generation_id",
-          "artifact_kind"
-        ],
-        "properties": {
-          "artifact_kind": {
-            "type": "string",
-            "description": "`catalog` or `steward`."
-          },
-          "catalog_generation_id": {
-            "type": "string"
-          },
-          "catalog_schema_version": {
-            "type": "string"
-          },
-          "mode": {
-            "type": "string",
-            "description": "`steward_holdings` (a steward's compiled holdings grounded the entries) or\n`global_fallback` (canonical resolution alone, blank `table`)."
-          },
-          "project_hash": {
-            "type": "string",
-            "description": "SHA-256 of the project's canonical JSON."
-          },
-          "project_name": {
-            "type": "string",
-            "description": "The project's `name`, never blank: a blank name blocks the order."
-          },
-          "project_reg_meta_version": {
-            "type": "string"
-          },
-          "project_schema_version": {
-            "type": "string"
-          },
-          "steward": {
-            "type": "string"
-          }
-        }
-      },
-      "OrderRowFilter": {
-        "type": "object",
-        "description": "A file's row filter (crates/DESIGN.md, \"Order manifest\"): keep the rows whose\n`column` value falls in any of `ranges`. A range's bounds are inclusive ISO dates;\nthe extract runner reads `column` per `encoding` (`date`, `year`, `yyyymm` or\n`yyyymmdd`, as `holding_table.period_encoding`) and keeps a row whose value's\nyear, month or day lies inside a range.",
-        "required": [
-          "column",
-          "encoding",
-          "ranges"
-        ],
-        "properties": {
-          "column": {
-            "type": "string"
-          },
-          "encoding": {
-            "type": "string"
-          },
-          "ranges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderFilterRange"
-            },
-            "description": "The file's requested days, ascending and disjoint, joined with OR."
-          }
-        }
-      },
       "OwningVariable": {
         "type": "object",
         "properties": {
@@ -3905,106 +3532,6 @@
           }
         }
       },
-      "PhysicalCoordinate": {
-        "type": "object",
-        "description": "The steward-side coordinate of an entry; in the global fallback `table` is\nblank, `column` the canonical column and `edition` the requested period.",
-        "required": [
-          "file",
-          "edition",
-          "table",
-          "column"
-        ],
-        "properties": {
-          "column": {
-            "type": "string"
-          },
-          "edition": {
-            "type": "string",
-            "description": "The table's edition, rendered as a period: one file per table, whatever\nperiods and variants its entries request."
-          },
-          "file": {
-            "type": "string",
-            "description": "The output file's name without its extension, the same on every entry of the\nfile: `<provider>_<register>[_<variant>][_<placement>][_<period>]` of the\ntable's own variant (crates/DESIGN.md, \"Extraction keeps delivery topology\")."
-          },
-          "member": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/PivotMember",
-                "description": "The column's wide-pivot member index; absent for a plain column."
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "partition": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The table's disjoint-partition label; absent when it has none."
-          },
-          "projection": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The table's projection token (#1634): the table is a declared projection\nof another table's delivery, extracted as its own file; absent otherwise."
-          },
-          "stata_name": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "The name a `dta` order writes the column under, with `column` as the\nvariable's label, when `column` is not a Stata variable name: its first 25\ncharacters made a name, `_` and 6 hex digits of its SHA-256; absent otherwise,\nand on every `parquet` or `csv` order."
-          },
-          "table": {
-            "type": "string"
-          }
-        }
-      },
-      "PivotMember": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "position"
-            ],
-            "properties": {
-              "position": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "year"
-            ],
-            "properties": {
-              "year": {
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          },
-          {
-            "type": "object",
-            "description": "`YYYY-MM`.",
-            "required": [
-              "month"
-            ],
-            "properties": {
-              "month": {
-                "type": "string",
-                "description": "`YYYY-MM`."
-              }
-            }
-          }
-        ],
-        "description": "A wide-pivot member index (#1495): one of N physical columns that together\ndeliver one representation. A position member serves the table's whole edition;\na year or month member serves only that period, so it is ordered only when the\nslice reaches it. Members order by index, so `DIA2` precedes `DIA10`."
-      },
       "Population": {
         "type": "object",
         "required": [
@@ -4042,6 +3569,14 @@
           "type"
         ],
         "properties": {
+          "classification": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A classification version's public id `class/<family>/<version>`.",
+            "pattern": "^class/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+$"
+          },
           "date_format": {
             "type": [
               "string",
@@ -4080,21 +3615,8 @@
               }
             ]
           },
-          "representation": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
           "type": {
             "$ref": "#/components/schemas/ProjectColumnType"
-          },
-          "value_set": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "A classification FQID `class/<slug>`."
           },
           "variable": {
             "type": "string",
@@ -4119,16 +3641,11 @@
         "description": "The top-level `project_data.json` document.",
         "required": [
           "schema_version",
-          "steward",
           "reg_meta_version",
           "name",
           "sources"
         ],
         "properties": {
-          "extract_format": {
-            "$ref": "#/components/schemas/ProjectExtractFormat",
-            "description": "The file format every extracted file is written in; absent means `dta`."
-          },
           "name": {
             "type": "string"
           },
@@ -4150,36 +3667,18 @@
               "$ref": "#/components/schemas/ProjectSource"
             }
           },
-          "steward": {
-            "type": "string",
-            "description": "The deployment the project is ordered from: `global`, or a steward id. Any\nslug (`^[a-z](?:-?[a-z0-9])*$`, not `class`) is accepted; an order compares it\nto the served artifact's steward."
-          },
           "window": {
             "$ref": "#/components/schemas/ProjectStudyWindow"
           }
         },
         "additionalProperties": false
       },
-      "ProjectEntityKey": {
-        "oneOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        ],
-        "description": "A panel's entity key: one column, or a composite."
-      },
-      "ProjectExtractFormat": {
+      "ProjectEdition": {
         "type": "string",
         "enum": [
-          "dta",
-          "parquet",
-          "csv"
+          "final",
+          "unstated",
+          "preliminary"
         ]
       },
       "ProjectIdSubtype": {
@@ -4188,19 +3687,6 @@
           "integer",
           "string"
         ]
-      },
-      "ProjectLiteralPeriod": {
-        "type": "object",
-        "description": "`{\"period\": int | string}`: a literal period, as opposed to a column ref.",
-        "required": [
-          "period"
-        ],
-        "properties": {
-          "period": {
-            "$ref": "#/components/schemas/ProjectPeriodValue"
-          }
-        },
-        "additionalProperties": false
       },
       "ProjectNumericSubtype": {
         "type": "string",
@@ -4223,61 +3709,15 @@
               "null"
             ]
           },
-          "entity_key": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProjectEntityKey"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "members": {
             "type": "array",
             "items": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "$ref": "#/components/schemas/ProjectPanelMember"
-                }
-              ],
-              "description": "A panel member as written: a source name, or a member object."
-            }
+              "type": "string"
+            },
+            "description": "Source names."
           },
           "panel_id": {
             "type": "string"
-          },
-          "time_key": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ProjectTimeKey"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProjectPanelMember": {
-        "type": "object",
-        "description": "A panel member; the bare-string shorthand deserializes to `{\"source\": <name>}`.",
-        "required": [
-          "source"
-        ],
-        "properties": {
-          "entity_key": {
-            "$ref": "#/components/schemas/ProjectEntityKey"
-          },
-          "source": {
-            "type": "string"
-          },
-          "time_key": {
-            "$ref": "#/components/schemas/ProjectTimeKey"
           }
         },
         "additionalProperties": false
@@ -4324,10 +3764,10 @@
       },
       "ProjectSource": {
         "type": "object",
-        "description": "One logical extraction: a register variant, a requested period and its bindings.",
+        "description": "One logical extraction: a table, a requested period and its bindings.",
         "required": [
           "name",
-          "register_variant",
+          "table",
           "period",
           "bindings"
         ],
@@ -4338,15 +3778,23 @@
               "$ref": "#/components/schemas/ProjectBinding"
             }
           },
+          "edition": {
+            "$ref": "#/components/schemas/ProjectEdition",
+            "description": "The release of the table asked for; absent asks for the primary edition."
+          },
           "name": {
             "type": "string"
           },
           "period": {
             "$ref": "#/components/schemas/ProjectSourcePeriod"
           },
-          "register_variant": {
+          "qualifier": {
             "type": "string",
-            "description": "The 3-part coordinate `<provider>/<register>/<variant>`."
+            "description": "The delivery qualifier asked for; absent asks for every qualifier."
+          },
+          "table": {
+            "type": "string",
+            "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
           }
         },
         "additionalProperties": false
@@ -4380,51 +3828,6 @@
           "to": {
             "type": "integer",
             "format": "int64"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProjectTimeKey": {
-        "oneOf": [
-          {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProjectTimePoint"
-            }
-          },
-          {
-            "$ref": "#/components/schemas/ProjectTimePoint"
-          }
-        ],
-        "description": "A panel's time key: one time point, or a composite."
-      },
-      "ProjectTimePoint": {
-        "oneOf": [
-          {
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "type": "string"
-          },
-          {
-            "$ref": "#/components/schemas/ProjectLiteralPeriod"
-          },
-          {
-            "$ref": "#/components/schemas/ProjectTimeRange"
-          }
-        ],
-        "description": "A literal year, a column ref, `{\"period\": ...}` or `{\"range\": {...}}`."
-      },
-      "ProjectTimeRange": {
-        "type": "object",
-        "description": "`{\"range\": {\"from\": ..., \"to\": ...}}`: a literal period range.",
-        "required": [
-          "range"
-        ],
-        "properties": {
-          "range": {
-            "$ref": "#/components/schemas/ProjectPeriodRange"
           }
         },
         "additionalProperties": false

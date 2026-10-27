@@ -263,6 +263,13 @@ The full SCB read is a heavy run.
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
 
+- **`follow_successor`**, an optional binding field, comes with D's first variable
+  `link` statements. Until then the order check reports `variable_replaced` and never
+  follows (v4 §4.4's "only when the project asks" has no field in 5.0.0).
+
+- **Classification pins** (`classification` in a binding) resolve once D curates class
+  versions. Until then every pin is `fqid_unresolved`.
+
 - **Unminted ids** are minted, and the new ids are reviewed in the PR.
 
 - **From D on, curation is edited only in `curation/`.** The old tree is frozen for the

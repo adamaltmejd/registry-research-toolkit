@@ -1,0 +1,17 @@
+{
+  "schema_version": "5.0.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "rust_difference",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "period": "_default",
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "type": "categorical"
+        }
+      ]
+    }
+  ]
+}

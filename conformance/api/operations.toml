@@ -4,263 +4,271 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
+# v5 reads the v4 catalog (schema.md v4). Every result is answered from the queries and
+# indexes of schema.md §2.1.
+#
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
 # (`[[download]]`) are the only exception.
 #
 # [[operation]]
 #   name     the operation, in reg-catalog and in MCP dispatch.
-#   http     its routes, "METHOD /path". `{ref}` spans several path segments (a FQID);
-#            other placeholders are one segment. Query parameters for GET, a JSON body
-#            for POST.
+#   http     its routes, "METHOD /path". `{ref}` spans several path segments (a public
+#            id); other placeholders are one segment. Query parameters for GET, a JSON
+#            body for POST.
 #   tool     the MCP tool that exposes it. A tool exposing several operations takes an
 #            `operation` argument naming one; its other arguments are that operation's
 #            params. No tool: HTTP only, and `note` says why.
-#   params   name = type. Types: ref (FQID or bare name; a one-segment ref
-#            resolves as a FQID first, then as a bare name, so an exact ref never turns
-#            ambiguous), period (the FQID/project period grammar), scope ("holdings" | "reference", default the
-#            artifact's), limit (1..200, default 50), cursor (opaque `next_cursor`),
-#            storage_id (a storage id as the decimal string results spell it, since ids
-#            pass 2^53), string, boolean, string[], enum(a|b), project (a
-#            project_data.json document as the body). A trailing `?` marks optional.
+#   params   name = type. Types: ref (a public id, or a bare name: exact `ident.pid`
+#            first, then `ident.name_fold`, so an exact ref never turns ambiguous; a
+#            hit in `ident_retired` is `retired_ref`), period (the reg-core period
+#            grammar, as in a project), limit (1..200, default 50), cursor (opaque
+#            `next_cursor`), hash (64 lowercase hex), string, boolean, string[],
+#            enum(a|b), project (a project_data.json document as the body). A trailing
+#            `?` marks optional.
 #   result   the `data` shape: a [shape.*] name, `Page<T>` (= {items: [T], next_cursor:
 #            cursor | null}) or a description of its fields. A list bounded by
-#            the request or the entity (a variable's warnings, a register's documents) is
+#            the request or the entity (a variable's findings, a register's documents) is
 #            a plain array, not a page.
 #   errors   codes from errors.toml it can return beyond the ones every operation can:
 #            invalid_parameter, catalog_unavailable, internal_error.
+#
+# Public ids (design v4 §7): providers `scb`; registers `<provider>/<register>`; tables
+# and variables `<provider>/<register>/<name>`, one namespace per register;
+# classifications `class/<family>[/<version>]`. Result fields that carry a public id
+# keep the name `fqid`, or `ref` where the field names an entity of another kind. A
+# cursor encodes (generation_id, last key), so a cursor from another generation is
+# `stale_cursor`.
 
-contract_version = "4.0.0"
+contract_version = "5.0.0"
 
 [[operation]]
 name = "search"
 http = ["GET /api/search"]
 tool = "search"
-params = { q = "string", type = "enum(register|variable|classification|classification_code|register_value)?", register = "ref?", period = "period?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
+params = { q = "string", type = "enum(register|table|variable|classification|code|document)?", register = "ref?", period = "period?", limit = "limit?", cursor = "cursor?" }
 result = "Page<SearchHit>"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
-note = """One ranked list per call. Without `type` it ranks every type together with \
-best-bets ordering (exact identity first, then type priors), continued by the cursor; \
-with `type` it returns that type only. The SPA's top-results strip is a call without \
-`type` and its five typed groups are one call each (rejected alternative: \
-`data.groups[]`, each its own page, which breaks "every list is {items, next_cursor}"). \
-`q` is at most 200 characters with no NUL; a query with no letter or digit returns no \
-items, not an error. The description and value arms are chosen by `type`, exact column \
-names are `resolve`, and concept groups always fold. Paging stops at depth 1000. Default \
-limit 50, maximum 200."""
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
+note = """One ranked list per call over `search` (FTS5) and `search_item`. Order is \
+bm25, then kind, then `sort_key` (schema §2.1): there is no exact-identity \
+first rule and no type prior, and pins and synonyms are curation (D). Without `type` \
+every kind ranks together; with `type` that kind only. `register` filters by \
+`search_item.register_id`; `period` keeps rows whose hull overlaps it. A `code` hit \
+is one distinct (code, label) pair, not a value set (schema §2.1, "Code search"): \
+`register` and `period` do not apply to it and exclude `code` rows from a \
+filtered search. Its value sets come from `values?code=&label=`. The tokenizer is \
+`unicode61 remove_diacritics 0`, so `lan` does not match `län`. `set` hits wait for D. \
+Classification hits are empty until D curates classifications. `q` is at \
+most 200 characters with no NUL; a query with no letter or digit returns no items, not \
+an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
+50, maximum 200."""
 
 [[operation]]
 name = "search_facets"
 http = ["GET /api/search/facets"]
-params = { q = "string", register = "ref?", limit = "limit?", scope = "scope?" }
+params = { q = "string", register = "ref?", limit = "limit?" }
 result = "RegisterFacets: {registers: [{fqid, name?, variable_matches, variables?: [{fqid, name}]}]} in FQID order"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = """Per register, the count of its variables that `search`'s variable arm admits \
-for `q` (the same fold, full-text match, scope and multi-token register-context \
-admission), counted in one grouped query: not cut by `limit` or the depth-1000 bound, \
-and before concept groups fold, so a group's members each count. Registers with no \
-match are absent; a query with no letter or digit returns none. Its own route, not a \
-`search` parameter: a facet is neither a page nor a hit list, and `search`'s cursor \
-binds its parameters. With `register` (resolved as `search`'s), the list holds only \
-that register, and its entry adds `variables`: the matched variables (FQID and name) \
-in FQID order, from the same admission, so the register page narrows by the server's \
-match (which reads definition and description text the page never loads) rather than \
-its own. Without `register`, `limit` adds each register's first `limit` matched \
-variables the same way, `variable_matches` still counting them all, and a listed \
-entry adds the register's `name`: the browse column lists other registers' matches \
-under their names with an honest remainder. Absent, it is counts only (not `search`'s \
-page default); with `register` the list is never cut. \
-No MCP tool: it feeds the SPA's in-place register filter, and an agent narrows with \
-`search`'s `register`."""
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """Per register, the count of `search`'s `variable` hits for `q`, counted in one \
+`GROUP BY register_id` over the FTS match (schema §2.1): not cut by `limit` or the \
+depth-1000 bound. Registers with no match are absent. With `register`, the list holds \
+only that register and its entry adds `variables`: the matched variables (FQID and \
+name) in FQID order, never cut. Without `register`, `limit` adds each register's first \
+`limit` matched variables, `variable_matches` still counting them all, and a listed \
+entry adds the register's `name`. Absent, it is counts only. No MCP tool: it feeds \
+the SPA's in-place register filter, and an agent narrows with `search`'s `register`."""
 
 [[operation]]
 name = "context"
 http = ["GET /api/context"]
-params = { scope = "scope?" }
 result = "Context"
-errors = ["scope_unavailable"]
-note = """The catalog's identity, branding and counts (the counts take `scope`). No MCP \
-tool: an agent's catalog identity is in every response's `meta`, and the branding and \
-counts serve the SPA shell."""
+note = """The catalog's identity and counts. No MCP tool: an agent's catalog identity \
+is in every response's `meta`, and the counts serve the SPA shell."""
 
 [[operation]]
 name = "show"
 http = ["GET /api/catalog", "GET /api/catalog/{ref}"]
 tool = "show"
-params = { ref = "ref?", scope = "scope?" }
+params = { ref = "ref?" }
 result = "Show"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = """The summary for any ref; no ref is the catalog root. Group refs are \
-`group/<provider>/<register>/<key>` and `group/class/<key>`, so `group` joins `class` as \
-a reserved first segment."""
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """The summary for any ref; no ref is the catalog root. `class` is the one \
+reserved first segment. Heavy parts are other operations: a variable's segments \
+(`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
+(`coverage`)."""
 
 [[operation]]
-name = "states"
-http = ["GET /api/states/{ref}"]
-tool = "states"
-params = { ref = "ref", period = "period?", variant = "string?", value_set_version = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<State>"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
-note = """A variable's states; `variant` and `value_set_version` narrow independently. \
-Facet routes are `/api/<operation>/{ref}` rather than `/api/catalog/{fqid}/<facet>`, \
-which a variable slug such as `states` could shadow."""
+name = "segments"
+http = ["GET /api/segments/{ref}"]
+tool = "segments"
+params = { ref = "ref", period = "period?", table = "ref?", value_set_name = "string?", evidence = "boolean?", limit = "limit?", cursor = "cursor?" }
+result = "Page<Segment>"
+errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
+note = """A variable's segments (schema §1.2), `ORDER BY start, table` (index \
+`segment_variable`), keyset-paged on (start, table pid). Renamed from `states`: v4 has \
+no state entity, and the segment is its main reader row. `table` narrows to one table \
+of the variable's register. `value_set_name` keeps segments whose value set a source \
+names so (`valueset_name`), replacing `value_set_version`. `evidence` adds each \
+segment's occurrences, their provenance and the losing source values (schema §2.1, \
+"Per-period detail"; design §2.4). Facet routes are `/api/<operation>/{ref}` rather \
+than `/api/catalog/{ref}/<facet>`, which a variable named `segments` could shadow."""
 
 [[operation]]
-name = "warnings"
-http = ["GET /api/warnings/{ref}"]
-params = { ref = "ref", period = "period?", variant = "string?", representation = "string?", unassigned_only = "boolean?", scope = "scope?" }
-result = "[DataWarning], deduplicated and ordered by warning_id"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable"]
-note = """A register's or variable's data warnings. The filters \
-need the period grammar and the delivery-column alias mapping, so they stay server-side. \
-No MCP tool: the SPA's project editor is the consumer."""
+name = "findings"
+http = ["GET /api/findings/{ref}"]
+params = { ref = "ref", period = "period?", table = "ref?", code = "string?" }
+result = "[Finding], ordered by subject kind, subject, start, code"
+errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period"]
+note = """The review and notice findings on a register (`finding_register`), a table or \
+a variable, its segments and its occurrences (`finding_subject`), overlapping \
+`period`. Renamed from `warnings`: v4's entity is the finding (schema §1.1). `code` \
+narrows by the rule code prefix (`F7`, `F7:edition-disagreement`). Bounded by the \
+entity, so not a page. No MCP tool: segments and the order check carry the findings an \
+agent needs; the SPA's entity pages are the consumer."""
 
 [[operation]]
 name = "values"
-http = ["GET /api/values/{ref}"]
+http = ["GET /api/values"]
 tool = "values"
-params = { ref = "ref", state = "storage_id?", partition = "enum(source_extensions|canonical|nonstandard|sentinels)?", classification = "ref?", column = "string?", alias_window_from = "string?", parent = "string?", q = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<Value> plus `total` (matches of `q` in the whole set)"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable", "invalid_cursor", "stale_cursor"]
-note = """A classification's codes, or the value set of one state of a variable (`state` \
-required for a variable). Value is ValueSetMember | \
-ClassificationExtensionMember | ClassificationCode: a classification's rows are \
-ClassificationCode (`level` and `is_valid`, which the classification page renders). \
-`total` is there because the SPA shows it. An agent lists states, then values per \
-state. A state without `classification` answers its whole value set; \
-with one, `partition` (default `source_extensions`) picks that book's part. \
-`alias_window_from` is an identity key: with `column` it selects which delivered alias's \
-codes, not a time filter, so it stays a string rather than a period. A classification's \
-`parent` pages one level of its code tree (#1297): empty for the roots, a code for its \
-children, each ClassificationCode with `child_count` (null for a book without a tree); \
-a non-empty `q` reads the book flat. Default limit 50, maximum 200."""
+params = { value_set = "hash?", classification = "ref?", code = "string?", label = "string?", level = "string?", parent = "string?", q = "string?", limit = "limit?", cursor = "cursor?" }
+result = "Page<ValueItem> plus `value_set` (ValueSetRef) and `total` (matches of `q` in the whole set); with `code`: Page<ValueSetRef>, ordered by hash"
+errors = ["invalid_parameter", "invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
+note = """Two modes. By content: one value set's items, by its hash or by a \
+classification version's ref (its `valueset_id`). By pair: `code` with an optional \
+`label` (absent = the item has no label) lists the value sets that some segment \
+references and that hold that (code, label) pair, as `[ValueSetRef]` ordered by hash \
+(index `vs_item_code`); this is the drill-down from a `code` search hit, and each \
+set's variables follow from `segments`' value set. Exactly one of `value_set`, \
+`classification` and `code`, otherwise `invalid_parameter`; `label` is valid only \
+with `code`; `level`, `parent` and `q` apply to the content mode only. In content \
+mode items are in \
+`ord` order (`vs_item` PK). The blank code `""` is an item like any other; a segment \
+without a value set has `value_set: null` and is never asked here. `level` narrows to \
+one level. `parent` pages one level of a hierarchical set: empty for the roots, a code \
+for its children; `child_count` is null for a flat set. A non-empty `q` matches code \
+or label in the set, flat. `q`, `parent` and `child_count` read the one set by its \
+primary-key prefix, bounded by `n_items`; there is no text index on `vs_item`. Default \
+limit 50, maximum 200. The old `partition`, `alias_window_from`, `column` and `state` \
+are gone: a value set is addressed by content."""
 
 [[operation]]
 name = "graph"
 http = ["GET /api/graph/{ref}"]
 tool = "graph"
-params = { ref = "ref", scope = "scope?" }
-result = "RelationshipGraph {nodes, edges, focus_id}"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = "For a variable, classification or group ref."
-
-[[operation]]
-name = "lineage"
-http = ["GET /api/lineage/{ref}"]
-tool = "graph"
-params = { ref = "ref", scope = "scope?" }
-result = "{edges: [LineageEdge], warnings: [LineageWarning], registers: [per-register provenance rows]}"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = "A variable's lineage."
+params = { ref = "ref", kind = "enum(continues|equivalent|derived_from|label_of)?" }
+result = "Graph {focus, nodes, edges}"
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """The `relation` edges where the ref is subject or object (`relation_subject`, \
+`relation_object`), for a variable, table, register or classification version; a \
+classification family gives its versions and correspondences (`class_version_family`, \
+`corr_target`). `kind` narrows the edges. It absorbs `lineage`, which is `kind = \
+derived_from` with the edge's `at` period."""
 
 [[operation]]
 name = "coverage"
 http = ["GET /api/coverage/{ref}"]
 tool = "coverage"
-params = { ref = "ref", scope = "scope?" }
-result = "Coverage (the ref's kind is in `fqid`)"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = "For a variable or register ref."
+params = { ref = "ref" }
+result = "Coverage"
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """For a register, a table or a variable (schema §2.1, "Coverage"). A table: \
+its `tbl_span` periods, gaps and releases. A register: that per table. A variable: its \
+segments merged per table, its gaps, and per column (folded spelling) the periods it \
+was delivered under."""
 
 [[operation]]
 name = "schema"
 http = ["GET /api/schema/{ref}"]
 tool = "schema"
-params = { ref = "ref", period = "period?", variant = "string?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<delivered column row, with its register variant and version window>"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable", "invalid_cursor", "stale_cursor"]
-note = "A register's delivered columns, or a variable's."
+params = { ref = "ref", period = "period?", table = "ref?", limit = "limit?", cursor = "cursor?" }
+result = "Page<SchemaLine>"
+errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
+note = """One line per (table, variable, folded spelling) over `period` (schema §2.1, \
+"Schema of a table"): for a table (`segment_table`), a register's tables, or one \
+variable's tables (`segment_variable`). `table` narrows a register ref. Keyset-paged \
+on (table pid, variable pid, start). Row keys are the lines with role `row_key`."""
 
 [[operation]]
 name = "diff"
 http = ["GET /api/diff/{ref}"]
 tool = "schema"
-params = { ref = "ref", from = "period", to = "period", variant = "string?", scope = "scope?" }
+params = { ref = "ref", from = "period", to = "period", table = "ref?" }
 result = "Diff"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "invalid_period", "scope_unavailable"]
-note = "A register's schema between two periods; the caller filters by variable."
-
-[[operation]]
-name = "coded_variables"
-http = ["GET /api/coded-variables"]
-tool = "schema"
-params = { scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<coded variable row>"
-errors = ["scope_unavailable", "invalid_cursor", "stale_cursor"]
-note = "The page is ordered by distinct codes."
+errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period"]
+note = """A table's or a register's schema at two periods, joined on variable \
+(schema §2.1, "Schema diff"): one side only is added or removed; a different spelling, \
+type, length or value set is changed. A rename shows as a changed spelling."""
 
 [[operation]]
 name = "resolve"
 http = ["GET /api/resolve"]
 tool = "resolve"
-params = { columns = "string[]", register = "ref?", scope = "scope?" }
-result = "{columns: [resolved column row]}"
-errors = ["invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = """Delivered column names to variables (at most 200 names). Not ref resolution, \
+params = { columns = "string[]", register = "ref?" }
+result = "{columns: [ResolvedColumn]}"
+errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """Delivered column names to variables (at most 200 names), through \
+`name_fold` → `alias` → `variable` (schema §2.1, "Header lookup"). Not ref resolution, \
 which every operation does. A name that matches nothing is not an error: each column \
-row has a status."""
+has a status."""
 
 [[operation]]
 name = "validate"
 http = ["POST /api/project/validate"]
 tool = "order"
 params = { project = "project" }
-result = "the validation result {ok, issues}"
-note = "An invalid project is a 200 with `ok: false`."
+result = "Validation {ok, issues: [Issue]}"
+note = """An invalid project is a 200 with `ok: false`. The issues are the structural \
+rules (reg-core), then the order check's findings (crates/DESIGN.md, "The logical order") at their levels: \
+a blocking finding is an `error`, the rest `warning` or `info`. `ok` is true exactly \
+when `order` would return a logical order."""
 
 [[operation]]
 name = "order"
 http = ["POST /api/project/order"]
 tool = "order"
 params = { project = "project" }
-result = "the order manifest"
+result = "LogicalOrder"
 errors = ["project_invalid", "order_blocked"]
-note = "The manifest's exact bytes come from the download route below."
+note = """The order check (design §9): the logical order (schema §2.3), or \
+`order_blocked` with every finding at once, the blocking ones at level `error`. A structurally invalid project is \
+`project_invalid`. Physical files, names and the manifest download are the holdings \
+layer's and return in E."""
 
 [[operation]]
 name = "docs_search"
 http = ["GET /api/docs/search"]
 tool = "docs"
-params = { q = "string?", register = "ref?", scope = "scope?", limit = "limit?", cursor = "cursor?" }
-result = "Page<DocResult> plus `total` and `register_ingested` (whether `register` has ingested docs)"
-errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
-note = """Without `q` it lists the documents. A catalog without docs answers \
+params = { q = "string?", register = "ref?", limit = "limit?", cursor = "cursor?" }
+result = "Page<DocHit> plus `total` and `register_ingested` (whether `register` has linked documents)"
+errors = ["docs_unavailable", "invalid_ref", "not_found", "retired_ref", "ambiguous_ref", "invalid_cursor", "stale_cursor"]
+note = """Over `doc_fts` (sections) and `doc_link`. Without `q` it lists the documents \
+(of `register`, when given) by title. A catalog without documents answers \
 `docs_unavailable`."""
 
 [[operation]]
 name = "docs_get"
-http = ["GET /api/docs/doc/{identifier}"]
+http = ["GET /api/docs/doc/{doc}"]
 tool = "docs"
-params = { identifier = "string", scope = "scope?" }
+params = { doc = "hash" }
 result = "DocDetail, with its 500-character `excerpt` (the SPA) and the full `body` (agents)"
-errors = ["docs_unavailable", "not_found", "scope_unavailable"]
+errors = ["docs_unavailable", "not_found"]
+note = "A document by its content hash (`doc.hash`)."
 
 [[operation]]
 name = "docs_related"
 http = ["GET /api/docs/related/{ref}"]
 tool = "docs"
-params = { ref = "ref", scope = "scope?" }
-result = "[related document {title, filename, source_url, license, fetched, sha256, byte_size}]"
-errors = ["docs_unavailable", "invalid_ref", "not_found", "ambiguous_ref", "scope_unavailable"]
-note = "A register's related documents; the JSON metadata for the document download route."
+params = { ref = "ref" }
+result = "[RelatedDocument]"
+errors = ["docs_unavailable", "invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
+note = """The documents linked to a register, table, variable or classification family \
+(`doc_link_subject`), by title."""
 
 [[download]]
-route = "GET /api/steward/logo.svg"
-media_type = "image/svg+xml"
-operation = "context"
-note = "The steward's `logo.svg` (`reg_webapp/stewards/<catalog>/`): the compact top bar's mark and the SPA's favicon. Served sandboxed."
-
-[[download]]
-route = "POST /api/project/order/manifest"
-media_type = "application/json"
-operation = "order"
-note = "The manifest bytes byte-identical to `order`'s `data`, as an attachment named `order_<slug>_<UTC date>.json`."
-
-[[download]]
-route = "GET /api/docs/file/{ref}/{filename}"
+route = "GET /api/docs/file/{doc}"
 media_type = "application/pdf"
 operation = "docs_related"
-note = "Served inline."
+note = "A `pdf` document's bytes by content hash (`doc.content`). Served inline."
 
 # The shapes `result` names. A result described in words above has its fields fixed by
 # its `api` cases.
@@ -268,7 +276,7 @@ note = "Served inline."
 [shape.Meta]
 contract_version = "string; contract_version above"
 generation = "string; the catalog's generation_id (64 hex)"
-scope = "\"holdings\" | \"reference\"; the effective scope (project operations: the artifact's)"
+catalog_version = "string; meta catalog_version"
 
 [shape.Error]
 code = "string; a code in errors.toml"
@@ -277,31 +285,176 @@ message = "string; rendered from the code and fields"
 remediation = "string"
 fields = "object; the code's fields in errors.toml"
 
+[shape.Period]
+start = "string | null; ISO day, inclusive; null = meta open_start (a timeless period)"
+end = "string | null; ISO day, exclusive; null = meta open_end (end not stated)"
+note = """Every result period is half-open, `[start, end)` (schema §0). A request \
+`period` stays the project grammar (`2018`, `2015..2019`); a period is never a \
+`{from, to}` year pair in a result."""
+
+[shape.Subject]
+kind = "\"register\" | \"table\" | \"release\" | \"variable\" | \"segment\" | \"occurrence\" | \"valueset\""
+fqid = "string | null; the register, table or variable; for a segment or an occurrence, its variable (null for an occurrence without one)"
+table = "string | null; the table of a release, segment or occurrence"
+period = "Period | null; the release's, segment's or occurrence's period (null when unplaced)"
+release = "string | null; a release's literal delivery name"
+spelling = "string | null; an occurrence's exact spelling"
+value_set = "string | null; a value set's hash"
+note = "What a finding is about, by natural key: segments, releases and occurrences have no public id, and row ids are never exposed (design §2.3)."
+
+[shape.ValueSetRef]
+hash = "string; valueset.hash"
+n_items = "integer"
+hierarchical = "boolean"
+names = "[string]; the names sources give it (valueset_name)"
+classification = "string | null; the curated classification version's ref (null until D)"
+
 [shape.SearchHit]
-type = "\"register\" | \"variable\" | \"group\" | \"classification\" | \"classification_succession\" | \"code\"; selects the fields below"
-note = """No `rank`: the order is the contract. `register_name`, not `register`, since \
-`register` is a ref everywhere else; a group's `key`/`label` as on concept-group nodes. \
-A group's `matched_count` and `members[].delivery_column` serve agents over MCP."""
-register = "fqid, name, purpose"
-variable = "fqid, name, register_name, definition, operational_definition, delivery_column_names"
-group = "kind (\"variable\" | \"classification\"), key, label, register_name, matched_count, members [{fqid, name, delivery_column}]"
-classification = "fqid, short_name, name, terminal_fqid"
-classification_succession = "fqid, short_name, name, matched_count, editions [{slug, fqid, name, effective_year}]"
-code = "code, label, code_system, variable_count, variables [{fqid, name, register_name}] (at most 5), classification_count, classifications [{fqid, short_name, name}] (at most 5)"
+type = "\"register\" | \"table\" | \"variable\" | \"classification\" | \"code\" | \"document\"; selects the fields below"
+note = """No `rank`: the order is the contract. `register_name`, not `register`, \
+since `register` is a ref everywhere else."""
+register = "fqid, name, description, period"
+table = "fqid, name, register_name, role, period"
+variable = "fqid, name, register_name, definition, spellings (the folded names it was delivered under, from `alias`), period"
+classification = "fqid, name, family"
+code = "code, label (string | null), value_set_count (integer; the value sets some segment references that hold this pair). One hit per distinct (code, label) pair, not per value set. The value sets are `values?code=&label=`."
+document = "doc, title, heading, page"
 
 [shape.Context]
-steward = "{id, name, long_name}"
+catalog_version = "string"
 schema_version = "string"
-import_date = "string"
-period_span = "{from: integer, to: integer} | null; the catalog's period span"
+period_span = "Period; the hull of every register"
 reg_meta_version = "string; the server's version, which seeds a new project's reg_meta_version"
-sizes = "{providers, registers, variables} in the requested scope"
+sizes = "{providers, registers, tables, variables}"
 
 [shape.Show]
-note = """A `kind`-tagged summary: root, provider, register, variable, classification_root, \
-classification, concept_group, classification_group, classification_family. Heavy \
-parts are facets: a variable's states \
-(`states`), lineage and succession chain (`lineage`, `graph`), a classification's edition \
-chain (`graph`), a classification's codes (`values`), data warnings (`warnings`). A \
-register carries its variants and a classification its owning variables, both \
-unpaged."""
+note = """A `kind`-tagged summary: root (providers), provider (registers), register \
+(name, description, period, tables [{fqid, name, role, implicit, timeless, unit_type, \
+cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
+(name, description, register, role, implicit, timeless, unit_type, cadence, spans \
+[Period], releases [Release], row_keys [{fqid, spelling, period}]), variable (name, \
+definition, register, period, unit_types, texts [{period, label, definition, \
+operational_definition, unit}], spellings [{spelling, kind}], tables [fqid]), \
+classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
+classification_version (family, label, period, value_set ValueSetRef, levels). \
+Registers list their tables and variables unpaged."""
+
+[shape.Release]
+name = "string; the literal delivery name"
+period = "Period | null; null when unparsed"
+edition = "\"final\" | \"unstated\" | \"preliminary\""
+qualifier = "string; \"\" = none"
+primary = "boolean | null; null when unparsed"
+parse_state = "\"parsed\" | \"unparsed\" | \"curated\""
+populations = "[{name, definition, ref_day}]"
+
+[shape.Segment]
+table = "string; the table's fqid"
+period = "Period"
+spelling = "string; the exact spelling of the latest primary occurrence"
+type = "string | null; null when ambiguous claimants disagree"
+length = "integer | null"
+format = "string | null"
+value_set = "ValueSetRef | null; null = no value set"
+classification = "string | null; a classification version's ref"
+coded = "\"yes\" | \"no\" | \"unknown\""
+sensitive = "boolean | null"
+identifier = "boolean | null"
+id_kind = "string | null; an identifier kind slug"
+role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
+temporality = "\"fixed\" | \"status\" | \"accumulated\" | \"event\" | \"unknown\""
+state = "\"clear\" | \"ambiguous\" | \"preliminary\""
+evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
+
+[shape.Finding]
+code = "string; rule code and sub-kind, `F7:edition-disagreement`"
+severity = "\"review\" | \"notice\""
+subject = "Subject"
+period = "Period | null"
+message = "string"
+caveat = "string | null; an acked statement's caveat"
+
+[shape.ValueItem]
+code = "string; may be \"\" (a real item)"
+label = "string | null"
+level = "integer"
+parent = "string | null; the parent's code"
+sentinel = "boolean"
+child_count = "integer | null; null for a flat set"
+
+[shape.Graph]
+focus = "string; the ref's fqid"
+nodes = "[{fqid, kind, name}]"
+edges = "[{kind, from, to, at (Period | null), prov (\"source\" | \"curated\" | \"rule\"), caveat}]"
+
+[shape.Coverage]
+fqid = "string"
+kind = "\"register\" | \"table\" | \"variable\""
+period = "Period; the hull"
+tables = "[{fqid, name, spans [Period], gaps [{period, reason}], releases [Release] (table and register refs)}]"
+columns = "variable only: [{spelling, spans [Period]}]"
+
+[shape.SchemaLine]
+table = "string"
+variable = "string; fqid"
+name = "string; the variable's label"
+spelling = "string"
+type = "string | null"
+length = "integer | null"
+value_set = "ValueSetRef | null"
+role = "string"
+state = "string"
+period = "Period; the lines' segments merged, clipped to the request"
+
+[shape.Diff]
+fqid = "string"
+from = "string; the request's `from`"
+to = "string; the request's `to`"
+tables = "[{table, added [SchemaLine], removed [SchemaLine], changed [{variable, changes [{field, from, to}]}], summary {added, removed, changed, unchanged}}]"
+
+[shape.ResolvedColumn]
+column = "string; as asked"
+status = "\"matched\" | \"ambiguous\" | \"unmatched\""
+matches = "[{fqid, name, register, alias (\"delivered\" | \"curated\")}]"
+
+[shape.Issue]
+level = "\"error\" | \"warning\" | \"info\""
+code = "string; a project issue or order finding code (crates/DESIGN.md, \"Project document 5.0.0\" and \"The logical order\")"
+path = "string; an RFC 6901 pointer into the project; empty for the whole document"
+message = "string"
+source = "string | null; the project source's name"
+variable = "string | null; fqid"
+table = "string | null; fqid"
+period = "Period | null"
+successor_fqid = "string | null; the successor a `variable_replaced` finding names"
+
+[shape.LogicalOrder]
+note = "crates/DESIGN.md, \"The logical order\", has the fields and two examples (a clear and a blocked order)."
+
+[shape.DocHit]
+doc = "string; doc.hash"
+title = "string"
+kind = "\"parsed\" | \"pdf\""
+heading = "string | null; the matched section's heading"
+page = "integer | null"
+snippet = "string | null; null without `q`"
+
+[shape.DocDetail]
+doc = "string"
+title = "string"
+kind = "\"parsed\" | \"pdf\""
+licence = "string"
+url = "string | null"
+bytes = "integer"
+subjects = "[{kind, fqid, page}]"
+excerpt = "string"
+body = "string | null; the sections joined; null for a pdf"
+
+[shape.RelatedDocument]
+doc = "string"
+title = "string"
+kind = "\"parsed\" | \"pdf\""
+licence = "string"
+url = "string | null"
+bytes = "integer"
+page = "integer; 0 = whole document"

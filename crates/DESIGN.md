@@ -431,6 +431,15 @@ tracks the milestones. This section holds the design decisions that outlive the 
   variable-to-names direction.
 - Code search rows: one row per distinct (code, label) pair, deferred to a follow-up PR
   (C-10 ruling, measured 1.48 GB at one row per item).
+- **Edition and qualifier.** They are source fields of a project, not the period suffix
+  (`2011:prelim`) of v4 §7. The field form leaves the period grammar unchanged, and its
+  rule ("that edition where a release of it exists, the primary elsewhere") covers a
+  mixed final and preliminary request. Links and URLs that need an edition later use the
+  same field form.
+- **Implicit tables are not in `ident`.** A 2-part ref resolves through `ident` to the
+  register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
+  implicit table has the register's pid. A 2-part table value naming a register with
+  named tables is `table_is_register`, listing the tables.
 - **Search keeps diacritics.** The new catalog's `search` index holds the text as
   written, under `unicode61 remove_diacritics 0` (schema §3.2, plan decision C-9), so
   `lan` and `län` differ. `reg_core::fold_search` strips combining marks and is not used
@@ -747,19 +756,18 @@ Builder accounting such as "temporally unassessed" range editions is not a warni
 ## Read scope and artifact admission
 
 A server or MCP process serves one artifact, chosen at start with `--db DIR` (the file
-is `DIR/reg_meta.db`). `--catalog NAME` names the expected catalog: `global` requires
-the `catalog` kind, any other name a steward artifact whose manifest `steward` equals
-it. Admission requires a compatible schema, a publishable kind (`catalog` or `steward`),
-complete status, a `generation_id` and, for a steward, a slug steward id. Anything else
-fails before serving, with no fallback. The file is opened read-only and `immutable=1`:
-published files are replaced by rename, never changed in place. The docs database beside
-it is optional; only docs operations need it.
+is `DIR/reg_meta.db`). Admission is exact: a supported schema version, every required
+manifest key present and a `generation_id` of 64 hex digits. Anything else, a missing
+key or a malformed `generation_id` included, is `schema_incompatible` (`schema_version`
+is the file's value, or `null`), and the process fails before serving, with no fallback.
+The file is opened read-only and `immutable=1`: published files are replaced by rename,
+never changed in place. The docs database beside it is optional; only docs operations
+need it.
 
 **Three layers.** `reference` is everything in the catalog; `holdings` is what the
-steward holds; a project is what one user has: a `project_data.json` against a steward
-(`steward: <id>`, ordered from its holdings) or against the global catalog
-(`steward: global`, a `global_fallback` manifest describing data the researcher already
-holds; nothing orders it). The project layer is the user's file: the server stores none,
+steward holds; a project is what one user has: a `project_data.json`, ordered from the
+holdings or, with a `global_fallback` manifest, describing data the researcher already
+holds (nothing orders it). The project layer is the user's file: the server stores none,
 and checks one only when it is posted to validate or order (the SPA runs the structural
 layer client-side first). Validation and order answer for the catalog that serves them,
 so a project is checked on its own steward's server: another catalog's answer differs
@@ -820,388 +828,240 @@ covers years the mapped spelling was delivered, and stay unclipped. A warning wi
 window, or one whose cell is held in no dated table, has nothing to clip against and
 stays as stored. Validation and order take no scope; they use the artifact's kind.
 
-## Order manifest
+## The logical order
 
-The order operation is the one place a logical `project_data.json` selection meets a
-steward's physical delivery topology. It returns a complete manifest or every blocking
-finding, never a partial order. HTTP and MCP both call the one implementation in
-`reg-catalog`, which is what makes their results identical.
+`order` runs the order check of design v4 §9 on a 5.0.0 project and returns the logical
+order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
+check and returns the same findings as issues. Both transports call the one
+implementation in `reg-catalog`, which is what makes their results identical. The check
+is written over the v4 catalog (the `r-order-check` PR), not ported from the 4.0.0
+physical-order logic, which v5 deletes.
 
-A `steward` artifact always orders from its compiled holdings, even when browsing in
-reference scope. A `catalog` artifact orders by global fallback: canonical resolution
-alone, each slice served by its canonical column under a blank table. It is the same
-pipeline with a different matching arm, so there is no second clip or coverage
-implementation. `provenance.mode` (`steward_holdings` or `global_fallback`) says which.
-The project's `steward` must equal the artifact's name (`global` or its steward id);
-`reg-core` accepts any slug there and holds no list of stewards, so this comparison is
-the only check that a steward exists. Retargeting is not a feature, and a user who means
-another deployment edits the JSON and uploads it again.
+The logical order says what is ordered, never in which files. It stops at the catalog:
+physical files, partitions, row filters, file names, the manifest download and the
+extract format are the holdings layer's, and the physical manifest returns with it in
+milestone E. Nothing in the result names a steward.
 
-Per binding, in declaration order, over its source's period
-([reg-core/DESIGN.md](reg-core/DESIGN.md)):
+**Shape.** `shape.LogicalOrder` in `conformance/api/operations.toml` is the field list.
+In short: `catalog` and `project` identify the generation and the project (with
+`project_hash`); `entries` are per source, per binding in declaration order, then by
+period start; `row_keys` are per source and period start; `clips` record every
+availability clip, also when nothing blocks; `findings` are the non-blocking ones
+(warnings and infos), as `Issue`. Periods are half-open ISO-day intervals, with `null`
+for the open sentinels; a timeless table has `{start: null, end: null}`.
 
-1. **Availability clip.** A source period means "these columns, wherever each is
-   available inside this window". A dated period reaches the source variant's succession
-   family (#1840, [reg-core/DESIGN.md](reg-core/DESIGN.md)): the `variant_replaced_by`
-   component `show` reports as `variant_family`, or the variant alone. The request is
-   split at member boundaries and each day goes to one member: the member whose states
-   deliver it, else the named variant, where the clip removes it, so no variant is
-   invented. The build guarantees a family is a chain whose members share no delivered
-   day (`validate_built_db`), so the split needs no tie-break and holdings never decide
-   it. A day the delivering member holds no table for stays with it and blocks as a
-   coverage gap whichever member the source names; a holding under a member that does
-   not deliver the day never takes it (conformance
-   `order/variant-family-held-elsewhere`). `_default` resolves the named variant
-   exactly. Each binding is then resolved once over the members' shares and clipped to
-   the union of its states there, so a column first delivered in 2019 under a 2018–2020
-   source does not widen the order into a cross-product, and a column only one member
-   delivers (LISA's 16+-only columns) gets one clip, not a block for the other member's
-   years. Every clip is reported, one per binding (requested: the source period;
-   ordered: the union across members), never silent and never an error, and is recorded
-   before the ambiguity gate can stop. Each slice keeps its member through matching,
-   coverage, emission and held keys, so a family source yields entries under each
-   member's `logical.variant` and its files are each member's own tables (conformance
-   `order/variant-family`, `order/variant-family-global`); the manifest shape does not
-   change.
-2. **Representation slicing.** The clipped request splits into slices of constant
-   canonical representation. A sequential rename makes two slices; two columns valid at
-   the same instant without a `representation` pin is ambiguity and blocks. Resolution
-   runs once per requested segment, because the window fallback is decided per query; a
-   state reaching two segments stays one state. Steps 1 and 2 are one pass shared with
-   validation, so the two never disagree about availability.
-3. **Matching and coverage.** A table matches a slice when one of its columns serves
-   `(variant, variable, representation)` over the slice ("Read scope and artifact
-   admission": a table's one representation also serves a spelling SCB did not deliver
-   beside it, so a rename inside one held table is two entries of one physical column)
-   and its edition overlaps the slice; only the intersection contributes. That fallback
-   is decided per instant, not over the slice: it serves exactly the slice's instants
-   where SCB did not deliver the mapped spelling, the inventory's `_fallbacks` rule
-   (conformance `api/held-projection-served-past-co-delivery`). Coverage
-   (`states::held`) still judges the fallback over each state's whole bounds, so where a
-   state spans a co-delivered instant it under-reports what the order serves; it never
-   over-reports. A held edition that overlaps the request but lies wholly outside the
-   binding's column windows is `column_window_unavailable`. Any uncovered subperiod
-   blocks the whole order (`coverage_gap`); a slice nothing serves is `mapping_missing`.
-   The materializer never chooses between tables: the inventory's one-to-one invariant
-   leaves at most one `(table, column)` per cell instant per partition, a spelling a
-   table serves through its one representation included, so every contribution is wanted
-   whole. A wide-pivot member set
-   ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Holdings resolution
-   invariants") is that one location: every position member serves the table's edition
-   and is emitted, while a year or month member serves only its own period, so it
-   matches and covers only where that period reaches the slice. A column window
-   (`holding_mapping.window_lo`/`window_hi`, #1645) likewise limits a mapping to its own
-   period: the column matches, covers and is emitted only there, and a request outside
-   every window of a column is a gap, never served from its table's edition. A declared
-   projection's value mapping (`holding_table.projection_of`, #1634) is dropped wherever
-   its parent serves it: a parent mapping serves the same canonical triple over that
-   instant (its own spelling, or one its one representation serves where SCB did not
-   deliver that representation anywhere in the projection mapping's period), at the same
-   position. A projection's position member is served only by the parent's member of
-   that position, and a plain column, a year or month member or a windowed mapping only
-   by a parent mapping that is not a position member. The parent serves a cell only
-   where its own served period (its edition, or the mapping's member or window) covers
-   the instant the projection's mapping serves: a projection cell outside the parent's
-   window stays the projection's and counts as its own cell for emission (conformance
-   `order/projection-windows`). This is the inventory's rule
-   ([../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Projections"), which
-   refuses any other overlap, so the parent alone serves each shared cell and no
-   projection cell is dropped without a parent cell in its place. A key mapping (the
-   bound variant's `panel_entity_key` or `panel_time_key`, a bare slug or a JSON list)
-   or an identifier mapping (`is_identifier`, a linking id included) is never dropped:
-   each file carries its own row keys, and a projection may sit at another grain (EKB's
-   household file beside its person file, keyed by a household id the person file also
-   holds), so an ordered id emitted from the parent alone would leave the projection's
-   rows unjoinable on it. This filters ordered matches only; which keys a file gains
-   unordered is step 5's narrower test. Tables without the declaration are never
-   filtered.
-4. **Emission.** Every matching table is emitted whole, every partition included. A
-   projection's output file (its variant and table edition, below) is emitted when the
-   projection contributes at least one cell its parent does not serve anywhere in that
-   file, key or non-key, from any source or period; its shared key and identifier cells
-   then come along with it. A projection file whose ordered cells its parent all serves
-   is not emitted, its shared keys included, so no file holds only keys its parent's
-   file also holds. Entries carry the literal physical table and column; the canonical
-   representation is a join key, not an output substitute. Entries keep project order,
-   then table, edition, member index and column, so members order by index (`DIA2`
-   before `DIA10`), not by name.
-5. **Held keys.** On a steward artifact every emitted file then carries its table's held
-   row key, whether or not the order binds it: each column of the file's table that maps
-   a key of the file's variant (the key test of step 3: the variant's `panel_entity_key`
-   and `panel_time_key` only) and that no entry of the file already extracts, under
-   whatever variable, gains an entry marked `key: true`. A linking id (a family,
-   household or workplace id, an employer's org number, any other identifier) comes
-   along only when the order binds it (maintainer ruling 2026-10-23: a LISA year file
-   carries LopNr, not its two dozen identifiers), and a variant that declares no panel
-   key carries nothing extra: the fix is to declare its key, never to fall back to every
-   identifier. A file is emitted only for an ordered entry, so keys never make a file on
-   their own, and only what the table holds is added: a key the table does not map under
-   the variant is not invented. A key entry takes the source of the file's first entry
-   and requests the union of the file's entries' `requested_period`, so the file's row
-   filter is not widened; a year or month member or a windowed key column requests that
-   union inside its own period and is left out where the union does not reach it, as an
-   ordered member is; a year-independent file's keys request `_default`. Key entries
-   follow every ordered entry, by table, variant, edition, member index and column. An
-   ordered key stays an ordered entry, unmarked. An auxiliary table's carried key
-   (`holding_key`: a panel key the table holds but does not serve,
-   [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md), "Carried keys") is added
-   the same way; it never matches an ordered binding, so the main tables alone serve a
-   key order. The global fallback has no physical table and adds none.
-6. **Row filter.** A file's requested period is the union of its entries'
-   `requested_period`, held keys included. When the file's table declares a period
-   column (`holding_table.period_column` and `period_encoding`, from the steward spec)
-   and that union leaves part of the table's held period out, every entry of the file
-   carries the same `filter`: `{column, encoding, ranges}`, where `ranges` are the
-   union's ascending, disjoint intervals, joined with OR. A range's `from` and `to` are
-   inclusive ISO dates, not the period grammar, so the extract runner compares without
-   parsing it; a bound at the table's first or last held day cuts nothing and is
-   omitted, so a range may be open-ended on either side. The runner reads the column per
-   `encoding` (`date`, `year`, `yyyymm`, `yyyymmdd`) and keeps a row whose year, month
-   or day lies in a range (a `datetime2` value compares by its day): a bound finer than
-   the encoding widens to its whole year or month, never narrowing the request. A row
-   whose period value is missing or unreadable matches no range, so a filtered file
-   leaves it out and an unfiltered file keeps it (settled at the v1 freeze). No filter
-   when the table declares no period column (it is extracted whole), when the request
-   covers every held day, for a year-independent file, or in the global fallback.
+- An **entry** is one merged segment of one binding in one table. With a table
+  succession (`continues` between tables) each day goes to the table whose `at_start`
+  window holds it, so one binding can give entries in two tables. Adjacent segments
+  merge when their spelling, type and value set agree (design §4.6), so a flag-only
+  boundary does not split an entry. `edition` and `qualifier` appear only when the
+  source names them.
+- **`row_keys`** are the table's segments with role `row_key` over the period. A row key
+  that no binding orders still appears there; it is not an entry. This is where a panel
+  gets its keys, since the document names none.
+- A blocked order is `order_blocked`, with every finding at once and nothing partial;
+  the blocking ones have level `error`.
 
-**Fail closed, in one pass.** A blocked order lists every finding across every binding
-(`steward_mismatch`, `project_unnamed`, `project_empty`, `period_not_orderable`,
-`variable_unresolved`, `binding_unavailable`, `representation_unknown`,
-`representation_unresolved`, `representation_ambiguous`, `mapping_missing`,
-`coverage_gap`, `column_window_unavailable`) as structured fields of `order_blocked`, so
-a researcher fixes the whole order in one edit. An empty project is a valid draft that
-cannot become a header-only manifest; so is an unnamed one (a blank or whitespace-only
-`name`), which cannot fill `provenance.project_name`. Only `order` reports these two:
-`validate` judges the draft, which may be both.
+**Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
+`variable_not_in_table`, `outside_availability`, `ambiguous_window`,
+`preliminary_without_edition`, `edition_not_found`, `period_default_on_dated_table`,
+`period_on_timeless_table` and `period_not_orderable`. Warnings and infos do not:
+`classification_version_ambiguous`, `edition_disagreement`, `variable_sensitive`,
+`variable_replaced`, `panel_row_keys_differ`, `period_clipped`, `form_change`,
+`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
+source, binding or panel and whose `source`, `variable`, `table` and `period` say what
+it is about (`null` for a whole-project finding). The conditions are the order check's
+to state in its own tests; the rules that shape them:
 
-**The manifest is a versioned JSON contract.** It carries the extract format (the
-project's `extract_format`, resolved to `dta` when the project sets none, so the runner
-has no default of its own), provenance (mode, steward, artifact kind, project name,
-schema version, declared reg_meta version and SHA-256 of the project's canonical JSON,
-catalog schema version and `generation_id`), the entries (logical coordinate with the
-canonical representation, the clipped `requested_period`, the physical output `file`
-name, edition, table, column, optional partition, optional projection token and optional
-`member` index, `key: true` on a held key no binding ordered, and the file's optional
-row `filter`) and the clips. It is written here and read offline by the steward-side
-extract system, so it is self-contained. That system is the MONA extract runner
-([../reg_mona_runner/DESIGN.md](../reg_mona_runner/DESIGN.md)): a data manager runs it
-inside MONA, it writes the files there, and nothing row-level leaves. Its bytes are
-sorted keys, two-space indent, UTF-8 and a trailing newline, byte-identical across runs;
-periods render through the shared grammar, except a row filter's ISO day bounds. No
-timestamps: the only time-shaped values come from the artifact and the project.
-`partition`, `projection` (the table's token), `member` (`{"position": N}`,
-`{"year": YYYY}` or `{"month": "YYYY-MM"}`), `stata_name`, `key`, `filter` and a filter
-range's `from` and `to` are the only optional fields; absent means none (an ordered
-entry for `key`, an unfiltered file for `filter`, an open end for a bound), so an
-inventory without partitions, projections, pivot members or period columns, and an order
-that binds every held key, produces the bytes it did before any existed. The parent
-(`projection_of`) is not in the manifest: the token is the placement.
+- A retired id reports "retired in <version>" and names no successor; no operation
+  follows `ident_retired`.
+- `variable_replaced` reports an incoming `continues` edge and never follows it.
+- Design §9 blocks only the two window kinds (`ambiguous`, and a preliminary segment
+  without its edition), so a class-version ambiguity the binding does not pin is a
+  warning.
+- Variables are register-scoped, so members of different registers never share a row-key
+  variable. `panel_row_keys_differ` compares the row-key segments' identifier kinds
+  (`segment.id_kind_id`, the full kind, pseudonymised form included) and warns only when
+  every member's kind is known and they differ. Which keys join is the researcher's
+  call.
+- A request partly outside availability is a clip (`period_clipped`), never silent and
+  never an error. Only availability empty across the whole request blocks.
 
-**A `dta` order renames a column `.dta` cannot hold.** A Stata variable name is 1 to 32
-characters, a letter (general category L\*) or `_` first, then letters, ASCII digits and
-`_`, and not a reserved word nor `str` and a digit (Stata's rule, stricter than what
-ReadStat writes). In 0.61.0, 274 SWECOV columns (68 distinct names, the
-financial-statement and pregnancy-register tables) are over 32 characters and 4 more
-hold a space, `-`, `,` or `(`; no two of their aliases meet in one table. On a `dta`
-order of a steward artifact every entry whose column fails the rule, held keys included,
-carries `physical.stata_name`: the column's first 25 characters, each that is not a
-letter, ASCII digit or `_` made `_` (and `_` put first when it would start with a digit
-or `str` and a digit), then `_` and the first 6 lowercase hex digits of the SHA-256 of
-the column's UTF-8 name, 32 characters at most. The runner writes the column under it,
-with the full name as its variable label. The alias is a function of the name alone, so
-a column takes one alias in every table, order and catalog generation, and two columns
-sharing their first 25 characters (up to nine in one table do) differ in the hash.
-Truncation with a counter would read better but makes a column's name depend on its
-table's other columns, so a new sibling could rename it under a researcher's do-file. A
-hash collision within one file is not handled here: the runner refuses a file that would
-hold two columns of one name. Nor is a name over 80 characters, a Stata label's limit
-(the longest held name is 65): the runner refuses it. `parquet` and `csv` orders keep
-every name.
+### A clear order
 
-**Version 3 is frozen** (2026-10-23; version 2, frozen 2026-10-23, had no `stata_name`
-and refused `.dta` orders of long names; version 1, frozen 2026-10-22 with its first
-reader, the extract runner, had no `extract_format`; both are retired). Every object is
-closed; this is the whole field set:
+Catalog (illustrative): table `scb/lisa/individ` with yearly spans 2003 onward. Variable
+`scb/lisa/dispink` has two segments: `DispInk` over `[2003-01-01, 2004-01-01)`, then
+`DispInk04` from 2004, both `int`. Variable `scb/lisa/sun2000niva` starts in 2004.
+`scb/lisa/lopnr` is the row key throughout.
 
-- root: `version` (the integer 3), `extract_format` (`dta`, `parquet` or `csv`),
-  `provenance`, `entries` (non-empty), `clips`;
-- `provenance`: `mode`, `steward`, `project_name`, `project_schema_version`,
-  `project_reg_meta_version`, `project_hash`, `catalog_schema_version`,
-  `catalog_generation_id`, `artifact_kind`, all strings, all non-empty (`project_name`
-  is never blank: an unnamed project blocks as `project_unnamed`);
-- entry: `source`, `logical`, `requested_period`, `physical`, optional `key` (only
-  `true`) and optional `filter`;
-- `logical`: `provider`, `register`, `variant`, `variable`, `representation`;
-- `physical`: `file`, `edition`, `table`, `column`, optional `partition`, `projection`,
-  `member` and `stata_name` (only on a `dta` order); `member` holds exactly one of
-  `position`, `year`, `month`;
-- `filter`: `column`, `encoding` (`date`, `year`, `yyyymm` or `yyyymmdd`), `ranges`
-  (non-empty); a range has optional `from` and `to`, inclusive `YYYY-MM-DD` days;
-- clip: `source`, `variable`, `requested_period`, `ordered_period`.
+Request: source `lisa`, table `scb/lisa/individ`, period `2003..2006`, binding `dispink`
+and `sun2000niva`.
 
-Rust writes only these fields; the runner enforces the set, refusing a version other
-than 3, a mode other than `steward_holdings`, another steward's order and any unknown
-field. So any change to the shape, an added optional field included, is version 4: a v3
-runner refuses it rather than misreading it.
+```json
+{
+  "data": {
+    "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
+    "project": {"name": "income-panel", "schema_version": "5.0.0",
+                "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
+    "entries": [
+      {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "period": {"start": "2003-01-01", "end": "2004-01-01"},
+       "spelling": "DispInk", "type": "int", "length": 8, "value_set": null,
+       "classification": null},
+      {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/dispink", "display_name": null,
+       "period": {"start": "2004-01-01", "end": "2007-01-01"},
+       "spelling": "DispInk04", "type": "int", "length": 8, "value_set": null,
+       "classification": null},
+      {"source": "lisa", "binding": 1, "provider": "scb", "register": "scb/lisa",
+       "table": "scb/lisa/individ", "variable": "scb/lisa/sun2000niva", "display_name": null,
+       "period": {"start": "2004-01-01", "end": "2007-01-01"},
+       "spelling": "Sun2000niva", "type": "char", "length": 3,
+       "value_set": {"hash": "c41e…", "n_items": 31}, "classification": null}
+    ],
+    "row_keys": [
+      {"source": "lisa", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2007-01-01"},
+       "columns": [{"variable": "scb/lisa/lopnr", "spelling": "LopNr"}]}
+    ],
+    "clips": [
+      {"source": "lisa", "variable": "scb/lisa/sun2000niva",
+       "requested": [{"start": "2003-01-01", "end": "2007-01-01"}],
+       "ordered": [{"start": "2004-01-01", "end": "2007-01-01"}]}
+    ],
+    "findings": [
+      {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
+       "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
+       "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null},
+      {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
+       "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
+       "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
+       "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
+    ]
+  },
+  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+}
+```
 
-The manifest stays pretty-printed. MONA's upload limit is 10 MB; a typical order is
-about 0.4 MB and the widest LISA order about 7 MB. Compact JSON would roughly halve
-that, but it is a second encoding beside the one the goldens pin, for headroom no real
-order needs yet. The runner parses compact and pretty JSON alike (its tests run a
-compact order), so a compact download needs no runner change. `simplify:` pretty output;
-switch the download to compact when a real order passes 8 MB.
+### A blocked order
 
-**Extraction keeps delivery topology.** One output file per physical table and table
-edition (`physical.edition`, #1661), whatever variants bind it. `physical.table` is the
-unique `physical_id`, and the partition and projection token are facts of the table, so
-the edition only names the file's period. A table several variants map is one delivery,
-so it is one file holding every ordered variant's columns, and its held keys are the
-keys of each variant its entries bind. An entry's `requested_period` keeps the clipped
-days it serves (availability, a column window, a year or month member) but never splits
-a file: a year or month member, a windowed column and the ordered key of one table land
-in the table's one file, whichever sources and years ordered them. A file's columns are
-the distinct physical columns of its entries: two entries for one column (two sources,
-or two periods) are one extracted column. Since a file holds its table's rows for every
-requested period, a split by clipped period would only repeat the same rows and separate
-columns from their keys; the file's row filter (step 6) narrows its rows to the union of
-its entries' requested periods instead. In the global fallback the edition is the
-entry's merged requested period, so nothing changes there.
+Catalog (illustrative): in `scb/lisa/individ`, two variables claim the folded spelling
+`kommun` over 2019, so both segments are `ambiguous` there. `scb/lisa/dispink` for 2020
+is delivered only by a `preliminary` release.
 
-The file's name, `physical.file`, is a fact of the table, never of the order (a
-maintainer ruling, 2026-10-23):
-`<provider>_<register>_<variant>[_<placement>][_<period>]`, plus the extract format's
-extension. The variant is the table's own: the variant that maps the most of the table's
-columns, ties to the first by provider, register and variant slug, so a table several
-variants share keeps one name whatever the order binds; `_default` is left out. The
-placement is the partition or the projection token. The period is the edition when it is
-one period (a year, a month or a day); a multi-period table's file holds every period
-and its name has none (`scb_lisa_individer-16plus_2020.dta`,
-`scb_lisa_foretag_2020.dta`, `region-skane_primarvard.dta`). Two tables of one variant,
-placement and period would share that name (106 of the 1432 SWECOV tables in 0.60.0,
-such as `Partner_2005` and `RTBFamilj2005`), so a name more than one catalog table takes
-gains the table's `physical_id` in slug spelling
-(`scb_rtb_familjer-fran-1998_2005-12-31_partner-2005`). The order computes this from the
-catalog it reads, so the manifest carries the final name and the runner never derives
-one; adding a sibling table to the catalog can lengthen an existing table's name
-(accepted pre-v1). The runner still refuses two files of one order whose names differ
-only in case. In the global fallback there is no table: the name is the entry's own
-coordinate and requested period. What goes in as two tables comes out as two files:
-shard identity (reporter stream, municipality) may exist in no column, so a union would
-destroy information, and a projection may have a finer grain than its parent. Each file
-carries its own keys, ordered or added as held keys (step 5), so a researcher who orders
-one non-key column still gets a joinable file; the user joins a projection file to its
-parent's on the shared key. The extract runner writes a key entry's column like any
-other and may tell it apart by `key`. A multi-period range is one file, filtered to the
-requested ranges when its table declares a period column.
+Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`, no
+`edition`.
 
-Design limit: sibling projections cannot share a key the parent lacks. Two projections
-of one parent that both map a key the parent does not map (a child id two narrow
-deliveries carry) are two claims on one cell, which the inventory refuses as
-`inventory_cell_conflict`. The parent is the only table a projection's cell defers to,
-so a sibling cannot serve another sibling's key. Revisit when a steward delivers such a
-pair: it needs either a declared shared-key set or a projection chain.
+```json
+{
+  "error": {
+    "code": "order_blocked",
+    "class": "order_blocked",
+    "message": "the order is blocked by 2 findings",
+    "remediation": "Narrow the period around the blocked windows, or name the edition; an ambiguous window needs curation.",
+    "fields": {
+      "findings": [
+        {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
+         "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
+         "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
+         "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null},
+        {"level": "error", "code": "preliminary_without_edition", "path": "/sources/0/bindings/1",
+         "message": "scb/lisa/dispink over [2020-01-01, 2021-01-01) has only a preliminary edition; name it with \"edition\": \"preliminary\"",
+         "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
+         "period": {"start": "2020-01-01", "end": "2021-01-01"}, "successor_fqid": null}
+      ]
+    }
+  },
+  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+}
+```
 
-`simplify:` a table without a declared period column is extracted whole, whatever part
-of its edition the order requests. Declare one (the steward spec's `period_column`) when
-a large multi-period table's whole extract is the cost.
-
-**Deferred: companion tables.** Steward deliveries include lookup and crosswalk tables
-that are not register data (VaraText beside IVP, skolkod↔skolenhetskod, the FEK
-`PeOrgNr`↔`FENr` key tables, `LopNrByte`). The SWECOV generator skips them for now; read
-that as awaiting this mechanism. A small closed code set becomes a catalog value set or
-classification. A large lookup or any crosswalk or key table becomes a physical
-companion: a table-level `companion_of = "<provider>/<register>"` in the inventory, with
-no mappings, shipped with any order touching that register. Sensitivity is an access
-fact: a pseudonym-bearing crosswalk must be a companion. It needs a manifest entry
-without a logical coordinate and one materializer arm. Open: `LopNrByte` belongs to the
-steward rather than a register, and ordering it may deserve its own access decision.
+With `"edition": "preliminary"` on the source, the second finding goes and the 2020
+entry carries `"edition": "preliminary"`. The first stays until curation resolves the
+ambiguity; narrowing the period to 2018 alone also clears it.
 
 ## Project semantic validation
 
 The validate operation runs the supported-version decision, then the structural
-validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), then the semantic layer here, and
-concatenates their issues. A failing project is a result, not an error. A structural
-failure skips the semantic layer, so a rejected document costs no catalog read. A
-document whose `steward` is not the serving catalog's is one `steward_mismatch` error at
-`/steward` and nothing else, as `order` refuses it: every other issue would come from
-another steward's holdings.
+validator ([reg-core/DESIGN.md](reg-core/DESIGN.md)), and concatenates their issues with
+the order check's findings ("The logical order"). A failing project is a result, not an
+error. A structural failure skips the catalog layer, so a rejected document costs no
+catalog read. Until the order check lands (`r-order-check`), `validate` returns the
+structural layer alone.
 
-Per source family (the source variant's succession family under a dated period, the
-variant itself under `_default`; "Order manifest", step 1) and binding:
+### Project document 5.0.0
 
-- The variant must resolve, and the binding's variable must resolve, else
-  `fqid_unresolved`.
-- Availability is the order's shared pass (steps 1 and 2 above); this layer only
-  translates its facts. Narrower availability (a leading or trailing shortfall, an
-  internal gap, a pinned representation covering only part) is no finding: the order's
-  `clips` and the timeline state it (#1836). A list period (`2005..2010,2015..2020`) is
-  one request with holes: a column delivered or co-existing only inside a hole is
-  neither availability nor ambiguity. Empty availability across the whole request
-  blocks. The pass's findings take this surface's names: `binding_unavailable` →
-  `period_outside_state_validity`, `representation_unknown` →
-  `binding_representation_unknown`, `representation_ambiguous` →
-  `binding_value_set_version_ambiguous`, `representation_unresolved` unchanged. The pass
-  runs once over the family, never per member with a merge: a member that does not
-  deliver a column would otherwise block it for that member's years.
-  `binding_state_drifts_within_period` (info) reports a sequential state transition
-  inside the request. It counts the distinct (canonical column by `fold_identity`, value
-  set) pairs among the states the request reaches: the order's partition of the request
-  by column, refined by coding (#1899). So a boundary is a transition only where the
-  representation or value set changes across it (LISA's `SyssStat` → `SyssStat11`),
-  inside one member as well as between members; a state boundary, gap or member boundary
-  one column simply runs through is not, and neither is a difference in any other fact,
-  such as the data type or the `source_register_text` (LISA's `cfar-nummer`, RAMS →
-  BAS), for which the order emits one entry. A value-set change on a continuing column
-  still counts, though the order emits one entry across it.
-- `source_period_narrower_than_available` (warning, at `/sources/<i>/period`) is the one
-  period finding, the reverse of a clip. It names the days inside the study window a
-  period widened into them would order, across the whole family, minus the source
-  period's days, when not empty. A day counts when some binding serves it (the same pass
-  asked for the whole window; on a steward artifact, only the days a holding serves) and
-  no binding would block on it: available but not held, or a finding such as co-existing
-  representations. So following the warning never blocks the order on availability. A
-  binding whose own period misses all its data still counts, so its
-  `period_outside_state_validity` comes with where the data is. Day grain, so a monthly
-  or half-year period is well defined. No window, a `"_default"` source or a source with
-  no resolved binding warns nothing. A list period narrower than the data warns on
-  purpose, as do per-year panel members of one variant.
-- `deprecated_traversal` (info) and `variable_replaced` (info, with `successor_fqid`
-  when the successor is a binding) are hints; the binding stays valid.
-- `variable_sensitive` (warning) marks a binding whose variable is `is_sensitive`. It is
-  flagged, never blocked (#1547): the steward decides whether to share it, and every
-  client of `validate` (the SPA's cart, MCP) sees the same warning.
-- A binding's `value_set` must name a known classification, else `value_set_missing`.
+`schema_version` `5.0.0` replaces 4.0.0 as a major bump: `register_variant` and
+`representation` go, so a 4.0.0 document cannot be read as 5.0.0. The reader takes its
+own version exactly (`unsupported_schema_version`), with no migration path. The field
+tables give each change and its reason.
 
-A clean validation means the project resolves; it is never proof of physical order
-readiness, because matching and coverage do not run here. This layer reads identity and
-state metadata, never code membership.
+Top level:
 
-**Representation, not `@version`.** One concept can have several delivery columns at the
-same instant (SSYK at 3, 4 and 5 digits; age brackets). When two or more columns overlap
-inside the requested instants and the binding sets no `representation`, the extract
-would pull several columns: `binding_value_set_version_ambiguous`. Distinct columns in
-non-overlapping windows are a rename, not ambiguity. A `representation` the catalog no
-longer delivers is `binding_representation_unknown`.
+  | Field            | 5.0.0     | Why                                                                                                                                                                                                       |
+  | ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `steward`        | removed   | Its readers go (the serving catalog's name, `steward_mismatch`, the holdings checks). The holdings layer (E) decides how a project names its steward or holdings. A field nothing checks would be a shim. |
+  | `extract_format` | removed   | A file format is physical. It returns with the order file in E.                                                                                                                                           |
+  | the rest         | unchanged | `schema_version`, `reg_meta_version`, `name`, `sources`, `panels`, `window`.                                                                                                                              |
 
-A defensive backstop (two available states with different value sets at one requested
-instant on one column) is unreachable from an admitted artifact, because two build
-invariants close it: no two overlapping states of one column carry distinct non-null
-value sets, and no code-less state overlaps a code-bearing one. The second is skipped on
-steward builds, which is safe only while the steward overlay adds code-less states for
-its own variables alone. If an overlay ever gains value sets or states on base
-variables, revisit the skip.
+Source:
 
-**Steward membership.** On a steward artifact, a binding the steward holds no column of
-is `fqid_outside_steward_catalog`, and a held concept whose resolved column is not held
-is `representation_outside_steward_catalog`, naming what is held. Both are warnings, so
-an uploaded project can be inspected; ordering blocks the same conditions with its own
-findings. Membership uses the literal authored FQID at any family member the period
-reaches (the named variant under `_default`), and a resolved column must be held under
-its own member; a `same_as` edge grants nothing. Catalog artifacts emit neither.
+  | Field              | 5.0.0                                               | Why                                                                                                                                                          |
+  | ------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `register_variant` | replaced by `table`: a table's public id            | v4 has tables, not variants (design §2.2). A 2-part id names a register with one implicit table; for a register with named tables it is `table_is_register`. |
+  | `period`           | same grammar                                        | `_default` now means "a timeless table" (design §2.1), checked against the catalog (`period_default_on_dated_table`).                                        |
+  | `edition`          | new, optional: `final`, `unstated` or `preliminary` | Design §4.3 T2: a `preliminary` segment is orderable only by naming its edition.                                                                             |
+  | `qualifier`        | new, optional string                                | Schema §2.3 and T3: releases with different qualifiers are distinct deliveries. Absent means every qualifier.                                                |
 
-New variables, registers and classifications onboard through slug-TOML changes to the
-build; a steward publishes a new compiled generation. Data without an FQID cannot be
-authored.
+`edition` selects, in every window of the source's period where a release of that
+edition exists, that release's occurrences. Elsewhere the primary edition serves. Naming
+an edition that no release of the table has in the period is `edition_not_found`.
+
+Binding and panel:
+
+  | Field                                     | 5.0.0                                                    | Why                                                                                                                                                                                                                         |
+  | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin is a class version (schema §2.2). Until D curates classifications no version exists, so any pin is `fqid_unresolved`.                                               |
+  | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not. |
+  | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                         |
+  | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                       |
+  | panel `entity_key`, `time_key`            | removed                                                  | Keys come from the catalog: a table's row keys are its segments with role `row_key` (schema §0), and the time axis is the member table's `time_point` / `time_start` segment, else the member source's period.              |
+
+A panel is a named grouping of sources with a comment. Which keys join across members is
+the researcher's call; the order check warns (`panel_row_keys_differ`).
+
+Structural rules (`reg-core`, the document alone). Removed with their fields:
+`invalid_slug` and `invalid_enum_value` on `steward` and `extract_format`,
+`composite_time_key_mixed_kinds`, `literal_period_invalid`,
+`composite_key_inconsistent`, `time_key_member_kind_mismatch`,
+`literal_time_key_duplicate`, `entity_key_unknown_column`, `time_key_unknown_column` and
+the key `invalid_field_type` rules. Changed:
+
+  | Rule                                                         | 5.0.0                                                                                                                                                           |
+  | ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                                                                                           |
+  | source keys                                                  | `table`; optional `edition` (`invalid_enum_value`) and `qualifier` (`invalid_field_type` if not a string); an explicit `null` of either is `invalid_field_type` |
+  | `invalid_fqid` on the source                                 | `table` is a 2- or 3-part public id, provider not `class`                                                                                                       |
+  | `fqid_table_mismatch` (was `fqid_register_variant_mismatch`) | the binding's `<provider>/<register>` equals the table's first two parts                                                                                        |
+  | `invalid_period` for `_default`                              | gone from the structural layer; the catalog rule `period_default_on_dated_table`                                                                                |
+  | binding keys                                                 | `classification`, `class/<family>/<version>` (3 segments); `representation` is `unexpected_field`                                                               |
+  | panel keys                                                   | `panel_id`, `members` (strings), `comment`                                                                                                                      |
+
+Everything else is unchanged: `invalid_root`, `missing_required_field`,
+`invalid_field_type`, `invalid_window`, `duplicate_source_name`, `empty_bindings`,
+`display_name_collision`, `subtype_on_wrong_type`, the period rules,
+`duplicate_panel_id`, `empty_members`, `panel_member_unknown_source`,
+`source_referenced_by_multiple_panels` and `unsupported_schema_version`.
+
+Catalog rules are the order check's, listed in "The logical order": `fqid_unresolved`
+(also for an unknown table or classification), `retired_ref`,
+`period_default_on_dated_table`, `period_on_timeless_table`, `edition_not_found`,
+`variable_not_in_table`, `table_is_register` and the warning `panel_row_keys_differ`.
+`steward_mismatch`, `fqid_outside_steward_catalog`, the `representation_*` codes,
+`value_set_missing` and `binding_state_drifts_within_period` go; the last becomes the
+`form_change` notice.
 
 ## Search
 
