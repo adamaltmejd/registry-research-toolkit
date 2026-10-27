@@ -4,7 +4,7 @@
 
 Prerequisites: **Python 3.15+** and [uv](https://docs.astral.sh/uv/) for the builder and
 the test tooling, a stable **Rust** toolchain for `crates/` (`uv sync` builds the
-`reg-core-py` extension with it), and [bun](https://bun.sh/) for the frontend.
+`reg-core-py` extension with it).
 
 ```bash
 git clone https://github.com/adamaltmejd/registry-research-toolkit.git

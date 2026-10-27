@@ -16,7 +16,6 @@ dist/
 .ruff_cache/
 .pytest_cache/
 .hypothesis/
-node_modules/
 # Cargo workspace build output (root Cargo.toml)
 /target/
 
@@ -53,7 +52,6 @@ reg_meta_build/docs/_raw/
 
 # Archive (concluded investigations, ad-hoc scripts, internal notes)
 archive/
-*.har
 
 # Claude Code harness state (transient locks, per-user settings, worktree shims).
 # `.claude/skills/` is intentionally tracked for shared skills, so ignore the

@@ -1,5 +1,5 @@
 //! The committed `openapi.json` equals the document `reg-meta serve` publishes. The
-//! SPA generates its types for the Rust server from that file (`bun run gen:types`).
+//! plugin's project JSON Schema is generated from that contract.
 //!
 //! Regenerate with `REG_META_BLESS=1 cargo test -p reg-meta --test openapi_snapshot`.
 

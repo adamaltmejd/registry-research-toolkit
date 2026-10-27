@@ -17,8 +17,7 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
   and `reg-build`, with its reader config and id ledgers under `curation/`.
 - `reg_meta_build` (CLI `reg-meta-build`) — build the catalog SQLite DBs from SCB
   exports (maintainer-only, Python).
-- `reg_webapp` — React SPA (React Aria Components) over the Rust server
-  (`reg-meta serve`): catalog browse + project authoring.
+- `reg_webapp` — server deployment: the Rust server container and hosted MCP edge.
 - `reg_mona_runner` — `swecov_extract.R`, the extract runner a SWECOV data manager runs
   inside MONA: order manifests in, one file per manifest file out, in the order's
   format: Stata `.dta`, Parquet or CSV (R: DBI, odbc, jsonlite, haven, arrow).
@@ -43,10 +42,6 @@ state.
 # Governance
 
 - `DESIGN.md` per package documents design rationale and constraints.
-- Exception in name only: `reg_webapp/frontend/DESIGN.md` is the SPA's *design language*
-  in the [DESIGN.md format](https://github.com/google-labs-code/design.md) (YAML token
-  front matter + rationale prose). It is the visual source of truth for the frontend;
-  `reg_webapp/DESIGN.md` keeps the engineering rationale.
 - No frozen specs or **permanent** implementation trackers — design decisions live in
   DESIGN.md, implementation history lives in git.
 - **Exception**: each multi-PR refactor spanning weeks may keep one root-level tracker
@@ -157,17 +152,14 @@ below are what an agent must follow when writing, changing or deleting a test. T
   to a slower tier (real-seed or release gate) or goes.
 - **Report what ran.** Name the checks you ran and the ones you did not; never claim an
   unrun check passed.
-- **Frontend follows the same rule**: no component internals and no screenshot
-  regression. A UI-specific regime is a separate, later decision.
 
 # Python conventions
 
 - Runtime deps live in each package's `pyproject.toml`; dev deps only in the root
   `pyproject.toml`. Add with `uv add` / `uv add --dev`; hand-edit only to bump an
   existing constraint (then `uv lock`). CI uses `uv sync --frozen`.
-- No minimum release age: `exclude-newer = false` in the root `pyproject.toml`
-  `[tool.uv]` and `minimumReleaseAge = 0` in `reg_webapp/frontend/bunfig.toml`. Keep
-  both written out: deleting a key inherits the checkout's global waiting period.
+- No minimum release age: keep `exclude-newer = false` in the root `pyproject.toml`
+  `[tool.uv]`; deleting it inherits the checkout's global waiting period.
 - Python floor `>=3.15` everywhere. The root `.python-version` makes
   `uv run --no-project` tooling in `scripts/` resolve 3.15 too.
 
@@ -179,26 +171,16 @@ below are what an agent must follow when writing, changing or deleting a test. T
   argparse CLI.
 - **Runtime** (`crates/`, Rust): reader, `project_data.json` validator, order
   materializer, HTTP API and MCP tools. There is no Python web backend.
-- **Web frontend** (`reg_webapp/frontend/`): React 19 + React Aria Components + Vite +
-  TypeScript, bun-managed; TS types codegen'd from `crates/reg-meta/openapi.json`.
 - **Tests**: pytest + pytest-xdist (builder, conformance), `cargo test` (crates),
   `@pytest.mark.release` for real-artifact tests, Hypothesis for grammars. Build/parse
   coverage is fully synthetic.
 - **Type checking**: `ty` (Astral, beta), blocking in CI, pinned in `scripts/gate.py`
   and run with `uvx` (not a dev dep).
 
-# Run (dev servers)
+# Run
 
-- `reg_webapp` local dev (Rust server + Vite with an `/api` proxy):
-  `reg_webapp/dev/dev.sh` (agent-browser for `smoke`/`shot`, the Playwright driver for
-  `flows`); the `/run-reg-webapp` skill (`.agents/skills/run-reg-webapp/`) explains the
-  modes. `.claude/launch.json` registers a single `reg-webapp` config for
-  `preview_start` (its entry point is `dev.sh preview`, so `autoPort` makes parallel
-  sessions collision-free and the proxy is auto-wired); for one-shot screenshots use
-  `dev.sh smoke` / `dev.sh shot`.
-- `reg_webapp` frontend work follows the design language in
-  `reg_webapp/frontend/DESIGN.md`: author with the `reg-webapp-frontend-design` skill
-  and judge the result with `reg-webapp-design-reviewer`.
+`reg-meta serve --db <catalog-dir> --port 8000` serves the HTTP API and `/mcp`. The SPA
+is archived on `archive/reg-webapp-spa` and returns in milestone E.
 
 # Lint and test
 
@@ -206,9 +188,10 @@ below are what an agent must follow when writing, changing or deleting a test. T
 no git hooks: CI is the gate, so run the relevant step before pushing.
 
 - `uv run --no-project scripts/gate.py all` — the full gate before a PR (`g0`, `rust`,
-  `release`, `flows`, `frontend`). The R packages are not gated: their testthat suites
-  run only by hand (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
-- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown) and ty only.
+  `release`). The R packages are not gated: their testthat suites run only by hand
+  (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
+- `uv run --no-project scripts/gate.py lint` — ruff, panache (markdown), ty, plugin
+  schema drift and provider vocabulary.
 - `uv run --no-project scripts/gate.py g0 rust --packages <pkg>...` — lint, crates and
   the touched packages' tests, plus the conformance run against the Rust server.
 - `uv run --no-project scripts/gate.py regen` — regenerate rebase-sensitive generated
@@ -218,11 +201,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Narrow runs: `uv run python -m pytest <path>`, `cargo test -p <crate>`.
 - Real-artifact conformance: the `release` step in `scripts/gate.py` shows the flags
   (`--run-release --artifact-dir=… --server-cmd=…`).
-- Local prerequisites: `cargo install cargo-machete --locked`;
-  `rustup target add wasm32-unknown-unknown` and `wasm-bindgen-cli` at the version
-  `crates/reg-core-wasm/Cargo.toml` pins.
-- A new worktree needs no setup step: Python syncs on the first `uv run`, and `dev.sh`
-  and the gate's `frontend` step run `bun install --frozen-lockfile` on demand.
+- Local prerequisite: `cargo install cargo-machete --locked`.
+- A new worktree needs no setup step: Python syncs on the first `uv run`.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs
   repository) is a build artifact — fix `scripts/parse_lisa_docs.py`, not the output.
 
@@ -254,8 +234,8 @@ enforced by `scripts/tests/test_skill_gh_reads.py`.
 - Develop on an isolated branch or worktree. A PR needs green CI and an independent
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
-- Renovate (`renovate.json`) opens the routine dependency PRs: tools, frontend, CI and
-  dev deps nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
+- Renovate (`renovate.json`) opens the routine dependency PRs: tools, CI and dev deps
+  nightly; the builder's runtime deps and Cargo weekly, plus a separate weekly
   lockfile-maintenance PR (the next curation real-seed build proves the weekly ones). A
   red Renovate PR is fixed locally by an Operator session with upgrade-deps.
 - Dependency repair and manual, larger upgrades use

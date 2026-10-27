@@ -58,8 +58,7 @@ The `ValidationResult` the structural validator must produce for the paired
 ```
 
 - `level` ∈ `{"error", "warning", "info"}`.
-- `code` is a namespaced, stable identifier. Tests pin codes; the SPA maps codes to UI
-  affordances. New codes are additive.
+- `code` is a namespaced, stable identifier. Tests pin codes. New codes are additive.
 - `path` is an RFC 6901 JSON pointer into the paired `input.json` root; empty string for
   whole-document issues.
 - `message` is English in v1; safe to localize later.
@@ -69,13 +68,9 @@ issues are compared in emission order.
 
 ## Consumers
 
-1. **`reg-core`** — `tests/project.rs` runs `validate_structural` on every case
-   (`structural_corpus`) and checks the recorded hashes in `../hashes.json`
-   (`project_hashes`).
-2. **SPA TypeScript tests** — `reg_webapp/frontend/src/lib/reg_core.test.ts` runs every
-   case through `reg-core-wasm`'s `check_project` (the browser's copy of the server's
-   structural door), and `validation.test.ts` checks that the SPA can locate each
-   expected issue's path and names each code.
+`reg-core`'s `tests/project.rs` runs `validate_structural` on every case
+(`structural_corpus`) and checks the recorded hashes in `../hashes.json`
+(`project_hashes`).
 
 ## Adding a case
 

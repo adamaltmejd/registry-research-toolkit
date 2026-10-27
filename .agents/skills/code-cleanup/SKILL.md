@@ -19,8 +19,8 @@ package. The pass reads the whole tree, not a diff.
 
 Take the numbers before anything moves, and again at the end. `<tag>` is the release tag
 prefix and `<dir>` the package directory, both `reg_meta_build` for the one Python
-package. The frontend and Rust counts follow; the Rust runtime releases as `reg_meta`,
-so its commit count uses `<tag>` = `reg_meta` and `<dir>` = `crates`.
+package. The Rust counts follow; the Rust runtime releases as `reg_meta`, so its commit
+count uses `<tag>` = `reg_meta` and `<dir>` = `crates`.
 
 ```sh
 last=$(git describe --tags --abbrev=0 --match '<tag>/v*' 2>/dev/null ||
@@ -29,16 +29,6 @@ git log --oneline "$last"..HEAD -- <dir> | wc -l
 git ls-files '<dir>/src/*.py' | xargs wc -l | tail -1
 git ls-files '<dir>/tests/*.py' | xargs wc -l | tail -1
 uv run python -m pytest <dir> -n auto -q --durations=20
-```
-
-The frontend counts product, colocated tests and the generated `api-types-rust.ts`
-apart:
-
-```sh
-cd reg_webapp/frontend
-git ls-files 'src/*.ts' 'src/*.tsx' | rg -v '\.test\.ts$|api-types-rust\.ts$' | xargs wc -l | tail -1
-git ls-files 'src/*.test.ts' | xargs wc -l | tail -1
-bun run test
 ```
 
 Compare each suite's wall time with its budget in ARCHITECTURE.md → "Tiers". Rust:
@@ -53,13 +43,11 @@ family's mid tier (in Claude, Sonnet); the work is lookup.
 
 - **Dependencies.** Each package's `[project] dependencies` against what its `src/`
   imports and what runs it outside Python imports: entry points, Dockerfiles and
-  entrypoint scripts and CI workflows. For the frontend, `package.json` dependencies and
-  devDependencies against imports, package scripts, `vite.config.ts` and CI steps. The
-  workspace-root `[dependency-groups].dev` against tests, tooling, build configuration
-  and CI. A dependency in one and not the other is a finding.
+  entrypoint scripts and CI workflows. The workspace-root `[dependency-groups].dev`
+  against tests, tooling, build configuration and CI. A dependency in one and not the
+  other is a finding.
 - **Dead code.** `uvx --from vulture==2.16 vulture <dir>/src --min-confidence 80`.
-  Confirm each hit with `rg` across the workspace and the frontend before calling it
-  dead.
+  Confirm each hit with `rg` across the workspace before calling it dead.
 - **Trace tables**, kept in the scratchpad: every argparse flag and subcommand, to its
   README or DESIGN.md line, to a test; every `openapi.json` path, to a conformance case;
   every curation-TOML key the loader accepts, to a committed use. A gap is a finding:
@@ -80,12 +68,10 @@ Claude, Opus) for code, the tier below for docs. Every tracked non-test source f
 (`git ls-files`, minus tests and committed data) belongs to exactly one module; a file
 the split below misses joins its nearest module. Today's split: `reg_meta_build/src` as
 `sources/`, `ir/` and the top-level modules by size, with
-`reg_webapp/stewards/swecov/build_catalog.py`; `reg_webapp/frontend` (the app root,
-`lib/`, config and `scripts/`); `reg_webapp/edge` with the Dockerfile and deploy
-scripts; the dev tooling in `reg_webapp/dev/` (`dev.sh` and its Playwright `flows`
-driver); `scripts/`; the `conformance/` harness; `plugins/microdata-tools-se/`; and
-`crates/` (Rust). The test trees are the `test-audit` skill's: run its sweep in the same
-waves and merge its list into step 3.
+`reg_webapp/stewards/swecov/build_catalog.py`; `reg_webapp/edge` with the Dockerfile and
+deploy scripts; `scripts/`; the `conformance/` harness; `plugins/microdata-tools-se/`;
+and `crates/` (Rust). The test trees are the `test-audit` skill's: run its sweep in the
+same waves and merge its list into step 3.
 
 Each prompt carries the module's paths, an instruction to read AGENTS.md,
 ARCHITECTURE.md and the package's DESIGN.md first and the module's files whole, the step
@@ -102,8 +88,8 @@ One line per finding, no hedging:
 - `yagni:` a protocol with one implementation, a helper with one caller, a layer that
   only delegates. Inline it.
 - `stdlib:` a hand-rolled thing the standard library ships. Name it.
-- `dep:` a hand-rolled thing an installed dependency (Pydantic, React Aria Components)
-  already does. Name the feature.
+- `dep:` a hand-rolled thing an installed dependency (Pydantic) already does. Name the
+  feature.
 - `dup:` the same leaf in two modules, the failure mode AGENTS.md names. Name the home
   it belongs in (`_curation.py`, `db.py`, …).
 - `shrink:` same logic, fewer lines, including a special case that a general fix to the
@@ -142,14 +128,11 @@ one of three piles.
 Edit directly, in an isolated worktree. One commit per module, the message naming what
 was removed. Before each push, run the gate steps CI runs for the touched module
 (`uv run --no-project scripts/gate.py <step>`): `lint` always, `g0 --packages <dir>` for
-a Python package, `crates` for `crates/`, `frontend` for the frontend. For the edge
-worker, after `bun run gen:types && bun run build` in `reg_webapp/frontend` (only
-`wrangler.swecov.jsonc` binds its `dist/`),
-`bunx wrangler@<pin> deploy --dry-run --config <c>` for each of
-`reg_webapp/edge/wrangler.jsonc` and `wrangler.swecov.jsonc`, with the wrangler pin
-`.github/workflows/container-build.yml` deploys with. A change that redesigns a module
-rather than deleting from it, or needs more than one sitting, becomes a GitHub issue
-instead (search open and closed first).
+a Python package and `crates` for `crates/`. For the edge worker, run
+`bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
+wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
+redesigns a module rather than deleting from it, or needs more than one sitting, becomes
+a GitHub issue instead (search open and closed first).
 
 ## 5. Report
 

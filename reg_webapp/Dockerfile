@@ -2,8 +2,7 @@
 
 # reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
 # baked reg_meta DB (crates/DESIGN.md, "Distribution"). It serves the API and `/mcp`
-# only; the edge worker serves the SPA (reg_webapp/edge/, built by
-# container-build.yml's edge jobs).
+# only; the global edge worker routes hosted MCP (reg_webapp/edge/).
 #
 # Build context is the REPO ROOT (not reg_webapp/): the server stage needs the
 # Cargo workspace. The DB bake needs the release tag and the SHA-256 digest GitHub

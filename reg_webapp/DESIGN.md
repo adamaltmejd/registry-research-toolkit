@@ -1,13 +1,15 @@
 # reg_webapp — design
 
-React SPA on the Rust server (`reg-meta serve`), which answers every `/api` route: the
-catalog reads (context, search, docs, the catalog pages) and the project operations
-(validate / order). The SPA is the researcher's authoring client. There is no Python web
-server. This file records the package-local design rationale. Cross-cutting topology
-(package tree, dependency graph, perf budgets, version policy, testing-strategy
+The Rust server (`reg-meta serve`) answers every `/api` route: catalog reads (context,
+search, docs and catalog nodes) and project operations (validate / order). There is no
+Python web server. This file records the package-local design rationale. Cross-cutting
+topology (package tree, dependency graph, perf budgets, version policy, testing-strategy
 overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in GitHub
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
+
+The SPA is archived on `archive/reg-webapp-spa` and returns in milestone E, rewritten on
+the v5 API from that archive and `claude/rebuild-s-shell-search`.
 
 **Catalog artifact.** `ARCHITECTURE.md` and `crates/DESIGN.md` own the compiled
 contract. The webapp admits one immutable catalog DB and delegates reads to the shared
@@ -16,7 +18,7 @@ SQL reader. Holdings, scope and steward branding return in milestone E.
 ## Why no auth — cost protection instead
 
 The data is public-ish registry metadata; there is **no server-side user-private state**
-(project files live in the browser, never on the server). "Auth" here is really cost
+(project files belong to clients, never to the server). "Auth" here is really cost
 protection, on two axes: read GETs are edge-cacheable + ETag-revalidated (cheap), and
 the actual-work POSTs carry an origin-side body-size cap + per-client rate limit (Cost
 protection, below). Real auth is a v2+ concern, layered on only if a steward ever needs
@@ -26,12 +28,10 @@ private data.
 
 ```text
 reg_webapp/
-  dev/                    # dev.sh (smoke/shot via agent-browser) and the
-                          # Playwright project flows (driver.mjs); dev.sh
-                          # --fixture-db serves conformance/cases/fixtures/webapp-dev;
-                          # how to use it: .agents/skills/run-reg-webapp/
-  frontend/               # React 19 + React Aria Components + Vite (bun)
-    src/lib/api-types-rust.ts  # codegen'd from crates/reg-meta/openapi.json
+  Dockerfile              # catalog bake and Rust server image
+  docker-entrypoint.sh    # server startup and readiness probes
+  fly.toml                # global origin deployment
+  edge/                   # global hosted MCP edge worker
   stewards/               # only swecov/: old builder inventory retained until E
   DESIGN.md
 ```
@@ -47,106 +47,14 @@ version must exactly equal `reg_core::CATALOG_SCHEMA_VERSION`. The `api` admissi
 corpus pins the refusals. The webapp ships no DDL or schema-version authority;
 `reg-build verify` owns published artifact invariants.
 
-## Catalog pages (the Rust server)
+## Catalog reads (the Rust server)
 
-The SPA's catalog pages read the Rust server (`reg-meta serve`): `show`
-(`GET /api/catalog` for the root, `GET /api/catalog/{ref}` for every other node) and its
-facets `states`, `warnings`, `values`, `graph` and `lineage` (`GET /api/<facet>/{ref}`).
-Every response is `{data, meta}`; an error is `{error: {code, message, fields}, meta}`.
-The contract is `conformance/api/operations.toml`, the SPA's types are generated from
-`crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts`, and the
-"Catalog surface" section of `frontend/src/lib/api.ts` is the one place the SPA calls
-them. Locally the Vite dev proxy sends these paths to the Rust server. Ref and period
-grammar, scope, cursors and their located errors live in `crates/reg-catalog`; the SPA
-renders the error message rather than re-validating.
-
-- **Route paths mirror `show`'s refs.** The page at `/catalog/<ref>` loads
-  `show(<ref>)`. The group pages `/catalog/group/<provider>/<register>/<key>` and
-  `/catalog/group/class/<key>` use the group refs `group/<provider>/<register>/<key>`
-  and `group/class/<key>`, so the SPA path and the API path are the same string. `show`
-  answers a `kind`-tagged node: `root`, `provider`, `register`, `variable`,
-  `classification_root`, `classification`, `concept_group`, `classification_group` or
-  `classification_family`.
-- **A bare-name ref resolves to its entity, without a redirect.** `show` answers the
-  entity's node, and its `data.fqid` is the canonical FQID; the page uses that FQID for
-  every facet call. A name several entities share is `ambiguous_ref` (409), shown in the
-  page's error banner. A FQID the catalog does not hold is `not_found`.
-- **The variable page fetches its facets separately.** `CatalogNodeView` loads the
-  variable's full state history (`states`) before it renders `BindingLeafView`. The leaf
-  then fetches the `?period` subset (`states` narrowed by `period`, `variant` and
-  `value_set_version`), its data warnings (`warnings`) and its relationship graph
-  (`graph`, which carries the succession chain); `LineageDetails` fetches `lineage`
-  (edges and warnings, one failure domain). Each facet is its own `useAsyncResource`
-  fetch with the loading and error affordances of its neighbours, so one failed facet
-  never blanks the page.
-- **Register pages embed their variants.** A register's `show` carries `children` (each
-  with `coverage` and `deliveries`), `groups`, `tags` and `variants`. The variant
-  browser (`/catalog/<provider>/<register>/variants`) and the variant chips read that
-  embedded list; there is no separate variants call.
-- **Classification pages.** A classification's edition timeline is its `family`'s
-  `editions` when it belongs to a derived family (#1116), else its `graph`. Its codes
-  come from `values`; `dimensions` names the curated umbrella groups it belongs to.
-
-**States carry coding identity, not code membership (Y-46).** A state carries its
-window, variant, delivery column, `value_set_id`, `value_set_version_label` and
-conformance verdict, plus a `value_set_summary` (`code_count` and the dense-integer
-`integer_range`), never its members. Embedding codings per state made the
-`scb/rtb/forsamling` page 24 MB. Members come from `values`: a classification ref pages
-its codes; a variable ref with `state=<state_id>` pages that state's value set, and
-`classification` with `partition` (`source_extensions` by default, `canonical`,
-`nonstandard`, `sentinels`) or `column` with `alias_window_from` selects one part.
-Paging is by cursor; `q` filters the whole set before paging and `total` counts the
-matches. The SPA's code panel owns paging, the filter and its loading, error and empty
-states, and is mounted only where a code table is shown, so a closed disclosure issues
-no request. A state whose coding has `code_count` 0 says "This value set has no codes"
-in place, without a read: an empty coding and no coding are different facts. Inside the
-panel `CodeList` renders each page as given (a page is a window, so the viewer's own
-grouping is off), and typing is debounced into one read.
-
-A classification whose codes name their parents (#1297) renders as a code tree. The
-panel's first read is the flat page it always reads: its `total` is the book's size for
-the filter, and a non-null `child_count` on its rows says the book has a tree.
-Unfiltered, `CodeTreeLevel` then shows the roots (`values?parent=`), each node with
-children a native `<details>` whose subtree mounts only while open and reads
-`parent=<code>` once; a panel-lifetime cache keyed by classification and parent keeps
-collapse, reopen and a cleared filter from reading again. A level longer than a page is
-read page by page within its node, with no "load more". While a node loads it reserves
-one skeleton row per announced child (up to the scroll box's height), so opening a node
-does not shift the page (#1139). A filter shows the flat matches with their paging, as
-for any set; a book without a tree (`child_count` null) renders exactly as before.
-
-Storage IDs, `state_id` included, are decimal strings on the wire. The browser never
-converts them to JavaScript numbers; comparisons use integer-safe ordering.
-
-`distinctValueSets` groups source domains by `value_set_id`, preserving first-seen
-order. A shared declared book does not make distinct source domains identical. Every
-book remains linked, including a declared book with nonstandard codes. Conformance
-notices retain each exact state, column window and book; counts describe the precise
-partition each disclosure opens. In-period notices follow the selected window and
-variant; whole-history usage spans and explicit out-of-period domains remain available.
-Known coverage and unknown bounds remain distinct. An exclusively year-independent
-selection hides the leaf's annual availability control while preserving the project's
-study window; these deliveries do not acquire invented observation years.
-
-**Data warnings** are catalog evidence, separate from project validation errors. The
-`warnings` facet takes a register or variable ref and filters by period, variant and
-literal representation; `unassigned_only` keeps a register's limitations that name no
-variable, so a variable page does not download every other variable's warnings.
-Unassigned register limitations stay visible but do not acquire an inferred owner. The
-catalog shows warnings before column selection, with their delivery scope. The project
-reads warnings for its selected columns and source periods, showing register limitations
-separately. A failed warning request stays visible rather than implying the data has no
-limitations. Warnings use the existing status tags and panels; inside project source
-cards the same content renders inline. They are not serialized into `project_data.json`.
-
-**Concept groups (#303).** Register and classification-root nodes carry a `groups` list
-beside the complete flat `children`: grouped members appear in both. The SPA folds
-client-side (`catalog.ts::foldGroupedRows`): grouped leaves hide under one
-`ConceptGroupRow`, a link to the group's subject page carrying the label and the
-distinct-member count; the members, their facets and picking live on that page.
-Ungrouped leaves render as before, and the type-to-filter matches a group on its
-label/key or any member's name/FQID (`groupMatchesFilter`), so member searches still
-surface the folded group.
+`reg-meta serve` answers `show` (`GET /api/catalog` for the root,
+`GET /api/catalog/{ref}` for other nodes) and its facets `states`, `warnings`, `values`,
+`graph` and `lineage`. Every response is `{data, meta}`; an error is
+`{error: {code, message, fields}, meta}`. Ref and period grammars, cursors and located
+errors live in `crates/reg-catalog`. The contract is `conformance/api/operations.toml`
+with its snapshot `crates/reg-meta/openapi.json`.
 
 ## Global catalog search (the Rust server)
 
@@ -157,37 +65,15 @@ operation in `conformance/api/operations.toml`): one ranked list per call, as
 curated pins first; without it, every arm's hits ranked together, grouped variable
 members hidden. Ranking, curated pins (`reg_meta_build/curation/search_pins.toml`, read
 from the catalog's `search_pin` table), concept-group folding, input limits and cursors
-live in `crates/reg-catalog`. Locally, the Vite dev proxy sends `/api/search` to the
-Rust server. Maintainers measure relevance with the repository's
+live in `crates/reg-catalog`. Maintainers measure relevance with the repository's
 `scripts/run_search_eval.py` (`scripts/search_eval.toml`, #393 item 10) against a
 running `reg-meta serve`.
 
-The SPA surface is the command palette (`CommandPalette.tsx`), opened from the top-bar
-field with Enter or `Meta/Ctrl+K`. The top bar's RAC `Autocomplete` wraps that field and
-a `Menu` in a non-modal popover under it, so the field is the palette's one input and
-its text the palette's query, for codes, classifications and the app's places; registers
-and variables are the in-place filter's. It asks three arms (classifications,
-classification codes, register-local value sets; 5 hits each, debounced, from 2
-characters) and lists the hits as a mixed list with type tags, after the places ranked
-by `rankFilter`; RAC's own filter is never used. A hit goes to its catalog page; a code,
-which has no page, goes to its defining classification or else to the first variable
-that uses it. There is no search route: a query is not a shareable URL (the `/search`
-page and its `?q=`/`?type=` state were removed in the React port). `api.ts` has
-`search(q, {limit?, type?, cursor?})` typed off the generated `api-types-rust.ts`.
-Global search does **not** render documentation results; documentation is reached from
-item pages via `DocMentionsPanel` and then the `/doc/<filename>` route (router `Route`
-union arm `{name:"doc",identifier}`), which renders `DocView.tsx`: title,
-register/variable/tags, a `source_url` link to the SCB source PDF (resolved from the
-curated map at doc-DB build, #372; None when uncurated) with `source_title` as label,
-and a bounded `excerpt`; 404 distinguishes "not ingested" vs "not found";
-`snippet`/`excerpt` are rendered as TEXT, never `dangerouslySetInnerHTML`, and the full
-converted body is never fetched.
-
 ## Docs library (the Rust server's `docs` operations)
 
-`/api/docs/*` (#354/#742) is served by the Rust server (the vite dev proxy sends
-`/api/docs` there). The operations (`conformance/api/operations.toml`) read
-documentation from the single `reg_meta.db` catalog, each answering `{data, meta}`:
+`/api/docs/*` (#354/#742) is served by the Rust server. The operations
+(`conformance/api/operations.toml`) read documentation from the single `reg_meta.db`
+catalog, each answering `{data, meta}`:
 
 - `docs_search` (`GET /api/docs/search?q=&register=&limit=&cursor=`): with `q`, the
   entries matching every word, best first, with an FTS `snippet`; without `q`, every
@@ -197,8 +83,7 @@ documentation from the single `reg_meta.db` catalog, each answering `{data, meta
   `fold_search` text (folded by the docs build), and snippets come from the stored body,
   so they keep case and diacritics.
 - `docs_get` (`GET /api/docs/doc/{identifier}`): metadata, source pointer, a BOUNDED
-  `excerpt` and the full markdown `body` for agents. The SPA renders only the excerpt
-  (marker+Gemini conversion quality + republication exposure).
+  `excerpt` and the full markdown `body` for agents.
 - `docs_related` (`GET /api/docs/related/{register ref}`) and its download
   (`GET /api/docs/file/{register ref}/{filename}`): the curated #739/#742 rehost
   surface, PDF bytes served verbatim with `Content-Type: application/pdf`, an inline
@@ -212,27 +97,6 @@ LISA-only today.
 
 - **Embedded docs**: documentation is part of the admitted catalog; there is no optional
   docs database or separate schema gate.
-- **Not in global search**: the command palette does not call `/api/docs/search`; the
-  SPA reaches docs through item pages.
-- **Parsed documentation on variable pages (#402/#967)**: `BindingLeafView.tsx` renders
-  `DocMentionsPanel` in the `SubjectView` docs section, firing a SEPARATE
-  `useAsyncResource` fetch at `docs_search` with the variable's name and its register
-  FQID — a distinct failure domain (a docs error, timeout, or absent index never blanks
-  the leaf). The panel omits the entire section when there is nothing to show (no docs
-  database, `register_ingested:false`, or zero items); loading and error states render
-  inline, so an in-flight or errored fetch never reads as a confirmed absence. The hits
-  are fuzzy name matches, not authoritative variable→doc links, and the section caption
-  says so. Each hit links to the `/doc/<filename>` viewer and renders the snippet via a
-  safe inline-emphasis subset (`**…**` → `<mark>` for the matched term, `*…*`/`_…_` →
-  `<em>`) as React text children (auto-escaped) — never `dangerouslySetInnerHTML`.
-- **Source documents on register pages (#742/#967)**: `RegisterView.tsx` renders
-  `RelatedDocumentsPanel` on register pages only, with the register FQID. These are
-  rehosted register-version source PDFs with provenance, not variable-level evidence, so
-  `BindingLeafView.tsx` must not inherit them. It renders after the register's
-  `VariantsSummary`. The panel is another independent docs failure domain: loading and
-  error render inline; no docs database or no curated rows omits the section. Each row
-  links the title to `/api/docs/file/{register FQID}/{filename}` and shows
-  `Källa: SCB · {license}` plus a source URL link.
 - **Caching**: the Rust server's cache tier for the docs operations is a day
   (`public, max-age=86400, must-revalidate`): doc-library content is rebuild-stable.
 
@@ -264,10 +128,6 @@ index `idx_variable_state_coverage` on
 `variable_state(variable_id, valid_from, valid_to)` (#371) lets the grouped MIN/MAX span
 scan be satisfied index-only. Holdings coverage folds the compiled deliveries below.
 
-- **Additive / payload-skew (#317)**: `coverage` is optional and the SPA doesn't read it
-  yet — it must tolerate its presence AND absence. It's None on a node that wasn't
-  enriched (e.g. a register's own node — coverage is populated only in the two LISTING
-  payloads).
 - **Open-ended sentinel**: `coverage_to` is None + `open_ended` True when the latest
   window is the `9999-12-31` DDL sentinel ("ongoing"); a stateless variable is
   `state_count == 0` with both bounds None (distinct from open-ended). The sentinel is
@@ -310,162 +170,14 @@ both against a recomputation. The reader lists the rows of the requested scope.
 - **Steward semantics**: the shared reader limits deliveries to mapped variants and
   canonical representations in holdings scope. Discovery unions held mappings across
   variants; each returned delivery retains its own variant and windows. Reference scope
-  returns the catalog's delivery evidence.
-- **Additive**: `deliveries` defaults to `[]` and is populated only in the register
-  listing payload; the SPA must tolerate its absence (a register node's own payload, or
-  a child that predates the field).
-- **The SPA's variant lens** (`CatalogNodeView`): the chips narrow the CHILDREN and the
-  concept groups' members before `foldGroupedRows` (`narrowGroupsToMembers`), never the
-  folded rows. A group row stands in for its members, so its count and its filter keys
-  must answer for the delivered ones only; a lens that leaves a group with one member
-  drops the group, and that member renders as its own leaf row. (The lens ends at the
-  row: `groupHref` carries no variant, so the subject page it links to is unnarrowed.)
-  The delivery-column cell and the filter's column keys read the SELECTED variants'
-  deliveries too, so a narrowed list never shows — or matches on — a column that variant
-  does not deliver. The chip set is read off the deliveries rather than the register's
-  declared variants, so no chip can narrow the list to nothing.
-- A chip is NAMED from the register's embedded `variants`, the same list
-  `VariantsSummary` renders: one spelling of a variant per page, and no second request.
-  Chip order is by slug.
-
-### Adding columns from the register list (Y-83)
-
-The register list is an AUTHORING surface: every delivery column it names carries a
-tick, and one action adds them all. The consumer is the researcher who knows LISA by its
-columns — ticking `ForvErs`, `ForvInk`, `Kon` and `Alder` in the list beats opening four
-variable pages to add one column each.
-
-- **The tick grain is the column NAME the list shows** (`catalog.ts`
-  `deliveryColumnRows`); the COMMIT grain is the variable's own picker row. A tick names
-  a column, an Add maps that name onto the rows the variable's own page builds
-  (`deliveryColumnRows` → `rowCoversColumn`), and `rowAdd` turns each of those into ONE
-  staged add that lands in its variant family's source (#1840), as the variable page's
-  adds do. The list's rows stay one per concrete variant (its deliveries carry no
-  family), so `deliveryColumnRows` tags each dated row with its family head from the
-  register's own `variants`; two variants of one family delivering a name are two adds
-  into one source. So the file a tick authors is the file that page authors. The chip
-  lens rides along, and it is CAPTURED WHEN THE COLUMN IS TICKED: a tick stores the
-  concrete variants the list showed that column under, and an Add stages the
-  intersection of those with the variants on screen when it is pressed, staging only the
-  rows those variants deliver — the part a `?variant` modifier plays on the variable's
-  own page (`narrowStatesByModifier`). The capture is the load-bearing half. The lens is
-  live and a tick is not, so reading the lens at Add time instead would let a lens
-  lifted in between widen the tick to a variant the researcher never saw, and a lens
-  moved to another variant swap the tick silently onto that one. Bounded by both pages,
-  a tick can never author a variant the researcher filtered away, in either direction:
-  one the lens has moved off reads as UNTICKED and adds nothing until the lens that made
-  it comes back — or until it is ticked again, which re-captures under what is on screen
-  now. The capture is PER COLUMN and stays that way through the commit: ONE sweep
-  (`stagedBatch`) meets each ticked name with the rows that deliver it, and a row joins
-  a tick only where that tick's own captured variants cover it. Two columns of one
-  variable ticked under different lenses must not pool their variants, because rows are
-  matched to columns by NAME (`rowCoversColumn`) and both names usually exist in both
-  variants — a pooled set would stage each column under the other's variants and quietly
-  author four adds where the researcher made two.
-- **The staging stack is shared, not copied.** `staged_picker.ts` owns the whole staged
-  add → resolve → commit sequence (`stagedAddCandidates` → `applyStagedPicks`,
-  committing through `projectStore.applyStagedDiff`), and `StagedAddStatus.tsx` is the
-  one confirmation/refusal row. The binding leaf, the concept group and the register
-  list are hosts: they own their own selection and scope and nothing else. Do not copy
-  the sequence into a new host — that is the leaf-helper duplication AGENTS.md names.
-- **The study window IS the period here.** The list carries no Period control (that
-  belongs to a subject page), so an add is clipped to the study window, and without one
-  an open-ended column has no finite period to commit — the batch is refused whole
-  before the store is touched, exactly as on a leaf. The nudge
-  (`ADD_WINDOW_REQUIRED_MESSAGE`) names the one control this page has. Every refusal the
-  page shows is a verdict on ONE Add under the window it was made under, so all of them
-  retire the moment the window moves — one `addRefusal` slot rather than a flag per
-  gate, so a verdict can never outlive the batch it refused. The refusal only: the ticks
-  survive, so "add again" is one press. An Add is bound to the window it was pressed
-  under for its whole round trip — the study-window slider is not disabled while the
-  draft restore and the per-add resolves are out, so a window moved mid-Add ABANDONS the
-  batch (the host's `lapsed` check, passed to `applyStagedPicks` as `cancelled` and
-  asked again after every await) rather than committing it under years the researcher
-  has already left, beside a list redrawn for the years they chose. Abandoned, not
-  refused: nothing is authored, nothing is claimed, and the ticks survive for an Add
-  under the window now on screen.
-- **A column the window has moved off is not tickable.** The list names every column the
-  register ever delivered, so a window later than a column's last era, earlier than its
-  first, or inside one of its gaps leaves it nothing to commit. The gate is that column
-  NAME's own eras, never the row's: a #902 rename chain folds into one row spanning the
-  whole chain, so a row-grain gate would offer the RETIRED name under a window only its
-  successor covers — a tick on a column the register stopped delivering before the
-  window opened, under a label printing the very years that say so. Such a tick is
-  disabled and the row carries the reason. A column delivered in NO era — the boundless
-  delivery `VariableDelivery` documents, an alias spelling on a variant with no states
-  of its own — is refused on its own terms ("Not delivered", naming no window, since
-  none would lift it): it has no row to stage, and a checkbox that ticks and commits
-  nothing is a control that lies.
-- **The list refuses before staging; a subject page refuses at Add.** Neither invents a
-  period for a column the window clips to nothing (see "Common study window" below). A
-  subject page's picker only DIMS such a row and still lets it be ticked, then refuses
-  the Add by name (`outside-scope`); here the window is the only period there is, so the
-  page refuses the row before staging it, and the bar's count never promises a column an
-  Add cannot commit.
-- **The list's windows are EXACT (Y-104), so an Add reads nothing extra.** Each delivery
-  carries its own DISJOINT `windows` beside the MIN/MAX `coverage` span, so a column
-  delivered 1968, then 1995–1996, then 1998– says so on the wire. `deliveryColumnRows`
-  builds a synthetic state per (delivery, window) and runs it through
-  `pickerRepresentations`, so the rows a tick stages ARE the rows the variable's own
-  page builds from its states — same key format, same window fuse, same #902 rename fold
-  — and the list's years label prints the eras the way that page does. One consequence
-  everywhere: the years beside a name, the window gate on the tick, the "In project"
-  marker and the committed #307 comma-union all read the same eras, so a window inside
-  an interruption is not tickable rather than tickable-then-dropped, and a register-list
-  add is byte-identical to the variable page's without a second read. Before Y-104 the
-  wire carried only the span; an Add paid a GET per ticked variable to rebuild these
-  rows from the states, and the two grades could disagree.
-- **The label and the tick are NAME-grain; the add and its marker are per (variant,
-  name); the commit is ROW-grain.** The split is load-bearing: a #902 rename chain folds
-  into ONE row spanning the whole chain, so a row-grain gate offers a retired name for
-  its successor's years. The label and the tick pool the name's eras across the variants
-  that ship it, because one box covers them all. `stagedBatch` and "In project" then ask
-  `windowsByVariant` for the row's OWN variant, because a sibling variant still shipping
-  a retired name must not lend those years to the variant that renamed it — that pooled
-  reading would stage the successor under the retired name, and mark it added.
-- **The years are spelled compactly** — `1968, 1995–1996, 1998–` — rather than through
-  the `since 1998` / `until 1968` words `formatWindow` gives the variable page: this
-  cell is all-mono and rides inside a tick's accessible name, and frontend/DESIGN.md
-  keeps prose out of mono. Each era is one unbreakable run, because a `1995–` wrapped to
-  the end of a line is this same grammar's "still delivered". An era undated at one end
-  takes the bare dash on that side (`–1968`) rather than being left out: an omission
-  from a LIST reads as a gap. Past three eras the list folds to its first and last era
-  plus a `+N` affordance (`1968 … 2024– +9`), so a long interrupted history cannot push
-  the row's name onto its own line (Y-110); the affordance carries the folded eras in
-  both its `title` and its accessible name, so they stay reachable by hover or by screen
-  reader.
-- **A sequential RENAME is listed twice and committed once.** The list names every
-  column a variable was delivered under, so `CDISP` and `CDISP5` are two tickable rows
-  (that is what Y-82 shows, and the name is what a researcher hunts for). The variable's
-  own page folds that chain into ONE `representation: null` row over the union (#902) —
-  pinning either name would break the other's era — and an Add commits THAT row: both
-  names map onto it (`rowCoversColumn`) and stage it once, whether one of them is ticked
-  or both. Two consequences worth knowing. A tick of the retired name commits the fold's
-  window-clipped union, which reaches into the surviving name's era — that is the
-  representation the variable has, and per-period resolution reads the right column per
-  year; afterwards BOTH names read as in the project, which is the same fact stated on
-  the list. And the confirmation counts the ticked COLUMNS, not the rows: ticking both
-  names of one chain says "+2 columns" over the one binding they share, because two
-  columns is what the researcher ticked.
-- **The action bar is sticky (Y-97).** Horizontal overflow for a wide table lives on
-  `DataTable`'s own scroll wrapper (`overflow-x: auto`, `max-inline-size: 100%`), not on
-  App's `.routed`, which stays `overflow: visible` — so the page scrolls on the
-  viewport, the same scrollport every other sticky element on the site already assumes.
-  `position: sticky; bottom: 0` on the bar now pins to that viewport, so scrolling any
-  distance through a long list (LISA's ~740 variables) still leaves the count and the
-  Add in reach at the bottom edge.
+  returns the catalog's delivery evidence. `deliveries` defaults to `[]` and is
+  populated only in the register listing payload.
 
 ## Context and catalog sizes (the Rust server)
 
-`GET /api/context` is answered by the Rust server (`reg-meta serve`, the `context`
-operation in `crates/reg-catalog/src/ops/slice_3a.rs`). One call returns the steward
-branding, schema version, import date, the steward's period span, the `reg_meta` version
-and the headline `sizes` (`{providers, registers, variables}` in the read scope), as
-`{data, meta}`. App fetches it once and threads `steward` and `sizes` to Home, which
-makes no request of its own. The SPA's types for it are generated from the committed
-`crates/reg-meta/openapi.json` into `frontend/src/lib/api-types-rust.ts` (a `cargo test`
-keeps the snapshot equal to the server). Locally, the Vite dev proxy sends
-`/api/context` to the Rust server and the rest of `/api` here.
+`GET /api/context` returns catalog metadata and headline sizes as `{data, meta}`. The
+committed OpenAPI snapshot describes its response; a Rust snapshot test keeps it
+identical to the server's rendered document.
 
 ## ETag / Cache-Control
 
@@ -497,9 +209,8 @@ without route execution. This complements rather than masks the bounded cold-que
 arbitrary first-time queries still have to meet the origin budget. #1135's bounded SQL
 path meets it, so no second in-process response cache is warranted.
 
-- **The Rust server's tiers**: `/api/context` revalidates always (`no-cache`): the SPA
-  vintage footer reads it to assert a specific deploy version/date, so a stale copy
-  would *visibly lie* right after a deploy. Catalog and search reads use `max-age=60`
+- **The Rust server's tiers**: `/api/context` revalidates always (`no-cache`) so clients
+  see the current deploy version and date. Catalog and search reads use `max-age=60`
   because both embed the #322 concept-group folds, which can change at the same browser
   URL on redeploy, and `s-maxage=86400` for the edge, whose key carries the deploy
   generation (#318), so a warm search is not revalidated at the origin every minute.
@@ -515,13 +226,9 @@ path meets it, so no second in-process response cache is warranted.
 
 ## Production performance budgets
 
-The v1 regression budgets, measured with browser-cold Chrome traces (1x CPU, no
-throttling; never substitute Lighthouse values for missing trace metrics):
-
-- Search: cache-miss origin p95 under 500 ms, browser-cold LCP under 2.5 s; a warm edge
-  hit must not execute the origin.
-- Catalog detail pages: cold and repeat CLS under 0.1. A large code list is grouped in
-  the DOM, so the fix for a heavy detail page is a smaller payload, not virtualization.
+Search cache-miss origin p95 must stay under 500 ms; a warm edge hit must not execute
+the origin. Catalog reads target p95 under 200 ms and project validation/order under 1 s.
+Measurements at the origin remain separate from edge-cache evidence.
 
 ## Compiled artifact identity and read scope
 
@@ -560,521 +267,11 @@ holdings without dated periods return null.
 The Docker image contains one catalog DB and the server binary. It has no steward
 branding input. SWECOV's delivery pipeline returns in milestone E.
 
-## OpenAPI snapshot + TS codegen (the drift gate)
+## OpenAPI snapshot (the drift gate)
 
-`crates/reg-meta/openapi.json` is committed and is the canonical contract. The SPA
-codegens `src/lib/api-types-rust.ts` from it via `openapi-typescript`. Two checks keep
-these in lockstep: `cargo test -p reg-meta --test openapi_snapshot` asserts the
-committed snapshot equals the server's rendered document, and the frontend gate step
-(`scripts/gate.py frontend`, run by the `reg-webapp-frontend` CI job) regenerates the
-types from the snapshot and fails on any diff — so server, snapshot, TS types, and the
-committed tree must agree. `scripts/gate.py regen` refreshes both.
-
-## Frontend toolchain
-
-React 19 + Vite + TypeScript, bun-managed. **Biome** formats and lints TS/TSX, CSS and
-JSON; **Oxlint** (`.oxlintrc.json`) lints `.ts`/`.tsx`: the Oxlint ports of Biome's
-recommended rules plus the `react` (rules of hooks and the React Compiler-backed rules),
-`jsx-a11y` and `correctness` sets, all at error. **`bun run check`** is the type gate:
-the TypeScript 7 native `tsc --noEmit`. Plain Vite, not the Vite+ (`vp`) CLI: adopting
-`vp` swaps `vite` for an alias package and moves the test imports, which buys nothing a
-lint script does not. CSS Modules (Vite built-in) style the components, and
-`@react-aria/optimize-locales-plugin` keeps React Aria Components' (RAC) strings to
-`en-US` and `sv-SE`. The codegen'd `src/lib/api-types-rust.ts` is excluded from Biome
-and Oxlint entirely (codegen output, never hand-formatted).
-
-**UI behavior layer: React Aria Components** is the sanctioned library for a11y-critical
-widgets: comboboxes, menus, dialogs, sliders, trees. It provides behavior and ARIA with
-no bundled styles; the CSS Modules over the design tokens supply all visual styling. Use
-the RAC component rather than hand-rolling the widget; #632 (a hand-extracted slider
-that pre-dated this decision) is the canonical motivating example. See § UI primitives
-below.
-
-## UI primitives — React Aria Components + CSS Modules
-
-RAC supplies behavior and ARIA; a CSS Module per component, reading the app's design
-tokens, supplies all styling. A bake-off (#689) against shadcn + Tailwind v4 (which also
-builds on a headless-primitives library, so accessibility was not the differentiator)
-rejected Tailwind: eight extra deps, about 1,000 lines of vendored components to own, a
-second token system disconnected from the app's, more than double the CSS, and tooling
-friction on this plain-Vite SPA (Biome rejects Tailwind v4 directives). Even the
-Tailwind arm had to style its widget with the app's own tokens. Revisit only if the app
-stops having its own design language.
-
-A nested expandable row cannot be a flat `role="option"`, so the browse tree is a RAC
-`Tree` (`BrowseTree.tsx`), not a filtered listbox; the command palette
-(`CommandPalette.tsx`) is a RAC `Autocomplete` over a flat list.
-
-## Visual language (design system)
-
-The design language — palette, type, layout, elevation, shapes, component styling, and
-the do's and don'ts — lives in **`frontend/DESIGN.md`**, a
-[DESIGN.md-format](https://github.com/google-labs-code/design.md) file whose YAML front
-matter is the normative token set and whose prose is the rationale.
-`frontend/src/tokens.css` implements those tokens as CSS custom properties of the same
-names, and `lint:tokens` fails when they disagree. On any conflict about how something
-looks, `frontend/DESIGN.md` wins over this file; this file keeps the engineering
-decisions (the two-layer token architecture below, primitives' ARIA and API contracts,
-tests).
-
-Two layers, semantic roles only consumed by components: **primitive ramps**
-(`--gray-1..12` and the fixed status/categorical/data hues — never referenced by a
-component) and **semantic roles** (`--bg`, `--surface*`, `--text*`, `--border*`,
-`--accent*`, the status, `--cat-*` and `--viz-*` roles, plus geometry, elevation, focus
-and motion). Dark mode and the planned per-provider themes are role remaps under
-`[data-theme]` / `[data-provider]` — no component CSS changes. The tokens live in
-`frontend/src/tokens.css`, imported once in `main.tsx`.
-
-**Enforced deterministically** by `frontend/scripts/lint_tokens.ts` (`lint:tokens`, part
-of `bun run lint`, so it runs in the `reg-webapp-frontend` CI job with no extra wiring):
-every CSS Module and `style={{}}` object under `src/` must be free of raw color literals
-(hex, `rgb()`, `hsl()`, `oklch()`, …) and raw `font-family` stacks — a literal that
-renders identically today still escapes the `[data-theme="dark"]` remap. `mask-image`
-declarations are exempt by rule (a mask is alpha geometry, not palette). The script also
-checks that `frontend/DESIGN.md`'s token front matter and `src/tokens.css` agree, and
-that every `var()` reference names a custom property `tokens.css` or the same file
-declares. A screenshot cannot see a token bypass. It is a source check only: it says
-nothing about hierarchy, copy, layout, or whether the right token was chosen.
-
-`main.tsx` imports `tokens.css`, `lib/ui/utilities.css` and `lib/ui/motion.css`. Vitest
-runs only pure-TS unit tests and renders no components, so nothing else needs the
-tokens.
-
-### Shared primitives (RAC behavior + CSS Modules)
-
-The recurring visual units live in `frontend/src/lib/ui/`: `Panel`, `DataTable`,
-`Breadcrumbs`, `Tag`, `TypeTag`, `Button`, `KeyValue`, `Definitions`, `Skeleton`,
-`EmptyState`, `StatusRow`, `FilterChip`, `ColumnList`, `ConfirmDialog` and the like.
-Behavior comes from RAC (`Button`, `Dialog`, `Modal`, `Tree`, `Slider`, …); styling is a
-sibling `*.module.css` reading **only** semantic tokens. The app shell is `App.tsx`
-(`App.module.css`) with `TopBar`, `BrowseTree`, `VariableList` and `ProjectBanner`.
-
-Load-bearing decisions not to re-litigate:
-
-- **`DataTable` ARIA roles — explicit and unconditional.** Every table element carries
-  its ARIA role explicitly (`table`, `rowgroup`, `row`, `columnheader`, `cell`). This is
-  required because the responsive stacked form switches `display` to `block`, which
-  strips native table roles in Firefox/Safari — explicit roles keep the semantics intact
-  across that change. `getRowId` only keys the rows; there is no selectable variant.
-- **`DataTable` row navigation — link delegation, not selection.** Browse tables whose
-  primary cell is a link opt into `rowNavigation`; rows stay in plain `role="table"`
-  semantics with no row `tabindex` or `aria-selected`, and the anchor remains the only
-  keyboard-focusable accessible link. Plain row/card clicks delegate to the first
-  contained `a[href]`; clicks on nested controls, modified/non-primary clicks, and
-  text-selection drags are left alone so browser/link semantics stay intact. Row hover
-  (`--surface-hover` + pointer cursor) is the interactivity signal, so link hover
-  underlines are suppressed inside this variant.
-- **`DataTable` framed surface.** Use `framed` when the table itself is the whole
-  grouped surface and its column headers should be the single top row. Do not wrap that
-  case in `Panel` — a `Panel` title plus table headers creates duplicate heading rows.
-  The framed variant keeps its header row visible at narrow widths and suppresses
-  repeated per-card column labels. It also keeps narrow rows flat inside the table
-  shell, not bordered/rounded cards; two-column framed tables collapse to one visual
-  column with the second cell as secondary text under the primary cell. The surface
-  still has exactly one visible heading row and one table layer.
-- **`DataTable` responsive stacking (≤48 rem).** At narrow widths each `<tr>` becomes a
-  bordered card; cells stack vertically. The first column is the primary title (no
-  micro-label prefix); non-primary cells show their column label as a CSS `::before`
-  prefix via `data-label`. Empty cells suppress the prefix via `td:empty::before`. The
-  visual-header row is visually hidden (clip, not `display:none`) so `columnheader`
-  roles stay in the accessibility tree. Consumers drop per-call
-  `overflow-wrap`/`hyphens` — the primitive owns graceful long-word breaking (excluded
-  for mono/numeric cells). The primary column gets a `min-width: 12rem` floor on the
-  `<th>` (under `table-layout:auto` this sizes the whole column track); an explicit
-  `Column.width` override wins via `th.first:not([style*="width"])`.
-- **`Tag` `tone` spans three disjoint sub-systems.** Chrome tones (`neutral`/`accent`),
-  categorical TYPE tones (`reg`/`var`/`code`/`class`/`group`), and status tones
-  (`error`/`warn`/`info`/`ok`). Categorical TYPE tags use the raw `--cat-*` hue as the
-  fill/border and `--cat-*-ink` (the 85 % dark mix) as the label text, so every type
-  label clears AA without per-component overrides. Status tones **require** a leading
-  `glyph` prop (the accent-vs-status rule: hue alone is never sufficient); the glyph is
-  `aria-hidden`, so status meaning must also appear in the label text.
-- **`Tag` is copy-faced.** The base `.tag` rule sets `font-family: var(--font-ui)` — a
-  tag label is a word of UI text, never the mono face.
-- **Focus-ring convention.** Every interactive primitive applies
-  `box-shadow: var(--focus-ring)` on its RAC focus-visible state
-  (`[data-focus-visible]`) or `:focus-visible` in its own CSS Module — no global
-  stylesheet owns this.
-- **`Button` is the one button.** It wraps the RAC `Button`; the variants (`primary`,
-  `default`, `danger`, `ghost`) are CSS Module classes, so no global class names leak.
-- **`.micro-label` global utility.** The label level (font-size, font-weight, muted
-  color — sentence case at normal tracking, per `frontend/DESIGN.md`) is the design
-  system's first cross-component global utility class, defined in `lib/ui/utilities.css`
-  and imported in `main.tsx` after `tokens.css`. It composes the `--micro-label-*`
-  tokens — tokens remain the source of truth; the class de-duplicates the composed rule
-  that was re-typed across seven components. A cross-component label can't be owned by
-  one component, so it gets a shared global stylesheet (`lib/ui/utilities.css`), which
-  also holds `.link` and `.muted`. The one consumer that keeps an inline copy is
-  `DataTable`'s `td:not(.first)::before` stacked-card column-label: a CSS-generated
-  pseudo-element can't take a class, and plain CSS has no mixin — that copy is kept in
-  sync by comment.
-- **`.visually-hidden` global utility.** The canonical sr-only recipe (modern
-  `clip-path: inset(50%)`, not the legacy `clip` property) is the second cross-component
-  utility in `lib/ui/utilities.css`. It removes content from the visual layout while
-  keeping it in the accessibility tree — unlike `display:none`, which severs both. Used
-  by `FilterChip`'s checkbox. `DataTable`'s stacked `<thead>` is sr-only only under
-  `@media (max-width: 48rem)`, so it cannot apply the (unconditional) class and keeps a
-  media-scoped inline copy held identical to the utility — the sr-only analog of the
-  `td::before` micro-label exception.
-- **`.cbox` global utility.** The app's checkbox face, in `lib/ui/utilities.css`. Every
-  tick in the app is a real native `<input type="checkbox">` — the role, the keyboard
-  control and the `:checked`/`:indeterminate` states are the platform's — and this class
-  strips the OS chrome (`appearance: none`) and repaints the box in roles: `--border` on
-  `--surface`, an `--accent` fill with an `--accent-fg` check when checked, the app's
-  `--focus-ring` on `:focus-visible`, the app's dim when disabled. Without it a tick
-  renders in the browser's own blue, a hue no theme can remap. It was
-  `RepresentationPicker`'s own CSS until the register list grew ticks of its own (Y-83):
-  a second consumer makes it cross-component, so it moved here rather than being
-  re-typed — the same reason `.micro-label` lives here.
-
-## Site-wide catalog vintage footer (#355 decision 2)
-
-`App.tsx` renders a `<footer>` (`styles.vintage`) on every route showing the reg_meta
-version, schema version, and DB build date sourced from `/api/context`
-(`context.reg_meta_version`, `context.schema_version`, `context.import_date`). The
-footer is guarded on `context` (same as the header `.build` chip) so it is absent until
-`/api/context` resolves. `import_date` is a UTC timestamp string
-(`"2026-06-12T08:30:00Z"`); the footer displays only the leading `YYYY-MM-DD` (split on
-`"T"`). The intent is citation stability: a reader quoting any catalog node can see
-which reg_meta build it reflects without navigating away.
-
-`ProjectBanner` (under the top bar) carries a RAC two-thumb `Slider` as the "Study
-window" control (#614/#611), reachable on every route. It sets the active project window
-over the catalog's bounds (`window_bounds.ts`: `/api/context`'s `period_span`, else 1960
-→ the catalog vintage year from `import_date`; the current year is the pre-context
-fallback). The slider keeps that span although the drawings scale to their data (#1831):
-it shows no data, and the early years must stay reachable. The thumbs move live and the
-store is written once, on release or on each committed key press, so a drag is one draft
-edit and one autosave. It writes through `windowStore` (`src/lib/window.ts`) — see the
-store description below.
-
-## SPA routing + production fallback
-
-The SPA (`frontend/`) browses the catalog read-only with **path-based routing**: clean
-URLs mirror the API (`/catalog`, `/catalog/scb/lisa`, `/catalog/scb/lisa/kon`,
-`/catalog/scb/lisa/variants`, `/catalog/class/<slug>`). The variants page is the one
-SPA-only path, over the register's `show`: a 3-seg path with a literal `variants` tail
-parses to the `variants` route (the token is reserved in the variable slot at build
-time, so no variable FQID can shadow it), never to a catalog node. The router is
-hand-rolled — no routing-library dep — in `src/lib/router.ts`, a plain-TS module
-singleton with `subscribe` (React reads it with `useSyncExternalStore`, via
-`use_router.ts`): it reads `window.location.pathname`, navigates via
-`history.pushState`, handles `popstate`, and intercepts internal `<a>` clicks
-(`onNavClick`, listened on the document) so navigation doesn't full-reload; RAC links
-route through RAC's `RouterProvider`.
-
-`route` is re-parsed — and so re-assigned — only when the **pathname** moves. A
-query-only navigation (a thumb coming to rest on a catalog leaf's period card) parses to
-the same route, and handing consumers a fresh object would invalidate every
-route-derived prop: the query-independent catalog node refetches and the article
-remounts around the card the researcher is working in, dropping keyboard focus to the
-document body mid-apply (Y-65). What such a navigation does move is `search`, which the
-resolution fetches read. A *genuine* refetch still swaps in the loading branch and takes
-its subtree with it — the invariant removes the spurious refetch, not the teardown.
-
-- **Dev** serving Just Works: the Vite dev server's default `appType: 'spa'` rewrites
-  unknown paths to `index.html`, and `vite.config.ts` proxies `/api` to the backend on
-  `:8000`. Deep-linking to `/catalog/...` in `bun run dev` works.
-- **Production** SPA fallback is edge config, NOT server code. The origin
-  (`reg-meta serve`) is a pure JSON API and serves no `index.html`, keeping `/api`,
-  `/openapi.json` and `/mcp` un-shadowed. The SPA is served by the edge worker
-  (Cloudflare static assets, `not_found_handling: single-page-application`), which
-  answers a cold-load deep link to any non-origin path with `index.html` (Deployment →
-  Edge workers below); see the comment atop `router.ts`.
-
-The fetch wrapper (`src/lib/api.ts`) types every response off
-`components["schemas"][...]` from the codegen'd `api-types-rust.ts`, so the SPA and the
-server contract can't drift. The catch-all returns the `kind`-discriminated
-`CatalogNode` union; components narrow on `kind` via `src/lib/catalog.ts` helpers
-(unit-tested).
-
-## Unified catalog subject page (`SubjectView`) (#611/#638)
-
-The catalog's three *leaf* kinds — a **variable** (`scb/lisa/kon`), a **classification**
-(`class/sun2020`), and a **concept group** (`group/scb/lisa/naringsgren`) — share one
-head, `Definitions` (`ui/Definitions.tsx`): the title, the member-of line, the facets
-row, then the definition list. They also share one **canonical section order**:
-
-1. **description** (the `Definitions` head itself)
-2. **picker** — slice axis × time axis
-3. **value set / codes**
-4. **relationships**
-5. **docs**
-6. **technical**
-
-`SubjectView` (`SubjectView.tsx`) is a thin *presentational* shell, used by
-`BindingLeafView`: one `<article>` holding `<Definitions {...head}/>` and then its
-`children`. It has no slots and owns no data, no headings beyond the head's, and no
-restyling. It does not enforce the section order either: each leaf view keeps the order
-by convention, passing its sections as children in sequence. `SubjectSection` (an `h2`
-over a hairline) is the section wrapper and `TechnicalDetails` the bottom disclosure;
-`ClassificationView.tsx` and `ConceptGroupView.tsx` use the same two directly, under
-their own `Definitions` head. A kind with nothing for a section simply renders no node
-for it (no empty wrapper, no "none found" wall). The under-title fqid line shows only
-when the leaf passes `fqid` to `Definitions`; neither the variable leaf (its breadcrumb
-ends in the slug) nor a concept group (no single fqid; its key lives in the
-description's Technical details) passes one.
-
-**Dispatch.** `CatalogNodeView.tsx` resolves a node by FQID (a no-query browse fetch, so
-the response is always a `kind`-tagged node) and switches on `kind`. The **list/browse**
-nodes — `provider`, `register`, `classification-root` — are NOT subjects: they render
-their child lists inline (with #303/#516 concept-group folding), not through
-`SubjectView`. The three **leaf** kinds each delegate to a per-kind view that renders
-the head and sections: `binding` → `BindingLeafView`, except a grouped member, whose URL
-redirects (history replace) to its group's page with `?member=<fqid>` (#1909); ungrouped
-`classification` → `ClassificationLeafView`; grouped or family `classification` →
-`ClassificationGroupView` with the requested edition tab active; and the `concept-group`
-(served by the fixed `/catalog/group/{provider}/{register}/{key}` route, see Catalog
-router structure above) → `ConceptGroupView`. The classification subject route (served
-by the fixed `/catalog/group/class/{key}` route) returns either `classification-group`
-or `classification-family`, and both render through `ClassificationGroupView`.
-
-Per-kind mapping into the six sections:
-
-  | Section       | Variable (`BindingLeafView`)                                                                                                                             | Classification (`ClassificationLeafView`)                        | Concept group (`ConceptGroupView`)                                                                                                            |
-  | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-  | description   | definition / description / unit `<dl>`                                                                                                                   | short name `<dl>`                                                | aggregated thematic tags, then shared definition/description (when members agree — #678/#900) above Technical details (key / facets / source) |
-  | picker        | `VariableTimeline`: one `RepresentationPicker` graph headed by the coverage row and period slider, + add-to-project                                      | `ClassificationEditionGraph` compact edition DAG (#906)          | `CoverageTimeline`: the variable page's graph headed by the coverage row, without the slider (#1909)                                          |
-  | value / codes | codings (`ValueSetView` (#905), each distinct value set via `CodeList`)                                                                                  | `ClassificationCodes` (`ValueSetCodes`)                          | the `?member`'s own tags, definitions, data warnings and `ValueSetView`, its states narrowed by `?period`                                     |
-  | relationships | `LineageDetails` (provenance/warnings); succession/group graph context lives in the picker                                                               | derived classification links; edition succession lives in picker | the `?member`'s `LineageDetails`; its succession neighbours are lanes in the picker                                                           |
-  | docs          | `DocMentionsPanel`                                                                                                                                       | —                                                                | the `?member`'s `DocMentionsPanel`                                                                                                            |
-  | technical     | one bottom `TechnicalDetails` disclosure (sensitive / identifier, single-state data type / column, and corrected delivery intervals with class/evidence) | —                                                                | the `?member`'s `TechnicalDetails`, as on the variable page                                                                                   |
-
-**A concept group is its members' variable page (#1909, ruling #1794).** A grouped
-member has no page of its own: `CatalogNodeView` sends its URL, with the query, to
-`group/<provider>/<register>/<key>?member=<fqid>`, history-replaced. The group page
-marks that member's lane current (`aria-current` on its name, scrolled into view), draws
-its succession neighbours as read-only lanes, and shows below the picker everything its
-variable page did: tags, definitions, data warnings, states, lineage, document mentions
-and technical details, through the same components (`VariableReference.tsx`). Nothing a
-researcher could reach from a member's page is lost. A lane's name links to the same
-page with that `?member`, a query-only move announced in a polite live region. The
-server names a variable's group only where its member row is in the scope's group
-(`group_key` in `show.rs`), so a variable whose group has no lane for it in holdings
-keeps its own page; a `?member` that still matches no lane says so and links that page.
-`BindingLeafView` therefore only ever shows a variable ungrouped in the scope, and its
-`/graph` read feeds the picker's neighbour lanes only.
-
-### The picker — slice axis × time axis
-
-The picker section carries up to two orthogonal controls. The **slice axis** differs per
-kind:
-
-- **Variable** — the slice is the `register_variant` (variant/population). The
-  subject-page picker lists concrete variant + delivery-column rows over the full state
-  history and stages row adds/removes until the footer applies one project diff (#995).
-  A pure time-sequential succession (one variant retiring into the next) is NOT a choice
-  — the family folds into one row and one source (#1840) — so the selector is invisible
-  for an unambiguous variable.
-
-- **Classification** — editions (`sun1996` → `sun2000` → …) are the slice. The
-  `ClassificationEditionGraph` (#906) renders the `/graph` succession chain as a compact
-  non-timeline DAG in the picker section: topology gives the horizontal order, branches
-  open rows only within the affected rank, and edition cards navigate to non-current
-  catalog leaves. It is read-only for now, not an add-to-project control.
-
-- **Concept group** — the **column / representation picker** (`RepresentationPicker`,
-  #678) drawn as the frontend DESIGN.md `LaneGraph`: one lane per member (a group's
-  members are told apart by their facets, so two columns of one variable are two lanes),
-  ordered by facet, each delivery column a span on one shared year axis. Spans are
-  native checkboxes named column-first; succession edges between drawn lanes are solid
-  arrows, a #902 rename fold a dashed hop inside one span, and the active window an
-  `accent-bg` band. A one-to-one axis (no value selects two or more lanes, e.g. an
-  `ordinal` 1…48) still orders the lanes but offers no filter and no header values; with
-  every axis hidden the lanes are titled by variable name (`informativeAxes` in
-  `catalog.ts`, #1904). The Variant and coding filters are exempt: they name the unit of
-  observation. The modules split by concern: `lane_graph.ts` (pure layout),
-  `picker_lanes.ts` (catalog rows → lanes, spans, edges), `LaneGraph.tsx` (rendering),
-  `RepresentationPicker.tsx` (filters, staging, the sticky footer). One shared staged
-  diff footer labels the action by diff shape ("Add to project", "Remove from project",
-  or "Apply changes"); the register list's add bar uses the same words. A committed
-  column whose source and the study window disagree is listed in words under the graph
-  only when it is outside the window: under the Timeline the coverage row speaks for
-  differing years, and the span's name carries the rest (#1833). A **per-dimension
-  filter strip** narrows a large multi-axis group to one axis value (#908,
-  `pickerFilterDimensions` / `pickerRowPasses` / `PickerDimension` in `catalog.ts`); a
-  dimension surfaces only when it discriminates (≥2 distinct values). Filtering is a
-  presentation lens: a hidden-but-selected row still commits, and the footer signals
-  this. OR within a dimension, AND across. The binding leaf uses the same picker, with
-  read-only neighbour lanes for variables a succession edge reaches (#1901). A neighbour
-  lane is not tickable, but its spans still show project membership
-  (`committedPickerRows` over the neighbour bands): selectability and "in project" are
-  separate. A lane never prints its slug, which names neither a column nor a variable;
-  two lanes under one name are told apart by the first of operational definition, facet
-  label, register name or delivery columns that differs across all of them, and a
-  neighbour in another register names that register. The succession arrow carries the
-  edge's `effective_year`: where the two spans overlap it drops at that year (clamped
-  onto both spans), else where the overlap begins. A variant-scoped edge reaches only
-  spans delivered under that variant, so it is drawn only where that variant's lanes are
-  shown.
-
-  The **sequential-rename collapse** (#902) is client-side and purely presentational:
-
-  - **Intra-variable sequential-rename collapse** (`pickerRepresentations` /
-    `coexistingColumns` in `catalog.ts`): one variable+variant whose delivery columns
-    span NON-overlapping eras (`DINF` → `DINF83` → `DINF84` → `DINF86`) collapses into
-    ONE picker row led by the latest-era column, spanning the union of all contributing
-    windows. Earlier column names appear as a quiet inline hint ("was DINF, DINF83, …")
-    via `renamedColumns` on `PickerRepresentation`. Genuinely parallel
-    (overlapping-window) columns stay separate rows. The coexist-vs-rename test is the
-    shared `coexistingColumns` leaf — also `resolveBindingAt`'s gate for an ambiguous
-    add — so the two surfaces can never drift on the distinction. The LaneGraph draws
-    the eras inside the row's one span.
-
-The **time axis** is the `Timeline` (`src/lib/Timeline.tsx`; see the Project-window
-store section): one axis over the page's data and the study window, rounded out to
-multiples of 5 (`dataAxis` in `period.ts`, frontend/DESIGN.md → Time), the active window
-as a band, the subject's coverage as a bar cut by edition ticks and left empty in a year
-without a delivery (#1832), and the part of the window outside coverage in the `info`
-tint (named in the header to a screen reader only). An open-ended coverage end is
-projected to the catalog vintage and an unknown start to the catalog's first year
-(`coverageBandEdges` in `period.ts`; a column's span likewise, `spanEnds` in
-`picker_lanes.ts`), and both count toward the axis, as does the active window. The
-control does a different job per kind:
-
-- On the **variable** it is `VariableTimeline`, the selectable form, and one drawing
-  with the columns (#1833): the `RepresentationPicker`'s `LaneGraph` headed by a
-  coverage row, with a RAC two-thumb `Slider` laid over that row and Clear in the
-  header. The variable's columns and the variables a succession reaches are the lanes
-  below it, on the same axis. `VariableTimeline` owns the drag, so the band and the
-  columns' in/out follow the thumbs live. The thumbs are the shared `PeriodThumbs`, the
-  same control the `/project` source card lays over its coverage row. The band is the
-  add window: the years the columns ticked here are added for. It drives resolution: a
-  thumb coming to rest (on release, or on each key press) writes `?period` (precedence
-  `?period` > project window > full history), which **refetches** the `resolve_at`
-  subset and narrows the visible states. There are no exact-year fields and no Apply
-  (maintainer ruling 2026-10-22): a drag is one URL change, not one per year crossed.
-  Richer server-supported `?period` wires (terms, comma lists, `_default`) remain valid
-  deep-link state; one that is not a span of whole years is reported in a warning row,
-  the drawing shows the project window, Clear drops it, and it is not rewritten unless
-  the user moves a thumb.
-- On the **concept group** it is `CoverageTimeline`, the same drawing without the
-  slider: the coverage row heads the members' lanes on one axis, and the page draws the
-  period and does not set one. `getConceptGroup` takes no period, so `?period` drives
-  **no refetch**; it sets the band (a member link keeps the active `?period`). A
-  `?period` the page was opened with that differs from the project window shows a status
-  row under the graph with Reset (or Clear when no window is set).
-- The **classification** leaf has no time axis (a classification edition is
-  period-less).
-
-The group's availability span is `ConceptGroupView`'s own `unionCoverage` over its
-members' coverages, and a member's coverage line uses `formatWindow` — including the
-one-sided `until <year>` form when the start is unknown (#658).
-
-### Shared section components
-
-- **`ValueSetView`** — the pure value-set / coding viewer for a variable's
-  `variable_state` rows. It is **presentation-only**: no fetch, no navigation, no
-  resolution state. The `RepresentationPicker` owns the `?variant` /
-  `?value_set_version` narrowing. `ValueSetView` receives the already-resolved `states`
-  list from `BindingLeafView` and renders in one of three modes:
-
-  - **Single-state detail** (`states.length === 1`): variant, validity, non-empty
-    value-set version, operational definition, and a height-constrained code table.
-    Default variants, wholly unknown validity windows, empty version labels, and
-    codeless value-set filler are omitted; state structural rows live in the binding
-    leaf's bottom `TechnicalDetails`.
-  - **Multi-state / distinct-value-set view** (`states.length > 1`, #668): dedups at two
-    levels — classification editions by `classification_slug`, others by `value_set_id`
-    — so a column with 415 states collapses to \~21 LKF editions + a few plain lists. A
-    `FilterInput` narrows the list; per-row "Isolate" focuses one; "All value sets"
-    resets. Period-greying (which value sets are in-scope for the current `?period`) is
-    driven by a `scopeStates` prop from `BindingLeafView`, not by internal resolution
-    logic (#744).
-  - **Empty** (`states.length === 0`): a clean "no state delivered for this period"
-    message (a valid resolved period outside every validity window — not an error).
-
-  The component is kept standalone (not folded back into the leaf) so the graph/picker
-  surface can place the same coding display next to the selected representations without
-  duplicating value-set rendering.
-
-- **`CodeList`** (#638 PR3) — the single value-set / code viewer. A variable's value set
-  and a classification's code list are the same shape (a code → label set, and a value
-  set often *is* a classification), so they render identically: `ValueSetView` uses it
-  for each distinct value set in the multi-state view (and for the single value set in
-  the detail mode), and `ClassificationCodes` for the edition's codes, both through
-  `ValueSetCodes`, which reads the codes a server page at a time and owns the
-  **size-dependent filter** (a search box appears only at ≥ `CODE_FILTER_THRESHOLD`
-  codes — pointless for a handful). `CodeList` renders the loaded pages verbatim in a
-  height-constrained scroll; a levelled code indents by its depth below the shallowest
-  level loaded, so a classification that starts at level 2 renders flat. Classification
-  conformance warnings render on the variable value-set surface, not inside the shared
-  code list.
-
-  **V1 payload correction (decision 2026-07-14; not implemented at this head).** A
-  classification or value-set detail response does not embed its complete code corpus.
-  Codes use a dedicated paginated, searchable endpoint with stable cursors; the detail
-  payload carries summary metadata, authoritative level buckets, optional
-  presentation-only prefix buckets where the classification explicitly supports them,
-  and an initial bounded page only. Expanding a bucket or filtering fetches the matching
-  page instead of downloading the corpus before rendering its grouping. Genuinely flat
-  sets remain flat: do not promote `CodeList`'s current prefix heuristics to semantic
-  hierarchy. The separate full export reuses reg_meta's existing complete-code export
-  rather than adding a second exporter. The shared `CodeList` remains the renderer for
-  pages from either owner surface.
-
-- **`TechnicalDetails`** (#638 PR4) — the shared "Technical details" `<details>`
-  disclosure that demotes **backend/structural** fields below the user-facing ones. The
-  binding leaf owns a single bottom disclosure for the variable's sensitive / identifier
-  flags and, when exactly one state is in view, that state's type / length / delivery
-  column. Errata-backed states add their exact interval, correction class and supporting
-  evidence here. When correction provenance carries scoped attribution records, the
-  disclosure names the catalog interval as provider-documented and renders each exact
-  source-edition/evidence association separately. Correction-only overlap records show
-  the corrected interval and exact associations without claiming provider attribution;
-  resolution-only gaps are listed separately as inferred and unattributed. A curated
-  matrix answer (`curated:matrix-answer` provenance) adds a Source row: the cited PDF
-  and the page of the state's column. The leaf fetches the register's related documents
-  only then, and links the one whose SHA256 the provenance names; without a match it
-  links the provider URL. That is one citation, not the register's document list, which
-  stays off variable pages. The disclosure remains collapsed and ordinary states add no
-  row. Concept groups still use the component for key / facets / source. One component
-  keeps the summary + styling consistent across call sites; callers omit it entirely
-  when there's nothing to demote. `LineageDetails` follows the same omit-when-empty
-  rule: with no provenance, warnings, loading state, or error, it renders nothing.
-
-### Picker graph ownership (#904, #1057)
-
-`RepresentationPicker` owns the rendered variable/concept-group graph context. It uses
-the `RelationshipGraph` payload as a graph/time-band picker when selectable cells can be
-projected onto the picker row model without dropping visible rows or leaking non-member
-columns. Variable nodes lay out as horizontal representation-run cells along the shared
-time axis; each selectable cell maps back to a picker row by variant + delivery column,
-including #902's folded rename rows when that mapping is one-to-one. Curated
-representation-grain succession (#888) rides the same graph edge set with source/target
-column metadata and an optional variant scope, so a variant-local rename is visible only
-when that variant's cells are in the current projection. In group mode the rendered
-graph is the current visible member projection, so #908 filters can hide whole members
-and still keep graph mode when the remaining projection is drawable. Cells that carry
-leaf graph context but have no selectable picker row (for example no-column bindings,
-same_as-only context, or sibling/predecessor context on a leaf) render as unavailable
-context, not as checkboxes. The #908 dimension filter strip is shared by list and graph
-modes. `LineageDetails` carries the variable-only non-graph residue
-(`variable_state_lineage` provenance edges and lineage warnings, both from the `lineage`
-facet).
-
-### Rejected alternatives + the viz-dependency trigger (#667 spike)
-
-The model is **entity nodes with column/representation slices** — *not* top-level column
-nodes, *not* variable-only nodes that hide the columns. A top-level column-node graph
-would explode dense monthly families (e.g. `agi1lonfink`'s 12 delivery columns) and the
-group pages into unreadable node clouds; a variable-only graph would lose the
-same-column-versus-different-variable distinction that motivated the view in the first
-place. Keeping one node per variable with its representation-run cells in-node preserves
-both: the family reads as one entity over time, and the columns stay visible as slices.
-Classifications reuse the same owned primitive but *not* timeline semantics — editions
-are standards/versions (a 2024 study may still code against SUN 2000), so they render as
-a version-ordered edition graph, never validity intervals.
-
-The primitive is deliberately **hand-built SVG + scoped CSS, not a graph library** (#667
-spike conclusion). Lanes/columns, node markers, edge arcs, labels, the keyboard/ARIA
-wrapper, and responsive overflow are each small enough to own locally against the design
-tokens, and both views are deterministic layouts (a time axis or an edition ordering),
-so a force-directed/auto-layout engine buys nothing. **Revisit a dedicated viz
-dependency only if** production requirements add pan/zoom, collision-avoidance,
-large-graph virtualization, or interactive graph editing — work that materially exceeds
-this custom primitive. Short of one of those four triggers, a library is net complexity,
-not net simplicity.
+`crates/reg-meta/openapi.json` is committed and is the canonical server contract.
+`cargo test -p reg-meta --test openapi_snapshot` asserts that it equals the server's
+rendered document. `scripts/gate.py regen` refreshes the snapshot.
 
 ## Deployment (`global` on Fly.io, Cloudflare edge in front)
 
@@ -1090,12 +287,12 @@ and officially documents the Cloudflare-in-front topology
 plain Docker image; only `fly.toml` and the CI deploy job are Fly-specific.
 
 The global catalog has no public website (maintainer, 2026-10-20, #1709): it is not what
-SWECOV offers, so it is not published under swecov.se, and its webapp runs locally only
-(`reg_webapp/dev/dev.sh`). Agents still need its hosted MCP (no install, no 1.2 GB
-download), so `reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`. vqv.uk is
-the maintainer's side-project zone, chosen to keep the personal altmejd.se zone out of
-it. `data.swecov.se` retains its last old-schema catalog, SPA and MCP. Its running app
-is untouched; it has no deploy path until milestone E.
+SWECOV offers, so it is not published under swecov.se. Agents use its hosted MCP (no
+install, no 1.2 GB download), so `reg-webapp-global` serves `/mcp` alone at
+`reg-meta.vqv.uk`. vqv.uk is the maintainer's side-project zone, chosen to keep the
+personal altmejd.se zone out of it. `data.swecov.se` retains its last old-schema
+catalog, SPA and MCP. Its running app is untouched; it has no deploy path until
+milestone E.
 
 - **The image runs the Rust server alone**: `reg-meta serve --db /opt/reg_meta` with one
   baked DB, no Python or steward branding at runtime. The Dockerfile has three stages:
@@ -1103,10 +300,9 @@ is untouched; it has no deploy path until milestone E.
   verify it against the SHA-256 digest GitHub records for it, unpack), a pinned Rust
   stage building `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate.
   The image serves the API and `/mcp` only; the existing SWECOV edge worker serves the
-  last old-schema SPA until milestone E restores its deploy jobs. The Rust server
-  answers every route the SPA calls. The global image serves `/api` too (the binary has
-  no per-route switch, and fly.toml's health check reads `/api/context`); its edge
-  worker forwards none of it.
+  last old-schema SPA until milestone E restores its deploy jobs. The global image
+  serves `/api` too (the binary has no per-route switch, and fly.toml's health check
+  reads `/api/context`); its edge worker forwards none of it.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
   is public. Both workers forward `/mcp` (`ROUTE_MCP`); the active `fly.toml` passes
@@ -1198,30 +394,11 @@ is untouched; it has no deploy path until milestone E.
   (DNS-01 cert issuance — the reliable path behind a proxy; never proxy a hostname
   pointing at `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode
   Full (strict). No dedicated IPv4 — the free shared IPv4 works behind the proxy.
-- **Edge workers** (`reg_webapp/edge/`, Workers free plan): one Worker source, two
-  configs. `wrangler.jsonc` (`reg-webapp-global-edge`, `reg-meta.vqv.uk/*`) has no
-  assets binding: it forwards `/mcp` to the origin with the edge token and answers
-  anything else with a `no-store` 404. `wrangler.swecov.jsonc` is a static-assets worker
-  on `data.swecov.se/*` serving the SPA `dist/` with `single-page-application` deep-link
-  fallback. Separate Worker names give each hostname its own `EDGE_TOKEN` and
-  `DEPLOY_VERSION`. Only the global worker deploys until E; the following SPA cache
-  configuration describes the unchanged SWECOV worker. On the SPA worker, origin paths
-  (`/api/*`, `/openapi.json` and `/mcp`) are `run_worker_first` + `fetch(request)`
-  passthrough to the incoming hostname's zone origin (Fly), so the origin
-  ETag/`Cache-Control` contract governs API caching as a classic proxied origin.
-  `run_worker_first` is required: SPA mode otherwise serves `index.html` to browser
-  navigations without invoking the worker, shadowing `/api` deep-opens. The assets layer
-  reads `frontend/public/_headers` (copied into `dist/`): hashed `/assets/*` files are
-  `public, max-age=31536000, immutable` (#1454); `index.html` and the SPA fallback keep
-  Workers' default `max-age=0, must-revalidate`. The rule matches by path, so the SPA
-  fallback for a missing `/assets/` file would be stamped immutable too; `/assets/*` is
-  therefore also `run_worker_first`, and the worker answers an HTML (fallback) response
-  there with a `no-store` 404. An existing asset still comes from the assets binding
-  with the `_headers` policy. The glob list (bar `/assets/*`) and the worker's
-  `ORIGIN_PATHS` regexes are a LOCKSTEP pair (comments in both files); `reg-meta serve`
-  answers exactly the forwarded set. Cloudflare downgrades the origin's strong ETag to
-  weak (`W/`) when compression applies — weak comparison is correct for GET
-  revalidation, not a bug.
+- **Edge worker** (`reg_webapp/edge/`, Workers free plan): `wrangler.jsonc`
+  (`reg-webapp-global-edge`, `reg-meta.vqv.uk/*`) has no assets binding. It forwards
+  `/mcp` to the origin with the edge token and answers anything else with a `no-store` 404.
+  Only the global worker deploys until E. Cloudflare downgrades a strong origin ETag to
+  weak (`W/`) when compression applies; weak comparison is correct for GET revalidation.
 - **Edge cache generations (#318)**: the worker stamps a per-deploy `DEPLOY_VERSION`
   (wrangler var; CI passes the commit SHA, `-<run_id>`-suffixed on dispatch so same-SHA
   data-only rebuilds still count) onto every origin-bound URL as an `__edge_v` query
@@ -1233,18 +410,11 @@ is untouched; it has no deploy path until milestone E.
   `reg-meta serve` drops it before validating the query (it rejects every other unknown
   parameter) and before deriving the ETag. Consequence: `edge-deploy` runs on
   **image-affecting** pushes too, not just edge paths — an origin deploy that changes
-  API payloads without touching the SPA/contract must still ship a new cache generation.
-  The motivating incident (#303 rollout) had the edge serving 11h-old pre-deploy catalog
-  JSON against a freshly deployed SPA; the #317 defensive-rendering rule (SPA tolerates
-  one cache generation of payload skew on additive fields) stays in force regardless,
-  for clients holding *browser*-cached payloads (catalog + search browser TTL is 60s;
-  doc-library is 86400s — both unversioned). Deploys: the global `edge-deploy` job
+  API payloads must still ship a new cache generation. The global `edge-deploy` job
   deploys the MCP-only worker on matching pushes and checks first that the token can see
   zone vqv.uk (`CLOUDFLARE_API_TOKEN` repo secret). It needs the global origin deploy
-  and runs the public `/mcp` smoke afterward; there is no public SPA or `/api` to probe
-  on reg-meta.vqv.uk. SWECOV's `edge-deploy-swecov` job is deleted until E, so the SPA
-  and its existing cache generation remain untouched. Its cache probes and manual deploy
-  path must be restored with its deployment in E.
+  and runs the public `/mcp` smoke afterward. SWECOV's deploy jobs return in milestone
+  E; its running deployment remains untouched.
 - **Zone rules (dashboard, free plan, zone swecov.se)**: a Cache Rule making `/api/*` on
   the hostname cache-eligible (Cloudflare never caches extensionless API paths by
   default, even with `Cache-Control: public` — without the rule every read is
@@ -1258,29 +428,8 @@ is untouched; it has no deploy path until milestone E.
   stands; no query-string fallback needed before publishing the OpenAPI.
 - **V1 performance-probe extension (pending, #1455)** — add a representative
   `/api/search` MISS→HIT + `Age`/`CF-Cache-Status` assertion and prove its warm
-  conditional request performs no origin route work. Probe static responses separately:
-  emitted hashed `/assets/*` files must be long-lived `immutable`, while `index.html`
-  and SPA fallback documents must revalidate. The original #220 path gate remains
+  conditional request performs no origin route work. The original #220 path gate remains
   unchanged.
-- **V1 programmatic boundary (decision 2026-07-14)**: the local agent/CLI reads the
-  selected compiled SQLite generation directly, so it does not depend on the deployed
-  API or impersonate a browser to evade zone bot protection. V1 deployment supports the
-  SPA. If remote programmatic API access becomes a product surface later, admit a
-  truthful toolkit User-Agent on the API paths under endpoint-specific rate limits and
-  probes; do not document a fake browser header as the contract.
-
-## Frontend tests (Vitest and the flows driver)
-
-`bun run test` runs **Vitest** (`vitest run`) — Vite-native, so it reuses
-`vite.config.ts`. Only pure-TS unit tests run, in `jsdom` (`router.ts` reads `window` at
-module load; `api.ts` mocks `fetch`; the stores are plain TS). Tests live next to source
-as `*.test.ts` and cover the fetch-wrapper error path, the `kind`-narrowing helpers,
-route parsing, the stores and the period and interval helpers. There are no component
-tests. Component and flow behavior is checked by the Playwright `flows` driver
-(`reg_webapp/dev/driver.mjs`, run through `reg_webapp/dev/dev.sh --fixture-db flows`
-against the fixture DB). The `reg-webapp-frontend` CI job runs `bun run test` alongside
-`bun run check`, the lint steps and the codegen drift check. (Use `bun run test`, not
-`bun test` — the latter is Bun's own runner.)
 
 ## Why CI uses a fixture DB, not a real asset
 
@@ -1298,37 +447,29 @@ synthetic success is not a real-corpus or deployment claim.
 
 ## Project operations (the Rust server)
 
-The project editor POSTs the WHOLE serialized draft, a raw object, to two operations of
-the `order` MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed
-strictly (`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at
-any depth, `serde_json`'s depth limit); anything else is `malformed_request` (400)
-before the operation runs. Unknown keys survive the parse, so `validate` reports each as
+Clients POST the whole serialized draft, a raw object, to two operations of the `order`
+MCP tool (`crates/reg-catalog/src/ops/slice_3e.rs`). The body is parsed strictly
+(`ops/body.rs`: one UTF-8 JSON object, no byte-order mark, no duplicate key at any
+depth, `serde_json`'s depth limit); anything else is `malformed_request` (400) before
+the operation runs. Unknown keys survive the parse, so `validate` reports each as
 `unexpected_field`. Neither operation takes a `scope`: a project is read in the
 artifact's own identity, and a `scope` parameter is `invalid_parameter`.
 
 - **`POST /api/project/validate`** answers `{data: {ok, issues}, meta}`. A project that
   FAILS validation is a successful answer — **200 with `ok: false`** and every issue in
   emission order (supported version → structural → semantic). A non-2xx is a refused
-  REQUEST (`malformed_request`, `payload_too_large`, `rate_limited`), which the SPA
-  banners apart from the issue list.
+  request (`malformed_request`, `payload_too_large`, `rate_limited`).
 - **`POST /api/project/order`** answers `{data: manifest, meta}`;
   **`POST /api/project/order/manifest`** serves the same manifest as the exact manifest
   bytes, an attachment named `order_<slug>_<YYYY-MM-DD>.json`: the project name folded
   to ASCII lowercase (å→a, é→e), other runs `-`, at most 60 characters, then the
-  server's UTC date. The server owns the name (the SPA saves under the
-  `Content-Disposition` filename), so a file emailed to the coordinator says which
-  project and day. The SPA's Download order uses the download. Anything that is NOT an
-  order is a 422 on both routes, never a partial manifest: `project_invalid` for a
-  document `validate` rejects structurally (its issues in `fields.issues`),
+  server's UTC date. The server owns the `Content-Disposition` filename. Anything that
+  is not an order is a 422 on both routes, never a partial manifest: `project_invalid`
+  for a document `validate` rejects structurally (its issues in `fields.issues`),
   `order_blocked` when any finding leaves part of the request undeliverable (every
   finding in `fields.findings`, each with its stable `code` and its `source` /
   `variable` / `period` coordinates). Fail-closed is a contract, so the findings ship as
-  data: `orderFindingsFromError` narrows them at the HTTP boundary, and the SPA renders
-  each through the SAME per-finding path as a validation issue (`projectFindings`;
-  `validation.orderFindingPointer` resolves the materializer's by-VALUE coordinates to
-  the by-POSITION pointer `findingLocation` already locates a card by). The finding
-  shape is declared in `api.ts` (the error catalog types `fields` as an open object) and
-  pinned by `conformance/cases/api/order-errors`.
+  data, pinned by `conformance/cases/api/order-errors`.
 
 The order pipeline and its findings are `ops/order.rs` (see `crates/DESIGN.md` → Order
 manifest): steward holdings on a steward artifact, canonical columns on the global one.
@@ -1357,435 +498,12 @@ same two origin-side guards; GET reads are not limited (they have the cheaper ed
   IPv6 address counts as its /64. **Address-only** by design: a session token would
   bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
   anonymous public data. Buckets are per process (lost on restart, not shared across
-  replicas), which suffices as the origin backstop behind the edge. The SPA's debounced
-  validation and its downloads stay far inside the budget (the `flows` run replays every
-  scenario from one address under it). A deployment whose worker sends no edge token
-  keys every client on Fly's proxy, so all of them share one bucket.
+  replicas), which suffices as the origin backstop behind the edge. A deployment whose
+  worker sends no edge token keys every client on Fly's proxy, so all of them share one
+  bucket.
 - **Body cap** — `payload_too_large` (413) over 1 MiB, counted as the body streams in
   (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
   plausible `project_data.json`.
-
-## Browse-only authoring: the data-order cart model (#991, #992/#993)
-
-The project editor was rebuilt around one rule: **the catalog is the only authoring
-surface**. `/project` is a **cart** — it shows what has been picked and authors nothing
-of its own but a source's **period** (Y-81, below; set directly or by the window-overlap
-action) and the project's name. `ProjectEditor` / `SourceEditor` display each source's
-variant coordinate, period, and its bindings as the lanes of its source timeline, and
-offer only removing a source, removing one column from one source, that period, the
-project's own name, and the New/Open/Download project_data.json/Download order actions.
-The columns are not listed again under the lanes (maintainer ruling 2026-10-23); each
-lane carries a quiet Remove that takes that binding out of that source alone, after a
-confirm. It is the only per-column way out for a column whose FQID the catalog does not
-know (its variable page has nothing to untick), and the only per-source one where two
-sources of one variant family carry the same column (unticking on the variable page
-removes it from every source of the family) — validation runs automatically on every
-edit, with no separate Validate action. A wrong variable, variant or representation gets
-fixed by picking again from the catalog subject page, not by editing the cart row; there
-is no general in-cart editing UI. A blank name closes Download order
-(`projectStore.nameBlocked`), with a visible reason under the toolbar that points to the
-name field: the server refuses an unnamed project's order as `project_unnamed`, and the
-SPA gate only spares the round trip.
-
-A cart row holds **coordinates, not words** — a `register_variant`, a variable FQID, and
-a `representation` only where a pick had to choose between co-existing columns — so the
-words a researcher recognizes are READ from the catalog (Y-80). A source card is HEADED
-by its register in the catalog's own spelling ("LISA", "MiDAS" — never the slug
-uppercased), with the variant that names the population on its own line under the
-heading — for a variant in a succession family, the FAMILY's label ("Individer",
-`variant_family_label`), never a member's, since a dated source reaches every member
-(#1840) and the members stay invisible: the title is COMPOSED in markup, never strung
-into one `A · B · C` line, which frontend/DESIGN.md rules out. A `_default` variant
-names no population, so the register heads the card alone. The owning PROVIDER is not
-part of that title — it is an attribute of the register rather than something the
-researcher picked, and a second unlabelled line under the heading could not be told from
-the variant — so it heads the card's `KeyValue` metadata rows, labelled, and only where
-the deployment serves more than one provider: a fact `App.tsx` reads ONCE and threads
-down like `steward`. The removal dialog and the delete button's accessible name say the
-same thing as SENTENCES ("Remove the LISA source (Individer, 16 år och äldre) and its 2
-columns?") rather than reciting the heading block. The coordinate itself stays on the
-card, in small mono. Every such read goes through `catalog_names.ts`, a module-singleton
-cache keyed per read (the catalog root; one per provider, which names every register it
-owns; one per register's variant list; one per register), so a hundred-column cart
-issues each request once and a re-render issues none; the browse tree reads the root
-through it too. A read in flight or a failed one — the root among them, since it is what
-says whether a register name needs its provider — leaves the card showing the coordinate
-it already holds: a machine coordinate is honest where an invented name is not. Nothing
-read is ever written back into the draft.
-
-Every field is **written once, at pick time**: the subject-page picker stages concrete
-`(period, variant, representation)` rows with final `type` / `representation`, then
-`applyStagedDiff` commits the diff in one mutation. Nothing re-derives afterwards, so
-there is no provenance state to track and no decision about whether a re-derived value
-may overwrite an author's edit; do not reintroduce a client-side re-derivation engine. A
-source's bindings can go stale relative to its period after the fact (e.g. the author
-widens the period); that drift is the **server validator's job** to surface
-(`source_period_narrower_than_available` for a period narrower than the data in the
-study window, `period_outside_state_validity` when nothing is left,
-`binding_state_drifts_within_period` across a transition — see `crates/DESIGN.md` →
-Project semantic validation), and auto-validation surfaces it on every edit (§ "Browser
-storage + project-file persistence" below). Each finding that resolves a catalog
-coordinate carries a "Fix <name> in the catalog" link, so the remediation path is always
-back to the catalog, never a cart-side patch.
-
-**Findings sit under what they concern (#1906).** `projectFindings` folds the three
-checks (a `/validate` issue, a blocked order's finding, the study window's disjoint
-source) into one located shape; `findingLocation` reads the JSON pointer to a source
-card and, for `/sources/i/bindings/j`, the column lane. A binding's finding renders
-under its lane (`LaneModel.below`; `LaneList` for a token period), a source's own at the
-top of its card, and the window finding as the period's error row. The summary panel
-(`ValidationPanel`) keeps the verdict, the count per level, the findings with no card
-(name, study window, schema) in full, and a jump link to each located one; there are no
-locate buttons. The validator keeps printing FQIDs: the UI names them. `catalogNames` is
-the one helper that turns a coordinate into the catalog's words (a register, a variable,
-a register variant as "LISA, Individer 16 år och äldre"), shared by finding messages
-(`plainMessage` replaces only the coordinates a finding is known to carry, as whole
-tokens), the "Fix in the catalog" link and the picker's lane disambiguator. A coordinate
-it cannot name stays as printed. The stable issue code sits in a delayed RAC `Tooltip`
-on the finding's title; pressing the title copies it.
-
-The one field a pick does NOT write is `display_name`, which it leaves **absent**. The
-field is optional — an absent one resolves to the reg_meta default from `variable_alias`
-— and stamping the delivery column onto it made two disjoint-era bindings of one
-physical column (`forvink-ers-aktiv` 1990..2021 and `forvink-ers` 2022..2023, both
-`ForvErs`) collide under reg-core's per-source `display_name_collision`, though the two
-never coexist. The rule is deliberately left as it is rather than made period-aware: the
-structural layer cannot see periods by design, and the rule still earns its place on
-hand-authored specs that set explicit names.
-
-Opened project files are held **verbatim** in the store so serialize/validate see the
-same malformed structure the backend diagnoses. The SPA's read side uses one
-`project_data.ts` safe-source-slot seam instead: non-array `sources` renders as empty,
-while malformed `sources[]` slots normalize to `null` for rendering/validation-display
-and remain counted so `/sources/{i}` anchors line up with backend issue paths. Store
-mutators that inspect source fields use the same accessors over the raw slots, so an
-untouched malformed slot is preserved until the user deletes it or replaces the source
-array through an explicit structural edit. The draft is typed `RawDraft`
-(`Record<string, unknown>`); the values the SPA writes into it are typed with the
-`Project*` schemas, which `reg-core`'s `openapi` feature publishes in `openapi.json` (no
-hand-written project types). The accepted model is never written back, so string panel
-members, unknown keys and invalid enums survive. One deliberate gap: an add whose column
-type did not resolve writes `type: ""` (`DraftBinding`) for the server to report.
-
-The commit primitive is `applyStagedDiff({adds, removes, periodChange})` — the
-browse-and-stage flow accumulates a user's picks/removes as a diff and commits it in
-**one atomic synchronous store mutation**, so autosave and the stable-id mirror fire/
-rebuild once per commit rather than once per pick (this is the write path the #995
-multi-select consumer commits through). Every step keys on the variant **family**
-(#1840), never on `(register_variant, period)`: a staged add or remove carries its
-family's `register_variant`s (`members`), and a source matches when its coordinate is
-any of them — any member is accepted, so a source an agent wrote at a predecessor, or
-one the head moved past after a new edge was curated, is still found. An add's members
-are the WHOLE family, a member that does not deliver the column included (else a second
-source of one family would order overlapping years): a picker row knows only the members
-that deliver it, so `applyStagedPicks` awaits the register read (`settledRegisterRead`,
-the session-cached `registerRead` every source card and register page shares) for each
-register a dated add touches. That is one register read per register per session —
-LISA's carries its whole variable list — paid on the first add from a variable page when
-no register page or source card has read it yet; a failed read falls back to the row's
-own members. A remove reaches the members of the row it removes. A new source is written
-at the family head (reg_meta's `variant_family`). A year-independent (`_default`) add
-names its variant exactly. So two picks against one family land in the same source
-regardless of period or member; a disjoint window is folded into the existing source's
-period via `periodCoverageUnion` (`period.ts`) rather than minting a second source: the
-union of the days both periods request, through reg-core (WASM) — merged (overlapping
-and day-adjacent days join) into the sorted, disjoint #307 list form. Two year-only
-periods are rendered whole (`2005..2010,2015..2020`). Otherwise a segment whose days the
-merge leaves untouched keeps the spelling it was written in (`2020-H1` plus `2022` is
-`2020-H1,2022`), and only an interval the merge created or changed is rendered
-(`2019-Q1` plus `2019-Q2` is `VT2019`; a span no token covers is a range like
-`2019..2020-06-30`). When either side has no days to place (`_default`, or a period
-reg-core refuses) the incoming period replaces it.
-
-The source period is the variant's extraction scope and every column's period (#1838):
-the order clips each column to its own years inside it, so a column is never pinned to
-years of its own. An add reaching beyond the source widens it to the union; an add
-inside it keeps the period as written. The add resolves its binding fields (type, value
-set) at its own period, the years picked (`finalAddPeriodWires`), not at every year the
-source orders, and over the family members that deliver the column (the row's
-`variantSegments`): a column only 16+ delivers has no state at the 15+ head. The runtime
-has no family flag on `states`, so `familyStates` reads the period unfiltered and keeps
-those members' states; one member is the server's own `variant` filter. Co-existing
-columns stay ambiguous across members as within one. The type comes from the HEAD-MOST
-member that delivers the column — the one whose delivery reaches latest, so the member
-the source's newest years order from (`familyTypeState`). An older member typed
-differently is reported nowhere: the server's `binding_state_drifts_within_period`
-counts a member boundary only where the column or value set changes (`crates/DESIGN.md`
-→ Project semantic validation), so a type-only difference across it stays silent. The
-cart resolves a column's name, its data warnings (one `warnings` read per member,
-merged), and the window relation its delivery eras, over the same family
-(`variantFamilyMembers` on the register read). A source period edit (`periodChange`)
-replaces the period and touches no binding. `applyStagedDiff` is the SOLE
-catalog→project mutation path. `updateField` (the project's own `name` / `window`),
-`removeSource`/`removeBinding` and `applySourcePeriodEdit` are the only other mutators
-the cart UI calls — a source's own generated `name` is not editable anywhere.
-
-Bindings, variant and representation are written once at PICK time; a source's
-**period** is the one field the cart edits (Y-81), on the source timeline (#1838). It is
-a field of the SOURCE rather than of any single pick — a study window of 2005..2020 with
-one register reaching back to 1990 is an ordinary order — and the `/project` source card
-is the only surface that shows a source WHOLE: its full coordinate, its stored period
-and every column it carries, including columns no one catalog page lists. That is what a
-source-wide rewrite has to be looked at against, so that is where it is made. The card
-draws the source as the variable page draws a variable: a `LaneGraph` headed by the
-coverage row of its succession family (every member's deliveries, from the register read
-the card already makes for its name; `source_timeline.ts`), with the period as the
-window band and the shared `PeriodThumbs` laid over that row, and one lane per column,
-each column a span of the years the family delivers it. Every source card shares the
-page's one axis (`dataAxis` over every source's family years and period, with the study
-window, computed in `ProjectEditor`), so periods line up across sources. The thumbs are
-bounded by the family's coverage; a thumb coming to rest (on release, or on each key
-press) writes the span they frame as the period. A #307 comma-list period rests the
-thumbs on its outer years, and a move replaces it with one span, which the card says
-under the drawing; a token period (`HT2018`) is a vocabulary the thumbs do not author,
-and is shown as it stands; with no lanes drawn, its columns are listed as plain rows
-carrying the same per-column Remove. Where the years the period covers differ from the
-project's `window` (narrower, wider, or holed; `periodWindowRelation`) the card MARKS it
-("Differs from study window 2005–2020"). Like the variable page's period card, it judges
-the two inside the years the source's columns are delivered in (the register read the
-card already makes for its name; period ruling 2026-10-22), so a period of window ∩
-availability, what an add writes, is no divergence, and while that read is out the card
-marks nothing. The window is an authoring seed, not an inheritance (reg-core puts
-`period` on `Source`, never on `window`), so divergence is shown. Two divergences are
-more than shown: a period narrower than what its columns deliver in the window is the
-server's `source_period_narrower_than_available` warning, and a period with no years
-inside the window at all blocks the order (see "Common study window").
-
-The rewrite goes through `applySourcePeriodEdit`, keyed by source **name** as well as
-coordinate: a draft may carry several differently named sources on one register variant
-(reg-core makes names unique, not variants), and an edit moves only the one it names. It
-is its own period-only `applyStagedDiff`, never unioned with staged adds, and it carries
-the edited source's complete value plus the draft's `replacementGeneration`. Both are
-re-checked through one store-internal predicate immediately before the write: a source
-that moved, or a project that was replaced, under an open edit refuses the write instead
-of overwriting it, and the card says so. Ordinary browsing still stages nothing —
-changing years, filtering rows or following a `?period` link leaves the draft alone, and
-`RepresentationPicker` has no period-change path at all: a catalog page's `?period` is
-the add window for the columns ticked there (an add widens its source to the union and
-never narrows it), and a partial leaf/group cannot infer a source-wide rewrite from the
-columns it happens to show, so a narrowing happens on the `/project` card only. Coverage
-and type drift after the edit stay the server validator's job, as above. Do not move
-period correction back onto catalog pages: a catalog page would have to re-state a
-source the cart already shows whole, and an earlier per-page "Project sources on this
-page" box went unused.
-
-## Browser storage + project-file persistence (the SPA store)
-
-Project files live in the **browser** during a session and as JSON in the user's git
-repo for durability. There is **no server-side storage** — git is the durable store,
-email/git-sharing handles collaboration (server-side projects are a possible v2
-feature). The authoring store (`project_store.ts`) is a module-singleton plain-TS store
-with `subscribe` (React reads it through `use_project.ts` and `useSyncExternalStore`)
-holding one draft per session.
-
-- **An APPLICATION-owned lifecycle.** `startDraftLifecycle()` wires the restore, the
-  autosave and the automatic validation, and is called **once**, in `main.tsx` outside
-  React — never by a route. The draft is authored from the catalog and only read at
-  `/project`, so a route-owned lifecycle both loses a catalog-authored draft (nothing
-  restores or autosaves until `/project` is visited) and, with a second caller, saves
-  and validates each edit twice. The restore is asynchronous, so it is exposed as
-  `projectStore.restored` and the catalog's Add path **awaits** it before it creates or
-  mutates a draft: without that gate, a cold entry at `/catalog` reads the still-empty
-  store, mints a second project, and later overwrites the saved one. Only a restore onto
-  an empty store applies, so a late restore never overwrites a deliberate new/open —
-  and, symmetrically, a pick queued behind the gate stays bound to the project it was
-  staged against: it is discarded (never applied) if a deliberate new/open replaced that
-  project, or the authoring page was left, while it waited. The generation is captured
-  at the PRESS, not when the store call starts — a page that reads anything
-  asynchronously first (the register list re-reads each ticked variable's delivery eras)
-  would otherwise leave a window in which a new/open lands unseen and the pick commits
-  into the replacement after all.
-- **Autosave to IndexedDB** (`indexeddb_persistence.ts`) over the raw IndexedDB API (no
-  `idb` dep — keeps the frontend dep surface lean) via a debounced (\~500ms) timer the
-  lifecycle owns. **Graceful degradation is mandatory**: in private mode / disabled
-  storage / quota failures, `save` resolves and `load` resolves `null` so the app keeps
-  working in-memory — autosave NEVER rejects or crashes the effect. A restore that fails
-  anyway settles the gate as "no restore" rather than rejecting it, so a broken
-  IndexedDB degrades to in-memory authoring instead of wedging the next pick.
-- **Store-schema stamping + gate.** Each persisted draft is stamped with the store's own
-  `storeSchemaVersion` (distinct from the project's `schema_version`); `load` restores
-  only on a match, else discards the stale-schema draft. This is the store's record
-  shape, bumped only when the persisted shape changes.
-- **reg-core in the browser.** The server's structural door, `reg_core::project::check`,
-  runs in the SPA as WebAssembly (`crates/reg-core-wasm`, built by `bun run gen:wasm`;
-  `lib/reg_core.ts` is its only importer). `main.tsx` loads it before mounting; if it
-  cannot load, `#app` shows a static alert instead of an app that cannot check a draft.
-  Every draft replacement (each edit, New, Open, the restore) runs `check_project`
-  synchronously, outside the validation debounce and the in-flight gate. A rejected
-  draft gets those issues as its validation at once and is never POSTed, so a stale
-  green answer for an earlier draft is discarded and cannot reopen the order download;
-  an accepted draft is POSTed to `/validate` (debounced) for the semantic layer, which
-  needs the catalog. A new draft takes `project_schema_version()`. Periods go through
-  the same module: the period grammar and project periods (a source period's days, a
-  study window's days) are reg-core's, never parsed or bounded in the SPA (`period.ts`
-  composes reg-core's answers, and `catalog.ts` fuses delivery windows and value-set
-  spans with reg-core's interval merge). The disjointness finding compares days. The
-  type-to-filter fold is the server search's `fold_search` through the same module, not
-  a TS copy.
-- **Project-file versions.** Any JSON object opens (the shape is the only ingress
-  check): the server reads exactly reg-core's `SCHEMA_VERSION` and answers any other as
-  the single `unsupported_schema_version` issue, which the browser now shows on open. No
-  migration, pre-v1 policy.
-- **Unsaved-changes warning.** A `dirty` flag derives from the draft diverging from the
-  last DOWNLOAD baseline (`lastDownloaded`); a `beforeunload` listener prompts on a
-  tab/window close with a dirty draft. The store drives the write endpoints (validate /
-  order download) through `lib/api.ts`.
-- **Deliberate replacement of a dirty draft.** `beforeunload` covers leaving the tab; it
-  does NOT run for the in-app New and Open, which replace the draft *and* the single
-  IndexedDB recovery copy behind it. Both therefore go through one policy
-  (`requestNewProject` / `requestOpenProject`, which hold the incoming project as DATA —
-  never a callback): over a dirty draft they raise a single confirmation (a RAC alert
-  dialog, through the shared `ConfirmDialog` that the source and window removals also
-  use) offering cancel / download-then-replace / replace anyway, and the replacement
-  runs only on a confirm. Nothing about the draft moves while that answer is pending, so
-  a cancel leaves the draft and its autosave untouched. Open PARSES first
-  (`parseProjectText` — JSON, top-level object) and asks only once the file is one that
-  could be loaded: a cancelled file picker, a parse/shape rejection, or a refused
-  replacement all leave the current draft exactly as it was. A restored autosave stays
-  dirty (a recovery copy is not a downloaded one), so it gets the same confirmation —
-  the flag is never cleared to skip the policy. The pending project is dropped when
-  `/project` unmounts, so an unanswered question can never outlive the page that asks
-  it. Reading a picked file's bytes is the one asynchronous step, and `/project` carries
-  a generation counter that a New, a newer Open and its own teardown all bump: a read
-  that loses that race is dropped BEFORE the ingress runs, since the ingress is what
-  raises the open-error — otherwise a stale file could still replace a newer decision,
-  or put a stale banner over it.
-
-Note: v1 is **one draft per SPA session** (a single IndexedDB key), not a multi-project
-list — a new or opened project replaces the current draft, deliberately (above).
-
-## Project-window store (`window.ts`) (#614/#611)
-
-`windowStore` (`src/lib/window.ts`) is a module-singleton plain-TS store with
-`subscribe` — a peer of `router.ts` and `project_store.ts`; React reads it through
-`useStudyWindow` (`use_project.ts`) — that is the **single read/write path** for the
-active study window (`{from, to}` int years, or `null` = full history). The
-`ProjectBanner` study-window slider and each subject page's period control go through it
-rather than touching the project store or `localStorage` directly.
-
-The variable page's `VariableTimeline` (#615/#671) seeds its pending selection with
-coverage-aware precedence — explicit year `?period` > intersection(coverage, window)
-when a window is set > the coverage span when none is > the bare window when there is no
-coverage > full bounds when neither — so a variable's true data coverage shows up front
-instead of the whole axis reading as available (M11). The part of the window outside
-coverage is drawn at once in the `info` tint, not selectable, and the thumbs are
-hard-clamped to the coverage span (#671). A local change writes `?period` only (never
-the global window). That selection is the add window (#1838): an add widens its source
-to the union and never narrows it, so it raises no warning, and a window wider than
-coverage is information (maintainer ruling 2026-10-22). The add window is drawn, as a
-second band over the always-drawn study window, only where it differs from the study
-window inside coverage (`periodWindowRelation`); the same test drops `?period` when the
-thumbs come to rest on the study window and hides "Clear period" while the applied
-period equals it (#1910).
-
-The catalog vintage (#631) is the ceiling an OPEN-ENDED coverage
-(`coverage.to === null`, "still delivered") projects to — the catalog only knows
-delivery up to its vintage — so the coverage band ends at the vintage and a selection
-past it reads as not covered. `windowBounds` (`window_bounds.ts`) derives it from
-`/api/context`'s `import_date`; `App.tsx` threads it down through `CatalogNodeView` to
-the leaf views. It is NOT a floor on the axis: a FINITE coverage keeps its real end
-(never extended to the vintage), and a window or selection past the vintage still widens
-the axis (the thumb renders the real value) without extending coverage. Wall-clock is
-the pre-context fallback only. The concept-group page draws the same coverage row
-without the slider (`CoverageTimeline`) and drives no refetch (`getConceptGroup` takes
-no period parameter).
-
-Precedence — two backing stores, one source of truth:
-
-- **Draft active**: the window IS `draft.window`. Reading returns the draft's value;
-  setting calls `projectStore.updateField("window", …)`, which marks the draft dirty and
-  rides the store's existing debounced autosave. The window is durable because it lives
-  in `project_data.json`. A draft with no `window` field reads as `null` (its own
-  absence) — the active project's state is always authoritative.
-- **No draft**: falls back to `localStorage` (key `reg_webapp:project_window`) so the
-  slider works and survives a reload when browsing without a project. Writes to
-  localStorage are best-effort; a failure (private mode, quota) degrades to an
-  in-memory-only session without crashing.
-
-The draft always wins while it exists; localStorage is purely the no-project fallback
-and is never mirrored while a draft is active. When a fresh draft is created FROM
-BROWSING — `projectStore.newProject` with no draft already open — the browse-time
-fallback (`windowStore.fallback`) is seeded into `draft.window` as the clean baseline,
-so a window set while browsing without a project carries over into the project created
-from that browse state rather than silently reverting to full history. `newProject`
-invoked while a draft is already active (the "New" button inside a project) does NOT
-seed the fallback: it is the stale no-draft value (active-draft window writes/clears
-don't update it). A deliberately created project (the banner's "Create a project", the
-"New" button) otherwise starts at 2015 to the catalog's last year (`defaultStudyWindow`;
-the whole span when the catalog ends before 2015, #1831). A project minted by a catalog
-Add with no window set stays windowless (full history): its picks were judged without
-one. An opened project (an open / restore) keeps its own `window` unchanged. The
-banner's study-window slider also has a Clear control that writes `null` back to the
-store, making full history reachable at any time after the first interaction. Filtered
-steward deployments seed the slider bounds and the axis fallback from `/api/context`'s
-`period_span` (#1037), a best-effort year span derived from admitted physical
-holding-period bounds and capped at the catalog import year. Catalog artifacts and
-holdings without dated periods fall back to the fixed 1960 → catalog-vintage bounds.
-
-## Common study window (decision 2026-07-11)
-
-The project's common study window is the authoring default for every dated source. It is
-never schema inheritance: each `Source` keeps its own explicit `period` in
-`project_data.json`, and nothing derives a period from the window at read time.
-
-- **Where it lives: the existing `window` field, no schema change.**
-  `ProjectData.window` (reg-core `StudyWindow`, optional since #611) already persists
-  the window with the draft, so it survives download, open and the autosave.
-- **The rules are SPA authoring rules; nothing past the SPA enforces them (decision
-  2026-10-07).** The window is an authoring default and every source carries its own
-  explicit period, so the period is the whole order request: neither `reg-meta order`
-  nor the HTTP `/api/project/order` endpoint reads `window`, and neither refuses a
-  project whose source is disjoint from it. The SPA's block is a gate on its own
-  download control, not a contract on the file. Enforcing it everywhere would make the
-  window a constraint on the order — a reg-core structural rule and a `schema_version`
-  change — which is deliberately not taken.
-- **An add persists the full available intersection.** A catalog Add clips each picked
-  column's delivery windows to the add window (the study window, or a subject page's own
-  `?period`) and commits every surviving era (`windowsAddPeriod`), so an interrupted
-  delivery keeps its gap as the #307 list form. This is the Add itself, not a
-  suggestion.
-- **No overlap blocks the add.** A column with no years inside the add window has no
-  period to commit, and none is invented from its own span (the earlier dimmed-row
-  fallback is gone). The register list does not offer the tick; a subject page refuses
-  the whole Apply before the store is touched (`applyStagedPicks` → `outside-scope`) and
-  names the columns and the window in the picker's status row. A subject page's own
-  `?period` overrides the add window, so the study window is checked as well: an add the
-  page period resolves wholly outside it would author a source that blocks the order,
-  and is refused the same way (`outside-study-window`), naming the study window. A pick
-  is one add however many variants of its family deliver it (#1840), so a LISA column
-  picked over 2004–2012 under a 1980–2005 window is one source over 2004–2012, judged
-  whole (#1834).
-- **A window edit never rewrites a source period.** The slider writes `window` and
-  nothing else. A source the new window leaves with no years inside it keeps its period
-  and blocks the order: `projectStore.canDownloadOrder` closes and `downloadOrder`
-  refuses, the card shows an error row, and the validation panel links to each such
-  source's row (`windowDisjointFindings`), as it does for any located finding. The
-  banner's project chip says "Order blocked" (the panel's own wording) wherever
-  validation alone would read "Draft valid" or "Warnings". The draft itself stays valid
-  and downloadable.
-- **Every divergence is marked.** On `/project` the card marks a differing period and,
-  at error tone, a disjoint one; the head of the sources list names the window and
-  counts both kinds. In the catalog, a committed column's "In project" tag says when its
-  source's years differ from the window, or that it is outside it (`committedMarker`,
-  shared by the subject-page picker and the register list); the subject page's own
-  `?period` deviation keeps the period picker's existing hint.
-- **A source narrower than its data warns once, from the server (#1836).** The SPA
-  computes no coverage of its own: `validate`'s `source_period_narrower_than_available`
-  names the days in the window the source's columns deliver and its period leaves out,
-  located on the source like any finding. A period narrower than the window where the
-  data is too says nothing.
-- **"Apply window overlap" is the one rewrite.** It reads each dated source's register
-  (the register list's `VariableDelivery.windows`), plans each source's overlap from its
-  own columns at its own variant (`planWindowOverlap`), and asks before writing: the
-  dialog lists every period it replaces and every source it leaves alone. Only sources
-  whose columns reach the window are rewritten, in one period-only `applyStagedDiff`; a
-  source with no overlap keeps its period, and keeps blocking if it is disjoint. So does
-  a source one of whose columns has no delivery at its variant in the read: narrowing it
-  to the columns that were found would silently drop the missing column's years. A draft
-  that moves while the reads are out drops the plan rather than writing it onto a
-  project nobody looked at. Once a plan has left nothing to change (a press that changed
-  nothing, or a rewrite that just landed), the action stays frozen (`aria-disabled`, so
-  focus stays put) until a source or the window moves.
 
 ## API surface
 
@@ -1809,7 +527,7 @@ orientation map. Read GETs are edge-cacheable, write POSTs are not.
   | GET    | `/api/docs/file/{ref}/{filename}`    | Rust   | One rehosted source PDF's bytes.                                                                                          |
   | POST   | `/api/project/validate`              | Rust   | `validate`: 200 + `ok` + issues, an invalid project included.                                                             |
   | POST   | `/api/project/order`                 | Rust   | `order`: the manifest; 422 `project_invalid` or `order_blocked` (with every finding) when not an order.                   |
-  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact bytes, an attachment named `order_<slug>_<date>.json` (the SPA's download).                |
+  | POST   | `/api/project/order/manifest`        | Rust   | The same manifest as the exact bytes, an attachment named `order_<slug>_<date>.json` as a download.                       |
 
 ## Input-validation gates (security boundary)
 
@@ -1818,18 +536,3 @@ bad period, variant or query) is refused by the Rust server with a located error
 grammars and refusals are pinned in `conformance/cases/api`. A project body is parsed
 strictly (`ops/body.rs`, Project operations above), and a `scope` parameter on a project
 operation is refused as `invalid_parameter`.
-
-## Forward-looking open UX notes
-
-These are unresolved UX questions, not built behavior — recorded so they aren't
-re-discovered. The underlying data-layer lineage rationale lives in `crates/DESIGN.md`
-and `reg_meta_build/DESIGN.md` (the `variable_state_lineage` interval-overlap edges);
-these are purely the authoring-UI presentation.
-
-- **LISA composite-source presentation.** \~64% of LISA's variable slugs are sourced
-  from RTB/RAMS/FastPak/IoT and carry inbound lineage edges. How the catalog UI surfaces
-  that origin when a user authors a LISA variable list — hover tooltip, inline note,
-  "see also" panel — is undecided. The data is present; the question is purely UX.
-- **Realign-patch lifecycle** (gated behind the unbuilt merged-mode realign flow).
-  Whether the realign-review UI writes an accepted patch back into git automatically or
-  just produces a new `project_data.json` the user replaces manually.

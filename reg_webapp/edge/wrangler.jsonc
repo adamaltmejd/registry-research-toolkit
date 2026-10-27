@@ -1,10 +1,8 @@
 // Cloudflare edge worker for the global catalog's hosted MCP (crates/DESIGN.md,
 // "Hosted MCP").
 //
-// MCP only, on reg-meta.vqv.uk: no SPA and no `/api` browse surface (the global
-// webapp runs locally only, reg_webapp/dev/dev.sh). With no `assets` binding the
-// worker forwards `/mcp` to the zone's DNS origin (the Fly app — the proxied A/AAAA
-// records for reg-meta.vqv.uk) with the edge token, and answers anything else with a
+// MCP only, on reg-meta.vqv.uk. The worker forwards `/mcp` to the zone's DNS
+// origin (the Fly app — the proxied A/AAAA records for reg-meta.vqv.uk) with the edge token, and answers anything else with a
 // 404. See reg_webapp/DESIGN.md → "Deployment" for the topology.
 //
 // Deploy:

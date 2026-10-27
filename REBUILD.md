@@ -290,7 +290,7 @@ The full SCB read is a heavy run.
   - parsed documents.
 - **`reg-catalog`** rewritten over the new schema. The operations in
   `conformance/api/operations.toml` and the OpenAPI contract are kept where the model
-  allows. Each contract change is reviewed and the SPA types are regenerated.
+  allows. Each contract change is reviewed against the server snapshot.
 - **The order check**, which returns the logical order or its findings. An ambiguous
   window blocks. A window only a preliminary release covers orders with a
   `preliminary_data` warning; final wins where both exist. Choosing an edition or
@@ -416,10 +416,10 @@ The full SCB read is a heavy run.
 - **Then the build.** SWECOV's holdings run on the new catalog, together with its
   steward catalog, its release asset and physical orders. `reg_mona_runner` reads the
   new order file.
-- **The SPA** is rewritten on the v5 API after curation and holdings: the wave-5 work
-  covers shell and search, entity pages, values/graph/docs, project and order, and
-  flows. Until then the SPA is not part of any milestone exit, and its CI job stays
-  frozen on `rebuild-c`.
+- **The SPA** is archived from main at the switch and rewritten in E on the v5 API from
+  `archive/reg-webapp-spa` and `claude/rebuild-s-shell-search`, after curation and
+  holdings. The work covers shell and search, entity pages, values/graph/docs, project
+  and order, and flows. Until E the SPA is not part of any milestone exit.
 
 **Exit:**
 
@@ -448,9 +448,9 @@ The full SCB read is a heavy run.
   the release `dbdiff` as the main release check;
 - `AGENTS.md`, `ARCHITECTURE.md` and `README.md`;
 - every other file that names `reg_meta_build`, edited to drop it: among others
-  `scripts/gate.py`, `scripts/parse_lisa_docs.py`, `reg_webapp/dev/dev.sh`, the root
-  `pyproject.toml` and `uv.lock`, `renovate.json`, `.panache.toml`, `.dockerignore`,
-  `.gitignore`, `reg_webapp/`, `conformance/` and `scripts/tests/`.
+  `scripts/gate.py`, `scripts/parse_lisa_docs.py`, the root `pyproject.toml` and
+  `uv.lock`, `renovate.json`, `.panache.toml`, `.dockerignore`, `.gitignore`,
+  `reg_webapp/`, `conformance/` and `scripts/tests/`.
 
 **Exit:** `git grep reg_meta_build` finds nothing, `scripts/gate.py all` is green, and a
 release is built by the new builder.
