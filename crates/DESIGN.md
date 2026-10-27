@@ -410,6 +410,12 @@ tracks the milestones. This section holds the design decisions that outlive the 
   meta keys `generation_id`, `catalog_version`, `builder_version` and `curation_digest`
   never count, since they differ every release), 2 on a usage or IO error or a missing
   or different `schema_version` major.
+- **Verification.** `reg-build verify FILE [--previous FILE]` is the single artifact
+  check: integrity, the schema's post-write queries, each value set's items hashing to
+  its address, and with `--previous` the id rules against the previous release. `emit`
+  runs it on the staged file before replacing the output, so conformance and the release
+  skill call the same authority. A previous file of another schema major is not
+  comparable.
 
 **What the rebuild is checked against.** Not today's artifact byte for byte. It is
 checked against what users see (tables, columns, variables, labels, value sets) and

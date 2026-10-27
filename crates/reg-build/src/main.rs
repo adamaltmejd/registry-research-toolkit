@@ -4,10 +4,12 @@
 //! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
+//! reg-build verify FILE [--previous FILE]
 //! reg-build diff OLD NEW [--json] [-n N]
 //! ```
 //!
-//! Both run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
+//! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
+//! against the previous release's; it prints nothing on success. `read` and `build` run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
 //! An input that is a release asset of the inputs repository is read from
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
@@ -20,6 +22,7 @@
 
 mod diff;
 mod emit;
+mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -350,16 +353,42 @@ fn build(args: &Args) -> Result<(), String> {
     emit::write(&catalog, &args.out)
 }
 
-fn main() -> ExitCode {
-    let args: Vec<String> = std::env::args().skip(1).collect();
-    if args.first().map(String::as_str) == Some("diff") {
-        return diff::run(&args[1..]);
+/// `verify FILE [--previous FILE]`, after the command word.
+fn parse_verify(
+    mut args: impl Iterator<Item = String>,
+) -> Result<(PathBuf, Option<PathBuf>), String> {
+    let usage = "usage: reg-build verify FILE [--previous FILE]";
+    let (mut file, mut previous) = (None, None);
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "--previous" if previous.is_none() => {
+                previous = Some(PathBuf::from(args.next().ok_or(usage)?));
+            }
+            flag if flag.starts_with("--") => {
+                return Err(format!("unknown flag {flag:?}; {usage}"));
+            }
+            _ if file.is_none() => file = Some(PathBuf::from(arg)),
+            _ => return Err(usage.to_owned()),
+        }
     }
-    let result = parse_args(args.into_iter()).and_then(|args| match args.command.as_str() {
-        "read" => read(&args),
-        "build" => build(&args),
-        other => Err(format!("unknown command {other:?}")),
-    });
+    Ok((file.ok_or(usage)?, previous))
+}
+
+fn main() -> ExitCode {
+    let mut args = std::env::args().skip(1).peekable();
+    // `diff` has its own exit codes (1 = the catalogs differ, 2 = error).
+    if args.next_if_eq("diff").is_some() {
+        return diff::run(&args.collect::<Vec<_>>());
+    }
+    let result = if args.next_if_eq("verify").is_some() {
+        parse_verify(args).and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
+    } else {
+        parse_args(args).and_then(|args| match args.command.as_str() {
+            "read" => read(&args),
+            "build" => build(&args),
+            other => Err(format!("unknown command {other:?}")),
+        })
+    };
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
