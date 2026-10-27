@@ -48,8 +48,8 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
   | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
   | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done        |
   | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done        |
-  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | in progress |
-  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the six statement kinds                                              | —           |
+  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done        |
+  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the six statement kinds                                              | in progress |
   | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —           |
   | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —           |
 
@@ -320,11 +320,14 @@ The full SCB read is a heavy run.
   classified;
 - the maintainer approves the switch release.
 
-**Outcome.** Exits 1 and 2 pass; exit 3, the maintainer's switch-release approval, is
-pending on [PR #1994’s approval
-sheet](https://github.com/adamaltmejd/registry-research-toolkit/pull/1994#approval-sheet).
-The recorded full real-seed build at `5380260f` (after #1992 and #1993) took 108 s,
-peaked at 7.1 GB RSS and produced a 663 MB catalog; `reg-build verify` exited 0. Its
+**Outcome.** The maintainer approved C-2, C-3, C-14 and the switch release on
+2026-10-27. `reg_meta/v0.65.0` was published 2026-10-27 from bump `629975af6` (inputs
+`9186fcb`), built without `--release` (5,128 unminted variables). `verify` exited 0;
+release conformance passed 4/4. The one catalog asset is `reg_meta.db.zst`.
+reg-meta.vqv.uk serves generation
+`0967d0cb920fbfb43de5e5562c72a01d93acb5d0662d11b13aec4ee8c9624507`, contract 5.0.0. The
+recorded full real-seed build at `5380260f` (after #1992 and #1993) took 108 s, peaked
+at 7.1 GB RSS and produced a 663 MB catalog; `reg-build verify` exited 0. Its
 `meta.generation` is `0967d0cb920fbfb43de5e5562c72a01d93acb5d0662d11b13aec4ee8c9624507`,
 identical to the build at `110134aa` (#1990): byte-identical output across reader-only
 changes.
@@ -390,8 +393,8 @@ Whole-catalog sizing found 3,788 ambiguous data segments in 99 of 291 registers;
 full-register order on any of those 99 refuses. Of the segments, 3,385 involve different
 SCB VarIds claiming one column. Blocking only the actual overlap still leaves all 99
 registers; exempting same-VarId type-only disagreements leaves 93. These are sizing
-estimates, not executed order requests; both changes are deferred to D. Sources:
-`.local/rebuild-c/runs/diag-orders-1.txt`, `diag-orders-2.txt` and
+estimates, not executed order requests; D's ruling below adopts the exemption only.
+Sources: `.local/rebuild-c/runs/diag-orders-1.txt`, `diag-orders-2.txt` and
 `ambiguity-sizing-1.txt`.
 
 The remaining C checklist:
@@ -407,7 +410,7 @@ The remaining C checklist:
   and code search #1958/#1962; parsed documents #1964. Tags did not ship: they need D
   curation, as do sets.
 - `reg-catalog` rewrite shipped: v5 contract #1963, admission #1973, operations
-  #1978–#1985; contract sign-off is pending on the approval sheet.
+  #1978–#1985; the maintainer approved the contract on 2026-10-27.
 - Logical order check shipped in #1985: ambiguity blocks, preliminary-only coverage
   warns and final wins; edition/qualifier selection remains deferred after curation.
 - Conformance moved off `reg_meta_build` in #1969; `reg-build verify` owns artifact
@@ -418,23 +421,25 @@ The remaining C checklist:
   deployment cleanup in #1993.
 - Rust `dbdiff` shipped as `reg-build diff` in #1955; post-switch releases compare with
   their predecessor. The switch has no comparable v4 predecessor.
-- Server switch has not happened. Plumbing shipped in #1986/#1993; approval, merge,
-  switch release and deployment remain. SWECOV stays on 0.64.0 until E.
+- Server switch shipped with `reg_meta/v0.65.0` on 2026-10-27; reg-meta.vqv.uk serves
+  contract 5.0.0. SWECOV stays on 0.64.0 until E.
 
 ### D: curation carry-over
 
-- **Release model.** Investigate whether a release as period plus description, with an
-  optional `supersedes`, replaces edition and qualifier with fewer concepts. Releases
+- **Release model** (maintainer ruling, 2026-10-27). A read-only investigation reports
+  first; the maintainer rules from it. Investigate whether period plus description, with
+  an optional `supersedes`, replaces edition and qualifier with fewer concepts. Releases
   stay optional and are never synthesized as placeholders for tables without one.
   Edition or qualifier selection in orders, if still needed, is designed together with
-  this model.
+  this model. The statement address grammar lands without `:edition/qualifier` until
+  that ruling.
 
-- **Ambiguity candidates from C** (not implemented):
-  - block only the actual overlap, instead of the whole ambiguous run; sizing still
-    leaves 99 registers with ambiguity;
-  - exempt same-VarId type-only disagreements while retaining label/value-set and
-    rival-variable blocking; sizing leaves 93 registers;
-  - revisit whether the rival check should mark the whole run or only its overlap.
+- **Ambiguity** (maintainer ruling, 2026-10-27):
+  - adopt the same-VarId type-only exemption: a column whose occurrences share one
+    source key and one folded spelling, and disagree only in type, or type and case, is
+    not ambiguous. Label and value-set disagreements and rival variables still block;
+  - overlap-only blocking is not adopted. The rival check keeps marking the whole run;
+  - sizing: 99 → 93 registers.
 
 - **F1 `domain-change` rule**: it is not emitted when only the classification version
   differs (tracker F1 spec). Moot in C, since class versions start in D; implement it
@@ -489,9 +494,9 @@ The remaining C checklist:
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
 
-- **`follow_successor`**, an optional binding field, comes with D's first variable
-  `link` statements. Until then the order check reports `variable_replaced` and never
-  follows (v4 §4.4's "only when the project asks" has no field in 5.0.0).
+- **`follow_successor`**, an optional binding field, was approved as contract 5.1.0
+  (maintainer ruling, 2026-10-27): additive; the default does not follow. It landed with
+  D's first variable `link` statements.
 
 - **Classification pins** (`classification` in a binding) resolve once D curates class
   versions. Until then every pin is `fqid_unresolved`.
@@ -508,6 +513,8 @@ The remaining C checklist:
 - the curated strict build passes;
 - no variable is unminted;
 - the comparison is re-run, and every curated difference is explained.
+
+**Outside:** G0 runs ~160 s against its 60 s budget; fixed in a separate task.
 
 ### E: the holdings layer
 
