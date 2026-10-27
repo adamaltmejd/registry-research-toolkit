@@ -253,7 +253,7 @@ impl ServerHandler for Tools {
             .and_then(|op| query(op, arguments).map(|query| (op, query)));
         let answer = match call {
             Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query).await,
-            Err(err) => Answer::new(&self.server, self.server.catalog.default_scope(), Err(err)),
+            Err(err) => Answer::new(&self.server, Err(err)),
         };
         Ok(if answer.status == StatusCode::OK {
             CallToolResult::structured(answer.body)

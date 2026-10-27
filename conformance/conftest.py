@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from http_cases import PARKED, ServerPool
+from http_cases import ServerPool
 from reader_artifacts import cached_reader_artifact
 
 
@@ -24,14 +24,14 @@ def pytest_addoption(parser):
     parser.addoption(
         "--server-cmd",
         default=None,
-        help="the Rust server's command template ({db}, {catalog}, {port}) every "
+        help="the Rust server's command template ({db}, {port}) every "
         "HTTP and MCP case runs against (required); see conformance/README.md",
     )
     parser.addoption(
         "--mcp-cmd",
         default=None,
         help="run the MCP stdio session against a process started from this "
-        "command template ({db}, {catalog}); see conformance/README.md",
+        "command template ({db}); see conformance/README.md",
     )
 
 
@@ -72,8 +72,6 @@ def artifact_dir(request):
 @pytest.fixture(scope="session")
 def server_cmd(request):
     """The `--server-cmd` template, for a test that starts the server."""
-    if PARKED["server"]:
-        pytest.skip("parked: the server does not admit the 4 schema (PARKED.toml)")
     return request.config.getoption("--server-cmd")
 
 

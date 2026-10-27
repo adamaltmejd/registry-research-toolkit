@@ -1,345 +1,179 @@
-//! Refs: a FQID, a group ref or a bare name, resolved in the read scope.
-//! [`resolve`] takes any kind (`show`); [`register`] takes a register only
-//! (`search`'s `register`, `docs_related`).
+//! Refs (`operations.toml`'s `ref` type): a public id or a bare name, resolved through
+//! `ident`. Every operation that takes a ref calls [`resolve`]; one that expects a
+//! table calls [`table`].
 
 use reg_core::Fqid;
-use rusqlite::{Connection, OptionalExtension, params_from_iter};
-use serde_json::json;
+use rusqlite::{Connection, OptionalExtension, Row};
 
-use crate::held::{self, Narrow};
-use crate::{Code, Error, Scope};
+use crate::{Code, Error};
 
-/// The first segment of classification FQIDs and of classification group refs.
-const CLASS: &str = "class";
-/// The first segment of group refs.
-const GROUP: &str = "group";
-
-/// SQL for the SCB numeric variable id of the variable `v` (provider `p`), NULL
-/// for other providers (today's `_VAR_ID_EXPR`). The provider is read from `p`:
-/// `variable_id` is dense and carries no provider band (#1296 2b).
-pub(crate) const VAR_ID: &str = "CASE WHEN p.slug = 'scb' \
-    AND v.provider_key GLOB '[0-9]*' AND NOT v.provider_key GLOB '*[^0-9]*' \
-    THEN CAST(v.provider_key AS INTEGER) END";
-
-/// What a ref names, resolved in the read scope.
-pub(crate) enum Target {
-    /// No ref: the catalog root.
-    Root,
-    Provider {
-        id: i64,
-        slug: String,
-    },
-    Register {
-        id: i64,
-        provider: String,
-        slug: String,
-    },
-    Variable {
-        id: i64,
-    },
-    /// `class`: every classification.
-    ClassificationRoot,
-    Classification {
-        id: i64,
-        slug: String,
-    },
-    /// `group/<provider>/<register>/<key>`; whether the group has members in scope
-    /// is the caller's to decide.
-    Group {
-        register_id: i64,
-        provider: String,
-        register: String,
-        key: String,
-    },
-    /// `group/class/<key>`: a classification group or family, or nothing.
-    ClassificationGroup {
-        key: String,
-    },
-}
-
-pub(crate) fn not_found(value: &str) -> Error {
-    Error::new(
-        Code::NotFound,
-        format!("Nothing named {value:?} in this scope."),
-        vec![value.into()],
-    )
-}
-
-/// `invalid_ref` for a ref that resolves to a kind the operation does not take.
-pub(crate) fn invalid_kind(value: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
-        format!("{value:?} is not a ref of a kind this operation takes."),
-        vec![value.into()],
-    )
-}
-
-fn invalid(value: &str) -> Error {
-    Error::new(
-        Code::InvalidRef,
-        format!("{value:?} is not a FQID, a group ref or a name."),
-        vec![value.into()],
-    )
-}
-
-/// Resolve `value` (`None` is the root): `class`; a group ref; a FQID, where one
-/// not live in scope is `not_found`; otherwise a bare name. A one-segment ref is a provider first, then a bare name, so an exact
-/// ref never turns ambiguous.
-pub(crate) fn resolve(
-    conn: &Connection,
-    scope: Scope,
-    value: Option<&str>,
-) -> Result<Target, Error> {
-    let Some(value) = value else {
-        return Ok(Target::Root);
-    };
-    if value == CLASS {
-        return Ok(Target::ClassificationRoot);
-    }
-    let segments: Vec<&str> = value.split('/').collect();
-    if segments[0] == GROUP {
-        return group(conn, value, &segments[1..]);
-    }
-    match value.parse::<Fqid>() {
-        Ok(Fqid::Provider { provider }) => {
-            let sql = format!(
-                "SELECT provider_id FROM provider p WHERE slug = ? AND {}",
-                held::provider(scope, "p.provider_id")
-            );
-            if let Some(id) = conn
-                .query_row(&sql, [&provider], |row| row.get(0))
-                .optional()?
-            {
-                return Ok(Target::Provider { id, slug: provider });
-            }
-            bare(conn, scope, value)
-        }
-        Ok(Fqid::Register { provider, register }) => {
-            let id = register_id(conn, scope, &[provider.clone(), register.clone()])?
-                .ok_or_else(|| not_found(value))?;
-            Ok(Target::Register {
-                id,
-                provider,
-                slug: register,
-            })
-        }
-        Ok(Fqid::Variable {
-            provider,
-            register,
-            variable,
-        }) => {
-            let id = variable_id(conn, scope, &[provider, register, variable])?
-                .ok_or_else(|| not_found(value))?;
-            Ok(Target::Variable { id })
-        }
-        // Classifications are scope-independent.
-        Ok(Fqid::Classification { classification }) => conn
-            .query_row(
-                "SELECT id FROM classification WHERE slug = ?",
-                [&classification],
-                |row| row.get(0),
-            )
-            .optional()?
-            .map(|id| Target::Classification {
-                id,
-                slug: classification,
-            })
-            .ok_or_else(|| not_found(value)),
-        Err(_) if !value.is_empty() && !value.contains('/') => bare(conn, scope, value),
-        Err(_) => Err(invalid(value)),
-    }
-}
-
-/// `group/class/<key>` or `group/<provider>/<register>/<key>`.
-fn group(conn: &Connection, value: &str, rest: &[&str]) -> Result<Target, Error> {
-    match rest {
-        [CLASS, key] if !key.is_empty() => Ok(Target::ClassificationGroup {
-            key: (*key).to_owned(),
-        }),
-        [provider, register, key] if !key.is_empty() => {
-            let Ok(Fqid::Register { provider, register }) =
-                format!("{provider}/{register}").parse()
-            else {
-                return Err(invalid(value));
-            };
-            // Membership in scope decides the group; the register need only exist.
-            let register_id = register_id(
-                conn,
-                Scope::Reference,
-                &[provider.clone(), register.clone()],
-            )?
-            .ok_or_else(|| not_found(value))?;
-            Ok(Target::Group {
-                register_id,
-                provider,
-                register,
-                key: (*key).to_owned(),
-            })
-        }
-        _ => Err(invalid(value)),
-    }
-}
-
-fn register_id(conn: &Connection, scope: Scope, slugs: &[String]) -> Result<Option<i64>, Error> {
-    let sql = format!(
-        "SELECT r.register_id FROM register r JOIN provider p USING(provider_id) \
-         WHERE p.slug = ? AND r.slug = ? AND {}",
-        held::register(scope, "r.register_id")
-    );
-    Ok(conn
-        .query_row(&sql, params_from_iter(slugs), |row| row.get(0))
-        .optional()?)
-}
-
-pub(crate) fn variable_id(
-    conn: &Connection,
-    scope: Scope,
-    slugs: &[String],
-) -> Result<Option<i64>, Error> {
-    // The register subquery keys idx_variable_slug(register_id, slug).
-    let sql = format!(
-        "SELECT v.variable_id FROM variable v WHERE v.register_id IN (SELECT r.register_id \
-         FROM register r JOIN provider p USING(provider_id) WHERE p.slug = ? AND r.slug = ?) \
-         AND v.slug = ? AND {}",
-        held::variable(scope, "v.variable_id", Narrow::default())
-    );
-    Ok(conn
-        .query_row(&sql, params_from_iter(slugs), |row| row.get(0))
-        .optional()?)
-}
-
-/// A bare name: the registers, variables (by `fold_identity` of their name) and
-/// classifications (of their short name or name) in scope. One resolves; several
-/// are `ambiguous_ref` with their FQIDs. Delivered column names are not names
-/// (`resolve` maps them).
-fn bare(conn: &Connection, scope: Scope, value: &str) -> Result<Target, Error> {
-    // simplify: fold_identity over every variable name per request; give `variable`
-    // a folded-name column if the measured request time on the real artifact grows.
-    let sql = format!(
-        "SELECT 'register', p.slug, r.slug, NULL, r.name FROM register r \
-         JOIN provider p USING(provider_id) \
-         WHERE r.slug IS NOT NULL AND fold_identity(r.name) = fold_identity(?1) AND {} \
-         UNION ALL \
-         SELECT 'variable', p.slug, r.slug, v.slug, v.name FROM variable v \
-         JOIN register r USING(register_id) JOIN provider p USING(provider_id) \
-         WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL \
-         AND fold_identity(v.name) = fold_identity(?1) AND {} \
-         UNION ALL \
-         SELECT 'classification', '{CLASS}', c.slug, NULL, c.short_name FROM classification c \
-         WHERE c.slug IS NOT NULL AND (fold_identity(c.short_name) = fold_identity(?1) \
-         OR fold_identity(c.name) = fold_identity(?1))",
-        held::register(scope, "r.register_id"),
-        held::variable(scope, "v.variable_id", Narrow::default()),
-    );
-    let mut stmt = conn.prepare(&sql)?;
-    let mut found: Vec<(String, &'static str, Option<String>)> = stmt
-        .query_map([value], |row| {
-            let kind: String = row.get(0)?;
-            let slugs: [Option<String>; 3] = [row.get(1)?, row.get(2)?, row.get(3)?];
-            let present: Vec<Option<String>> = slugs.into_iter().flatten().map(Some).collect();
-            let kind = match kind.as_str() {
-                "register" => "register",
-                "variable" => "variable",
-                _ => "classification",
-            };
-            Ok((fqid(&present).unwrap_or_default(), kind, row.get(4)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    found.retain(|(fqid, ..)| !fqid.is_empty());
-    found.sort();
-    match found.as_slice() {
-        [] => Err(not_found(value)),
-        [(fqid, ..)] => resolve(conn, scope, Some(fqid)),
-        _ => Err(Error::new(
-            Code::AmbiguousRef,
-            format!("{} entities are named {value:?}.", found.len()),
-            vec![
-                value.into(),
-                found
-                    .iter()
-                    .map(|(fqid, kind, name)| json!({"fqid": fqid, "kind": kind, "name": name}))
-                    .collect(),
-            ],
-        )),
-    }
-}
-
-/// A resolved register.
-pub(crate) struct Register {
+/// A resolved ref: `ident`'s row.
+pub(crate) struct Entity {
+    /// `ident.kind`: `provider`, `register`, `table`, `variable`, ...
+    pub kind: String,
+    /// The row id in the kind's table.
     pub id: i64,
-    /// Its slug; a register without one has no FQID.
-    pub slug: Option<String>,
+    pub pid: String,
 }
 
-/// Today's register lookup for `--register`, as a ref: a FQID with a `/` resolves
-/// by slugs; a one-segment ref is a bare name, matched on `fold_identity`. Either
-/// must name a register in scope.
-pub(crate) fn register(conn: &Connection, scope: Scope, value: &str) -> Result<Register, Error> {
-    let in_scope = held::register(scope, "r.register_id");
-    let not_found = || {
-        Error::new(
-            Code::NotFound,
-            format!("No register {value:?} in this scope."),
-            vec![value.into()],
+fn entity(row: &Row) -> rusqlite::Result<Entity> {
+    Ok(Entity {
+        kind: row.get(0)?,
+        id: row.get(1)?,
+        pid: row.get(2)?,
+    })
+}
+
+/// Resolve `value`: an exact `ident.pid` first; then, for a ref without a `/`, the
+/// `ident` rows whose `name_fold` is its `fold_identity`, where several are
+/// `ambiguous_ref`. So an exact pid never turns ambiguous. Otherwise a retired pid is
+/// `retired_ref`, a malformed ref with a `/` `invalid_ref` and anything else
+/// `not_found`.
+///
+/// # Errors
+///
+/// `ambiguous_ref`, `retired_ref`, `invalid_ref` or `not_found`.
+pub(crate) fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
+    if let Some(hit) = conn
+        .query_row(
+            "SELECT kind, entity_id, pid FROM ident WHERE pid = ?",
+            [value],
+            entity,
         )
-    };
-    if value.contains('/') {
-        let Ok(Fqid::Register { provider, register }) = value.parse() else {
-            return Err(Error::new(
-                Code::InvalidRef,
-                format!("{value:?} is not a register FQID or name."),
-                vec![value.into()],
-            ));
-        };
-        return register_id(conn, scope, &[provider, register.clone()])?
-            .map(|id| Register {
-                id,
-                slug: Some(register),
-            })
-            .ok_or_else(not_found);
+        .optional()?
+    {
+        return Ok(hit);
     }
-    let sql = format!(
-        "SELECT r.register_id, p.slug, r.slug, r.name FROM register r \
-         JOIN provider p USING(provider_id) \
-         WHERE fold_identity(r.name) = fold_identity(?) AND {in_scope} ORDER BY p.slug, r.slug"
-    );
-    let mut stmt = conn.prepare(&sql)?;
-    let found: Vec<(i64, Option<String>, Option<String>, String)> = stmt
-        .query_map([value], |row| {
-            let slug: Option<String> = row.get(2)?;
-            let fqid = fqid(&[row.get(1)?, slug.clone()]);
-            Ok((row.get(0)?, slug, fqid, row.get(3)?))
-        })?
-        .collect::<rusqlite::Result<_>>()?;
-    match found.as_slice() {
-        [] => Err(not_found()),
-        [(id, slug, ..)] => Ok(Register {
-            id: *id,
-            slug: slug.clone(),
-        }),
-        _ => Err(Error::new(
-            Code::AmbiguousRef,
-            format!("{} registers are named {value:?}.", found.len()),
-            vec![
-                value.into(),
-                found
+    if !value.contains('/') {
+        let mut found: Vec<Entity> = conn
+            .prepare("SELECT kind, entity_id, pid FROM ident WHERE name_fold = ? ORDER BY pid")?
+            .query_map([reg_core::fold_identity(value)], entity)?
+            .collect::<rusqlite::Result<_>>()?;
+        match found.len() {
+            0 => {}
+            1 => return Ok(found.remove(0)),
+            n => {
+                let candidates = found
                     .iter()
-                    .map(|(_, _, fqid, name)| {
-                        json!({"fqid": fqid, "kind": "register", "name": name})
-                    })
-                    .collect(),
-            ],
+                    .map(|e| candidate(conn, e))
+                    .collect::<rusqlite::Result<Vec<_>>>()?;
+                return Err(Error::new(
+                    Code::AmbiguousRef,
+                    format!("{n} entities are named {value:?}."),
+                    vec![value.into(), candidates.into()],
+                ));
+            }
+        }
+    }
+    if let Some((kind, retired_in, reason)) = conn
+        .query_row(
+            "SELECT kind, retired_in, reason FROM ident_retired WHERE pid = ?",
+            [value],
+            |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, String>(2)?,
+                ))
+            },
+        )
+        .optional()?
+    {
+        return Err(Error::new(
+            Code::RetiredRef,
+            format!("{value:?} was retired in catalog {retired_in} ({reason})."),
+            vec![value.into(), kind.into(), retired_in.into(), reason.into()],
+        ));
+    }
+    if value.contains('/') && !well_formed(value) {
+        return Err(Error::new(
+            Code::InvalidRef,
+            format!("{value:?} is not a public id."),
+            vec![value.into()],
+        ));
+    }
+    Err(Error::new(
+        Code::NotFound,
+        format!("Nothing is named {value:?}."),
+        vec![value.into()],
+    ))
+}
+
+/// An `ambiguous_ref` candidate `{fqid, kind, name}`. A variable's or class version's
+/// name is its label.
+fn candidate(conn: &Connection, e: &Entity) -> rusqlite::Result<serde_json::Value> {
+    let table = match e.kind.as_str() {
+        "provider" => "provider",
+        "register" => "register",
+        "table" => "tbl",
+        "variable" => "variable",
+        "class_family" => "class_family",
+        "class_version" => "class_version",
+        _ => "var_set",
+    };
+    let column = if matches!(table, "variable" | "class_version") {
+        "label_text"
+    } else {
+        "name_text"
+    };
+    let name: String = conn.query_row(
+        &format!("SELECT x.body FROM {table} t JOIN text x ON x.id = t.{column} WHERE t.id = ?"),
+        [e.id],
+        |row| row.get(0),
+    )?;
+    Ok(serde_json::json!({"fqid": &e.pid, "kind": &e.kind, "name": name}))
+}
+
+/// A table ref: a `tbl.pid`, or a ref that resolves to a table. A register with an
+/// implicit table resolves to that table, which has the register's pid; one with
+/// explicit tables is `table_is_register`, listing their pids.
+///
+/// # Errors
+///
+/// [`resolve`]'s; `table_is_register`; `invalid_ref` for a ref of another kind.
+pub(crate) fn table(conn: &Connection, value: &str) -> Result<i64, Error> {
+    let by_pid = |pid: &str| {
+        conn.query_row("SELECT id FROM tbl WHERE pid = ?", [pid], |row| row.get(0))
+            .optional()
+    };
+    if let Some(id) = by_pid(value)? {
+        return Ok(id);
+    }
+    let hit = resolve(conn, value)?;
+    match hit.kind.as_str() {
+        "table" => Ok(hit.id),
+        "register" => {
+            if let Some(id) = by_pid(&hit.pid)? {
+                return Ok(id);
+            }
+            let tables: Vec<String> = conn
+                .prepare("SELECT pid FROM tbl WHERE register_id = ? ORDER BY pid")?
+                .query_map([hit.id], |row| row.get(0))?
+                .collect::<rusqlite::Result<_>>()?;
+            Err(Error::new(
+                Code::TableIsRegister,
+                format!("{value:?} is a register; name one of its tables."),
+                vec![value.into(), tables.into()],
+            ))
+        }
+        kind => Err(Error::new(
+            Code::InvalidRef,
+            format!("{value:?} is a {kind}, not a table."),
+            vec![value.into()],
         )),
     }
 }
 
-/// A FQID from its slugs, or None when one is missing or not a slug (today's
-/// `try_emit`).
-pub(crate) fn fqid(slugs: &[Option<String>]) -> Option<String> {
-    let joined = slugs
-        .iter()
-        .map(|s| s.as_deref().filter(|s| !s.is_empty()))
-        .collect::<Option<Vec<_>>>()?
-        .join("/");
-    joined.parse::<Fqid>().ok().map(|_| joined)
+/// Whether `value` is in the public-id grammar: reg-core's FQID grammar, or a
+/// classification version `class/<family>/<version>`, which that grammar lacks.
+fn well_formed(value: &str) -> bool {
+    // simplify: the classification version is spelled here; move it into
+    // `reg_core::Fqid` when reg-core gains `class/<family>/<version>`.
+    match value.strip_prefix("class/") {
+        Some(rest) => {
+            let segments: Vec<&str> = rest.split('/').collect();
+            segments.len() <= 2 && segments.iter().all(|s| reg_core::is_slug(s))
+        }
+        None => value.parse::<Fqid>().is_ok(),
+    }
 }

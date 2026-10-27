@@ -1,0 +1,12 @@
+{
+  "note": "Fails if the server admits a generation_id that is not 64 lowercase hex digits (here 63), on which every cursor and ETag is keyed.",
+  "manifest": {
+    "generation_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

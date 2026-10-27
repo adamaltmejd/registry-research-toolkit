@@ -1,0 +1,20 @@
+[
+  {
+    "status": 200,
+    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]},
+    "json": {
+      "/meta/contract_version": "5.0.0",
+      "/meta/catalog_version": "dev"
+    }
+  },
+  {
+    "status": 422,
+    "keys": {"/meta": ["catalog_version", "contract_version", "generation"]},
+    "json": {
+      "/error/code": "invalid_parameter",
+      "/error/fields/parameter": "scope",
+      "/meta/contract_version": "5.0.0",
+      "/meta/catalog_version": "dev"
+    }
+  }
+]

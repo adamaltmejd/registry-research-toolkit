@@ -65,7 +65,6 @@ EQUIVALENCE = {
         "docs-scope-unavailable",
     ),
     "show": ("show-provider", "show-bare-names"),
-    "states": ("states-paging", "states-errors", "states-stale-cursor"),
     "values": (
         "values-classification",
         "values-state",
@@ -74,11 +73,9 @@ EQUIVALENCE = {
         "values-tree",
     ),
     "graph": ("graph-succession", "graph-unheld", "graph-errors"),
-    "lineage": ("lineage", "lineage-unheld-reference", "graph-errors"),
     "schema": ("schema-paging", "schema-errors"),
     "diff": ("diff-register", "diff-errors"),
     "coverage": ("coverage-register", "coverage-errors"),
-    "coded_variables": ("coded-variables-order",),
     # `resolve-columns` sends `columns` as a JSON array, `resolve-errors` 201 of them
     # and a repeated scalar as an array.
     "resolve": ("resolve-columns", "resolve-errors"),
@@ -208,6 +205,8 @@ def test_tool_of_several_needs_an_operation(http_servers):
     # Fails when a tool of several operations answers a call that names none of them
     # (it would have to guess one), or one that omits its operation's required
     # parameter, with anything but `invalid_parameter` naming the parameter.
+    if "docs_get" in PARKED["operations"]:
+        pytest.skip("parked: the docs tool is not served (PARKED.toml)")
     client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for arguments, parameter in (
         ({"identifier": "Kon"}, "operation"),
@@ -226,6 +225,8 @@ def test_array_argument_only_for_an_array_parameter(http_servers):
     # accepts an empty array for one that is (`columns: []`), instead of refusing
     # it with `invalid_parameter` naming the parameter. HTTP has no spelling of an
     # empty array, so these have no `api` twin.
+    if {"resolve", "coverage"} & set(PARKED["operations"]):
+        pytest.skip("parked: resolve and coverage are not served (PARKED.toml)")
     client = http_servers.client(artifact_env(cached_case_artifact(READER)))
     for tool, arguments, parameter in (
         ("resolve", {"register": [], "columns": ["Value"]}, "register"),
@@ -302,10 +303,12 @@ def test_burst_is_rate_limited(server_cmd, tmp_path):
         assert response.status_code == 429
         assert response.headers["retry-after"] == "1"
         assert response.json()["error"]["fields"] == {"retry_after_seconds": 1}
-        validate = client.post("/api/project/validate", json={})
-        assert validate.status_code == 429
-        assert validate.headers["retry-after"] == "1"
-        assert validate.json()["error"]["code"] == "rate_limited"
+        # simplify: the shared bucket is checked again once `validate` is served.
+        if "validate" not in PARKED["operations"]:
+            validate = client.post("/api/project/validate", json={})
+            assert validate.status_code == 429
+            assert validate.headers["retry-after"] == "1"
+            assert validate.json()["error"]["code"] == "rate_limited"
         assert client.get("/api/context").status_code == 200
         response = drain(lambda n: f"2001:db8::{n + 1:x}", "edge-secret")
         assert response.status_code == 429
@@ -320,9 +323,15 @@ def test_stdio_session(request, http_servers):
     template = request.config.getoption("--mcp-cmd")
     if template is None:
         pytest.skip("the stdio session runs against --mcp-cmd")
+    # simplify: the `search` call joins the session once `search` is served (PARKED.toml).
+    calls_search = "search" not in PARKED["operations"]
     env = artifact_env(cached_case_artifact(READER))
     arguments = {"q": "Value", "type": "variable", "limit": 1}
-    expected = http_servers.client(env).get("/api/search", params=arguments)
+    expected = (
+        http_servers.client(env).get("/api/search", params=arguments)
+        if calls_search
+        else None
+    )
     messages = [
         {
             "method": "initialize",
@@ -334,14 +343,15 @@ def test_stdio_session(request, http_servers):
         },
         {"method": "notifications/initialized"},
         {"method": "tools/list"},
-        {"method": "tools/call", "params": {"name": "search", "arguments": arguments}},
     ]
-    argv = [
-        word.replace("{db}", env["REG_META_DB"]).replace(
-            "{catalog}", env["REG_WEBAPP_STEWARD"]
+    if calls_search:
+        messages.append(
+            {
+                "method": "tools/call",
+                "params": {"name": "search", "arguments": arguments},
+            }
         )
-        for word in shlex.split(template)
-    ]
+    argv = [word.replace("{db}", env["REG_META_DB"]) for word in shlex.split(template)]
     # Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
     # panic (exit 101, #1326) instead of exiting cleanly.
     closed = subprocess.run(
@@ -371,8 +381,10 @@ def test_stdio_session(request, http_servers):
                 replies.append(json.loads(process.stdout.readline()))
         process.stdin.close()
         assert process.wait(timeout=10) == 0
-    initialize, tools, result = (reply["result"] for reply in replies)
+    initialize, tools, *calls = (reply["result"] for reply in replies)
     assert initialize["serverInfo"]["name"] == "reg-meta"
     assert unparked(tools["tools"]) == unparked(TOOLS)
-    assert result["isError"] is False
-    assert result["structuredContent"] == expected.json()
+    if calls_search:
+        (result,) = calls
+        assert result["isError"] is False
+        assert result["structuredContent"] == expected.json()

@@ -2,17 +2,8 @@
 # Each R PR removes the entries it ports; the last one deletes this file and the code
 # that reads it.
 
-# Whether the server still refuses the catalog schema the fixtures are built in (its
-# admission reads the old one), so every test that starts a server is skipped. `r-core`
-# ports admission and removes this key.
-server = true
-
-# Operation names, in either contract, whose served form is not yet 5.0.0's.
-# `coded_variables`, `lineage`, `states` and `warnings` are dropped from the contract:
-# the server still serves their routes, so they stay here until `r-core` deletes them.
+# Contract operations the server does not serve yet.
 operations = [
-    "coded_variables",
-    "context",
     "coverage",
     "diff",
     "docs_get",
@@ -20,7 +11,6 @@ operations = [
     "docs_search",
     "findings",
     "graph",
-    "lineage",
     "order",
     "resolve",
     "schema",
@@ -28,33 +18,12 @@ operations = [
     "search_facets",
     "segments",
     "show",
-    "states",
     "validate",
     "values",
-    "warnings",
 ]
-
-# Download routes the server serves that the table's `[[download]]` does not list.
-downloads = ["GET /api/steward/logo.svg", "GET /api/docs/file/{ref}/{filename}"]
-
-# Error codes the server still has and errors.toml no longer lists.
-codes = ["catalog_mismatch", "catalog_unpublishable", "doc_schema_incompatible", "scope_unavailable"]
 
 # Case directories under conformance/cases/, relative ("api/states-basic").
 cases = [
-    "api/admission-catalog-mismatch",
-    "api/admission-db-not-found",
-    "api/admission-doc-schema-incompatible",
-    "api/admission-incomplete",
-    "api/admission-invalid-generation",
-    "api/admission-missing-kind",
-    "api/admission-schema-9-2",
-    "api/admission-schema-incompatible",
-    "api/admission-unpublishable",
-    "api/context-admitted-period-span",
-    "api/context-catalog-kind",
-    "api/context-period-span-import-vintage",
-    "api/context-unmapped-periods",
     "api/coverage-register",
     "api/coverage-variable",
     "api/cursor-stale",

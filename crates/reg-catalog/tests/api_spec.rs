@@ -32,7 +32,6 @@ fn parked(list: &str) -> BTreeSet<String> {
 /// Fails when a code is added to, dropped from or changed in one side only.
 #[test]
 fn error_enum_equals_errors_toml() {
-    let parked_codes = parked("codes");
     let table = spec("errors.toml");
     let expected: BTreeMap<String, Value> = table["code"]
         .as_array()
@@ -54,7 +53,6 @@ fn error_enum_equals_errors_toml() {
         .collect();
     let actual: BTreeMap<String, Value> = Code::ALL
         .iter()
-        .filter(|code| !parked_codes.contains(code.spec().name))
         .map(|code| {
             let s = code.spec();
             let some = |n: i64| (n != 0).then_some(n);
@@ -72,18 +70,16 @@ fn error_enum_equals_errors_toml() {
     assert_eq!(actual, expected);
 }
 
-/// The type of a parameter in `operations.toml` (`scope?`) as the `OpenAPI` schema
-/// the server must generate for it.
+/// The type of a parameter in `operations.toml` (`ref?`) as the `OpenAPI` schema the
+/// server must generate for it.
 fn param_schema(ty: &str) -> Value {
     if let Some(members) = ty.strip_prefix("enum(").and_then(|t| t.strip_suffix(')')) {
         return json!({"type": "string", "enum": members.split('|').collect::<Vec<_>>()});
     }
     match ty {
-        "scope" => json!({"$ref": "#/components/schemas/Scope"}),
         "string" | "ref" | "period" | "cursor" => json!({"type": "string"}),
         "limit" => json!({"type": "integer", "minimum": 1, "maximum": 200}),
         "boolean" => json!({"type": "boolean"}),
-        "storage_id" => json!({"type": "string", "pattern": "^-?[0-9]+$"}),
         // At most 200 values: the table's one array, `resolve`'s `columns`.
         "string[]" => json!({"type": "array", "items": {"type": "string"}, "maxItems": 200}),
         _ => panic!("map parameter type {ty:?}"),
@@ -100,7 +96,6 @@ fn param_schema(ty: &str) -> Value {
 #[test]
 fn openapi_matches_operations_toml() {
     let parked_ops = parked("operations");
-    let parked_downloads = parked("downloads");
     let table = spec("operations.toml");
     assert_eq!(table["contract_version"].as_str(), Some(CONTRACT_VERSION));
     let rows: BTreeMap<&str, &toml::Table> = table["operation"]
@@ -160,10 +155,9 @@ fn openapi_matches_operations_toml() {
                 });
                 (name, params)
             } else {
-                let Some(download) = downloads.get(route.as_str()) else {
-                    assert!(parked_downloads.contains(&route), "{route} unlisted");
-                    continue;
-                };
+                let download = downloads
+                    .get(route.as_str())
+                    .unwrap_or_else(|| panic!("{route} is not in the table"));
                 let media_type = download["media_type"].as_str().unwrap();
                 assert!(
                     operation["responses"]["200"]["content"]
@@ -241,12 +235,17 @@ fn served_params(operation: &Value) -> BTreeMap<String, Value> {
         .collect()
 }
 
+/// An operation row's `params`; a row without the key (`context`) takes none.
+fn row_params(row: &toml::Table) -> toml::Table {
+    row.get("params")
+        .map(|params| params.as_table().unwrap().clone())
+        .unwrap_or_default()
+}
+
 /// A row with a `project` parameter takes it as the route's JSON object body, never a
 /// path or query parameter; any other row takes no body.
 fn assert_body(route: &str, operation: &Value, row: &toml::Table) {
-    let body = row["params"]
-        .as_table()
-        .unwrap()
+    let body = row_params(row)
         .values()
         .any(|ty| ty.as_str() == Some("project"));
     assert_eq!(
@@ -258,9 +257,7 @@ fn assert_body(route: &str, operation: &Value, row: &toml::Table) {
 
 /// An operation row's path and query `params` as `{required, schema}` by name.
 fn expected_params(row: &toml::Table) -> BTreeMap<String, Value> {
-    row["params"]
-        .as_table()
-        .unwrap()
+    row_params(row)
         .iter()
         .filter(|(_, ty)| ty.as_str() != Some("project"))
         .map(|(param, ty)| {

@@ -1,0 +1,12 @@
+{
+  "note": "Fails if the server admits a catalog whose meta.schema_version is not exactly the supported one, or refuses it without naming the file's version and the supported one.",
+  "manifest": {
+    "schema_version": "5"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

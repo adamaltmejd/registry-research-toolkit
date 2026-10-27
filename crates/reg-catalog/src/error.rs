@@ -53,8 +53,6 @@ codes! {
         "Use the period grammar, for example 2019, 2015..2019 or 2019-03.";
     InvalidCursor "invalid_cursor" "usage" 422 0 []
         "Pass a next_cursor from the same request, or restart without cursor.";
-    ScopeUnavailable "scope_unavailable" "usage" 422 0 ["scope"]
-        "Use scope=reference, or select a steward catalog.";
     ProjectInvalid "project_invalid" "usage" 422 0 ["issues"]
         "Fix the listed issues; validate reports them.";
     NotFound "not_found" "not_found" 404 0 ["ref"]
@@ -85,12 +83,6 @@ codes! {
         "Pass --db with the directory that holds reg_meta.db.";
     SchemaIncompatible "schema_incompatible" "unavailable" 0 10 ["schema_version", "supported"]
         "Install a catalog with a supported schema version.";
-    CatalogUnpublishable "catalog_unpublishable" "unavailable" 0 10 []
-        "Install a complete, publishable catalog.";
-    CatalogMismatch "catalog_mismatch" "unavailable" 0 10 ["configured", "artifact"]
-        "Select the artifact's own catalog name, or another artifact.";
-    DocSchemaIncompatible "doc_schema_incompatible" "unavailable" 0 10 []
-        "Install a documentation database with a supported schema version.";
 }
 
 /// The error document `{code, class, message, remediation, fields}`.

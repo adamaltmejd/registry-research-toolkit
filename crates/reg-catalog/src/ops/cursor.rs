@@ -1,5 +1,5 @@
-//! Cursors: opaque, bound to the catalog generation and to the request
-//! they continue. Today `search`'s.
+//! Cursors: opaque, bound to the catalog generation and to the request they continue
+//! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
 use crate::{Code, Error, hex};
 
@@ -51,9 +51,7 @@ pub(crate) fn decode(
         ));
     }
     if issued_for != context {
-        return Err(invalid(
-            "Cursor was issued for other parameters or another scope.",
-        ));
+        return Err(invalid("Cursor was issued for other parameters."));
     }
     let offset = offset
         .parse()

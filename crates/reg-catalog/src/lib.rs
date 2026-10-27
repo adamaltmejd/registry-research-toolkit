@@ -2,9 +2,7 @@
 //! admits one catalog artifact and defines the operation set ([`ops`]), which the
 //! `reg-meta` binary serves.
 
-mod docs;
 mod error;
-mod held;
 pub mod ops;
 
 use std::collections::BTreeMap;
@@ -13,59 +11,46 @@ use std::path::{Path, PathBuf};
 
 use rusqlite::functions::FunctionFlags;
 use rusqlite::{Connection, OpenFlags};
-use serde::Serialize;
-use utoipa::ToSchema;
+use serde_json::Value;
 
-pub use docs::Docs;
 pub use error::{Code, Error, Spec};
 
 /// `contract_version` in `conformance/api/operations.toml`.
 pub const CONTRACT_VERSION: &str = "5.0.0";
-/// The schema gate: the artifact's major must equal this major and its minor be at
-/// least this minor.
-pub const SCHEMA: (u32, u32) = (12, 3);
 const DB_FILENAME: &str = "reg_meta.db";
+/// The `meta` keys every catalog carries (`reg-build`'s `schema.sql` and `checks.sql`).
+const REQUIRED_META: [&str; 10] = [
+    "schema_version",
+    "generation_id",
+    "catalog_version",
+    "builder_version",
+    "sqlite_version",
+    "open_start",
+    "open_end",
+    "curation_digest",
+    "period_grammar",
+    "delivery_name_grammar",
+];
 
-/// `holdings`: what this steward holds, the default on a steward catalog and
-/// unavailable on the global one. `reference`: every register in the catalog. Answer
-/// from the default; repeat with `reference` when asked what exists elsewhere or when
-/// holdings comes up empty, and say the data exists but is not held.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, ToSchema)]
-#[serde(rename_all = "lowercase")]
-pub enum Scope {
-    Holdings,
-    Reference,
-}
-
-impl Scope {
-    /// The scope's name, as derived tables key their per-scope rows.
-    #[must_use]
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Self::Holdings => "holdings",
-            Self::Reference => "reference",
-        }
-    }
-}
-
-/// An admitted artifact: schema-compatible, publishable and, when named, the
-/// selected catalog.
+/// An admitted catalog: its `meta` has every required key, `schema_version` is
+/// exactly [`reg_core::CATALOG_SCHEMA_VERSION`] and `generation_id` is 64 lowercase
+/// hex. Publishability is `reg-build verify`'s, not the reader's.
 pub struct Catalog {
     path: PathBuf,
-    manifest: BTreeMap<String, String>,
+    meta: BTreeMap<String, String>,
     mmap_size: i64,
 }
 
 impl Catalog {
-    /// Open `dir/reg_meta.db` and admit it. `selected` is `--catalog NAME`: `global`
-    /// for the catalog artifact, else a steward id. `mmap_size` is each connection's
+    /// Open `dir/reg_meta.db` and admit it. `mmap_size` is each connection's
     /// `PRAGMA mmap_size` (`DEFAULT_MMAP_SIZE`; 0 disables memory-mapping).
     ///
     /// # Errors
     ///
-    /// `db_not_found`, `schema_incompatible`, `catalog_unpublishable` or
-    /// `catalog_mismatch`.
-    pub fn open(dir: &Path, selected: Option<&str>, mmap_size: i64) -> Result<Self, Error> {
+    /// `db_not_found`, or `schema_incompatible` for a file that is not a readable
+    /// catalog, another schema version, a missing `meta` key or a malformed
+    /// `generation_id`.
+    pub fn open(dir: &Path, mmap_size: i64) -> Result<Self, Error> {
         let path = dir.join(DB_FILENAME);
         if !path.is_file() {
             return Err(Error::new(
@@ -74,85 +59,51 @@ impl Catalog {
                 vec![],
             ));
         }
-        let manifest = read_manifest(&path, mmap_size).map_err(|err| {
+        let supported = reg_core::CATALOG_SCHEMA_VERSION.to_string();
+        let refuse = |version: Option<&str>, reason: String| {
             Error::new(
                 Code::SchemaIncompatible,
-                format!(
-                    "Database manifest is unreadable in {}: {err}",
-                    path.display()
-                ),
-                vec![serde_json::Value::Null, supported(SCHEMA).into()],
+                format!("{} is not an admissible catalog: {reason}", path.display()),
+                vec![
+                    version.map_or(Value::Null, Value::from),
+                    supported.as_str().into(),
+                ],
             )
-        })?;
-        let catalog = Self {
-            path,
-            manifest,
-            mmap_size,
         };
-        catalog.gate_schema()?;
-        catalog.admit_identity()?;
-        // `global` names the catalog artifact, never a steward that calls itself so.
-        if let Some(name) = selected
-            && (name != catalog.name() || (name == "global" && catalog.is_steward()))
-        {
-            return Err(Error::new(
-                Code::CatalogMismatch,
-                format!(
-                    "Selected catalog {name:?} disagrees with the artifact's catalog {:?}.",
-                    catalog.name()
-                ),
-                vec![name.into(), catalog.name().into()],
+        let meta = read_meta(&path, mmap_size)
+            .map_err(|err| refuse(None, format!("manifest is unreadable ({err})")))?;
+        let version = meta.get("schema_version").map(String::as_str);
+        if version != Some(supported.as_str()) {
+            return Err(refuse(
+                version,
+                format!("schema version {version:?} is not {supported:?}"),
             ));
         }
-        Ok(catalog)
-    }
-
-    fn gate_schema(&self) -> Result<(), Error> {
-        let version = self.manifest("schema_version");
-        if admits(SCHEMA, version) {
-            return Ok(());
+        if let Some(key) = REQUIRED_META.iter().find(|key| !meta.contains_key(**key)) {
+            return Err(refuse(version, format!("meta has no {key:?}")));
         }
-        Err(Error::new(
-            Code::SchemaIncompatible,
-            format!(
-                "Database schema {version:?} ({}) is not supported (supported: {}).",
-                self.path.display(),
-                supported(SCHEMA)
-            ),
-            vec![version.into(), supported(SCHEMA).into()],
-        ))
-    }
-
-    /// Today's `validate_catalog_selection`, plus the `import_date` that `context`
-    /// reports.
-    fn admit_identity(&self) -> Result<(), Error> {
-        let generation = self.manifest("generation_id");
-        let publishable = matches!(
-            self.manifest("catalog_artifact_kind"),
-            "catalog" | "steward"
-        ) && self.manifest("catalog_publishable") == "true"
-            && self.manifest("catalog_completeness") == "complete"
-            && generation.len() == 64
-            && generation
+        let generation = &meta["generation_id"];
+        if generation.len() != 64
+            || !generation
                 .bytes()
                 .all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
-            && !self.manifest("import_date").is_empty()
-            && (!self.is_steward() || reg_core::is_slug(self.manifest("steward")));
-        if publishable {
-            Ok(())
-        } else {
-            Err(Error::new(
-                Code::CatalogUnpublishable,
-                "Selected artifact lacks a publishable catalog identity and generation.",
-                vec![],
-            ))
+        {
+            return Err(refuse(
+                version,
+                format!("generation_id {generation:?} is not 64 lowercase hex digits"),
+            ));
         }
+        Ok(Self {
+            path,
+            meta,
+            mmap_size,
+        })
     }
 
-    /// A manifest value, or `""` when the key is absent.
+    /// A required `meta` value.
     #[must_use]
-    pub fn manifest(&self, key: &str) -> &str {
-        self.manifest.get(key).map_or("", String::as_str)
+    pub fn meta(&self, key: &str) -> &str {
+        &self.meta[key]
     }
 
     /// The admitted database file.
@@ -163,51 +114,7 @@ impl Catalog {
 
     #[must_use]
     pub fn generation(&self) -> &str {
-        self.manifest("generation_id")
-    }
-
-    #[must_use]
-    pub fn is_steward(&self) -> bool {
-        self.manifest("catalog_artifact_kind") == "steward"
-    }
-
-    /// The catalog's name: `global`, or the steward id (an admitted slug).
-    #[must_use]
-    pub fn name(&self) -> &str {
-        if self.is_steward() {
-            self.manifest("steward")
-        } else {
-            "global"
-        }
-    }
-
-    #[must_use]
-    pub fn default_scope(&self) -> Scope {
-        if self.is_steward() {
-            Scope::Holdings
-        } else {
-            Scope::Reference
-        }
-    }
-
-    /// The effective scope for a request's `scope` value.
-    ///
-    /// # Errors
-    ///
-    /// `invalid_parameter` for an unknown value; `scope_unavailable` for `holdings`
-    /// on a catalog artifact.
-    pub fn scope(&self, value: Option<&str>) -> Result<Scope, Error> {
-        match value {
-            None => Ok(self.default_scope()),
-            Some("reference") => Ok(Scope::Reference),
-            Some("holdings") if self.is_steward() => Ok(Scope::Holdings),
-            Some("holdings") => Err(Error::new(
-                Code::ScopeUnavailable,
-                "Holdings scope requires a steward artifact; this artifact is a catalog.",
-                vec!["holdings".into()],
-            )),
-            Some(_) => Err(Error::invalid_parameter("scope")),
-        }
+        self.meta("generation_id")
     }
 
     /// A fresh read-only connection with the `reg-core` folds as SQL functions
@@ -241,20 +148,6 @@ pub fn hex(bytes: &[u8]) -> String {
         write!(out, "{byte:02x}").expect("write to String");
     }
     out
-}
-
-/// A schema gate: `version`'s major equals the gate's and its minor is at least the
-/// gate's.
-fn admits(gate: (u32, u32), version: &str) -> bool {
-    let mut parts = version.split('.').map(str::parse::<u32>);
-    matches!(
-        (parts.next(), parts.next()),
-        (Some(Ok(major)), Some(Ok(minor))) if major == gate.0 && minor >= gate.1
-    )
-}
-
-fn supported(gate: (u32, u32)) -> String {
-    format!("{}.{} or a later {}.x", gate.0, gate.1, gate.0)
 }
 
 /// The default `PRAGMA mmap_size` (`serve --mmap-size`): memory-map the file (SQLite
@@ -315,9 +208,9 @@ fn with_folds(conn: Connection) -> rusqlite::Result<Connection> {
     Ok(conn)
 }
 
-fn read_manifest(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<String, String>> {
+fn read_meta(path: &Path, mmap_size: i64) -> rusqlite::Result<BTreeMap<String, String>> {
     let conn = connect(path, mmap_size)?;
-    let mut stmt = conn.prepare("SELECT key, value FROM import_manifest")?;
+    let mut stmt = conn.prepare("SELECT key, value FROM meta")?;
     stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?
         .collect()
 }

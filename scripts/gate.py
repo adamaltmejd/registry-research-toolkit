@@ -39,16 +39,17 @@ CONFORMANCE = "uv run python -m pytest conformance -q -n auto"
 # A raised write limit: the suite and release admission replay many projects from one
 # address (conformance/test_mcp.py's burst case drops it to pin the default).
 SERVER_CMD = (
-    "--server-cmd='target/debug/reg-meta serve --db {db} --catalog {catalog}"
-    " --stewards reg_webapp/stewards --port {port} --write-limit 100000'"
+    "--server-cmd='target/debug/reg-meta serve --db {db} --port {port}"
+    " --write-limit 100000'"
 )
-MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db} --catalog {catalog}'"
+MCP_CMD = "--mcp-cmd='target/debug/reg-meta mcp --db {db}'"
 # simplify: frozen on rebuild-c until s-flows, which restores flows here (dev.sh --fixture-db and the webapp-dev fixture are gone).
 ALL = ("g0", "rust", "release", "frontend")
 # Only reg-readers may name a provider or a format (crates/DESIGN.md, "The catalog
-# builder"). These words fail `lint` in the other builder crates: providers, their
-# template vocabulary and file formats. Extend the list with each new reader.
-BUILDER_CRATES = ("reg-frame", "reg-resolve", "reg-build")
+# builder"). These words fail `lint` in the other builder crates and in the catalog
+# reader and server, which read only the catalog: providers, their template
+# vocabulary and file formats. Extend the list with each new reader.
+NEUTRAL_CRATES = ("reg-frame", "reg-resolve", "reg-build", "reg-catalog", "reg-meta")
 PROVIDER_WORDS = re.compile(
     r"\b(scb|sos|socialstyrelsen|fk|försäkringskassan|fohm|folkhälsomyndigheten"
     r"|lakemedelsverket|läkemedelsverket|pliktverket|riksarkivet|umu|swecov"
@@ -107,10 +108,10 @@ def lint() -> None:
 
 
 def provider_vocabulary() -> None:
-    print("$ provider vocabulary scan:", ", ".join(BUILDER_CRATES), flush=True)
+    print("$ provider vocabulary scan:", ", ".join(NEUTRAL_CRATES), flush=True)
     hits = [
         f"{path.relative_to(ROOT)}:{number}: {match[0]}"
-        for crate in BUILDER_CRATES
+        for crate in NEUTRAL_CRATES
         for path in sorted((ROOT / "crates" / crate / "src").rglob("*"))
         if path.is_file()
         for number, line in enumerate(path.read_text().splitlines(), 1)
@@ -207,7 +208,7 @@ def regen() -> None:
         {"id": 1, "method": "tools/list"},
     ]
     session = run(
-        ["target/debug/reg-meta", "mcp", "--db", artifact, "--catalog", "global"],
+        ["target/debug/reg-meta", "mcp", "--db", artifact],
         input="".join(json.dumps({"jsonrpc": "2.0"} | m) + "\n" for m in messages),
         stdout=subprocess.PIPE,
         text=True,

@@ -1,15 +1,13 @@
 //! `reg-meta`: run modes only, no query CLI (`crates/DESIGN.md`, "Agent and web interface").
 //!
 //! ```text
-//! reg-meta serve --db DIR [--catalog NAME] --stewards DIR --port N [--host ADDR]
-//!                [--public-host HOST] [--write-limit N] [--mmap-size BYTES]
-//! reg-meta mcp --db DIR [--catalog NAME]
+//! reg-meta serve --db DIR --port N [--host ADDR] [--public-host HOST]
+//!                [--write-limit N] [--mmap-size BYTES]
+//! reg-meta mcp --db DIR
 //! ```
 //!
-//! Both admit `DIR/reg_meta.db` (as `--catalog NAME` when given) and, when present,
-//! `DIR/reg_meta_docs.db`. `serve` loads the catalog's branding from
-//! `DIR/<catalog>/steward.json` under `--stewards` and serves every registered
-//! operation and download, `/openapi.json` and MCP at `/mcp` on `--host` (default
+//! Both admit `DIR/reg_meta.db`. `serve` serves every registered operation and
+//! download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
 //! names. `/mcp` and every POST share one rate limit per client address, keyed with
 //! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
@@ -36,10 +34,8 @@ use axum::http::{HeaderValue, StatusCode, header};
 use axum::middleware::from_fn_with_state;
 use axum::response::{IntoResponse, Response};
 use axum::routing::{MethodRouter, get, post};
-use reg_catalog::ops::{
-    self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, Steward, body,
-};
-use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Docs, Error, Scope};
+use reg_catalog::ops::{self, Cache, Download, Meta, Operation, Param, Raw, Run, Server, body};
+use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Error};
 use serde_json::{Value, json};
 
 use crate::limit::Limits;
@@ -49,7 +45,6 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 enum Mode {
     Serve {
-        stewards: PathBuf,
         port: u16,
         host: IpAddr,
         public_host: Option<String>,
@@ -60,7 +55,6 @@ enum Mode {
 
 struct Args {
     db: PathBuf,
-    catalog: Option<String>,
     /// `serve --mmap-size`; `mcp` keeps the default.
     mmap_size: i64,
     mode: Mode,
@@ -68,13 +62,11 @@ struct Args {
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     let mode = args.next();
-    let (mut db, mut catalog, mut stewards, mut port) = (None, None, None, None);
+    let (mut db, mut port) = (None, None);
     let (mut host, mut public_host, mut write_limit, mut mmap_size) = (None, None, None, None);
     while let Some(flag) = args.next() {
         let slot = match flag.as_str() {
             "--db" => &mut db,
-            "--catalog" => &mut catalog,
-            "--stewards" => &mut stewards,
             "--port" => &mut port,
             "--host" => &mut host,
             "--public-host" => &mut public_host,
@@ -86,9 +78,6 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     }
     let mode = match mode.as_deref() {
         Some("serve") => Mode::Serve {
-            stewards: stewards
-                .ok_or_else(|| Error::invalid_parameter("--stewards"))?
-                .into(),
             port: port
                 .and_then(|p| p.parse().ok())
                 .ok_or_else(|| Error::invalid_parameter("--port"))?,
@@ -108,10 +97,9 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 None => limit::DEFAULT_PER_MINUTE,
             },
         },
-        // `mcp` loads no branding and listens on no port.
+        // `mcp` listens on no port.
         Some("mcp") => {
             let serve_only = [
-                ("--stewards", &stewards),
                 ("--port", &port),
                 ("--host", &host),
                 ("--public-host", &public_host),
@@ -127,7 +115,6 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
     };
     Ok(Args {
         db: db.ok_or_else(|| Error::invalid_parameter("--db"))?.into(),
-        catalog,
         mmap_size: match mmap_size {
             Some(bytes) => bytes
                 .parse()
@@ -149,42 +136,16 @@ fn refuse(err: &Error) -> ! {
 #[tokio::main]
 async fn main() {
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
-    let catalog = Catalog::open(&args.db, args.catalog.as_deref(), args.mmap_size)
-        .unwrap_or_else(|err| refuse(&err));
-    let docs = Docs::open(&args.db, args.mmap_size).unwrap_or_else(|err| refuse(&err));
+    let catalog = Catalog::open(&args.db, args.mmap_size).unwrap_or_else(|err| refuse(&err));
+    let server = Arc::new(Server::new(catalog, VERSION).unwrap_or_else(|err| refuse(&err)));
     match args.mode {
         Mode::Serve {
-            stewards,
             port,
             host,
             public_host,
             write_limit,
-        } => {
-            let steward =
-                Steward::load(&stewards, catalog.name()).unwrap_or_else(|err| refuse(&err));
-            let server = Server {
-                catalog,
-                docs,
-                steward: Some(steward),
-                version: VERSION,
-            };
-            serve(
-                Arc::new(server),
-                (host, port).into(),
-                public_host,
-                write_limit,
-            )
-            .await;
-        }
-        Mode::Mcp => {
-            let server = Server {
-                catalog,
-                docs,
-                steward: None,
-                version: VERSION,
-            };
-            mcp::stdio(Arc::new(server)).await;
-        }
+        } => serve(server, (host, port).into(), public_host, write_limit).await,
+        Mode::Mcp => mcp::stdio(server).await,
     }
 }
 
@@ -271,8 +232,8 @@ struct Answer {
 }
 
 impl Answer {
-    fn new(server: &Server, scope: Scope, result: Result<Value, Error>) -> Self {
-        let meta = Meta::new(&server.catalog, scope);
+    fn new(server: &Server, result: Result<Value, Error>) -> Self {
+        let meta = Meta::new(&server.catalog);
         let (status, body) = match result {
             Ok(data) => (StatusCode::OK, json!({"data": data, "meta": meta})),
             Err(err) => (
@@ -290,7 +251,7 @@ async fn call<T: Send + 'static>(
     params: Vec<&'static Param>,
     run: Run<T>,
     query: Vec<(String, String)>,
-) -> (Scope, Result<T, Error>) {
+) -> Result<T, Error> {
     let task = Arc::clone(server);
     tokio::task::spawn_blocking(move || ops::call(&task, &params, run, &query))
         .await
@@ -304,8 +265,8 @@ async fn run(
     params: Vec<&'static Param>,
     query: Vec<(String, String)>,
 ) -> Answer {
-    let (scope, result) = call(server, params, op.run, query).await;
-    Answer::new(server, scope, result)
+    let result = call(server, params, op.run, query).await;
+    Answer::new(server, result)
 }
 
 fn json(body: String) -> Response {
@@ -402,8 +363,8 @@ async fn submit_download(
     };
     let declared = download.params.iter().collect();
     match call(&server, declared, download.run, params).await {
-        (_, Ok(raw)) => raw_response(download.media_type, raw),
-        (scope, Err(err)) => refusal(&server, scope, err),
+        Ok(raw) => raw_response(download.media_type, raw),
+        Err(err) => refusal(&server, err),
     }
 }
 
@@ -416,16 +377,15 @@ fn posted(
     query: Vec<(String, String)>,
     bytes: &[u8],
 ) -> Result<Vec<(String, String)>, Box<Response>> {
-    let project = body::parse(bytes)
-        .map_err(|err| Box::new(refusal(server, server.catalog.default_scope(), err)))?;
+    let project = body::parse(bytes).map_err(|err| Box::new(refusal(server, err)))?;
     let mut params = request_params(route, Vec::new(), query);
     params.push((body.name.to_owned(), project.to_string()));
     Ok(params)
 }
 
 /// `{error, meta}` with the code's status.
-fn refusal(server: &Server, scope: Scope, err: Error) -> Response {
-    let answer = Answer::new(server, scope, Err(err));
+fn refusal(server: &Server, err: Error) -> Response {
+    let answer = Answer::new(server, Err(err));
     (answer.status, json(answer.body.to_string())).into_response()
 }
 
@@ -446,8 +406,8 @@ async fn fetch(
     )
     .await
     {
-        (_, Ok(raw)) => raw_response(download.media_type, raw),
-        (scope, Err(err)) => refusal(&server, scope, err),
+        Ok(raw) => raw_response(download.media_type, raw),
+        Err(err) => refusal(&server, err),
     }
 }
 
