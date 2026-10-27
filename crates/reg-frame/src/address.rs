@@ -5,7 +5,7 @@ use std::{fmt, str::FromStr};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 const RELEASE_SELECTOR: &str =
-    "edition and qualifier selectors are refused: the release model is under investigation";
+    "unsupported :edition or /qualifier address syntax; use where release = '<handle>'";
 
 /// A normalized union of reg-core periods, optionally open at either end.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -51,13 +51,14 @@ impl fmt::Display for PeriodSet {
     }
 }
 
-/// Source fields allowed in guards; provider keys are opaque equality values.
+/// Source fields allowed in guards; keys and release handles are opaque equality values.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum GuardField {
     Label,
     Type,
     Unit,
     Key,
+    Release,
 }
 
 impl GuardField {
@@ -67,6 +68,7 @@ impl GuardField {
             Self::Type => "type",
             Self::Unit => "unit",
             Self::Key => "key",
+            Self::Release => "release",
         }
     }
 }
@@ -84,7 +86,7 @@ pub struct Guard {
     pub value: String,
 }
 
-/// A source occurrence selector or an entity addressed by its public ledger id.
+/// A source occurrence, a public ledger entity, or a table's opaque release handle.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Address {
     Occurrence {
@@ -95,12 +97,33 @@ pub enum Address {
     },
     Variable(String),
     Table(String),
+    Release {
+        table: String,
+        handle: String,
+    },
 }
 
 impl FromStr for Address {
     type Err = String;
 
     fn from_str(text: &str) -> Result<Self, Self::Err> {
+        // A release handle is opaque, including characters that delimit occurrence
+        // scopes or guards. Parse it before interpreting any of those characters.
+        if let Some(release) = text.trim_start().strip_prefix("release:") {
+            let (table, handle) = release
+                .split_once('/')
+                .ok_or("a release address needs release:<table-slug>/<handle>")?;
+            if !reg_core::is_slug(table) || handle.is_empty() {
+                return Err(
+                    "a release address needs a catalog table slug and nonempty source handle"
+                        .to_owned(),
+                );
+            }
+            return Ok(Self::Release {
+                table: table.to_owned(),
+                handle: handle.to_owned(),
+            });
+        }
         let text = text.trim();
         let (head, guards) = match split_keyword(text, "where") {
             Some((_, guards)) if guards.trim().is_empty() => {
@@ -116,7 +139,7 @@ impl FromStr for Address {
         };
         let (table, spelling) = head
             .split_once(':')
-            .ok_or("an address needs table: spelling, var:<id> or table:<slug>")?;
+            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
         let (table, spelling) = (table.trim(), spelling.trim());
         if spelling.contains([':', '/']) {
             return Err(RELEASE_SELECTOR.to_owned());
@@ -172,10 +195,11 @@ fn parse_guards(mut text: &str) -> Result<Vec<Guard>, String> {
             "type" => GuardField::Type,
             "unit" => GuardField::Unit,
             "key" => GuardField::Key,
-            _ => return Err("guards allow only label, type, unit and key".to_owned()),
+            "release" => GuardField::Release,
+            _ => return Err("guards allow only label, type, unit, key and release".to_owned()),
         };
-        if prefix && field == GuardField::Key {
-            return Err("a provider coordinate is allowed only in bind source handles and where key equality guards".to_owned());
+        if prefix && matches!(field, GuardField::Key | GuardField::Release) {
+            return Err("where key and where release allow exact equality only".to_owned());
         }
         let quoted = rest
             .trim_start()
@@ -278,6 +302,7 @@ impl fmt::Display for Address {
         match self {
             Self::Variable(id) => write!(f, "var:{id}"),
             Self::Table(id) => write!(f, "table:{id}"),
+            Self::Release { table, handle } => write!(f, "release:{table}/{handle}"),
             Self::Occurrence {
                 table,
                 spellings,
