@@ -566,6 +566,25 @@ pub fn apply(
             };
             for p in spans {
                 if text(&value, "kind") == Some("occurrence") {
+                    if records.iter().any(|record| {
+                        let Record::Occurrence(row) = record else {
+                            return false;
+                        };
+                        context.period(row).as_ref() == Some(&p)
+                            && premise.subjects.iter().any(|source| {
+                                matches_occurrence(
+                                    &source.fields,
+                                    std::slice::from_ref(&source.locator),
+                                    row,
+                                    &tree(record),
+                                    &context,
+                                )
+                            })
+                    }) {
+                        return Err(
+                            "assert occurrence cannot replace a source occurrence; use set".into(),
+                        );
+                    }
                     if !table_handles(records).any(|handle| handle == table) {
                         return Err(
                             "assert occurrence requires an existing table; assert the table first"

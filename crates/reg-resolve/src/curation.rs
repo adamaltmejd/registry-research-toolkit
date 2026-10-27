@@ -1153,6 +1153,7 @@ pub fn resolve(
     for statement in statements {
         let address = subject(statement);
         let mut matches = select(address, &view, variables);
+        let whole = whole_occurrences(&matches, &view);
         if let Statement::Link {
             at: Some(scope), ..
         } = statement
@@ -1186,7 +1187,7 @@ pub fn resolve(
                 return Err("empty match".into());
             }
             ambiguity(&matches, &view)?;
-            whole_occurrences(&matches, &view)?;
+            whole?;
             let mut fields: BTreeSet<String> = [
                 "kind",
                 "provider",
