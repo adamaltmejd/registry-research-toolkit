@@ -1,7 +1,8 @@
-//! Resolve curation against source coordinates, without applying any statements.
-//!
-//! D-3a supplies the frame after bind/assert here. Other overrides must never feed
-//! this view: selectors and premises always describe the source the curator reviewed.
+//! Resolve curation against source coordinates. The apply module prepares the
+//! bound/asserted frame; other overrides never feed selector resolution. Selectors
+//! and premises describe the source the curator reviewed.
+
+pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -93,24 +94,35 @@ fn bounds(fields: &BTreeMap<String, Value>) -> Interval {
 
 #[allow(clippy::too_many_lines)]
 fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
-    let register = records.iter().find_map(|r| {
-        if let Record::Register(r) = r {
-            Some(r)
-        } else {
-            None
-        }
-    });
+    let registers: BTreeMap<_, _> = records
+        .iter()
+        .filter_map(|r| match r {
+            Record::Register(r) => Some(((r.provider.as_str(), r.register.as_str()), r)),
+            _ => None,
+        })
+        .collect();
     let tables: BTreeMap<_, _> = records
         .iter()
         .filter_map(|r| match r {
-            Record::Table(t) => Some((t.table.as_str(), t)),
+            Record::Table(t) => Some((
+                (t.provider.as_str(), t.register.as_str(), t.table.as_str()),
+                t,
+            )),
             _ => None,
         })
         .collect();
     let releases: BTreeMap<_, _> = records
         .iter()
         .filter_map(|r| match r {
-            Record::Release(r) => Some(((r.table.as_str(), r.release.as_str()), r)),
+            Record::Release(r) => Some((
+                (
+                    r.provider.as_str(),
+                    r.register.as_str(),
+                    r.table.as_str(),
+                    r.release.as_str(),
+                ),
+                r,
+            )),
             _ => None,
         })
         .collect();
@@ -144,7 +156,12 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                     locators.extend(o.also.iter().cloned());
                     let period = if let Some(handle) = &o.release {
                         releases
-                            .get(&(o.table.as_str(), handle.as_str()))
+                            .get(&(
+                                o.provider.as_str(),
+                                o.register.as_str(),
+                                o.table.as_str(),
+                                handle.as_str(),
+                            ))
                             .and_then(|r| {
                                 r.from
                                     .as_ref()
@@ -152,7 +169,14 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                                     .map(|(a, b)| (a.clone(), b.clone()))
                             })
                     } else {
-                        let table = tables.get(o.table.as_str());
+                        let table = tables.get(&(
+                            o.provider.as_str(),
+                            o.register.as_str(),
+                            o.table.as_str(),
+                        ));
+                        let register = registers
+                            .get(&(o.provider.as_str(), o.register.as_str()))
+                            .copied();
                         Some((
                             o.from
                                 .clone()
@@ -189,6 +213,12 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 }
             }
             if let Some(handle) = fields.get("table").and_then(Value::as_str) {
+                let register = fields
+                    .get("provider")
+                    .and_then(Value::as_str)
+                    .zip(fields.get("register").and_then(Value::as_str))
+                    .and_then(|key| registers.get(&key))
+                    .copied();
                 let slug = if handle.is_empty() {
                     ledger
                         .public
@@ -218,15 +248,13 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             })
         })
         .collect();
-    if !tables.contains_key("")
-        && records
-            .iter()
-            .any(|r| matches!(r,Record::Occurrence(o) if o.table.is_empty()))
-        && let Some(register) = register
-    {
-        // The implicit row shape is sourced by the register, just as in the default
-        // resolver. Keep that locator rather than inventing a table provenance.
-        if let Some(source) = sources.iter().find(|s| s.text("kind") == Some("register")) {
+    for register in registers.values() {
+        if tables.contains_key(&(register.provider.as_str(),register.register.as_str(),"")) || !records.iter().any(|r| matches!(r,Record::Occurrence(o) if o.table.is_empty() && o.provider == register.provider && o.register == register.register)) { continue; }
+        if let Some(source) = sources.iter().find(|s| {
+            s.text("kind") == Some("register")
+                && s.text("provider") == Some(register.provider.as_str())
+                && s.text("register") == Some(register.register.as_str())
+        }) {
             let mut fields = source.fields.clone();
             fields.insert("kind".into(), Value::String("table".into()));
             fields.insert("table".into(), Value::String(String::new()));
@@ -665,7 +693,8 @@ pub fn reference(
 }
 
 /// Compute premises in statement order. This function performs no IO and applies no
-/// statements. Pass D-3a's bind/assert source view here when that stage lands.
+/// statements. The caller supplies the immutable view for the current application
+/// phase; ordinary selectors see the bound frame plus asserted facts.
 ///
 /// Empty ordinary selectors, ambiguous source coordinates and source-redundant
 /// assertions are refusals. Conflicts point to both statement indices on success.
@@ -709,12 +738,8 @@ pub fn resolve(
             view.iter()
                 .enumerate()
                 .filter(|(_, s)| match target {
-                    BindTarget::Register { .. } => {
-                        s.text("kind") == Some("register") && s.text("register") == Some(handle)
-                    }
-                    BindTarget::Table { .. } => {
-                        s.text("kind") == Some("table") && s.text("table") == Some(handle)
-                    }
+                    BindTarget::Register { .. } => s.text("register") == Some(handle),
+                    BindTarget::Table { .. } => s.text("table") == Some(handle),
                 })
                 .map(|(source, s)| Match {
                     source,
@@ -759,7 +784,15 @@ pub fn resolve(
             if matches.is_empty() && !matches!(statement, Statement::Assert { .. }) {
                 return Err("empty match".into());
             }
-            ambiguity(&matches, &view)?;
+            if !matches!(
+                statement,
+                Statement::Bind {
+                    source: Some(_),
+                    ..
+                }
+            ) {
+                ambiguity(&matches, &view)?;
+            }
             let mut fields: BTreeSet<String> = [
                 "kind",
                 "provider",

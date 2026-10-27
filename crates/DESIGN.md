@@ -222,15 +222,39 @@ spelling and type. A D `set` states those.
 - The pure model and address grammar live in `reg-frame`, shared by readers and resolve;
   `reg-frame` uses `reg-core` for periods and folds. The TOML loader stays in
   `reg-readers`, so no new crate or reader dependency is needed in resolve.
-- The loader validates statements before `reg-build build` reads inputs. D-2 resolves
-  selectors and checks premises, without applying statements; application is D-3. With
-  no statements, artifact bytes are unchanged and no lock is written. CI builds the
-  synthetic fixture twice and compares bytes.
+- The loader validates statements before `reg-build build` reads inputs. Builds apply
+  `bind` and `assert` before default resolution; the other kinds only check premises
+  until their application stages land. With no statements, artifact bytes are unchanged
+  and no lock is written. CI builds the synthetic fixture twice and compares bytes.
 - Selectors read an immutable source view: the frame plus asserted facts, after binding.
-  D-2 accepts the frame at that boundary; D-3a supplies its bound/asserted output there.
   Other statement outputs never enter selector resolution. Occurrence periods intersect
   the selector scope; spellings fold and guards compare source values. A match is a set
   of source locators, including merged-row locators.
+- Application binds register handles first, then table handles and occurrence rows, then
+  asserts source-shaped facts. Each phase checks selectors and locks against an
+  immutable snapshot before applying accepted statements. Refused statements contribute
+  no facts. Bind premises include the moved subtree, so source changes affecting a merge
+  or priority cannot escape review. Later selectors see the bound frame plus assertions,
+  while each assertion's redundancy check sees the bound source without that assertion.
+- A bind's numeric priority ranks its source against unbound sources at zero. Higher
+  wins per field and period; equal-priority occurrence disagreements retain F6 evidence.
+  Ordinary dated rows can be split by scope. A scope cannot bisect a stated release;
+  moving a release's rows to another table detaches them as dated occurrences. A new
+  destination row shape carries the binding statement's provenance. Curated rows that
+  exceed a destination table's stated coverage are refused: correcting that coverage
+  requires `set`.
+- Assertions add occurrences, tables, releases, content-addressed value sets or
+  classification versions. Occurrence/table fields must fit the source frame; other
+  fields are refused rather than discarded. A value-set assertion fills an occurrence
+  whose source states no set; replacing one requires `set`. An asserted classification
+  version defines a version and its code list without binding occurrences to it.
+  Versions of a family cannot overlap. Assertions of existing facts remain refusals; an
+  assertion and a later override of its field are refused at both locations.
+- Accepted application is published through the existing `statement` and `override`
+  tables: normalized hash, file/line, evidence, caveat, winning values and losing source
+  values. Moved rows retain their source locators. Asserted rows have statement
+  provenance instead of invented input rows; asserted releases use `curated` parse
+  state. No catalog schema change is needed.
 - `curation.lock` is generated canonical JSON (via `reg-frame::canonical_line`), with
   `version = 1` and a `statements` object keyed by normalized statement identity. Each
   premise stores sorted `subjects` and `objects`: source locators and the source values
