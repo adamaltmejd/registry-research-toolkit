@@ -1,10 +1,8 @@
 # reg_webapp build + deploy: the Fly origin images and the Cloudflare edge workers
-# (topology in reg_webapp/DESIGN.md → "Deployment"). Two deployments, each an origin
-# app behind an edge worker:
-#   global  reg-webapp-global behind an MCP-only worker on reg-meta.vqv.uk: `/mcp`
-#           only, no SPA and no `/api`.
-#   swecov  reg-webapp-swecov behind a worker on data.swecov.se that serves the SPA
-#           as static assets and passes `/api`, `/openapi.json` and `/mcp` through.
+# (topology in reg_webapp/DESIGN.md → "Deployment"): reg-webapp-global behind an
+# MCP-only worker on reg-meta.vqv.uk (`/mcp` only, no SPA and no `/api`). SWECOV has
+# no deploy path until milestone E recreates it (REBUILD.md); its running Fly app is
+# left untouched.
 #
 # PRs: build-only. `build-image` proves the multi-stage Dockerfile still builds,
 # including the digest-verified DB bake, the `reg-meta` Rust build and the #224
@@ -12,14 +10,12 @@
 # reg_meta.provenance.db* is present). Nothing deploys.
 #
 # Pushes to main: the `changes` filter, diffed against the last deployed commit rather
-# than the push's `before` (#1481, see the job), scopes four deploy jobs. Image-affecting paths
-# build, push and `flyctl deploy` both origins (`deploy`, `deploy-swecov`). Each edge
-# job (`edge-deploy` for global, `edge-deploy-swecov`, which also builds the SPA)
-# runs when its own worker's inputs change, and after every origin deploy of its
-# deployment: the swecov worker's fresh DEPLOY_VERSION orphans its pre-deploy /api/*
-# cache (#318), and each job's public MCP smoke checks the new origin through the
-# edge. Each edge job `needs:` its origin deploy, so a worker never ships ahead of
-# its origin (deploy-skew guard). Every deploy job also verifies it is still main's
+# than the push's `before` (#1481, see the job), scopes the deploy jobs. Image-affecting
+# paths build, push and `flyctl deploy` the origin (`deploy`). The edge job
+# (`edge-deploy`) runs when the worker's inputs change, and after every origin
+# deploy; its public MCP smoke checks the new origin through the edge. It `needs:`
+# the origin deploy, so the worker never ships ahead of its origin (deploy-skew
+# guard). Every deploy job also verifies it is still main's
 # HEAD before shipping: GHA concurrency serializes deploys but admits them in
 # BUILD-COMPLETION order, so without the guard an older commit's slow build could
 # overwrite a newer deploy. A commit the guard skips is not lost: the next push's
@@ -68,7 +64,6 @@ jobs:
     outputs:
       image: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.image }}
       edge_global: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_global }}
-      edge_swecov: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_swecov }}
     steps:
       # Full history on a push, for the ancestry check below.
       - uses: actions/checkout@v7.0.1
@@ -89,8 +84,7 @@ jobs:
       # might have skipped, so it never counts; widening the window only excludes more
       # candidates, so that over-includes paths (a redundant redeploy) but never misses one. An unfinished
       # or failed run never counts either, so a red deploy is retried by the next push.
-      # Blind spots: a `pending_bump` run (#448) counts though it deployed nothing,
-      # which the owed release's dispatch covers. A `[skip ci]` push starts no run, so
+      # Blind spot: a `[skip ci]` push starts no run, so
       # a run it overlapped (and HEAD-skipped) would count: the gap reopens for that
       # one case; none of main's commits use it. No commit found in the last 200 runs
       # (or one that is not an ancestor) counts as everything changed.
@@ -139,18 +133,13 @@ jobs:
           # prod machines (brief origin blip), so content-identical rebuilds
           # are worth avoiding.
           #
-          # Each edge filter lists what its job's `wrangler deploy` ships. The global
-          # worker is the worker code and its config: no assets binding, so the
-          # SPA never reaches it. The swecov worker also ships the SPA it builds
-          # (frontend/** plus the openapi.json `gen:types` reads); the crates
-          # `gen:wasm` compiles are under `image`, which runs it too.
+          # The edge filter lists what the job's `wrangler deploy` ships: the worker
+          # code and its config. No assets binding, so the SPA never reaches it.
           filters: |
             image:
-              - "reg_webapp/stewards/**"
               - "reg_webapp/Dockerfile"
               - "reg_webapp/docker-entrypoint.sh"
               - "reg_webapp/fly.toml"
-              - "reg_webapp/fly.swecov.toml"
               - "crates/**"
               - "Cargo.toml"
               - "Cargo.lock"
@@ -160,34 +149,27 @@ jobs:
               - "reg_webapp/edge/src/**"
               - "reg_webapp/edge/wrangler.jsonc"
               - ".github/workflows/container-build.yml"
-            edge_swecov:
-              - "reg_webapp/edge/src/**"
-              - "reg_webapp/edge/wrangler.swecov.jsonc"
-              - "reg_webapp/frontend/**"
-              - "crates/reg-meta/openapi.json"
-              - ".github/workflows/container-build.yml"
 
-  # Pending-schema-bump guard (#448) — its OWN job so EVERY deploy path can consult
-  # it, including an edge-only push that skips build-image. Resolves the reg_meta/v*
-  # tag to bake and decides whether main's schema is merely AHEAD of that released
-  # asset (a self-clearing pending release → neutralize) vs a genuine break (fail red).
+  # Schema guard — its OWN job so EVERY deploy path can consult it, including an
+  # edge-only push that skips build-image. Resolves the reg_meta/v* tag to bake and
+  # fails closed unless the code's catalog schema constant equals the newest
+  # release's. Two outcomes only, no pass-through: between the merge of a schema
+  # change and its release, every main push is red here and nothing deploys
+  # (plan: "Deploy window"). Publishing the release (publish_reg_meta.yml) dispatches
+  # this workflow, which then passes.
   schema-guard:
     needs: changes
     if: >-
       !cancelled() && (needs.changes.outputs.image == 'true' ||
       needs.changes.outputs.edge_global == 'true' ||
-      needs.changes.outputs.edge_swecov == 'true' ||
       github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.regmeta.outputs.tag }}
       db_sha256: ${{ steps.regmeta.outputs.db_sha256 }}
-      swecov_db_sha256: ${{ steps.regmeta.outputs.swecov_db_sha256 }}
-      docs_sha256: ${{ steps.regmeta.outputs.docs_sha256 }}
-      pending_bump: ${{ steps.schemaguard.outputs.pending_bump }}
     steps:
       # fetch-depth: 0 + tags so the schema guard below can `git show <tag>:...`
-      # the released asset's schema constants (the resolved reg_meta/v* tag).
+      # the released asset's schema constant (the resolved reg_meta/v* tag).
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
@@ -199,19 +181,11 @@ jobs:
       # OLD cached layer and silently revert prod's DB. A concrete tag makes
       # the cache key change exactly when the release does.
       #
-      # Newest-by-tag is asset-blind, which is safe because every published
-      # reg_meta release carries both DB assets — the release flow copies
-      # assets forward on code-only releases (self-contained releases,
-      # .agents/skills/release/SKILL.md step 8). A release violating that
-      # invariant fails the bake stage loudly, which is exactly the #343
-      # outage mode.
-      #
-      # The step also resolves the SHA-256 digest GitHub records for each DB
+      # The step also resolves the SHA-256 digest GitHub records for the DB
       # asset (as integration.yml does), passed to the bake as bare hex. A
       # missing or duplicated asset resolves to an empty digest, which fails
-      # only the image that needs it: the SWECOV bake without
-      # reg_meta_swecov.db.zst (#1091), never the global one.
-      - name: Resolve reg_meta release tag and asset digests
+      # the bake loudly (the #343 outage mode).
+      - name: Resolve reg_meta release tag and asset digest
         id: regmeta
         env:
           GH_TOKEN: ${{ github.token }}
@@ -225,97 +199,32 @@ jobs:
           [ -n "$tag" ] || { echo "FATAL: no reg_meta/v* release found" >&2; exit 1; }
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "Baking reg_meta release: $tag"
-          assets=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets)
-          for pair in db_sha256=reg_meta.db.zst swecov_db_sha256=reg_meta_swecov.db.zst \
-              docs_sha256=reg_meta_docs.db.zst; do
-            digest=$(printf '%s' "$assets" \
-              | jq -r --arg name "${pair#*=}" '[.assets[] | select(.name == $name) | .digest]
-                    | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]' \
-              | sed -n 's/^sha256:\([0-9a-f]\{64\}\)$/\1/p')
-            [ -n "$digest" ] || echo "::warning::release $tag has no single sha256-digested ${pair#*=}"
-            echo "${pair%%=*}=$digest" >> "$GITHUB_OUTPUT"
-          done
-      # Pending-schema-bump guard (#448). Compares the Rust server's catalog and
-      # docs schema gates (`reg-meta serve` refuses to boot on an asset behind
-      # either) against the released tag's builder schemas via a three-way verdict
-      # (break / pending / compatible) and FAILS RED (non-zero exit) on a genuine
-      # break or a schema-behind release that's also MISSING a DB asset. Because
-      # build-image, deploy, AND edge-deploy all gate on `needs.schema-guard.result
-      # == 'success'`, a failed guard blocks every deploy path — including an
-      # edge-only main push that has NO image to fail (pre-#448 the break surfaced
-      # only in the bake on image pushes; an edge-only push then shipped a new
-      # SPA/cache generation against a still-stuck origin). It green-neutralizes
-      # ONLY the safe code-ahead case where main's schema is merely AHEAD of the
-      # latest released asset (same major, higher minor) AND the release carries both
-      # `.zst` assets — the image's boot refusal is expected and self-clearing (the
-      # owed reg_meta release ships the matching asset). For that case it emits `pending_bump=true`,
-      # deferring the bake + deploy with a GREEN build-image + a `::notice::`; the
-      # BUILD self-clears on the next image-affecting main push, the DEPLOY is
-      # self-clearing on release (publish_reg_meta.yml dispatches this workflow). A
-      # `compatible` verdict emits `pending_bump=false` and proceeds normally. The
-      # asset schema is read from the release tag's source (a data-only release keeps
-      # the tag-commit schema), so the comparison needs the tag history (checkout
-      # above). The guard applies to the AUTO-RESOLVED newest reg_meta/v* tag
-      # (push/PR, or a dispatch with an empty `reg_meta_tag`); an explicit
-      # `workflow_dispatch` `reg_meta_tag` pin is never neutralized (the "owed
-      # release will catch up" rationale only holds for the newest tag — a
-      # deliberate pin of an incompatible asset fails the guard red instead).
-      # Trade-off: on a schema-bumping window the Dockerfile bake isn't exercised
-      # (a build-only PR goes green-skipped); it's re-exercised once the release
-      # ships and branches rebase onto the now-caught-up asset.
-      - name: Pending-schema-bump guard
+          digest=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets \
+            | jq -r '[.assets[] | select(.name == "reg_meta.db.zst") | .digest]
+                  | if length == 1 then .[0] else "" end' | tr '[:upper:]' '[:lower:]' \
+            | sed -n 's/^sha256:\([0-9a-f]\{64\}\)$/\1/p')
+          [ -n "$digest" ] || echo "::warning::release $tag has no single sha256-digested reg_meta.db.zst"
+          echo "db_sha256=$digest" >> "$GITHUB_OUTPUT"
+      # The Rust server refuses to boot on an asset whose schema differs from its
+      # `CATALOG_SCHEMA_VERSION` (crates/reg-core/src/lib.rs). The asset's schema is
+      # read from the release tag's source (a data-only release keeps the tag-commit
+      # schema), hence the full-history checkout. A release from before the constant
+      # existed has none, which is a mismatch too. An explicit `reg_meta_tag` pin
+      # follows the same rule.
+      - name: Schema guard
         id: schemaguard
-        env:
-          GH_TOKEN: ${{ github.token }}  # for `gh release view` (missing-asset check below)
         run: |
           set -euo pipefail
           TAG="${{ steps.regmeta.outputs.tag }}"
-          # The Rust gates: `pub const SCHEMA: (u32, u32) = (10, 0);` -> 10.0
-          code_db=$(grep -oP '^pub const SCHEMA: \(u32, u32\) = \(\K\d+, \d+' crates/reg-catalog/src/lib.rs | tr -d ' ' | tr , .)
-          code_doc=$(grep -oP '^const DOC_SCHEMA: \(u32, u32\) = \(\K\d+, \d+' crates/reg-catalog/src/docs.rs | tr -d ' ' | tr , .)
-          # The builder's constants at the tag. Anchored grep (^…) so it can't match
-          # an f-string/usage of the constant; an empty result fails the helper.
-          asset_db=$(git show "$TAG:reg_meta_build/src/reg_meta_build/db.py" | grep -oP '^SCHEMA_VERSION = "\K[^"]+' || true)
-          asset_doc=$(git show "$TAG:reg_meta_build/src/reg_meta_build/doc_db.py" | grep -oP '^DOC_SCHEMA_VERSION = "\K[^"]+' || true)
-          verdict=$(python3 scripts/schema_pending_bump.py --code-db "$code_db" --code-doc "$code_doc" --asset-db "$asset_db" --asset-doc "$asset_doc")
-          # An explicit `reg_meta_tag` dispatch pin is a deliberate operator choice — the
-          # "owed release will catch up" rationale only holds for the auto-resolved newest
-          # tag, so never neutralize an explicit pin: anything but `compatible` fails loud
-          # here, since the bake itself reads no schema and the image would only refuse at
-          # boot, on the deploy target.
-          if [ -n "${{ inputs.reg_meta_tag }}" ]; then
-            if [ "$verdict" != compatible ]; then
-              echo "::error::schema-guard: pinned release $TAG is $verdict against the code's schema gates — deploys blocked."
-              exit 1
-            fi
-            echo "pending_bump=false" >> "$GITHUB_OUTPUT"
+          pattern='CATALOG_SCHEMA_VERSION: u32 = [0-9]+'
+          code=$(grep -oE "$pattern" crates/reg-core/src/lib.rs || true)
+          asset=$(git show "$TAG:crates/reg-core/src/lib.rs" | grep -oE "$pattern" || true)
+          if [ -n "$code" ] && [ "$code" = "$asset" ]; then
+            echo "schema-guard: code and $TAG agree (${code#*= })"
             exit 0
           fi
-          case "$verdict" in
-            break)
-              # A major schema mismatch is a genuine incompatibility — NOT the neutralizable
-              # code-ahead case. Fail the guard so build-image/deploy/edge-deploy (all gated on
-              # schema-guard success) are blocked red, including an edge-only push that has no
-              # image to fail.
-              echo "::error::schema-guard: major schema mismatch between code and latest release $TAG — genuine break, deploys blocked."
-              exit 1 ;;
-            pending)
-              # Code is a minor ahead (same major) — the neutralizable pending-release case, BUT
-              # only if the release actually carries both DB assets. A schema-behind release that
-              # is ALSO missing an asset is a #343 invariant violation: fail red, don't mask it
-              # (an edge-only push has no bake to catch it otherwise). An empty digest is a
-              # missing (or duplicated) asset.
-              if [ -z "${{ steps.regmeta.outputs.db_sha256 }}" ] || [ -z "${{ steps.regmeta.outputs.docs_sha256 }}" ]; then
-                echo "::error::schema-guard: release $TAG is schema-behind AND missing a DB asset (#343) — deploys blocked."
-                exit 1
-              fi
-              echo "pending_bump=true" >> "$GITHUB_OUTPUT"
-              echo "::notice::pending reg_meta release — bake + deploy paused by design (code schema ahead of latest released asset $TAG). The owed release (publish_reg_meta.yml → container-build dispatch) clears this." ;;
-            compatible)
-              echo "pending_bump=false" >> "$GITHUB_OUTPUT" ;;
-            *)
-              echo "::error::schema-guard: unexpected verdict '$verdict'"; exit 1 ;;
-          esac
+          echo "::error::schema-guard: code has '${code:-absent}' but release $TAG has '${asset:-absent}' — publish the switch release first; deploys blocked."
+          exit 1
 
   # Deploy gate: nothing ships unless the ci.yml run for THIS commit succeeded
   # (lint + ty + pytest + frontend jobs). CI runs on every main push (no paths
@@ -362,9 +271,9 @@ jobs:
       - uses: docker/setup-buildx-action@v4.4.1
       # Registry push auth (main/dispatch only). The username is ignored by
       # Fly's registry — the FLY_API_TOKEN deploy token authenticates. Skipped on a
-      # pending bump (#448) — nothing to push when the bake is deferred.
+      # Fly's registry — the FLY_API_TOKEN deploy token authenticates.
       - name: Log in to registry.fly.io
-        if: github.event_name != 'pull_request' && needs.schema-guard.outputs.pending_bump != 'true'
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v4.7.0
         with:
           registry: registry.fly.io
@@ -380,12 +289,7 @@ jobs:
       # cheap; cache is WRITTEN only on non-PR events — PR-scoped GHA cache is
       # unreadable from main, so PR writes would only evict useful cache from
       # the repo's 10 GB pool (#290). PRs still READ main's cache.
-      # Skipped on a pending bump (#448): the image would refuse to boot on the
-      # behind-schema asset by design — defer it to the owed reg_meta release
-      # rather than build an image that cannot serve. build-image stays green;
-      # deploys wait (job output below).
-      - if: needs.schema-guard.outputs.pending_bump != 'true'
-        uses: docker/build-push-action@v7.4.0
+      - uses: docker/build-push-action@v7.4.0
         with:
           context: .
           file: reg_webapp/Dockerfile
@@ -394,58 +298,13 @@ jobs:
           build-args: |
             REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
             REG_META_DB_SHA256=${{ needs.schema-guard.outputs.db_sha256 }}
-            REG_META_DOCS_SHA256=${{ needs.schema-guard.outputs.docs_sha256 }}
           cache-from: type=gha
           cache-to: ${{ github.event_name != 'pull_request' && 'type=gha,mode=max' || '' }}
 
-  build-swecov-image:
-    needs: [changes, schema-guard]
-    # PRs build only the public/global image: the SWECOV image needs the flavored
-    # DB release artifact, which is deployment state and not available to
-    # fork-safe PR builds. SWECOV metadata is non-confidential for the current
-    # testing steward, so the artifact lives on the public reg_meta/v* release
-    # beside the global DB. The bake fetches it from that same tag and fails
-    # loudly if the release has no reg_meta_swecov.db.zst (an empty digest),
-    # rather than shipping the steward against the public global DB (#1091).
-    if: >-
-      !cancelled() && github.event_name != 'pull_request' &&
-      needs.schema-guard.result == 'success' &&
-      (needs.changes.outputs.image == 'true' ||
-      github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: docker/setup-buildx-action@v4.4.1
-      - name: Log in to registry.fly.io
-        if: needs.schema-guard.outputs.pending_bump != 'true'
-        uses: docker/login-action@v4.7.0
-        with:
-          registry: registry.fly.io
-          username: x
-          password: ${{ secrets.FLY_API_TOKEN_SWECOV }}
-      - if: needs.schema-guard.outputs.pending_bump != 'true'
-        uses: docker/build-push-action@v7.4.0
-        with:
-          context: .
-          file: reg_webapp/Dockerfile
-          push: true
-          tags: registry.fly.io/reg-webapp-swecov:${{ env.IMAGE_TAG }}
-          build-args: |
-            REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
-            REG_META_FLAVOR=swecov
-            REG_META_DB_SHA256=${{ needs.schema-guard.outputs.swecov_db_sha256 }}
-            REG_META_DOCS_SHA256=${{ needs.schema-guard.outputs.docs_sha256 }}
-
   deploy:
     needs: [build-image, wait-ci, schema-guard]
-    # A pending schema bump (#448) leaves build-image GREEN with the bake skipped —
-    # there is no new image to ship, so the deploy waits for the owed reg_meta
-    # release (after which a rebase re-runs the now-passing bake and deploys).
     if: >-
       !cancelled() && needs.build-image.result == 'success' &&
-      needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.wait-ci.result == 'success' &&
       github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -511,8 +370,7 @@ jobs:
           # prod is actively running (review on #296).
           DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
           FLY_APP: reg-webapp-global
-        # Anchored: deploy-swecov runs the same script with its own FLY_APP.
-        run: &prune-registry |
+        run: |
           set -euo pipefail
           REPO_URL="https://registry.fly.io/v2/$FLY_APP"
           ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
@@ -549,51 +407,6 @@ jobs:
               fi
             done
 
-  deploy-swecov:
-    needs: [build-swecov-image, wait-ci, schema-guard]
-    if: >-
-      !cancelled() && needs.build-swecov-image.result == 'success' &&
-      needs.schema-guard.outputs.pending_bump != 'true' &&
-      needs.wait-ci.result == 'success' &&
-      github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    concurrency:
-      group: fly-deploy-swecov
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - name: Skip unless HEAD of main
-        id: head
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
-          if [ "$main_sha" != "$GITHUB_SHA" ]; then
-            echo "::notice::skipping SWECOV deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
-      - uses: superfly/flyctl-actions/setup-flyctl@1.6
-        if: steps.head.outputs.skip != 'true'
-        with:
-          version: "0.4.122"
-      - if: steps.head.outputs.skip != 'true'
-        run: >-
-          flyctl deploy
-          --config reg_webapp/fly.swecov.toml
-          --image registry.fly.io/reg-webapp-swecov:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-          --ha=false
-          --wait-timeout 10m0s
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
-      - name: Prune old SWECOV registry tags
-        if: steps.head.outputs.skip != 'true'
-        continue-on-error: true
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_SWECOV }}
-          DEPLOYED_TAG: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-          FLY_APP: reg-webapp-swecov
-        run: *prune-registry
-
   # Edge worker for the global catalog's hosted MCP on reg-meta.vqv.uk: `/mcp` only,
   # no SPA and no `/api` (reg_webapp/DESIGN.md → "Deployment"). Runs AFTER the global
   # origin deploy, so the worker never forwards to an origin that does not yet admit
@@ -601,15 +414,12 @@ jobs:
   # rebuild) is fine; a FAILED image build/deploy blocks the edge ship.
   edge-deploy:
     needs: [changes, build-image, deploy, wait-ci, schema-guard]
-    # Also gated on the pending-bump guard (#448): during a pending-bump window the
-    # edge waits for the owed release alongside the origin. A guard FAILURE also
-    # blocks the edge: build-image being skipped is tolerated below, so a failed
-    # guard must not fall through to an empty output.
+    # A guard FAILURE also blocks the edge: build-image being skipped is tolerated
+    # below, so a failed guard must not fall through.
     if: >-
       !cancelled() && github.event_name != 'pull_request' &&
       needs.wait-ci.result == 'success' &&
       needs.schema-guard.result == 'success' &&
-      needs.schema-guard.outputs.pending_bump != 'true' &&
       needs.build-image.result != 'failure' && needs.deploy.result != 'failure' &&
       (needs.changes.outputs.edge_global == 'true' ||
       needs.changes.outputs.image == 'true' ||
@@ -659,14 +469,12 @@ jobs:
       # endpoint answers JSON-RPC through the edge — `initialize`, `tools/list`
       # naming `search`, and one `search` call that is not a tool error. Fails
       # when the worker stops routing /mcp, the origin's allowed hosts drop the
-      # public host, or the tool stops answering. Anchored: edge-deploy-swecov runs
-      # it against its own EDGE_HOST.
+      # public host, or the tool stops answering.
       - name: Public MCP smoke
         if: steps.head.outputs.skip != 'true'
         env:
           EDGE_HOST: reg-meta.vqv.uk
-        run: &public-mcp-smoke |
-          set -euo pipefail
+        run: |
           rpc() {
             curl -sfS "https://$EDGE_HOST/mcp" \
               -H 'accept: application/json, text/event-stream' \
@@ -679,132 +487,3 @@ jobs:
           rpc tools/list '{}' | jq -e '[.result.tools[].name] | index("search")'
           rpc tools/call '{"name": "search", "arguments": {"q": "inkomst", "limit": 1}}' \
             | jq -e '.result.isError == false'
-
-  # Edge worker (SPA + /api and /mcp passthrough) for data.swecov.se. Runs AFTER the
-  # SWECOV origin deploy (deploy-skew guard): on a contract-changing push the SPA
-  # must not go live before the origin serves the new endpoints. Image-affecting
-  # changes also run this job even when nothing edge-side changed: the deploy ships a
-  # fresh DEPLOY_VERSION cache generation (#318), without which the edge would keep
-  # serving pre-deploy /api/* payloads for up to the 24h TTL.
-  edge-deploy-swecov:
-    needs: [changes, build-swecov-image, deploy-swecov, wait-ci, schema-guard]
-    if: >-
-      !cancelled() && github.event_name != 'pull_request' &&
-      needs.wait-ci.result == 'success' &&
-      needs.schema-guard.result == 'success' &&
-      needs.schema-guard.outputs.pending_bump != 'true' &&
-      needs.build-swecov-image.result != 'failure' &&
-      needs.deploy-swecov.result != 'failure' &&
-      (needs.changes.outputs.edge_swecov == 'true' ||
-      needs.changes.outputs.image == 'true' ||
-      github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    concurrency:
-      group: edge-deploy-swecov
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: "26.12.1"
-      - uses: oven-sh/setup-bun@v2.2.0
-        with:
-          bun-version: "1.4.4"
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2.9.3
-      - uses: taiki-e/install-action@v2.87.31
-        with:
-          tool: wasm-bindgen@0.2.129
-      - run: bun install --frozen-lockfile
-        working-directory: reg_webapp/frontend
-      - run: bun run gen:wasm && bun run gen:types && bun run build
-        working-directory: reg_webapp/frontend
-      - name: Skip unless HEAD of main
-        id: head
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          main_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" -q .object.sha)
-          if [ "$main_sha" != "$GITHUB_SHA" ]; then
-            echo "::notice::skipping SWECOV edge deploy: $GITHUB_SHA is not main HEAD ($main_sha)"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
-      - if: steps.head.outputs.skip != 'true'
-        run: >-
-          bunx wrangler@4.152.0 deploy --config reg_webapp/edge/wrangler.swecov.jsonc
-          --var DEPLOY_VERSION:${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: 8aa45afed8a0f3c7162b0e0b3d4f31c2
-      # The SPA mounts only once reg-core's .wasm loads, so the deployed one must
-      # answer 200 as application/wasm (WebAssembly.instantiateStreaming refuses
-      # any other type).
-      # Both probes wait for the new worker version (#1491): `wrangler deploy`
-      # returns before every PoP serves it, so the first request can reach the
-      # previous version. The worker exposes no version header, so each probe
-      # retries on its own signal of the new version (the .wasm hashed for this
-      # build; a young cache entry under this DEPLOY_VERSION) for a bounded
-      # window, then fails naming what it expected and what it last saw.
-      - name: SWECOV edge .wasm probe
-        if: steps.head.outputs.skip != 'true'
-        working-directory: reg_webapp/frontend
-        env:
-          EDGE_HOST: data.swecov.se
-        run: |
-          window=180 interval=10
-          wasm=$(cd dist && ls assets/*.wasm)
-          deadline=$((SECONDS + window))
-          # Before the new assets reach a PoP, the hashed path answers the worker's
-          # no-store 404: retry anything but 200 application/wasm.
-          while :; do
-            read -r code type < <(curl -m 15 -so /dev/null -w '%{http_code} %{content_type}\n' "https://$EDGE_HOST/$wasm")
-            echo "$wasm: $code $type"
-            [ "$code" = 200 ] && [ "$type" = application/wasm ] && break
-            [ "$SECONDS" -lt "$deadline" ] || { echo "FATAL: expected this build's $wasm as 200 application/wasm within ${window}s, last saw $code $type" >&2; exit 1; }
-            sleep "$interval"
-          done
-      # Standing #220 regression probe: the /api/* Cache Rule and the ETag
-      # contract are zone-dashboard state (click-ops, no IaC) — assert after
-      # every edge deploy that a search read still caches (MISS/HIT family,
-      # not DYNAMIC) and revalidates with an edge 304. Catches silent Cache
-      # Rule deletion / zone drift that nothing else in CI would notice.
-      # Also asserts the HIT is YOUNG (#318): this deploy started a new cache
-      # generation, so any reachable entry must have been populated after it —
-      # an old Age means DEPLOY_VERSION stopped reaching the cache key and the
-      # stale-24h window is back.
-      - name: SWECOV edge cache probe (#220 + #318)
-        if: steps.head.outputs.skip != 'true'
-        env:
-          EDGE_HOST: data.swecov.se
-          DEPLOY_VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-{1}', github.sha, github.run_id) || github.sha }}
-        run: |
-          window=180 interval=10
-          url="https://$EDGE_HOST/api/search?q=inkomst"
-          deadline=$((SECONDS + window))
-          # One request per attempt, so status and Age come from the same isolate.
-          # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
-          # still on the previous worker version) retries until the window ends.
-          while :; do
-            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
-            echo "$code cf-cache-status: $status, age: ${age:-0}s"
-            [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
-            if [ "$SECONDS" -ge "$deadline" ]; then
-              [ "$status" = HIT ] || { echo "FATAL: /api/* not edge-cached within ${window}s, last saw $code $status (Cache Rule missing?)" >&2; exit 1; }
-              echo "FATAL: expected a young HIT under DEPLOY_VERSION $DEPLOY_VERSION within ${window}s, last saw a HIT ${age}s old — the new worker version is not served everywhere, or #318 DEPLOY_VERSION cache-key versioning is broken" >&2
-              exit 1
-            fi
-            sleep "$interval"
-          done
-          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
-          echo "If-None-Match -> $code"
-          [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
-      # The SWECOV catalog's hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"),
-      # the same smoke as the global one.
-      - name: SWECOV public MCP smoke
-        if: steps.head.outputs.skip != 'true'
-        env:
-          EDGE_HOST: data.swecov.se
-        run: *public-mcp-smoke
