@@ -5,6 +5,7 @@
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
 //!                 [--catalog-version V] [--release]
 //! reg-build verify FILE [--previous FILE]
+//! reg-build diff OLD NEW [--json] [-n N]
 //! ```
 //!
 //! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
@@ -16,8 +17,10 @@
 //! `<curation>/registers/<provider>/<register>/ids.toml` and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
 //! recorded in the file; `--release` refuses a variable without a ledger id. A refusal
-//! prints the error on stderr and exits 1.
+//! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
+//! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
+mod diff;
 mod emit;
 mod verify;
 
@@ -373,6 +376,10 @@ fn parse_verify(
 
 fn main() -> ExitCode {
     let mut args = std::env::args().skip(1).peekable();
+    // `diff` has its own exit codes (1 = the catalogs differ, 2 = error).
+    if args.next_if_eq("diff").is_some() {
+        return diff::run(&args.collect::<Vec<_>>());
+    }
     let result = if args.next_if_eq("verify").is_some() {
         parse_verify(args).and_then(|(file, previous)| verify::catalog(&file, previous.as_deref()))
     } else {

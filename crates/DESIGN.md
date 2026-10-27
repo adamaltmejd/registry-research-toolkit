@@ -400,6 +400,16 @@ tracks the milestones. This section holds the design decisions that outlive the 
 
 **Decisions taken in milestone C.**
 
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
+  natural key (pid, table name, meta key), never by row id, in nine sections: schema
+  (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
+  retired), provider and register names, table names and spans, per-variable segments,
+  label and definition runs, value sets (with the codes added and removed where only a
+  segment's value-set hash changed), and finding counts per code. Text shows at most `N`
+  (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
+  something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
+  and `curation_digest` never count, since they differ every release), 2 on a usage or
+  IO error or a missing or different `schema_version` major.
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
