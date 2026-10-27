@@ -229,6 +229,40 @@ pub fn config<T: serde::de::DeserializeOwned>(path: &Path) -> Result<T, ReadErro
     toml::from_str(&text).map_err(|e| error(&name, e.to_string()))
 }
 
+/// A `derived_from` link from the variable `key` of `provider`'s register `register` (a
+/// handle) to the register the source calls `name`.
+pub(crate) fn derived_from(
+    provider: &str,
+    register: &str,
+    key: String,
+    name: String,
+    locator: reg_frame::Locator,
+) -> reg_frame::Record {
+    let end = |kind: &str| reg_frame::Endpoint {
+        kind: kind.to_owned(),
+        provider: provider.to_owned(),
+        register: None,
+        register_name: None,
+        table: None,
+        key: None,
+    };
+    reg_frame::Record::Link(reg_frame::Link {
+        kind: "derived_from".to_owned(),
+        subject: reg_frame::Endpoint {
+            register: Some(register.to_owned()),
+            key: Some(key),
+            ..end("variable")
+        },
+        object: reg_frame::Endpoint {
+            register_name: Some(name),
+            ..end("register")
+        },
+        at: None,
+        note: None,
+        locator,
+    })
+}
+
 /// `text` trimmed, or `None` when nothing is left.
 pub(crate) fn nonblank(text: &str) -> Option<String> {
     let t = text.trim();

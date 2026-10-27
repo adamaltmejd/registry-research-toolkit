@@ -14,7 +14,8 @@
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
 //! `<name>.warnings` under `--out`. `build` resolves each register with its ledger
-//! `<curation>/registers/<provider>/<register>/ids.toml` and writes the catalog file to `--out`
+//! `<curation>/registers/<provider>/<register>/ids.toml`, matches the frames' links and
+//! notices across the resolved registers (`link.rs`), and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
 //! recorded in the file; `--release` refuses a variable without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
@@ -22,6 +23,7 @@
 
 mod diff;
 mod emit;
+mod link;
 mod search;
 mod verify;
 
@@ -233,9 +235,15 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut registers: BTreeMap<(String, String), Vec<Record>> = BTreeMap::new();
     let mut valuesets = BTreeMap::new();
+    // Links and notices cross registers: the link stage reads them, not resolve.
+    let mut links = Vec::new();
     for (i, output) in outputs.iter().enumerate() {
         for record in &output.frame.records {
             let key = match record {
+                Record::Link(_) | Record::Notice(_) => {
+                    links.push(record.clone());
+                    continue;
+                }
                 Record::Register(r) => (r.provider.clone(), r.register.clone()),
                 Record::Table(t) => (t.provider.clone(), t.register.clone()),
                 Record::Release(r) => (r.provider.clone(), r.register.clone()),
@@ -278,6 +286,9 @@ fn build(args: &Args) -> Result<(), String> {
         }
         resolved.push(r);
     }
+    let linked = link::resolve(&resolved, &links)?;
+    let link_unresolved = linked.warnings.len();
+    warnings.extend(linked.warnings);
     for r in &resolved {
         report.insert(
             format!("{}/{}", r.register.provider, r.register.register),
@@ -341,12 +352,15 @@ fn build(args: &Args) -> Result<(), String> {
         registers: resolved,
         valuesets,
         file_input,
+        relations: linked.relations,
+        notices: linked.notices,
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({
             "generation_id": generation_id,
             "registers": report,
             "warnings": warnings,
+            "link_unresolved": link_unresolved,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;

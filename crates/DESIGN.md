@@ -360,7 +360,18 @@ tracks the milestones. This section holds the design decisions that outlive the 
   raise one F6 per key.
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
-  no B table holds. The link stage reads them.
+  no B table holds. `Entitet` fixes what `ID1` and `ID2` are (`Register` a `RegisterId`,
+  `RegisterVariant` a `RegVarID`, `RegisterVersion` a `RegVerID`, `Variabel` a `VarId`;
+  each row's `Namn` is `ID1`'s name). `Tidsseriebrott` and `Avslutad` are a notice on
+  `ID1`'s entity, `<Handelse>: <Beskrivning>`. `Ersätter` (`ID1` takes over from `ID2`)
+  and `Ersatt av` (`ID2` from `ID1`) are a `continues` link from the newer entity, and
+  come in mirrored pairs the link stage folds into one relation; between releases the
+  succession is a notice on the newer one, `continues <older name>`. A `VarId` stands
+  for each register that documents it. The config's `[timeseries]` holds this map;
+  `AktuellVariabel` (its ids name no entity of the export), `Population`, `PopContext`
+  and `VS_Class` are left out and counted, and `FilID` (a document reference, on every
+  row) is left to the documents. A row's `VariabelRegister_Källa` is a `derived_from`
+  link to the register of that name.
 - **The LISA workbook** is its own reader (`lisa`), not the Socialstyrelsen template's:
   a sheet is a table named by the sheet, a data row an occurrence keyed by its folded
   column name, a year cell one occurrence per year or range, and `Känslig1` the
@@ -369,7 +380,9 @@ tracks the milestones. This section holds the design decisions that outlive the 
   manifest's `register`: attaching its sheets to the export's LISA tables, by period
   where needed, is D's `bind`, since a workbook column keyed by name beside the export's
   `v<VarId>` would otherwise be a rival or a second variable. Section headings (group
-  hints) wait for D's sets, `Grundregister` for C's `derived-from` links. `Individ`
+  hints) wait for D's sets. Each `Grundregister` cell is a `derived_from` link from the
+  row's variable to each register it names (split at `,`, `;` and line breaks), matched
+  by name, so LISA's abbreviations (`RTB`) stay unresolved until D's `bind`. `Individ`
   repeats the year-independent columns with blank year cells; the year-less sheet's row
   stands, so `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables
   (birth country, deaths, migration) under headings, each keyed by `PersonNr`; the
@@ -427,6 +440,24 @@ tracks the milestones. This section holds the design decisions that outlive the 
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
   other version is not comparable.
+- **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
+  its register by handle or by name (`fold_identity` of the trimmed name, which exactly
+  one register must match), then a table, a release or a variable by source key, where a
+  split key gives every piece. A `continues` needs one entity of one kind at each end, a
+  `derived_from` one object and gives a relation per subject piece, and a release end is
+  never a relation (a reader states a succession between releases as a notice). A notice
+  becomes one finding per subject entity, `S0:source-notice` with severity `notice`: an
+  addition to v4 §4.5, which has no source-notice code. A source can state successions
+  the catalog cannot hold, so after folding the stage drops them as misses rather than
+  let the post-write checks refuse the build: every table `continues` of one table on
+  one day (the source names no single successor), then, in locator order, each
+  `continues` that closes a cycle. Every miss is one `link:` warning, counted as
+  `link_unresolved` in the build report. Name matching is per provider (the index key is
+  `(provider, fold(name))`), so a source text naming another provider's register never
+  matches and is reported unresolved for D to `bind`: that count is not a reader defect.
+  A malformed link or notice (an unknown kind, an endpoint without exactly one register
+  reference) is refused at its locator. In frame JSONL a link's kind is written
+  `relation`, since the record tag owns `kind`.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,
