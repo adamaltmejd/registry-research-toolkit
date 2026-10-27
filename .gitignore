@@ -46,6 +46,7 @@ scripts/sample_*.py
 
 # SCB source PDFs (binary, copyrighted, not committed)
 *.pdf
+!crates/reg-build/fixture/**/*.pdf
 
 # Marker raw output (regenerable from PDFs + parser)
 reg_meta_build/docs/_raw/

@@ -466,8 +466,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
   `zstd -19`). The build was 630,218,752 B (112,422,605 B at `-19`, 166,077,411 B at
   `-3`), so with the PDFs the `-19` artifact is about 117.7 MB, past schema §5.2's
   90-115 MB. The Operator ruled on 2026-10-27 to keep `doc.content` in the catalog at
-  that size and informed the maintainer. If the maintainer objects, §5.2's sidecar
-  lever is the fallback: PDFs outside the database.
+  that size and informed the maintainer. If the maintainer objects, §5.2's sidecar lever
+  is the fallback: PDFs outside the database.
 - **Documents: metadata and subjects (plan decision C-8).** Document metadata
   (`related_documents.toml`: title, licence, fetched, URL) lives beside the PDFs in the
   inputs repository, pinned like any input. The reader states each subject in source
