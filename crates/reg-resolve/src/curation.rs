@@ -559,6 +559,7 @@ fn effects(statement: &Statement) -> BTreeSet<String> {
             AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                 stated_fields(fields).into_keys().collect()
             }
+            AssertFact::ValueSet { .. } => BTreeSet::from(["value_set".into()]),
             _ => BTreeSet::from(["assertion".into()]),
         },
         Statement::Link {
@@ -614,7 +615,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         .period
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
-    match subject(statement) {
+    let mut selected = match subject(statement) {
         Some(Address::Occurrence {
             periods: Some(scope),
             ..
@@ -623,7 +624,61 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
             .filter_map(|p| intersect(&span, p))
             .collect(),
         _ => vec![span],
+    };
+    if let Statement::Bind {
+        period: Some(scope),
+        ..
     }
+    | Statement::Link {
+        at: Some(scope), ..
+    } = statement
+    {
+        selected = reg_core::overlap(&selected, &periods(scope));
+    }
+    selected
+}
+
+/// Conflicting effects selected in separate authoring groups must be refused before
+/// any group mutates the frame. Binding dependencies include destination facts, so
+/// a bind cannot consume a coordinate another bind rewrites in the same phase.
+#[must_use]
+pub fn source_conflicts(statements: &[(&Statement, &Premise)]) -> Vec<(usize, usize)> {
+    let mut conflicts = Vec::new();
+    for (a, (left, left_premise)) in statements.iter().enumerate() {
+        for (b, (right, right_premise)) in statements.iter().enumerate().skip(a + 1) {
+            if !effects_overlap(&effects(left), &effects(right)) {
+                continue;
+            }
+            if premise_overlap(left, left_premise, right, right_premise) {
+                conflicts.push((a, b));
+            }
+        }
+    }
+    conflicts
+}
+
+fn premise_overlap(
+    left: &Statement,
+    left_premise: &Premise,
+    right: &Statement,
+    right_premise: &Premise,
+) -> bool {
+    let overlaps = |left_rows: &[SourcePremise], right_rows: &[SourcePremise]| {
+        left_rows.iter().any(|a| {
+            let a = premise_source(a);
+            right_rows.iter().any(|b| {
+                let b = premise_source(b);
+                same_subject(&a, &b)
+                    && !reg_core::overlap(&subject_spans(left, &a), &subject_spans(right, &b))
+                        .is_empty()
+            })
+        })
+    };
+    overlaps(&left_premise.subjects, &right_premise.subjects)
+        || (matches!(left, Statement::Bind { .. })
+            && matches!(right, Statement::Bind { .. })
+            && (overlaps(&left_premise.subjects, &right_premise.objects)
+                || overlaps(&left_premise.objects, &right_premise.subjects)))
 }
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
@@ -1147,7 +1202,6 @@ pub fn resolve(
     };
     let empty_variables = BTreeMap::new();
     let variables = variable_result.as_ref().unwrap_or(&empty_variables);
-    let mut subjects = Vec::new();
     let mut out = Vec::new();
     for statement in statements {
         let address = subject(statement);
@@ -1339,7 +1393,6 @@ pub fn resolve(
                 conflicts: Vec::new(),
             })
         })();
-        subjects.push(matches);
         out.push(result);
     }
     // simplify: pair scan of register-local statements; index by field and locator if
@@ -1351,11 +1404,12 @@ pub fn resolve(
             if out[a].is_err() || out[b].is_err() || !effects_overlap(&a_effects, &b_effects) {
                 continue;
             }
-            if subjects[a].iter().any(|a| {
-                subjects[b]
-                    .iter()
-                    .any(|b| same_subject(&view[a.source], &view[b.source]) && overlaps(a, b))
-            }) || (matches!(statements[a], Statement::Assert { .. })
+            if premise_overlap(
+                statements[a],
+                &out[a].as_ref().expect("successful evaluation").premise,
+                statements[b],
+                &out[b].as_ref().expect("successful evaluation").premise,
+            ) || (matches!(statements[a], Statement::Assert { .. })
                 && matches!(statements[b], Statement::Assert { .. })
                 && addresses_overlap(subject(statements[a]), subject(statements[b])))
             {

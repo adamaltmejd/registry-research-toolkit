@@ -27,6 +27,23 @@ fn publication_identity(statement: &LocatedStatement) -> String {
         .scoped_identity(&statement.provider, &statement.register)
 }
 
+fn statement_locator(
+    root: &Path,
+    statement: &LocatedStatement,
+) -> Result<reg_frame::Locator, String> {
+    let file = statement.path.strip_prefix(root).map_err(|_| {
+        format!(
+            "{}: statement is outside curation root {}",
+            statement.path.display(),
+            root.display()
+        )
+    })?;
+    Ok(reg_frame::Locator {
+        input: file.to_string_lossy().into_owned(),
+        at: format!("line={}", statement.line),
+    })
+}
+
 fn application_statement(
     statement: &LocatedStatement,
     ledger: &reg_resolve::Ledger,
@@ -338,6 +355,7 @@ fn run_selected(
         // Resolve every group before changing this phase's frame. This makes file
         // order immaterial, including a bind that moves a foreign source register.
         let mut accepted = Vec::new();
+        let mut unavailable = BTreeSet::new();
         for ((provider, register), group) in &groups {
             let Some((path, ledger, old)) = locks.get(&(provider, register)) else {
                 continue;
@@ -386,12 +404,12 @@ fn run_selected(
                             location(group[*other])
                         ));
                     }
-                    continue;
+                    unavailable.insert(publication_identity(statement));
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
                     refusals.push(format!("{at}: {e}"));
-                    continue;
+                    unavailable.insert(publication_identity(statement));
                 }
                 if resolved.redundant {
                     findings.push(format!("{at}: redundant-set: set equals the source"));
@@ -399,28 +417,67 @@ fn run_selected(
                 accepted.push((*statement, resolved.premise, provider, register));
             }
         }
+        let resolved = accepted
+            .iter()
+            .map(|(s, p, ..)| (&s.statement, p))
+            .collect::<Vec<_>>();
+        let mut conflicting = accepted
+            .iter()
+            .enumerate()
+            .filter_map(|(i, (s, ..))| unavailable.contains(&publication_identity(s)).then_some(i))
+            .collect::<BTreeSet<_>>();
+        for (a, b) in reg_resolve::curation::source_conflicts(&resolved) {
+            conflicting.extend([a, b]);
+            for (left, right) in [(a, b), (b, a)] {
+                refusals.push(format!(
+                    "{}: curation-overlap: overlapping overrides with {}",
+                    location(accepted[left].0),
+                    location(accepted[right].0)
+                ));
+            }
+        }
+        accepted = accepted
+            .into_iter()
+            .enumerate()
+            .filter_map(|(i, value)| (!conflicting.contains(&i)).then_some(value))
+            .collect();
         for (statement, premise, _, _) in &accepted {
             priorities.add(&statement.statement, premise);
         }
+        accepted.sort_by_key(|(s, ..)| {
+            use reg_frame::statement::{AssertFact, Statement};
+            let dependency = match &s.statement {
+                Statement::Assert {
+                    fact: AssertFact::Table { .. },
+                    ..
+                } => 0,
+                Statement::Assert {
+                    fact: AssertFact::Release { .. },
+                    ..
+                } => 1,
+                Statement::Assert {
+                    fact: AssertFact::ClassificationVersion { .. },
+                    ..
+                } => 2,
+                Statement::Assert {
+                    fact: AssertFact::Occurrence { .. },
+                    ..
+                } => 3,
+                _ => 4,
+            };
+            (dependency, publication_identity(s))
+        });
         if stage == 2 {
-            accepted.sort_by_key(|(s, ..)| {
-                use reg_frame::statement::{AssertFact, Statement};
-                match &s.statement {
-                    Statement::Assert {
-                        fact: AssertFact::Table { .. },
-                        ..
-                    } => (0, &s.identity),
-                    Statement::Assert {
-                        fact: AssertFact::Release { .. },
-                        ..
-                    } => (1, &s.identity),
-                    Statement::Assert {
-                        fact: AssertFact::Occurrence { .. },
-                        ..
-                    } => (2, &s.identity),
-                    _ => (3, &s.identity),
+            // Code lists are definitions consumed by occurrence assertions. Their
+            // subject attachment follows occurrences, including newly asserted ones.
+            for (statement, ..) in &accepted {
+                let at = statement_locator(root, statement)?;
+                if let Some(set) =
+                    reg_resolve::curation::apply::asserted_value_set(&statement.statement, &at)
+                {
+                    records.push(Record::ValueSet(set));
                 }
-            });
+            }
         }
         for (statement, premise, provider, register) in accepted {
             let (_, ledger, _) = &locks[&(provider, register)];
@@ -436,22 +493,8 @@ fn run_selected(
                 })
                 .cloned()
                 .collect::<Vec<_>>();
-            let file = statement
-                .path
-                .strip_prefix(root)
-                .map_err(|_| {
-                    format!(
-                        "{}: statement is outside curation root {}",
-                        statement.path.display(),
-                        root.display()
-                    )
-                })?
-                .to_string_lossy()
-                .into_owned();
-            let locator = reg_frame::Locator {
-                input: file.clone(),
-                at: format!("line={}", statement.line),
-            };
+            let locator = statement_locator(root, statement)?;
+            let file = locator.input.clone();
             let content = application_statement(statement, ledger, register);
             let applied = match reg_resolve::curation::apply::apply(
                 &source,

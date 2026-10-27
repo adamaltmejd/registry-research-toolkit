@@ -234,26 +234,32 @@ spelling and type. A D `set` states those.
   of source locators, including merged-row locators.
 - Application binds register handles first, then table handles and occurrence rows, then
   asserts source-shaped facts. Each phase checks selectors and locks against an
-  immutable snapshot before applying accepted statements. Refused statements contribute
-  no facts. Bind premises include the moved subtree and the destination and parent facts
-  used by merging, priority and coverage decisions. Those dependencies are evidence,
-  never extra rows selected for rewriting. Later selectors see the bound frame plus
-  assertions, while each assertion's redundancy check sees the bound source without that
-  assertion.
+  immutable snapshot before applying accepted statements. Conflicts are checked across
+  authoring groups before any application; competing binds and binds that consume each
+  other's source coordinates are refused together. Independent statements apply in
+  scoped identity order. Refused statements contribute no facts. Bind premises include
+  the moved subtree and the destination and parent facts used by merging, priority and
+  coverage decisions. Those dependencies are evidence, never extra rows selected for
+  rewriting. Later selectors see the bound frame plus assertions, while each assertion's
+  redundancy check sees the bound source without that assertion.
 - A bind's numeric priority ranks its source against unbound sources at zero. Higher
   wins per field and period; equal-priority occurrence disagreements retain F6 evidence.
   Ordinary dated rows can be split by scope. A scope cannot bisect a stated release;
-  moving a release's rows to another table detaches them as dated occurrences. A new
-  destination row shape carries the binding statement's provenance. Curated rows that
-  exceed a destination table's stated coverage are refused: correcting that coverage
-  requires `set`.
+  moving a release's rows to another table detaches them as dated occurrences.
+  Detachment is refused for population-specific value sets. Release merges that change
+  referenced population ordinals are also refused. A new destination row shape carries
+  the binding statement's provenance. Curated rows that exceed a destination table's
+  stated coverage are refused: correcting that coverage requires `set`.
 - Assertions add occurrences, tables, releases, content-addressed value sets or
-  classification versions. Occurrence/table fields must fit the source frame; other
-  fields are refused rather than discarded. A value-set assertion fills an occurrence
-  whose source states no set; replacing one requires `set`. An asserted classification
-  version defines a version and its code list without binding occurrences to it.
-  Versions of a family cannot overlap. Assertions of existing facts remain refusals; an
-  assertion and a later override of its field are refused at both locations.
+  classification versions. Tables and releases precede their consumers. Accepted code
+  lists are defined before occurrences consume their hashes; value-set subject
+  attachments follow occurrences, including newly asserted ones. Occurrence/table fields
+  must fit the source frame; other fields are refused rather than discarded. A value-set
+  assertion fills an occurrence whose source states no set; replacing one requires
+  `set`. An asserted classification version defines a version and its code list without
+  binding occurrences to it. Versions of a family cannot overlap. Assertions of existing
+  facts remain refusals; an assertion and a later override of its field are refused at
+  both locations.
 - Accepted application is published through the existing `statement` and `override`
   tables: normalized hash, file/line, evidence, caveat, winning values and losing source
   values. Moved rows retain their source locators. Asserted rows have statement

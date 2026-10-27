@@ -42,6 +42,19 @@ pub struct Applied {
     pub classifications: Vec<Classification>,
 }
 
+/// Define an asserted code list before applying occurrences that consume its hash.
+/// Subject attachment and provenance remain part of the statement's application.
+#[must_use]
+pub fn asserted_value_set(statement: &Statement, at: &Locator) -> Option<ValueSet> {
+    match statement {
+        Statement::Assert {
+            fact: AssertFact::ValueSet { items } | AssertFact::ClassificationVersion { items, .. },
+            ..
+        } => Some(ValueSet::new(items.clone(), None, at.clone())),
+        _ => None,
+    }
+}
+
 struct Priority {
     provider: String,
     kind: String,
@@ -479,6 +492,15 @@ pub fn apply(
                     // A row moved out of its release becomes its own dated documented
                     // occurrence; the original delivery does not describe the new table.
                     if subject.is_some() && kind == "occurrence" && !bound["release"].is_null() {
+                        if bound["population_valuesets"]
+                            .as_array()
+                            .is_some_and(|sets| !sets.is_empty())
+                        {
+                            return Err(
+                                "bind cannot detach an occurrence with population-specific value sets from its release"
+                                    .into(),
+                            );
+                        }
                         bound["release"] = Value::Null;
                         bound["from"] = json!(selected.0);
                         bound["to"] = json!(selected.1);
@@ -685,9 +707,8 @@ pub fn apply(
                     }
                     json!({"kind":"release","provider":register.provider,"register":register.register,"table":table,"release":handle,"name":name,"description":null,"from":p[0].0,"to":p[0].1,"grain":"span","edition":"unstated","qualifier":null,"populations":[],"locator":at})
                 }
-                AssertFact::ValueSet { items }
-                | AssertFact::ClassificationVersion { items, .. } => {
-                    let set = ValueSet::new(items.clone(), None, at.clone());
+                AssertFact::ValueSet { .. } | AssertFact::ClassificationVersion { .. } => {
+                    let set = asserted_value_set(statement, at).expect("code-list assertion");
                     if let AssertFact::ClassificationVersion {
                         family, version, ..
                     } = fact
@@ -868,7 +889,10 @@ pub fn apply(
                         Some(p.clone()),
                     ));
                 }
-                out.records.push(decode(value.clone())?);
+                let record = decode(value.clone())?;
+                if !out.records.contains(&record) {
+                    out.records.push(record);
+                }
             }
         }
         _ => {}
@@ -1220,6 +1244,12 @@ fn partition_overlaps(
             }
             let edges = edges.into_iter().collect::<Vec<_>>();
             let detach = o.release.is_some() && (edges.len()>1 || rivals.iter().any(|(r,_)|matches!(r,Record::Occurrence(other) if other.release != o.release)));
+            if detach && !o.population_valuesets.is_empty() {
+                return Err(
+                    "bind cannot detach an occurrence with population-specific value sets from its release"
+                        .into(),
+                );
+            }
             for (index, start) in edges.iter().enumerate() {
                 let p = (
                     start.clone(),
@@ -1299,6 +1329,27 @@ fn merge_bound(
         }
     }
     let mut moved = moved;
+    for record in &moved {
+        let Record::Release(incoming) = record else {
+            continue;
+        };
+        if output.iter().any(|record| {
+            matches!(record, Record::Release(old)
+                if old.provider == incoming.provider && old.register == incoming.register
+                    && old.table == incoming.table && old.release == incoming.release
+                    && old.populations != incoming.populations)
+        }) && output.iter().chain(&moved).any(|record| {
+            matches!(record, Record::Occurrence(o)
+                if o.provider == incoming.provider && o.register == incoming.register
+                    && o.table == incoming.table && o.release.as_ref() == Some(&incoming.release)
+                    && !o.population_valuesets.is_empty())
+        }) {
+            return Err(
+                "bind cannot merge differing release populations used by population-specific value sets"
+                    .into(),
+            );
+        }
+    }
     partition_overlaps(output, &mut moved, changes)?;
     for record in moved {
         let mut incoming = tree(&record);
