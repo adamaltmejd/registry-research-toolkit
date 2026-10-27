@@ -1,0 +1,16 @@
+# Register fr: ambiguity (Del), release editions (r), population value sets (p).
+{"kind":"register","provider":"demo","register":"fr","name":"Frame demo"}
+{"kind":"table","provider":"demo","register":"fr","table":"t","from":"2020-01-01","to":"2021-12-31"}
+{"kind":"table","provider":"demo","register":"fr","table":"r","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"table","provider":"demo","register":"fr","table":"p","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"value_set","items":[{"code":"1","label":"Ja"},{"code":"2","label":"Nej"}],"names":["janej"]}
+{"kind":"value_set","items":[{"code":"M","label":"Man"},{"code":"K","label":"Kvinna"}],"names":["kon"]}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"t","column":"Svar","source_key":"k1","from":"2020-01-01","to":"2021-12-31","label":"Svar","valueset":"janej"}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"t","column":"Del","source_key":"k3","from":"2020-01-01","to":"2020-12-31","label":"Del"}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"t","column":"Del","source_key":"k4","from":"2020-01-01","to":"2020-12-31","label":"Del"}
+{"kind":"release","provider":"demo","register":"fr","table":"r","release":"r1","name":"R 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"fr","table":"r","release":"r2","name":"R 2020 prel","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"r","release":"r1","column":"Mat","source_key":"k2","label":"Mat"}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"r","release":"r2","column":"Mat","source_key":"k2","label":"Mat"}
+{"kind":"release","provider":"demo","register":"fr","table":"p","release":"p1","name":"P 2020 prel","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"preliminary","populations":[{"name":"Kvinnor"},{"name":"Män"}]}
+{"kind":"occurrence","provider":"demo","register":"fr","table":"p","release":"p1","column":"Grp","source_key":"k5","label":"Grp","population_valuesets":[{"population":0,"valueset":"janej"},{"population":1,"valueset":"kon"}]}
