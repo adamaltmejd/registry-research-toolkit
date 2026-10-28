@@ -174,13 +174,19 @@ def statuses(db: sqlite3.Connection) -> dict[tuple[str, str], set[str]]:
     return out
 
 
+def implicit_table_alias(old_tables: set[str], new_tables: set[str]) -> str | None:
+    """The v4 unnamed table and v5's sole named table are the same coordinate."""
+    if old_tables == {""} and len(new_tables) == 1:
+        return next(iter(new_tables))
+    return None
+
+
 def compare(reg: str, old: View, new: View, status, unminted: set[str], diffs) -> None:
     def add(cls: str, detail: str) -> None:
         diffs[cls].append((reg, detail))
 
     # The old catalog left a one-table register's table unnamed; the new one may name it.
-    if old.tables == {""} and len(new.tables) == 1:
-        only = next(iter(new.tables))
+    if (only := implicit_table_alias(old.tables, new.tables)) is not None:
         new.tables = {""}
         new.placed = defaultdict(
             set,

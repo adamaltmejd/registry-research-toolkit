@@ -412,3 +412,21 @@ kind = "set"
 subject = "var:btypall"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
