@@ -36,3 +36,7 @@ public = "ses"
 "tjanstgoringsomfattning" = ["Individer: B271"]
 "upprakningstal" = ["Företag: A41"]
 "yrkesuppgift" = ["Individer: B23"]
+"nyckel-key-l" = ["Individer: Key_L"]
+"upprakningstal-a51" = ["Företag/Organisationer: A51"]
+"upprakningstal-b42" = ["Individer i privat sektor: B42"]
+"upprakningstal-b52" = ["Individer: B52"]

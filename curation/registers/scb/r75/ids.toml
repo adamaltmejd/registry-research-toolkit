@@ -67,3 +67,7 @@ public = "energi-flerbostad"
 "varmtot" = ["Energistatistik för flerbostadshus: VarmTot"]
 "varmvm3" = ["Energistatistik för flerbostadshus: VarmvM3"]
 "vatten" = ["Energistatistik för flerbostadshus: Vatten"]
+"identitet" = ["Energistatistik för flerbostadshus: SCBid"]
+"varmvattenforbrukning-energiid" = ["Energistatistik för flerbostadshus: Energiid # v7998"]
+"varmvattenforbrukning-kvant" = ["Energistatistik för flerbostadshus: Kvant # v7998"]
+"varmvattenforbrukning-uppvid" = ["Energistatistik för flerbostadshus: Uppvid # v7998"]

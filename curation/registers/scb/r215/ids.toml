@@ -332,3 +332,7 @@ public = "vattenbruk"
 "tot-m" = ["Kostnadsenkäten: Tot_M"]
 "u15" = ["Kostnadsenkäten: U15"]
 "uni" = ["Kostnadsenkäten: Uni"]
+"antal-odlingar-lan1" = ["Vattenbruk: Lan1 # v41234"]
+"antal-odlingar-lan2" = ["Vattenbruk: Lan2 # v41234"]
+"antal-odlingar-lan3" = ["Vattenbruk: Lan3 # v41234"]
+"organisationsnummer-peorgnr" = ["Kostnadsenkäten: PeOrgNr"]

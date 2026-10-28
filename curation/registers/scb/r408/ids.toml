@@ -145,3 +145,6 @@ public = "anst"
 "totulag" = ["Anställningar, LAPS: TotUlag"]
 "urvalsstorlek-per-stratum" = ["Sjukfrånvaro under sjuklöneperioden (SuS): lillan"]
 "urvalsstratum" = ["Sjukfrånvaro under sjuklöneperioden (SuS): strata"]
+"kontant-bruttolon-agilon011" = ["Anställningar, grund: AGILon011"]
+"lopnummer-for-sjukfall" = ["Sjukfrånvaro under sjuklöneperioden (SuS): id"]
+"referensperiod-manad" = ["Anställningar, grund: Manad"]

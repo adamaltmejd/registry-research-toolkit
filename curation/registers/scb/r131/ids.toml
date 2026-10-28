@@ -83,3 +83,5 @@ public = "ireg"
 "urvnr" = ["Kvartalsomsättning tjänstesektorn: Urvnr"]
 "venr" = ["Lagerstatistik för varuhandel och tjänstenäringar: VeNr"]
 "vgr" = ["Lagerstatistik för varuhandel och tjänstenäringar: vgr"]
+"blankettyp-svalt" = ["Lagerstatistik för varuhandel och tjänstenäringar: svalt"]
+"lillan-nsvar" = ["Lagerstatistik för varuhandel och tjänstenäringar: nsvar"]

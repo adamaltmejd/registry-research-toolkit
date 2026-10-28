@@ -129,3 +129,6 @@ public = "specialskola"
 "utlbakgr" = ["Betyg åk 10: UtlBakGr"]
 "utlbakgr2" = ["Betyg åk 10: UtlBakGr2"]
 "utlsvbakg" = ["Betyg åk 10: UtlSvBakg"]
+"arskurs-ak" = ["Betyg åk 10: Ak"]
+"folkbokforingskommun-hemkommun" = ["Elever: Hemkommun"]
+"skolenhetens-namn-skolnamn" = ["Betyg åk 10: Skolnamn # v30654"]

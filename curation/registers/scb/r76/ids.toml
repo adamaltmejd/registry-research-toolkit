@@ -52,3 +52,6 @@ public = "bylbbs"
 "telefonnummer-1" = ["Bygglov för bostäder och lokaler: Telnr1"]
 "telefonnummer-2" = ["Bygglov för bostäder och lokaler: Telnr2"]
 "upplatelseform" = ["Bygglov för bostäder och lokaler: Upplatelseform"]
+"antal-lagenheter-totalt-antlghbt" = ["Bygglov för bostäder och lokaler: AntLghBT"]
+"upplatelseform-upplatform" = ["Bygglov för bostäder och lokaler: Upplatform"]
+"upplatelseform-upplatform2" = ["Nybyggnad av bostäder: UpplatForm2"]

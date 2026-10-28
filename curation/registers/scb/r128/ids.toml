@@ -139,3 +139,6 @@ public = "lsum"
 "typ-av-post" = ["Anställningar - nattbefolkning: KUTyp"]
 "utlsvbakg" = ["Anställningar - dagbefolkning: UtlSvBakg"]
 "utrikes" = ["Anställningar - nattbefolkning: Utrikes"]
+"ej-skatteavdrag-antejskattejbeskatt" = ["Företag - Uppgifter aggregerade till företagsnivå (KUAGG): AntEjSkattEjBeskatt"]
+"formaner-forman" = ["Anställningar - nattbefolkning: Forman"]
+"institutionell-sektorkod-i-lsum-instkod7" = ["Anställningar - nattbefolkning: instkod7"]

@@ -73,3 +73,4 @@ public = "ombyggnad-och-rivning"
 "vattenled" = ["Ombyggnad av flerbostadshus: VattenLed"]
 "vent" = ["Ombyggnad av flerbostadshus: Vent"]
 "ventefter" = ["Ombyggnad av flerbostadshus: VentEfter"]
+"ursprunglig-byggnadsperiod-byggnadsperiod" = ["Rivning av flerbostadshus: Byggnadsperiod"]
