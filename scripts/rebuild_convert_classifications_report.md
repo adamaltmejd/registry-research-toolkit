@@ -895,8 +895,8 @@ The real order `fohm/sminet/diagnos`, `fohm/sminet`, year 2005, categorical,
 informational `coverage_end_unstated` and sensitivity warning remain; the order check
 does not confirm delivery availability. KS87-P has zero parent links.
 
-All 33 direct declarations converted. The 111 label rules select 23,891 source
-occurrences: 23,756 emitted setters, 129 matches covered by explicit book bindings, and
+All 33 direct declarations converted. The 111 label rules select 23,891 rule/occurrence
+matches: 23,756 expanded bindings, 129 matches covered by explicit book bindings, and
 six refused rule/occurrence pairs representing three distinct occurrences. Five rules
 have partial refusals. Across all surfaces the final form has 6,353 classification
 setters and six occurrence assertions. The DORS timeline's 52 source occurrences remain
