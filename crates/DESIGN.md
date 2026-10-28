@@ -157,8 +157,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
 
 **Change findings (F1).** Resolve reports what changed in a variable's documentation as
 `notice` findings, one per (variable, sub-kind, table or none, first day of the new
-form), on that day. Neighbours are compared: an `ambiguous` segment is skipped and a gap
-is not a change.
+form), on that day, except for the grouped integer/decimal drift below. Neighbours are
+compared: an `ambiguous` segment is skipped and a gap is not a change.
 
 - `F1:type-change`: the stated type family differs between consecutive segments of one
   table. Width and length differences never create findings or reviews. One closed map
@@ -170,7 +170,11 @@ is not a change.
   format literals before they enter the frame. `unspecified` is recognized unknown
   evidence, not a family or a fallback for unmapped names. An unknown side never creates
   a type-change finding. Integer/decimal, text/integer, text/decimal and transitions
-  between those families and temporal remain changes.
+  between those families and temporal remain changes. Integer/decimal transitions
+  produce one notice per (variable, table), dated at the first such transition; its
+  message counts those transitions and names their first and last day. Other family
+  changes retain one notice per transition. A curated `set type` that removes the drift
+  leaves no type-change notice; switchers without strict evidence remain uncurated.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
   uncoded. The message counts codes added, removed and relabelled.
 - `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs

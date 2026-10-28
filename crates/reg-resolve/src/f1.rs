@@ -37,6 +37,7 @@ pub(crate) fn changes(
         };
 
     for (v, variable) in variables.iter().enumerate() {
+        let mut numeric_drift: BTreeMap<usize, (usize, &str, &str)> = BTreeMap::new();
         // Segments are held per table, in period order.
         for (i, pair) in variable.segments.windows(2).enumerate() {
             let (a, b) = (&pair[0], &pair[1]);
@@ -46,11 +47,22 @@ pub(crate) fn changes(
             let day = b.period.0.as_str();
             let table = table_name(a.table);
             // Unstated or conflicting types do not state a family change.
+            let families = (
+                super::family(a.dtype.as_deref()),
+                super::family(b.dtype.as_deref()),
+            );
             let families_differ = matches!(
-                (super::family(a.dtype.as_deref()), super::family(b.dtype.as_deref())),
+                families,
                 (Some(x), Some(y)) if x != y
             );
-            if families_differ {
+            if matches!(
+                families,
+                (Some("integer"), Some("decimal")) | (Some("decimal"), Some("integer"))
+            ) {
+                let drift = numeric_drift.entry(a.table).or_insert((0, day, day));
+                drift.0 += 1;
+                drift.2 = day;
+            } else if families_differ {
                 push(
                     v,
                     "F1:type-change",
@@ -85,6 +97,19 @@ pub(crate) fn changes(
                     format!("{} in {table}", domain(a, b, valuesets, split)),
                 );
             }
+        }
+
+        for (table, (count, first, last)) in numeric_drift {
+            push(
+                v,
+                "F1:type-change",
+                Some(table),
+                first,
+                format!(
+                    "integer ↔ decimal in {}: {count} transitions, first {first}, last {last}",
+                    table_name(table)
+                ),
+            );
         }
 
         for pair in variable.texts.windows(2) {
