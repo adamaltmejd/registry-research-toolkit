@@ -30,6 +30,7 @@ mod docs;
 mod emit;
 mod link;
 mod proposals;
+mod retired;
 mod search;
 mod verify;
 
@@ -246,6 +247,7 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
 
 #[allow(clippy::too_many_lines)]
 fn build(args: &Args) -> Result<(), String> {
+    let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
@@ -482,6 +484,7 @@ fn build(args: &Args) -> Result<(), String> {
         &applied.overrides,
     );
     let catalog = emit::Catalog {
+        retired,
         meta,
         inputs: sorted_inputs,
         providers,

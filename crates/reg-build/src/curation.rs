@@ -68,6 +68,30 @@ fn application_record(record: &Record, provider: &str, register: &str, hash: Opt
     }
 }
 
+fn ledger(
+    root: &Path,
+    provider: &str,
+    register: &str,
+    retired: &[crate::retired::Retired],
+) -> Result<reg_resolve::Ledger, String> {
+    let path = super::ledger_path(root, provider, register);
+    let mut ledger: reg_resolve::Ledger = if path.is_file() {
+        super::toml_file(&path)?
+    } else {
+        reg_resolve::Ledger::default()
+    };
+    let prefix = format!(
+        "{provider}/{}/",
+        ledger.public.as_deref().unwrap_or(register)
+    );
+    ledger.retired.extend(
+        retired
+            .iter()
+            .filter_map(|r| r.pid.strip_prefix(&prefix).map(str::to_owned)),
+    );
+    Ok(ledger)
+}
+
 /// Catalog references resolve through each register's ledger, then snapshot source
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
 fn references(
@@ -77,6 +101,7 @@ fn references(
     classifications: &[reg_resolve::curation::apply::Classification],
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     shared: &reg_resolve::curation::SharedSources,
+    retired: &[crate::retired::Retired],
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -133,12 +158,7 @@ fn references(
             if source.provider != provider {
                 continue;
             }
-            let path = super::ledger_path(root, &provider, &source.register);
-            let ledger: reg_resolve::Ledger = if path.is_file() {
-                super::toml_file(&path)?
-            } else {
-                reg_resolve::Ledger::default()
-            };
+            let ledger = ledger(root, &provider, &source.register, retired)?;
             if ledger.public.as_deref().unwrap_or(&source.register) != register {
                 continue;
             }
@@ -528,6 +548,7 @@ fn run_selected(
     registers: &[String],
     release: bool,
 ) -> Result<Applied, String> {
+    let retired = crate::retired::load(root)?;
     let mut records = outputs
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
@@ -554,12 +575,7 @@ fn run_selected(
         selected.insert((*register).clone());
         let directory = root.join("registers").join(provider).join(register);
         let path = directory.join("curation.lock");
-        let ledger_path = directory.join("ids.toml");
-        let ledger = if ledger_path.is_file() {
-            super::toml_file(&ledger_path)?
-        } else {
-            reg_resolve::Ledger::default()
-        };
+        let ledger = ledger(root, provider, register, &retired)?;
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
@@ -686,6 +702,7 @@ fn run_selected(
                 &result.classifications,
                 &result.variables,
                 &shared,
+                &retired,
             )?;
             let evaluations = reg_resolve::curation::resolve(
                 &source,
@@ -1324,6 +1341,7 @@ pub(super) fn resolve_catalog(
     metadata: &[reg_resolve::curation::apply::Metadata],
     classifications: &[reg_resolve::curation::apply::Classification],
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
+    let retired = crate::retired::load(root)?;
     let sets = records
         .iter()
         .filter_map(|r| match r {
@@ -1345,12 +1363,7 @@ pub(super) fn resolve_catalog(
     groups
         .into_iter()
         .map(|((provider, register), source)| {
-            let path = super::ledger_path(root, provider, register);
-            let ledger = if path.is_file() {
-                super::toml_file(&path)?
-            } else {
-                reg_resolve::Ledger::default()
-            };
+            let ledger = ledger(root, provider, register, &retired)?;
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
             reg_resolve::curation::apply_metadata(&mut resolved, metadata);
