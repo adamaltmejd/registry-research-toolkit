@@ -108,7 +108,7 @@ fn formats(bytes: &[u8]) -> Result<Vec<Style>, String> {
                     _ => {
                         font.size = required(a, "val")?
                             .parse()
-                            .map_err(|e| format!("invalid font size: {e}"))?
+                            .map_err(|e| format!("invalid font size: {e}"))?;
                     }
                 }
             }

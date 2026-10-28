@@ -225,6 +225,7 @@ pub fn read(
 }
 
 /// One sheet's header and data rows.
+#[allow(clippy::too_many_lines)]
 fn sheet(
     rel: &str,
     name: String,
@@ -320,7 +321,6 @@ fn sheet(
                 let continuation = previous.is_some_and(|previous| {
                     sections.last().is_some_and(|s| {
                         s.kind == SectionKind::Heading
-                            && s.locator.at == format!("{name}!{at_column}{}", at - 1)
                             && previous.size > style.size
                             && !previous.bottom
                             && style.bottom
