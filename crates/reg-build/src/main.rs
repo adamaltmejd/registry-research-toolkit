@@ -18,7 +18,8 @@
 //! `<curation>/registers/<provider>/<register>/ids.toml`, matches the frames' links and
 //! notices across the resolved registers (`link.rs`), and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
-//! recorded in the file; `--release` refuses a variable without a ledger id. A refusal
+//! recorded in the file; `--release` refuses unplaced or split ledger ids and variables
+//! without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
 //! key (exit 0 same, 1 different, 2 error); see `diff.rs`.
 
@@ -128,6 +129,36 @@ fn ledger_path(curation: &Path, provider: &str, register: &str) -> PathBuf {
         .join(provider)
         .join(register)
         .join("ids.toml")
+}
+
+/// Locate a reported id using TOML spans, including quoted keys and multiline anchors.
+fn ledger_refusal(path: &Path, id: &str, code: &str, reason: &str) -> Result<String, String> {
+    #[derive(Deserialize)]
+    struct Locations {
+        variables: BTreeMap<toml::Spanned<String>, Vec<String>>,
+    }
+    let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let locations: Locations =
+        toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
+    let key = locations
+        .variables
+        .keys()
+        .find(|key| key.get_ref() == id)
+        .ok_or_else(|| {
+            format!(
+                "{}: ledger id {id:?} has no source location",
+                path.display()
+            )
+        })?;
+    let line = text[..key.span().start]
+        .bytes()
+        .filter(|&c| c == b'\n')
+        .count()
+        + 1;
+    Ok(format!(
+        "{}:{line}: {code}: ledger id {id:?} {reason} (--release)",
+        path.display()
+    ))
 }
 
 fn read_all(args: &Args, manifest: &Manifest) -> Result<Vec<reg_readers::ReadOutput>, String> {
@@ -331,6 +362,24 @@ fn build(args: &Args) -> Result<(), String> {
         reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
         if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
             r.acknowledgements.extend(acks.clone());
+        }
+        if args.release {
+            if let Some(id) = r.report.unplaced_ids.first() {
+                return Err(ledger_refusal(
+                    &path,
+                    id,
+                    "ledger-id-unplaced",
+                    "has no placed variable",
+                )?);
+            }
+            if let Some(id) = r.report.split_ids.first() {
+                return Err(ledger_refusal(
+                    &path,
+                    id,
+                    "ledger-id-split",
+                    "anchors more than one variable",
+                )?);
+            }
         }
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
