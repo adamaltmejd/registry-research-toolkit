@@ -893,7 +893,13 @@ The real order `fohm/sminet/diagnos`, `fohm/sminet`, year 2005, categorical,
 `classification = "class/icd/icd-10-se"` changes from HTTP 422 `order_blocked`
 (`fqid_unresolved`) to HTTP 200 with one entry carrying that exact class version. The
 informational `coverage_end_unstated` and sensitivity warning remain; the order check
-does not confirm delivery availability. KS87-P has zero parent links.
+does not confirm delivery availability. KS87-P has zero parent links. Its reader reports
+383 dropped external parents; value-set normalization removes them. The existing
+inventory evidence says the reader config suppresses these parents; that historical
+wording is stale and remains unchanged to avoid changing curation. Reading KS87-P before
+and after removing the reader option produced the same value-set hash,
+`58cabd567afb1572331493659c691996acf39466e6e2c823be2bf74aef07757e` (383 items, zero
+retained parents in both).
 
 All 33 direct declarations converted. The 111 label rules select 23,891 rule/occurrence
 matches: 23,756 expanded bindings, 129 matches covered by explicit book bindings, and

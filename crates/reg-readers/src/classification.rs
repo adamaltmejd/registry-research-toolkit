@@ -17,9 +17,6 @@ pub struct Config {
     pub code: Vec<String>,
     pub label: Vec<String>,
     pub parent: Vec<String>,
-    /// Exact input locators whose declared hierarchy is flat.
-    #[serde(default)]
-    pub flat: Vec<String>,
 }
 
 impl Config {
@@ -54,11 +51,7 @@ pub fn read(root: &Path, rel: &str, config: &Config) -> Result<ReadOutput, ReadE
         let code = find(&config.code)
             .ok_or_else(|| error(&path, "no code column (see classification-csv.toml)"))?;
         let label = find(&config.label);
-        let parent = if config.flat.contains(&path) {
-            None
-        } else {
-            find(&config.parent)
-        };
+        let parent = find(&config.parent);
         let mut items = Vec::new();
         for record in reader.records() {
             let record = record.map_err(|e| error(&path, e.to_string()))?;

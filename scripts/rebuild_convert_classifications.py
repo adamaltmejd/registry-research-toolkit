@@ -125,7 +125,7 @@ def inventory(root):
             entry["period"] = f"{start or ''}..{end or ''}"
         if definition.get("hierarchy") == "flat":
             entry["evidence"] += (
-                "; declared flat hierarchy; reader config suppresses external parents"
+                "; declared flat hierarchy; external parents dropped by value-set normalization"
             )
         entries.append(entry)
         by_slug[definition["slug"]] = (entry, book)
