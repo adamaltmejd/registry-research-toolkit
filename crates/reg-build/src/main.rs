@@ -14,7 +14,8 @@
 //! An input that is a release asset of the inputs repository is read from
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).
 //! `read` writes each input's frame as `<name>.jsonl` and its warnings as
-//! `<name>.warnings` under `--out`. `build` resolves each register with its ledger
+//! `<name>.warnings` under `--out`. Source section maps are written
+//! as `<name>.sections.json`. `build` resolves each register with its ledger
 //! `<curation>/registers/<provider>/<register>/ids.toml`, matches the frames' links and
 //! notices across the resolved registers (`link.rs`), and writes the catalog file to `--out`
 //! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
@@ -182,6 +183,10 @@ fn read(args: &Args) -> Result<(), String> {
             std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
         };
         write("jsonl", output.frame.to_jsonl())?;
+        write(
+            "sections.json",
+            serde_json::to_string_pretty(&output.sections).map_err(|e| e.to_string())? + "\n",
+        )?;
         write(
             "warnings",
             output

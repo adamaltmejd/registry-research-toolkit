@@ -5,7 +5,7 @@
 //! Each sheet has a header row (the first with a column alias in any cell) and then
 //! data rows: a column, its description, its years and, on some sheets, a sensitivity
 //! flag, each column found by its header alias. A row without a column or a label is a
-//! section heading or a note and is skipped (with a warning when it states years or
+//! section heading or a note, retained in a separate section map (with a warning when it states years or
 //! sensitivity). A year cell holds years and ranges (`1990-2024`, `2003-2008\n2013`);
 //! each range is one occurrence of the column. A sheet with no year column, or a blank
 //! year cell, leaves the bounds unstated. A blank-year row on a sheet with years that
@@ -26,7 +26,11 @@ use reg_frame::{Frame, Locator, Occurrence, Record, Register, Table};
 use serde::Deserialize;
 
 use crate::workbook::{cell, text};
-use crate::{ReadError, ReadOutput, config, derived_from, error, name_key, nonblank};
+use crate::{
+    ReadError, ReadOutput, Section, SectionKind, config, derived_from, error, name_key, nonblank,
+};
+
+mod styles;
 
 /// `curation/readers/lisa.toml`.
 #[derive(Debug, Deserialize)]
@@ -61,6 +65,7 @@ impl Config {
 /// A data row: its column-name cell's address, column, label, year cell, sensitivity
 /// flag and source register cell.
 struct Entry {
+    section: usize,
     at: String,
     column: String,
     label: String,
@@ -77,6 +82,7 @@ struct Sheet {
     title_at: String,
     years: bool,
     entries: Vec<Entry>,
+    sections: Vec<Section>,
 }
 
 /// Read the workbook at `rel` as register `register` of `provider`.
@@ -94,6 +100,7 @@ pub fn read(
 ) -> Result<ReadOutput, ReadError> {
     let mut workbook: Xlsx<_> = open_workbook(root.join(rel))
         .map_err(|e: calamine::XlsxError| error(rel, e.to_string()))?;
+    let styles = styles::Styles::load(&root.join(rel)).map_err(|e| error(rel, e))?;
     let mut out = ReadOutput::default();
     out.files.push(rel.to_owned());
     let mut sheets = Vec::new();
@@ -101,7 +108,14 @@ pub fn read(
         let range = workbook
             .worksheet_range(&name)
             .map_err(|e| error(rel, format!("sheet {name:?}: {e}")))?;
-        sheets.push(sheet(rel, name, &range, config, &mut out.warnings)?);
+        sheets.push(sheet(
+            rel,
+            name,
+            &range,
+            &styles,
+            config,
+            &mut out.warnings,
+        )?);
     }
     // A sheet with years lists some year-independent columns again with a blank year
     // cell; the sheet without years is where they belong.
@@ -125,7 +139,7 @@ pub fn read(
             at: String::new(),
         },
     })];
-    for sheet in sheets {
+    for mut sheet in sheets {
         let at = |at: &str| Locator {
             input: rel.to_owned(),
             at: at.to_owned(),
@@ -146,6 +160,7 @@ pub fn read(
                 *repeated.entry(sheet.name.clone()).or_default() += 1;
                 continue;
             }
+            sheet.sections[entry.section].rows.push(at(&entry.at));
             // A cell may name several registers, one per line or separated by `,` or `;`.
             for text in entry.source.iter().flat_map(|s| s.split([',', ';', '\n'])) {
                 if let Some(text) = nonblank(text) {
@@ -192,6 +207,7 @@ pub fn read(
                 }));
             }
         }
+        out.sections.extend(sheet.sections);
     }
     records.extend(
         derived
@@ -210,10 +226,12 @@ pub fn read(
 }
 
 /// One sheet's header and data rows.
+#[allow(clippy::too_many_lines)]
 fn sheet(
     rel: &str,
     name: String,
     range: &Range<Data>,
+    styles: &styles::Styles,
     config: &Config,
     warnings: &mut Vec<String>,
 ) -> Result<Sheet, ReadError> {
@@ -251,15 +269,110 @@ fn sheet(
     }
     let at_column = letter(first_col + column);
     let mut entries = Vec::new();
+    let mut sections: Vec<Section> = Vec::new();
+    let mut current: Option<usize> = None;
+    let mut previous_data: Option<(usize, bool)> = None;
+    let mut direct_rows = 0;
+    let body_size = rows
+        .iter()
+        .enumerate()
+        .skip(header + 1)
+        .find(|(_, r)| cell(r, Some(column)).is_some() && cell(r, label).is_some())
+        .map(|(i, _)| styles.cell(&name, i + offset, first_col + column))
+        .transpose()
+        .map_err(|e| error(rel, e))?
+        .map(|s| s.size);
     for (i, row) in rows.iter().enumerate().skip(header + 1) {
         let at = i + offset;
-        let (Some(column), Some(label)) = (cell(row, Some(column)), cell(row, label)) else {
-            // Headings and notes state no years and no sensitivity.
+        let column_text = cell(row, Some(column));
+        let label_text = cell(row, label);
+        let locator = || Locator {
+            input: rel.to_owned(),
+            at: format!("{name}!{at_column}{at}"),
+        };
+        let (Some(column_text), Some(label_text)) = (column_text.clone(), label_text) else {
+            // Only a lone text cell in the column-name column is a candidate.
+            // Footnotes in the description column are outside the section layout.
+            if let Some(text) =
+                column_text.filter(|_| row.iter().filter(|c| text(c).is_some()).count() == 1)
+            {
+                let style = styles
+                    .cell(&name, at, first_col + column)
+                    .map_err(|e| error(rel, e))?;
+                let next_undated = rows
+                    .iter()
+                    .skip(i + 1)
+                    .find(|r| cell(r, Some(column)).is_some())
+                    .is_some_and(|r| cell(r, label).is_some() && cell(r, years).is_none());
+                // A smaller line closing an adjacent larger heading's open border
+                // band is a continuation note, not another section.
+                let previous = if i > header + 1
+                    && sections
+                        .last()
+                        .is_some_and(|s| s.locator.at == format!("{name}!{at_column}{}", at - 1))
+                {
+                    Some(
+                        styles
+                            .cell(&name, at - 1, first_col + column)
+                            .map_err(|e| error(rel, e))?,
+                    )
+                } else {
+                    None
+                };
+                let continuation = previous.is_some_and(|previous| {
+                    sections.last().is_some_and(|s| {
+                        s.kind == SectionKind::Heading
+                            && previous.size > style.size
+                            && !previous.bottom
+                            && style.bottom
+                    })
+                });
+                let note = continuation
+                    || (style.italic
+                        && !style.bold
+                        && body_size.is_some_and(|size| style.size.total_cmp(&size).is_eq())
+                        && !next_undated);
+                if !note {
+                    if let Some(index) = current.filter(|_| direct_rows == 0) {
+                        sections[index].kind = SectionKind::Parent;
+                    }
+                    current = Some(sections.len());
+                    direct_rows = 0;
+                }
+                sections.push(Section {
+                    text: Some(text),
+                    kind: if note {
+                        SectionKind::Note
+                    } else {
+                        SectionKind::Heading
+                    },
+                    locator: locator(),
+                    rows: Vec::new(),
+                });
+            }
             if cell(row, years).is_some() || cell(row, sensitive).is_some() {
                 warnings.push(format!("{name}!{at_column}{at}: a row with years or sensitivity but no column or label is skipped"));
             }
             continue;
         };
+        let dated = cell(row, years).is_some();
+        // The source switches back to annual rows without a heading cell. A new
+        // explicit heading already starts its own scope and needs no reset.
+        let annual = previous_data
+            .is_some_and(|(section, undated)| undated && dated && current == Some(section));
+        if current.is_none() || annual {
+            current = Some(sections.len());
+            direct_rows = 0;
+            sections.push(Section {
+                text: None,
+                kind: SectionKind::Unheaded,
+                locator: locator(),
+                rows: Vec::new(),
+            });
+        }
+        let section = current.expect("data has a section");
+        direct_rows += 1;
+        previous_data = Some((section, !dated));
         let stated = cell(row, sensitive).map(|s| s.to_lowercase());
         let flag = stated
             .as_ref()
@@ -270,9 +383,10 @@ fn sheet(
             ));
         }
         entries.push(Entry {
+            section,
             at: format!("{name}!{at_column}{at}"),
-            column,
-            label,
+            column: column_text,
+            label: label_text,
             years: cell(row, years),
             sensitive: flag,
             source: cell(row, source),
@@ -284,6 +398,7 @@ fn sheet(
         years: years.is_some(),
         name,
         entries,
+        sections,
     })
 }
 

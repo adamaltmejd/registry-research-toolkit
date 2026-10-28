@@ -8,6 +8,7 @@ publish.workspace = true
 calamine = "0.37.0"
 csv = "1.4.0"
 encoding_rs = "0.8.42"
+quick-xml = "0.42.0"
 reg-core = { path = "../reg-core" }
 reg-frame = { path = "../reg-frame" }
 serde = { version = "1.0.229", features = ["derive"] }
