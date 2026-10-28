@@ -1,0 +1,1560 @@
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: dispinkfam"
+fields = { "description" = "Disponibel inkomst för familj" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:655\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni2002b"
+fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:577\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni2002b"
+fields = { "description" = "Näringsgren, SNI2002, begränsad nivå (42 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:889\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni2002g"
+fields = { "description" = "Näringsgren, SNI2002, grov nivå (10 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:583\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni2002g"
+fields = { "description" = "Näringsgren, SNI2002, grov nivå (10 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:895\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni92b"
+fields = { "description" = "Näringsgren, SNI92, begränsad nivå (42 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:601\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni92b"
+fields = { "description" = "Näringsgren, SNI92, begränsad nivå (42 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:913\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni92g"
+fields = { "description" = "Näringsgren, SNI92, grov nivå (10 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:607\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni92g"
+fields = { "description" = "Näringsgren, SNI92, grov nivå (10 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:919\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: cfarnr"
+fields = { "spelling" = "CfarNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3502\n\nComplete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: peorgnr"
+fields = { "spelling" = "PeOrgNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3526\n\nComplete accepted SWECOV physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: sjukp_bdag @1994..2009"
+fields = { "spelling" = "SjukP_Bdag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3568\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: sjukp_belopp @1994..2009"
+fields = { "spelling" = "SjukP_Belopp_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3640\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: sjukp_ndag @1994..2007"
+fields = { "spelling" = "SjukP_Ndag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3604\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: sjukp_ndag @2008..2009"
+fields = { "spelling" = "SjukP_Ndag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3616\n\nComplete accepted SWECOV physical table headers Individ_1994 through Individ_2009 (LISA individer-16plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: cfarnr"
+fields = { "spelling" = "CfarNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3490\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_CfarNr_LISA for this exact own native quantity; exported CfarNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places CfarNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: peorgnr"
+fields = { "spelling" = "PeOrgNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3514\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only P1105_LopNr_PeOrgNr_LISA for this exact own native quantity; exported PeOrgNr is SCB's documentation spelling (#1907). SCB Dataleverans 2023-2024 Bilaga 2 places PeOrgNr_LISA in view Individ_ÅÅÅÅ 1990-2020. Same correction as AstNr. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukp_bdag"
+fields = { "spelling" = "SjukP_Bdag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3556\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Bdag_MiDAS for this exact own native quantity; exported SjukP_Bdag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukp_belopp"
+fields = { "spelling" = "SjukP_Belopp_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3628\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Belopp_MiDAS for this exact own native quantity; exported SjukP_Belopp is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukp_ndag @2010..2011"
+fields = { "spelling" = "SjukP_Ndag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3580\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukp_ndag @2012..2015"
+fields = { "spelling" = "SjukP_Ndag_MiDAS" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3592\n\nComplete accepted SWECOV physical table headers Individ_2010 through Individ_2015 (LISA individer-15plus) carry only SjukP_Ndag_MiDAS for this exact own native quantity; exported SjukP_Ndag is SCB's documentation spelling (#1907, Operator ruling 2026-10-25). SCB names the series _MiDAS from 1994. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: astnr"
+fields = { "spelling" = "AstNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3376\n\nComplete accepted physical table header contains only AstNr_LISA for this exact own native quantity; exported AstNr is absent. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: astnr"
+fields = { "spelling" = "AstNr_LISA" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3476\n\nComplete accepted physical table headers Individ_1990 through Individ_2009 (LISA individer-16plus) contain only AstNr_LISA for this exact own native quantity; exported AstNr is absent. SCB's P1105 delivery variable list (Bilaga 2, 2023-2024) places AstNr_LISA in view Individ_ÅÅÅÅ for these years. Same correction as the 2010-2015 individer-15plus entries. Preserve original source fields; no type/coding/role borrowing."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: civilantar @2010..2015"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3156\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: civilantar @1990..1994"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3132\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: civilantar @1995..1999"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3144\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: civilantar @2000..2009"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3120\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sumaldp03"
+fields = { "variable" = "alderspension-inkomst-premie-garanti" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2395\n\nDistinct supplied sums: folkpension, ATP and special pension supplement versus income, supplementary, premium, guarantee pension and special supplement. Preserve original amounts, units, observation years and sparse historical operations; no numerical equivalence is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: sumaldp03"
+fields = { "variable" = "alderspension-inkomst-premie-garanti" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2395\n\nDistinct supplied sums: folkpension, ATP and special pension supplement versus income, supplementary, premium, guarantee pension and special supplement. Preserve original amounts, units, observation years and sparse historical operations; no numerical equivalence is asserted."
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sektorgrp"
+fields = { "variable" = "institutionell-sektor-aggregerad" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2379\n\nExact definitions and supplied BAS operations establish aggregated institutional sector. Company, workplace and individual variant contexts remain separate. No codebook equivalence or validity extension is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sektorgrp"
+fields = { "variable" = "institutionell-sektor-aggregerad" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2379\n\nExact definitions and supplied BAS operations establish aggregated institutional sector. Company, workplace and individual variant contexts remain separate. No codebook equivalence or validity extension is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: astkommun"
+fields = { "variable" = "kommun-for-arbetsstalle" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2385\n\nExact definitions identify the municipality where the workplace is located. The individual source additionally describes the principal workplace; individual and workplace variants, source coding and dates are retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: astkommun"
+fields = { "variable" = "kommun-for-arbetsstalle" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2385\n\nExact definitions identify the municipality where the workplace is located. The individual source additionally describes the principal workplace; individual and workplace variants, source coding and dates are retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: astnr_lisa"
+fields = { "variable" = "arbetsstallenummer" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2359\n\nExact definitions identify the same workplace number, combined with organisation number. Individual and workplace variant contexts remain unchanged; identifiers, original widths and provenance are retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: cfarnr_lisa"
+fields = { "variable" = "cfar-nummer" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2369\n\nOne CFAR workplace number under two delivery headers: CfarNr in Arbetsställen 1990-2023, CfarNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). CfarNrSreg is the co-delivered Sysselsättningsregister reading (Individ 2013-2015) and keeps its own key. Per-variant operational definitions stay on the states."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: peorgnr_lisa"
+fields = { "variable" = "person-orgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2374\n\nOne person/organisation number under two delivery headers: PeOrgNr in Arbetsställen and Företag 1990-2023, PeOrgNr_LISA in Individ 1990-2023 (SCB Dataleverans 2023-2024 Bilaga 2; SWECOV holdings). PeOrgNrSreg is the co-delivered Sysselsättningsregister reading (Individ 1990-2015) and keeps its own key."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssyk3_2012"
+fields = { "variable" = "ssyk3-storsta-2012" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2321\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk3.md identifies KU1Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU1Ssyk3_2012.md identifies KU1Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK3_2012 and AGI1Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.1842: KU1Ssyk3 2001-2013, KU1Ssyk3_2012 2014-2018, AGI1Ssyk3_2012 2019 and AGI1SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1ssyk3_2012"
+fields = { "variable" = "ssyk3-storsta-2012-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2321\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk3.md identifies KU1Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU1Ssyk3_2012.md identifies KU1Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK3_2012 and AGI1Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.1842: KU1Ssyk3 2001-2013, KU1Ssyk3_2012 2014-2018, AGI1Ssyk3_2012 2019 and AGI1SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssyk4_2012"
+fields = { "variable" = "ssyk4-storsta-2012" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2336\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk4.md identifies KU1Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU1Ssyk4_2012.md identifies KU1Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK4_2012 and AGI1Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.16224: KU1Ssyk4 2001-2013, KU1Ssyk4_2012 2014-2018, AGI1Ssyk4_2012 2019 and AGI1SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1ssyk4_2012"
+fields = { "variable" = "ssyk4-storsta-2012-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2336\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU1Ssyk4.md identifies KU1Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU1Ssyk4_2012.md identifies KU1Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI1SSYK4_2012 and AGI1Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.16224: KU1Ssyk4 2001-2013, KU1Ssyk4_2012 2014-2018, AGI1Ssyk4_2012 2019 and AGI1SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2ssyk3_2012"
+fields = { "variable" = "ssyk3-nast-2012" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2326\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk3.md identifies KU2Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU2Ssyk3_2012.md identifies KU2Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK3_2012 and AGI2Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4904: KU2Ssyk3 2001-2013, KU2Ssyk3_2012 2014-2018, AGI2Ssyk3_2012 2019 and AGI2SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi2ssyk3_2012"
+fields = { "variable" = "ssyk3-nast-2012-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2326\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk3.md identifies KU2Ssyk3 as Standard för svensk yrkesklassificering 1996 at Yrkesgrupp level and docs/lisa/KU2Ssyk3_2012.md identifies KU2Ssyk3_2012 as Standard för svensk yrkesklassificering 2012 at Yrkesgrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK3_2012 and AGI2Ssyk3_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4904: KU2Ssyk3 2001-2013, KU2Ssyk3_2012 2014-2018, AGI2Ssyk3_2012 2019 and AGI2SSYK3_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2ssyk4_2012"
+fields = { "variable" = "ssyk4-nast-2012" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2331\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk4.md identifies KU2Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU2Ssyk4_2012.md identifies KU2Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK4_2012 and AGI2Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4905: KU2Ssyk4 2001-2013, KU2Ssyk4_2012 2014-2018, AGI2Ssyk4_2012 2019 and AGI2SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi2ssyk4_2012"
+fields = { "variable" = "ssyk4-nast-2012-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2331\n\nReviewed classification-edition and source-basis split; SCB docs/lisa/KU2Ssyk4.md identifies KU2Ssyk4 as Standard för svensk yrkesklassificering 1996 at Undergrupp level and docs/lisa/KU2Ssyk4_2012.md identifies KU2Ssyk4_2012 as Standard för svensk yrkesklassificering 2012 at Undergrupp level; docs/lisa/_changelog-2019.md documents the monthly AGI declarations replacing the annual KU from reference year 2019, and both AGI2SSYK4_2012 and AGI2Ssyk4_2012 carry that same delivered SSYK 2012 descriptor and are one source-basis owner; prepared v28 native family 34.4905: KU2Ssyk4 2001-2013, KU2Ssyk4_2012 2014-2018, AGI2Ssyk4_2012 2019 and AGI2SSYK4_2012 2020-2023. Distinct delivered classification editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: tillpens"
+fields = { "variable" = "tillaggspension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2118\n\nReviewed documented-concept split; SCB lisa-bakgrundsfakta-1990-2017 docs/lisa/ATPBel.md (Summa ATP, 1990-2002) and docs/lisa/TillPens.md (Tilläggspension, from 2003, sum of earlier ATP and folkpension); prepared v28 native family 34.2509: ATPBel 1990-2002, TillPens 2003-2009 (variant 34.1335) and 2010-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: tillpens"
+fields = { "variable" = "tillaggspension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2118\n\nReviewed documented-concept split; SCB lisa-bakgrundsfakta-1990-2017 docs/lisa/ATPBel.md (Summa ATP, 1990-2002) and docs/lisa/TillPens.md (Tilläggspension, from 2003, sum of earlier ATP and folkpension); prepared v28 native family 34.2509: ATPBel 1990-2002, TillPens 2003-2009 (variant 34.1335) and 2010-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: svuxlan"
+fields = { "variable" = "vuxenstudiestod-lan-ovriga" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2123\n\nReviewed documented-concept split; SCB lisa-bakgrundsfakta-1990-2017 docs/lisa/VuxLan.md (1990-1996 reports SVuxALan and SVuxLan in one VuxLan variable) and docs/lisa/SVuxLan.md (Vuxenstudiestöd, lånedel (övriga), 1997-2003); prepared v28 native family 34.2669: VuxLan 1990-1996, SVuxLan 1997-2003; both in hundreds of kronor but with unequal component coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1instkod6"
+fields = { "variable" = "ku1instkod-1999" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1instkod7"
+fields = { "variable" = "ku1instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1instkod7"
+fields = { "variable" = "ku1instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1instkod10"
+fields = { "variable" = "ku1instkod-2014" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1instkod10"
+fields = { "variable" = "ku1instkod-2014-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2346\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU1InstKod as Enhetsindelning 1968 (5-siffrig kod), KU1InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU1InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU1InstKod10/AGI1InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU1InstKod7.md documents the 2001-2013 seven-position layout, docs/lisa/KU1InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31289: KU1InstKod 1990-1998, KU1InstKod6 1999-2000, KU1InstKod7 2001-2013, KU1InstKod10 2014-2018, AGI1InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2instkod6"
+fields = { "variable" = "ku2instkod-1999" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2instkod7"
+fields = { "variable" = "ku2instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2instkod7"
+fields = { "variable" = "ku2instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2instkod10"
+fields = { "variable" = "ku2instkod-2014" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi2instkod10"
+fields = { "variable" = "ku2instkod-2014-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2341\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU2InstKod as Enhetsindelning 1968 (5-siffrig kod), KU2InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU2InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU2InstKod10/AGI2InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU2InstKod.md explains the 1990-1998 five-position and 1999-2000 six-position layouts, docs/lisa/KU2InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU2InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31111: KU2InstKod 1990-1998, KU2InstKod6 1999-2000, KU2InstKod7 2001-2013, KU2InstKod10 2014-2018, AGI2InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3instkod6"
+fields = { "variable" = "ku3instkod-1999" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2351\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3instkod7"
+fields = { "variable" = "ku3instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2351\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3instkod7"
+fields = { "variable" = "ku3instkod-2000" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2351\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3instkod10"
+fields = { "variable" = "ku3instkod-2014" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2351\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi3instkod10"
+fields = { "variable" = "ku3instkod-2014-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2351\n\nReviewed institutional-sector coding-edition and source-basis split; prepared v28 descriptors identify KU3InstKod as Enhetsindelning 1968 (5-siffrig kod), KU3InstKod6 as Enhetsindelning 1999 (6-siffrig kod), KU3InstKod7 as Enhetsindelning 2000 (7-siffrig kod) and KU3InstKod10/AGI3InstKod10 as Enhetsindelning 2014 (10-siffrig kod); SCB docs/lisa/KU3InstKod.md documents the 1990-1998 five-position layout, docs/lisa/KU3InstKod6.md the 1999-2000 six-position layout, docs/lisa/KU3InstKod7.md the 2001-2013 seven-position layout, docs/lisa/KU3InstKod10.md the 2014 onward ten-position layout, and docs/lisa/_changelog-2019.md the AGI source basis from reference year 2019; prepared v28 native family 34.31298: KU3InstKod 1990-1998, KU3InstKod6 1999-2000, KU3InstKod7 2001-2013, KU3InstKod10 2014-2018, AGI3InstKod10 2019-2023. Distinct delivered coding editions and source bases, not a sequential synonym rename; no claim that codes are identical across editions."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agipens"
+fields = { "variable" = "tjanstepension-tjanst-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2139\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md Tjanstepension (KUPens 2018 to AGIPens 2019 with the KU-to-AGI transition, 'variabler försvinner från kontrolluppgifterna i samband med övergången till AGI') and docs/lisa/KUPens.md (amount in hundreds of kronor; 1990 cannot be reported); prepared v28 native family 34.591: KUPens 1991-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGIPens 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2astnr"
+fields = { "variable" = "ku2astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2189\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.15858: KU2AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2astnr"
+fields = { "variable" = "ku2astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2189\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.15858: KU2AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1astnr"
+fields = { "variable" = "ku1astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2194\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16214: KU1AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1astnr"
+fields = { "variable" = "ku1astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2194\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16214: KU1AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1peorgnr"
+fields = { "variable" = "ku1peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2199\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16219: KU1PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1peorgnr"
+fields = { "variable" = "ku1peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2199\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16219: KU1PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2peorgnr"
+fields = { "variable" = "ku2peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2204\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16220: KU2PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2peorgnr"
+fields = { "variable" = "ku2peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2204\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16220: KU2PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2ssykkalla"
+fields = { "variable" = "ku2ssykkalla" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2209\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16227: KU2SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykKalla 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2ssykkalla"
+fields = { "variable" = "ku2ssykkalla" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2209\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16227: KU2SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykKalla 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssykkalla"
+fields = { "variable" = "ku1ssykkalla" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2214\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16237: KU1SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykKalla 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1ssykkalla"
+fields = { "variable" = "ku1ssykkalla" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2214\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16237: KU1SsykKalla 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykKalla 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2ssykar"
+fields = { "variable" = "ku2ssykar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2219\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16244: KU2SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykAr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2ssykar"
+fields = { "variable" = "ku2ssykar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2219\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16244: KU2SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SsykAr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ink"
+fields = { "variable" = "ku1ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2224\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16249: KU1Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1ink"
+fields = { "variable" = "ku1ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2224\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16249: KU1Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2ink"
+fields = { "variable" = "ku2ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2229\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16250: KU2Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2ink"
+fields = { "variable" = "ku2ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2229\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.16250: KU2Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1ssykstatus"
+fields = { "variable" = "ssyk-overensstammelse-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2234\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.18911: KU1SsykStatus 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykStatus 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssykar"
+fields = { "variable" = "ku1ssykar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2164\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1933: KU1SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykAr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1ssykar"
+fields = { "variable" = "ku1ssykar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2164\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1933: KU1SsykAr 2001-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SsykAr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1astkommun"
+fields = { "variable" = "ku1astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2169\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1935: KU1AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1astkommun"
+fields = { "variable" = "ku1astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2169\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1935: KU1AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1astlan"
+fields = { "variable" = "ku1astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2174\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1936: KU1AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1astlan"
+fields = { "variable" = "ku1astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2174\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.1936: KU1AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1cfarnr"
+fields = { "variable" = "ku1cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2239\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21004: KU1CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1cfarnr"
+fields = { "variable" = "ku1cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2239\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21004: KU1CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2cfarnr"
+fields = { "variable" = "ku2cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2244\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21005: KU2CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2cfarnr"
+fields = { "variable" = "ku2cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2244\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.21005: KU2CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1sektorkod"
+fields = { "variable" = "sektorkod-storsta-forvarvskalla-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2249\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.25621: KU1SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2astkommun"
+fields = { "variable" = "ku2astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2254\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31108: KU2AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2astkommun"
+fields = { "variable" = "ku2astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2254\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31108: KU2AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2astlan"
+fields = { "variable" = "ku2astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2259\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31109: KU2AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2astlan"
+fields = { "variable" = "ku2astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2259\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31109: KU2AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi2sektorkod"
+fields = { "variable" = "sektorkod-nast-forvarvskalla-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2264\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31118: KU2SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3ink"
+fields = { "variable" = "ku3ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2269\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31290: KU3Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3ink"
+fields = { "variable" = "ku3ink" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2269\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31290: KU3Ink 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3Ink 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3peorgnr"
+fields = { "variable" = "ku3peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2274\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31291: KU3PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3peorgnr"
+fields = { "variable" = "ku3peorgnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2274\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31291: KU3PeOrgNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3PeOrgNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3cfarnr"
+fields = { "variable" = "ku3cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2279\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31292: KU3CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3cfarnr"
+fields = { "variable" = "ku3cfarnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2279\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31292: KU3CfarNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3CfarNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3astnr"
+fields = { "variable" = "ku3astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2284\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31293: KU3AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3astnr"
+fields = { "variable" = "ku3astnr" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2284\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31293: KU3AstNr 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstNr 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3yrkstalln"
+fields = { "variable" = "ku3yrkesstallning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2289\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31294: KU3YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3YrkStalln 2019-2021 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3yrkstalln"
+fields = { "variable" = "ku3yrkesstallning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2289\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31294: KU3YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3YrkStalln 2019-2021 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3astkommun"
+fields = { "variable" = "ku3astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2294\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31295: KU3AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3astkommun"
+fields = { "variable" = "ku3astkommun" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2294\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31295: KU3AstKommun 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstKommun 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3astlan"
+fields = { "variable" = "ku3astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2299\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31296: KU3AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3astlan"
+fields = { "variable" = "ku3astlan" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2299\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31296: KU3AstLan 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3AstLan 2019-2023 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi3sektorkod"
+fields = { "variable" = "sektorkod-tredje-forvarvskalla-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2304\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.31299: KU3SektorKod 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI3SektorKod 2019-2023 except 2022 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi2yrkstalln"
+fields = { "variable" = "yrkesstallning-nast-forvarvskallan-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2179\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.4911: KU2YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI2YrkStalln 2019-2021 (variant 34.153)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: agi1yrkstalln"
+fields = { "variable" = "yrkesstallning-storsta-forvarvskallan-agi" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2184\n\nReviewed source-basis split; SCB docs/lisa/_changelog-2019.md describes the 2019 KU-to-AGI transition ('de månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga kontrolluppgifterna (KU)') and lists the new AGI-based employment/source variables; prepared v28 native family 34.4948: KU1YrkStalln 1990-2009 (variant 34.1335) and 2010-2018 (variant 34.153), AGI1YrkStalln 2019-2021 (variant 34.153)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2011-01-01..2011-12-31 where key = 'v44791' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2012-01-01..2012-12-31 where key = 'v44791' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2013-01-01..2013-12-31 where key = 'v44791' and release = 'r6053'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2014-01-01..2014-12-31 where key = 'v44791' and release = 'r8612'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2015-01-01..2015-12-31 where key = 'v44791' and release = 'r11268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2016-01-01..2016-12-31 where key = 'v44791' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2017-01-01..2017-12-31 where key = 'v44791' and release = 'r13286'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2018-01-01..2018-12-31 where key = 'v44791' and release = 'r14349'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TPENSAU @2019-01-01..2019-12-31 where key = 'v44791' and release = 'r16266'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade", "definition" = "Pensioner, utländskt beskattade", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: tpensau @2011..2019"
+fields = { "operational_definition" = "Nordisk pension, utländskt beskattad.\r\n\r\nInkomsterna som levereras från respektive lands skattemyndighet är redovisade på ett id-nummer (TIN) kompletterat med bland annat namn och adress. Dessa uppgifter personnummermatchas för att identifiera folkbokförda i Sverige genom en modell för att koppla på det svenska personnumret. Denna hantering ger en viss osäkerhet på mikrodatanivå, det kan i undantagsfall därför förekomma att nordiska inkomster har kopplats till fel person." }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:109\n\nSCB Förändringar i LISA 2020 (2022-02-28), Nya variabler och befintliga variabler i LISA som påverkas: TPENSAU 2011–2020; SWECOV_variables_full_2026-06-15.csv, LISA/Individ/Individ_2011 through Individ_2019 each explicitly contains TPENSAU."
+
+[[statement]]
+kind = "set"
+subject = "individer-fodelseland: fodelsetidmor"
+fields = { "definition" = "Datum för födelse för mor." }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3066\n\nSCB LISA Bakgrundsfakta1990–2017 page72 states Moderns födelsetid FodelseTidMor, År, månad och dag för moderns födelse. Correct only native34.7947 variant34.1582 edition15549 literalFodelseTidMor: supplied definition erroneously says father although supplied name and physical question denote mother. Capture complete singleton native family and nine original prose/classification/type/coverage guards. Preserve original erroneous definition, coding markers and unknown source scopes; this changes effective interpretation only. Documentary source SHA25616e6e1d344c25b3699e8edca2d08b12a4a36240c37a6cbacd5646399f1735119."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: ALUAMK @1994,1995,1996"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetslivsutvecklingsbidrag (från AMK)", "definition" = "Arbetslivsutvecklingsbidrag från statlig arbetsmarknadskassa (AMK). Beloppet anges i hundratal kronor.", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:417\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ALUAMK for 1994–1996 — see inputs:catalog/docs/markdown/lisa/ALUAMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling alukas (ALUKAS, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: AMK @1994,1995,1996,1997"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättning från statlig arbetsmarknadskassa", "definition" = "Inkomstrelaterad dagpenning från statlig arbetsmarknadskassa till arbetslösa som inte tillhör en arbetslöshetskassa, införd 1/7 1994 och avskaffad 1/1 1995 med övergångsbestämmelser t.o.m. 30 juni 1996. Ersättningsnivån var 80 procent av tidigare inkomst. Beloppet anges i hundratals kronor.", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:430\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AMK for 1994–1997 — see inputs:catalog/docs/markdown/lisa/AMK.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling kas (KAS, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: ATPFam @1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "ATP-kod för efterlevandeförmån", "definition" = "ATP-kod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension.", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:391\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ATPFam for 1990–2002 — see inputs:catalog/docs/markdown/lisa/ATPFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: ArbTid @1990"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetad tid", "definition" = "Överenskommen eller normal veckoarbetstid under oktober 1990 (vid tillfällig frånvaro avses senaste arbetade veckan); för personer med mer än ett förvärvsarbete redovisas den sammanlagda arbetstiden. Kodad i intervall: 1 = 0 tim, 2 = 1–15 tim, 3 = 16–19 tim, 4 = 20–34 tim, 5 = 35– tim, 9 = Uppgift saknas. Kodningen bygger på Folk- och Bostadsräkningen 1990 (FoB 90).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:482\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbTid for 1990–1990 — see inputs:catalog/docs/markdown/lisa/ArbTid.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: ArbstIdJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kopplingsvariabel till arbetsställetabell (endast förvärvsarbetande vid faktiska arbetsställen), enligt justerad metod", "definition" = "Kopplingsvariabel (identifierare) till arbetsställetabellen för endast förvärvsarbetande vid faktiska arbetsställen, enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004.", "type" = "text", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:313\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents ArbstIdJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/ArbstIdJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fad-arbetsstalle-id (ArbstId, is_sensitive=false, is_identifier=true)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: AstKommunJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsställekommun enligt justerad metod", "definition" = "Arbetsställekommun enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004').", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:192\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstKommunJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstKommunJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: AstLanJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsställelän enligt justerad metod", "definition" = "Arbetsställelän enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004').", "type" = "text", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:205\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents AstLanJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/AstLanJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling lan-arbetsstalle (AstLan, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CfarNrSregJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsställe (november) enligt justerad metod", "definition" = "Det huvudsakliga arbetsstället (CFAR-nummer) bestämt utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Vid utlämnande av data från LISA ersätts CFAR-numret av ett nytt löpnummer.", "type" = "text", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:287\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents CfarNrSregJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/CfarNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling cfar-nummer-3 (CfarNrSreg, is_sensitive=false, is_identifier=true)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: FastBet @2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fastighetsbeteckning", "definition" = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:508\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see inputs:catalog/docs/markdown/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FastBet @1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Fastighetsbeteckning", "definition" = "Officiell fastighetsbeteckning som fastighetsidentitet, införd 1998 när SCB skapade det nya systemet för Registret över totalbefolkningen (RTB). Personer redovisas där de är folkbokförda. Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar (t.ex. för att skapa områden).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:495\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FastBet for 1998– — see inputs:catalog/docs/markdown/lisa/FastBet.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FolkFam @1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Folkpensionskod för efterlevandeförmån", "definition" = "Folkpensionskod för efterlevandeförmån. Upp till tre förekomster kan finnas samtidigt (t.ex. både änkepension och omställningspension ger koden 13). Kodförteckning: 1 = Änkepension, 2 = Barnpension, 3 = Omställningspension, 4 = Förlängd omställningspension, 5 = Särskild efterlevandepension.", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:404\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FolkFam for 1990–2002 — see inputs:catalog/docs/markdown/lisa/FolkFam.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FortPens_Bdag_MiDAS @1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension, antal bruttodagar", "definition" = "Antal utbetalda bruttodagar under året med förtidspension. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:339\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Bdag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-bman (FortPens_Bman, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FortPens_Ndag_MiDAS @1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension, antal nettodagar", "definition" = "Antal utbetalda nettodagar under året med förtidspension. Förtidspension kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:352\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents FortPens_Ndag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/FortPens_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling fortpens-nman (FortPens_Nman, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: InstKod7J @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Institutionell sektorkod (företag) enligt justerad metod", "definition" = "Institutionell sektorkod enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Koden bildas utifrån företagets samhällssektor, ägare och juridiska form (tio positioner) och hämtas ur Företagsdatabasen (FDB).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:274\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents InstKod7J for 2003–2003 — see inputs:catalog/docs/markdown/lisa/InstKod7J.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: LoneInkJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön enligt justerad metod", "definition" = "Kontant bruttolön utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid. Beloppet anges i hundratals kronor.", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:326\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents LoneInkJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/LoneInkJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling loneink (LoneInk, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: MedbLandNamn @2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Medborgarskap", "definition" = "Medborgarskap (medborgarskapsland).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:534\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see inputs:catalog/docs/markdown/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: MedbLandNamn @1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Medborgarskap", "definition" = "Medborgarskap (medborgarskapsland).", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:521\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents MedbLandNamn for 1990– — see inputs:catalog/docs/markdown/lisa/MedbLandNamn.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: Nyk @1990"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Yrke enligt Folk- och bostadsräkningen", "definition" = "Yrkeskod enligt Nordisk yrkesklassificering, FoB-85:s schema (NYK-kod). Yrkeskodningen bygger på den förvärvsarbetande befolkningens yrkesuppgift till Folk- och Bostadsräkningen 1990 (FoB 90) och avser i princip november månad 1990. Likartade yrken sammanförs utan hänsyn till utbildning, yrkesställning, tjänsteställning eller branschtillhörighet. I FoB 1990 kunde 8–9 procent av samtliga förvärvsarbetande inte kodas enligt NYK då yrkesuppgift saknas eller inte går att klassificera.", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:166\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Nyk for 1990–1990 — see inputs:catalog/docs/markdown/lisa/Nyk.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: OTA @1997"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Offentligt Tillfälligt Arbete (OTA)", "definition" = "Ersättning i samband med Offentligt Tillfälligt Arbete (OTA), infört 1/11 1996 för arbetslösa som fyllt 55 år och varit anmälda som arbetssökande minst 24 månader. Endast de som fått sin OTA-ersättning utbetald från Försäkringskassan redovisas här; de som ersätts av arbetslöshetskassa redovisas under ALUKU (t.o.m. 1999) respektive AKassa-AmPol (fr.o.m. 2000). Beloppet anges i hundratal kronor.", "type" = "decimal", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:443\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents OTA for 1997–1997 — see inputs:catalog/docs/markdown/lisa/OTA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: PeOrgNrSregJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagets organisationsnummer, enligt justerad metod", "definition" = "Företagets person-/organisationsnummer enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid.", "type" = "text", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:300\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents PeOrgNrSregJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/PeOrgNrSregJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling person-orgnr-3 (PeOrgNrSreg, is_sensitive=false, is_identifier=true)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: SjukBidr_Bdag_MiDAS @1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sjukbidrag, antal bruttodagar", "definition" = "Antal utbetalda bruttodagar under året med sjukbidrag. För ytterligare information se grundtexten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:365\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Bdag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Bdag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-bman (SjukBidr_Bman, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: SjukBidr_Ndag_MiDAS @1994,1995,1996,1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sjukbidrag, antal nettodagar", "definition" = "Antal utbetalda nettodagar under året med sjukbidrag. Sjukbidrag kan betalas ut som hel (100 %), tre fjärdedels (75 %), halv (50 %) eller en fjärdedels (25 %); antal nettodagar är bruttodagar gånger omfattningen under året.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:378\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukBidr_Ndag_MiDAS for 1994–2002 — see inputs:catalog/docs/markdown/lisa/SjukBidr_Ndag_MiDAS.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukbidr-nman (SjukBidr_Nman, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: SjukPA @1990,1991,1992,1993"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sjukpenning, skattepliktig (arbetsgivarinträde)", "definition" = "Skattepliktig sjukpenning vid arbetsgivarinträde: arbetsgivaren lämnar sjuklön och får sedan, från Försäkringskassan, den sjukpenning/arbetsskadesjukpenning som den anställde har rätt till. Arbetsgivarinträdet upphörde 1/7 1992. Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod. Beloppet anges i hundratals kronor.", "type" = "decimal", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:456\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents SjukPA for 1990–1993 — see inputs:catalog/docs/markdown/lisa/SjukPA.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling sjukpenning-ej-arbetsgivarintrade (SjukPP, is_sensitive=true, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: TAE @1997"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Tillfällig avgångsersättning", "definition" = "Tillfällig avgångsersättning.", "type" = "decimal", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:469\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents TAE for 1997–1997 — see inputs:catalog/docs/markdown/lisa/TAE.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: YSEG_J16 @2010,2011,2012,2013"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Yrkesbaserad socioekonomisk gruppering, inkl. härledda yrken för företagare", "definition" = "Yrkesbaserad socioekonomisk gruppering (YSEG), inklusive härledda yrken för företagare. Från år 2016 ingår härledda yrken för företagare; metoden har tillämpats bakåt i tiden och finns för YSEG sedan 2010. För att undvika att företagare får en gammal yrkeskod eller saknar yrkeskod har yrket härletts via utbildning, licens, bransch och företagsnamn.", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:153\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YSEG_J16 for 2010–2013 — see inputs:catalog/docs/markdown/lisa/YSEG_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: YrkStallnJ @2003"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Yrkesställning enligt justerad metod", "definition" = "Yrkesställning enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid (bilaga 3 'Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004').", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:179\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents YrkStallnJ for 2003–2003 — see inputs:catalog/docs/markdown/lisa/YrkStallnJ.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. No sibling; LISA person-level default (Q5)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE @2010-01-01..2010-12-31 where key = 'v2574' and release = 'r8652'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE @2011-01-01..2011-12-31 where key = 'v2574' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE @2012-01-01..2012-12-31 where key = 'v2574' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:46\n\nSCB's own LISA documentation gives DispInkKE as delivered from 1998 onwards, and SWECOV's holdings list the column in Individ_2010, Individ_2011 and Individ_2012; SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: AldPens_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Summa inkomst av pensioner, inklusive pension från annat nordiskt land", "definition" = "Summa inkomst av pensioner inklusive pension från annat nordiskt land, 2011–2019 (SCB LISA ändringar 2020). Från 2020 ingår sådan pension i AldPens; för 2011–2019 är detta en annan definition än AldPens.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3538\n\nSWECOV holds AldPens_INKLGP in Individ_2011 through Individ_2019 (2011-2019); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individer-15plus. holdings_period is the SWECOV holdings range (#1302). Sibling aldpens (AldPens, is_sensitive=false, is_identifier=false); a different definition, so not that variable."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: AmPol @2016-01-01..2016-12-31 where key = 'v31597' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Summa inkomst föranledd av arbetsmarknadspolitisk åtgärd", "definition" = "Den under året summerade inkomsten föranledd av arbetsmarknadspolitisk åtgärd.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:84\n\nSWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ampol @2016"
+fields = { "operational_definition" = "Summering av skattefri och skattepliktig ersättning vid deltagande i arbetsmarknadspolitiska program.\r\nErsättningen avser inkomståret oavsett år för händelse." }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:84\n\nSWECOV holds AmPol in Individ_2016 (LISA individer-15plus); SCB's Registerinformation export documents the column in every LISA version 2010..2015 and 2017..2023 but carries no row for it in 2016 — a one-year documentation hole in a continuing column."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: BAS @2020-01-01..2020-12-31 where key = 'v45149' and release = 'r18093'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsmarknadsstatus", "definition" = "Klassificering av personer utifrån deras situation på arbetsmarknaden.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: BAS @2021-01-01..2021-12-31 where key = 'v45149' and release = 'r18668'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsmarknadsstatus", "definition" = "Klassificering av personer utifrån deras situation på arbetsmarknaden.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: bas @2020..2021"
+fields = { "operational_definition" = "Klassificeringen är hierarkisk i sin uppbyggnad, där sysselsatt prioriteras högts och därefter enligt prioriteringsordningen arbetslös, studerande, pensionär och sjuk. Det innebär att om en person har blivit klassificerad som sysselsatt, kan samma person inte bli klassificerad till någon annan status, och på motsvarande sätt för de statusar som följer i hierarkin." }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:101\n\nSWECOV holds BAS in Individ_2020 and Individ_2021; SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) states BAS delivered 2020–2023, while the Registerinformation export documents it only from 2022."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: eseg where key = 'v29960'"
+fields = { "variable" = "yrkesbaserad-seg-eseg" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2464\n\nSeparate YSEG and ESeG coding representations: original widths 2 versus 3 and independently supplied finite domains (11 versus 42 distinct code/label pairs). The original ISCO-88 definition is retained, not repaired into an inferred schema or transplanted codebook."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: opvledare"
+fields = { "variable" = "operativ-verksamhetsledare" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2624\n\nSeparate the descriptive twelve-position PersonNr_OpV identifier representation from one-position OpVLedare with exact supplied 0=Nej and 1=Ja finite domain. Native definition and source algorithm remain unchanged; no identifier or sensitivity flags are fabricated."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: forpeng_bdag_midas"
+fields = { "variable" = "foraldrapenning-antal-bruttodagar-midas" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2088\n\nSource switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: forpeng_belopp_midas"
+fields = { "variable" = "foraldrapenning-ersattningsbelopp-midas" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2093\n\nSource switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37048: ForPeng_Belopp 1993-2012; ForPeng_Belopp_MiDAS 2016-2023."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: forpeng_ndag_midas"
+fields = { "variable" = "foraldrapenning-antal-nettodagar-midas" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2098\n\nSource switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37049: ForPeng_Ndag 1993-2012; ForPeng_Ndag_MiDAS 2016-2023."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE04 @2010-01-01..2010-12-31 where key = 'v21516' and release = 'r8652'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE04 @2011-01-01..2011-12-31 where key = 'v21516' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE04 @2012-01-01..2012-12-31 where key = 'v21516' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet, familj, 2004 års definition", "definition" = "Disponibel inkomst är summan av alla inkomster och positiva transfereringar (t.ex. barn- social och bostadsbidrag) minus slutlig skatt, familj.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:55\n\nThe 2004-definition twin of DispInkKE, co-delivered with it: SWECOV's holdings list DispInkKE04 in Individ_2010, Individ_2011 and Individ_2012, and SCB's Registerinformation export documents those three versions but carries no row for the column. See inputs:catalog/docs/markdown/lisa/DispInkKE.md for the family's delivery span."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: medbman @2010..2015"
+fields = { "unit" = "År och månad" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:3273\n\nThe complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: tfranv @2019"
+fields = { "value_set" = "d0147ad31f6a6ba14d5917717ee1042fe38e516206b7287afa94246adece0e5b" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2643\n\nThe exact2019 source operation explicitly establishes the exhaustive1/otherwise0 response domain; extend the complete matching2020 TFranv list only over2019."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: aktersviland"
+fields = { "description" = "Andel/grad för aktivitetsersättning (vilande) 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:547\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: garpensand"
+fields = { "description" = "Andel/grad för garantipension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:787\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukersgarand"
+fields = { "description" = "Andel/grad för sjukersättning (garantiersättning) 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:553\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukersviland"
+fields = { "description" = "Andel/grad för sjukersättning (vilande) 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:559\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: tillpensand"
+fields = { "description" = "Andel/grad för tilläggspension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1093\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_anlaggningstillgangar"
+fields = { "description" = "Anläggningstillgångar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:565\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3astnr"
+fields = { "description" = "Arbetsställenummer" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:841\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3cfarnr"
+fields = { "description" = "Arbetsställets CFAR-nummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:847\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_lonesum"
+fields = { "description" = "Arbetsställets utbetalda lönesumma under året" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1075\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t9"
+fields = { "description" = "Avskrivningar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:775\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t22"
+fields = { "description" = "Avsättningar o långfristiga skulder/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:763\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_avsattningar"
+fields = { "description" = "Avsättningar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:613\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_belkommun"
+fields = { "description" = "Belägenhetskommun för största arbetsstället" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:883\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: bostbidru"
+fields = { "description" = "Bostadsbidrag (uppdelat på huvudsökande och medsökande)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:631\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: bostbidrfam"
+fields = { "description" = "Bostadsbidrag för familj" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:625\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: bosttillfam"
+fields = { "description" = "Bostadstillägg för familj" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:619\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_bruttoinv_byggnader_mark"
+fields = { "description" = "Bruttoinvestering i byggnader och mark" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:637\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_bruttoinv_maskiner_inventarier"
+fields = { "description" = "Bruttoinvestering i maskiner och inventarier" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:643\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: civil"
+fields = { "description" = "Civilstånd" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:649\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: deklon"
+fields = { "description" = "Deklarerad löneinkomst" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:859\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t20"
+fields = { "description" = "Eget kapital/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:751\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: karensers"
+fields = { "description" = "Ersättning för karens 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:661\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: riskgruppers"
+fields = { "description" = "Ersättning för riskgrupp 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:667\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: famstf"
+fields = { "description" = "Familjeställning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:673\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t14"
+fields = { "description" = "Finansiella anläggningstillgångar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:715\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: peorgnr"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:943\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1peorgnr"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:823\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku2peorgnr"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:835\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku3peorgnr"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:853\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_typ"
+fields = { "description" = "Företagstyp (ett- eller flerarbetsställeföretag)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:925\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_foradlingsvarde"
+fields = { "description" = "Förädlingsvärde" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:679\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: garpens"
+fields = { "description" = "Garantipension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:781\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t11"
+fields = { "description" = "Immateriella anläggningstillgångar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:697\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: kapink"
+fields = { "description" = "Inkomst av kapital" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:793\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: inkpenstill"
+fields = { "description" = "Inkomstpensionstillägg" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:811\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t18"
+fields = { "description" = "Kassa, bank o kortfristiga placeringar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:739\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_kortfristiga_skulder"
+fields = { "description" = "Kortfristiga skulder" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1045\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t19"
+fields = { "description" = "Kortfristiga skulder/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:745\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t16"
+fields = { "description" = "Kundfordringar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:727\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t15"
+fields = { "description" = "Lager o pågående arbeten/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:721\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_langfristiga_skulder"
+fields = { "description" = "Långfristiga skulder" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1051\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_lonekostn_och_andra_ersattn"
+fields = { "description" = "Lönekostnader och andra ersättningar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:817\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t13"
+fields = { "description" = "Maskiner o inventarier/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:709\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t12"
+fields = { "description" = "Materiella anläggningstillgångar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:703\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_nettoinv_byggnader_mark"
+fields = { "description" = "Nettoinvestering i byggnader och mark" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:865\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_nettoinv_maskiner_inventarier"
+fields = { "description" = "Nettoinvestering i maskiner och inventarier" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:871\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_nettoomsattning"
+fields = { "description" = "Nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:877\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni2007g"
+fields = { "description" = "Näringsgren, SNI2007, grov nivå (15 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:589\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni2007g"
+fields = { "description" = "Näringsgren, SNI2007, grov nivå (15 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:901\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni2007u"
+fields = { "description" = "Näringsgren, SNI2007, utökad nivå (51 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:595\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni2007u"
+fields = { "description" = "Näringsgren, SNI2007, utökad nivå (51 grupper)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:907\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_obeskattade_reserver"
+fields = { "description" = "Obeskattade reserver" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1063\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t21"
+fields = { "description" = "Obeskattade reserver/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:757\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_omsattningstillgangar"
+fields = { "description" = "Omsättningstillgångar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1069\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t7"
+fields = { "description" = "Personalkostnader/förädlingsvärde" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:769\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_g8"
+fields = { "description" = "Personalkostnader/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:691\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: prempens"
+fields = { "description" = "Premiepension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:949\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_res_efter_finansiella_poster"
+fields = { "description" = "Resultat efter finansiella poster" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:961\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_g11"
+fields = { "description" = "Rörelsekapital/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:685\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_rorelseresultat"
+fields = { "description" = "Rörelseresultat" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:967\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: seninvar"
+fields = { "description" = "Senaste invandringsår" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:985\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_skatt"
+fields = { "description" = "Skatt på årets resultat" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:991\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_sociala_kostn_och_andra_avg"
+fields = { "description" = "Sociala kostnader och andra avgifter" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:997\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: studmed"
+fields = { "description" = "Studiemedel och studiehjälp" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1033\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_summa_bruttoinv"
+fields = { "description" = "Summa bruttoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1039\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sjukre"
+fields = { "description" = "Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering 6" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:799\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: stud"
+fields = { "description" = "Summa inkomst föranledd av studier" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:805\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_summa_nettoinv"
+fields = { "description" = "Summa nettoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1057\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: syssstat19"
+fields = { "description" = "Sysselsättningsstatus enligt justerad metod 2019" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1081\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: spentill"
+fields = { "description" = "Särskilt pensionstillägg" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:973\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_satekommun"
+fields = { "description" = "Säteskommunen" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:979\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: tillpens"
+fields = { "description" = "Tilläggspension" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1087\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_typbas"
+fields = { "description" = "Typ av företag (ett- eller flerarbetsställeföretag, finns inte i Företagsdatabasen, uppgift saknas)" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:931\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ssyk3_2012_j16"
+fields = { "description" = "Yrke enligt SSYK2012, 3-siffernivå, inkl. härledda yrken för företagare" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1009\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ssyk4_2012_j16"
+fields = { "description" = "Yrke enligt SSYK2012, 4-siffernivå, inkl. härledda yrken för företagare" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1015\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ssykstatus_j16"
+fields = { "description" = "Yrkets överensstämmelse med novemberjobbet, inkl. härledda yrken för företagare" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1027\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssykstatus"
+fields = { "description" = "Yrkets överensstämmelse med största förvärvskälla" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1003\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_arets_resultat"
+fields = { "description" = "Årets resultat" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:955\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ku1ssykar"
+fields = { "description" = "Årtal för yrkesuppgift, för yrkesverksamma" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:829\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: ssykar_j16"
+fields = { "description" = "Årtal för yrkesuppgift, inkl. härledda yrken för företagare" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1021\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_t17"
+fields = { "description" = "Övriga kortfristiga fordringar/nettoomsättning" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:733\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftg_ovriga_rorelseintakter"
+fields = { "description" = "Övriga rörelseintäkter" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:937\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: sun2020niva_old"
+fields = { "variable" = "sun2020niva-old" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1279\n\nY-318 2026-09-29: SCB LISA VarId 774 explicitly distinguishes SUN 2000 NivaOld (29 annual originals: Sun2000niva_old 25 in 1990-1991 and 1994-2016, Sun2000Niva_old 2 in 1992-1993, Sun2000niva_Old 2 in 2017-2018) from SUN 2020 NivaOld (Sun2020Niva_Old 5 annual originals, 2019-2023). Every member has 14 coding associations; preserve the source description of four aggregate levels, exact descriptor whitespace, population-age/variant differences and original physical provenance."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: ast_sni92"
+fields = { "variable" = "naringsgren-huvud-arbetsstalle" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1247\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni92"
+fields = { "variable" = "naringsgren-huvud-foretag" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1247\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku2astsni92"
+fields = { "variable" = "naringsgren-nast-storsta-ku" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1255\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku1astsni92"
+fields = { "variable" = "naringsgren-storsta-ku" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1271\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: ku3astsni92"
+fields = { "variable" = "naringsgren-tredje-storsta-ku" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1263\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: syssstat"
+fields = { "variable" = "sysselsattningsstatus-november" }
+evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1239\n\ncuration/relations.toml replaced_by edge scb/lisa/sysselsattningsstatus-november -> scb/lisa/syssstat19 (from_column SyssStat11, to_column SyssStat19, variant individer-15plus, 2019): SyssStat11 belongs to the SyssStat split; other splits by exact literal discriminator."

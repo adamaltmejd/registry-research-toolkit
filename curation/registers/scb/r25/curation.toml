@@ -1,0 +1,336 @@
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bvbman @2011"
+fields = { "unit" = "Antal månader" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:4826\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: brekbid @2013"
+fields = { "unit" = "Veckor" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:4814\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: brekbid where release = 'r4978'"
+fields = { "unit" = "Veckor" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:4802\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: brekbid where release = 'r5226'"
+fields = { "unit" = "Veckor" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:4838\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tlonsf"
+fields = { "variable" = "vissa-ej-skattepliktiga-ersattningar-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3513\n\nOriginal TKULONSF operational prose explicitly says the variable was named IKUSF through 2010. Original 2010 preliminary edition3720 delivers IKUSF and final edition4067 delivers TKULONSF, both fullcalendar2010; preserve this actual boundary despite the prose. Keep both historical literals under the native construct. Following Y316 source-basis precedent and SCB IoT2019 K5.1 pp18-19, TLONSF2019-2024 receives a separate mixedAGI/remainingKU owner; no rate/legal or numerical-equivalence inference. All original int/bigint types, SEK units, Tal associations and validity retained."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: cfakt03"
+fields = { "variable" = "faktorinkomst-individ-2003" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3697\n\nPrepared SCB export: CFAKT03 explicitly supplies the individual 2003 definition of derived factor income. Household CFAKTHB and its modelled shared-residence counterpart explicitly sum wages, hobby income, business income excluding business-owner sick pay and close-company income. Keep the 2003 basis and the household calculations separate; preserve all original Nordic-income notes and no numerical or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: dinpp83"
+fields = { "variable" = "disponibel-inkomst-per-vuxen-familj-ranta-utdelning" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:53\n\nPrepared SCB export: DINPP1981 uses the previous definition while DINPP81 explicitly uses the1981 definition. DINPP82 and DINPP83 share exact supplied meaning and the explicit INKAP-to-interest/dividend substitution formula; retain original types, lengths and coding validity. DINPP84 and DINPP86 coexist and explicitly name1984 and1986 definition bases in1987; keep those bases distinct without asserting numerical inequivalence. Preserve other reviewed branches, including DINPP88K with incomplete historical formula evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pbarnsf"
+fields = { "variable" = "barnpension-skattefri-del-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3692\n\nPrepared SCB export: PBARNSF and BARNSKF explicitly name and define the same individual tax-free child-pension amount. Household PBLIVSFHB and its modelled shared-residence counterpart explicitly sum tax-free child pension plus total tax-free annuity and pension, a broader component set; keep these separate owners with names reflecting the supplied sum. Preserve every original name/definition even where its child-pension caption is narrower than the operational calculation."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: plivsp"
+fields = { "variable" = "livranta-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3617\n\nPrepared SCB export: PLIVSP and PLIVDS supply exactly the same inclusive annuity definition and the same pension/insurance payment-code list 421,422,423,424,426,428,429,473,481,483,486. Retain separate individual, ordinary household and modelled shared-residence household amounts; no employer-AGI claim."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sjukpen"
+fields = { "variable" = "ersattning-forsakringskassa-ku-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3687\n\nPrepared SCB export: SJUKPEN and CFKASS explicitly name and define the same Försäkringskassa KU compensation amount under this native identity. Retain blank historical operations; later operations specify the sum of compensation from employment and other earned work. Keep individual, household and modelled shared-residence household amounts separate. No unreported old calculation, reporting transition or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: unrva"
+fields = { "variable" = "underskott-aktiv-naringsverksamhet-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3677\n\nPrepared SCB export: UNRVA and NUNDAT1 explicitly name and define the same active-business deficit amount under this native identity. Retain the original blank 1991 operation; later operations explicitly sum sole-proprietor and handelsbolag deficits. Keep individual, household and modelled shared-residence household amounts separate. This map does not infer an unreported old formula or numerical equivalence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: unrvp"
+fields = { "variable" = "underskott-passiv-naringsverksamhet-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3682\n\nPrepared SCB export: UNRVP and NUNDPT1 explicitly name and define the same passive-business deficit amount under this native identity. Retain the original blank 1991 operation; later operations explicitly sum sole-proprietor and handelsbolag deficits. Keep individual, household and modelled shared-residence household amounts separate. This map does not infer an unreported old formula or numerical equivalence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: din84"
+fields = { "variable" = "din8" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:37\n\nPrepared SCB export: native 25.1304 CDISP5 explicitly subtracts capital gains from the 1991 disposable-income definition; CDISP retains the ordinary definition. They coexist in preliminary and final 2020-2024 editions and require distinct calculation owners. Historical branches retain their reviewed ownership. Native 25.22307 CDISP5 has its own formula and remains separate."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: din86"
+fields = { "variable" = "din8" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:37\n\nPrepared SCB export: native 25.1304 CDISP5 explicitly subtracts capital gains from the 1991 disposable-income definition; CDISP retains the ordinary definition. They coexist in preliminary and final 2020-2024 editions and require distinct calculation owners. Historical branches retain their reviewed ownership. Native 25.22307 CDISP5 has its own formula and remains separate."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kbesk where key = 'v1107'"
+fields = { "variable" = "beskattningsbar-kapitalinkomst-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3545\n\nPrepared SCB native 25.1107: individual literals KBESK, SBESKK share the explicit source amount definition (Beskattningsbar inkomst av kapital), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion. KBESK on native25.40075 remains separate municipal taxable-income evidence; no cross-native alias is asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: staxkap"
+fields = { "variable" = "statlig-taxerad-kapitalinkomst-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3550\n\nPrepared SCB native 25.1111: individual literals KKAPS, STAXKAP share the explicit source amount definition (Statlig taxerad inkomst av kapital), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: nrv"
+fields = { "variable" = "inkomst-av-naringsverksamhet-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3555\n\nPrepared SCB native 25.1169: individual literals NRV, INNRV share the explicit source amount definition (Inkomst av näringsverksamhet), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tsocers"
+fields = { "variable" = "sociala-formaner-tjanst-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3560\n\nPrepared SCB native 25.1207: individual literals SOCERS, TSOCERS share the explicit source amount definition (Summa sociala förmåner, tjänst), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ibarnb"
+fields = { "variable" = "barnbidrag-forlangt-flerbarnstillagg-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3565\n\nPrepared SCB native 25.1393: individual literals BBIDR, IBARNB share the explicit source amount definition (Allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ibdf"
+fields = { "variable" = "mottaget-bidragsforskott-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3570\n\nPrepared SCB native 25.1395: individual literals BFMBEL, IBDF share the explicit source amount definition (Mottaget bidragsförskott), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ihkap"
+fields = { "variable" = "handikappersattning-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3575\n\nPrepared SCB native 25.1403: individual literals HKAP, IHKAP share the explicit source amount definition (Handikappersättning), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kkukap"
+fields = { "variable" = "kapitalinkomster-bank-aktier-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3580\n\nPrepared SCB native 25.1481: individual literals KKUKAP, KAPINK share the explicit source amount definition (Kapitalinkomster från bank, aktier och andra värdepapper), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sslutex"
+fields = { "variable" = "slutlig-skatt-exkl-egenavgifter-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3610\n\nPrepared SCB native 25.15299: individual literals SSLUTEX, SKSLUTX share the explicit source amount definition (Slutlig skatt exkl. egenavgifter och övriga avdragsgilla skatter/avgifter), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: avgbel"
+fields = { "variable" = "aterbetalt-studielan-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3585\n\nPrepared SCB native 25.1605: individual literals AVGBEL, UATER, ATERBET share the explicit source amount definition (Återbetalt belopp, studielån), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: uater"
+fields = { "variable" = "aterbetalt-studielan-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3585\n\nPrepared SCB native 25.1605: individual literals AVGBEL, UATER, ATERBET share the explicit source amount definition (Återbetalt belopp, studielån), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ubdf"
+fields = { "variable" = "givet-underhallsbidrag-aterbetalt-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3590\n\nPrepared SCB native 25.1607: individual literals BFGBEL, UBDF share the explicit source amount definition (Givet underhållsbidrag, återbetalt bidragsförskott), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: skfink"
+fields = { "variable" = "statlig-kommunal-inkomstskatt-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3595\n\nPrepared SCB native 25.1635: individual literals SFORV, SKFINK share the explicit source amount definition (Statlig och kommunal inkomstskatt på förvärvsinkomster), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: segen"
+fields = { "variable" = "egenavgifter-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3535\n\nPrepared SCB native 25.727: individual literals AVEGEN, SEGEN share the explicit source amount definition (Egenavgifter), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ssfvi"
+fields = { "variable" = "statlig-inkomstskatt-forvarv-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3540\n\nPrepared SCB native 25.735: individual literals SSFVI, SKSINF share the explicit source amount definition (Statlig inkomstskatt på förvärvsinkomster), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sredkap"
+fields = { "variable" = "skattereduktion-underskott-kapital-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3600\n\nPrepared SCB native 25.8297: individual literals SREDKAP, SKRKAP share the explicit source amount definition (Skattereduktion för underskott av kapital), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: skkap"
+fields = { "variable" = "statlig-inkomstskatt-kapitalinkomster-individ" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3605\n\nPrepared SCB native 25.8299: individual literals SKAP, SKKAP share the explicit source amount definition (Statlig inkomstskatt på kapitalinkomster), with shared supplied operation or direct reported-amount meaning. Variant763 is individual; variant1153 ordinary and VX editions retain distinct household calculation bases. Preserve all original temporal fields, types, lengths, coding and source provenance; do not infer numerical equivalence or employer-reporting conversion."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ters"
+fields = { "variable" = "ovriga-kostnadsersattningar-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3474\n\nSCB Registerinformation native 25.1192: all 147 physical originals/49 members explicitly describe the same source-native amount; exact supplied literals (TKUERS 1993-2018, KUERS 1991-1992, TERS 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: thobb"
+fields = { "variable" = "ersattning-grund-egenavgifter-tjanst-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3479\n\nSCB Registerinformation native 25.1193: all 147 physical originals/49 members explicitly describe the same source-native amount; exact supplied literals (TKUHOBB 1993-2018, THOBB 2019-2024, KUHOBBY 1991-1992) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tlon"
+fields = { "variable" = "kontant-bruttolon-mm-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3484\n\nSCB Registerinformation native 25.1194: all 174 physical originals/58 members explicitly describe the same source-native amount; exact supplied literals (KULON 1982-1992, TKULON 1993-2018, TLON 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tovr where key = 'v1196'"
+fields = { "variable" = "ovriga-skattepliktiga-ers-tjanst-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3489\n\nSCB Registerinformation native 25.1196: all 156 physical originals/52 members explicitly describe the same source-native amount; exact supplied literals (KUOVR 1988-1992, TKUOVR 1993-2018, TOVR 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras. Cross-native literals remain outside this map: TOVR native 25.30862."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sarb"
+fields = { "variable" = "avdragen-preliminar-a-skatt-arbetsgivare-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3494\n\nSCB Registerinformation native 25.21816: all 117 physical originals/39 members explicitly describe the same source-native amount; exact supplied literals (SAKU 1994-1997, SKUARB 2005-2018, SARB 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: papen"
+fields = { "variable" = "tjanstepension-tjanst-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3469\n\nSCB Registerinformation native 25.591: all 150 physical originals/50 members explicitly describe the same source-native amount; exact supplied literals (PKUAPEN 1993-2018, KUPENS 1990-1992, PAPEN 2019-2024) retain original definitions, operational prose, all numeric source types, SEK units, Tal non-membership coding and all delivered full-year periods. Following the existing Y-316 source-basis decision, pre-2019 spellings share the annual-KU owner; the 2019-2024 spelling has a separate -agi-ku owner. SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents monthly AGI plus remaining annual KU from 2019; no claim of numeric equivalence across reporting eras. Cross-native literals remain outside this map: KUPENS native 25.18384."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: CDISP04H_INKLGP @2015..2019"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04H; för 2015–2019 skiljer sig variabeln därför från CDISP04H. Motsvarar DispInkFam04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5501\n\nSWECOV holds CDISP04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkFam04_INKLGP as 'Disponibel inkomst för familj - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04H_INKLGP beside CDISP04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: CDISP04_INKLGP @2015..2019"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Delkomponent till disponibel inkomst, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst (individens delkomponent), 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISP04; för 2015–2019 skiljer sig variabeln därför från CDISP04. Motsvarar DispInk04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5490\n\nSWECOV holds CDISP04_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInk04_INKLGP as 'Disponibel inkomst (individens delkomponent) - inkl. lön intjänat i annat nordiskt land' and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISP04_INKLGP beside CDISP04 in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: CDISPKE04H_INKLGP @2015..2019"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive lön intjänad i annat nordiskt land, 2015–2019. Från inkomstår 2020 ingår sådan lön i CDISPKE04H; för 2015–2019 skiljer sig variabeln därför från CDISPKE04H. Motsvarar DispInkKE04_INKLGP i LISA (SCB:s LISA-variabellista).", "type" = "integer" } }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5512\n\nSWECOV holds CDISPKE04H_INKLGP in IoT2015..IoT2019; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (IoT sheet) lists it for 2015-2019 without a description; SCB's Registerinformation export carries no row for it on this variant; name and definition from SCB's LISA variable list (LISA samtliga variabler.xlsx, SWECOV delivery docs), which documents the LISA equivalent DispInkKE04_INKLGP (described under DispInkKE_INKLGP as 'Disponibel inkomst per konsumtionsenhet för familj - inkl. lön intjänat i annat nordiskt land') and the base variable as including such income from 2020; P1105_Variabellista 2022 lists CDISPKE04H_INKLGP beside CDISPKE04H in the IoT delivery; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bdebsed @2016..2024"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3702\n\nThe exact annual source supplies the extraction-round date as text with unit Datum and a Tal marker. Retain these delivered date-valued windows without a finite value set; do not extend the earlier 0–5 extraction-round list. Earlier coded windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kutrind @1981"
+fields = { "value_set" = "0db766ee038bf7baa0ec909a7e220bd06aefae2f9575c97703176963212d83b7" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5434\n\nThe exact historical source delivery is explicitly linked to this native SCB quantity. Its complete own-native source dictionaries agree on every stored code and label. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and every original coding association; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: bkuskav @2001"
+fields = { "value_set" = "3a3957f2a4954348081844f4094ac128d2e29d47f72dce9f7a09f58e670c1790" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5458\n\nThe exact historical source delivery is explicitly linked to this native SCB quantity. Its complete own-native source dictionaries agree on every stored code and label. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and every original coding association; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: jordbr @1990"
+fields = { "value_set" = "c1349a512a3e371a8376539827e823f8d015fa15f2dc1a537633b9cb02cedf30" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:5446\n\nThe exact historical source delivery is explicitly linked to this native SCB quantity. Its complete own-native source dictionaries agree on every stored code and label. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and every original coding association; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tlono"
+fields = { "variable" = "skattepliktiga-formaner-ej-lon-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3395\n\nY-316 2026-09-29: SCB IoT native 25.1195 'skattepliktiga-formaner-ej-lon' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKULONO 2005-2018 (69 originals) owned by 25.1195.skattepliktiga-formaner-ej-lon, and post-2019 literal TLONO 2019-2024 (36 originals) owned by 25.1195.skattepliktiga-formaner-ej-lon-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: baorg"
+fields = { "variable" = "ordinarie-organisationsnummer-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3405\n\nY-316 2026-09-29: SCB IoT native 25.19855 'ordinarie-organisationsnummer' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal BKUAORG 2005-2018 (69 originals) owned by 25.19855.ordinarie-organisationsnummer, and post-2019 literal BAORG 2019-2024 (36 originals) owned by 25.19855.ordinarie-organisationsnummer-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ahuv"
+fields = { "variable" = "underlag-skattereduktion-rut-forman-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3410\n\nY-316 2026-09-29: SCB IoT native 25.21209 'underlag-skattereduktion-rut-forman' employer-reporting source-basis split, 96 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal AKUHUV 2008-2018 (60 originals) owned by 25.21209.underlag-skattereduktion-rut-forman, and post-2019 literal AHUV 2019-2024 (36 originals) owned by 25.21209.underlag-skattereduktion-rut-forman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: taav"
+fields = { "variable" = "avdrag-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3415\n\nY-316 2026-09-29: SCB IoT native 25.21829 'avdrag' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TAKUAV 2005-2018 (69 originals) owned by 25.21829.avdrag, and post-2019 literal TAAV 2019-2024 (36 originals) owned by 25.21829.avdrag-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tbilf"
+fields = { "variable" = "bilforman-utom-drivmedel-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3420\n\nY-316 2026-09-29: SCB IoT native 25.21830 'bilforman-utom-drivmedel' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUBILF 2005-2018 (69 originals) owned by 25.21830.bilforman-utom-drivmedel, and post-2019 literal TBILF 2019-2024 (36 originals) owned by 25.21830.bilforman-utom-drivmedel-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tdriv"
+fields = { "variable" = "drivmedel-vid-bilforman-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3425\n\nY-316 2026-09-29: SCB IoT native 25.21831 'drivmedel-vid-bilforman' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUDRIV 2005-2018 (69 originals) owned by 25.21831.drivmedel-vid-bilforman, and post-2019 literal TDRIV 2019-2024 (36 originals) owned by 25.21831.drivmedel-vid-bilforman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tove"
+fields = { "variable" = "skattepliktiga-ersattningar-ej-sociala-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3430\n\nY-316 2026-09-29: SCB IoT native 25.21879 'skattepliktiga-ersattningar-ej-sociala' employer-reporting source-basis split, 99 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal TKUOVE 2007-2018 (63 originals) owned by 25.21879.skattepliktiga-ersattningar-ej-sociala, and post-2019 literal TOVE 2019-2024 (36 originals) owned by 25.21879.skattepliktiga-ersattningar-ej-sociala-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: arot"
+fields = { "variable" = "underlag-skattereduktion-rot-forman-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3435\n\nY-316 2026-09-29: SCB IoT native 25.24169 'underlag-skattereduktion-rot-forman' employer-reporting source-basis split, 93 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal AKUROT 2009-2018 (57 originals) owned by 25.24169.underlag-skattereduktion-rot-forman, and post-2019 literal AROT 2019-2024 (36 originals) owned by 25.24169.underlag-skattereduktion-rot-forman-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: khyr"
+fields = { "variable" = "hyresersattning-agi-ku" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:3400\n\nY-316 2026-09-29: SCB IoT native 25.6093 'hyresersattning' employer-reporting source-basis split, 105 physical originals in variant 25.763 (Individer och dödsbon): annual-KU literal KKUHYR 2005-2018 (69 originals) owned by 25.6093.hyresersattning, and post-2019 literal KHYR 2019-2024 (36 originals) owned by 25.6093.hyresersattning-agi-ku; evidence SCB 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', v1 2021-03-03, pp.18-19 K5.1 'Övergången från KU till AGI' documents that from 2019 SCB combines the monthly AGI declarations with the remaining annual KU; distinct reporting eras, not a sequential synonym rename, and no claim of equivalent numeric contents across 2018/2019"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: dinf83"
+fields = { "variable" = "disponibel-inkomst-familj-2" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:45\n\ncuration/concept_groups.toml group scb/iot/disponibel-inkomst member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: dinf84"
+fields = { "variable" = "disponibel-inkomst-familj-2" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:45\n\ncuration/concept_groups.toml group scb/iot/disponibel-inkomst member delivery columns"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: dinf86"
+fields = { "variable" = "disponibel-inkomst-familj-2" }
+evidence = "reg_meta_build/curation/registers/scb/iot.toml:45\n\ncuration/concept_groups.toml group scb/iot/disponibel-inkomst member delivery columns"

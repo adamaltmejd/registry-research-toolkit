@@ -1,0 +1,26 @@
+
+[[statement]]
+kind = "link"
+subject = "var:partinamn"
+relation = "label_of"
+object = "scb/allmanna-val-nominerade/partikod"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:14\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:riksdagsvalkrets-namn"
+relation = "label_of"
+object = "scb/allmanna-val-nominerade/riksdagsvalkrets-kod"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:21\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-kod"
+fields = { "sets" = ["legacy-kommunvalkrets-kod"] }
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:127\n\nThe same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { "sets" = ["legacy-riksdagsvalkrets-kod"] }
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:115\n\nThe same exact1998 source record is already explicitly projected to both physical constituency-code names by maintained checked delivery curation. Source definition positively identifies a code; both representations retain their own literal names and metadata and any own list. No equality of observed values or extension of a domain is asserted. All original raw fields and exact projection are guarded. Batch53-SCB-finish-source-proof.json."

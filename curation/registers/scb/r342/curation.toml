@@ -1,0 +1,55 @@
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-prov/skolenhetskod"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:36\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: termin @2015-07-01..2015-12-31"
+fields = { "definition" = "Anger vilken termin uppgifterna avser." }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:129\n\nSCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: termin @2016-01-01..2016-06-30"
+fields = { "definition" = "Anger vilken termin uppgifterna avser." }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:141\n\nSCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: termin @2016-07-01..2019-12-31,2020-07-01..2020-12-31,2021-07-01..2025-06-30"
+fields = { "definition" = "Anger vilken termin uppgifterna avser." }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:153\n\nSCB's own operational definitions for this column name the term label of the edition (Hösttermin 2015: 'Endast värdet \"HT15\" vilket innebär höstterminen 2015.'; Vårtermin 2016 likewise), and the maintainer ruling of 2026-10-15 (#1603 D5, errata.delivered above) found the column carries the term label, not an ordinal term number; the shared SCB concept definition does not apply here. The replacement is SCB's own wording, from the operational definition of scb/fritidshem/termin. Maintainer decision on #1619 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: kurs"
+fields = { "description" = "Kurskod för vilken kurs det gäller" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: stvkod"
+fields = { "description" = "Studieväg" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: utbild"
+fields = { "description" = "Variabel som visar vilket program/utbidning eleven läser, klartext i hjälptabell" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

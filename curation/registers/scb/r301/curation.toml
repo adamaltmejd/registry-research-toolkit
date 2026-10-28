@@ -1,0 +1,1524 @@
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedistol2"
+fields = { "label" = "Distansstudier/nätuniversitet — Anger om distansstudierna för den andra slumpmässigt valda kursen var helt nätbaserad eller inte" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5806\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedistol1"
+fields = { "label" = "Distansstudier/nätuniversitet — Anger om distansstudierna för den första slumpmässigt valda kursen var helt nätbaserad eller inte" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5818\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: feddistol"
+fields = { "label" = "Distansstudier/nätuniversitet — Anger om distansstudierna var helt nätbaserad eller inte" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5830\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeactweight_2"
+fields = { "label" = "Gregvikt — Beräknad vikt för de maximalt 2 slumpmässigt utvalda icke-formella utbildningsaktiviteterna per individ" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5842\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeactweight"
+fields = { "label" = "Gregvikt — Beräknad vikt för varje icke-formell utbildningsaktivitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5854\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeactweight_5"
+fields = { "label" = "Gregvikt — Beräknad vikt för varje icke-formell utbildningsaktivitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5866\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeworktime10"
+fields = { "label" = "Icke-formell utbildning, aktivitetsvariabler — Anger om personen har deltagit i åtminstone en av de icke-formella utbildningarna under betald arbetstid (inklusive betald semester eller återhämtning)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5878\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepurp10"
+fields = { "label" = "Icke-formell utbildning, aktivitetsvariabler — Anger om åtminstone en av de icke-formella utbildningarna var arbetsrelaterad" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5890\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nferand2"
+fields = { "label" = "Icke-formell utbildning, aktivitetsvariabler — Identifikationkod för den andra slumpmässigt valda icke-formella aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5902\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nferand1"
+fields = { "label" = "Icke-formell utbildning, aktivitetsvariabler — Identifikationkod för den första slumpmässigt valda icke-formella aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5914\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nferand3"
+fields = { "label" = "Icke-formell utbildning, aktivitetsvariabler — Identifikationkod för den tredje slumpmässigt valda icke-formella aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5926\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidby2 where key = 'v32787'"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler — Andra slumpmässigt valda icke-formella utbildningen. Antal betalande objekt" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5938\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidby1 where key = 'v32787'"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler — Första slumpmässigt valda icke-formella utbildningen. Antal betalande objekt" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5950\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidby3"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler — Tredje slumpmässigt valda icke-formella utbildningen. Antal betalande objekt" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5962\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidby10"
+fields = { "label" = "Icke-formell utbildning, kostnadsvariabler — Åtminstone en av icke-formella utbildningarna var helt eller delvis betald av arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5974\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guide_3"
+fields = { "label" = "Information — Senaste 12 månaderna: rådgivning om dispens från formella inträdeskrav" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3670\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guide_1"
+fields = { "label" = "Information — Senaste 12 månaderna: rådgivning om utbildningsmöjligheter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3682\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guide_2"
+fields = { "label" = "Information — Senaste 12 månaderna: utbildningsbehov utvärderade genom test eller intervju" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3658\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidetype_1"
+fields = { "label" = "Information — Typ av gratis information: allmän information" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3622\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidetype_4"
+fields = { "label" = "Information — Typ av gratis information: annan, t.ex. studiestöd, boende, bussförbindelser" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3610\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidetype_2"
+fields = { "label" = "Information — Typ av gratis information: lämplighets- eller intressetest" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3646\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidetype_3"
+fields = { "label" = "Information — Typ av gratis information: om dispens från formella inträdeskrav" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3634\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_2 @2016"
+fields = { "label" = "Informationskälla — Informationskällan kommer från Arbetsförmedlingen, t.ex. yrkesrådgivare, vägledningstjänster" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3694\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_4"
+fields = { "label" = "Informationskälla — Informationskällan kommer från vägledningstjänster, t.ex. yrkesrådgivare vid arbetsförmedling" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3706\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_2 @2022"
+fields = { "label" = "Informationskälla — Informationskällan är Arbetsförmedlingen" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3718\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_7"
+fields = { "label" = "Informationskälla — Informationskällan är böcker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3730\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_5"
+fields = { "label" = "Informationskälla — Informationskällan är en annan institution eller organisation som tillhandahåller gratis information om utbildningsmöjligheter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3754\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_4 @2022"
+fields = { "label" = "Informationskälla — Informationskällan är en annan institution eller organisation" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3742\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_4 @2016"
+fields = { "label" = "Informationskälla — Informationskällan är en fackförening" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3766\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_2"
+fields = { "label" = "Informationskälla — Informationskällan är en familjemedlem, granne eller arbetskamrat" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3778\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_1 @2022"
+fields = { "label" = "Informationskälla — Informationskällan är en skola" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3790\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_1 @2016"
+fields = { "label" = "Informationskälla — Informationskällan är en utbildningsinstitution, t.ex. skola, högskola, utbildningscenter, universitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3802\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_5"
+fields = { "label" = "Informationskälla — Informationskällan är en utbildningsinstitution, t.ex. skola, högskola, utbildningscenter, universitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3814\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_1"
+fields = { "label" = "Informationskälla — Informationskällan är internet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3826\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_6"
+fields = { "label" = "Informationskälla — Informationskällan är massmedier, t.ex. TV, radio, tidningar eller affischer" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3838\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_3 @2016"
+fields = { "label" = "Informationskälla — Informationskällan är personens egna arbetsgivare eller arbetsgivarorganisation" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3862\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_3"
+fields = { "label" = "Informationskälla — Informationskällan är personens egna arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3850\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_3 @2022"
+fields = { "label" = "Informationskälla — Informationskällan är personens nuvarande eller blivande arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3874\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidemode_4"
+fields = { "label" = "Insamlingsmetod — Fick informationen utan interaktion, endast via tryckt material, webbsidor, TV etc" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5770\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidemode_1"
+fields = { "label" = "Insamlingsmetod — Fick informationen via ett personligt samtal (face-to-face)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5782\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidemode_2"
+fields = { "label" = "Insamlingsmetod — Fick informationen via kontakt med annan person via internet, telefon, epost eller annan media" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5794\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedonpar"
+fields = { "label" = "Kontakt med kurskamrater — Formell utbildning" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6010\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeonpar2"
+fields = { "label" = "Kontakt med kurskamrater — Icke-formell utbildning, andra aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5986\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeonpar1"
+fields = { "label" = "Kontakt med kurskamrater — Icke-formell utbildning, första aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5998\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedontea"
+fields = { "label" = "Kontakt med lärare, ledare eller föreläsare — Formell utbildning" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6022\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeontea2"
+fields = { "label" = "Kontakt med lärare, ledare eller föreläsare — Icke-formell utbildning, andra aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6034\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeontea1"
+fields = { "label" = "Kontakt med lärare, ledare eller föreläsare — Icke-formell utbildning, första aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6046\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud1"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 1" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3094\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval1 @2011-07-01..2012-06-30"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 1" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3106\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval1 @2016,2022"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 1" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3082\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud2"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 2" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3130\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval2 @2011-07-01..2012-06-30"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 2" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3142\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval2 @2016,2022"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 2" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3118\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud3"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 3" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3154\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval3"
+fields = { "label" = "Kostnader icke-formell utbildning — Avser icke-formell utbildning 3" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3166\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: feurostud1"
+fields = { "label" = "Kostnader studier formell utbildning — Avser formell utbildning 1" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6094\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: feurostud2"
+fields = { "label" = "Kostnader studier formell utbildning — Avser formell utbildning 2" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6106\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedpaidval"
+fields = { "label" = "Kostnader studier formell utbildning — Avser senaste formella utbildning" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6118\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeuse2"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning — Användning av de färdigheter eller kunskaper som förvärvats vid den andra slumpmässigt utvalda icke-formella utbildningsaktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3886\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeuse1"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning — Användning av de färdigheter eller kunskaper som förvärvats vid den första slumpmässigt utvalda icke-formella utbildningsaktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3898\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeuse3"
+fields = { "label" = "Kunskapsanvändning, icke-formell utbildning — Användning av de färdigheter eller kunskaper som förvärvats vid den tredje slumpmässigt utvalda icke-formella utbildningsaktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3910\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd1"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 1, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3190\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours1 @2011-07-01..2012-06-30"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 1, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3202\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours1 @2016,2022"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 1, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3178\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd2"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 2, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3226\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours2 @2011-07-01..2012-06-30"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 2, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3238\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours2 @2016,2022"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 2, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3214\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd3"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 3, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3250\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours3"
+fields = { "label" = "Längd icke-formell utbildning — Avser icke-formell utbildning 3, självstudier och resor räknas inte med" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3262\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_5 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4126\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_5 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4114\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_5 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4138\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_2 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3982\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_2 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3970\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_2 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3994\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_1 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4018\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_1 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4006\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_1 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4030\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_3 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4054\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_3 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4042\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_3 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4066\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_4 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4090\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_4 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4078\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_4 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4102\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_8"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Förväntas inte ge några resultat" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3922\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_7 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Inga resultat hittills (2011–2012)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3934\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_7 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Inga resultat hittills (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3946\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_7 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Inga resultat hittills (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3958\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_6 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4162\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_6 @2016"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4150\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcome_6 @2022"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4174\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedoutcomemain"
+fields = { "label" = "Resultat av nya kunskaper, formell utbildning — Viktigaste resultatet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4186\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_5 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4414\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_5 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4402\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_2 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4306\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_2 @2016"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4294\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_2 @2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4318\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_1 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4342\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_1 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4330\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_3 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4366\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_3 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4354\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_4 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4390\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_4 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4378\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_8"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: förväntas inte ge några resultat" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4198\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_7 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: inga resultat hittills (2011–2012)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4210\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_7 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: inga resultat hittills (2016, 2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4270\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_6 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4438\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome2_6 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4426\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcomemain2"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Andra aktiviteten: viktigaste resultatet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4678\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_5 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4570\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_5 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4558\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_2 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4462\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_2 @2016"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4450\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_2 @2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4474\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_1 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4498\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_1 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4486\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_3 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4522\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_3 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4510\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_4 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4546\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_4 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4534\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_8"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: förväntas inte ge några resultat" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4222\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_7 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: inga resultat hittills (2011–2012)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4234\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_7 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: inga resultat hittills (2016, 2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4282\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_6 @2011-07-01..2012-06-30"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4594\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome1_6 @2016,2022"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4582\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcomemain1"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Första aktiviteten: viktigaste resultatet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4690\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_5"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: enklare att utföra arbetsuppgifterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4654\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_2"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: fick befordran i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4606\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_1"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: fick ett nytt arbete" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4618\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_3"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: fick högre lön" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4630\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_4"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: fick nya arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4642\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_8"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: förväntas inte ge några resultat" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4246\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_7"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: inga resultat hittills" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4258\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeoutcome3_6"
+fields = { "label" = "Resultat av nya kunskaper, icke-formell utbildning — Tredje aktiviteten: personliga orsaker" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4666\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_10 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: av hälsoskäl (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5206\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_10 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: av hälsoskäl (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4702\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_01"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: bli bättre i arbetet/förbättra karriärmöjligheter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5050\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_12 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: bättre insats i frivilligarbete/ideellt engagemang (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5230\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_12 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: bättre insats i frivilligarbete/ideellt engagemang (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4726\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_08 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: få ett utbildningsbevis (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5002\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_08 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: få ett utbildningsbevis (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4990\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_08 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: få ett utbildningsbevis (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4714\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_11 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: krävdes av arbetsgivare eller enligt lag (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5218\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_11 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: krävdes av arbetsgivare eller enligt lag (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4750\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_02 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: minska risken att förlora arbetet (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5074\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_02 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: minska risken att förlora arbetet (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5062\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_02 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: minska risken att förlora arbetet (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4762\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_06 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: nyttiga kunskaper för det dagliga livet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5026\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_06 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: nyttiga kunskaper för det dagliga livet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5014\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_13 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: organisationsförändringar/nya tekniska krav (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5242\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_13 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: organisationsförändringar/nya tekniska krav (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4786\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_04 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: starta eget företag (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5098\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_04 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: starta eget företag (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5086\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_04 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: starta eget företag (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4798\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_09 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: träffa nya människor/för nöjets skull (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5170\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_09 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: träffa nya människor/för nöjets skull (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5158\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_09 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: träffa nya människor/för nöjets skull (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4738\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_01a @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: utföra arbetet bättre (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4834\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_01a @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: utföra arbetet bättre" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5110\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_05"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: var tvungen att delta" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5038\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereasonmain2"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: viktigaste skälet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5626\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_01b @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka karriärmöjligheterna (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4810\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_01b @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka karriärmöjligheterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5146\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_06_7"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka kunskaperna i ett ämne som intresserar (_06_7)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4822\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_07 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka kunskaperna i ett ämne som intresserar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5194\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_07 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka kunskaperna i ett ämne som intresserar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5182\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_03 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5134\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_03 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5122\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason2_03 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Andra aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4774\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_10 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: av hälsoskäl (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5470\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_10 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: av hälsoskäl (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4846\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_01"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: bli bättre i arbetet/förbättra karriärmöjligheter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5314\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_12 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: bättre insats i frivilligarbete/ideellt engagemang (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5494\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_12 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: bättre insats i frivilligarbete/ideellt engagemang (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4870\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_08 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: få ett utbildningsbevis (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5266\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_08 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: få ett utbildningsbevis (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5254\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_08 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: få ett utbildningsbevis (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4858\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_11 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: krävdes av arbetsgivare eller enligt lag (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5482\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_11 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: krävdes av arbetsgivare eller enligt lag (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4894\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_02 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: minska risken att förlora arbetet (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5338\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_02 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: minska risken att förlora arbetet (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5326\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_02 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: minska risken att förlora arbetet (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4906\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_06 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: nyttiga kunskaper för det dagliga livet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5290\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_06 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: nyttiga kunskaper för det dagliga livet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5278\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_13 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: organisationsförändringar/nya tekniska krav (2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5506\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_13 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: organisationsförändringar/nya tekniska krav (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4930\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_04 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: starta eget företag (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5362\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_04 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: starta eget företag (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5350\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_04 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: starta eget företag (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4942\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_09 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: träffa nya människor/för nöjets skull (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5434\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_09 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: träffa nya människor/för nöjets skull (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5422\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_09 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: träffa nya människor/för nöjets skull (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4882\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_01a @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: utföra arbetet bättre (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4954\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_01a @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: utföra arbetet bättre" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5374\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_05"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: var tvungen att delta" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5302\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereasonmain1"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: viktigaste skälet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5638\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_01b @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka karriärmöjligheterna (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4966\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_01b @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka karriärmöjligheterna" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5410\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_06_7"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka kunskaperna i ett ämne som intresserar (_06_7)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4978\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_07 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka kunskaperna i ett ämne som intresserar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5458\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_07 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka kunskaperna i ett ämne som intresserar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5446\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_03 @2011-07-01..2012-06-30"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5398\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_03 @2016"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2011–2012, 2016)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5386\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason1_03 @2022"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Första aktiviteten: öka möjligheten att få arbete eller byta arbetsplats (2022)" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:4918\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_01"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: bli bättre i arbetet/förbättra karriärmöjligheter" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5554\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_08"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: få ett utbildningsbevis" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5518\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_02"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: minska risken att förlora arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5566\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_06"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: nyttiga kunskaper för det dagliga livet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5530\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_04"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: starta eget företag" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5578\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_09"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: träffa nya människor/för nöjets skull" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5602\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_05"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: var tvungen att delta" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5542\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_07"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: öka kunskaperna i ett ämne som intresserar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5614\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfereason3_03"
+fields = { "label" = "Skäl till deltagande, icke-formell utbildning — Tredje aktiviteten: öka möjligheten att få arbete eller byta arbetsplats" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5590\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difficulty"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Anger om personen har deltagit i formell eller icke-formell utbildning och om personen ville/inte ville delta mer" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3274\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: want"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Anger om personen har deltagit i formell eller icke-formell utbildning och om personen ville/inte ville delta mer" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3286\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_04 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att den krockade med personens schema" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3310\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_04 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att den krockade med personens schema" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3298\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_10 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att det inte fanns någon lämplig utbildningsaktivitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3334\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_10 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att det inte fanns någon lämplig utbildningsaktivitet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3322\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_06 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att det saknades tillgång till dator eller Internet vid distansstudier" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3346\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_07 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen hade tidsbrist pga familjeansvar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3370\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_07 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen hade tidsbrist pga familjeansvar" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3358\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_11"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen inte hade något ytterligare behov av utbildning" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3382\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_03 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen saknade stöd från sin arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3406\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_03 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personen saknade stöd från sin arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3394\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_08"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personens hälsa eller ålder hindrade personen från att delta" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3418\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_08a @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personens hälsa hindrade" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3430\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_08b @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var att personens ålder hindrade" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3442\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_05 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var avståndet där utbildningen skedde" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3466\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_05 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var avståndet där utbildningen skedde" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3454\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_02 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var för att personen inte hade råd" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3490\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_02 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var för att personen inte hade råd" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3478\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_09 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var pga andra personliga orsaker, tex tidsbrist" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3514\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_09 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Det svåra med utbildningen var pga andra personliga orsaker, tex tidsbrist" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3502\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype where key = 'v35197'"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Orsaker till att urvalspersonen inte deltog i fler utbildningar eller kurser" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3526\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_01 @2011-07-01..2012-06-30"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Otillräckliga förkunskaper eller behörighet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3550\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_01 @2016"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Otillräckliga förkunskaper eller behörighet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3538\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_01 @2022"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Otillräckliga förkunskaper eller behörighet" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3562\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_08a @2022"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att din hälsa hindrade dig från att delta?" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3574\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difftype_08b @2022"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Vad var orsakerna till att du inte ville delta i någon utbildning? Var det för att din ålder hindrade dig från att delta?" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3586\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: diffmain @2022"
+fields = { "label" = "Svårighet vid utbildningsdeltagande — Vilken var den viktigaste anledningen (främsta svårigheten)?" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:3598\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedonmat"
+fields = { "label" = "Undervisningsmaterial — Formell utbildning" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6058\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeonmat2"
+fields = { "label" = "Undervisningsmaterial — Icke-formell utbildning, andra aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6070\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeonmat1"
+fields = { "label" = "Undervisningsmaterial — Icke-formell utbildning, första aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:6082\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedist2"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5650\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfemethod2"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5662\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeplace2"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den andra slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5674\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfedist1"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5686\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfemethod1"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5698\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeplace1"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den första slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5710\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfemethod3"
+fields = { "label" = "Undervisningsmetod, icke-formell utbildning — Huvudmetod för inlärning som använts för den tredje slumpmässigt valda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5722\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infmethod2"
+fields = { "label" = "Undervisningsmetod, informell utbildning — Informell inlärningsmetod som använts för den näst senast gjorda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5734\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infmethod1"
+fields = { "label" = "Undervisningsmetod, informell utbildning — Informell inlärningsmetod som använts för den senast gjorda aktiviteten" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5746\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infmedia"
+fields = { "label" = "Undervisningsmetod, informell utbildning — TV eller lyssna på radio" }
+evidence = "reg_meta_build/curation/registers/scb/aes.toml:5758\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."

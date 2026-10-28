@@ -1,0 +1,594 @@
+
+[[statement]]
+kind = "set"
+subject = "ut-invandrares-utbildning: fblakomigarplus2"
+fields = { "label" = "Folkbokföringskommun vid slutet av andra året efter migrationsåret" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4438\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "ut-invandrares-utbildning: fblanmigarplus2"
+fields = { "label" = "Folkbokföringslän vid slutet av andra året efter migrationsåret" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4426\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr_1 @2000,2002..2007"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4246\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr_1 @2001"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4258\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2008..2009,2011..2012"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4090\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2010,2013"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4138\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2014..2015"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4354\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2016"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4402\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2017..2021"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4210\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr_3"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4222\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2008..2009,2011"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4114\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2010"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4162\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2012..2013"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4174\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2014..2015"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4366\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2016"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4378\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @2017..2021"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4186\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr_2"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4234\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @2008..2009,2011"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4102\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @2010,2012..2013"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4150\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @2014..2015"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4342\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @2016"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4390\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @2017..2021"
+fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4198\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_1 @2019"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4294\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_1 @2020..2024"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4330\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_3 @2019"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4270\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_3 @2020..2024"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, tre första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4306\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_2 @2019"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4282\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020inr_2 @2020..2024"
+fields = { "label" = "Högsta utbildningens inriktning SUN2020, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4318\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced2011niva_1 @2010..2015"
+fields = { "label" = "Högsta utbildningens nivå ISCED2011, enställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3754\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced2011niva_1 @2016"
+fields = { "label" = "Högsta utbildningens nivå ISCED2011, enställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4018\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced2011niva_1 @2017..2024"
+fields = { "label" = "Högsta utbildningens nivå ISCED2011, enställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3778\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_1"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3742\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_1 @2008..2012"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3718\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_1 @2013"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3898\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_1 @2014..2016"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3886\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_1 @2017..2018"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3826\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_grov"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3790\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2008..2010"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3730\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2011..2012"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3766\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2013"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3994\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2014..2015"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4006\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2016"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4054\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @2017..2018"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3658\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_2 @2000..2004,2006..2007"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3838\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_2 @2005"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3862\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_2 @2008..2016"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3802\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_2 @2017..2018"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3814\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_old @2000..2005,2007"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3850\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000niva_old @2006"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3874\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2008..2010"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3670\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2011..2012"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3682\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2013"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3910\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2014..2016"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3922\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2017..2018"
+fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3646\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_1 @2019"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3946\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_1 @2020..2024"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, första positionen" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3970\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_grov @2019"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4066\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_grov @2020..2024"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, grovt aggregat till fyra värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4030\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_2 @2019"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3934\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_2 @2020..2024"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3958\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_old @2019"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4042\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_old @2020..2024"
+fields = { "label" = "Högsta utbildningens nivå SUN2020, äldre aggregat till sju värden" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3982\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "komvux: sun2020niva @1988-07-01..2024-06-30"
+fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3706\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "komvux: sun2020niva_2"
+fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, två första positionerna" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3694\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2013"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2013" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3490\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2014"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2014" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3502\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2015"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2015" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3514\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2016"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2016" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3526\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2017"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2017" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3538\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2018"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2018" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3550\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2019"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2019" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3562\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2020"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2020" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3574\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2021"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2021" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3586\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2022"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2022" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3610\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2023"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2023" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3622\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: totalpoang_2024"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2024" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3634\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: poang"
+fields = { "label" = "Poäng som kursen omfattar" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3598\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: kallkod_6"
+fields = { "label" = "Utbildningens källkod för äldre personer födda 1911–1926, RAMS och LISA" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3466\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-samtliga-utbildningar: kallkod_6"
+fields = { "label" = "Utbildningens källkod för äldre personer födda 1911–1926, RAMS och LISA" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3478\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced_f_2013_2 @2010..2016"
+fields = { "label" = "Utbildningsinriktning ISCED-F 2013, tvåställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4078\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced_f_2013_2 @2017..2018"
+fields = { "label" = "Utbildningsinriktning ISCED-F 2013, tvåställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4126\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: isced_f_2013_2 @2019..2024"
+fields = { "label" = "Utbildningsinriktning ISCED-F 2013, tvåställigt källkodfält" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:4414\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr @2000"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3178\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr @2001"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3214\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: sun2000inr @2002..2007"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3052\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr @2008..2009"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:2917\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr @2010"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:2971\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr @2011..2013,2015..2016"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:2899\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr @2014"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3358\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2000inr @2017..2021"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3025\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-samtliga-utbildningar: sun2000inr @2000..2018"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:2863\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "personens-samtliga-utbildningar: sun2000inr @2019..2021"
+fields = { "variable" = "sun2000inr" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:3403\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1990"
+fact = { "entity" = "release", "name" = "1990", "period" = "1990" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5065\n\nSWECOV holds UREG1990 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1991"
+fact = { "entity" = "release", "name" = "1991", "period" = "1991" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5071\n\nSWECOV holds UREG1991 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1992"
+fact = { "entity" = "release", "name" = "1992", "period" = "1992" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5077\n\nSWECOV holds UREG1992 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1993"
+fact = { "entity" = "release", "name" = "1993", "period" = "1993" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5083\n\nSWECOV holds UREG1993 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1994"
+fact = { "entity" = "release", "name" = "1994", "period" = "1994" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5089\n\nSWECOV holds UREG1994 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1995"
+fact = { "entity" = "release", "name" = "1995", "period" = "1995" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5095\n\nSWECOV holds UREG1995 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:personens-hogsta-utbildning-16-74/1996"
+fact = { "entity" = "release", "name" = "1996", "period" = "1996" }
+evidence = "reg_meta_build/curation/registers/scb/ureg.toml:5101\n\nSWECOV holds UREG1996 with the 16–74 layout (SUN2000Niva, SUN2000Niva_old, SUN2000Inr, SUN2000Grp, ExamAr, KallKod, PersonNr); SCB's Registerinformation export documents this variant from 1997 only. LISA bakgrundsfakta 1990–2017 pp. 38–39 and 101 date the SUN2000-coded highest-education variables from 1990. Named in the variant's own YYYY convention."

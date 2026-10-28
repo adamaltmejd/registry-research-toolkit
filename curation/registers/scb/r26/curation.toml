@@ -1,0 +1,79 @@
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: astsni"
+fields = { "variable" = "naringsgren-huvud-sni92" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:371\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json. Exception (#1620): AstSni, documented only on jobbregistret 1996, shares the 26.19053.astsni92 component. It fills that variant's 1996 gap between the AstSni92 editions 1993-1995 and 1997-1999 with the same name, definition, operational definition, storage width and SNI92 value set as 1993-1995; LISA bakgrundsfakta 1990-2017 dates AstSNI92 to 1990-2001, and SWECOV holds the 1996 column as AstSni92 (maintainer ruling 2026-10-15, reg_webapp/stewards/swecov/series/jobb.toml)."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: manfran"
+fields = { "description" = "Anställd från och med månad" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:6\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: mantill"
+fields = { "description" = "Anställd till och med månad" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astbelgata"
+fields = { "description" = "Arbetsställets belägenhetsgata" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:18\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astbelgatnr"
+fields = { "description" = "Arbetsställets belägenhetsgatunummer" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:30\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astbelort @1985..1998,2003..2021"
+fields = { "description" = "Arbetsställets belägenhetsort" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:24\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: peorgnr @1985..1998,2003..2021"
+fields = { "description" = "Företagets organisationsnummer (ersätts med löpnummer vid levererans)" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:42\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:48\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "foretag: sektor"
+fields = { "description" = "Sektor" }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:36\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstallen: AntalSysC @2019-01-01..2019-12-31 where key = 'v44696' and release = 'r15438'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sysselsatta på arbetsstället enligt arbetsställeregistret", "definition" = "Antal sysselsatta på arbetsstället enligt arbetsställeregistret.", "type" = "int", "sensitive" = false, "identifier" = false, "unit" = "Antal" } }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:505\n\nSWECOV holds AntalSysC in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: antalsysc @2019"
+fields = { "operational_definition" = "Antalet sysselsatta har räknats fram genom att summera personer som är placerade på arbetsstället i arbetsställeregistret (summa per cfarnr)." }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:505\n\nSWECOV holds AntalSysC in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstallen: AntalSysS @2019-01-01..2019-12-31 where key = 'v44694' and release = 'r15438'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sysselsatta på arbetsstället enligt sysselsättningsregistret", "definition" = "Antal sysselsatta på arbetsstället enligt sysselsättningsregistret.", "type" = "int", "sensitive" = false, "identifier" = false, "unit" = "Antal" } }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:515\n\nSWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: antalsyss @2019"
+fields = { "operational_definition" = "Antalet sysselsatta har räknats fram genom att summera personer som är placerade på arbetsstället i sysselsättningsregistret (summerat på AstNr)." }
+evidence = "reg_meta_build/curation/registers/scb/rams.toml:515\n\nSWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."

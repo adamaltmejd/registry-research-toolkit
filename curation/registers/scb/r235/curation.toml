@@ -1,0 +1,42 @@
+
+[[statement]]
+kind = "link"
+subject = "var:glyfosat-namn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/glyfosat-id"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:glyfosat-namn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/glyfosat-id-2006"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:grodnamn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/grodid"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:14\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:vaxtskyddsmedel-namn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:18\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:vaxtskyddsmedelsnamn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/vaxtskyddsmedel-id"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:22\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:vsnamn"
+relation = "label_of"
+object = "scb/vaxtskyddsmedel/vsid"
+evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:26\n\nLegacy code_label_pair declaration"

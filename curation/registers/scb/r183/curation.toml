@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: referensar"
+fields = { "variable" = "undersokningsar" }
+evidence = "reg_meta_build/curation/registers/scb/investeringsenkaten.toml:459\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."

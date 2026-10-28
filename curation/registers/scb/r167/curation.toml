@@ -1,0 +1,30 @@
+
+[[statement]]
+kind = "assert"
+subject = "release:konkurser-offentliga-ackord/2022"
+fact = { "entity" = "release", "name" = "2022", "period" = "2022" }
+evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:16\n\nSWECOV holds Konkurs_2022 for edition 2022; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning uppd 2023-2024 rows 18210-18219 describe Konkurs_2022 with the same columns and types as Konkurs_2021."
+
+[[statement]]
+kind = "assert"
+subject = "release:konkurser-offentliga-ackord/2023"
+fact = { "entity" = "release", "name" = "2023", "period" = "2023" }
+evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:22\n\nSWECOV holds Konkurs_2023 for edition 2023; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+
+[[statement]]
+kind = "assert"
+subject = "release:konkurser-offentliga-ackord/2024"
+fact = { "entity" = "release", "name" = "2024", "period" = "2024" }
+evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:28\n\nSWECOV holds Konkurs_2024 for edition 2024; SCB's Registerinformation export documents konkurser-offentliga-ackord through 2021 only. Dataleverans 2025 Utkast_P1105_Variabellista_uppd2025_v5.xlsx (a draft), Konkurser och offentliga ackord rows 5-14 list the Konkurs_ÅÅÅÅ columns for 2023-2024; that list is a draft."
+
+[[statement]]
+kind = "assert"
+subject = "konkurser-offentliga-ackord: PersonNr_opnr @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer för gäldenär som är enskild firma eller privatperson", "definition" = "Gäldenärens personnummer när gäldenären är en enskild firma eller en privatperson (från och med 1996). Levereras som löpnummer i kolumnen P1105_LopNr_PersonNr_opnr.", "type" = "text", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:208\n\nSWECOV holds P1105_LopNr_PersonNr_opnr in Konkurs_2015..Konkurs_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source Konk.OffAck and view Konkurs_ÅÅÅÅ; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F1, maintainer round 5)."
+
+[[statement]]
+kind = "assert"
+subject = "konkurser-offentliga-ackord: tidning @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Nummer på postgumman (från och med 1997)", "definition" = "Nummer på postgumman (från och med 1997)" } }
+evidence = "reg_meta_build/curation/registers/scb/konkurser.toml:174\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."

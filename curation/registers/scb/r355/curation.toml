@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "tradbransle-torv-och-avfallspriser: orgnr"
+fields = { "variable" = "orgnr-2" }
+evidence = "reg_meta_build/curation/registers/scb/tradbransle-torv.toml:46\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."

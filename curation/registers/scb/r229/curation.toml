@@ -1,0 +1,72 @@
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: arr5 @1999..2003"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 — Arr5" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1658\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: arr5 @2006-01-01..2006-06-30"
+fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 — Arr5" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1670\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: gxpld6"
+fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (gxpld6)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1550\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: xplangd6"
+fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1538\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: gxpld7"
+fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (gxpld7)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1574\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: xplangd7"
+fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1562\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: gxpld8"
+fields = { "label" = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (gxpld8)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1598\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: xplangd8"
+fields = { "label" = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1586\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: gxpld9"
+fields = { "label" = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (gxpld9)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1622\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: xplangd9"
+fields = { "label" = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1610\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: gxpld5"
+fields = { "label" = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (gxpld5)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1646\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: xplangd5 where key = 'v17494'"
+fields = { "label" = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)" }
+evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.toml:1634\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."

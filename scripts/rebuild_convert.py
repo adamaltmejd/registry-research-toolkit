@@ -9,7 +9,8 @@ are proposals: lock reviews today's premises, not the old builder's fingerprints
 Run reg-build read first, then:
   uv run --no-project scripts/rebuild_convert.py --frames DIR --out SCRATCH
   ... --lock --inputs DIR --assets DIR
-The output root must not exist. No generated curation is committed.
+The report output root must not exist. --write-curation replaces the checkout's
+curation statements and locks directly; otherwise output stays in scratch.
 Exit 1 when the requested lock fails, after writing the report.
 """
 
@@ -29,6 +30,7 @@ from rebuild_convert_classifications import convert as classifications
 from rebuild_convert_deferred import convert as deferred
 from rebuild_convert_groups import normalize_sets
 from rebuild_convert_identity import IdentityProjection
+from rebuild_convert_selectors import collapse
 
 ROOT = Path(__file__).resolve().parents[1]
 # simplify: resolver finding codes are string literals; replace this inventory if codes become computed.
@@ -306,6 +308,7 @@ class Converter:
         self.case_only = []
         self.field_demand = collections.Counter()
         self.selector_members = {}
+        self.selector_collapse = {}
         self.coordinate_spans = {}
         self.coordinate_labels = {}
         self.unscoped_year_coordinates = set()
@@ -1172,27 +1175,33 @@ class Converter:
                 result.update(outcome="dropped", reason=str(error))
             self.results.append(result)
 
-    def write(self):
-        shutil.copytree(ROOT / "curation", self.out / "curation")
-        for path in (self.out / "curation").rglob("curation.lock"):
+    def write(self, write_curation=False):
+        self.curation = ROOT / "curation" if write_curation else self.out / "curation"
+        if not write_curation:
+            shutil.copytree(ROOT / "curation", self.curation)
+        for path in self.curation.rglob("curation.lock"):
             path.unlink()
-        for path in (self.out / "curation").rglob("curation.toml"):
+        for path in self.curation.rglob("curation.toml"):
             path.unlink()
         self.counts = collections.Counter()
         self.locations = {}
         for (provider, register), records in sorted(self.statements.items()):
-            path = (
-                self.out / "curation/registers" / provider / register / "curation.toml"
-            )
+            if not records:
+                continue
+            path = self.curation / "registers" / provider / register / "curation.toml"
             path.parent.mkdir(parents=True, exist_ok=True)
-            text = "# One-shot conversion proposals; deleted at milestone F (REBUILD.md).\n"
-            next_line = 2
+            text = ""
+            next_line = 1
             for key, record in sorted(records.items()):
-                statement = record["statement"]
+                statement = dict(record["statement"])
+                statement["evidence"] = "\n".join(sorted(set(record["origins"]))) + (
+                    "\n\n" + statement["evidence"] if statement.get("evidence") else ""
+                )
                 text += "\n[[statement]]\n"
                 line = next_line + 1
                 self.locations[str(path.resolve()), line] = record
-                record["location"] = f"{path.relative_to(self.out)}:{line}"
+                relative = path.relative_to(ROOT if write_curation else self.out)
+                record["location"] = f"{relative}:{line}"
                 body = (
                     "\n".join(f"{k} = {literal(v)}" for k, v in statement.items())
                     + "\n"
@@ -1285,6 +1294,7 @@ class Converter:
             "source_entries": len(self.results),
             "outcomes": dict(outcomes),
             "statement_counts": dict(sorted(self.counts.items())),
+            "selector_collapse": self.selector_collapse,
             "identity_audit": dict(self.identity_audit),
             "grouping_audit": getattr(self, "grouping_audit", {}),
             "grouping_deferred": getattr(self, "grouping_deferred", []),
@@ -1443,10 +1453,13 @@ def main():
     parser.add_argument("--frames", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--lock", action="store_true")
+    parser.add_argument("--write-curation", action="store_true")
     parser.add_argument("--inputs", type=Path)
     parser.add_argument("--assets", type=Path)
     parser.add_argument("--previous-proposals", type=Path)
     args = parser.parse_args()
+    if args.write_curation and args.previous_proposals:
+        parser.error("--previous-proposals requires scratch curation output")
     args.out = args.out.resolve()
     if args.out.exists() or ROOT / "curation" in (args.out, *args.out.parents):
         parser.error("--out must be a new scratch directory outside curation/")
@@ -1485,7 +1498,8 @@ def main():
         converter.results.append(result)
     converter.normalize_identity()
     normalize_sets(converter)
-    converter.write()
+    collapse(converter)
+    converter.write(args.write_curation)
     lock = {"status": "not run", "refusals": []}
     converter.report(lock)
     if args.previous_proposals:
@@ -1499,7 +1513,7 @@ def main():
             "--inputs",
             str(args.inputs),
             "--curation",
-            str(args.out / "curation"),
+            str(converter.curation),
         ]
         if args.assets:
             command += ["--assets", str(args.assets)]

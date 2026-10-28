@@ -1,0 +1,98 @@
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: anslag_ar"
+fields = { "variable" = "anslag-ar" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:54\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: appropriation"
+fields = { "variable" = "appropriation" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:54\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: budgetitem"
+fields = { "variable" = "budgetitem" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:75\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: budgetitem_name"
+fields = { "variable" = "budgetitem-name" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:82\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: departement"
+fields = { "variable" = "departement" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:47\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: fou_anslag"
+fields = { "variable" = "fou-anslag" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:61\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: fou_ar"
+fields = { "variable" = "fou-ar" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:61\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: gbard"
+fields = { "variable" = "gbard" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:61\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: ministry"
+fields = { "variable" = "ministry" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:47\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: nr2007"
+fields = { "variable" = "nr2007" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:75\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: nr2010"
+fields = { "variable" = "nr2010" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:75\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: nrar"
+fields = { "variable" = "nrar" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:75\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: obs_value_p"
+fields = { "variable" = "obs-value-p" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:61\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: utgiftsomrade"
+fields = { "variable" = "utgiftsomrade-25227" }
+evidence = "reg_meta_build/curation/registers/scb/statliga-anslag-fou.toml:68\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."

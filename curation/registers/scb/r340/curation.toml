@@ -1,0 +1,145 @@
+
+[[statement]]
+kind = "link"
+subject = "var:hmannamn"
+relation = "label_of"
+object = "scb/grundskola-betyg-ak6/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:144\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: no @2022..2025"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh @2013..2021"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

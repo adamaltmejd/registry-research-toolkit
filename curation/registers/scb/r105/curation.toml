@@ -1,0 +1,7 @@
+
+[[statement]]
+kind = "link"
+subject = "var:kommunalforbund-namn"
+relation = "label_of"
+object = "scb/folkhogskolan/kommunalforbund-id"
+evidence = "reg_meta_build/curation/registers/scb/folkhogskolan.toml:6\n\nLegacy code_label_pair declaration"

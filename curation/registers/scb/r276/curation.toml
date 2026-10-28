@@ -1,0 +1,7 @@
+
+[[statement]]
+kind = "link"
+subject = "var:distriktsnamn"
+relation = "label_of"
+object = "scb/fastighetsreg/distriktskod"
+evidence = "reg_meta_build/curation/registers/scb/fastighetsreg.toml:6\n\nLegacy code_label_pair declaration"

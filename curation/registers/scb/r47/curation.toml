@@ -1,0 +1,644 @@
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: tmgrp @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "tmgrp", "definition" = "Kodkolumn i examensleveransen; innebörden är inte dokumenterad." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1249\n\nSWECOV holds tmgrp in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024; SCB's P1105 Leveransrapport 2023-2024 (Postbeskrivning) lists it for Hreg_Examina_1990_2022. It is in no variable list and SCB's Registerinformation export carries no row for it on grundutbildning-examina. LOVA's TMGRP name match is not used as evidence. holdings_period is the SWECOV holdings range (#1302)."
+caveat = "Delivery is documented; the column's meaning and codes are not."
+
+[[statement]]
+kind = "link"
+subject = "var:hogskolenamn"
+relation = "label_of"
+object = "scb/hreg/anknytande-hogskola"
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:427\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: artermin"
+fields = { "variable" = "ar-och-termin-for-examen" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:916\n\nSCB HREG native 47.1715: all three originals explicitly measure year and semester (calendar half-year) for the issued examination certificate. ExArTermin specifies a doctoral certificate, LicArTermin identifies a completed licentiate certificate, and ArTermin covers the examination event in the mixed doctoral/licentiate examination variant. This is one generic certificate-issued-semester question, not an assertion that degree types or observations are equivalent. All three retain text length 5, Termin unit and Tal nonmembership coding. Preserve the pre-autumn-1998 paper-report caveat and every pooled source scope, including the LicArTermin January period versus July context discrepancy. ArTermin on other native variables is outside this mapping."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forskarskolor: licartermin"
+fields = { "variable" = "ar-och-termin-for-examen" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:916\n\nSCB HREG native 47.1715: all three originals explicitly measure year and semester (calendar half-year) for the issued examination certificate. ExArTermin specifies a doctoral certificate, LicArTermin identifies a completed licentiate certificate, and ArTermin covers the examination event in the mixed doctoral/licentiate examination variant. This is one generic certificate-issued-semester question, not an assertion that degree types or observations are equivalent. All three retain text length 5, Termin unit and Tal nonmembership coding. Preserve the pre-autumn-1998 paper-report caveat and every pooled source scope, including the LicArTermin January period versus July context discrepancy. ArTermin on other native variables is outside this mapping."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forskarskolor: avhoppdat"
+fields = { "variable" = "datum-for-studieavbrott" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:836\n\nSCB Registerinformation native 47.1565: reviewed all 3 original occurrences. Both originals explicitly define year, month and day when studies in the subject were interrupted; identical original caveats describe availability from autumn 1998 and incomplete later Ladok reporting. Keep those caveats and all pooled periods unchanged. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forskarskolor: fslnamn"
+fields = { "variable" = "namn" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:806\n\nSCB Registerinformation native 47.326: reviewed all 7 original occurrences. Every original operational definition explicitly names the doctoral student at the latest reporting occasion, surname plus first name; FSLNamn does not name a doctoral school. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "var:medverkande-hogskola"
+fields = { "sets" = ["legacy-medverkande-hogskola"] }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:841\nreg_meta_build/curation/registers/scb/hreg.toml:921\n\nSCB Registerinformation native 47.38118: reviewed all 2 original occurrences. Both originals explicitly name a university participating in a doctoral school and share the operational translation from external university name codes to SCB internal codes for universities with doctoral degree rights; preserve the complete 135-code classification and both pooled delivery scopes. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged.\n\nAccepted prepared SCB export native 47.38118: both columns explicitly identify a university participating in a doctoral school, with identical operational translation from external university name codes to SCB internal codes. Both original names, definitions, type text, length 3 and complete supplied university coding and validity agree. Admit the two literal representations only in their exact pooled-edition intersection; retain the full original 2001–2008 and 2008–2022 scopes, all coding associations and provenance."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "sets" = ["legacy-kon"] }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:796\n\nSCB Registerinformation native 47.44: reviewed all 174 original occurrences. Original operational descriptions derive the same person sex from the penultimate personal-number digit. Keep numeric 0/1/2 and alphabetical M/K source coding versions as delivered; the literals do not establish separate constructs. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "forskarutbildning-tillgodoraknande: kar"
+fields = { "variable" = "ar-for-tillgodoraknande" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:801\n\nSCB Registerinformation native 47.73: reviewed all 7 original occurrences. Ar is explicitly the single reference-year value in the staff delivery; KAr is explicitly the calendar year when doctoral training was credited. Distinct event anchors, not a variant-only split. Source audit pinned to prepared commit ac1cb5c03ac99fe7334fd4e31664c7d9a50b2fba; preserve original types, units, coding associations, validity and provenance. These maps are native-scoped; reused literals in other natives remain unchanged."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2015-01-01..2015-06-30 where key = 'v1275' and release = 'r5768'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2015-07-01..2015-12-31 where key = 'v1275' and release = 'r6179'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2016-01-01..2016-06-30 where key = 'v1275' and release = 'r11137'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2016-07-01..2016-12-31 where key = 'v1275' and release = 'r9855'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2017-01-01..2017-06-30 where key = 'v1275' and release = 'r11142'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2017-07-01..2017-12-31 where key = 'v1275' and release = 'r11272'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2018-01-01..2018-06-30 where key = 'v1275' and release = 'r12948'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2018-07-01..2018-12-31 where key = 'v1275' and release = 'r12583'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2019-01-01..2019-06-30 where key = 'v1275' and release = 'r13625'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2019-07-01..2019-12-31 where key = 'v1275' and release = 'r13626'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2020-01-01..2020-06-30 where key = 'v1275' and release = 'r14377'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2020-07-01..2020-12-31 where key = 'v1275' and release = 'r15066'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2021-01-01..2021-06-30 where key = 'v1275' and release = 'r16168'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2021-07-01..2021-12-31 where key = 'v1275' and release = 'r17701'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2022-01-01..2022-06-30 where key = 'v1275' and release = 'r18256'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2022-07-01..2022-12-31 where key = 'v1275' and release = 'r18422'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2023-01-01..2023-06-30 where key = 'v1275' and release = 'r18714'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2023-07-01..2023-12-31 where key = 'v1275' and release = 'r18914'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2024-01-01..2024-06-30 where key = 'v1275' and release = 'r19151'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LInr @2024-07-01..2024-12-31 where key = 'v1275' and release = 'r19453'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Inriktningskod för utbildningsprogram", "definition" = "Högskolans programinriktningskod. Kod för inriktning av utbildningsprogram från högskolor som har Ladok.", "type" = "char", "length" = 4, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:59\n\nSWECOV holds LInr in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2015-01-01..2015-06-30 where key = 'v1278' and release = 'r5768'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2015-07-01..2015-12-31 where key = 'v1278' and release = 'r6179'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2016-01-01..2016-06-30 where key = 'v1278' and release = 'r11137'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2016-07-01..2016-12-31 where key = 'v1278' and release = 'r9855'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2017-01-01..2017-06-30 where key = 'v1278' and release = 'r11142'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2017-07-01..2017-12-31 where key = 'v1278' and release = 'r11272'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2018-01-01..2018-06-30 where key = 'v1278' and release = 'r12948'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2018-07-01..2018-12-31 where key = 'v1278' and release = 'r12583'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2019-01-01..2019-06-30 where key = 'v1278' and release = 'r13625'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2019-07-01..2019-12-31 where key = 'v1278' and release = 'r13626'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2020-01-01..2020-06-30 where key = 'v1278' and release = 'r14377'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2020-07-01..2020-12-31 where key = 'v1278' and release = 'r15066'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2021-01-01..2021-06-30 where key = 'v1278' and release = 'r16168'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2021-07-01..2021-12-31 where key = 'v1278' and release = 'r17701'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2022-01-01..2022-06-30 where key = 'v1278' and release = 'r18256'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2022-07-01..2022-12-31 where key = 'v1278' and release = 'r18422'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2023-01-01..2023-06-30 where key = 'v1278' and release = 'r18714'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2023-07-01..2023-12-31 where key = 'v1278' and release = 'r18914'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2024-01-01..2024-06-30 where key = 'v1278' and release = 'r19151'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: LProg @2024-07-01..2024-12-31 where key = 'v1278' and release = 'r19453'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Högskolans interna programkod", "definition" = "Kod för högskolornas utbildningsprogram.", "type" = "char", "length" = 5, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:68\n\nSWECOV holds LProg in Hreg_Sok_2015_2022 (edition 2015..2021) and Hreg_Sok_2022_2024 (edition 2022..2024); SCB's Registerinformation export carries the column on sokande-grund-avancerad only in Höstterminen 2005, 2006, 2007 and 2008 and in no version from Vårterminen 2009 on."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: Omr @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Utbildningsområde", "definition" = "Utbildningsområde" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1117\n\nSWECOV holds Omr in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024). SCB Dataleverans 2023-2024 Bilaga 2 - Variabellista.xlsx, sheet Högskola row 112 (Omr, Utbildningsområde, 1990-VT2022, HREG, Hreg_Examina); Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, Postbeskrivning row 12380 (Hreg_Examina_1990_2022, Omr char(2)) and Högskola row 169 (code list Hreg_H_omr); Utkast_P1105_Variabellista_uppd2025_v5.xlsx, Högskola row 112 (1990-HT2024). SCB's Registerinformation export carries no row for the column on grundutbildning-examina. Not the course-level scb/hreg/utbildningsomrade: no equivalence is asserted. Maintainer ruling 2026-10-14 (#1516)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2000Inr3_amnegrupp @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1128\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2000Inr3_amnegrupp @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1029\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2000Inr3_amnegrupp @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1194\n\nSWECOV holds SUN2000Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2000Inr3_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1139\n\nSWECOV holds SUN2000Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2000Inr3_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1040\n\nSWECOV holds SUN2000Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2000Niva_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1150\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2000Niva_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1051\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2000Niva_lprog @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2000)", "definition" = "Programmets sunnivå (SUN2000)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1205\n\nSWECOV holds SUN2000Niva_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2020Inr3_amnegrupp @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1161\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2020Inr3_amnegrupp @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1062\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2020Inr3_amnegrupp @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)", "definition" = "Ämnesgruppens suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1216\n\nSWECOV holds SUN2020Inr3_amnegrupp in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2020Inr3_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1172\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2020Inr3_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1073\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2020Inr3_lprog @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets suninriktning på 3-siffernivå (SUN2020)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1227\n\nSWECOV holds SUN2020Inr3_lprog in Hreg_Sok_2015_2022 and Hreg_Sok_2022_2024 (2015-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on sokande-grund-avancerad. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-poang: SUN2020Niva_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2020)", "definition" = "Programmets sunnivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1183\n\nSWECOV holds SUN2020Niva_lprog in Hreg_Poang_1993_2022 and Hreg_Poang_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-poang. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: SUN2020Niva_lprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programmets sunnivå (SUN2020)", "definition" = "Programmets sunnivå (SUN2020)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1084\n\nSWECOV holds SUN2020Niva_lprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: Termin @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Termin för examen", "definition" = "Termin för examen" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1238\n\nSWECOV holds Termin in Hreg_Examina_1990_2022 and Hreg_Examina_2022_2024 (1990-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-examina. holdings_period is the SWECOV holdings range (#1302). The other Hreg Termin variables are registration, credit or application terms, not the degree term."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: omr_amnegrupp @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ämnesgruppens utbildningsområde", "definition" = "Ämnesgruppens utbildningsområde" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1095\n\nSWECOV holds omr_amnegrupp in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: omr_yprog @1993..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Yrkesexamensprogrammets utbildningsområde", "definition" = "Yrkesexamensprogrammets utbildningsområde" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:1106\n\nSWECOV holds omr_yprog in Hreg_Reg_1993_2022 and Hreg_Reg_2022_2024 (1993-2024); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on grundutbildning-1993. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2000Inr_lprog @2007..2024"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "definition" = "Programmets suninriktning på 3-siffernivå (SUN2000)", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:297\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-grund-avancerad: SUN2020Niva3_lprog @2007..2024"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Programmets sunnivå på 3-siffernivå (SUN2020)", "definition" = "Programmets sunnivå på 3-siffernivå (SUN2020)", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:308\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213). Accepted SWECOV schema registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv (SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295) explicitly supplies char/varchar width3 for this exact literal in Hreg_Sok, Hreg_Sok_2015_2022, Hreg_Sok_2022_2024 and corresponding base tables. Set only the coarse text type; retain existing holdings periods and source facts."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: FFG_hskod @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare.", "definition" = "1=För första gången registrerad på lärosätet denna termin. HögskolAnybörjare." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:99\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: FFG_lprog @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)", "definition" = "1=För första gången registrerad på specifikt lprog denna termin (Ej vanlig uppgift att lämna ut - ej synonymt med SCB \"vanliga\" programnybörjare)" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:110\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: FFG_Yprog @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare.", "definition" = "1=För första gången registrerad på specifikt yprog (Synonymt med SCBs \"vanliga\"programnybörjare." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:132\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: FFG_Stud @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare.", "definition" = "1=För första gången registrerad på svenskt lärosäte denna termin. HögskolEnybörjare." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:121\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: benamning @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Benämning till namnare. Lärosätets detaljerade examensbenämning.", "definition" = "Benämning till namnare. Lärosätets detaljerade examensbenämning." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:176\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv1 @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, detaljerad nivå", "definition" = "Examensinriktningsgrupp, detaljerad nivå" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:187\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv1namn @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, detaljerad nivå. Benämning.", "definition" = "Examensinriktningsgrupp, detaljerad nivå. Benämning." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:198\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv3 @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, grov nivå", "definition" = "Examensinriktningsgrupp, grov nivå" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:231\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv3namn @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, grov nivå. Benämning.", "definition" = "Examensinriktningsgrupp, grov nivå. Benämning." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:242\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv2 @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, mellannivå", "definition" = "Examensinriktningsgrupp, mellannivå" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:209\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: grp1niv2namn @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Examensinriktningsgrupp, mellannivå. Benämning.", "definition" = "Examensinriktningsgrupp, mellannivå. Benämning." } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:220\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: TermNrKurs @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Kursens terminsnummer", "definition" = "Kursens terminsnummer" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:154\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: THPoang @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Kursregistreringens högskolepoäng inom terminen", "definition" = "Kursregistreringens högskolepoäng inom terminen" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:165\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: sun2000inr @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-inriktning, 2000-års nomenklatur", "definition" = "SUN-inriktning, 2000-års nomenklatur" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:253\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: SUN2020Inr @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-inriktning, 2020-års nomenklatur", "definition" = "SUN-inriktning, 2020-års nomenklatur" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:275\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: sun2000niva @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-nivå, 2000-års nomenklatur", "definition" = "SUN-nivå, 2000-års nomenklatur" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:264\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-examina: SUN2020Niva @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SUN-nivå, 2020-års nomenklatur", "definition" = "SUN-nivå, 2020-års nomenklatur" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:286\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "grundutbildning-1993: FFGArTermin_Stud @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "År+Termin för första registrering på svenskt lärosäte", "definition" = "År+Termin för första registrering på svenskt lärosäte" } }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:143\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: niva"
+fields = { "description" = "Förkunskapsnivå, högskolekurs" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:331\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: linr @2005-07-01..2005-12-31,2006-07-01..2006-12-31,2007-07-01..2007-12-31,2008-07-01..2008-12-31"
+fields = { "description" = "Högskolans interna programinriktning" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:379\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: kurskodben"
+fields = { "description" = "Kursenbs benämning" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:355\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: kurskod"
+fields = { "description" = "Kurskod" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:349\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: kurslan"
+fields = { "description" = "Kurslän" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:361\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-anknytande-hogskolor: hsnamn"
+fields = { "description" = "Lärosäte, klartext" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:343\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: hskod"
+fields = { "description" = "Lärosäte, kod (klartext i hjälptabell)" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:337\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lprog @2005-07-01..2005-12-31,2006-07-01..2006-12-31,2007-07-01..2007-12-31,2008-07-01..2008-12-31"
+fields = { "description" = "Lärosätets kod på programmet" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:385\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: lprogben"
+fields = { "description" = "Programmets benämning" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:391\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: linrben"
+fields = { "description" = "Programmets inriktning i klartext. Alla program har inte inriiktning. (Endast för ansökningar till program)" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:403\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: kursort"
+fields = { "description" = "Studieort, kurs" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:367\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: progort"
+fields = { "description" = "Studieort, program" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:397\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: takt"
+fields = { "description" = "Studietakt" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:373\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: termnr"
+fields = { "description" = "Terminsnummer för programstudier" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:409\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: utbomr"
+fields = { "description" = "Utbildningsområde (klartext i hjälptabell)" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:421\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: uprog"
+fields = { "description" = "Utbytesprogram" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:415\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: amnegrupp"
+fields = { "description" = "Ämnesgrupp för kursansökningar (ämnesgrupp på kursen)" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:319\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1977: ar"
+fields = { "description" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/hreg.toml:325\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

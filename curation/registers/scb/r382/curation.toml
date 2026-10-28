@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-urvalsenheter"
+fields = { "sets" = ["legacy-lopnummer-urvalsenheter"] }
+evidence = "reg_meta_build/curation/registers/scb/pin.toml:1391\n\nThe same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."

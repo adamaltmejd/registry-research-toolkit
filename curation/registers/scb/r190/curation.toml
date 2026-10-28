@@ -1,0 +1,127 @@
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/grundskola-prov-ak9/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:126\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: so_prov"
+fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: sv_kursplan"
+fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: sva @2003-01-01..2003-06-30"
+fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-no: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-no: bi_provbet"
+fields = { "description" = "Provbetyg i biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: en_provbet @2005-01-01..2005-06-30,2006-01-01..2006-06-30,2007-01-01..2007-06-30,2008-01-01..2008-06-30"
+fields = { "description" = "Provbetyg i engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-no: fy_provbet"
+fields = { "description" = "Provbetyg i fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: ge_provbet"
+fields = { "description" = "Provbetyg i geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: hi_provbet"
+fields = { "description" = "Provbetyg i historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-no: ke_provbet"
+fields = { "description" = "Provbetyg i kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: ma_provbet @2003-01-01..2003-06-30"
+fields = { "description" = "Provbetyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: re_provbet"
+fields = { "description" = "Provbetyg i religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: sh_provbet"
+fields = { "description" = "Provbetyg i samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: sv_provbet @2005-01-01..2005-06-30,2006-01-01..2006-06-30,2007-01-01..2007-06-30,2008-01-01..2008-06-30"
+fields = { "description" = "Provbetyg i svenska / svenska som andra språk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: en_a_prp"
+fields = { "description" = "Resultat på delprov A i engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: sv_a_prp"
+fields = { "description" = "Resultat på delprov A i svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: en_b_prp"
+fields = { "description" = "Resultat på delprov B i engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: sv_b_prp"
+fields = { "description" = "Resultat på delprov B i svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: en_c_prp"
+fields = { "description" = "Resultat på delprov C i engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: sv_c_prp"
+fields = { "description" = "Resultat på delprov C i svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

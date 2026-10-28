@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning-2016: storan"
+fields = { "unit" = "Antal" }
+evidence = "reg_meta_build/curation/registers/scb/godselmedelsanvandning.toml:82\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Populationsstorlek per stratum as the number of units in the stratum population. Replace it with Antal; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning: storan"
+fields = { "unit" = "Antal" }
+evidence = "reg_meta_build/curation/registers/scb/godselmedelsanvandning.toml:70\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Populationsstorlek per stratum as the number of units in the stratum population. Replace it with Antal; no value or scale is converted."

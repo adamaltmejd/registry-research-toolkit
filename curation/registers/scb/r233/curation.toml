@@ -1,0 +1,63 @@
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: utlbakgr2"
+fields = { "variable" = "utlbakgr" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:144\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json. Exception, shared-column succession fold 2026-10-21 (maintainer-approved high-confidence worklist batch): UtlBakGr2 (2014-2016) and UtlBakGr (2017-2024) carry the identical full operational definition (born-abroad or both parents abroad; missing birth country gives 'Uppgift saknas'), the same 3 codes, and are never co-delivered; both fold into the UtlBakGr2 owner. Utl_BakG and UtlSvBakg stay separate; Y-211/Y-276 sequential-rename policy."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: hkom @1993-10-15,1994-10-15,2007-10-15,2008-10-15,2009-10-15,2010-10-15,2011-10-15,2012-10-15,2013-10-15,2014-10-15,2015-10-15,2016-10-15"
+fields = { "description" = "Hemkommun" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "link"
+subject = "var:gymnasieforbundets-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-elever/gymnasieforbund-id"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:48\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-elever/skolenhetskod"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:52\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: klass"
+fields = { "description" = "Klassbeteckning. Ogranskad variabel som saknar egentlig defintionn. Denna brukar vi inte lämna ut." }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: personnr @1992-10-15,1993-10-15,1994-10-15,1995-10-15,1996-10-15,1997-10-15,1998-10-15,1999-10-15,2000-10-15,2001-10-15,2002-10-15,2003-10-15,2004-10-15,2005-10-15,2006-10-15,2007-10-15,2008-10-15,2009-10-15,2010-10-15,2011-10-15,2012-10-15,2013-10-15,2014-10-15"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: kommun"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: skolkommun"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: inriktninggy"
+fields = { "description" = "Typ av fristående gymnasieskola" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: arskurs"
+fields = { "description" = "Årskurs" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-elever.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

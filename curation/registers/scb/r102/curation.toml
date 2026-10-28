@@ -1,0 +1,52 @@
+
+[[statement]]
+kind = "link"
+subject = "var:huvudman-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-betyg/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:52\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kursnamn"
+relation = "label_of"
+object = "scb/gymnasieskola-betyg/kurs"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:56\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-betyg/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:60\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:studievag-namn"
+relation = "label_of"
+object = "scb/gymnasieskola-betyg/studievag"
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:64\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "assert"
+subject = "slutbetyg: utbildningstyp @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Programtyp", "definition" = "Visar om en elev läser Högskole(förberedande) program (HP), yrkes(förberedande) program (YP) ,IV-program (IV), introduktionsprogram(IM) eller specialutformade program (SM) som inte klan anknytas till något nationellt program" } }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:21\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "slutbetyg: AvgAr @1972..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Avgångsår", "definition" = "Avgångsår" } }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213); extended from 1990 to 1972 because SWECOV holds the column in GymnasieskolaAvg_Individ_1973–1990 (LA1972–LA1989), and 1990 was not an SCB boundary (#1603; maintainer ruling 2026-10-15)."
+
+[[statement]]
+kind = "set"
+subject = "examens-studiebevis-teknikprogrammet-ak4: utokad"
+fields = { "description" = "Kursen är en s.k. utökad kurs." }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "avgangna-fran-waldorf: skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

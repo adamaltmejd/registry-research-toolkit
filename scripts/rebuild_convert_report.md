@@ -1,3 +1,133 @@
+# D-4b fix round 01: readable selectors
+
+Output committed at `bda3ce88fdfed654e74fda9bd7e0b7a943d43b85`. Rerun only to regenerate
+before D-13 freezes the old tree.
+
+Collapse setters from the same legacy entry only after comparing exact occurrence
+membership against raw and asserted facts. Prefer spelling alone, then a normalized
+calendar union; remove key guards only with the same membership. Preserve whole
+occurrences and refuse ambiguity between overlapping source keys/labels. Assertion
+subjects construct facts, so their key/release guards remain unchanged. Legacy source
+file:line stays first in evidence.
+
+  | Measure        | Before | After  |
+  | -------------- | -----: | -----: |
+  | Statements     | 13,746 |  6,113 |
+  | Setters        | 11,044 |  3,411 |
+  | TOML lines     | 83,227 | 37,320 |
+  | Release guards | 10,607 |    660 |
+  | Key guards     | 11,345 |    743 |
+
+Remaining release guards: 545 assertion constructors, 98 setters distinguishing
+calendar-overlapping editions, and 17 setters whose undated editions cannot be selected
+faithfully by a calendar period. Assertions (2,599) and links (103) are unchanged. All
+244 statement/lock files reproduced byte for byte with the final converter. Both
+corrected locks passed with 45 redundant-set notices and no refusals.
+
+**The before/after catalog files are not byte-identical.** Collapsing statements changes
+the published statement rows, authoring locations, curation digest and generation ID.
+The full-file SHA-256 comparison was:
+
+- before: `f3a47622164b5a61140f3455a30f5f089b0051ed0cda1f279b207dc4bc3dbb99`
+- after: `b524f8dfb2f01ffec5ef6ff0141a1e032ea64b27aac63da817fb85a8a4850fa2`
+
+`reg-build diff` reports only statement row-count and two meta-value changes. A full
+logical-table comparison found all 51 catalog tables equal, preserving raw inputs,
+source locators and entity ID mappings. It normalizes declared text references and
+statement references (kind, evidence, caveat), excludes the statement table and the
+`generation_id`/`curation_digest` meta values, and separately identifies SQLite's
+changed `sqlite_stat1`/`sqlite_stat4` planner statistics. The initial full comparison
+returned 1 solely for those two physical statistics tables; the 51 catalog-table hashes
+all match. This proves unchanged applied catalog effects, not literal file identity.
+Published statements: 13,569 → 6,068 (2,599 assert, 3,366 set, 103 link).
+
+Release binary; inputs remain at `9186fcbceeb2283a50c7f684764869e4dda5765e` and the SCB
+asset SHA-256 at `a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`.
+Heavy commands ran sequentially.
+
+  | Command           | Exit | Wall seconds |
+  | ----------------- | ---: | -----------: |
+  | release-build     |    0 |        0.208 |
+  | read              |    0 |       56.720 |
+  | before-build      |    0 |      263.184 |
+  | before-verify     |    0 |       23.615 |
+  | convert           |    0 |       70.675 |
+  | convert-lock      |    0 |      185.866 |
+  | rerun             |    0 |       71.890 |
+  | rerun-lock        |    0 |      185.065 |
+  | final-replay      |    0 |       73.687 |
+  | final-replay-lock |    0 |      185.572 |
+  | after-build       |    0 |      261.613 |
+  | after-verify      |    0 |       23.601 |
+  | diff              |    1 |        0.815 |
+  | effects           |    1 |       84.812 |
+
+The first two conversions straddled a case-folding correction found in review; their
+replay mismatch was not accepted as reproducibility evidence. The final two corrected
+conversions/locks are identical. Independent final source review passed. No new tests.
+
+`g0 rust` passed in 21.644 seconds: lint/type/schema/vocabulary checks, Rust
+Clippy/tests/dependency checks, 116 script tests, byte-identical synthetic builds, and
+194 conformance cases (2 skipped). Its first attempt caught an undeclared report
+attribute; initialization fixed the type check without changing generated output.
+
+Not run this round: legacy real-seed build, release gate, curated release build, R
+suites, `gate.py regen`, or an additional uncurated build. No new tests. Final Markdown
+formatting/lint and `git diff --check` passed. Task-owned scratch is removed after
+reporting.
+
+Earlier conversion measurements below are historical.
+
+# D-4b: committed curation
+
+Output committed at `8471d6c3b297c14ce904bd39a3164358a9e2d745`. Rerun only to regenerate
+before D-13 freezes the old tree.
+
+The converter's explicit `--write-curation` mode writes into this checkout's
+`curation/`; its default still writes to a new scratch root. Each statement includes its
+legacy source file:line in evidence. There are 122 register statement/lock pairs, with
+no generated comments or empty statement files. Two conversions and locks on inputs
+`9186fcbceeb2283a50c7f684764869e4dda5765e` reproduced all 244 files byte for byte. The
+SCB asset digest remains
+`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`.
+
+Both locks passed with 177 redundant-set notices and zero refusals. The committed-tree
+dev build and explicit verify passed. Applied: 2,599 assert, 10,867 set, 103 link, zero
+ack. Relative to uncurated: +1,912 variables, +2,370 segments, -67 ambiguous segments,
++155 withheld occurrences. The dev report retains 6,927 unminted variables; this does
+not certify D's release/minting exit gate.
+
+  | Command      | Exit | Wall seconds |
+  | ------------ | ---: | -----------: |
+  | read         |    0 |       65.964 |
+  | uncurated    |    0 |      132.013 |
+  | convert      |    0 |       79.184 |
+  | convert-lock |    0 |      187.085 |
+  | rerun        |    0 |       68.820 |
+  | rerun-lock   |    0 |      187.572 |
+  | curated      |    0 |      266.903 |
+  | verify       |    0 |       23.423 |
+  | diff         |    1 |        1.170 |
+
+The diff's exit 1 means expected catalog differences. Rust data commands ran
+sequentially. Initial Python environment synchronization briefly overlapped the dev
+build, so its wall time is not an isolated performance benchmark. The first release
+compile failed in the host sccache; disabling RUSTC_WRAPPER succeeded.
+
+CI's Rust build and conformance use their own synthetic curation roots; the legacy suite
+reads `reg_meta_build/curation`. No inspected CI step applies this real tree. Default
+build paths, fixtures and tests are unchanged.
+
+`uv run --no-project scripts/gate.py g0 rust` passed in 62.404 seconds:
+lint/type/schema/vocabulary checks, Rust Clippy/tests/dependency checks, 116 script
+tests, byte-identical synthetic rebuilds, and 194 conformance cases (2 skipped).
+Independent converter and generated-file review passed. No new tests were added.
+
+Not run: legacy real-seed build, release gate, R suites, `gate.py regen`, or curated
+release build. Task-owned scratch artifacts are removed after reporting.
+
+The earlier converter reports below are historical measurements.
+
 ## D-3c fix round 01: current finding codes and a smaller link stage
 
 Deleted at milestone F (REBUILD.md).

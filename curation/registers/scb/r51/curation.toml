@@ -1,0 +1,78 @@
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjomf @1996..1998,2000"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:141\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjomf @1999,2001..2002"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:129\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjomf @2003,2005..2011"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:153\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjomf @2004"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:165\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osysly @1996,1998"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:177\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osysly @2004..2012"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:189\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osysly @2013..2015"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:201\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Överenskommen sysselsättningsgrad för månadsavlönade as the employment rate in the contract of employment, a share of full time; SCB documents the sibling native 5717 (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osys @1996..1998"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:213\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osys @2004..2011"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:225\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: osysly @2016..2017"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:237\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB documents the same native variable (Överenskommen sysselsättningsgrad) with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjlom @1996..1998"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:261\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjlom @1999..2002"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:249\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: tjlom @2003..2011"
+fields = { "unit" = "Procent" }
+evidence = "reg_meta_build/curation/registers/scb/slr.toml:273\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."

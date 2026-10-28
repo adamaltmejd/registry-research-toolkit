@@ -1,0 +1,68 @@
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: ma_f_pr @2013-01-01..2013-06-30,2014-01-01..2014-06-30,2015-01-01..2015-06-30,2022-01-01..2022-06-30,2023-01-01..2023-06-30,2024-01-01..2024-06-30,2025-01-01..2025-06-30"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov F" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:6\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: ma_f2_pr"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov F2" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:12\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: ma_g_pr @2013-01-01..2013-06-30,2014-01-01..2014-06-30,2015-01-01..2015-06-30"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov G" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:18\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "label_of"
+object = "scb/grundskola-prov-ak3/skolenhetskod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:60\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/grundskola-prov-ak3/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:64\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: sva"
+fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: ma_g2_pr"
+fields = { "description" = "Elevens delprovsresultat i matematik, delprov G2" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: skolenhetskod @2015-01-01..2015-06-30,2016-01-01..2016-06-30,2017-01-01..2017-06-30,2018-01-01..2018-06-30,2019-01-01..2019-06-30,2022-01-01..2022-06-30,2023-01-01..2023-06-30,2024-01-01..2024-06-30,2025-01-01..2025-06-30"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: kommun"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak3.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

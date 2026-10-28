@@ -1,0 +1,306 @@
+
+[[statement]]
+kind = "set"
+subject = "sol: pseudo"
+fields = { "description" = "Anonymt id nummer" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: htjtim"
+fields = { "description" = "Antal beviljade hemtjänsttimmar under månaden" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:328\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: abist"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om annan vård- eller omsorgsinsats" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:238\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: avan"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om avlösning av anhörig i hemmet som inte ingår i ett hemtjänstbeslut" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:247\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: bosto"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om boendestöd" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: dagv"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om dagverksamhet" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: htj"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om hemtjänst" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: kontf"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktfamilj" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:346\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: kontp"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om kontaktperson" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:355\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: korttid"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om korttidsvård/korttidsboende" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: ledsag"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om ledsagning som inte ingår i ett hemtjänstbeslut" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:373\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: matd"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om matdistribution som inte ingår i ett hemtjänstbeslut" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:382\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: trygg"
+fields = { "description" = "Brukaren har den sista dagen i månaden ett verkställt biståndsbeslut om trygghetslarm som inte ingår i ett hemtjänstbeslut" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:409\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: foddatn"
+fields = { "description" = "Brukarens födelsedatum" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: foddatn"
+fields = { "description" = "Brukarens födelsedatum" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: foddatn"
+fields = { "description" = "Brukarens födelsedatum, numeriskt sas-datum" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:274\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: kdel"
+fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är frivillig och är till för att underlätta eventuella återkontakter med kommunen." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kdel"
+fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är till för Stockholm, Göteborg och Malmö." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: kdel"
+fields = { "description" = "De kommuner som har kommundel, stadsdel, nämnd eller motsvarande kan ange detta här. Uppgiften är till för Stockholm, Göteborg och Malmö." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:337\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: bosto"
+fields = { "description" = "Med boendestöd avses bistånd i form av stöd i den dagliga livsföringen riktat till särskilda målgrupper. Till särskilda målgrupper hör bl.a. personer med psykisk funktionsnedsättning. Boendestöd kan vara ett såväl praktiskt som socialt stöd för att stärka en persons förmåga att klara vardagen i bostaden och ute i samhället." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: dagv"
+fields = { "description" = "Med dagverksamhet avses bistånd i form av sysselsättning, gemenskap, behandling eller rehabilitering under dagtid utanför den egna bostaden. Så kallade öppna verksamheter, dvs. verksamheter i vilka personer kan delta utan ett individuellt beslut, t.ex. kaféverksamheter och andra former av träffpunkter avses inte." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: htj"
+fields = { "description" = "Med hemtjänst avses biståndsbeslutad service och personlig omvårdnad i den enskildes bostad i ordinärt boende, i särskilt boende eller i annat boende. Service avser t.ex. praktisk hjälp med hemmets skötsel, såsom städning och tvätt, hjälp med inköp, ärenden på post- och bankkontor, hjälp med tillredning av måltid" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: korttid"
+fields = { "description" = "Med korttidsvård/korttidsboende avses bistånd i form av tillfälligt boende för bl.a. avlösning och växelvård, som kan vara förenat med hälso- och sjukvårdsinsatser.\n26" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjtim"
+fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: antal beviljade timmar per månad" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:328\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjavan"
+fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser avlösning av anhörig" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:292\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjled"
+fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser ledsagning" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:301\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjpomv"
+fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser personlig omvårdnad" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:310\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htjserv"
+fields = { "description" = "Om verkställigheten/avslutet avser hemtjänst: beslutet avser service" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:319\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: pseudo"
+fields = { "description" = "Pseudonymiserat ID-nummer, alfanumeriskt" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: pseudo"
+fields = { "description" = "Socialstyrelsens pseudonymiserade ID-nummer för brukaren, alfanumeriskt" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:391\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: sbo"
+fields = { "description" = "Särskilda boendeformer för service och omvårdnad som kommunen, enligt 5 kap. 5 § socialtjänstlagen, ska inrätta för äldre personer som behöver särskilt stöd. Till särskilda boendeformer för service och omvårdnad hör bl.a. ålderdomshem, servicehus, gruppboenden och sjukhem. - Bostäder med särskild service som kommunen, enligt 5 kap. 7 § socialtjänstlagen, ska inrätta för personer som av fysiska, psykiska eller andra skäl möter betydande svårigheter i sin livsföring och som till följd av dessa svårigheter behöver ett sådant boende." }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:400\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: htjavan"
+fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser avlösning av anhörig" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:292\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: htjled"
+fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser ledsagning" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:301\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: htjpomv"
+fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser personlig omvårdnad" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:310\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: htjserv"
+fields = { "description" = "Verkställigheten av beslutet om hemtjänst avser service" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:319\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: abist"
+fields = { "description" = "Verkställigheten/avslutet avser annat bistånd inom vård- och omsorg" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:238\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: bosto"
+fields = { "description" = "Verkställigheten/avslutet avser boendestöd" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:256\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: dagv"
+fields = { "description" = "Verkställigheten/avslutet avser dagverksamhet" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:265\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: htj"
+fields = { "description" = "Verkställigheten/avslutet avser hemtjänst" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:283\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kontf"
+fields = { "description" = "Verkställigheten/avslutet avser kontaktfamilj" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:346\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kontp"
+fields = { "description" = "Verkställigheten/avslutet avser kontaktperson" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:355\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: korttid"
+fields = { "description" = "Verkställigheten/avslutet avser korttidsboende/korttidsvård" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:364\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: avan"
+fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om avlösning i hemmet" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:247\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: ledsag"
+fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om ledsagning" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:373\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: matd"
+fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om matdistribution" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:382\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: trygg"
+fields = { "description" = "Verkställigheten/avslutet avser separat biståndsbeslut om trygghetslarm" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:409\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: sbo"
+fields = { "description" = "Verkställigheten/avslutet avser särskilt boende" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:400\n\nComplete own SOL source family establishes a stable named quantity within its reviewed source role. Preserve variant-specific delivery descriptions, source periods and own domains. The month-end stock and implementation/termination events are distinct delivery contexts, not statistically interchangeable observations. Historical contradictory roles are separately guarded owners. Batch49-SOL-semantic-role-proposal.json and Batch49-SOL-semantic-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: adat"
+fields = { "label" = "Datum för avslut" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:158\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: korttid"
+fields = { "label" = "Korttidsvård/-boende" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:203\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
+
+[[statement]]
+kind = "set"
+subject = "sol: korttid"
+fields = { "label" = "Korttidsvård/-boende" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:188\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: sbo"
+fields = { "label" = "Särskilt boende" }
+evidence = "reg_meta_build/curation/registers/sos/sol.toml:173\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."

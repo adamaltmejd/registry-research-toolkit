@@ -1,0 +1,234 @@
+
+[[statement]]
+kind = "set"
+subject = "par-sv: lk where label = 'Folkbokföringsort (län, kommun) 31 dec, från SCB'"
+fields = { "label" = "Folkbokföringsort (län, kommun) 31 dec" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:540\n\nBoth exact annual LK originals positively state identical31December observation wording and SCB source attribution. Use the existing PAR_OV name also for PAR_SV; redundant source attribution remains explicitly SCB. Retain all monthly care-event originals, source descriptions, periods, classifications and raw contexts."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: utdatum"
+fields = { "description" = "Det datum då patienten skrivits ut, i SAS-datum" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:894\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: atco where label = 'ATC-kod som komplement till åtgärdskod, finns i plattfil, flera koder i en sträng'"
+fields = { "label" = "ATC-kod som komplement till åtgärdskod" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:858\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: lt_in"
+fields = { "label" = "Uppgiftslämnare" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:870\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: lt_in"
+fields = { "label" = "Uppgiftslämnare" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:882\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: atgdatum"
+fields = { "description" = "Datum då åtgärden påbörjades, i SAS-datum, i at-fil" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:276\n\nComma spacing only. Original rows row:12 and row:85 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: dia_ant"
+fields = { "label" = "Antal diagnoskoder" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:378\n\nCorrect the duplicated plural ending using the peer name; both descriptions count diagnosis codes. Original rows row:16 and row:89 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: pvard"
+fields = { "description" = "Anger om vårdkontakten varit planerat eller ej" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:402\n\nDefinite noun form only; preserve identical planned-contact code meanings. Original rows row:165 and row:62 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: pnr"
+fields = { "description" = "Personnummer eller samordningsnummer på patient. Om reservnummer är variabeln tom och värdet finns i RNR." }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:390\n\nDuplicated space only. Original rows row:58 and row:161 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ekod"
+fields = { "description" = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: dia"
+fields = { "description" = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:288\n\nHard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: yo"
+fields = { "description" = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:414\n\nHard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: op_ant"
+fields = { "description" = "Antal inrapporterade åtgärder" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:822\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: op_ant"
+fields = { "description" = "Antal inrapporterade åtgärder, kan vara mer än 30" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:822\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: utsatt"
+fields = { "description" = "Avser vad patienten skrivs ut till efter avslutad vårdkontakt eller om patienten avlidit" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:849\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: utsatt"
+fields = { "description" = "Avser vad patienten skrivs ut till efter avslutat vårdtillfälle eller om patienten avlidit" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:849\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ane2"
+fields = { "description" = "Den andra koden för ev. anestesi som används vid operation" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:741\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ane2"
+fields = { "description" = "Den andra koden för ev. anestesi som används vid operation. Skall ha inrapporterats enligt Rekommendationer för registrering av anestesiarbete, utgiven av Svensk Förening för Anestesi och Intensivvård 1997" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:741\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ane1"
+fields = { "description" = "Den första koden för ev. anestesi som används vid operation" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:732\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ane1"
+fields = { "description" = "Den första koden för ev. anestesi som används vid operation. Skall ha inrapporterats enligt Rekommendationer för registrering av anestesiarbete, utgiven av Svensk Förening för Anestesi och Intensivvård 1997" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:732\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: lt_in"
+fields = { "description" = "Inrapporterande region eller privat rapportör" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: lt_in"
+fields = { "description" = "Inrapporterande region eller privat rapportör" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: lt_klin"
+fields = { "description" = "Klinik eller medicinskt verksamhetsområde där patienten varit inskriven" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:804\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: lt_klin"
+fields = { "description" = "Klinik eller medicinskt verksamhetsområde för vårdkontakten" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:804\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: mvo"
+fields = { "description" = "Klinik/verksamhetsenhet/vårdenhet/basenhet som patienten besökt/haft kontakt med" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: mvo"
+fields = { "description" = "Klinik/verksamhetsenhet/vårdenhet/basenhet som patienten var inskriven på" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: mvo"
+fields = { "description" = "Klinik/verksamhetsenhet/vårdenhet/basenhet som patienten var inskriven på" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: lt_in"
+fields = { "description" = "Om registrerad uppgiftslämnare är en region avses landstingsnummer, om privat uppgiftslämare anges PV" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: foddatumn"
+fields = { "description" = "Patientens födelsedatum, i SAS-datum" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: foddatumn"
+fields = { "description" = "Patientens födelsedatum, i SAS-datum, i ad-fil" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: foddatumn"
+fields = { "description" = "Patientens födelsedatum, i SAS-datum,i ad-fil" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: insatt"
+fields = { "description" = "På vilket sätt patienten skrivits in" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:786\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: sjukhus"
+fields = { "description" = "Sjukhus/sjukvårdsinrättning patienten besökt eller varit i kontakt med. En sjukhuskod bör vara knuten till en vårdgivare och fysisk plats. Läs mer på Lämna uppgifter till patientregistret - Socialstyrelsen." }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: sjukhus"
+fields = { "description" = "Sjukhus/sjukvårdsinrättning vid vilken patienten varit inskriven på" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: sjukhus"
+fields = { "description" = "Sjukhus/sjukvårdsinrättning vid vilken patienten varit inskriven på" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: insatt"
+fields = { "description" = "Varifrån patienten skrivs in" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:786\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: icd"
+fields = { "description" = "Version av ICD klassificering som används för diagnoskod i variabel HDIA" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:777\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: icd"
+fields = { "description" = "Version av ICD klassificering som används för diagnoskoderna" }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:777\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: diagnos"
+fields = { "description" = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget max vid insamling men endast 30 diagnoskoder läggs i strängen." }
+evidence = "reg_meta_build/curation/registers/sos/par.toml:426\n\nWord order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."

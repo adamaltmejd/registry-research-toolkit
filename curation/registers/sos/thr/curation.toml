@@ -1,0 +1,96 @@
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: mot_namn"
+fields = { "description" = "Klinikens namn" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:253\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: org_nr"
+fields = { "description" = "Klinikens organisationsnummer\n10-siffrig kod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:262\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: postkod"
+fields = { "description" = "Klinikens postkod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:271\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: postort"
+fields = { "description" = "Klinikens stad" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:280\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: org_nr"
+fields = { "description" = "Mottagningens organisationsnummer\n10-siffrig kod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:262\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: mot_namn"
+fields = { "description" = "Mottagningensnamn" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:253\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: postkod"
+fields = { "description" = "Mottagnings postkod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:271\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: postort"
+fields = { "description" = "Mottagnings stad" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:280\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa-landsting: kon"
+fields = { "description" = "Patientens kön" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa: kon"
+fields = { "description" = "Patientens kön" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: kon"
+fields = { "description" = "Patientens kön. Man eller kvinna. Härleds från Patientens Patientnummer." }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: kon"
+fields = { "description" = "Patientens kön. Man eller kvinna. Härleds från patientens Patientnummer." }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:244\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa-landsting: arendeid"
+fields = { "description" = "Ärende ID" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa: arendeid"
+fields = { "description" = "Ärende ID" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: arendeid"
+fields = { "description" = "Ärende ID\n10-siffrig kod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: arendeid"
+fields = { "description" = "Ärende ID\n10-siffrig kod" }
+evidence = "reg_meta_build/curation/registers/sos/thr.toml:235\n\nSame source-defined quantity with delivery-specific qualifier, derivation or clinic/mottagning wording. Preserve each own description, raw storage and representation. No integer-to-text correction, code replacement or new measurement role. Batch52-THR-complete-source-review.json."

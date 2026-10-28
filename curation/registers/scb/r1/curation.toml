@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstalleenheter: jurform @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Juridisk form", "definition" = "Juridisk form." } }
+evidence = "reg_meta_build/curation/registers/scb/fdb.toml:276\n\nSWECOV holds jurform in FDB_AE_2015..FDB_AE_2022; Leveransrapport 2023-2024 (Postbeskrivning) lists it on FDB_AE_2021/2022; SCB's Registerinformation export carries no row for it on this variant (JurForm is documented on juridiska-enheter only, which these tables are not) (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstalleenheter: regdatktid @2015..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "date", "label" = "regdatktid", "definition" = "regdatktid" } }
+evidence = "reg_meta_build/curation/registers/scb/fdb.toml:265\n\nSWECOV holds regdatktid in FDB_AE_2015..FDB_AE_2022 and the renamed AdmStatStartDatKtid in FDB_AE_2023..2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (FDB sheet) lists RegDatKtid for FDB_AE 2015-2024; SCB's Registerinformation export carries no row for it on this variant. Twin of the avregdatktid errata; the 2023-2024 rename maps through the overlay (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstalleenheter: avregdatktid @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "date", "label" = "Avregistreringsår", "definition" = "Avregistreringsår" } }
+evidence = "reg_meta_build/curation/registers/scb/fdb.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "administrativa: aststat"
+fields = { "description" = "AST-status" }
+evidence = "reg_meta_build/curation/registers/scb/fdb.toml:21\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

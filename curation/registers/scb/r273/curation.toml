@@ -1,0 +1,18 @@
+
+[[statement]]
+kind = "set"
+subject = "stativ: afsokyrkerf @2022..2023"
+fields = { "description" = "Erfarenhet i sökt yrke" }
+evidence = "reg_meta_build/curation/registers/scb/stativ.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "stativ: afkassgrp @2022..2023"
+fields = { "description" = "Kassagrupp" }
+evidence = "reg_meta_build/curation/registers/scb/stativ.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "stativ: afsokyrkutb @2022..2023"
+fields = { "description" = "Utbildning i sökt yrke" }
+evidence = "reg_meta_build/curation/registers/scb/stativ.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

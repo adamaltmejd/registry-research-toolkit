@@ -1,0 +1,138 @@
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelapr"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:455\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelaug"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:467\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibeldec"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:479\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelfeb"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:491\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibeljan"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:503\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibeljul"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:515\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibeljun"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:527\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelmaj"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:539\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelmar"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:551\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelnov"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:563\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelokt"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:575\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: ibelsep"
+fields = { "definition" = "Belopp för introduktionsersättning under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:587\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelapr"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:599\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelaug"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:611\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelfeb"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:623\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbeljan"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:635\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbeljul"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:647\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbeljun"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:659\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelmaj"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:671\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelmar"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:683\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelnov"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:695\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelokt"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:707\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: sbelsep"
+fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
+evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:719\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."

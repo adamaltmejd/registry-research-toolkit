@@ -1,0 +1,35 @@
+
+[[statement]]
+kind = "link"
+subject = "var:fodelselandvdnamn"
+relation = "label_of"
+object = "scb/ep-val-deltagande/fodelseland-varldsdel-2"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-deltagande.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kgruppnamn2011"
+relation = "label_of"
+object = "scb/ep-val-deltagande/kgruppnr2011"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-deltagande.toml:23\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunnamn"
+relation = "label_of"
+object = "scb/ep-val-deltagande/kommun"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-deltagande.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommungrupp-namn"
+relation = "label_of"
+object = "scb/ep-val-deltagande/kommungrupp-kod"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-deltagande.toml:19\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:medborgarland-varldsdel-namn"
+relation = "label_of"
+object = "scb/ep-val-deltagande/medborgarland-varldsdel-2"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-deltagande.toml:14\n\nLegacy code_label_pair declaration"

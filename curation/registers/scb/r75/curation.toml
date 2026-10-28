@@ -1,0 +1,138 @@
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v2330'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:81\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v4235'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:91\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v7905'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:101\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v7906'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:106\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v7950'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:111\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: energiid where key = 'v7969'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:116\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v2330'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:81\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v4235'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:91\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v7877'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:96\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v7905'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:101\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v7906'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:106\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v7950'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:111\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: kvant where key = 'v7969'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:116\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: scbid where key = 'v7877'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:96\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v2330'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:81\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v4019'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:86\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v4235'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:91\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v7877'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:96\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v7905'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:101\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v7906'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:106\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v7950'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:111\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v7969'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:116\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v8051'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/energi-flerbostad.toml:121\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."

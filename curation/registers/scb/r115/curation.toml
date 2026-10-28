@@ -1,0 +1,25 @@
+
+[[statement]]
+kind = "link"
+subject = "var:kommun-eller-lansnamn"
+relation = "label_of"
+object = "scb/kommunalskatter/kommun"
+evidence = "reg_meta_build/curation/registers/scb/kommunalskatter.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "kommunalskatter-landsting: folkm1231_2"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/kommunalskatter.toml:127\n\nThis source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kommunalskatter: folkm1231_2 @2007"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/kommunalskatter.toml:139\n\nThis source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kommunalskatter: folkm1231_2 @2008..2011"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/kommunalskatter.toml:115\n\nThis source explicitly defines Folkmängden den 31 dec år t-2. Antal and the supplied Antal personer both count persons for this same quantity; the wording adds no different measurement or scale. Complete native-family partition guards pin every original, field, parent and coding reference. Preserve the original unit spelling and every yearly fact. Batch52-Kommunalskatter7-source-proof.json."

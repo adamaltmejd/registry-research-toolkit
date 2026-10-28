@@ -1,0 +1,18 @@
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:167\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "sets" = ["legacy-personnr"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:215\n\nExact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer"
+fields = { "sets" = ["legacy-skolans-identitetsnummer"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:228\n\nExact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."

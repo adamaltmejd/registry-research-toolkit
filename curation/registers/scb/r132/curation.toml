@@ -1,0 +1,378 @@
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: anst where key = 'v1639'"
+fields = { "label" = "Anställda på arbetsstället — Anst" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1392\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: anställda where key = 'v1639'"
+fields = { "label" = "Anställda på arbetsstället — Anställda" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1404\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: anst where key = 'v16314'"
+fields = { "label" = "Antal anställda på arbetsstället — Anst" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1728\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: anställda where key = 'v16314'"
+fields = { "label" = "Antal anställda på arbetsstället — Anställda" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1740\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: aestat @2004"
+fields = { "label" = "Arbetsställestatus — AeStat" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1848\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: aestat @2006..2009"
+fields = { "label" = "Arbetsställestatus — AeStat" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1812\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: aestat @2010..2016"
+fields = { "label" = "Arbetsställestatus — AeStat" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1824\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: arbetsställestatus"
+fields = { "label" = "Arbetsställestatus — Arbetsställestatus" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1836\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ben where key = 'v16328'"
+fields = { "label" = "Benämning på arbetsstället — Ben" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1320\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: benämning where key = 'v16328'"
+fields = { "label" = "Benämning på arbetsstället — Benämning" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1332\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ben where key = 'v2622'"
+fields = { "label" = "Benämning på redovisningsenheten — Ben" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1884\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: benämning where key = 'v2622'"
+fields = { "label" = "Benämning på redovisningsenheten — Benämning" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1896\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: bränsleförbr_transp"
+fields = { "label" = "Bränsleanvändning för transporter — Bränsleförbr_transp" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1608\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: forbtrans"
+fields = { "label" = "Bränsleanvändning för transporter — ForbTrans" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1596\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: bränsleförbr_övrig where key = 'v16413'"
+fields = { "label" = "Bränsleanvändning för övrigt — Bränsleförbr_övrig" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1632\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: forbovr where key = 'v16413'"
+fields = { "label" = "Bränsleanvändning för övrigt — ForbOvr" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1620\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: bränsleförbr_övrig where key = 'v7845'"
+fields = { "label" = "Bränsleförbrukning övrigt — Bränsleförbr_övrig" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1932\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: forbovr where key = 'v7845'"
+fields = { "label" = "Bränsleförbrukning övrigt — ForbOvr" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1944\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: vv where key = 'v2598'"
+fields = { "label" = "Bränsleslagens värmevärden — Vv" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1908\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: värmevärde where key = 'v2598'"
+fields = { "label" = "Bränsleslagens värmevärden — Värmevärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1920\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: btext @2004..2009"
+fields = { "label" = "Bränsleslaget i klartext — BText" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1776\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: btext @2010..2011"
+fields = { "label" = "Bränsleslaget i klartext — BText" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1776\nreg_meta_build/curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: btext @2012..2018"
+fields = { "label" = "Bränsleslaget i klartext — BText" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1788\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: bränsleslag"
+fields = { "label" = "Bränsleslaget i klartext — Bränsleslag" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1800\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: vv @2006..2009,2016..2017"
+fields = { "label" = "Bränsleslagets värmevärden — Vv" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1656\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: vv @2010..2015,2018..2024"
+fields = { "label" = "Bränsleslagets värmevärden — Vv" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1644\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: värmevärde where key = 'v16414'"
+fields = { "label" = "Bränsleslagets värmevärden — Värmevärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1668\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: el_mwh"
+fields = { "label" = "Elanvändningen i kvantitet MWh — El_MWh" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1584\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: mwh"
+fields = { "label" = "Elanvändningen i kvantitet MWh — MWh" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1572\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: fnamn where key = 'v3575'"
+fields = { "label" = "Företagets namn — FNamn" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1752\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: företagsnamn"
+fields = { "label" = "Företagets namn — Företagsnamn" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1764\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: elvärde where key = 'v16432'"
+fields = { "label" = "Inköpsvärde av el — Elvärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1872\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde where key = 'v16432'"
+fields = { "label" = "Inköpsvärde av el — Varde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1860\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: inköpsvärde where key = 'v16418'"
+fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Inköpsvärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1692\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde where key = 'v16418'"
+fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Varde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1680\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: inkopt"
+fields = { "label" = "Inköpt kvantitet — Inkopt" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1704\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: inköptkvantitet"
+fields = { "label" = "Inköpt kvantitet — InköptKvantitet" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1716\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: inköpsvärde where key = 'v2607'"
+fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Inköpsvärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1968\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde where key = 'v2607'"
+fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Varde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1956\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kpers1 @2004"
+fields = { "label" = "Kontaktperson 1 — KPers1" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1524\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kpers1 @2005..2024"
+fields = { "label" = "Kontaktperson 1 — KPers1" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1512\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kontaktperson1"
+fields = { "label" = "Kontaktperson 1 — Kontaktperson1" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1536\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kpers2"
+fields = { "label" = "Kontaktperson 2 — KPers2" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1548\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kontaktperson2"
+fields = { "label" = "Kontaktperson 2 — Kontaktperson2" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1560\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ng2007 @2007"
+fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1464\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ng2007 @2008..2009"
+fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1500\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ng2007 @2010..2024"
+fields = { "label" = "Näringsgren för arbetsställe — NG2007" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1488\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: näringsgren2002"
+fields = { "label" = "Näringsgren för arbetsställe — Äldre standard än Ng2002 (Näringsgren2002)" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1452\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: näringsgren2007"
+fields = { "label" = "Näringsgren för arbetsställe — Äldre standard än Ng2007." }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1476\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: peorgnr @2004"
+fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1416\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: peorgnr @2005"
+fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeOrgNr)" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1428\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: peorgnrhe"
+fields = { "label" = "Organisationsnummer, redovisningsenheten — 12-siffrigt nummer från Företagsdatabasen (PeorgNrHe)" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1440\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ppostort"
+fields = { "label" = "Postort för arbetsstället — PPostort" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1380\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: poanst where key = 'v16428'"
+fields = { "label" = "Postort för arbetsstället — PoAnst" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1344\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: postnr where key = 'v16428'"
+fields = { "label" = "Postort för arbetsstället — PostNr" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1368\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: postort where key = 'v16428'"
+fields = { "label" = "Postort för arbetsstället — Postort" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1356\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: adress where key = 'v2620'"
+fields = { "label" = "Vilken adress har redovisningsenheten — Adress" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1272\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: anladr"
+fields = { "label" = "Vilken adress har redovisningsenheten — AnlAdr" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1284\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: poanst where key = 'v2634'"
+fields = { "label" = "Vilken postort har redovisningsenheten — PoAnst" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1296\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: postort where key = 'v2634'"
+fields = { "label" = "Vilken postort har redovisningsenheten — Postort" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1308\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: elvärde where key = 'v2606'"
+fields = { "label" = "Värdet av elförbrukningen och bränsleförbrukning för transporter — Elvärde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1992\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: varde where key = 'v2606'"
+fields = { "label" = "Värdet av elförbrukningen och bränsleförbrukning för transporter — Varde" }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:1980\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslaget-i-klartext-btext"
+fields = { "sets" = ["legacy-bransleslaget-i-klartext-btext"] }
+evidence = "reg_meta_build/curation/registers/scb/isen.toml:2004\nreg_meta_build/curation/registers/scb/isen.toml:2017\n\nExact same native source member declares both BText and BTEXT with identical substantive fields in this edition. Retain both literal physical forms under their known native klartext quantity, with per-column metadata. No field dropped, code value merged or suffix meaning inferred. Batch51-ISEN25-source-proof.json."

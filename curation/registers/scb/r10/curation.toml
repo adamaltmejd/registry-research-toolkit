@@ -1,0 +1,88 @@
+
+[[statement]]
+kind = "set"
+subject = "brukare: lbrid"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "set"
+subject = "tradgard-friland: idnr"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "set"
+subject = "tradgard-friland: lbrid"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "set"
+subject = "tradgard-vaxthus: idnr"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: idnr"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: lbrid"
+fields = { "variable" = "lantbruk-foretags-id" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:298\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."
+
+[[statement]]
+kind = "link"
+subject = "var:distriktsnamn"
+relation = "label_of"
+object = "scb/lbr/distriktskod"
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:grodans-namn"
+relation = "label_of"
+object = "scb/lbr/grodans-id-nummer"
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:14\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:grodnamn"
+relation = "label_of"
+object = "scb/lbr/grodid"
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:18\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunnamn"
+relation = "label_of"
+object = "scb/lbr/kommunkod"
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:22\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "arealer: po"
+fields = { "variable" = "po8" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:293\n\nShared-column succession fold 2026-10-21: SCB VarId 2432 'Produktionsområde' sequential rename {PO/po 1989-1991, 1998-1999 and 2005-2014, po8 2014-2025} owned by 10.2432.po8; identical definition 'Geografisk indelning i 8 områden.', the same eight area codes (po additionally lists the sentinel 0 'Okänt produktionsområde'), never co-delivered in arealer, foretag or uppdragsregistret (reg_meta v0.57.0). po18 is the separate concurrent 18-area grouping. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "foretag: po"
+fields = { "variable" = "po8" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:293\n\nShared-column succession fold 2026-10-21: SCB VarId 2432 'Produktionsområde' sequential rename {PO/po 1989-1991, 1998-1999 and 2005-2014, po8 2014-2025} owned by 10.2432.po8; identical definition 'Geografisk indelning i 8 områden.', the same eight area codes (po additionally lists the sentinel 0 'Okänt produktionsområde'), never co-delivered in arealer, foretag or uppdragsregistret (reg_meta v0.57.0). po18 is the separate concurrent 18-area grouping. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: po"
+fields = { "variable" = "po8" }
+evidence = "reg_meta_build/curation/registers/scb/lbr.toml:293\n\nShared-column succession fold 2026-10-21: SCB VarId 2432 'Produktionsområde' sequential rename {PO/po 1989-1991, 1998-1999 and 2005-2014, po8 2014-2025} owned by 10.2432.po8; identical definition 'Geografisk indelning i 8 områden.', the same eight area codes (po additionally lists the sentinel 0 'Okänt produktionsområde'), never co-delivered in arealer, foretag or uppdragsregistret (reg_meta v0.57.0). po18 is the separate concurrent 18-area grouping. Y-211/Y-276 sequential-rename policy."

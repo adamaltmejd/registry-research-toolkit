@@ -1,0 +1,43 @@
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/grundskola-prov-ak6/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:48\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: sv_b_prp"
+fields = { "description" = "Resultat på delprov B i svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: sv_c_prp"
+fields = { "description" = "Resultat på delprov C i svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: skolkod"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: kommun"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

@@ -1,0 +1,7 @@
+
+[[statement]]
+kind = "link"
+subject = "var:kommun-namn"
+relation = "label_of"
+object = "scb/kommunalekonomisk-utjamning/kommun"
+evidence = "reg_meta_build/curation/registers/scb/kommunalekonomisk-utjamning.toml:7\n\nLegacy code_label_pair declaration"

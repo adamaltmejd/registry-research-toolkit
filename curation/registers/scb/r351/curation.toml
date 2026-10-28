@@ -1,0 +1,462 @@
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q01b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — andel av tiden: samarbeta eller arbeta i grupp med arbetskamrater" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1834\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda Internet för att förstå problem relaterade till arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1402\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda e-post" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1378\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda eller räkna ut bråktal, decimaler eller procent" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1354\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03g"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda enkel algebra eller enkla formler" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1366\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05e"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda kalkylprogram" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1414\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03h"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda mer avancerad matematik eller statistik" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1726\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03d"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda miniräknare" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1426\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05f"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda ordbehandlingsprogram" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1390\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05g"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda programmeringsspråk" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1438\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q06c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använda skicklighet och noggrannhet med händer eller fingrar" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1450\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q04"
+fields = { "label" = "Hur ofta brukar du på arbetet... — använder dator i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1738\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q06b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — arbeta fysiskt under en längre period" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1774\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q07b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — behöver mer kunskaper eller utbildning för nuvarande arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1858\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q08"
+fields = { "label" = "Hur ofta brukar du på arbetet... — brist på datorkunskap påverkat anställning, befordran eller löneförhöjning" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1762\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q06"
+fields = { "label" = "Hur ofta brukar du på arbetet... — datorkunskap som är nödvändig i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1894\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05h"
+fields = { "label" = "Hur ofta brukar du på arbetet... — delta i diskussioner i realtid på Internet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1462\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q02d"
+fields = { "label" = "Hur ofta brukar du på arbetet... — fylla i formulär med efterfrågade uppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1474\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q04b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — förhandla med andra inom eller utanför företaget eller organisationen" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1486\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q02e"
+fields = { "label" = "Hur ofta brukar du på arbetet... — ge råd till andra" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1498\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03f"
+fields = { "label" = "Hur ofta brukar du på arbetet... — göra diagram, grafer eller tabeller" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1510\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q07"
+fields = { "label" = "Hur ofta brukar du på arbetet... — har datorkunskaper som behövs i arbetet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1882\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q07a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — har kunskaper för mer utmanande uppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1846\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q02c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — hålla tal, föredrag eller presentera muntligt inför minst fem personer" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1522\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q02b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — instruera, lära eller undervisa andra" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1534\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01d"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa artiklar i facktidskrifter, läroböcker eller vetenskapliga rapporter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1546\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa artiklar i tidningar, tidskrifter eller nyhetsbrev" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1558\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa brev, PM eller e-post" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1570\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa bruksanvisningar eller instruktioner" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1582\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01e"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa böcker" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1594\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01h"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa diagram, kartor eller tabeller" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1606\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01g"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa fakturor, räkningar, kontoutdrag eller andra ekonomiska redovisningar" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1618\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q01f"
+fields = { "label" = "Hur ofta brukar du på arbetet... — läsa manualer eller referensmaterial" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1630\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q03b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — planera andras arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1642\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q03c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — planera din tid" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1654\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q03a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — planera dina egna arbetsuppgifter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1810\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q03b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — räkna fram priser, kostnader eller budgetar" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1666\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q02b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — skriva artiklar för tidningar, tidskrifter eller nyhetsbrev" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1678\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q02a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — skriva brev, PM eller e-post" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1870\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q02c"
+fields = { "label" = "Hur ofta brukar du på arbetet... — skriva rapporter" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1690\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q05a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — ställas inför relativt enkla problem (högst 5 minuter att lösa)" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1750\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q05b"
+fields = { "label" = "Hur ofta brukar du på arbetet... — ställas inför svårare problem (minst 30 minuter att lösa)" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1822\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q02d"
+fields = { "label" = "Hur ofta brukar du på arbetet... — sälja en vara eller tjänst" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1702\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q02a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — utbyta information om arbetet med arbetskamrater" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1786\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: g_q05d"
+fields = { "label" = "Hur ofta brukar du på arbetet... — utföra transaktioner på Internet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1714\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: f_q04a"
+fields = { "label" = "Hur ofta brukar du på arbetet... — övertala eller påverka andra" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1798\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q17b"
+fields = { "label" = "Nuvarande arbetsplats - lön — andra ersättningar före skatt under föregående år" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2158\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q17a"
+fields = { "label" = "Nuvarande arbetsplats - lön — får andra ersättningar utöver ordinarie lön" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2062\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_s16a"
+fields = { "label" = "Nuvarande arbetsplats - lön — genomsnittligt antal timmar för att framställa en enhet" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2050\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16b"
+fields = { "label" = "Nuvarande arbetsplats - lön — lön före skatt per timme (inkl. regelbundna tillägg)" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2170\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16a"
+fields = { "label" = "Nuvarande arbetsplats - lön — sätt att få lön" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2146\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d2"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per dag" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2074\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d5"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per månad" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2086\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d1"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per timme" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2098\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d4"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per två veckor" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2110\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d3"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per vecka" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2122\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q16d6"
+fields = { "label" = "Nuvarande arbetsplats - lön — ungefärlig lön före skatt per år" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2134\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: d_q18a"
+fields = { "label" = "Nuvarande arbetsplats - lön — uttagen lön före skatt från eget företag förra året" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2182\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q04"
+fields = { "label" = "Senaste arbetsplats — anställd eller egen företagare" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2014\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q07b"
+fields = { "label" = "Senaste arbetsplats — antal anställda på arbetsplatsen" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1966\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q06"
+fields = { "label" = "Senaste arbetsplats — antal personer som arbetade för arbetsgivaren på arbetsplatsen" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1978\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q03"
+fields = { "label" = "Senaste arbetsplats — arbetsmarknadssektor" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2002\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q07a"
+fields = { "label" = "Senaste arbetsplats — hade anställda i eget företag" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1954\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q10"
+fields = { "label" = "Senaste arbetsplats — huvudsakligt skäl till att arbetet upphörde" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2038\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q08"
+fields = { "label" = "Senaste arbetsplats — typ av anställning" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:2026\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q09"
+fields = { "label" = "Senaste arbetsplats — vanlig arbetstid, timmar per vecka" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1990\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q05a1"
+fields = { "label" = "Senaste arbetsplats — ålder vid början hos senaste arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1930\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q05b1"
+fields = { "label" = "Senaste arbetsplats — ålder vid början i eget företag" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1918\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q05a2"
+fields = { "label" = "Senaste arbetsplats — år vid början hos senaste arbetsgivare" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1942\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: e_q05b2"
+fields = { "label" = "Senaste arbetsplats — år vid början i eget företag" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1906\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q10a"
+fields = { "label" = "Sysselsättningsstatus — antal arbetsgivare senaste 5 åren" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1306\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q09"
+fields = { "label" = "Sysselsättningsstatus — antal år med betalt arbete totalt" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1318\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q08b"
+fields = { "label" = "Sysselsättningsstatus — haft betalt arbete senaste 12 månaderna" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1282\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q07"
+fields = { "label" = "Sysselsättningsstatus — nuvarande situation" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1330\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q08a"
+fields = { "label" = "Sysselsättningsstatus — någon gång haft avlönat arbete" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1270\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q08c1"
+fields = { "label" = "Sysselsättningsstatus — ålder när senaste avlönade arbete upphörde" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1294\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: c_q08c2"
+fields = { "label" = "Sysselsättningsstatus — år när senaste avlönade arbete upphörde" }
+evidence = "reg_meta_build/curation/registers/scb/piaac.toml:1342\n\nComplete accepted PIAAC8 source families117originals; each finite physical subquestion has explicit supplied operation text. Preserve each subquestion separately, all original source fields, response domains, dates and flags. No generic header identity or inferred question ordinal. Proof: Batch50-PIAAC8-source-proof.json."

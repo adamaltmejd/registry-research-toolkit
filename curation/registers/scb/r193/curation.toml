@@ -1,0 +1,129 @@
+
+[[statement]]
+kind = "link"
+subject = "var:huvudman-namn"
+relation = "label_of"
+object = "scb/grundskola-elever/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:147\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "label_of"
+object = "scb/grundskola-elever/skolenhetskod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:151\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/grundskola-elever/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:155\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "assert"
+subject = "individregister: MSPR2_ALT @2008..2008"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för språkval (alternativ)", "definition" = "Moderna språk inom ramen för språkval (alternativ)" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:236\n\nSWECOV holds MSPR2_ALT in Grund_Fkl_Fth_2008 (2008); SCB's P1105 delivery variable list (Utkast_P1105_Variabellista_uppd2025_v5) places it in that view. SCB's Registerinformation export carries no row for the column on individregister. holdings_period is the SWECOV holdings range (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: FTH @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Anger om eleven är inskriven i fritidshem", "definition" = "Anger om eleven är inskriven i fritidshem" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:21\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: OBTIDFTH @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Eleven är inskriven på fritidshem under obekväma tider.", "definition" = "Eleven är inskriven på fritidshem under obekväma tider." } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:76\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: GRREKTFTH @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Gemensam rektor med fritidshem", "definition" = "Gemensam rektor med fritidshem" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:32\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: HMANFTH @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Huvudman fritidshem", "definition" = "Huvudman fritidshem" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:43\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: MSPR1_SPRAK @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för elevens val (språk)", "definition" = "Moderna språk inom ramen för elevens val (språk)" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:54\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: MSPR2_SPRAK @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Moderna språk inom ramen för språkval (språk)", "definition" = "Moderna språk inom ramen för språkval (språk)" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:65\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individregister: Ar @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "År", "definition" = "År" } }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "individregister: m2_spr_alt"
+fields = { "description" = "Alternativ till språkval" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: anp_stud"
+fields = { "description" = "Anpassad studiegång" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: sva"
+fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: personnr"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: skolenhetskod"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: skolkod @2008-10-15"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: skolkommun"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:129\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: skom"
+fields = { "description" = "Skolkommun" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:135\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: stud_handl_ml"
+fields = { "description" = "Studiehandlening på modersmål" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:141\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individregister: inriktning"
+fields = { "description" = "Typ av grundskola (Inriktning). From 2017 kan även kommunala skolor ha inriktning=14, tidigare var det bara fristående skolor som hade inriktningar." }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

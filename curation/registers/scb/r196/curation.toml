@@ -1,0 +1,30 @@
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: längd1"
+fields = { "variable" = "langd1" }
+evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: längd2"
+fields = { "variable" = "langd2" }
+evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: längd3"
+fields = { "variable" = "langd3" }
+evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: längd4"
+fields = { "variable" = "langd4" }
+evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: längd5"
+fields = { "variable" = "langd5" }
+evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78\n\nComplete native source family and all physical peers reviewed. Literal-case spellings retain the same explicitly supplied definition and identifier. Vessel positions follow source operational definitions Fartyg1–5, never suffix inference. Delivery-specific roles and every raw type, date, unit, name and coding association remain evidence; observed-value equivalence is not asserted. Batch52-directfacts4-source-review.json."

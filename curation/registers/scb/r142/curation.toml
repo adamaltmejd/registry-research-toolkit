@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad"
+fields = { "sets" = ["legacy-redovisningsmanad"] }
+evidence = "reg_meta_build/curation/registers/scb/manel.toml:98\n\nThe complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:redovisningsmanad-producteo"
+fields = { "sets" = ["legacy-redovisningsmanad"] }
+evidence = "reg_meta_build/curation/registers/scb/manel.toml:98\n\nThe complete own source native name, definition and year/month unit define reporting month for both literal fields. Preserve all source types and per-column measurement acquisition contexts. No concrete storage format or value equivalence is inferred."

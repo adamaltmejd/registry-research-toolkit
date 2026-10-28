@@ -1,0 +1,13 @@
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "sets" = ["legacy-manad"] }
+evidence = "reg_meta_build/curation/registers/scb/klk.toml:42\nreg_meta_build/curation/registers/scb/klk.toml:48\n\nComplete accepted own-native time-key family: literal spelling changes retain the same explicitly defined month or sickness-period start-date quantity. Per-column metadata, storage types, original quarter operations and coding remain separate. No query encoding or value equivalence assertion. Proof: Batch48-employment-time-source-proof.json.\n\nComplete own-native source explicitly defines this as the same month or sickness-period start-date quantity. These exact simultaneously supplied spellings remain independent delivery representations; retain every original operational wording, raw char/varchar/date/datetime type, scope, code association and literal. No storage/value equivalence is assumed. Proof: Batch48-employment-time-source-proof.json."
+
+[[statement]]
+kind = "link"
+subject = "var:kommunnamn"
+relation = "label_of"
+object = "scb/klk/kommun"
+evidence = "reg_meta_build/curation/registers/scb/klk.toml:6\n\nLegacy code_label_pair declaration"

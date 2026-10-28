@@ -1,0 +1,174 @@
+
+[[statement]]
+kind = "set"
+subject = "mfr: ar"
+fields = { "label" = "Barnets födelseår" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:447\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:11 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr-ivf: ar"
+fields = { "label" = "Barnets födelseår" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:459\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:272 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr-lmed: ar"
+fields = { "label" = "Barnets födelseår" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:471\n\nAll four originals define the child birth year and retain YYYY format. Original rows row:290 and row:212 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: homf"
+fields = { "description" = "Barnets huvudomfång i cm" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:495\n\nBoth names explicitly state child head circumference in centimetres; retain differing original data types. Original rows row:103 and row:262 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag10"
+fields = { "description" = "Barnets diagnoskod 10 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:411\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:16 and row:222 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag11"
+fields = { "description" = "Barnets diagnoskod 11 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:423\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:17 and row:223 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag12"
+fields = { "description" = "Barnets diagnoskod 12 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:435\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:18 and row:224 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag2"
+fields = { "description" = "Barnets diagnoskod 2 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:315\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:19 and row:232 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag3"
+fields = { "description" = "Barnets diagnoskod 3 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:327\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:20 and row:234 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag4"
+fields = { "description" = "Barnets diagnoskod 4 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:339\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:21 and row:235 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag5"
+fields = { "description" = "Barnets diagnoskod 5 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:351\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:22 and row:236 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag6"
+fields = { "description" = "Barnets diagnoskod 6 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:363\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:23 and row:237 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag7"
+fields = { "description" = "Barnets diagnoskod 7 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:375\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:24 and row:238 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag8"
+fields = { "description" = "Barnets diagnoskod 8 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:387\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:25 and row:239 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bdiag9"
+fields = { "description" = "Barnets diagnoskod 9 enligt  svenska versionen av ICD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:399\n\nBoth originals explicitly declare the Swedish ICD representation; expand the shorter description without selecting an ICD edition. Original rows row:26 and row:240 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: grvbs"
+fields = { "label" = "Graviditetslängd, fullbordade veckor, bästa skattning" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:531\n\nBoth originals explicitly describe gestational length in completed weeks, best estimate. Expand only the abbreviated name using the supplied MFR name. Keep each original algorithm description, range (22–45 versus21–44), type, availability and source coding unchanged; this does not assert algorithm or distribution equivalence."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: sjukhus_s"
+fields = { "label" = "Sjukhuskod, bearbetad" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:543\n\nBoth originals explicitly identify a processed hospital code. Add only the supplied punctuation in the MFR name; preserve each original processing description, representation, coding, type and availability. This does not equate processing rules or hospital-code histories."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: ddagar"
+fields = { "description" = "Barnets dödsålder i dagar, endast om barnet har avlidit under nyföddhetsperioden" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:507\n\nBoth originals state child death age restricted to the neonatal period and supply the identical 0–27 day representation. Original rows row:252 and row:63 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "mfr: dklass"
+fields = { "description" = "Barnets överlevnad under nyföddhetsperioden" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1851\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: dklass"
+fields = { "description" = "Barnets överlevnad under nyföddhetsperioden. Skapas utifrån DODFOD samt uppgifter från Dödsorsaksregistret/AVI.\n\nDödfödda barn ingår i MFR om de har en graviditetslängd på minst 22+0 veckor (före 1 juli 2008 ingick dödfödda från och med vecka 28+0).\n\nInformation om neonatal död (värdemängd 2 och 3) hämtas primärt från Dödsorsaksregistret/AVI och sekundärt från uppgift i förlossningsjournal 2 (FV2)" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1851\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr: grdbs"
+fields = { "description" = "Graviditetslängd i dagar beräknad enligt algoritmen som beskrivs i GRMETOD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1869\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: grdbs"
+fields = { "description" = "Graviditetslängd i dagar, första hand enligt ultraljud och andra hand enligt sista mensdatum." }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1869\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr: grvbs"
+fields = { "description" = "Graviditetslängd i fullbordade veckor beräknad enligt algoritmen som beskrivs i GRMETOD" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1878\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: grvbs"
+fields = { "description" = "Graviditetslängd i fullbordade veckor, första hand enligt ultraljud och andra hand enligt sista mensdatum" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1878\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: sjukhus_s"
+fields = { "description" = "Sjukhuskod utan felaktiga koder (framtaget för statistik)" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1887\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr: sjukhus_s"
+fields = { "description" = "Sjukhuskod, bearbetad (jämför variabeln SJUKHUS).\n* Sjukhuskoder som har rapporterats, men som inte är aktuella ett visst år (förlossningsavdelningen/-mottagningen är inte verksam det året) blankas (eller korrigeras om man vet den korrekta/aktuella koden)\n* Sjukhuskoder som saknas vid inrapportering kan i vissa fall kompletteras genom samkörning med Patientregistret\n* Genom samkörning med Patientregistret kan även vissa sjukhus som rapporteras in tillsammans särskiljas, t.ex. Skåne universitetssjukhus Malmö respektive Skåne universitetssjukhus Lund." }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1887\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr: fid"
+fields = { "description" = "Unikt löpnummer för varje född barn" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: fid"
+fields = { "description" = "Unikt löpnummer för varje födsel. De födslar som finns även i MFR har samma FID och kan kopplas med ihop med variabeln. Om 5. positionen är 3 då finns den inte i MFR" }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:1860\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "mfr: bvikt"
+fields = { "description" = "Barnets födelsevikt i gram." }
+evidence = "reg_meta_build/curation/registers/sos/mfr.toml:483\n\nTerminal punctuation only; retain differing original data types. Original rows row:56 and row:250 provide the positive peer wording; preserve originals, periods, coding and all other fields."

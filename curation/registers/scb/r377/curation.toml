@@ -1,0 +1,28 @@
+
+[[statement]]
+kind = "link"
+subject = "var:fa15namn-senaste"
+relation = "label_of"
+object = "scb/yrkeshogskolan/fa15nr-senaste"
+evidence = "reg_meta_build/curation/registers/scb/yrkeshogskolan.toml:8\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:fa15namn-start"
+relation = "label_of"
+object = "scb/yrkeshogskolan/fa15nr-start"
+evidence = "reg_meta_build/curation/registers/scb/yrkeshogskolan.toml:12\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:studiekommunnamn-utb"
+relation = "label_of"
+object = "scb/yrkeshogskolan/studiekommun-utb"
+evidence = "reg_meta_build/curation/registers/scb/yrkeshogskolan.toml:16\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:studielannamn-utb"
+relation = "label_of"
+object = "scb/yrkeshogskolan/studielan-utb"
+evidence = "reg_meta_build/curation/registers/scb/yrkeshogskolan.toml:20\n\nLegacy code_label_pair declaration"
