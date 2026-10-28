@@ -1556,6 +1556,17 @@ pub fn resolve(
             let mut redundant = false;
             match statement {
                 Statement::Set { fields: values, .. } => {
+                    if (values.coverage.is_some() || values.period.is_some())
+                        && stated_fields(values).len() != 1
+                    {
+                        return Err(
+                            "set coverage/period with other fields requires separate statements"
+                                .into(),
+                        );
+                    }
+                    if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
+                        return Err("set coverage requires a table selector".into());
+                    }
                     if values.sets.is_some() && stated_fields(values).len() != 1 {
                         return Err(
                             "set sets with other fields requires separate statements".into()
@@ -1563,7 +1574,6 @@ pub fn resolve(
                     }
                     for field in stated_fields(values).keys() {
                         let package = match field.as_str() {
-                            "coverage" => Some("D-5 (EKB)"),
                             "classification" | "tags" => Some("D-9"),
                             "sentinels" => Some("D (sentinels)"),
                             "role" | "unit_type" => {

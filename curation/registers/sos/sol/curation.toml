@@ -304,3 +304,15 @@ kind = "set"
 subject = "sol-incr: sbo"
 fields = { "label" = "Särskilt boende" }
 evidence = "reg_meta_build/curation/registers/sos/sol.toml:173\n\nComplete same-native-family source descriptions establish equivalent names for this quantity; this literal canonical name is supplied by the guarded sibling variant. Preserve all raw names, coding, storage, source periods and delivery-specific operations. Batch49-SOL-semantic-role-proposal.json."
+
+[[statement]]
+kind = "assert"
+subject = "sol-incr: pomvtrygg"
+fact = { entity = "value-set", items = [{ code = "0", label = "(ogiltigt)" }, { code = "1", label = "enbart trygghetslarm" }, { code = "2", label = "trygghetslarm som delinsats" }, { code = "3", label = "innehåller ej trygghetslarm" }, { code = "8", label = "ej tillämplig" }, { code = "9", label = "uppgift saknas" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx#Metadata - Variabelnivå!109. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list. Rows 32 and 109 enumerate the same six codes and meanings; use row 109's spelling ogiltigt for code 0, retaining row 32's source typo as evidence."
+
+[[statement]]
+kind = "set"
+subject = "sol: pomvtrygg"
+fields = { value_set = "b4acd7895f71aecc3067b8f93ae9a983eb02405590bed7d0db0b6b603a73ec4e" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx#Metadata - Variabelnivå!32. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list. Rows 32 and 109 enumerate the same six codes and meanings; use row 109's spelling ogiltigt for code 0, retaining row 32's source typo as evidence."

@@ -8,7 +8,7 @@
 "alder" = ["LMED: ALDER"]
 "antal" = ["LMED: ANTAL"]
 "antal-numerisk-enhet" = ["LMED VARA: ANTAL_NUMERISK_ENHET"]
-"antal-uthamtade-ddd" = ["LMED VARA/LMED: FDDD"]
+"antal-uthamtade-ddd" = ["LMED: FDDD"]
 "antidot" = ["LMED VARA: ANTIDOT"]
 "antnum" = ["LMED VARA: ANTNUM"]
 "arbetspl" = ["LMED: ARBETSPL"]

@@ -211,18 +211,32 @@ pub(super) struct Applied {
         BTreeMap<(String, String), BTreeMap<usize, reg_resolve::curation::ack::Acknowledgement>>,
 }
 
-fn phase(statement: &reg_frame::statement::Statement) -> u8 {
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Phase {
+    Parents,
+    Coverage,
+    Periods,
+    Moves,
+    Facts,
+    Variables,
+    Fields,
+    Relations,
+}
+
+fn phase(statement: &reg_frame::statement::Statement) -> Phase {
     use reg_frame::statement::{AssertFact, Statement};
     match statement {
         Statement::Assert {
             fact: AssertFact::Table { .. } | AssertFact::Release { .. },
             ..
-        } => 0,
-        Statement::Set { fields, .. } if fields.table.is_some() => 1,
-        Statement::Assert { .. } => 2,
-        Statement::Set { fields, .. } if fields.variable.is_some() => 3,
-        Statement::Link { .. } | Statement::Ack { .. } => 5,
-        Statement::Set { .. } => 4,
+        } => Phase::Parents,
+        Statement::Set { fields, .. } if fields.coverage.is_some() => Phase::Coverage,
+        Statement::Set { fields, .. } if fields.period.is_some() => Phase::Periods,
+        Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
+        Statement::Assert { .. } => Phase::Facts,
+        Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
+        Statement::Link { .. } | Statement::Ack { .. } => Phase::Relations,
+        Statement::Set { .. } => Phase::Fields,
     }
 }
 
@@ -349,7 +363,7 @@ pub(super) fn run(
     )
 }
 
-/// Declare parents, move whole occurrences, then add remaining facts. Each phase
+/// Apply parent, bound, period, move, fact, identity and field stages in order. Each phase
 /// evaluates an immutable snapshot before applying accepted statements. Other kinds
 /// see only that resulting source view. `record` is explicit review acceptance.
 #[allow(clippy::too_many_lines)]
@@ -402,47 +416,20 @@ fn run_selected(
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
-    let mut field_snapshot = Vec::new();
     let mut conflict_overrides = None;
-    for stage in 0..6 {
-        if stage == 5 && !field_snapshot.is_empty() {
-            // Conflict checks retain the field phase view; links and acks see final identities.
-            conflict_overrides = Some(result.overrides.clone());
-            let final_coordinates = records
-                .iter()
-                .filter(|r| {
-                    matches!(
-                        r,
-                        Record::Register(_)
-                            | Record::Table(_)
-                            | Record::Release(_)
-                            | Record::Occurrence(_)
-                    )
-                })
-                .cloned()
-                .collect::<Vec<_>>();
-            if let Err(at) = reg_resolve::curation::apply::rekey(
-                &field_snapshot,
-                &final_coordinates,
-                &mut result.variables,
-                &mut result.overrides,
-                &mut result.metadata,
-            ) {
-                for (statement, premise) in &evaluated {
-                    if matches!(&statement.statement, reg_frame::statement::Statement::Set {fields,..} if fields.spelling.is_some() || fields.period.is_some())
-                        && premise.subjects.iter().any(|p| p.locator == at)
-                    {
-                        conflicts.insert(publication_identity(statement));
-                        refusals.push(format!(
-                            "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
-                            location(statement),
-                            at.input,
-                            at.at
-                        ));
-                    }
-                }
-            }
-        }
+    for stage in [
+        Phase::Parents,
+        Phase::Coverage,
+        Phase::Periods,
+        Phase::Moves,
+        Phase::Facts,
+        Phase::Variables,
+        Phase::Fields,
+        Phase::Relations,
+    ] {
+        let fields_stage = matches!(stage, Phase::Coverage | Phase::Periods | Phase::Fields);
+        let structural_stage = matches!(stage, Phase::Parents | Phase::Moves | Phase::Facts);
+        let mut field_snapshot = Vec::new();
         if !conflicts.is_empty() {
             break;
         }
@@ -457,10 +444,10 @@ fn run_selected(
         let mut accepted = Vec::new();
         let mut field_applications = BTreeMap::new();
         let mut ack_indices = BTreeMap::new();
-        if stage == 4
+        if fields_stage
             && statements.iter().any(|s| {
                 matches!(s.statement, reg_frame::statement::Statement::Set { .. })
-                    && phase(&s.statement) == 4
+                    && phase(&s.statement) == stage
             })
         {
             field_snapshot = records
@@ -478,7 +465,7 @@ fn run_selected(
                 .collect();
         }
         let mut locators = BTreeMap::<_, Vec<_>>::new();
-        if stage == 4 {
+        if fields_stage {
             for (i, record) in records.iter().enumerate() {
                 let at = match record {
                     Record::Register(r) => Some(&r.locator),
@@ -515,7 +502,7 @@ fn run_selected(
                 .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
-            if stage == 4
+            if stage == Phase::Fields
                 && group
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
@@ -531,7 +518,7 @@ fn run_selected(
                     }
                 }
             }
-            let finding_view = if stage == 5
+            let finding_view = if stage == Phase::Relations
                 && group
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Ack { .. }))
@@ -584,7 +571,7 @@ fn run_selected(
                     }
                     continue;
                 }
-                if stage == 4
+                if fields_stage
                     && matches!(
                         statement.statement,
                         reg_frame::statement::Statement::Set { .. }
@@ -661,7 +648,7 @@ fn run_selected(
             };
             (dependency, publication_identity(s))
         });
-        if stage == 2 {
+        if stage == Phase::Facts {
             // Code lists are definitions consumed by occurrence assertions. Their
             // subject attachment follows occurrences, including newly asserted ones.
             for (statement, ..) in &accepted {
@@ -675,7 +662,7 @@ fn run_selected(
         }
         // Identity assignments share the phase snapshot and never rewrite facts.
         let mut assignments = BTreeMap::new();
-        if stage == 3 {
+        if stage == Phase::Variables {
             for (provider, register) in groups.keys() {
                 let group = accepted
                     .iter()
@@ -711,7 +698,7 @@ fn run_selected(
                 } => fields.value_set.as_deref(),
                 _ => asserted.as_ref().map(|set| set.hash.as_str()),
             };
-            let source = if stage < 3 {
+            let source = if structural_stage {
                 records
                     .iter()
                     .filter(|r| application_record(r, provider, register, hash))
@@ -720,7 +707,7 @@ fn run_selected(
             } else {
                 Vec::new()
             };
-            if stage == 5 {
+            if stage == Phase::Relations {
                 match &statement.statement {
                     reg_frame::statement::Statement::Link { .. } => {
                         result.links.push(((*statement).clone(), premise.clone()));
@@ -748,11 +735,11 @@ fn run_selected(
                 }
             }
             let application = match stage {
-                3 => assignments
+                Phase::Variables => assignments
                     .remove(&publication_identity(statement))
                     .expect("evaluated assignment"),
-                5 => Ok(reg_resolve::curation::apply::Applied::default()),
-                4 => {
+                Phase::Relations => Ok(reg_resolve::curation::apply::Applied::default()),
+                Phase::Coverage | Phase::Periods | Phase::Fields => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
@@ -774,6 +761,24 @@ fn run_selected(
                     &premise,
                 ),
             };
+            let application = application.and_then(|applied| {
+                if stage == Phase::Moves {
+                    reg_resolve::curation::apply::rekey(
+                        &source,
+                        &applied.records,
+                        &mut result.variables,
+                        &mut result.overrides,
+                        &mut result.metadata,
+                    )
+                    .map_err(|at| {
+                        format!(
+                            "curation-coordinate-collision: set coordinates collide at {}:{}",
+                            at.input, at.at
+                        )
+                    })?;
+                }
+                Ok(applied)
+            });
             let applied = match application {
                 Ok(a) => a,
                 Err(e) => {
@@ -834,12 +839,81 @@ fn run_selected(
                     .classifications
                     .extend(applied.classifications.iter().cloned());
             }
-            if stage < 3 {
+            if structural_stage {
                 records.retain(|r| !application_record(r, provider, register, hash));
                 records.extend(applied.records);
             }
         }
-        if stage == 3 {
+        if fields_stage && !field_snapshot.is_empty() {
+            if stage == Phase::Fields {
+                // Conflict checks retain the field phase view; links and acks see final identities.
+                conflict_overrides = Some(result.overrides.clone());
+            }
+            let final_coordinates = records
+                .iter()
+                .filter(|r| {
+                    matches!(
+                        r,
+                        Record::Register(_)
+                            | Record::Table(_)
+                            | Record::Release(_)
+                            | Record::Occurrence(_)
+                    )
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            if let Err(at) = reg_resolve::curation::apply::rekey(
+                &field_snapshot,
+                &final_coordinates,
+                &mut result.variables,
+                &mut result.overrides,
+                &mut result.metadata,
+            ) {
+                for (statement, premise) in &evaluated {
+                    let reg_frame::statement::Statement::Set { fields, .. } = &statement.statement
+                    else {
+                        continue;
+                    };
+                    if phase(&statement.statement) != stage {
+                        continue;
+                    }
+                    let affected = premise.subjects.iter().any(|subject| {
+                        if subject.locator == at {
+                            return true;
+                        }
+                        let text =
+                            |key| subject.fields.get(key).and_then(serde_json::Value::as_str);
+                        field_snapshot.iter().any(|record| {
+                            let Record::Occurrence(row) = record else {
+                                return false;
+                            };
+                            (row.locator == at || row.also.contains(&at))
+                                && text("provider") == Some(row.provider.as_str())
+                                && text("register") == Some(row.register.as_str())
+                                && text("table") == Some(row.table.as_str())
+                                && ((fields.coverage.is_some() && text("kind") == Some("table"))
+                                    || (fields.period.is_some()
+                                        && text("kind") == Some("release")
+                                        && text("release") == row.release.as_deref()))
+                        })
+                    });
+                    if (fields.spelling.is_some()
+                        || fields.period.is_some()
+                        || fields.coverage.is_some())
+                        && affected
+                    {
+                        conflicts.insert(publication_identity(statement));
+                        refusals.push(format!(
+                            "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
+                            location(statement),
+                            at.input,
+                            at.at
+                        ));
+                    }
+                }
+            }
+        }
+        if stage == Phase::Variables {
             for ((provider, register), (_, ledger, _)) in &locks {
                 let assignments = evaluated
                     .iter()

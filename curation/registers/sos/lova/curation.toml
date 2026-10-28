@@ -613,90 +613,203 @@ evidence = "reg_meta_build/curation/registers/sos/lova.toml:1884\n\nExact routed
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ssyk4"
+subject = "lova-ekonomi-arbetsmarknad: ssyk4 where label = 'Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för aktuellt år'"
 fields = { "label" = "Yrke enligt SSYK, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:495\n\nLOVA SSYK4, exact original row:147 and peer row:146. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ssykstatus"
+subject = "lova-ekonomi-arbetsmarknad: ssykstatus where label = 'Yrkets överensstämmelse med novembersysselsättningen'"
 fields = { "label" = "Yrkets överensstämmelse med novembersysselsättningen för förvärvsarbetande" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:507\n\nLOVA SSYKSTATUS, exact original row:158 and peer row:157. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ssykstatus_j16"
+subject = "lova-ekonomi-arbetsmarknad: ssykstatus_j16 where label = 'Yrkets överensstämmelse med novembersysselsättningen'"
 fields = { "label" = "Yrkets överensstämmelse med novembersysselsättningen för förvärvsarbetande och företagare" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:519\n\nLOVA SSYKSTATUS_J16, exact original row:160 and peer row:159. The exact peer descriptions, representations and declared classification agree; retain the main source name, including its explicit employment qualifier. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
 
 [[statement]]
 kind = "set"
-subject = "a-lova: utbland"
+subject = "lova-ekonomi-arbetsmarknad: utbland"
 fields = { "description" = "Ubildningsland för underliggande examen för legitamationen/beviset" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:531\n\nLOVA UTBLAND, exact original row:181 and peer row:182. The main source points to the same exact country-group steering list as the HOSP row, which explicitly explains the underlying qualification country. Retain that explanatory description; original list reference remains on the original record. Preserve every original text, period, type, coding, context and public identity. This corrects wording within the already accepted source family; it does not assert statistical comparability."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-hosp: leg_spec_ar"
+subject = "lova-hosp: leg_spec_ar"
 fields = { "description" = "År för utfärdande av aktuell legitimation eller specialitetsbevis" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:447\n\nLOVA original row:103 and row:102 supply the same LEG_SPEC_AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova: leg_specdatum"
+subject = "lova-ekonomi-arbetsmarknad: leg_specdatum"
 fields = { "description" = "Datum för utfärdande av legitimation eller specialitetsbevis" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:459\n\nLOVA original row:112 and row:113 supply the same LEG_SPECDATUM construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ssyk3"
+subject = "lova-ekonomi-arbetsmarknad: ssyk3 where label = 'Yrke enligt SSYK, 3-siffernivå, för förvärvsarbetande'"
 fields = { "label" = "Yrke enligt SSYK, klassad enligt SSYK96, 3-siffernivå, för förvärvsarbetande" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:471\n\nLOVA original row:140 and row:139 supply the same SSYK3 construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ssyk4_j16"
+subject = "lova-ekonomi-arbetsmarknad: ssyk4_j16"
 fields = { "description" = "Yrke enligt Standard för svensk yrkesklassificering - ett system för att gruppera individers yrken eller arbetsuppgifter, klassad enligt SSYK96, 4-siffernivå, för förvärvsarbetande och företagare för aktuellt år" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:483\n\nLOVA original row:152 and row:151 supply the same SSYK4_J16 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: astsni2007"
+subject = "lova-ekonomi-arbetsmarknad: astsni2007"
 fields = { "description" = "Arbetsställets branch enligt  Standard för svensk näringsgrensindelning, SNI2007" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:423\n\nLOVA original row:16 and row:15 supply the same ASTSNI2007 construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: agarkat"
+subject = "lova-ekonomi-arbetsmarknad: agarkat"
 fields = { "description" = "Kod för om arbetsstället är privat eller offentlig ägt" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:387\n\nLOVA original row:3 and row:2 supply the same AGARKAT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-examen: hskoleort"
+subject = "lova-examen: hskoleort"
 fields = { "description" = "Högskoleort för aktuell examen" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:435\n\nLOVA original row:50 and row:49 supply the same HSKOLEORT construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-person: alder"
+subject = "lova-person: alder"
 fields = { "label" = "Ålder vid årets slut" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:399\n\nLOVA original row:6 and row:5 supply the same ALDER construct. Adopt the peer's explicit name wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: ar"
+subject = "lova-ekonomi-arbetsmarknad: ar"
 fields = { "description" = "År som gäller för raden" }
 evidence = "reg_meta_build/curation/registers/sos/lova.toml:411\n\nLOVA original row:8 and row:7 supply the same AR construct. Adopt the peer's explicit description wording; preserve original texts, periods, types, representations, classifications and contexts."
 
 [[statement]]
 kind = "set"
-subject = "a-lova-lisa: syssstat"
-fields = { "description" = "Sysselsättningsstatus, utan hänsyn taget till leg" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:2196\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+subject = "lova-ekonomi-arbetsmarknad: syssstat"
+fields = { "description" = "Vilken typ av sysselsättning individen har aktuellt år i november" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!166-167. Both rows label the field Sysselsättningsstatus (november månad), refer to the same source lookup and state 1995-2022. After their table tokens are curated onto the same declared table, use row 166's general wording for the occurrence description. Drop the converted LISA-only description override, which cannot remain separately selected after co-location. Preserve row 167's more specific source definition (utan hänsyn taget till leg), raw coding and linkage descriptions as evidence; do not infer equivalent classification domains."
+
 
 [[statement]]
 kind = "set"
-subject = "a-lova: syssstat"
-fields = { "description" = "Vilken typ av sysselsättning individen har aktuellt år i november" }
-evidence = "reg_meta_build/curation/registers/sos/lova.toml:2196\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json."
+subject = "a-lova: {agarkat,alder,ar,arb_mark_stat,astkommun,astsni2007,bryt_dat_1_nov,cfarnr,ej_pnr,examar,hskoleort,instkod,kategori,kommun,ku2astsni2007,leg_spec_ar,leg_spec_exam_kod,leg_spec_exam_nr,leg_spec_kat,leg_spec_kat_grp,leg_specdatum,lopnr,naringsgrupp,peorgnr,regi,sektorkod,sjukvardsregion,sni,ssyk3,ssyk3_2012_j16,ssyk3_j16,ssyk4,ssyk4_2012_j16,ssyk4_j16,ssykar,ssykar_j16,ssykstatus,ssykstatus_j16,syssstat,tandvardsregion,utbland,yrkeskod,yrkstalln}"
+fields = { "table" = "lova-ekonomi-arbetsmarknad" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!2,5,7,9,13,15,25,26,29,32,49,51,81,94,97,102,104,106,107,109,112,115,120,122,126,128,132,134,139,142,144,146,149,151,153,155,157,159,166,169,181,210,215. The source token A_LOVA names the declared table in Deldatamängder och datavyer!15; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-lisa: {agarkat,ar,arb_mark_stat_lisa,arbsoknov,astkommun,astsni2007,cfarnr,instkod,kommun,ku2astsni2007,lopnr,naringsgrupp,peorgnr,regi,sektorkod,sni,ssyk3,ssyk3_2012,ssyk3_2012_j16,ssyk3_j16,ssyk4,ssyk4_2012,ssyk4_2012_j16,ssyk4_j16,ssykar,ssykar_j16,ssykstatus,ssykstatus_j16,syssstat,yrkstalln}"
+fields = { "table" = "lova-ekonomi-arbetsmarknad" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!3,8,10,12,14,16,27,52,95,98,118,121,123,127,129,135,140,141,143,145,147,148,150,152,154,156,158,160,167,216. The source token A_LOVA_LISA names the declared table in Deldatamängder och datavyer!2; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-examen: {examar,examen,examenskod,hskod,hskoleort,lopnr,sun2000inr,sun2000niva,sun2020inr,sun2020niva,tmgrp,tmgrpnamn,yrkeskod}"
+fields = { "table" = "lova-examen" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!33,35,38,47,50,116,161,163,164,165,173,175,211. The source token A_LOVA_EXAMEN names the declared table in Deldatamängder och datavyer!3. That table states delivery from 1995; Metadata - Datamängd!3-4 independently states annual reconstruction with data back to 1995. Keep that documented table bound. The existing occurrence period corrections apply the 1995 delivery scope before moving whole occurrences; their earlier literal source bounds remain evidence."
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-agarkat: {agarkat,klartext}"
+fields = { "table" = "lova-agarkat" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!4,84. The source token A_LOVA_STYR_AGARKAT names the declared table in Deldatamängder och datavyer!5; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-arb-mark-status: {arb_mark_status,klartext}"
+fields = { "table" = "lova-arb-mark-stat" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!11,85. The source token A_LOVA_STYR_ARB_MARK_STATUS names the declared table in Deldatamängder och datavyer!6; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-hosp-koder: {beskrivning,from_ar,klartext,kod,typ}"
+fields = { "table" = "lova-hospkoder" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!23,45,86,93,178. The source token A_LOVA_STYR_HOSP_KODER names the declared table in Deldatamängder och datavyer!10; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-syssstat: {beskrivning,syssstat}"
+fields = { "table" = "lova-syssstat" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!24,168. The source token A_LOVA_STYR_SYSSSTAT names the declared table in Deldatamängder och datavyer!8; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-examenskoder: {examen,examenskod,hskod,spec,sun2000inr,tmgrp,tmgrpnamn,yrkeskod}"
+fields = { "table" = "lova-examenskoder" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!36,39,48,136,162,174,176,213. The source token A_LOVA_STYR_EXAMENSKODER names the declared table in Deldatamängder och datavyer!14; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-landskod: {from_datum,klartext,klartext_grp,landskod,tom_datum}"
+fields = { "table" = "lova-landskod" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!46,87,91,99,177. The source token A_LOVA_STYR_LANDSKOD names the declared table in Deldatamängder och datavyer!12; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-leg-spec-exam-kod: {kategori,klartext,klartext_grp,leg_spec_exam_kod,leg_spec_kat,leg_spec_kat_grp,spec_order,spec_typ,yrkeskod}"
+fields = { "table" = "lova-leg-spec-exam" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!83,88,92,105,108,110,137,138,214. The source token A_LOVA_STYR_LEG_SPEC_EXAM_KOD names the declared table in Deldatamängder och datavyer!13; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-sektorkod: {klartext,sektorkod}"
+fields = { "table" = "lova-sektorkod" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!89,130. The source token A_LOVA_STYR_SEKTORKOD names the declared table in Deldatamängder och datavyer!7; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-yrkstalln: {klartext,yrkstalln}"
+fields = { "table" = "lova-yrkstalln" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!90,217. The source token A_LOVA_STYR_YRKSTALLN names the declared table in Deldatamängder och datavyer!9; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-region: {lk,sjukvardsregion,tandvardsregion}"
+fields = { "table" = "lova-region" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!114,133,170. The source token A_LOVA_STYR_REGION names the declared table in Deldatamängder och datavyer!11; its label and subject matter agree. Move each whole occurrence with its separately curated effective period; literal source bounds remain evidence."
+[[statement]]
+kind = "set"
+subject = "a-lova-hosp: {begransadfrdatum,behorighetsbegransningsdatum,behorighetsbegransningskod,desleg_datum,ej_pnr,eu_ees,examar,examensdatum,forskrivningsratt,forskrivningsrattsdatum,kalla,kategori,larosate,leg_spec_ar,leg_spec_nr,leg_specdatum,lopnr,provotidfran,provotidtill,tempbehorighetfran,tempbehorighettill,utb_spec_kod,utbildningsland,utbland,yrkeskod}"
+fields = { "table" = "lova-hosp" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!20,21,22,28,30,31,34,37,43,44,80,82,101,103,111,113,117,124,125,171,172,179,180,182,212. The source token A_LOVA_HOSP names the declared table in Deldatamängder och datavyer!4. That table states delivery from 1995; Metadata - Datamängd!3-4 independently states annual reconstruction with data back to 1995. Keep that documented table bound. The existing occurrence period corrections apply the 1995 delivery scope before moving whole occurrences; their earlier literal source bounds remain evidence."
+
+[[statement]]
+kind = "set"
+subject = "a-lova-person: {alder,aterpnr,avlidenar,avlidendatum,fodelsear,fodelselan,fodelselandnamn,invarn1,invarn2,invarn3,invarn4,invarn5,invarn6,invarn7,invdatum1,invdatum2,invdatum3,invdatum4,invdatum5,invdatum6,invdatum7,invdatum8,invdatum9,invland1,invland2,invland3,invland4,invland5,invland6,invland7,invland8,invland9,kon,larare,lopnr,senpnr,utvarn1,utvarn2,utvarn3,utvarn4,utvarn5,utvarn6,utvarn7,utvarn8,utvarn9,utvdatum1,utvdatum2,utvdatum3,utvdatum4,utvdatum5,utvdatum6,utvdatum7,utvdatum8,utvdatum9,utvland1,utvland2,utvland3,utvland4,utvland5,utvland6,utvland7,utvland8,utvland9}"
+fields = { "table" = "lova-person" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!6,17,18,19,40,41,42,53,54,55,56,57,58,59,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,96,100,119,131,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209. The source token A_LOVA_PERSON names the declared table in Deldatamängder och datavyer!16. That table states delivery from 1995; Metadata - Datamängd!3-4 independently states annual reconstruction with data back to 1995. Keep that documented table bound. The existing occurrence period corrections apply the 1995 delivery scope before moving whole occurrences; their earlier literal source bounds remain evidence."
+
+[[statement]]
+kind = "set"
+subject = "a-lova-styr-examenskoder: sun2000inr"
+fields = { period = "1995.." }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!162; Deldatamängder och datavyer!14; Metadata - Datamängd!3-4. SUN2000INR in A_LOVA_STYR_EXAMENSKODER leaves its own bounds blank. The declared parent LOVA EXAMENSKODER and register both document data from 1995; the surrounding lookup occurrences also start in 1995. Apply that documented delivery period before moving this whole occurrence onto its declared parent. Preserve the blank source bounds as evidence."
+
+[[statement]]
+kind = "set"
+subject = "a-lova-person: invarn8 where label = 'Invandringsdatum 8 numerisk'"
+fields = { table = "lova-person" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!60; Deldatamängder och datavyer!16. The source repeats spelling INVARN8 for two different numbered immigration-date fields. This exact source label selects only the documented field, matching its existing pre-move period correction. Move the whole occurrence onto LOVA PERSON after that period correction; preserve the source spelling and label as evidence."
+
+[[statement]]
+kind = "set"
+subject = "a-lova-person: invarn8 where label = 'Invandringsdatum 9 numerisk'"
+fields = { table = "lova-person" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!61; Deldatamängder och datavyer!16. The source repeats spelling INVARN8 for two different numbered immigration-date fields. This exact source label selects only the documented field, matching its existing pre-move period correction. Move the whole occurrence onto LOVA PERSON after that period correction; preserve the source spelling and label as evidence."
