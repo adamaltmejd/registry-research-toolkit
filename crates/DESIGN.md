@@ -1083,22 +1083,54 @@ boundary and the absence of a catalog series entity are settled in [REBUILD.md,
 populations and series" above. The choices still requiring a ruling are collected in
 "Open for the maintainer" below; their recommendations are not adopted policy.
 
+Source references in this section use `cleanroom/design.md` (v4, 2026-10-26) and
+`cleanroom/schema-v3.md`, under the maintainer-local `.local/design/first-principles/`
+directory. The latter's prefatory "Maintainer rulings after the review" override its
+programme-era body. The v4 design and later rulings in REBUILD.md and this file govern
+where they supersede older rules: no programme, `parallel` state, separate table-key
+entity, six-kind curation grammar or restored order-time edition selector is imported
+from that older schema.
+
 ### Three questions, three scopes
 
 The **reference** scope answers what the providers document. The **steward** scope
 answers what this steward physically holds, including accounted but unmapped columns.
-The **project** scope answers what a researcher has selected and which physical files an
-order delivers. A selection is not evidence that an extract has run. Neither an alias, a
-successor nor an equivalence grants possession.
+The **project** scope answers what a project actually received, described by its own
+file/column inventory. Research intent in `project_data.json` and a materialized order
+are not evidence that delivery occurred. These are distinct inputs, not three filters on
+the logical selection (clean-room design §1 and §13 D7).
 
-One steward artifact contains the complete reference catalog and the steward's compiled
-holdings. Reference browsing remains possible without installing a second database. The
-reader applies the requested scope before search ranking, counts and pagination; cursors
-bind both scope and artifact generation. Steward discovery lists held members and their
-gaps; reference discovery also lists unheld variables. Detail responses make the
-distinction explicit. The logical `order` and `validate` contracts remain shared and
-steward independent. Physical materialization consumes that logical result and adds the
-steward's restrictions, findings and files; it never runs another resolver.
+A project may order through a steward or directly from providers. With no steward it
+still has project and reference scopes; steward is optional, never a prerequisite for
+recording delivered files or making local mocks. The same holdings compiler handles
+`owner = {kind = steward|project, id}`; it does not introduce a programme entity or a
+second project-specific schema. A project inventory is explicitly supplied metadata, not
+inferred by scanning microdata. Its catalog pin and safe filenames, column names, types,
+periods and mapping evidence pass the same validation as steward holdings.
+
+For example, a project may receive only `DIA1`, `AR` and `P1105_LopNr_PersonNr` from the
+pooled SV table for 2019–2020. Its project holdings record those three columns and the
+received period even if its earlier request listed all thirty diagnosis slots. If the
+provider delivered a different literal header, the reviewed project mapping records that
+actual header; the request is not rewritten into evidence. An independent provider
+delivery uses the same project inventory without a SWECOV owner or MONA extraction
+request.
+
+The published catalog and a holdings database remain separate (schema-v3, prefatory
+maintainer rulings; clean-room design §0 and §13 D7). The reader opens their pinned pair
+read-only. Reference browsing uses the catalog; held browsing joins accepted mappings by
+public id and applies scope before ranking, counts and pagination. Cursors bind scope
+and both generations. Neither an alias, a successor nor equivalence grants possession.
+The logical `order` and `validate` remain shared and independent of physical holdings; a
+project without holdings receives the logical order only (§9). Physical materialization
+consumes that result and adds the selected holdings restrictions, findings and files; it
+never runs another resolver.
+
+An open provider end stays open and keeps its `coverage_end_unstated` notice. A finite
+received-file inventory bounds possession independently; it does not close the
+provider's segment or infer an unobserved later delivery (clean-room §2.1 and §15, "Open
+ends"). A holdings refresh can therefore change physical clips without changing the
+logical order's reference availability.
 
 For example, the checked-in SWECOV definition for `SWECOV_SOS_SV` names the provider
 table `sos/par/par-sv`, a physical span 2005–2023 and the row-period column `AR`.
@@ -1144,9 +1176,11 @@ The ordinary catalog pipeline handles missing logical facts before holdings comp
 `reg-readers` → `reg-frame` → `reg-resolve` → `reg-build` emission. Existing-provider
 corrections use ordinary `assert`/`set` statements and reviewed global curation;
 steward-only row shapes get explicit logical definitions and normal ids, never silent
-extra variants of global registers. Their publication scope is an open question below.
-There is no physical-table record in the catalog's `reg-frame::Record`: its `Table`
-means a logical row shape and its `Release` a stated provider delivery.
+extra variants of global registers. Their semantic publication boundary is an open
+question below; received file shapes themselves are holdings facts, never additions to
+the provider catalog. There is no physical-table record in the catalog's
+`reg-frame::Record`: its `Table` means a logical row shape and its `Release` a stated
+provider delivery.
 
 No new crate is needed for the physical layer. Pure serialized holdings/order types live
 in `reg-core`; format readers in `reg-readers`; compilation and SQLite emission in
@@ -1159,19 +1193,31 @@ format names remain confined to readers/configuration, as for the catalog builde
 
 ### Compiled facts and publication
 
-`reg-build holdings --base <published-db> --inputs <root> --curation <root> --steward swecov --out <file>`
-is the separate stage. It admits and verifies the base, reads it without modifying it,
-and emits a new artifact. The base's catalog records retain their meaning. If the
-maintainer adopts steward-only semantic additions (question 1), assembly first copies
-the base into the output, resolves the explicitly listed supplemental registers through
-the ordinary pipeline, then appends them through the existing emitter in one
-transaction. Allocate supplemental row ids after the base's maxima in natural-key order;
-reuse interned facts by their natural keys and remap supplemental references. Reject
-public-id collisions and attempts to replace base registers. Rebuild derived search
-indexes through the existing indexing implementation. This is composition of new
-register definitions, not source priority or another resolve pass over the base.
-Question 3's steward-specific coding must name a new ordinary table/register with normal
-variable ids; there is no new addressable "form" entity.
+`reg-build holdings --base <published-db> --inputs <root> --curation <root> --owner <steward|project>:<id> --out <file>`
+is the separate stage. It verifies the catalog, reads it without modifying or copying
+it, and emits only the holdings layer. The base's entities, row ids, documents and
+search indexes stay in the catalog file. Holdings inputs and stored cross-file mappings
+use public ids; integer ids are local to each database and never joined across files
+without their database origin. Do not import schema-v3's obsolete programme id ranges or
+`UNION ALL` of unqualified row ids.
+`reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
+cross-file references that SQLite cannot enforce as foreign keys.
+
+Steward-only logical descriptions, if retained outside the provider catalog, use the
+ordinary readers/resolver/emitter in a supplemental semantic part of the holdings file.
+No existing global register is overwritten. Their public ids must be distinct; the
+reader resolves a public id to one database origin before using its local row id. Shared
+code lists are addressed by content hash. The same catalog-check implementation can read
+this composed semantic view without changing base entities. The precise boundary for
+these new logical definitions is question 1; there is no new addressable "form" entity
+and no base-copy/append pipeline.
+
+`reg-build/src/holdings/schema.sql` owns the holdings DDL and
+`reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
+schema. `meta` records owner kind/id, holdings generation, catalog generation and file
+digest, plus input/curation/compiler pins. Admission checks both schemas exactly and the
+pairing pins; it does not accept another generation because the public ids happen to
+resolve.
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
@@ -1181,8 +1227,14 @@ catalog's half-open day convention:
   | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, `scope` (`dated`, `timeless`, `unknown`), delivery token, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, disposition, reason and source locator. One row per physical table. A delivery token is not a provider release edition. |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown scope. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                              |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, unmapped reason and locator. Includes every census column, even when it maps to nothing.                                                                                                                                                                           |
-  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, catalog form selector (spelling plus interval), `start`, `end`, `carried`, optional member kind/index, caveat/window and evidence locator. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                        |
-  | `holding_key`     | `holding_id`, `column_id`, logical table and row-key variable ids, ordinal: the held keys required in this physical file. A carried key grants no additional ordered cell.                                                                                                                                                                                   |
+  | `holding_mapping` | `id`, `column_id`, public `table_pid`, public `variable_pid`, catalog form selector (spelling plus interval), `start`, `end`, `role`, `carried`, optional member kind/index, caveat/window and evidence locator. One accepted semantic placement over one served interval. Public ids are resolved and indexed at build time.                                |
+
+Row keys are `role = row_key` on column placements, validated against the logical
+column's role; there is no `holding_key` or `tbl_key` table (clean-room design §2.2, §13
+D10; schema-v3 prefatory rulings). Carried copies retain that role and grant no
+additional ordered cell. Stable key ordering derives from column ordinals. Holdings
+listings are metadata, not confidential by default (§13 D9); this does not authorize
+publishing private source documents, secrets or any microdata.
 
 Partition and projection are mutually exclusive. Projection parents must exist, be
 acyclic and cover the projected mapping's interval and form; no projection is an SQL
@@ -1209,16 +1261,20 @@ child × month rows carry both `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_Pers
 they must never be merged into recipient rows. This is a settled maintainer ruling
 recorded in `series/fk-vbbarn-lev4.toml` (2026-10-16).
 
-Publish `reg_meta_swecov.db.zst` beside `reg_meta.db.zst` in the same `reg_meta/v*`
-release. The steward file contains reference metadata, documents and holdings; no
-runtime TOML or separate holdings DB. `reg-meta serve --catalog swecov` selects the
-installed `reg_meta_swecov.db`, checks `meta.steward = swecov`, schema equality and the
-pinned base generation, and opens read-only connections. `--catalog global` selects
-`reg_meta.db`; `--db <dir>` supplies the installation directory. Missing or mismatched
-named artifacts fail; no fallback to global or another release. The matching global file
-need not be installed: its generation is recorded in the steward file. This extends
-today's hardcoded `reg-catalog::Catalog::open`, rather than claiming the flag already
-exists.
+Publish `reg_meta_swecov.db.zst`, the SWECOV holdings layer, beside `reg_meta.db.zst`,
+the reference catalog, in the same `reg_meta/v*` release. They are a required pinned
+pair, not two copies of the reference catalog.
+`reg-meta serve --catalog swecov --db <dir>` opens `reg_meta.db` and
+`reg_meta_swecov.db`, checks owner `steward:swecov`, both schema versions and the exact
+catalog generation/digest named by the holdings file, then exposes their composed view.
+`--catalog global` opens only `reg_meta.db`; it does not make physical promises. Missing
+or mismatched files fail before serving, with no fallback. Documents remain in the
+catalog; runtime TOML is not read. Each response's generation identifies the selected
+pair; the manifest also records both component generations. The default global
+installation still requires only one file. A project holdings file is loaded explicitly
+with its owner/pin checks for local project inspection and mocks. Selecting a project
+file never changes a hosted process into a multi-project store. This extends today's
+hardcoded `reg-catalog::Catalog::open`, rather than claiming these flags already exist.
 
 Generation hashes cover the exact base generation and file digest, pinned inputs,
 topology/curation digests, schema and compiler semantics. Sort natural keys before row
@@ -1232,27 +1288,32 @@ promised (the runner deliberately has no `ORDER BY`).
 ### From a logical order to physical files
 
 `materialize_order` is `POST /api/project/materialize`, exposed as an operation on the
-existing coarse `order` MCP tool. Its request contains `project`, `steward` and
-`extract_format`; if those choices become project fields (question 5), remove the
-duplicate parameters. `scope = reference|steward` is an explicit discovery parameter;
-project scope is the submitted project's bounded selection, not server-side state. These
-additions are versioned in `conformance/api/operations.toml` and `errors.toml` when
-implemented. The physical result is the manifest below, or `order_blocked` with all
-located findings and no partial files. Holdings failures name the missing mapping/key,
-ambiguous placement or storage mismatch and the source/binding path, not microdata.
+existing coarse `order` MCP tool. Its request contains `project`, the selected holdings
+owner and `extract_format`; if those choices become project fields (question 4), remove
+the duplicate parameters. A MONA manifest requires a configured MONA steward;
+project-only inspection/mocks do not. `scope = reference|steward|project` is an explicit
+discovery parameter; project scope uses the explicitly loaded project holdings
+inventory, never the posted selection or a server-side project store. A scope without
+its required inventory is refused. These additions are versioned in
+`conformance/api/operations.toml` and `errors.toml` when implemented. The SWECOV
+physical result is the manifest below, or `order_blocked` with all located findings and
+no partial files. Holdings failures name the missing mapping/key, ambiguous placement or
+storage mismatch and the source/binding path, not microdata.
 
-Materialization takes a project, steward id and extract format, with artifact identity
-bound to the result. It first calls the logical check, then intersects each resulting
-table/variable/form interval with accepted holdings windows. Partial possession is an
-explicit physical clip, wholly unheld selections block, and ambiguous rival placements
-block with located findings. Catalog ambiguity remains blocking even if only one rival
-is held. Physical findings never disappear into the logical `validate.ok` result. The
-separate physical operation reports its own success/refusal.
+Materialization takes a project, holdings owner and extract format, with artifact
+identity bound to the result. It first calls the logical check, then intersects each
+resulting table/variable/form interval with accepted holdings windows. Partial
+possession is an explicit physical clip, wholly unheld selections block, and ambiguous
+rival placements block with located findings. Catalog ambiguity remains blocking even if
+only one rival is held. Physical findings never disappear into the logical `validate.ok`
+result. The separate physical operation reports its own success/refusal.
 
 Select all explicit partition members needed for the requested interval. Projection
 duplicates use the parent's serving placement for an ordered shared key and retain the
 projection's carried copy for its own file. Deduplicate repeated bindings by exact
-physical column while retaining their logical provenance. Add only required held row
+physical column while retaining their logical provenance. The physical header wins for
+that file even when the catalog displays a newer spelling (clean-room design §4.2, §13
+D12); case alone never creates a second logical variable. Add only required held row
 keys of each selected shape. A missing or ambiguous held key blocks the complete order;
 do not substitute a vaguely similar identifier. Row-key-only requests and required
 key-only files are valid. The row-key restriction is settled by the runner contract, not
@@ -1270,9 +1331,11 @@ Wide temporal columns select columns, not rows: `cis.toml` maps `emp04` to the E
 concept's year 2004. Positional columns select the declared slots: `DIA1`…`DIA30` in
 `SWECOV_SOS_SV` are thirty diagnosis slots, not thirty periods. The catalog still gives
 each documented wide column its own variable, optionally grouped by a set. A holdings
-mapping must not collapse those identities into a series entity. A long-to-wide
-delivery's relation to the provider concept needs the ruling below; the legacy
-many-to-one `member` encoding is not itself authority for a new identity rule.
+mapping must not collapse those identities into a series entity. A long-to-wide delivery
+does not turn a provider concept binding into thirty columns. Select the separate wide
+variables, with a curated set as the picking unit (clean-room design §13 D32 and §15
+resolved question 5). Lineage may document the provider concept; it is not executable
+expansion. The legacy many-to-one `member` identity shortcut is dropped.
 
 Column windows differ from either member kind. In `swecov-sos-barn-insats.toml`,
 `P1105_LopNr_PersonNr` serves the current BU shape over 2007–2021 and the older
@@ -1298,7 +1361,7 @@ entry:
 - `version`, required `extract_format` (`dta`, `parquet`, `csv`), `provenance`, `files`,
   `clips` and non-blocking `findings`;
 - provenance: `mode = steward_holdings`, steward, catalog release/schema/generation,
-  base generation and project schema/hash/name;
+  holdings owner/generation, base generation and project schema/hash/name;
 - each file: safe `name`, exact physical `schema`, `table`, delivery token, optional
   partition or projection, one optional `row_filter`, and ordered `columns`;
 - each column: exact physical `name`, optional `stata_name`, expected storage metadata,
@@ -1345,8 +1408,12 @@ inferred logical type. A disagreement with the reader's `[types]` map emits a lo
 `N1` review with both types, evidence and a proposed ordinary `set type` where
 representable. It does not automatically rewrite a segment, clear ambiguity or silence
 F1. This follows D's 2026-10-28 ruling in REBUILD.md: curate only evidenced affected
-occurrences; unresolved integer/decimal switches remain visible. N1's exact inference
-policy is open below, rather than an undocumented name-based heuristic.
+occurrences; unresolved integer/decimal switches remain visible. The input basis is
+settled: N1 infers from the type string and value pattern and emits review on
+disagreement (clean-room design §4.5). Value patterns mean documented code
+literals/pattern metadata, never MONA row samples. Column roles and identifier kinds
+remain separate attributes (§2.2); a row-key role is not a dtype disagreement. Exact
+accepted patterns, thresholds and consumption before review remain open below.
 
 For example, `curation/readers/scb.toml` maps `numeric` to `decimal`, and `char` to
 `char`. An integer-looking coded column can still require text: leading-zero codes must
@@ -1354,16 +1421,16 @@ survive. A code list alone proves the listed codes, not that an uncoded amount n
 a decimal. N1 records that distinction; storage `numeric(p,s)` remains storage evidence,
 and `s = 0` does not retroactively change provider metadata.
 
-In the FK child projection, `P1105_LopNr_PersonNr` is explicitly the recipient row key
-and `P1105_LopNr_Barn_PersonNr` the child row key. N1 can review an integer-normalized
-source type against that identifier role; the mock must generate distinct synthetic
-recipient and child keys, not measurements. This is a worked rule input from the
-reviewed series, not a claim that an N1 run found a disagreement. Likewise, `DIA1` in
-the SV pivot is a diagnosis code slot, so a numeric-looking subset cannot justify
-integer mock values in place of its full coded text domain.
+For a concrete pattern input, `DIA1` in the SV pivot is a diagnosis code slot. N1
+compares its normalized type string with its documented code domain: an alphanumeric
+pattern supports text, whereas a numeric-looking subset does not support integer
+inference. `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_PersonNr` in the FK child
+projection instead have separately evidenced recipient/child identifier roles. Mocks
+reuse distinct synthetic key domains without recasting a numeric storage type as a role.
+These are worked metadata inputs, not claims of findings from an unrun N1 pass.
 
-`mock_data` takes the same project/steward/format selection plus explicit `seed` and
-`rows_per_file`, over the same materialized file plan. It is a local-only operation
+`mock_data` takes the same project/holdings-owner/format selection plus explicit `seed`
+and `rows_per_file`, over the same materialized file plan. It is a local-only operation
 (`POST /api/project/mock`, on the `order` MCP tool), implemented in `reg-catalog` over
 pure `reg-core` types and exposed by `reg-meta`. It returns a bounded archive of
 synthetic files and its typed plan; the local server writes no researcher-chosen path.
@@ -1371,7 +1438,10 @@ Size limits are checked before allocation. It reads no MONA rows or empirical
 distributions. Use resolved types, lengths, value sets and classification pins; refuse
 unsupported or unknown types needing a guess. Generate conspicuously synthetic keys with
 stable cross-file reuse only for explicitly compatible id kinds; never invent real
-person numbers. A panel warning is not proof that keys join. No sampling from holdings.
+person numbers. A panel warning is not proof that keys join. No sampling of held
+microdata. Project-only delivered shapes work without a steward; a request with no
+holdings can produce a logical plan, but cannot claim physical mock parity (clean-room
+design §1 and §9).
 
 For the FK child projection, a small mock produces separate parent and child files,
 reuses synthetic recipient keys, and adds synthetic child keys without asserting the
@@ -1390,27 +1460,32 @@ This checklist inventories today's implementation rather than freezing it. Sourc
 `steward_storage.py` in `reg_meta_build/src/reg_meta_build/`, their holdings/steward
 cases, and the SWECOV series.
 
-  | Today's item                                                     | Disposition        | Reason                                                                                                                                                       |
-  | ---------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-  | Annual tables; pooled editions; disjoint period lists            | Kept               | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                            |
-  | Partitions                                                       | Kept               | Declared disjoint shards, e.g. Swedbank `v15`; never a way to hide competing deliveries.                                                                     |
-  | Projections                                                      | Kept               | Own grain, keys and file, e.g. FK child × month and RTB postnr.                                                                                              |
-  | Wide position/year/month members                                 | Changed            | Keep literal topology and member order/period; no catalog series identity or automatic collapse of wide variables. Concept expansion needs the ruling below. |
-  | Column windows                                                   | Kept               | Mapping applicability can be narrower than the physical table.                                                                                               |
-  | Row-period columns and encodings                                 | Kept               | Explicit row filter independent of column selection.                                                                                                         |
-  | Carried row keys; key-only files                                 | Kept               | Required topology without granting another serving placement or arbitrary identifier extraction.                                                             |
-  | Timeless/year-independent; retained unknown                      | Changed            | Explicit timeless semantics; unknown remains accounted and unavailable. Drop legacy `_default` variant restrictions.                                         |
-  | Excluded and lookup dispositions                                 | Kept               | Exact census accounting without observation availability.                                                                                                    |
-  | Unmapped columns and held-column coverage denominator            | Kept               | Honest possession counts without invented semantic admission.                                                                                                |
-  | Combined tables and several logical mappings per column          | Kept               | Validate each form/window; one physical extraction column with several references.                                                                           |
-  | Exact physical names; Stata aliases                              | Kept               | Literal SQL identifiers and format-safe output, never display-name renaming.                                                                                 |
-  | `register_variant` and canonical `representation`                | Dropped            | Current public table/variable/form coordinates replace obsolete identity selectors.                                                                          |
-  | Mapping caveats and their windows                                | Kept               | Preserve evidenced steward-specific warnings and warn-not-hold decisions.                                                                                    |
-  | Warned-gap catalog-state clones                                  | Dropped            | A separate layer cannot rewrite provider history; representation is open below.                                                                              |
-  | Alias, `same_as`, succession as a holdings shortcut              | Dropped            | Documentary relationships grant no possession.                                                                                                               |
-  | Delivery series authoring groups                                 | Kept as input data | Share reviewed decisions across explicitly named tables; never a catalog entity.                                                                             |
-  | Flavor/graft/globals/errata generator stages; separate slug pins | Changed            | Ordinary readers, ledgers and statements own logical facts; one holdings compiler owns placements.                                                           |
-  | Generated inventory, candidate manifests and base/spec pins      | Changed            | Preserve exact provenance/accounting; remove duplicate intermediate authority.                                                                               |
+  | Today's item                                                     | Disposition        | Reason                                                                                                                                                                                                             |
+  | ---------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | Annual tables; pooled editions; disjoint period lists            | Kept               | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                                                                                  |
+  | Partitions                                                       | Kept               | Declared disjoint shards, e.g. Swedbank `v15`; never a way to hide competing deliveries.                                                                                                                           |
+  | Projections                                                      | Kept               | Own grain, keys and file, e.g. FK child × month and RTB postnr.                                                                                                                                                    |
+  | Wide position/year/month members                                 | Changed            | Keep literal topology and member order/period; no catalog series identity or automatic collapse of wide variables. Separate variables + curated sets are settled by clean-room D32; no implicit concept expansion. |
+  | Column windows                                                   | Kept               | Mapping applicability can be narrower than the physical table.                                                                                                                                                     |
+  | Row-period columns and encodings                                 | Kept               | Explicit row filter independent of column selection.                                                                                                                                                               |
+  | Column-role row keys; carried keys; key-only files               | Kept               | Roles on columns, no separate key table (D10); required topology grants no extra serving placement.                                                                                                                |
+  | Timeless/year-independent; retained unknown                      | Changed            | Explicit timeless semantics; unknown remains accounted and unavailable. Drop legacy `_default` variant restrictions.                                                                                               |
+  | Excluded and lookup dispositions                                 | Kept               | Exact census accounting without observation availability.                                                                                                                                                          |
+  | Unmapped columns and held-column coverage denominator            | Kept               | Honest possession counts without invented semantic admission.                                                                                                                                                      |
+  | Combined tables and several logical mappings per column          | Kept               | Validate each form/window; one physical extraction column with several references.                                                                                                                                 |
+  | Exact physical names; Stata aliases                              | Kept               | Literal SQL identifiers and format-safe output, never display-name renaming.                                                                                                                                       |
+  | `register_variant` and canonical `representation`                | Dropped            | Current public table/variable/form coordinates replace obsolete identity selectors.                                                                                                                                |
+  | Mapping caveats and their windows                                | Kept               | Preserve evidenced steward-specific warnings and warn-not-hold decisions.                                                                                                                                          |
+  | Warned-gap catalog-state clones                                  | Dropped            | A separate layer cannot rewrite provider history; representation is open below.                                                                                                                                    |
+  | Alias, `same_as`, succession as a holdings shortcut              | Dropped            | Documentary relationships grant no possession.                                                                                                                                                                     |
+  | Delivery series authoring groups                                 | Kept as input data | Share reviewed decisions across explicitly named tables; never a catalog entity.                                                                                                                                   |
+  | Flavor/graft/globals/errata generator stages; separate slug pins | Changed            | Ordinary readers, ledgers and statements own logical facts; one holdings compiler owns placements.                                                                                                                 |
+  | Generated inventory, candidate manifests and base/spec pins      | Changed            | Preserve exact provenance/accounting; remove duplicate intermediate authority.                                                                                                                                     |
+
+Project-received inventories and optional steward ownership are kept explicitly, using
+the same file/column contract (clean-room §1, D7). The separate catalog and holdings
+files, metadata status of file listings (D9), and actual-file spelling precedence (D12)
+are also settled parts of this contract, not maintainer questions.
 
 Keep `conformance/cases/order` and `conformance/test_order.py` as the logical contract:
 availability clips, row keys, ambiguity, classification and `validate` agreement. Add a
@@ -1421,9 +1496,11 @@ beside an allowed placement, a changed spelling, a column window, a key-only pro
 two disjoint partitions, pooled row filters and a storage mismatch. Refusals assert
 located codes; `reg-build verify` owns structural invariants. Adapt the existing
 `test_order.py` harness in E to distinguish logical and physical requests and load the
-new holdings fixtures. This restores the holdings/steward cases removed in C, as REBUILD
-§C requires; it does not introduce another test suite or resolver oracle. Broader test
-additions/audit remain F work under the no-new-tests rebuild rule.
+new holdings fixtures, including a project-only owner, a mismatched catalog/holdings
+pair and an actual-file spelling differing from the latest catalog spelling. This
+restores the holdings/steward cases removed in C, as REBUILD §C requires; it does not
+introduce another test suite or resolver oracle. Broader test additions/audit remain F
+work under the no-new-tests rebuild rule.
 
 `conformance/test_release_order.py` keeps its independent published-catalog SQL census,
 repeat-byte and HTTP/MCP checks. Its adapted steward mode in E samples accepted
@@ -1445,51 +1522,59 @@ warned-state cloning pipeline survives as a compatibility layer.
 
 ### Open for the maintainer
 
-1. **Where are steward-only logical descriptions published?** Options: include all
-   reviewed descriptions in the global catalog; or append only explicitly new logical
-   registers to the steward artifact with the ordinary builder. Recommend the latter,
-   keeping the exact published base read-only and rejecting collisions with its ids. It
-   changes emitter composition and reference scope inside a steward artifact. A global
-   correction still belongs in global curation; neither option permits adding arbitrary
-   variants to a global register (SWECOV scope's recorded 2026-10-16 ruling).
-2. **How does a provider long concept select a steward wide pivot?** Options: require
-   explicit selection of separately identified wide variables; or allow an evidenced
-   holdings-only concept-to-member expansion. Recommend explicit wide variables and sets
-   for picking, with documented lineage to the provider concept. This preserves the
-   settled no-series identity rule, but changes legacy diagnosis-concept orders into a
-   selection of thirty members. Expansion would need a separate, explicit relation and
-   refusal rules; it cannot treat a pivot as a mere spelling rename.
-3. **How is warn-not-hold represented outside provider validity?** Options: explicit
+These six questions concern choices not settled by clean-room design §13/§15,
+REBUILD.md's "Decisions already made", the project contract or the runner rulings. The
+fixed boundaries are stated with each choice; recommendations are not rulings.
+
+1. **How are supplemental logical descriptions composed with the reference catalog?**
+   Options: emit their ordinary semantic tables into the separate holdings database; or
+   build another supplemental catalog and pair it with the holdings layer. Recommend the
+   first, using the existing readers/resolver/emitter and distinct public ids, without
+   copying or overriding the published base. It changes reader composition and
+   supplemental schema validation. Only genuinely missing provider documentation is a
+   candidate for global curation. Received shapes stay outside the published provider
+   catalog (clean-room §0/§1; schema-v3 prefatory separation ruling); no combined
+   catalog/holdings database is an option. Old programme namespaces and fixed id ranges
+   are not an adopted solution.
+2. **How is warn-not-hold represented outside provider validity?** Options: explicit
    steward-only logical tables/registers linked to the provider variable; or
-   holdings-only form evidence evaluated after a reference check that can report, but
-   not discard, those windows. Recommend explicit new logical tables/registers through
-   ordinary frames/statements. This changes BU order source selection and adds no global
-   retrospective validity. The warn-and-order behavior itself is already settled in
-   `series/swecov-sos-barn-insats.toml`; refusal or silent clipping is not an
-   alternative.
-4. **How are unequal row ranges in one physical file handled?** Options: extract their
+   holdings-only form evidence evaluated by the same logical checker in a composed
+   semantic view, without discarding the evidenced windows. Recommend explicit new
+   logical tables/registers through ordinary frames/statements. This changes BU order
+   source selection and adds no global retrospective validity. Warn-and-order itself is
+   settled in `series/swecov-sos-barn-insats.toml` (2026-10-19); refusal or silent
+   clipping is not an alternative. No new cross-register variable identity is permitted
+   (clean-room §13 D28).
+3. **How are unequal row ranges in one physical file handled?** Options: extract their
    union with a prominent per-column over-extraction notice; or block until the
-   researcher aligns periods. Recommend union with explicit notices, preserving one
-   physical file per table/delivery. This determines physical findings and mock row
-   coverage; neither option silently promises column-specific row filtering.
-5. **Where are steward and format selected?** Options: new versioned project fields; or
-   explicit physical-operation parameters saved alongside the project. Recommend project
-   fields in the next project major version, checked by physical admission; `.dta` is
-   the authoring default and always explicit in the manifest. This changes `reg-core`
-   and project UI serialization. Today's 5.1.0 rejects both fields, so accepting them
-   without a contract change is not an option. Named orders, row-key restriction and
-   `.dta` default are settled runner rulings, not reopened choices.
-6. **What evidence may N1 infer from, and which type is consumed before adoption?**
-   Options: conservative code-domain/role evidence producing reviews only, with
-   consumers using curated normalized types; or a richer inferred type used by mocks
-   while pending review. Recommend reviews only, preserving text codes and explicit
-   unknowns; no name-only date inference or integer inference from a few examples. This
-   determines the N1 rule table and refusal behavior, not the SQL writer mapping.
-7. **Which mock formats ship in E?** Options: CSV plus a typed schema/plan; or all three
+   researcher aligns source periods. Recommend union with explicit notices. The runner
+   already settles one common filter and one file per physical table/delivery ("The
+   run"); it does not settle this choice. This determines physical findings and mock row
+   coverage, without adding per-binding periods to the project contract.
+4. **Where are holdings owner and format selected?** Options: optional versioned project
+   fields; or physical-operation parameters saved alongside the project. Recommend
+   operation parameters initially, keeping logical intent separate from received-file
+   inventories. This changes authoring/hand-off serialization and avoids adding a
+   project major version solely to carry physical choices. A project without a steward
+   remains valid (clean-room §1). The current 5.1.0 project rejects steward and format
+   fields and explicitly leaves E to decide their representation. The runner's one
+   format per project, `.dta` authoring default, required manifest format, named orders
+   and row-key restriction are settled and are not choices here.
+5. **Which documented value patterns support N1, and which type is consumed while a
+   disagreement awaits review?** Options: a conservative closed pattern table that emits
+   reviews, with consumers using adopted normalized types; or a broader documented
+   pattern table whose inferred types mocks may use while flagged for review. Recommend
+   the first, preserving text codes and explicit unknowns, with no inference from MONA
+   rows or a few examples. This determines pattern acceptance, thresholds and consumer
+   refusals. Inferring from the type string and value pattern and emitting review on
+   disagreement are already fixed (clean-room §4.5); roles remain separate (§2.2). D's
+   2026-10-28 ruling rules out automatic global correction of unresolved cases.
+6. **Which mock formats ship in E?** Options: CSV plus a typed schema/plan; or all three
    extract formats with installed Rust writers. Recommend CSV plus typed schema first,
    clearly labelled as CSV mocks even for a `.dta` extract plan. This avoids a second
    Stata writer dependency; exact `.dta`/Parquet mock parity would require writer
-   choices and format round-trip checks. The real runner still supports all three.
+   choices and format round-trip checks. No clean-room or runner ruling settles mock
+   writer scope; the real runner continues to support all three extract formats.
 
 ## Project semantic validation
 

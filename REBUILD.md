@@ -546,18 +546,20 @@ The remaining C checklist:
      descriptions through ordinary readers/ledgers/statements and public topology
      definitions into `curation/stewards/swecov/`; account for every old decision;
   3. **e-holdings:** separate `reg-build holdings` stage, compiled tables and
-     `reg-build verify`, named steward artifact admission and scoped discovery;
+     `reg-build verify` over the pinned catalog/holdings pair, owner-scoped admission
+     (steward or project) and discovery;
   4. **e-types:** N1 review findings and the adopted type policy, shared with mock and
      output planning; no automatic global type correction;
   5. **e-order:** physical materialization over the existing logical check, versioned
-     project selection and file-oriented manifest; reviewed conformance cases;
+     holdings-owner/format selection and file-oriented manifest; reviewed conformance
+     cases;
   6. **e-runner:** switch the R runner and its corpus together, reconnect topology
      cases, preserve format/precision/refusal and MONA boundaries;
   7. **e-mock:** deterministic local mock files over the physical plan, explicit seed
      and size, with the maintainer-approved format scope;
-  8. **e-release:** `reg_meta_swecov.db.zst`, deployment with `--catalog swecov` and
-     scheduled real-artifact conformance. Stop using `build_catalog.py` and Python
-     `extend-db`; F deletes them;
+  8. **e-release:** `reg_meta_swecov.db.zst` paired with `reg_meta.db.zst`, deployment
+     with `--catalog swecov` and scheduled real-artifact conformance. Stop using
+     `build_catalog.py` and Python `extend-db`; F deletes them;
   9. **e-spa:** the flows below, then the maintainer's real MONA order and E audit. The
      existing black-box suites remain the proof surface under the no-new-tests rule; any
      necessary harness change follows that rule rather than adding a second resolver
