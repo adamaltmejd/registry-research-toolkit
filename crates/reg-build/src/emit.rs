@@ -171,6 +171,7 @@ fn write_provenance(
         ProvenanceSubject::Table(..) => "table",
         ProvenanceSubject::Release(..) => "release",
         ProvenanceSubject::Occurrence(..) => "occurrence",
+        ProvenanceSubject::Variable(..) => "variable",
         ProvenanceSubject::ValueSet(_) => "valueset",
         ProvenanceSubject::ClassVersion(..) => "class_version",
     };
@@ -490,7 +491,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(rid),
                     Cell::Int(table_id[&(ri, release.table)]),
                     Cell::Str(
-                        if asserted {
+                        if asserted
+                            || provenance_by_subject
+                                .get(&ProvenanceSubject::Release(ri, x))
+                                .is_some_and(|values| {
+                                    values.iter().any(|v| {
+                                        v.field == "period"
+                                            && matches!(v.origin, Origin::Curated(_))
+                                    })
+                                })
+                        {
                             "curated"
                         } else if period.is_some() {
                             "parsed"
@@ -559,6 +569,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(reg_core::fold_identity(&variable.slug)),
                 ],
             );
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Variable(ri, v),
+                vid,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
             for run in &variable.texts {
                 rows.push(
                     "variable_text",
@@ -597,7 +614,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Spelling(segment.spelling.clone()),
                         opt_str(segment.dtype.as_ref()),
                         opt_int(segment.length),
-                        Cell::Null,
+                        opt_str(segment.format.as_ref()),
                         opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
                         Cell::Null,
                         Cell::Str(segment.coded.into()),
@@ -648,7 +665,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_text(x.unit.as_ref()),
                     opt_str(x.dtype.as_ref()),
                     opt_int(x.length),
-                    Cell::Null,
+                    opt_str(x.format.as_ref()),
                     opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),
                     Cell::Null,
                     Cell::Str(reg_resolve::coded(x).into()),
@@ -747,6 +764,64 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
         Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
     };
+    let mut memberships = BTreeMap::<(usize, String), BTreeSet<usize>>::new();
+    for value in &catalog.provenance.values {
+        if let ProvenanceSubject::Variable(ri, v) = value.subject
+            && value.field == "sets"
+            && let Some(json) = &value.value
+        {
+            let sets: Vec<String> = serde_json::from_str(json).map_err(|e| e.to_string())?;
+            for set in sets {
+                memberships.entry((ri, set)).or_default().insert(v);
+            }
+        }
+        if value.field == "notice"
+            && let Some(message) = &value.value
+        {
+            let (ri, kind, subject, period) = match value.subject {
+                ProvenanceSubject::Occurrence(ri, o) => (
+                    ri,
+                    "occurrence",
+                    occurrence_id[&(ri, o)],
+                    catalog.registers[ri].occurrences[o]
+                        .period
+                        .as_ref()
+                        .map(|p| (start(&p.0), end(&p.1))),
+                ),
+                _ => continue,
+            };
+            let reg_pid = pid_of_register(&catalog.registers[ri]);
+            findings.push((
+                (reg_pid.clone(), "C0:curated-notice", kind, subject, period),
+                (register_id[&reg_pid], "notice", message.clone()),
+            ));
+        }
+    }
+    for (i, ((ri, set), members)) in memberships.into_iter().enumerate() {
+        let reg_pid = pid_of_register(&catalog.registers[ri]);
+        let set_id = id(i);
+        rows.push(
+            "var_set",
+            vec![
+                Cell::Int(set_id),
+                Cell::Str("set".into()),
+                Cell::Str(format!("{reg_pid}/{set}")),
+                Cell::Int(register_id[&reg_pid]),
+                Cell::Text(set),
+                Cell::Null,
+            ],
+        );
+        for (ord, v) in members.into_iter().enumerate() {
+            rows.push(
+                "var_set_member",
+                vec![
+                    Cell::Int(set_id),
+                    Cell::Int(variable_id[&(ri, v)]),
+                    Cell::Int(i64::try_from(ord).expect("set member ordinal fits i64")),
+                ],
+            );
+        }
+    }
     for notice in &catalog.notices {
         let r = &catalog.registers[notice.subject.register()];
         let reg_pid = pid_of_register(r);

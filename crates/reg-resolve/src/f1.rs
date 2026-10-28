@@ -45,11 +45,12 @@ pub(crate) fn changes(
             }
             let day = b.period.0.as_str();
             let table = table_name(a.table);
-            // A dtype or length counts only when both sides state one: an unstated or
+            // A type, length or format counts only when both sides state one: an unstated or
             // conflicting value (F6 records the conflict) is not a change of type.
             let dtypes_differ = matches!((&a.dtype, &b.dtype), (Some(x), Some(y)) if x != y);
             let lengths_differ = matches!((a.length, b.length), (Some(x), Some(y)) if x != y);
-            if dtypes_differ || lengths_differ {
+            let formats_differ = matches!((&a.format, &b.format), (Some(x), Some(y)) if x != y);
+            if dtypes_differ || lengths_differ || formats_differ {
                 push(
                     v,
                     "F1:type-change",
@@ -193,12 +194,16 @@ fn names(x: &ResolvedRelease) -> BTreeSet<&str> {
         .collect()
 }
 
-/// A segment's type as `int` or `char(8)`.
+/// A segment's type and any stated length or format.
 fn shape(s: &Segment) -> String {
     let dtype = s.dtype.as_deref().unwrap_or("untyped");
-    match s.length {
+    let shape = match s.length {
         Some(n) => format!("{dtype}({n})"),
         None => dtype.to_owned(),
+    };
+    match &s.format {
+        Some(format) => format!("{shape} [{format}]"),
+        None => shape,
     }
 }
 

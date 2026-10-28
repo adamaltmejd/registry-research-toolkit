@@ -317,6 +317,7 @@ pub fn read(
             length: get(length)
                 .and_then(|l| l.parse().ok())
                 .filter(|&l: &i64| l > 0),
+            format: None,
             valueset: None,
             population_valuesets: Vec::new(),
             coded: None,

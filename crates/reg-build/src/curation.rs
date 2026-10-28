@@ -220,6 +220,54 @@ fn phase(statement: &reg_frame::statement::Statement) -> u8 {
     }
 }
 
+/// Keep field applications small and based on the same immutable phase evidence.
+fn field_application(
+    records: &[Record],
+    statement: &LocatedStatement,
+    ledger: &reg_resolve::Ledger,
+    premise: &Premise,
+    locators: &BTreeMap<reg_frame::Locator, Vec<usize>>,
+    root: &Path,
+) -> Result<
+    (
+        Vec<usize>,
+        Vec<Record>,
+        reg_resolve::curation::apply::Applied,
+    ),
+    String,
+> {
+    let indices = premise
+        .subjects
+        .iter()
+        .chain(&premise.objects)
+        .flat_map(|p| locators.get(&p.locator).into_iter().flatten().copied())
+        .filter(|i| belongs(&records[*i], &statement.provider, &statement.register))
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let source = indices
+        .iter()
+        .map(|i| records[*i].clone())
+        .collect::<Vec<_>>();
+    let at = statement_locator(root, statement)?;
+    let applied =
+        reg_resolve::curation::apply::apply(&source, ledger, &statement.statement, &at, premise)?;
+    Ok((indices, source, applied))
+}
+
+/// Independent fields merge as patches, never as whole-record replacements.
+fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Record, String> {
+    let mut current = serde_json::to_value(current).map_err(|e| e.to_string())?;
+    let before = serde_json::to_value(before).map_err(|e| e.to_string())?;
+    let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
+    for (field, value) in after.as_object().expect("frame object") {
+        if before.get(field) != Some(value) {
+            current[field] = value.clone();
+        }
+    }
+    serde_json::from_value(current).map_err(|e| e.to_string())
+}
+
 fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, Premise>, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
         return Ok(BTreeMap::new());
@@ -333,6 +381,7 @@ fn run_selected(
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
+    let mut field_snapshot = Vec::new();
     for stage in 0..5 {
         let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
             reg_resolve::curation::SharedSources::new(&records)
@@ -342,6 +391,48 @@ fn run_selected(
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
         let mut accepted = Vec::new();
+        let mut field_applications = BTreeMap::new();
+        if stage == 4
+            && statements.iter().any(|s| {
+                matches!(s.statement, reg_frame::statement::Statement::Set { .. })
+                    && phase(&s.statement) == 4
+            })
+        {
+            field_snapshot = records
+                .iter()
+                .filter(|r| {
+                    matches!(
+                        r,
+                        Record::Register(_)
+                            | Record::Table(_)
+                            | Record::Release(_)
+                            | Record::Occurrence(_)
+                    )
+                })
+                .cloned()
+                .collect();
+        }
+        let mut locators = BTreeMap::<_, Vec<_>>::new();
+        if stage == 4 {
+            for (i, record) in records.iter().enumerate() {
+                let at = match record {
+                    Record::Register(r) => Some(&r.locator),
+                    Record::Table(r) => Some(&r.locator),
+                    Record::Release(r) => Some(&r.locator),
+                    Record::Occurrence(r) => Some(&r.locator),
+                    Record::ValueSet(r) => Some(&r.locator),
+                    _ => None,
+                };
+                if let Some(at) = at {
+                    locators.entry(at.clone()).or_default().push(i);
+                }
+                if let Record::Occurrence(r) = record {
+                    for at in &r.also {
+                        locators.entry(at.clone()).or_default().push(i);
+                    }
+                }
+            }
+        }
         for ((provider, register), group) in &groups {
             let Some((path, ledger, old)) = locks.get(&(provider, register)) else {
                 continue;
@@ -359,6 +450,22 @@ fn run_selected(
                 .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
+            if stage == 4
+                && group
+                    .iter()
+                    .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
+            {
+                for (variable, members) in
+                    reg_resolve::curation::variable_members(&source, ledger, &result.variables)?
+                {
+                    for member in members {
+                        result
+                            .variables
+                            .entry(member)
+                            .or_insert_with(|| variable.clone());
+                    }
+                }
+            }
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
             let references = references(
                 root,
@@ -393,6 +500,29 @@ fn run_selected(
                         ));
                     }
                     continue;
+                }
+                if stage == 4
+                    && matches!(
+                        statement.statement,
+                        reg_frame::statement::Statement::Set { .. }
+                    )
+                {
+                    match field_application(
+                        &records,
+                        statement,
+                        ledger,
+                        &resolved.premise,
+                        &locators,
+                        root,
+                    ) {
+                        Ok(application) => {
+                            field_applications.insert(publication_identity(statement), application);
+                        }
+                        Err(error) => {
+                            refusals.push(format!("{at}: {error}"));
+                            continue;
+                        }
+                    }
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
@@ -491,7 +621,20 @@ fn run_selected(
                 3 => assignments
                     .remove(&publication_identity(statement))
                     .expect("evaluated assignment"),
-                4 => Ok(reg_resolve::curation::apply::Applied::default()),
+                4 => {
+                    if let Some((indices, before, applied)) =
+                        field_applications.remove(&publication_identity(statement))
+                    {
+                        for ((index, before), after) in
+                            indices.into_iter().zip(&before).zip(&applied.records)
+                        {
+                            records[index] = merge_fields(&records[index], before, after)?;
+                        }
+                        Ok(applied)
+                    } else {
+                        Ok(reg_resolve::curation::apply::Applied::default())
+                    }
+                }
                 _ => reg_resolve::curation::apply::apply(
                     &source,
                     ledger,
@@ -647,6 +790,41 @@ fn run_selected(
             "{}:{}: curation-overlap: classification version overlaps {}:{}",
             left.locator.input, left.locator.at, right.locator.input, right.locator.at
         ));
+    }
+    if !field_snapshot.is_empty() {
+        let final_coordinates = records
+            .iter()
+            .filter(|r| {
+                matches!(
+                    r,
+                    Record::Register(_)
+                        | Record::Table(_)
+                        | Record::Release(_)
+                        | Record::Occurrence(_)
+                )
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        if let Err(at) = reg_resolve::curation::apply::rekey(
+            &field_snapshot,
+            &final_coordinates,
+            &mut result.variables,
+            &mut result.overrides,
+        ) {
+            for (statement, premise) in &evaluated {
+                if matches!(&statement.statement, reg_frame::statement::Statement::Set {fields,..} if fields.spelling.is_some() || fields.period.is_some())
+                    && premise.subjects.iter().any(|p| p.locator == at)
+                {
+                    conflicts.insert(publication_identity(statement));
+                    refusals.push(format!(
+                        "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
+                        location(statement),
+                        at.input,
+                        at.at
+                    ));
+                }
+            }
+        }
     }
     if !conflicts.is_empty() {
         if record || release {

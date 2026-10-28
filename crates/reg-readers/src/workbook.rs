@@ -458,6 +458,7 @@ impl Context<'_> {
                         .unwrap_or(t)
                 }),
                 length: None,
+                format: None,
                 valueset,
                 population_valuesets: Vec::new(),
                 coded: None,

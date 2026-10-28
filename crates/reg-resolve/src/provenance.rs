@@ -33,6 +33,7 @@ pub enum Subject {
     Table(usize, usize),
     Release(usize, usize),
     Occurrence(usize, usize),
+    Variable(usize, usize),
     ValueSet(String),
     ClassVersion(String, String),
 }
@@ -316,9 +317,25 @@ pub fn finalize(
             if mask != 0 {
                 result.occurrence_masks.insert((ri, oi), mask);
             }
-            result.values.extend(values);
+            for mut value in values {
+                if value.field == "sets" {
+                    if let Some(variable) = occurrence.variable {
+                        value.subject = Subject::Variable(ri, variable);
+                        result.values.push(value);
+                    }
+                } else {
+                    result.values.push(value);
+                }
+            }
         }
     }
+    // One variable-level set value can be reached through several selected occurrences.
+    result
+        .values
+        .sort_by(|a, b| (&a.subject, &a.field).cmp(&(&b.subject, &b.field)));
+    result
+        .values
+        .dedup_by(|a, b| a.subject == b.subject && a.field == b.field);
     // Content-addressed sets may keep a source locator when an assertion introduces
     // the same code list elsewhere. Its asserted provenance follows the hash, not the
     // arbitrary first source locator retained by value-set interning.
