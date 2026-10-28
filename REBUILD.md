@@ -515,16 +515,16 @@ The remaining C checklist:
   and line in the converter's report;
 - [x] the curated strict build passes;
 - [x] no variable is unminted;
-- [ ] the comparison is re-run, and every curated difference is explained.
+- [x] the comparison is re-run, and every curated difference is explained.
 
-**D-X outcome (2026-10-28): blocked on the comparison; no release.** Checks used the
-committed tree `8cc73d5fe` and clean inputs `9186fcbceeb2283a50c7f684764869e4dda5765e`,
-with the pinned SCB archive. The release binary's second strict build exited 0 in
-393.923 s, peaking at 10,340,057,088 bytes RSS. The first took 363.41 s; its
-`/usr/bin/time -l` wrapper failed on a sandbox-denied `sysctl` after writing the
-catalog, so its builder exit and peak RSS were not captured. Independent
-`reg-build verify` passed (exit 0, 27.617 s). Both catalog files and JSON reports were
-byte-identical. Catalog size: 1,181,515,776 bytes; SHA-256:
+**D-X outcome (2026-10-28): exit checks passed; no release.** Checks used the committed
+tree `8cc73d5fe` and clean inputs `9186fcbceeb2283a50c7f684764869e4dda5765e`, with the
+pinned SCB archive. The release binary's second strict build exited 0 in 393.923 s,
+peaking at 10,340,057,088 bytes RSS. The first took 363.41 s; its `/usr/bin/time -l`
+wrapper failed on a sandbox-denied `sysctl` after writing the catalog, so its builder
+exit and peak RSS were not captured. Independent `reg-build verify` passed (exit 0,
+27.617 s). Both catalog files and JSON reports were byte-identical. Catalog size:
+1,181,515,776 bytes; SHA-256:
 `23ddf88880a0821b1d50693bf718c82781c37c7649fb91ec300e34fcd4268aa2`.
 
 - Retained catalog: this worktree's `.local/d-exit/strict/reg_meta.db`.
@@ -550,38 +550,78 @@ byte-identical. Catalog size: 1,181,515,776 bytes; SHA-256:
   unexplained dbdiff category was found. This does not independently certify every
   changed text or selector.
 
-The full random-order comparison against downloaded 0.64.0 ran with n=20 for each of
-seeds 0 and 1. Both commands exited 0, but their classifications fail the exit
-criterion:
+The corrected full random-order comparison against downloaded 0.64.0 ran with n=20 for
+each of seeds 0 and 1. Both commands exited 0; every defect class has zero rows.
+Classification-version transitions now have their own intended class. Each extra
+boundary still needs catalog evidence; unsupported splits remain `other`. No test was
+added: the real comparison is the verification.
 
-  | Class            | C seed 0 | D seed 0 | C seed 1 | D seed 1 |
-  | ---------------- | -------: | -------: | -------: | -------: |
-  | Blocked window   |     4211 |     2939 |     3437 |     8453 |
-  | Identity change  |        0 |        5 |      330 |      155 |
-  | Old curation     |        1 |        0 |      606 |      538 |
-  | Unplaced release |        0 |        0 |       33 |       33 |
-  | Form boundary    |       99 |      130 |      833 |      861 |
-  | Spelling         |       13 |       13 |       77 |       72 |
-  | Other            |        0 |       24 |        0 |      720 |
+  | Class                  | C seed 0 | D seed 0 | C seed 1 | D seed 1 |
+  | ---------------------- | -------: | -------: | -------: | -------: |
+  | Blocked window         |     4211 |     2939 |     3437 |     8453 |
+  | Identity change        |        0 |        5 |      330 |      209 |
+  | Old curation           |        1 |        0 |      606 |      538 |
+  | Unplaced release       |        0 |        0 |       33 |       33 |
+  | Form boundary          |       99 |       99 |      833 |      779 |
+  | Classification version |        0 |       55 |        0 |      747 |
+  | Spelling               |       13 |       13 |       77 |       73 |
+  | Other                  |        0 |        0 |        0 |        0 |
 
 All other classes have zero rows. Blocked-window refusals: seven and six (C: six each);
-register-only difference records: zero. Retiring the standalone workbook register
-changes the sampling pool from 291 to 290; only 13 and 14 sampled registers respectively
-overlap C, so these totals are not a fixed-register trend.
+register-only difference records: zero. The 538 old-curation rows are 520 LISA
+monthly/annual period-family differences and 18 provenance-backed errata (nine omitted,
+six additional, two steward-holdings, one blank column). The 33 unplaced rows are LISA
+releases without parsed coverage; no calendar coverage is inferred. Unexplained list:
+empty.
 
-**Comparator-classified `other` rows: 744.** Seed 0 has 24 on `scb/moms/sateskommun`;
-seed 1 has 720 across seven registers. The comparator's `form_boundary()` checks type
-and value-set changes but omits classification versions. A read-only audit of the
-complete saved responses and catalog explains all 501 unsupported interior boundaries by
-classification-version transitions (eight in seed 0, 493 in seed 1). No unexplained
-boundary remains; no catalog defect was established. The comparator defect remains
-unfixed, and its corrected replay is unrun. No code was changed. D's comparison box
-remains open.
+**Blocked-window attribution.** The class counts above are affected old order rows, not
+counts of ambiguity findings. Retiring the workbook register changes the sampling pool
+from 291 to 290; only 13 and 14 registers overlap C's samples. A seed-1 control against
+the 0.65.0 asset reproduces C's 3,437 rows exactly. Shared blocked registers BYLBBS
+(84), annual energy (254) and IoT (2,370) contribute 2,708 rows in both samples. C-only
+SLK (134), SSV (79) and PIN (516) contribute 729; D-only RTB (5,120), STATIV (480) and
+new-housing prices (145) contribute 5,745. The difference 5,745 − 729 = 5,016 accounts
+exactly for 8,453 − 3,437. The rise in this class is entirely sampling.
 
-Stopped at the defect as instructed. Release-tier conformance, full gates, synthetic
-suites, legacy real-seed builds, converter replay, `gate.py regen`, release publication
-and PR merge were not run. The replay catalog and downloaded comparison artifacts are
-removed after reporting; the strict catalog is retained for a later release decision.
+The exact D requests were also replayed unchanged over both catalogs with the same
+current server binary, isolating catalog effects. Seed-0 ambiguity findings are 40 → 42;
+seed 1 is 378 → 858. C additionally returns 19 and 852 `fqid_unresolved` findings,
+respectively, so these raw findings cannot be compared without identity attribution. The
+per-register counts and other error counts are in the D-X PR. All seven/six D
+ambiguity-blocked register orders already encounter ambiguity on C. Four increases:
+
+- OHA 1 → 2: D `urval` (`r143/ids.toml:27`) is C `lillan`, source `v2325`; the same
+  2008–2009 ambiguity already exists. This is an intended ID change.
+- Vattenbruk 15 → 18: three newly minted `antal-odlingar-lan1/2/3` IDs
+  (`r215/ids.toml:335–337`, source `v41234`) expose the same ambiguous 2024 cells. Five
+  other existing windows extend from 2019 to 2018 under D's width-insensitive form
+  joining and unchanged whole-run rival rule. These are intended effects.
+- SSV 9 → 10: overlapping source editions now bind different curated LKF versions.
+  `r391/curation.toml:32` (LKF1998) conflicts with lines 38/62 (LKF1999), with annual
+  equivalents at 56 versus 68/92, 86 versus 98/122 and 116 versus 128/146. `skollan`
+  becomes ambiguous in 1998–2002 and `skolkommun` extends through 2002. The resolver
+  deliberately blocks classification disagreement: intended curation.
+- Annual energy 346 → 832: 341 findings are identical, five C findings disappear and 491
+  D findings appear. Of those, 490 are newly named IDs in `r200/ids.toml:420` onward,
+  each matched by exact table, source key, spelling and occurrence period to ambiguous C
+  source occurrences; zero unmatched. The remaining shared ID `maxnetto` (line 106)
+  joins the clear 2009 length-5 form to the ambiguous 2010–2021 length-9 form under D's
+  width-insensitive rule; the unchanged whole-run rival rule makes 2009–2021 ambiguous.
+  No field override causes it. C's own full-register request returns 834 ambiguity
+  findings; the smaller count on the exact D request reflects unresolved names. These
+  are intended ID/form effects, not new rival evidence.
+
+No catalog defect was found. The comparator fix received independent review. Release
+conformance against the retained strict catalog passed all four selected checks in 27.60
+s (`-m release --run-release --artifact-dir`, current release server binary; the
+verifier harness's debug path points to the release builder). `gate.py lint`, Ruff
+check/format, focused Markdown checks and whitespace checks passed.
+
+Not run: another metadata build, converter replay, full gates, synthetic/R suites,
+legacy real-seed workflows, `gate.py regen`, release publication or PR merge. The
+initial comparator stop is superseded by the operator's authorization to fix the rebuild
+tool in this PR. Scratch comparison artifacts are removed after reporting; the strict
+catalog remains for a later release decision.
 
 **Outside:** G0 runs ~160 s against its 60 s budget; fixed in a separate task.
 
