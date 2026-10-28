@@ -14,3 +14,5 @@ public = "konkurser"
 "person-orgnr" = ["Konkurser o offentliga ackord: opnr"]
 "referensmanad" = ["Konkurser o offentliga ackord: beslutstid"]
 "sni2007-5siffror" = ["Konkurser o offentliga ackord: bransch"]
+"nummer-pa-postgumman-fran-och-med-1997" = ["Konkurser o offentliga ackord: tidning"]
+"personnummer-for-galdenar-som-ar-enskild-firma-eller" = ["Konkurser o offentliga ackord: personnr_opnr"]

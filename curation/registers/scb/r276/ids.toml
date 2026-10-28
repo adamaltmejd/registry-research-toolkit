@@ -304,3 +304,6 @@ public = "fastighetsreg"
 "versionsnr-fastighetsreg" = ["Adressplatsinformation: VERNR"]
 "xl" = ["Fastighetsinformation: XL"]
 "yl" = ["Fastighetsinformation: YL"]
+"nordlig-koordinat-i-system-sweref" = ["Fastighetsinformation: XR"]
+"ostlig-koordinat-i-system-sweref" = ["Fastighetsinformation: YR"]
+"versionsnummer-fastighetsreg" = ["Inskrivningsinformation: VERSION"]

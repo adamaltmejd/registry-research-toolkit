@@ -24,3 +24,5 @@ public = "tradbransle-torv"
 "postnr" = ["Trädbränsle-, torv- och avfallspriser: PostNr"]
 "postort" = ["Trädbränsle-, torv- och avfallspriser: PoAnst @ 2014-01-01"]
 "stratum" = ["Trädbränsle-, torv- och avfallspriser: stratum"]
+"kvartal-och-ar" = ["Trädbränsle-, torv- och avfallspriser: Period"]
+"pris-for-forbrukat-bransle" = ["Trädbränsle-, torv- och avfallspriser: Pris"]

@@ -117,3 +117,5 @@ public = "innovation-offentlig"
 "upprakningsvikt" = ["Innovation i offentlig sektor - Arbetsställeenheter: WEIGHT"]
 "varcd" = ["Innovation i offentlig sektor - Arbetsställeenheter: VARCD"]
 "variabelnamn" = ["Innovation i offentlig sektor - Arbetsställeenheter: VARNAME"]
+"cfar-nummer-2" = ["Innovation i offentlig sektor - Jurdiska enheter: ID_AE"]
+"namn-juridiska-enheten-2" = ["Innovation i offentlig sektor - Jurdiska enheter: SCBNAME"]

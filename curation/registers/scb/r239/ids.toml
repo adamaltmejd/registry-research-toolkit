@@ -51,3 +51,5 @@ public = "allmanna-val-nominerade"
 "utlsvbakg" = ["Kommunfullmäktigeval: UtlSvBakG"]
 "vald" = ["Kommunfullmäktigeval: vald"]
 "valgrund" = ["Kommunfullmäktigeval: valgrund"]
+"kommunvalkrets-2" = ["Kommunfullmäktigeval: kommunvalkrets"]
+"riksdagsvalkrets" = ["Riksdagsval: riksdagsvalkrets"]

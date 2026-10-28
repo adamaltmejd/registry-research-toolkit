@@ -135,3 +135,4 @@ public = "livsmedelsforsaljning"
 "variabelnummer" = ["Livsmedelsförsäljning fördelad på varugrupper: variabel @ 2001-01-01"]
 "wh-uppr" = ["Livsmedelsförsäljning fördelad på varugrupper: WH_Uppr"]
 "wil-uppr" = ["Livsmedelsförsäljning fördelad på varugrupper: Wil_Uppr"]
+"upprakningstal" = ["Livsmedelsförsäljning fördelad på varugrupper: Uppräkningsfaktor # v466"]

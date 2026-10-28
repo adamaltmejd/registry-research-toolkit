@@ -122,3 +122,6 @@ public = "fdb"
 "verksomr" = ["Administrativa arbetsställen: VerksOmr"]
 "vestat" = ["Verksamhetsenheter: VEStat"]
 "webbadress" = ["Juridiska enheter: WebbAdress"]
+"avregistreringsar" = ["Arbetsställeenheter: avregdatktid"]
+"juridisk-form-2" = ["Arbetsställeenheter: jurform"]
+"regdatktid" = ["Arbetsställeenheter: regdatktid"]

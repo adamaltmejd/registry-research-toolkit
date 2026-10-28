@@ -41,3 +41,6 @@ public = "kust-strander-oar"
 "uuid" = ["Basinformation om kust, stränder och öar: UUID @ 0001-01-01"]
 "validto" = ["Basinformation om kust, stränder och öar: ValidTo"]
 "vattentyp" = ["Basinformation om kust, stränder och öar: VATTENTYP"]
+"areal" = ["Befolkade öar utan fastlandsförbindelse: AreaHa"]
+"namn-pa-geografiskt-objekt-2" = ["Befolkade öar utan fastlandsförbindelse: Ö_namn"]
+"referensar-2" = ["Befolkade öar utan fastlandsförbindelse: AR"]

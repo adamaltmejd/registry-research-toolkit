@@ -32,3 +32,5 @@ public = "rego"
 "summa-utgaende-moms" = ["Arbetsställe, månad: uskatt"]
 "utgaende-moms-12-m11" = ["Arbetsställe, månad: MomsMat"]
 "utgaende-moms-25-m10" = ["Arbetsställe, månad: MomsFull"]
+"antal-anstallda-arbetsstallet" = ["Arbetsställe, år: anst"]
+"antal-arbetsstallen-2" = ["Bransch, kommun, år: antal_ae"]

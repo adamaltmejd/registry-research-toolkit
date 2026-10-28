@@ -62,3 +62,5 @@ public = "offentligt-agda-foretag"
 "summa-omsattningstillgangar" = ["Offentligt ägda företag: SumOmsättn"]
 "summa-tillgangar" = ["Offentligt ägda företag: SumTillgång"]
 "varulager" = ["Offentligt ägda företag: Varor"]
+"organisationsnummer-10-siffror" = ["Offentligt ägda företag: OrgNr # v3577"]
+"person-organisationsnummer" = ["Offentligt ägda företag: OrgNr # v56"]

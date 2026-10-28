@@ -205,3 +205,7 @@ public = "formogenhetsreg"
 "utbetalt-belopp-obligationer-mm" = ["Individ: KKUVPUT"]
 "utlandsk-forsakring-foregaende-ar" = ["Individ: FKUUTFT"]
 "utlandsk-skatt-pa-utdelning-delagare" = ["Individ: SKUUTL"]
+"alder-31-12-2" = ["Individ: BALD"]
+"kon-2" = ["Individ: BKON"]
+"obligationer-fordran-2" = ["Hushåll: FKUVP"]
+"obligationer-fordran-3" = ["Hushåll: FKUVPR"]

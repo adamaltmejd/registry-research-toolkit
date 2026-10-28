@@ -165,3 +165,5 @@ public = "ureg"
 "ypoang-num" = ["Komvux: YPoang_Num"]
 "ytantal" = ["Komvux: YTantal"]
 "ytutim" = ["Komvux: YTutim"]
+"examensar-2" = ["Personens högsta utbildning: ExamAr"]
+"personnummer" = ["Komvux: Personnr"]

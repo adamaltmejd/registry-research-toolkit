@@ -53,3 +53,4 @@ public = "energi-lokaler"
 "vpumpfran" = ["Energistatistik för lokaler: vpumpfran"]
 "vpumpute" = ["Energistatistik för lokaler: vpumpute"]
 "vpute" = ["Energistatistik för lokaler: VpUte"]
+"lan-2" = ["Energistatistik för lokaler: länsnamn"]

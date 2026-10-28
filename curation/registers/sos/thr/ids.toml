@@ -41,3 +41,5 @@
 "tandposition" = ["THR_BESOK: TANDPOSITION"]
 "tillstand" = ["THR_BESOK: TILLSTAND"]
 "transtyp" = ["THR_BESOK: TRANSTYP"]
+"beslutsdatum-atb-anvandningsdatum" = ["THR_BESOK: BESLUTSDATUMN"]
+"besoksdatum" = ["THR_BESOK: BESOKSDATUMN"]
