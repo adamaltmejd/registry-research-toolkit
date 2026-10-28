@@ -906,12 +906,6 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 
 [[statement]]
 kind = "set"
-subject = "var:invandringsdatum-8-numerisk"
-fields = { "sets" = ["invarn"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
-
-[[statement]]
-kind = "set"
 subject = "var:invandringsdatum-9"
 fields = { "sets" = ["invandringsdatum"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"

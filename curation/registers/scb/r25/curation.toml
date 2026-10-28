@@ -2257,19 +2257,7 @@ evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:13"
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-2"
-fields = { "sets" = ["disponibel-inkomst"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
-
-[[statement]]
-kind = "set"
 subject = "var:disponibel-inkomst-3"
-fields = { "sets" = ["disponibel-inkomst"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-4"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
 
@@ -2287,12 +2275,6 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende"
-fields = { "sets" = ["disponibel-inkomst"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
-
-[[statement]]
-kind = "set"
 subject = "var:disponibel-inkomst-exkl-kapvinst-2004"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
@@ -2300,12 +2282,6 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-exkl-kapvinst-2004-hushall"
-fields = { "sets" = ["disponibel-inkomst"] }
-evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
 
