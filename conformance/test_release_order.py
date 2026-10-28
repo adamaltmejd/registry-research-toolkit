@@ -144,7 +144,7 @@ def census(db_path):
 
 def project(pid, period, variables):
     return {
-        "schema_version": "5.0.0",
+        "schema_version": "5.1.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [

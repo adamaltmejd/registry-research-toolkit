@@ -2,7 +2,7 @@
   "note": "`imp` starts in 2018. Fails if ordering `Ink` over 2016..2019 stops giving one entry from 2018, one clip and one `period_clipped` over 2016-2017, or if the row key `Lopnr` (identifier, not bound) stops appearing in `row_keys` over the ordered days. Oracle: the fixture's JSONL and logical-order.md §1.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

@@ -22,7 +22,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "5.0.0";
+pub const SCHEMA_VERSION: &str = "5.1.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -224,6 +224,10 @@ pub struct Source {
 pub struct Binding {
     /// The binding FQID `<provider>/<register>/<slug>`.
     pub variable: String,
+    /// Follow the variable's continues successors after it ends; absent means false.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false, default = false))]
+    pub follow_successor: Option<bool>,
     #[serde(rename = "type")]
     pub column_type: ColumnType,
     #[serde(default)]

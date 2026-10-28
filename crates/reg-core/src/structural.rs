@@ -30,8 +30,9 @@ use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
 const PROJECT_OPTIONAL: [&str; 2] = ["panels", "window"];
 const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
-const BINDING_KEYS: [&str; 8] = [
+const BINDING_KEYS: [&str; 9] = [
     "variable",
+    "follow_successor",
     "type",
     "display_name",
     "id_subtype",
@@ -575,6 +576,16 @@ fn check_binding(
     issues: &mut Issues,
 ) {
     check_unexpected_keys(binding, &BINDING_KEYS, base, "binding", issues);
+    if binding
+        .get("follow_successor")
+        .is_some_and(|value| !value.is_boolean())
+    {
+        issues.error(
+            "invalid_field_type",
+            format!("{base}/follow_successor"),
+            "follow_successor must be a boolean".into(),
+        );
+    }
     if let Some(variable) = required_string(binding, "variable", base, "binding 'variable'", issues)
     {
         match three_part(variable) {

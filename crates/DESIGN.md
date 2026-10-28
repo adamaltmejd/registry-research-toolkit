@@ -284,8 +284,8 @@ spelling and type. A D `set` states those.
   successions, so no successor-choice or `reject` form exists. Curated links that close
   a cycle or give a table a second successor on one day refuse at their statement
   locations. The existing link stage still drops invalid source-only successions;
-  curation does not choose between them or change that evidence. `follow_successor` and
-  continuation proposals remain D-10 and D-6.
+  curation does not choose between them or change that evidence. Order following uses
+  these same rows (`follow_successor`, D-10); continuation proposals remain D-6.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
@@ -792,7 +792,7 @@ it is posted to `validate` or `order`. Holdings return in milestone E.
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 5.0.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 5.1.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -841,7 +841,8 @@ the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
-- `variable_replaced` reports an incoming `continues` edge and never follows it.
+- `variable_replaced` reports an incoming `continues` edge. By default it is a warning
+  and the edge is not followed. Opt-in refusal can raise it to an error (below).
 - Design §9 blocks only the `ambiguous` window kind. A preliminary segment orders with a
   warning (selecting an edition is deferred until curation), and a class-version
   ambiguity the binding does not pin is a warning.
@@ -870,7 +871,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "5.0.0",
+    "project": {"name": "income-panel", "schema_version": "5.1.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -910,7 +911,7 @@ and `sun2000niva`.
        "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null}
     ]
   },
-  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -938,7 +939,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "5.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "5.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -954,16 +955,17 @@ the order check's findings ("The logical order"). A failing project is a result,
 error. A structural failure skips the catalog layer, so a rejected document costs no
 catalog read. `validate`'s `ok` is true exactly when `order` returns a logical order.
 
-### Project document 5.0.0
+### Project document 5.1.0
 
-`schema_version` `5.0.0` replaces 4.0.0 as a major bump: `register_variant` and
-`representation` go, so a 4.0.0 document cannot be read as 5.0.0. The reader takes its
-own version exactly (`unsupported_schema_version`), with no migration path. The field
-tables give each change and its reason.
+`schema_version` `5.1.0` adds optional boolean `follow_successor` to variable bindings
+(default false). The 5.0.0 major change from 4.0.0 removed fields: `register_variant`
+and `representation` were removed, so a 4.0.0 document cannot be read as 5.1.0. The
+reader takes its own version exactly (`unsupported_schema_version`), with no migration
+path. The field tables give each change and its reason.
 
 Top level:
 
-  | Field            | 5.0.0     | Why                                                                                                                                                                                                       |
+  | Field            | 5.1.0     | Why                                                                                                                                                                                                       |
   | ---------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `steward`        | removed   | Its readers go (the serving catalog's name, `steward_mismatch`, the holdings checks). The holdings layer (E) decides how a project names its steward or holdings. A field nothing checks would be a shim. |
   | `extract_format` | removed   | A file format is physical. It returns with the order file in E.                                                                                                                                           |
@@ -971,7 +973,7 @@ Top level:
 
 Source:
 
-  | Field                  | 5.0.0                                    | Why                                                                                                                                                                                                    |
+  | Field                  | 5.1.0                                    | Why                                                                                                                                                                                                    |
   | ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
   | `register_variant`     | replaced by `table`: a table's public id | v4 has tables, not variants (design §2.2). A 2-part id names a register with one implicit table; for a register with named tables it is `table_is_register`.                                           |
   | `period`               | same grammar                             | `_default` now means "a timeless table" (design §2.1), checked against the catalog (`period_default_on_dated_table`).                                                                                  |
@@ -979,7 +981,43 @@ Source:
 
 Binding and panel:
 
-  | Field                                     | 5.0.0                                                    | Why                                                                                                                                                                                                                         |
+`follow_successor` is optional and accepts only a boolean; explicit null is refused.
+Absence and false leave order routing unchanged. It belongs to a binding's variable, not
+a source, panel or other object (unknown keys remain `unexpected_field`). Every binding
+must resolve to a variable; a non-variable reference is `fqid_unresolved`, also when the
+field is present and false.
+
+With true, follow incoming variable-to-variable `continues` rows, regardless of whether
+their provenance is source or curated. Retain the original binding index, display name
+and type declarations, but emit each entry with its actual variable, provider, register,
+table, spelling and form. Each hop starts at the later of the predecessor's exclusive
+coverage end and the relation's stated start day. Never replace an earlier window or
+fill an internal gap in the predecessor. Follow transitively, including intermediate
+variables outside the requested period; stop when no requested day remains or no
+successor exists. A missing interval between hops is explicitly clipped. No date is
+inferred for an undated relation.
+
+A successor remains a separate register-scoped variable. Prefer the source's explicit
+table succession chain when the successor occurs there, honoring its dated table
+routing. Otherwise use the successor's segment tables, requiring exactly one table per
+requested day. This also permits a cross-register successor without inventing a
+cross-register variable or a new source. Those serving tables contribute their own row
+keys and panel identifier kinds. Overlapping candidate tables are `ambiguous_window`,
+never an arbitrary table choice.
+
+When the request extends beyond a predecessor's end, multiple successor rows or an
+undated successor block with `variable_replaced` at error level. A cycle or a hop that
+cannot advance is `ambiguous_window`. Ordinary segment checks still apply: ambiguous
+successor segments block with `ambiguous_window`. Every uncovered requested successor
+window blocks with `outside_availability`: withheld occurrences retain no variable
+identity, so missing successor coverage cannot safely be treated as an ordinary clip.
+This is deliberately conservative even for a terminal successor. A withheld identity
+absent from the published catalog cannot be invented or resolved by its label. Only
+published relation endpoints can be followed. Ordinary bindings and the predecessor
+retain explicit clipping; preliminary data remains a warning. A refusal blocks the whole
+order with the existing structured findings, never returns a partial order.
+
+  | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                         |
   | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin is a class version (schema §2.2). Until D curates classifications no version exists, so any pin is `fqid_unresolved`.                                               |
   | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not. |
@@ -997,7 +1035,7 @@ Structural rules (`reg-core`, the document alone). Removed with their fields:
 `literal_time_key_duplicate`, `entity_key_unknown_column`, `time_key_unknown_column` and
 the key `invalid_field_type` rules. Changed:
 
-  | Rule                                                         | 5.0.0                                                                                             |
+  | Rule                                                         | 5.1.0                                                                                             |
   | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
   | top-level keys                                               | `steward` and `extract_format` are `unexpected_field`                                             |
   | source keys                                                  | `name`, `table`, `period`, `bindings`; `edition` and `qualifier` are `unexpected_field`           |

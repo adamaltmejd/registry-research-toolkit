@@ -2,7 +2,7 @@
   "note": "A document with `sources: []` is a valid draft but has nothing to order. Fails if `order` stops refusing it with exactly one `project_empty` error at /sources (pre-fix it returned an empty logical order), or if `validate` stops agreeing with `order` (ok false, the same error). Oracle: crates/DESIGN.md (An empty project) and logical-order.md §3.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": []

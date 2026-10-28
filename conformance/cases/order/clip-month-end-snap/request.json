@@ -2,7 +2,7 @@
   "note": "A range ending at a month ends on that month's last day: `{from: 2017, to: \"2019-02\"}` is `[2017-01-01, 2019-03-01)` (the reg-core period grammar has months). `imp` starts in 2018. Fails if `Kon` stops being ordered over `[2018-01-01, 2019-03-01)` with its value set, if the clip or its `period_clipped` over 2017 changes, or if the row key's period stops ending with the request. Oracle: the fixture's JSONL, the period grammar and logical-order.md §1; the value set hash is the fixture build's (content-addressed).",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

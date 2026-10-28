@@ -2,7 +2,7 @@
   "note": "The study window is 2025..2026 and the source `s` asks `demo/imp` for 2019: the source lies wholly outside the window. Editing the window never rewrites a source's period, so the project blocks with one `source_outside_window` at the source's period (reg-core DESIGN.md, \"Logical selection\"). Fails if a window-disjoint source orders (codex r9 on #1985). Oracle: reg-core DESIGN.md.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "window": {

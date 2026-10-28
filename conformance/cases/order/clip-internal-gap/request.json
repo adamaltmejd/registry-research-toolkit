@@ -2,7 +2,7 @@
   "note": "`gap` has releases 2015, 2016 and 2018, so `X` has two segments with no 2017 between them. Fails if ordering 2015..2018 stops giving one entry per segment piece, `[2015, 2017)` and `[2018, 2019)`, one clip whose `ordered` lists both pieces, and one `period_clipped` over the missing 2017; or if a same-form gap is reported as a form change. Oracle: the fixture's JSONL and logical-order.md §1.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

@@ -2,7 +2,7 @@
   "note": "`eda` has a final year release for 2019 (`V` int) and a final H2 release (`V` decimal). Both occurrences share source key k1, folded spelling V, normalized label Värde and no value set. The 2026-10-27 maintainer ruling exempts this type-only disagreement: the whole 2019 segment is clear with type unset, so March is orderable. Fails if type disagreement alone blocks the order or if a type is guessed. Oracle: the existing fixture JSONL and crates/DESIGN.md, Segments hold whole occurrences. This replaces the previous ambiguity refusal because the resolver rule changed; whole occurrences still form the segment.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

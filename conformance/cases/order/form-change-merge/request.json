@@ -2,7 +2,7 @@
   "note": "In `nam/a` one variable is spelled `Belopp` in 2018-2019 and `BeloppTot` in 2020 (one source key), and `Flagga` turns sensitive in 2020, a flag-only boundary that splits the builder's segments. Fails if `Belopp`/`BeloppTot` stops giving two entries and one `form_change` naming the 2020 boundary, if the flag-only boundary splits `Flagga`'s entry (v4 §4.6: merge on spelling, type and value set), if `Flagga`'s sensitive 2020 stops being `variable_sensitive`, or if the row key `Lopnr` leaves `row_keys`. Oracle: the fixture's JSONL and logical-order.md §1 and §3.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

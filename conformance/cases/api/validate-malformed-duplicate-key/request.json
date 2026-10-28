@@ -5,13 +5,13 @@
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
-      "content": "{\"schema_version\": \"5.0.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\"}]}]}"
+      "content": "{\"schema_version\": \"5.1.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"First\", \"name\": \"Second\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\"}]}]}"
     },
     {
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
-      "content": "{\"schema_version\": \"5.0.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"Order case\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\", \"type\": \"numeric\"}]}]}"
+      "content": "{\"schema_version\": \"5.1.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"Order case\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\", \"type\": \"numeric\"}]}]}"
     }
   ]
 }

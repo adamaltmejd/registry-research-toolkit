@@ -35,6 +35,7 @@ pub(super) struct Outcome {
     pub findings: Vec<Issue>,
     pub entries: Vec<OrderEntry>,
     pub clip: Option<OrderClip>,
+    pub serving: Vec<Serving>,
 }
 
 /// A resolved binding variable.
@@ -169,6 +170,20 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
         ));
         return Ok(outcome);
     }
+    if binding.follow_successor == Some(true) {
+        return super::successor::binding(scope, b, binding);
+    }
+    materialize(scope, b, binding, &variable, outcome)
+}
+
+fn materialize(
+    scope: &Scope,
+    b: usize,
+    binding: &Binding,
+    variable: &Variable,
+    mut outcome: Outcome,
+) -> Result<Outcome, Error> {
+    let at = Located { scope, b, variable };
     let mut pieces = Vec::new();
     for k in 0..scope.serving.len() {
         pieces.extend(served(scope, k, variable.id)?);
@@ -454,7 +469,8 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
 
 /// `variable_replaced`: an incoming variable `continues` edge whose `at_start` lies
 /// before the request end, or that states no `at` (then with no period: no day is
-/// inferred). Reported, never followed (following waits for D).
+/// inferred). This notice does not route the request; opt-in following is handled
+/// by `successor` before the per-window checks.
 fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let requested = hull(scope.requested);
@@ -596,7 +612,7 @@ fn value_set(conn: &Connection, id: i64) -> rusqlite::Result<OrderValueSet> {
 }
 
 /// The result periods of inclusive ISO intervals.
-fn periods(server: &Server, intervals: &[Interval]) -> Vec<crate::ops::Period> {
+pub(super) fn periods(server: &Server, intervals: &[Interval]) -> Vec<crate::ops::Period> {
     intervals.iter().map(|i| period(server, i)).collect()
 }
 

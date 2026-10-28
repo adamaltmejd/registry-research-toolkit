@@ -2,7 +2,7 @@
   "note": "S5. `und/tva` continues `und/ett` with no `at`. Fails if the check follows it (an entry in `tva`), infers a day from coverage, or stops reporting the source-level info `table_succession_undated` whose `successor_fqid` and message name `demo/und/tva`, over the requested days past `ett`'s coverage end; the rest is clipped (`period_clipped`). Oracle: the fixture's JSONL and r-order-check/02 rule 3.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

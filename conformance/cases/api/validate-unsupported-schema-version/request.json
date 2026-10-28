@@ -1,5 +1,5 @@
 {
-  "note": "Fails if a 4.0.0 document stops being answered by `unsupported_schema_version` alone, a 200 with `ok: false`: the document also carries the removed `steward` and `register_variant`, which the structural layer would report, and no catalog check may run on it. Oracle: reg-core's version decision (crates/DESIGN.md, \"Project document 5.0.0\").",
+  "note": "Fails if a 4.0.0 document stops being answered by `unsupported_schema_version` alone, a 200 with `ok: false`: the document also carries the removed `steward` and `register_variant`, which the structural layer would report, and no catalog check may run on it. Oracle: reg-core's version decision (crates/DESIGN.md, \"Project document 5.1.0\").",
   "fixture": "orders",
   "requests": [
     {

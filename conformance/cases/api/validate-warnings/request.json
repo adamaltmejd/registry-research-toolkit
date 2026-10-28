@@ -7,7 +7,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "body": {
-        "schema_version": "5.0.0",
+        "schema_version": "5.1.0",
         "reg_meta_version": "0.64.0",
         "name": "Order case",
         "sources": [
@@ -64,7 +64,7 @@
       "method": "POST",
       "path": "/api/project/validate",
       "query": {"verbose": "true"},
-      "body": {"schema_version": "5.0.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
+      "body": {"schema_version": "5.1.0", "reg_meta_version": "0.64.0", "name": "Order case", "sources": []}
     }
   ]
 }
