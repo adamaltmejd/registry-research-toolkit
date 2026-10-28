@@ -230,5 +230,5 @@ evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy ex
 [[statement]]
 kind = "set"
 subject = "var:kommun"
-fields = { "sets" = ["kommun", "legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/iku.toml:14"
+fields = { "sets" = ["legacy-kommun"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."

@@ -10935,19 +10935,19 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml
 [[statement]]
 kind = "set"
 subject = "var:delkomponent-disponibel-inkomst"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
 kind = "set"
 subject = "var:delkomponent-disponibel-inkomst-2004"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
 kind = "set"
 subject = "var:dispinkkehb04"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
@@ -10959,19 +10959,19 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-familj"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-familj-2004"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
@@ -10989,13 +10989,13 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-per-ke-familj"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]
 kind = "set"
 subject = "var:disponibel-inkomst-per-ke-familj-2004"
-fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
 
 [[statement]]

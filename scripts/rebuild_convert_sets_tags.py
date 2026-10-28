@@ -73,7 +73,7 @@ def source_rows():
             )
 
 
-def merge_memberships(path, additions):
+def merge_memberships(path, additions, removals):
     """Replace only affected membership blocks; preserve all other authored text."""
     text = path.read_text() if path.exists() else ""
     starts = [match.start() for match in re.finditer(r"(?m)^\[\[statement\]\]", text)]
@@ -81,10 +81,20 @@ def merge_memberships(path, additions):
     blocks = [text[start:end] for start, end in zip(starts, [*starts[1:], len(text)])]
     kept = []
     merged = {}
+    aliases = (
+        {"lisa-disponibel-inkomst": "disponibel-inkomst"}
+        if path.relative_to(ROOT).as_posix()
+        == "curation/registers/scb/r34/curation.toml"
+        else {}
+    )
     for block in blocks:
         statement = tomllib.loads(block)["statement"][0]
         key = statement["subject"], next(iter(statement.get("fields", {})), None)
-        if statement["kind"] != "set" or key not in additions:
+        if key[1] == "sets" and any(
+            name in aliases for name in statement["fields"]["sets"]
+        ):
+            additions.setdefault(key, {"members": set(), "sources": set()})
+        if statement["kind"] != "set" or (key not in additions and key not in removals):
             kept.append(block)
             continue
         if set(statement["fields"]) != {key[1]}:
@@ -92,18 +102,40 @@ def merge_memberships(path, additions):
                 f"{path}: combined membership/scalar setter requires review"
             )
         own = merged.setdefault(key, {"members": set(), "evidence": [], "caveat": []})
-        own["members"].update(statement["fields"][key[1]])
+        old_members = {aliases.get(name, name) for name in statement["fields"][key[1]]}
+        if removed := removals.get(key, set()) & old_members:
+            if "D-9 membership only:" not in statement.get("evidence", ""):
+                raise ValueError(
+                    f"{path}: cannot remove membership without D-9 provenance"
+                )
+            old_members.difference_update(removed)
+        own["members"].update(old_members)
         for field in ("evidence", "caveat"):
-            if statement.get(field) and statement[field] not in own[field]:
-                own[field].append(statement[field])
+            value = statement.get(field)
+            if (
+                field == "evidence"
+                and removed
+                and not additions.get(key, {}).get("sources")
+            ):
+                value = "\n\n".join(
+                    p
+                    for p in value.split("\n\n")
+                    if not p.startswith("D-9 membership only:")
+                )
+            if value and value not in own[field]:
+                own[field].append(value)
     if kept and not kept[-1].endswith("\n\n"):
         kept[-1] += "\n"
-    for key, addition in sorted(additions.items()):
+    for key in sorted(additions.keys() | removals.keys()):
+        addition = additions.get(key, {"members": set(), "sources": set()})
         own = merged.setdefault(key, {"members": set(), "evidence": [], "caveat": []})
         own["members"].update(addition["members"])
-        evidence = "D-9 membership only: " + "; ".join(sorted(addition["sources"]))
-        if evidence not in "\n\n".join(own["evidence"]).split("\n\n"):
-            own["evidence"].append(evidence)
+        if not own["members"]:
+            continue
+        if addition["sources"]:
+            evidence = "D-9 membership only: " + "; ".join(sorted(addition["sources"]))
+            if evidence not in "\n\n".join(own["evidence"]).split("\n\n"):
+                own["evidence"].append(evidence)
         statement = {
             "kind": "set",
             "subject": key[0],
@@ -132,9 +164,38 @@ def convert(*, write_curation=False):
             raise ValueError(f"duplicate register public id: {public}")
         ledgers[public] = path.parent / "curation.toml", data.get("variables", {})
     additions = collections.defaultdict(dict)
+    removals = collections.defaultdict(lambda: collections.defaultdict(set))
     outcomes = []
     counts = collections.Counter()
-    for source, field, target, member, metadata in source_rows():
+    rows = list(source_rows())
+    valid_members = collections.defaultdict(set)
+    for _, field, target, member, _ in rows:
+        if field == "set declaration":
+            valid_members[target, member]
+    for _, field, target, member, _ in rows:
+        if field == "sets":
+            public, _, variable = target.rpartition("/")
+            if public in ledgers and variable in ledgers[public][1]:
+                valid_members[public, member].add(variable)
+    # Existing curated memberships also count when the legacy group uses the same slug.
+    for public, (path, variables) in ledgers.items():
+        if not path.exists():
+            continue
+        for statement in tomllib.loads(path.read_text()).get("statement", []):
+            subject = statement.get("subject", "")
+            variable = subject.removeprefix("var:")
+            if (
+                statement["kind"] != "set"
+                or not subject.startswith("var:")
+                or variable not in variables
+            ):
+                continue
+            for name in statement.get("fields", {}).get("sets", []):
+                if public == "scb/lisa" and name == "lisa-disponibel-inkomst":
+                    name = "disponibel-inkomst"
+                if (public, name) in valid_members:
+                    valid_members[public, name].add(variable)
+    for source, field, target, member, metadata in rows:
         counts[field] += 1
         if metadata:
             outcomes.append(
@@ -147,6 +208,17 @@ def convert(*, write_curation=False):
                     "presentation metadata: "
                     + ", ".join(metadata)
                     + "; membership-only ruling, deferred webapp presentation",
+                )
+            )
+        if field == "set declaration" and len(valid_members[target, member]) < 2:
+            outcomes.append(
+                (
+                    "deferred",
+                    source,
+                    field,
+                    target,
+                    member,
+                    f"fewer than two valid local ledger members after refusals ({len(valid_members[target, member])}); review after D-12",
                 )
             )
         if field.endswith("declaration"):
@@ -178,6 +250,19 @@ def convert(*, write_curation=False):
             continue
         path, _ = ledgers[public]
         key = f"var:{variable}", field
+        if field == "sets" and len(valid_members[public, member]) < 2:
+            removals[path][key].add(member)
+            outcomes.append(
+                (
+                    "deferred",
+                    source,
+                    field,
+                    target,
+                    member,
+                    "set has fewer than two valid local ledger members after refusals; review after D-12",
+                )
+            )
+            continue
         own = additions[path].setdefault(key, {"members": set(), "sources": set()})
         own["members"].add(member)
         own["sources"].add(source)
@@ -192,7 +277,10 @@ def convert(*, write_curation=False):
             )
         )
     # Compute every edit before writing, so an unsupported existing setter fails closed.
-    edits = {path: merge_memberships(path, items) for path, items in additions.items()}
+    edits = {
+        path: merge_memberships(path, additions[path], removals[path])
+        for path in additions.keys() | removals.keys()
+    }
     if write_curation:
         for path, text in edits.items():
             path.write_text(text)
@@ -206,7 +294,9 @@ def convert(*, write_curation=False):
         "",
         "This is static source accounting. Lock, curated build and verify were not run; placement and final resolver selection remain unverified. Tag search is not implemented. Presentation fields are dropped with reasons below; register memberships remain deferred.",
         "",
-        "| Field | Converted memberships | Refused memberships | Deferred register memberships |",
+        "Sets with fewer than two distinct locally pinned members after refusals are deferred; their remaining memberships are not emitted. A local ledger id does not by itself prove final placement.",
+        "",
+        "| Field | Converted memberships | Refused memberships | Deferred memberships |",
         "| --- | ---: | ---: | ---: |",
     ]
     for field in ("sets", "tags", "register tags"):
@@ -216,7 +306,7 @@ def convert(*, write_curation=False):
             if row[2] == field and not row[5].startswith("presentation metadata:")
         )
         lines.append(
-            f"| {field} | {summary['converted']} | {summary['refused']} | {summary['dropped']} |"
+            f"| {field} | {summary['converted']} | {summary['refused']} | {summary['deferred'] + summary['dropped']} |"
         )
     lines += [
         "",
