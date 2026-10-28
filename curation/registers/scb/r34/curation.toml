@@ -16793,4 +16793,3 @@ kind = "set"
 subject = "individer-15plus: sun2020niva where key = 'v66' and release = 'r19949'"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-||||||| 9925448f
