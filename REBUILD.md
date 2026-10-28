@@ -542,28 +542,38 @@ The remaining C checklist:
   [crates/DESIGN.md, "Holdings"](crates/DESIGN.md#holdings). Resolve its final "Open for
   the maintainer" questions before the dependent implementation:
   1. **e-design:** holdings design and this sequence, maintainer review only;
-  2. **e-inputs:** pin the SWECOV census/storage inputs; convert steward-only logical
-     descriptions through ordinary readers/ledgers/statements and public topology
-     definitions into `curation/stewards/swecov/`; account for every old decision;
-  3. **e-holdings:** separate `reg-build holdings` stage, compiled tables and
-     `reg-build verify` over the pinned catalog/holdings pair, owner-scoped admission
-     (steward or project) and discovery;
-  4. **e-types:** N1 review findings and the adopted type policy, shared with mock and
-     output planning; no automatic global type correction;
-  5. **e-order:** physical materialization over the existing logical check, versioned
-     holdings-owner/format selection and file-oriented manifest; reviewed conformance
-     cases;
-  6. **e-runner:** switch the R runner and its corpus together, reconnect topology
-     cases, preserve format/precision/refusal and MONA boundaries;
-  7. **e-mock:** deterministic local mock files over the physical plan, explicit seed
-     and size, with the maintainer-approved format scope;
+  2. **e-holdings:** inputs and schema/reader/compiler together: pin census, storage,
+     slug and selected document evidence; one-shot TOML → pinned transcription CSV;
+     convert routing/decisions and missing targets with ordinary ledgers/statements;
+     auto-map against the exact D pin; verify the catalog/holdings pair and scoped
+     admission. Q1 blocks its semantic model. No input-only PR depends on an unbuilt
+     reader or a new test suite;
+  3. **e-order:** materialization over the selected shared logical view, optional
+     project `extract_format` in the next minor version, hosted owner from
+     configuration, file manifest and existing conformance cases. Q1/Q4 block; Q2
+     confirms or explicitly reopens the existing union filter; Q6 applies only to a
+     needed companion;
+  4. **e-runner:** switch R and its corpus atomically, reconnect topology cases, repair
+     stale DESIGN links, preserve format/precision/refusals and MONA boundaries. Q6
+     blocks companion-specific support if needed;
+  5. **e-compare:** compare orderable physical columns, held intervals and
+     representative orders with the 0.64.0 SWECOV asset; classify every difference under
+     REBUILD's proof model. Fix defects/account for missing inputs before proceeding;
+  6. **e-types:** N1's adopted pattern table (Q3), review findings only. It changes the
+     catalog generation; rebuild/re-pin holdings and repeat the comparison/conformance;
+  7. **e-mock:** local-only gate, deterministic mocks over the final plan, explicit seed
+     and size; Q5 blocks the writer/dependency scope. No project-inventory loading or
+     project mocks until a real received-file input exists;
   8. **e-release:** `reg_meta_swecov.db.zst` paired with `reg_meta.db.zst`, deployment
-     with `--catalog swecov` and scheduled real-artifact conformance. Stop using
-     `build_catalog.py` and Python `extend-db`; F deletes them;
+     with `--catalog swecov`, scheduled real-artifact checks and the final comparison.
+     Stop using `build_catalog.py` and Python `extend-db`; F deletes them;
   9. **e-spa:** the flows below, then the maintainer's real MONA order and E audit. The
-     existing black-box suites remain the proof surface under the no-new-tests rule; any
-     necessary harness change follows that rule rather than adding a second resolver
-     oracle. Heavy builds and MONA execution are maintainer scheduled.
+     existing suites remain the proof surface under the no-new-tests rule; use the
+     comparison script and boundary-harness adaptations, never another resolver oracle.
+     Heavy builds/comparisons and MONA execution are maintainer scheduled.
+- **Deferred beyond E:** project-received inventories (`owner.kind = project` remains in
+  the schema), project loading/`scope=project`/project mocks until a real input contract
+  exists; companions unless the exit order establishes their need (Q6).
 - **The SPA** is archived from main at the switch and rewritten in E on the v5 API from
   `archive/reg-webapp-spa` and `claude/rebuild-s-shell-search`, after curation and
   holdings. The work covers shell and search, entity pages, values/graph/docs, project
