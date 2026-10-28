@@ -116,6 +116,7 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
 #[derive(Debug, Clone)]
 pub enum MetadataValue {
     Sets(BTreeSet<String>),
+    Tags(BTreeSet<String>),
     Notice(String),
 }
 
@@ -975,7 +976,6 @@ fn apply_fields(
     }
     for field in fields.keys() {
         let package = match field.as_str() {
-            "tags" => Some("D-9"),
             "sentinels" => Some("D (sentinels)"),
             "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
             "synonyms" => Some("D (search curation)"),
@@ -1013,6 +1013,7 @@ fn apply_fields(
                         | "length"
                         | "period"
                         | "sets"
+                        | "tags"
                         | "classification"
                         | "notice"
                 ),
@@ -1027,14 +1028,16 @@ fn apply_fields(
         let mut after = before.clone();
         for (field, winning) in &fields {
             match field.as_str() {
-                "sets" => {
+                "sets" | "tags" => {
                     if winning
                         .as_array()
-                        .expect("typed sets")
+                        .expect("typed membership list")
                         .iter()
-                        .any(|value| !reg_core::is_slug(value.as_str().expect("typed set slug")))
+                        .any(|value| {
+                            !reg_core::is_slug(value.as_str().expect("typed membership slug"))
+                        })
                     {
-                        return Err("set sets requires catalog slugs".into());
+                        return Err(format!("set {field} requires catalog slugs"));
                     }
                 }
                 "notice" => {}
@@ -1165,6 +1168,12 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Sets(sets.iter().cloned().collect()),
+                });
+            }
+            if let Some(tags) = &metadata_fields.tags {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Tags(tags.iter().cloned().collect()),
                 });
             }
             if let Some(notice) = &metadata_fields.notice {

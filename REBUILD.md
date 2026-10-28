@@ -494,6 +494,10 @@ The remaining C checklist:
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
 
+- Set/tag presentation metadata (axes, filters, value labels, coordinates, tag
+  rank/star/notes) is useful for the webapp and is incorporated later; source:
+  reg_meta_build/curation at 99de15a6a908c032972e5b32dea97c7b1808ab07.
+
 - **`follow_successor`**, an optional binding field in D-10, is additive; the default
   does not follow.
 

@@ -71,3 +71,867 @@ kind = "set"
 subject = "dors-cov: {alder,ar,dbgrund,distrikt,dodsdat,dodsdatn,dodspl,dodsplatskommun,foddat,foddatn,icdkoder,kap19,kon,lk,opdat,opdatn,oporsak,pnr,pnrq,pseudo,skada_beskr,skada_forgiftning,skada_forgiftning_dat,skapad_datum,ulorsak,uppdat_datum}"
 fields = { "table" = "cov-dors-hermes" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx#Metadata - Variabelnivå!220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245. DORS-COV is the covid-19 death-cause subset declared as COV_DORS_HERMES in deldatamängder och datavyer!4 (2020 start). Both describe deaths with covid-19 as cause; retain source occurrence dates."
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-1"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-10"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-11"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-12"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-13"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-14"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-15"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-16"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-17"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-18"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-19"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-2"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-20"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-21"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-22"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-23"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-24"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-25"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-26"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-27"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-28"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-29"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-3"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-30"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-31"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-32"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-33"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-34"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-35"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-36"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-37"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-38"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-39"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-4"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-40"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-41"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-42"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-43"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-44"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-45"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-46"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-47"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-48"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-5"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-6"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-7"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-8"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-9"
+fields = { "sets" = ["dodsorsak"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-1"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-10"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-11"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-12"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-13"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-14"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-15"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-16"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-17"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-18"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-19"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-2"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-20"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-21"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-22"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-23"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-24"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-25"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-26"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-27"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-28"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-29"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-3"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-30"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-31"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-32"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-33"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-34"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-35"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-36"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-37"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-38"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-39"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-4"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-40"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-41"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-42"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-43"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-44"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-45"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-46"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-47"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-48"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-5"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-6"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-7"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-8"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:dodsorsak-position-9"
+fields = { "sets" = ["dodsorsak-position"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-1"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-10"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-11"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-12"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-13"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-14"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-15"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-16"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-17"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-18"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-19"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-2"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-20"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-21"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-22"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-23"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-24"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-25"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-26"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-27"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-28"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-29"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-3"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-30"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-31"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-32"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-33"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-34"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-35"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-36"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-37"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-38"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-39"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-4"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-40"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-41"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-42"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-43"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-44"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-45"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-46"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-47"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-48"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-5"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-6"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-7"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-8"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:substans-9"
+fields = { "sets" = ["substans"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/dors.toml:23"

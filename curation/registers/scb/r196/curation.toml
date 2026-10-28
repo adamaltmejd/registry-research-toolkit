@@ -34,3 +34,27 @@ kind = "set"
 subject = "energianvandningen-inom-fiskesektorn: {forsamling,kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:signal1"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:signal2"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:signal3"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:signal4"
+fields = { "sets" = ["signal-ordinal"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:13"

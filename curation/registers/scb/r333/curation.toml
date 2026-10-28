@@ -1210,3 +1210,27 @@ kind = "set"
 subject = "familjer: {sun2020niva_grov_bofar,sun2020niva_grov_bomor} where key = 'v775'"
 fields = { "classification" = "class/niva-grov/niva-grovv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap1"
+fields = { "sets" = ["personnrap"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:21"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap2"
+fields = { "sets" = ["personnrap"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:21"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard1"
+fields = { "sets" = ["personnrvard"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard2"
+fields = { "sets" = ["personnrvard"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/breg.toml:13"

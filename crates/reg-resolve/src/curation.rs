@@ -738,7 +738,8 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         .period
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
-    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some()) {
+    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some() || fields.tags.is_some())
+    {
         return vec![span];
     }
     let mut selected = match subject(statement) {
@@ -1430,7 +1431,7 @@ pub fn resolve(
     let mut view = sources(records, ledger);
     view.extend(shared.sources.iter().cloned());
     let needs_variables = statements.iter().any(|statement| {
-        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some()) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some()) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
         variable_members(records, ledger, assignments)
@@ -1461,7 +1462,8 @@ pub fn resolve(
         let address = subject(statement);
         let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
-        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some()) {
+        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some())
+        {
             let names = variables
                 .iter()
                 .filter(|(_, members)| {
@@ -1515,6 +1517,11 @@ pub fn resolve(
             {
                 return Err(format!("variable selector: {error}"));
             }
+            if matches!(statement, Statement::Set { fields, .. } if fields.tags.is_some())
+                && !matches!(address, Address::Variable(_) | Address::Occurrence { .. })
+            {
+                return Err("set tags requires a variable or occurrence selector".into());
+            }
             if matches.is_empty() && !matches!(statement, Statement::Assert { .. }) {
                 return Err("empty match".into());
             }
@@ -1565,14 +1572,20 @@ pub fn resolve(
                     if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
                         return Err("set coverage requires a table selector".into());
                     }
-                    if values.sets.is_some() && stated_fields(values).len() != 1 {
-                        return Err(
-                            "set sets with other fields requires separate statements".into()
-                        );
+                    if (values.sets.is_some() || values.tags.is_some())
+                        && stated_fields(values).len() != 1
+                    {
+                        let field = if values.sets.is_some() {
+                            "sets"
+                        } else {
+                            "tags"
+                        };
+                        return Err(format!(
+                            "set {field} with other fields requires separate statements"
+                        ));
                     }
                     for field in stated_fields(values).keys() {
                         let package = match field.as_str() {
-                            "tags" => Some("D-9"),
                             "sentinels" => Some("D (sentinels)"),
                             "role" | "unit_type" => {
                                 Some("D (unit types and roles beyond defaults)")
@@ -1816,6 +1829,11 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
                     apply::MetadataValue::Sets(sets) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].sets.clone_from(sets);
+                        }
+                    }
+                    apply::MetadataValue::Tags(tags) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].tags.clone_from(tags);
                         }
                     }
                     apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),

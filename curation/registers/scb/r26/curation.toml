@@ -1055,3 +1055,15 @@ kind = "set"
 subject = "var:institutionell-sektorkod"
 fields = { "classification" = "class/sektorkod/sektorkod" }
 evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\nreg_meta_build/curation/classifications/SEKTORKOD.toml:32\nreg_meta_build/curation/classifications/SEKTORKOD.toml:55\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "var:arbink"
+fields = { "tags" = ["income"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:43"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-agi"
+fields = { "tags" = ["employment"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:101"

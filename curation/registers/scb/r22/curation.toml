@@ -154,3 +154,15 @@ kind = "set"
 subject = "ekonomiskt-bistand: {kommun,kommunnamn,lan}"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:antmanad"
+fields = { "tags" = ["transfers"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:73"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp-till-hushallet"
+fields = { "tags" = ["transfers"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:61"

@@ -282,17 +282,19 @@ spelling and type. A D `set` states those.
   releases stays on those entities. `coverage` replaces a table's source bound and
   requires a table selector and one contiguous period; it lives in the table's existing
   bounds. The overridden source bound remains evidence and the review premise, so a
-  source-bound change reopens review. `sets` belongs to variables; typed curation
-  decisions resolve to variable memberships. `notice` resolves to a finding on its
-  selected subject. The emitter serializes these resolved facts and never derives them
-  from provenance. Occurrence descriptions live in the existing `override` table and are
-  returned with segment evidence; they do not replace definitions or operational
-  definitions. No field gets a second home. A value-set override chooses the
-  occurrence's own set while retaining its source population alternatives as evidence.
-  Unsupported entity/field combinations are located refusals. Type corrections that
-  change the family participate in F6 and ambiguity resolution; length corrections do
-  not. Corrected conflict markers clear while the original premises remain evidence.
-  Format is carried and published without changing agreement or F1 findings.
+  source-bound change reopens review. `sets` and `tags` belong to variables; typed
+  curation decisions resolve to variable memberships. Tags use the existing variable tag
+  storage; register tags have no home and remain deferred rather than propagating to
+  variables. `notice` resolves to a finding on its selected subject. The emitter
+  serializes these resolved facts and never derives them from provenance. Occurrence
+  descriptions live in the existing `override` table and are returned with segment
+  evidence; they do not replace definitions or operational definitions. No field gets a
+  second home. A value-set override chooses the occurrence's own set while retaining its
+  source population alternatives as evidence. Unsupported entity/field combinations are
+  located refusals. Type corrections that change the family participate in F6 and
+  ambiguity resolution; length corrections do not. Corrected conflict markers clear
+  while the original premises remain evidence. Format is carried and published without
+  changing agreement or F1 findings.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -333,7 +335,8 @@ spelling and type. A D `set` states those.
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
-  version follows occurrences into segments and orders. `tags` remains refused with D-9.
+  version follows occurrences into segments and orders. Variable `tags` applies as
+  normalized membership, independently of identity, binding, ordering and peers.
   Sentinels, roles and unit types remain deferred to D's planned sentinel and
   nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
   entity-name and search curation.
@@ -1214,8 +1217,14 @@ substitutes a version or reinterprets codes.
 
 ## Sets and tags
 
-Neither is built in the v4 catalog yet (milestone D builds them); the maintainer rulings
-stand.
+Variable membership is curated with `set sets` and `set tags` and emitted through the
+existing membership storage. The D-9 converter combines explicit legacy groups with
+existing memberships into one setter per final variable. It converts membership only:
+axes, filters, value labels, coordinates, delivery-column hints and tag rank/star/notes
+are dropped with a named reason in its source-located report. Useful presentation
+metadata is deferred to the webapp rebuild (source recorded in REBUILD.md). Register tag
+memberships are deferred because the catalog has no register tag home; they are never
+expanded onto variables. Tag search is not implemented in D-9.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it
