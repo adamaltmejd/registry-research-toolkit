@@ -552,6 +552,9 @@ missing row also invalidates an omission claim covering that row.
 
 ### Curation source and layout
 
+Frozen since D; edit [root curation](../curation/) instead. This tree feeds the SWECOV
+build until E and is deleted at F.
+
 Tracked TOML in this repository is the only curation input. The build reads it directly.
 It is not part of the input bundle, and apart from the authored sources under
 `providers/` and `scb_canonical/` (see "Input storage and preparation") no preparation
