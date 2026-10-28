@@ -18,8 +18,13 @@ pub(crate) fn changes(
     tables: &[ResolvedTable],
     releases: &[ResolvedRelease],
     valuesets: &BTreeMap<&str, &ValueSet>,
+    classifications: &[crate::curation::apply::Classification],
     findings: &mut Vec<Finding>,
 ) {
+    let classifications: BTreeMap<_, _> = classifications
+        .iter()
+        .map(|c| (format!("class/{}/{}", c.family, c.version), c))
+        .collect();
     let table_name = |t: usize| tables[t].table.name.clone().unwrap_or_default();
     // One finding per (variable, sub-kind, table or none, day the new form starts).
     let mut seen: BTreeSet<(usize, &'static str, Option<usize>, String)> = BTreeSet::new();
@@ -71,7 +76,21 @@ pub(crate) fn changes(
                     format!("{} → {} in {table}", shape(a), shape(b)),
                 );
             }
-            if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" {
+            let edition_only = a
+                .classification
+                .as_ref()
+                .and_then(|id| classifications.get(id))
+                .zip(
+                    b.classification
+                        .as_ref()
+                        .and_then(|id| classifications.get(id)),
+                )
+                .is_some_and(|(old, new)| {
+                    old.family == new.family
+                        && a.valueset.as_deref() == Some(old.valueset.as_str())
+                        && b.valueset.as_deref() == Some(new.valueset.as_str())
+                });
+            if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" && !edition_only {
                 // A side that states no set but whose occurrence states one set per
                 // population is split, not emptied.
                 let per_population = |side: &Segment, segment: usize| {

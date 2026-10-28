@@ -1,0 +1,13 @@
+{
+  "note": "Fails if F1 reports an edition-only change whose two sets equal their bound editions, or if sharing a family hides a local response-domain change. Both variables bind old in 2018 and new in 2019; Edition matches each edition, while Local restricts the 2019 response domain to code 1. Oracle: the fixture CSV/JSONL and the F1 rule.",
+  "fixture": "classification-domains",
+  "requests": [
+    {
+      "operation": "findings",
+      "path": "/api/findings/demo/domains",
+      "query": {
+        "code": "F1"
+      }
+    }
+  ]
+}

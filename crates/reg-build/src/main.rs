@@ -29,6 +29,7 @@ mod diff;
 mod docs;
 mod emit;
 mod link;
+mod proposals;
 mod search;
 mod verify;
 
@@ -362,8 +363,14 @@ fn build(args: &Args) -> Result<(), String> {
         } else {
             reg_resolve::Ledger::default()
         };
-        let mut r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
-            .map_err(|e| format!("{provider}/{register}: {e}"))?;
+        let mut r = reg_resolve::resolve(
+            records,
+            &ledger,
+            &set_by_hash,
+            &applied.variables,
+            &applied.classifications,
+        )
+        .map_err(|e| format!("{provider}/{register}: {e}"))?;
         reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
         if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
             r.acknowledgements.extend(acks.clone());
@@ -424,6 +431,12 @@ fn build(args: &Args) -> Result<(), String> {
         linked.relations = curated.relations;
         applied.statements.extend(curated.statements);
     }
+    proposals::generate(
+        &mut resolved,
+        &applied.classifications,
+        &set_by_hash,
+        &linked,
+    )?;
     let link_unresolved = linked.warnings.len();
     let succession_dropped = linked.succession_warnings.len();
     let doc_subject_unresolved = linked.doc_warnings.len();

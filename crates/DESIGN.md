@@ -177,7 +177,10 @@ compared: an `ambiguous` segment is skipped and a gap is not a change.
   changes retain one notice per transition. A curated `set type` that removes the drift
   leaves no type-change notice; switchers without strict evidence remain uncurated.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
-  uncoded. The message counts codes added, removed and relabelled.
+  uncoded. Skip an edition-only transition only when both sides bind versions of one
+  classification family and each side's value set equals its bound version's set. A
+  local recode or changed response domain still fires. The message counts codes added,
+  removed and relabelled.
 - `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs
   differ. The definition message names the field, never the text.
 - `F1:population-change`: the primary releases carrying the variable, in period order,
@@ -187,6 +190,26 @@ compared: an `ambiguous` segment is skipped and a gap is not a change.
 V2 (value-set carry across a segment that states none) is a v4 rule not built: on the
 first full build 7 coded segments of 166k sat between two neighbours with one value set,
 spelling and type. A D `set` states those.
+
+**Review proposals (F3, V1).** Proposals are review findings whose messages carry ranked
+candidate statements as TOML in the existing curation grammar. They use the existing
+findings output and never change identity, relations or classification bindings.
+Accepting one requires reviewed curation and a premise lock.
+
+- F3 compares successive, non-overlapping variables with different source keys,
+  including different spellings. Label, type and value-set agreement rank candidates;
+  spelling agreement is evidence, never a prerequisite. Within a register it proposes
+  `set variable` when the predecessor has a ledger id; otherwise, and across registers
+  of one provider, it proposes `link continues` from successor to predecessor. Existing
+  continuations are excluded. Candidates meet at adjacent documentation boundaries; at
+  most three are reported per successor, ranked deterministically by agreement.
+  Proposals require representable whole-occurrence selectors; a cross-register
+  predecessor also needs a ledger id so the link can address it.
+- V1 compares unbound coded occurrences with inventory versions by value-set agreement
+  (codes and labels), ranking exact matches before partial agreement. It proposes
+  `set classification` for whole occurrences. Source code-system text and historic label
+  rules remain evidence only; neither creates a binding. Inventory book periods do not
+  imply occurrence applicability.
 
 **Time.**
 
@@ -313,7 +336,8 @@ spelling and type. A D `set` states those.
   a cycle or give a table a second successor on one day refuse at their statement
   locations. The existing link stage still drops invalid source-only successions;
   curation does not choose between them or change that evidence. Order following uses
-  these same rows (`follow_successor`, D-10); continuation proposals remain D-6.
+  these same rows (`follow_successor`, D-10); continuation proposals use the findings
+  output described above.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.

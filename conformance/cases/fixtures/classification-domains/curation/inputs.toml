@@ -1,0 +1,16 @@
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Synthetic provider"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"
+
+[[input]]
+name = "codes"
+reader = "classification-csv"
+path = "codes"

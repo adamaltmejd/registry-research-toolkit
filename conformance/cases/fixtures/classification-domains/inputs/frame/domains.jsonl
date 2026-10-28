@@ -1,0 +1,8 @@
+{"kind":"register","provider":"demo","register":"domains","name":"Classification domains"}
+{"kind":"value_set","names":["old"],"items":[{"code":"1","label":"First"},{"code":"2","label":"Second"}]}
+{"kind":"value_set","names":["new"],"items":[{"code":"1","label":"First"},{"code":"2","label":"Second"},{"code":"3","label":"Third"}]}
+{"kind":"value_set","names":["local"],"items":[{"code":"1","label":"First"}]}
+{"kind":"occurrence","provider":"demo","register":"domains","table":"","column":"Edition","source_key":"edition","label":"Edition","dtype":"int","valueset":"old","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"domains","table":"","column":"Local","source_key":"local","label":"Local","dtype":"int","valueset":"old","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"domains","table":"","column":"Edition","source_key":"edition","label":"Edition","dtype":"int","valueset":"new","from":"2019-01-01","to":"2019-12-31"}
+{"kind":"occurrence","provider":"demo","register":"domains","table":"","column":"Local","source_key":"local","label":"Local","dtype":"int","valueset":"local","from":"2019-01-01","to":"2019-12-31"}

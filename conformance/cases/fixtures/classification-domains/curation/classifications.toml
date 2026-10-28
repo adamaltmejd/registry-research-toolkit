@@ -1,0 +1,11 @@
+[[classification]]
+family = "kind"
+version = "old"
+value_set = "codes/old.csv"
+evidence = "Synthetic first edition."
+
+[[classification]]
+family = "kind"
+version = "new"
+value_set = "codes/new.csv"
+evidence = "Synthetic next edition adds code 3."

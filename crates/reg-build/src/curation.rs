@@ -675,7 +675,13 @@ fn run_selected(
                         _ => None,
                     })
                     .collect();
-                let mut resolved = reg_resolve::resolve(&source, ledger, &sets, &result.variables)?;
+                let mut resolved = reg_resolve::resolve(
+                    &source,
+                    ledger,
+                    &sets,
+                    &result.variables,
+                    &result.classifications,
+                )?;
                 reg_resolve::curation::apply_metadata(&mut resolved, &result.metadata);
                 Some(resolved)
             } else {
@@ -1091,7 +1097,13 @@ fn run_selected(
         }
     }
     if !result.links.is_empty() {
-        let resolved = resolve_catalog(root, &records, &result.variables, &result.metadata)?;
+        let resolved = resolve_catalog(
+            root,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )?;
         let linked = crate::link::curate(root, &resolved, &records, &result.links)?;
         if !linked.refusals.is_empty() {
             let messages = linked
@@ -1290,6 +1302,7 @@ pub(super) fn resolve_catalog(
     records: &[Record],
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     metadata: &[reg_resolve::curation::apply::Metadata],
+    classifications: &[reg_resolve::curation::apply::Classification],
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let sets = records
         .iter()
@@ -1318,7 +1331,8 @@ pub(super) fn resolve_catalog(
             } else {
                 reg_resolve::Ledger::default()
             };
-            let mut resolved = reg_resolve::resolve(&source, &ledger, &sets, variables)?;
+            let mut resolved =
+                reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
             reg_resolve::curation::apply_metadata(&mut resolved, metadata);
             Ok(resolved)
         })
