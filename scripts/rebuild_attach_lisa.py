@@ -36,6 +36,83 @@ FAMILIES = {
     "In- och Utvandring": {"individer-in-utvandring"},
 }
 
+# D curation: exact workbook tokens, not register-name similarity. None records
+# an unresolved source, rather than substituting a provider or an upstream input.
+# RAMS subregisters: SCB AM0207, Beskrivning av statistiken 2003, section A.10:
+# https://www.scb.se/contentassets/a5f118521a3145c0bcb008ff39805e15/am0207_bs_2003.pdf
+REGISTER_ALIASES = {
+    "AF": (None, "Arbetsförmedlingen is a provider; no unique catalog register."),
+    "Arbetsstallen": (
+        "scb/rams",
+        "SCB RAMS: Registret över arbetsställen (CFAR), AM0207 2003 A.10.",
+    ),
+    "BAS": ("scb/bas", "SCB r404: Befolkningens arbetsmarknadsstatus (BAS)."),
+    "BAS-Jobb": ("scb/bas", "SCB r404 includes Årsuppgifter - Jobb (r404/ids.toml)."),
+    "FAD": (
+        "scb/rams",
+        "SCB r26 includes Företagens och arbetsställenas dynamik, FAD (r26/ids.toml).",
+    ),
+    "FEK": ("scb/fek", "SCB r168: Företagens ekonomi (FEK)."),
+    "FK": (
+        None,
+        "Försäkringskassan is a provider; MiDAS/STORE do not identify one catalog register.",
+    ),
+    "FoB90": (
+        "scb/fob",
+        "SCB r32: Folk- och bostadsräkningen; LISA overview names FoB1990 as input.",
+    ),
+    "Högskolereg.": ("scb/hreg", "SCB r47: Universitets- och högskoleregistret."),
+    "IoT": ("scb/iot", "SCB r25: Inkomst- och taxeringsregistret (IoT)."),
+    "JobbReg": ("scb/rams", "SCB r26 includes Registret över jobb (r26/ids.toml)."),
+    "KUSoc": (
+        None,
+        "KUSOC occurs in both IoT/KUREG and LSUM/KU documentation; no unique endpoint.",
+    ),
+    "OVL": (
+        None,
+        "Operativa verksamhetsledare: no documented catalog register endpoint; do not substitute BAS.",
+    ),
+    "OpF": (
+        None,
+        "Operativa företagsledare in Entreprenörskapsdatabasen: no catalog register endpoint; do not substitute RAMS.",
+    ),
+    "Orgra": (
+        "scb/rams",
+        "SCB RAMS: Registret över företag (ORGRA), AM0207 2003 A.10.",
+    ),
+    "Personer i utb.": (
+        "scb/rpu",
+        "SCB r103: Registret över personer i utbildning (RPU).",
+    ),
+    "RAMS": ("scb/rams", "SCB r26: Registerbaserad arbetsmarknadsstatistik (RAMS)."),
+    "RAMS-Jobb": ("scb/rams", "SCB r26 includes Registret över jobb (r26/ids.toml)."),
+    "RTB": ("scb/rtb", "SCB r2: Registret över totalbefolkningen (RTB)."),
+    "SocReg": (
+        None,
+        "SocReg: no documented unique catalog register endpoint.",
+    ),
+    "SyssReg": (
+        "scb/rams",
+        "SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.10.",
+    ),
+    "UReg": (
+        "scb/ureg",
+        "SCB r24: Registret över befolkningens utbildning (Utbildningsregistret).",
+    ),
+    "Yreg": ("scb/yrkesreg", "SCB r55: Yrkesregistret."),
+}
+
+
+def lineage_sources(name):
+    """Resolve only the workbook's visible list and derived-source grammar."""
+    result = {}
+    for part in re.split(r"[/&]", name):
+        alias = part.strip().removeprefix("Härledd-").strip()
+        result[alias] = REGISTER_ALIASES.get(
+            alias, (None, "No curated exact register alias.")
+        )
+    return result
+
 
 def records(path):
     with path.open() as stream:
@@ -341,41 +418,68 @@ def main():
         sections, targets_by_row, tomllib.loads(path.read_text())["statement"]
     )
 
-    # Exact register names, public ledger names and source-stated parenthesized
-    # abbreviations are evidence; similar strings and compound source texts are not.
-    register_names = collections.defaultdict(set)
-    for register in registers:
-        owner = register["provider"], register["register"]
-        public = converter.ledgers.get(owner, {}).get("public", owner[1])
-        name = register.get("name") or ""
-        for alias in [name, public, *re.findall(r"\(([^()]*)\)", name)]:
-            if alias:
-                register_names[alias.lower()].add(f"{owner[0]}/{public}")
+    available_registers = {
+        f"{r['provider']}/{converter.ledgers.get((r['provider'], r['register']), {}).get('public', r['register'])}"
+        for r in registers
+    }
+    lineage_texts = {}
+    old_links = {
+        (s["subject"], s["object"])
+        for s in tomllib.loads(path.read_text())["statement"]
+        if s["kind"] == "link" and s["relation"] == "derived_from"
+    }
+    emitted_links = {}
     for link in (r for r in workbook if r["kind"] == "link"):
         name = link["object"]["register_name"]
-        objects = register_names[name.lower()]
+        sources = lineage_sources(name)
+        objects = {endpoint for endpoint, _ in sources.values() if endpoint}
+        missing = objects - available_registers
+        if missing:
+            raise ValueError(
+                f"{name}: curated register endpoints absent: {sorted(missing)}"
+            )
+        unresolved = {
+            alias: note
+            for alias, (endpoint, note) in sources.items()
+            if endpoint is None
+        }
+        item = lineage_texts.setdefault(
+            name,
+            {"entries": 0, "endpoints": sorted(objects), "unresolved": unresolved},
+        )
+        item["entries"] += 1
         at = link["locator"]["at"]
-        if len(objects) != 1:
+        if unresolved:
             report["lineage_unresolved"].append(
-                {
-                    "at": at,
-                    "name": name,
-                    "reason": "no unique exact register name/public name/source abbreviation",
-                }
+                {"at": at, "name": name, "sources": unresolved}
             )
-            continue
-        for target in sorted(targets_by_row.get(at, set())):
-            converter.add(
-                f"{link['locator']['input']}:{at}",
-                *OWNER,
-                {
-                    "kind": "link",
-                    "subject": f"var:{target}",
-                    "relation": "derived_from",
-                    "object": next(iter(objects)),
-                    "evidence": f"LISA Grundregister: {name}.",
-                },
+        for obj in sorted(objects):
+            evidence = "; ".join(
+                f"{alias}: {note}"
+                for alias, (endpoint, note) in sources.items()
+                if endpoint == obj
             )
+            for target in sorted(targets_by_row.get(at, set())):
+                subject = f"var:{target}"
+                origins, evidence_notes = emitted_links.setdefault(
+                    (subject, obj), (set(), set())
+                )
+                origins.add(f"{link['locator']['input']}:{at}")
+                evidence_notes.add(f"LISA Grundregister: {name}. {evidence}")
+    for (subject, obj), (origins, evidence_notes) in sorted(emitted_links.items()):
+        statement = {
+            "kind": "link",
+            "subject": subject,
+            "relation": "derived_from",
+            "object": obj,
+            "evidence": "\n".join(sorted(evidence_notes)),
+        }
+        for origin in sorted(origins):
+            converter.add(origin, *OWNER, statement)
+    report["lineage_texts"] = dict(sorted(lineage_texts.items()))
+    report["lineage_links"] = len(emitted_links)
+    report["lineage_new_links"] = len(emitted_links.keys() - old_links)
+    report["lineage_unresolved_entries"] = len(report["lineage_unresolved"])
 
     normalize_sets(converter)
     collapse(converter)
