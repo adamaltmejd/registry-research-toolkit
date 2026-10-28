@@ -61,6 +61,6 @@ public = "skolvasendet-kostnader"
 "undervisning" = ["Kostnader för skolväsendet: Undervisning"]
 "varldsdel" = ["Kostnader för skolväsendet: Varldsdel"]
 "ytajust" = ["Kostnader för skolväsendet: YtaJust"]
-"antal-elever" = ["Kostnader för skolväsendet: SkElev"]
+"antal-elever" = ["Kostnader för skolväsendet: SkElev # v30485"]
 "sarskoleform-2" = ["Kostnader för skolväsendet: SForm # v8702"]
 "skolform" = ["Kostnader för skolväsendet: SForm # v1996"]
