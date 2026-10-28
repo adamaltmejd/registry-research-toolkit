@@ -2646,6 +2646,11 @@
               "null"
             ]
           },
+          "follow_successor": {
+            "type": "boolean",
+            "description": "Follow the variable's continues successors after it ends; absent means false.",
+            "default": false
+          },
           "id_subtype": {
             "oneOf": [
               {
