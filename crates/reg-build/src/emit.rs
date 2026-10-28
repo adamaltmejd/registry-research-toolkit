@@ -765,36 +765,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
     };
     let mut memberships = BTreeMap::<(usize, String), BTreeSet<usize>>::new();
-    for value in &catalog.provenance.values {
-        if let ProvenanceSubject::Variable(ri, v) = value.subject
-            && value.field == "sets"
-            && let Some(json) = &value.value
-        {
-            let sets: Vec<String> = serde_json::from_str(json).map_err(|e| e.to_string())?;
-            for set in sets {
-                memberships.entry((ri, set)).or_default().insert(v);
+    for (ri, register) in catalog.registers.iter().enumerate() {
+        for (variable, resolved) in register.variables.iter().enumerate() {
+            for set in &resolved.sets {
+                memberships
+                    .entry((ri, set.clone()))
+                    .or_default()
+                    .insert(variable);
             }
-        }
-        if value.field == "notice"
-            && let Some(message) = &value.value
-        {
-            let (ri, kind, subject, period) = match value.subject {
-                ProvenanceSubject::Occurrence(ri, o) => (
-                    ri,
-                    "occurrence",
-                    occurrence_id[&(ri, o)],
-                    catalog.registers[ri].occurrences[o]
-                        .period
-                        .as_ref()
-                        .map(|p| (start(&p.0), end(&p.1))),
-                ),
-                _ => continue,
-            };
-            let reg_pid = pid_of_register(&catalog.registers[ri]);
-            findings.push((
-                (reg_pid.clone(), "C0:curated-notice", kind, subject, period),
-                (register_id[&reg_pid], "notice", message.clone()),
-            ));
         }
     }
     for (i, ((ri, set), members)) in memberships.into_iter().enumerate() {

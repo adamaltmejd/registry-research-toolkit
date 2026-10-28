@@ -204,6 +204,7 @@ pub(super) struct Applied {
     pub overrides: Vec<reg_resolve::provenance::Claim>,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
     pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
+    pub metadata: Vec<reg_resolve::curation::apply::Metadata>,
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> u8 {
@@ -262,7 +263,22 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     let after = serde_json::to_value(after).map_err(|e| e.to_string())?;
     for (field, value) in after.as_object().expect("frame object") {
         if before.get(field) != Some(value) {
-            current[field] = value.clone();
+            if field == "conflicts" {
+                // Independent corrections remove markers from the same source snapshot.
+                if let Some(conflicts) = current
+                    .get_mut(field)
+                    .and_then(serde_json::Value::as_array_mut)
+                {
+                    conflicts.retain(|field| {
+                        value
+                            .as_array()
+                            .expect("source conflict list")
+                            .contains(field)
+                    });
+                }
+            } else {
+                current[field] = value.clone();
+            }
         }
     }
     serde_json::from_value(current).map_err(|e| e.to_string())
@@ -666,6 +682,7 @@ fn run_selected(
                 }
             };
             result.variables.extend(applied.assignments);
+            result.metadata.extend(applied.metadata);
             evaluated.push((statement, premise.clone()));
             premises
                 .entry((provider, register))
@@ -810,6 +827,7 @@ fn run_selected(
             &final_coordinates,
             &mut result.variables,
             &mut result.overrides,
+            &mut result.metadata,
         ) {
             for (statement, premise) in &evaluated {
                 if matches!(&statement.statement, reg_frame::statement::Statement::Set {fields,..} if fields.spelling.is_some() || fields.period.is_some())

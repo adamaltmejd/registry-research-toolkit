@@ -36,12 +36,26 @@ pub struct Classification {
     pub period: Interval,
 }
 
+/// Typed curation facts that need the occurrence's resolved variable or subject.
+#[derive(Debug, Clone)]
+pub enum MetadataValue {
+    Sets(BTreeSet<String>),
+    Notice(String),
+}
+
+#[derive(Debug, Clone)]
+pub struct Metadata {
+    pub key: crate::OccurrenceKey,
+    pub value: MetadataValue,
+}
+
 #[derive(Debug, Default)]
 pub struct Applied {
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
     pub assignments: BTreeMap<crate::OccurrenceKey, String>,
+    pub metadata: Vec<Metadata>,
 }
 
 /// Assign variables against one immutable phase snapshot without copying its facts.
@@ -368,6 +382,7 @@ pub fn apply(
         changes: Vec::new(),
         classifications: Vec::new(),
         assignments: BTreeMap::new(),
+        metadata: Vec::new(),
     };
     match statement {
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
@@ -869,6 +884,7 @@ fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Opt
 
 fn target_field(field: &str) -> &str {
     match field {
+        "type" => "dtype",
         "spelling" => "column",
         "value_set" => "valueset",
         field => field,
@@ -883,11 +899,16 @@ fn apply_fields(
     context: &crate::OccurrenceContext<'_>,
     out: &mut Applied,
 ) -> Result<(), String> {
+    let metadata_fields = fields;
     let fields = stated_fields(fields);
     for field in fields.keys() {
         let package = match field.as_str() {
             "coverage" => Some("D-5 (EKB)"),
             "classification" | "tags" => Some("D-9"),
+            "sentinels" => Some("D (sentinels)"),
+            "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
+            "synonyms" => Some("D (search curation)"),
+            "name" => Some("D (entity names)"),
             _ => None,
         };
         if let Some(package) = package {
@@ -917,6 +938,8 @@ fn apply_fields(
                         | "identifier"
                         | "sensitive"
                         | "format"
+                        | "type"
+                        | "length"
                         | "period"
                         | "sets"
                         | "notice"
@@ -1004,6 +1027,13 @@ fn apply_fields(
         {
             return Err("set coded=true requires a known value set or source code system".into());
         }
+        if let Some(conflicts) = after.get_mut("conflicts").and_then(Value::as_array_mut) {
+            conflicts.retain(|field| {
+                !matches!(field.as_str(), Some("type" | "dtype")) || !fields.contains_key("type")
+            });
+            conflicts
+                .retain(|field| field.as_str() != Some("length") || !fields.contains_key("length"));
+        }
         let after_record = decode(after.clone())?;
         let period = if matches!(record, Record::Occurrence(_) | Record::Release(_)) {
             source_period(&after_record, context)
@@ -1020,7 +1050,15 @@ fn apply_fields(
             } else {
                 (winning.clone(), before[target_field(field)].clone())
             };
-            if winning != losing {
+            let resolves_conflict = matches!(field.as_str(), "type" | "length")
+                && before["conflicts"].as_array().is_some_and(|conflicts| {
+                    conflicts.iter().any(|conflict| {
+                        conflict.as_str().is_some_and(|conflict| {
+                            conflict == field || conflict == target_field(field)
+                        })
+                    })
+                });
+            if winning != losing || resolves_conflict {
                 out.changes.push(change(
                     context,
                     &after,
@@ -1043,6 +1081,19 @@ fn apply_fields(
         }
         if let Record::Occurrence(row) = record {
             let identity = context.identity(row);
+            let key = crate::OccurrenceKey::new(identity.clone(), &row.locator);
+            if let Some(sets) = &metadata_fields.sets {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Sets(sets.iter().cloned().collect()),
+                });
+            }
+            if let Some(notice) = &metadata_fields.notice {
+                out.metadata.push(Metadata {
+                    key,
+                    value: MetadataValue::Notice(notice.clone()),
+                });
+            }
             for claim in &mut out.changes[first_change..] {
                 claim.identity = Some(identity.clone());
             }
@@ -1068,6 +1119,7 @@ pub fn rekey(
     after: &[Record],
     assignments: &mut BTreeMap<crate::OccurrenceKey, String>,
     claims: &mut [crate::provenance::Claim],
+    metadata: &mut [Metadata],
 ) -> Result<(), Locator> {
     assert_eq!(
         before.len(),
@@ -1076,6 +1128,22 @@ pub fn rekey(
     );
     let old_context = crate::OccurrenceContext::new(before);
     let new_context = crate::OccurrenceContext::new(after);
+    let releases: BTreeMap<_, _> = after
+        .iter()
+        .filter_map(|record| match record {
+            Record::Release(release) => Some((
+                (
+                    Some(release.provider.as_str()),
+                    Some(release.register.as_str()),
+                    Some(release.table.as_str()),
+                    Some(release.release.as_str()),
+                    &release.locator,
+                ),
+                crate::placed(release),
+            )),
+            _ => None,
+        })
+        .collect();
     let mut changed = BTreeMap::new();
     let mut owners = BTreeMap::new();
     let mut destinations = BTreeMap::new();
@@ -1113,7 +1181,23 @@ pub fn rekey(
             (key, value)
         })
         .collect();
+    for value in metadata {
+        if let Some(identity) = changed.get(&value.key) {
+            value.key.identity = identity.clone();
+        }
+    }
     for claim in claims {
+        if claim.kind == "release"
+            && let Some(period) = releases.get(&(
+                claim.provider.as_deref(),
+                claim.register.as_deref(),
+                claim.table.as_deref(),
+                claim.release.as_deref(),
+                &claim.locator,
+            ))
+        {
+            claim.period.clone_from(period);
+        }
         let Some(identity) = &claim.identity else {
             continue;
         };

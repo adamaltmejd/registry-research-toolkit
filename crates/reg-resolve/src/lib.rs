@@ -41,7 +41,9 @@ mod ledger;
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use reg_core::{Interval, fold_identity, intersect, label_key, merge, next_iso_day, prev_iso_day};
+use reg_core::{
+    Form, Interval, fold_identity, intersect, label_key, merge, next_iso_day, prev_iso_day,
+};
 use reg_frame::{
     Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
 };
@@ -240,6 +242,7 @@ pub struct ResolvedRelease {
 #[derive(Debug)]
 pub struct Variable {
     pub slug: String,
+    pub sets: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -972,10 +975,10 @@ pub fn resolve(
                     table: t,
                     period,
                     spelling: o.column.clone(),
-                    dtype: agreed(|f| &f.0.dtype),
+                    dtype: agreed(|f| &f.dtype),
                     length,
-                    format: agreed(|f| &f.1),
-                    valueset: agreed(|f| &f.0.valueset),
+                    format: o.format.clone(),
+                    valueset: agreed(|f| &f.valueset),
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
@@ -1071,6 +1074,7 @@ pub fn resolve(
                 .expect("a variable is used"),
         );
         variables.push(Variable {
+            sets: BTreeSet::new(),
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1110,9 +1114,9 @@ pub fn resolve(
         let forms: BTreeSet<Form> = own.iter().map(|r| form(r)).collect();
         let first = forms.first().expect("a segment has a used occurrence");
         if forms.len() > 1
-            && forms.iter().all(|f| {
-                f.0.label == first.0.label && f.0.valueset == first.0.valueset && f.1 == first.1
-            })
+            && forms
+                .iter()
+                .all(|f| f.label == first.label && f.valueset == first.valueset)
             && own.iter().all(|r| {
                 r.occurrence.source_key == own[0].occurrence.source_key
                     && fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling)
@@ -1369,17 +1373,12 @@ fn order(r: &ResolvedOccurrence) -> (&Option<Interval>, &Locator) {
 type Forms<'a> = BTreeMap<&'a str, BTreeSet<(String, Option<&'a str>)>>;
 
 /// What two overlapping occurrences of one variable must agree on.
-type Form = (reg_core::Form, Option<String>);
-
 fn form(r: &ResolvedOccurrence) -> Form {
     let o = &r.occurrence;
-    (
-        reg_core::Form::new(
-            o.label.as_deref(),
-            o.dtype.as_deref(),
-            o.valueset.as_deref(),
-        ),
-        o.format.clone(),
+    Form::new(
+        o.label.as_deref(),
+        o.dtype.as_deref(),
+        o.valueset.as_deref(),
     )
 }
 

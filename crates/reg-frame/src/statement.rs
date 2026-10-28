@@ -18,7 +18,7 @@ pub enum Statement {
     Set {
         subject: Address,
         #[serde(default)]
-        fields: SetFields,
+        fields: Box<SetFields>,
         evidence: String,
         caveat: Option<String>,
     },
@@ -44,14 +44,14 @@ pub enum Statement {
 #[serde(tag = "entity", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum AssertFact {
     Occurrence {
-        fields: AssertFields,
+        fields: Box<AssertFields>,
     },
     Release {
         name: String,
         period: PeriodSet,
     },
     Table {
-        fields: AssertFields,
+        fields: Box<AssertFields>,
     },
     ValueSet {
         items: Vec<crate::Item>,
@@ -86,27 +86,34 @@ pub enum Severity {
 pub struct SetFields {
     pub table: Option<String>,
     pub variable: Option<String>,
+    pub name: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
     pub operational_definition: Option<String>,
     pub unit: Option<String>,
     pub description: Option<String>,
+    pub synonyms: Option<Vec<String>>,
+    #[serde(rename = "type")]
+    pub dtype: Option<String>,
+    pub length: Option<u64>,
     pub format: Option<String>,
     pub spelling: Option<String>,
     pub period: Option<PeriodSet>,
     pub value_set: Option<String>,
     pub coded: Option<bool>,
+    pub sentinels: Option<Vec<String>>,
     pub classification: Option<String>,
     pub coverage: Option<PeriodSet>,
     pub notice: Option<String>,
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
+    pub role: Option<String>,
+    pub unit_type: Option<String>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
 }
 
-/// Source-shaped facts for assertions. Source type and length can be stated when
-/// adding an occurrence, but are not fields curators override with `set`.
+/// Source-shaped facts for assertions, separate from field overrides.
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct AssertFields {
@@ -260,7 +267,15 @@ impl SetFields {
     }
 
     fn normalize(&mut self) {
-        for values in [&mut self.sets, &mut self.tags].into_iter().flatten() {
+        for values in [
+            &mut self.synonyms,
+            &mut self.sentinels,
+            &mut self.sets,
+            &mut self.tags,
+        ]
+        .into_iter()
+        .flatten()
+        {
             values.sort();
             values.dedup();
         }

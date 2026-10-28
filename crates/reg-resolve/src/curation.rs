@@ -540,7 +540,7 @@ fn stated_fields(fields: &impl serde::Serialize) -> BTreeMap<String, Value> {
         .into_iter()
         .filter(|(_, v)| !v.is_null())
         .map(|(field, mut value)| {
-            if field == "sets"
+            if matches!(field.as_str(), "sets" | "tags" | "sentinels" | "synonyms")
                 && let Some(values) = value.as_array_mut()
             {
                 values.sort_by(|a, b| a.as_str().cmp(&b.as_str()));
@@ -552,6 +552,22 @@ fn stated_fields(fields: &impl serde::Serialize) -> BTreeMap<String, Value> {
 }
 
 fn field_equal(source: &Source, field: &str, expected: &Value) -> bool {
+    if matches!(field, "type" | "length")
+        && source
+            .fields
+            .get("conflicts")
+            .and_then(Value::as_array)
+            .is_some_and(|conflicts| {
+                conflicts.iter().any(|conflict| {
+                    conflict.as_str().is_some_and(|conflict| {
+                        conflict == field || (field == "type" && conflict == "dtype")
+                    })
+                })
+            })
+    {
+        return false;
+    }
+
     if matches!(field, "period" | "coverage") {
         expected
             .as_str()
@@ -1532,6 +1548,12 @@ pub fn resolve(
                         let package = match field.as_str() {
                             "coverage" => Some("D-5 (EKB)"),
                             "classification" | "tags" => Some("D-9"),
+                            "sentinels" => Some("D (sentinels)"),
+                            "role" | "unit_type" => {
+                                Some("D (unit types and roles beyond defaults)")
+                            }
+                            "synonyms" => Some("D (search curation)"),
+                            "name" => Some("D (entity names)"),
                             _ => None,
                         };
                         if let Some(package) = package {
@@ -1720,4 +1742,55 @@ pub fn resolve(
         }
     }
     out
+}
+
+/// Resolve typed curation facts after occurrence identities and variable membership.
+/// Provenance records the evidence for these facts; it is never an input to them.
+pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadata]) {
+    let mut by_occurrence = BTreeMap::<_, Vec<_>>::new();
+    for decision in metadata.iter().filter(|m| {
+        m.key.identity.provider == resolved.register.provider
+            && m.key.identity.register == resolved.register.register
+    }) {
+        by_occurrence
+            .entry(&decision.key)
+            .or_default()
+            .push(&decision.value);
+    }
+    if by_occurrence.is_empty() {
+        return;
+    }
+    for (index, occurrence) in resolved.occurrences.iter().enumerate() {
+        let row = &occurrence.occurrence;
+        let identity = crate::OccurrenceIdentity::new(
+            row,
+            occurrence
+                .stated
+                .clone()
+                .or_else(|| occurrence.period.clone()),
+        );
+        let mut notice = None;
+        for at in std::iter::once(&row.locator).chain(&row.also) {
+            let key = crate::OccurrenceKey::new(identity.clone(), at);
+            for value in by_occurrence.get(&key).into_iter().flatten() {
+                match value {
+                    apply::MetadataValue::Sets(sets) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].sets.clone_from(sets);
+                        }
+                    }
+                    apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),
+                }
+            }
+        }
+        if let Some(message) = notice {
+            resolved.findings.push(crate::Finding {
+                code: "C0:curated-notice",
+                severity: "notice",
+                subject: crate::Subject::Occurrence(index),
+                period: occurrence.period.clone(),
+                message,
+            });
+        }
+    }
 }

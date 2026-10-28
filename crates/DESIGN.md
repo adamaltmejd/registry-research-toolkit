@@ -248,16 +248,20 @@ spelling and type. A D `set` states those.
   change only selected whole occurrences, or the selected entity for fields owned by
   tables, releases or variables. Selectors and premises use the immutable phase view.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
-  `spelling`, `identifier`, `sensitive` and `format` belong to occurrences; text runs
-  and segments derive from those occurrences. `period` changes occurrence bounds or the
-  addressed release's placement. `description` on tables and releases stays on those
-  entities. `sets` belongs to variables and writes existing set memberships; `notice`
-  writes an existing finding on its selected subject. Occurrence descriptions live in
-  the existing `override` table and are returned with segment evidence; they do not
-  replace definitions or operational definitions. No field gets a second home. A
-  value-set override chooses the occurrence's own set while retaining its source
-  population alternatives as evidence. Unsupported entity/field combinations are located
-  refusals.
+  `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
+  occurrences; text runs and segments derive from those occurrences. `period` changes
+  occurrence bounds or the addressed release's placement. `description` on tables and
+  releases stays on those entities. `sets` belongs to variables; typed curation
+  decisions resolve to variable memberships. `notice` resolves to a finding on its
+  selected subject. The emitter serializes these resolved facts and never derives them
+  from provenance. Occurrence descriptions live in the existing `override` table and are
+  returned with segment evidence; they do not replace definitions or operational
+  definitions. No field gets a second home. A value-set override chooses the
+  occurrence's own set while retaining its source population alternatives as evidence.
+  Unsupported entity/field combinations are located refusals. Type and length
+  corrections participate in F6 and ambiguity resolution; corrected conflict markers
+  clear while the original premises remain evidence. Format is carried and published
+  without changing agreement or F1 findings.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -269,7 +273,9 @@ spelling and type. A D `set` states those.
   statements, artifact bytes remain unchanged.
 - `coverage` is applied in D-5 (EKB); `classification` and `tags` in D-9. Their fields
   remain accepted syntax but application refuses with the owning work package. `link`
-  and `ack` application wait for D-3c.
+  and `ack` application wait for D-3c. Sentinels, roles and unit types remain deferred
+  to D's planned sentinel and nondefault-role/unit-type work. Entity names and synonyms
+  remain deferred to D's entity-name and search curation.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
@@ -332,12 +338,14 @@ optional user-facing text. Kind-specific content is:
 
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
-`identifier`, `sensitive`, `format`, `notice`, `coverage`, `classification` and `tags`.
+`identifier`, `sensitive`, `type`, `length`, `format`, `notice`, `coverage`,
+`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name` and `synonyms`.
 Source-shaped assertion fields have a separate closed schema, including table `name` and
-occurrence `type` and `length`. Lists of sets and tags normalize as sorted sets;
-asserted codes sort by code, while duplicate codes are refused. Addresses normalize
-folded spellings, expanded braces and sorted guards and period tokens before hashing.
-`set reject` has no form; succession acceptance/rejection belongs to D-3c's link work.
+occurrence `type` and `length`. Lists of sets, tags, sentinels and synonyms normalize as
+sorted sets; asserted codes sort by code, while duplicate codes are refused. Addresses
+normalize folded spellings, expanded braces and sorted guards and period tokens before
+hashing. `set reject` has no form; succession acceptance/rejection belongs to D-3c's
+link work. Merged release changes update every claim to the release's final placement.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate
