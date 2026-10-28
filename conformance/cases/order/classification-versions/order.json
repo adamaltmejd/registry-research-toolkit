@@ -1,0 +1,88 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "4"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "5.1.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/pins",
+      "table": "demo/pins",
+      "variable": "demo/pins/kod",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2019-01-01"
+      },
+      "spelling": "Kod",
+      "type": "int",
+      "length": null,
+      "value_set": {
+        "hash": "a59303823d8dcad4eadf3098f87d0adfb752dfcb097fba316d51f989508f053e",
+        "n_items": 2
+      },
+      "classification": "class/kind/v1"
+    },
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/pins",
+      "table": "demo/pins",
+      "variable": "demo/pins/kod",
+      "display_name": null,
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-01-01"
+      },
+      "spelling": "Kod",
+      "type": "int",
+      "length": null,
+      "value_set": {
+        "hash": "a59303823d8dcad4eadf3098f87d0adfb752dfcb097fba316d51f989508f053e",
+        "n_items": 2
+      },
+      "classification": "class/kind/v2"
+    }
+  ],
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/pins",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/pins/lopnr",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "clips": [],
+  "findings": [
+    {
+      "level": "warning",
+      "code": "classification_version_ambiguous",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/pins/kod carries more than one classification version over [2018-01-01, 2020-01-01); pin one with \"classification\".",
+      "source": "s",
+      "variable": "demo/pins/kod",
+      "table": "demo/pins",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "successor_fqid": null
+    }
+  ]
+}

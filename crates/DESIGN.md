@@ -328,10 +328,14 @@ spelling and type. A D `set` states those.
   ambiguous segments. F5 is currently a notice, F6 a review; neither independently
   blocks orders. Notice acknowledgements annotate; there is currently no separate
   generic review-finding order blocker to suppress. F7 edition findings remain warnings.
-- `classification` and `tags` are applied in D-9. Their fields remain accepted syntax
-  but application refuses with the owning work package. Sentinels, roles and unit types
-  remain deferred to D's planned sentinel and nondefault-role/unit-type work. Entity
-  names and synonyms remain deferred to D's entity-name and search curation.
+- `classification` selects an exact curated `class/<family>/<version>` for whole
+  occurrences. The curated frame carries this optional version through resolution;
+  readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
+  facts are locked premises; missing references are located refusals. The selected
+  version follows occurrences into segments and orders. `tags` remains refused with D-9.
+  Sentinels, roles and unit types remain deferred to D's planned sentinel and
+  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
+  entity-name and search curation.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
@@ -1056,7 +1060,7 @@ order with the existing structured findings, never returns a partial order.
 
   | Field                                     | 5.1.0                                                    | Why                                                                                                                                                                                                                         |
   | ----------------------------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin is a class version (schema §2.2). Until D curates classifications no version exists, so any pin is `fqid_unresolved`.                                               |
+  | `value_set`                               | replaced by `classification`: `class/<family>/<version>` | A value set is content-addressed by hash in v5; the pin selects an exact curated class version (schema §2.2). Missing versions are `fqid_unresolved`; unrelated versions are refused.                                       |
   | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not. |
   | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                         |
   | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                       |
@@ -1156,8 +1160,19 @@ A value set is content-addressed: its hash covers the sorted `(code, label)` ite
 segments that deliver the same codes share one set, and a segment with no value set has
 `value_set: null`. `values` reads a set by its hash, or lists the sets holding a code
 and label. The blank code `""` is an item like any other. Classifications (versions,
-codes, correspondences) are not served until curation lands in milestone D; the `class/`
-grammar and the `classification` parameters stay reserved for it.
+codes, correspondences) use curated identities. `curation/classifications.toml` holds
+family/version metadata, names, publisher, URL, existence periods, aliases, umbrella
+membership and explicit succession edges. Its code lists reference reader value sets;
+they are never copied into inventory items. Inventory versions reuse the existing
+`assert classification-version` construction and emission path. Inline `items` remain
+available for genuinely hand-authored assertions.
+
+Book periods describe existence only. They are neither inferred nor truncated, and
+versions of one family may overlap. Applicability comes exclusively from occurrence
+`set classification` statements naming exact versions. An order classification pin
+selects only compatible curated version windows, preserving coverage clipping and
+refusing an unrelated version at the binding's classification field. A pin never
+substitutes a version or reinterprets codes.
 
 ## Sets and tags
 

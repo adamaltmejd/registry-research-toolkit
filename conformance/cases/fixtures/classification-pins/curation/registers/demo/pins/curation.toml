@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "pins: Kod @2018"
+fields.classification = "class/kind/v1"
+evidence = "The first release uses v1."
+
+[[statement]]
+kind = "set"
+subject = "pins: Kod @2019"
+fields.classification = "class/kind/v2"
+evidence = "The second release uses v2."

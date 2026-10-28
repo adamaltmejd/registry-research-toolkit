@@ -180,6 +180,7 @@ pub fn read(
                     length: None,
                     format: None,
                     valueset: None,
+                    classification: None,
                     population_valuesets: Vec::new(),
                     coded: None,
                     code_system: None,

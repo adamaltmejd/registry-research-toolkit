@@ -365,7 +365,7 @@ pub fn finalize(
     }
     for class in classes {
         let candidates = by_locator.get(&("class_version", &class.locator));
-        result.values.extend(field_values(candidates.into_iter().flatten().copied().filter(|c| matches(c, None, None, None, Some(&class.period))), &Subject::ClassVersion(class.family.clone(), class.version.clone()), &serde_json::json!({"family":class.family,"version":class.version,"valueset":class.valueset}), Some(&class.period)));
+        result.values.extend(field_values(candidates.into_iter().flatten().copied().filter(|c| matches(c, None, None, None, Some(&class.period))), &Subject::ClassVersion(class.family.clone(), class.version.clone()), &serde_json::json!({"family":class.family,"version":class.version,"valueset":class.valueset,"inventory":class.metadata}), Some(&class.period)));
     }
     result
 }

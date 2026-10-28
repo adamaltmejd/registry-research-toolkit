@@ -1,0 +1,8 @@
+{"kind":"register","provider":"demo","register":"pins","name":"Classification pins"}
+{"kind":"value_set","items":[{"code":"1","label":"First"},{"code":"2","label":"Second"}],"names":["kind"]}
+{"kind":"release","provider":"demo","register":"pins","table":"","release":"r2018","name":"2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"pins","table":"","release":"r2019","name":"2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2018","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2019","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2018","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2019","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}

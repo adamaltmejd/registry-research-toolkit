@@ -7,6 +7,7 @@ use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
 use reg_resolve::curation::Premise;
 use serde::{Deserialize, Serialize};
+use sha2::Digest;
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -82,6 +83,7 @@ fn references(
         .iter()
         .filter_map(|s| match &s.statement {
             reg_frame::statement::Statement::Link { object, .. } => Some(object),
+            reg_frame::statement::Statement::Set { fields, .. } => fields.classification.as_ref(),
             _ => None,
         })
         .collect::<BTreeSet<_>>();
@@ -95,6 +97,7 @@ fn references(
                     ("family".into(), serde_json::json!(class.family)),
                     ("version".into(), serde_json::json!(class.version)),
                     ("period".into(), serde_json::json!(class.period)),
+                    ("inventory".into(), class.metadata.clone()),
                     (
                         "items".into(),
                         records
@@ -162,6 +165,155 @@ fn references(
         }
     }
     Ok(references)
+}
+
+/// Resolve code-list references before register curation, through the same constructor
+/// used by inline classification assertions. No applicability is inferred here.
+#[allow(clippy::too_many_lines)]
+fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
+    use reg_frame::statement::{AssertFact, Statement};
+    let mut out = Applied::default();
+    let entries = reg_readers::curation::load_classifications(root).map_err(|e| e.to_string())?;
+    let mut families = BTreeMap::new();
+    for entry in entries {
+        let c = &entry.classification;
+        let at = reg_frame::Locator {
+            input: "classifications.toml".into(),
+            at: format!("line={}", entry.line),
+        };
+        let located = |message: String| {
+            format!(
+                "{}:{}: {message}",
+                root.join(&at.input).display(),
+                entry.line
+            )
+        };
+        for (field, value) in [("family_name", &c.family_name), ("publisher", &c.publisher)] {
+            if let Some(value) = value {
+                let key = (c.family.clone(), field);
+                if let Some((previous, line)) = families.get(&key)
+                    && previous != value
+                {
+                    return Err(located(format!(
+                        "classification-family-conflict: {field} conflicts with classifications.toml:{line}"
+                    )));
+                }
+                families.insert(key, (value.clone(), entry.line));
+            }
+        }
+        let sets = records
+            .iter()
+            .filter_map(|r| match r {
+                Record::ValueSet(v) if v.locator.input == c.value_set => Some((v.hash.as_str(), v)),
+                _ => None,
+            })
+            .collect::<BTreeMap<_, _>>();
+        let [set] = sets.values().copied().collect::<Vec<_>>()[..] else {
+            return Err(located(format!(
+                "classification-reference-unresolved: value_set {:?} must name exactly one reader value set",
+                c.value_set
+            )));
+        };
+        let scope = c
+            .period
+            .as_ref()
+            .map_or_else(String::new, |p| format!(" @{p}"));
+        let statement = Statement::Assert {
+            subject: format!("inventory: code{scope}").parse().map_err(located)?,
+            fact: AssertFact::ClassificationVersion {
+                family: c.family.clone(),
+                version: c.version.clone(),
+                items: set.items.clone(),
+            },
+            evidence: c.evidence.clone(),
+            caveat: None,
+        };
+        statement.validate().map_err(located)?;
+        let mut class =
+            reg_resolve::curation::apply::classification(&statement, &at).map_err(located)?;
+        class.metadata = serde_json::to_value(c).map_err(|e| located(e.to_string()))?;
+        let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
+        out.statements.push(crate::emit::StatementRow {
+            hash: hash.clone(),
+            kind: "assert".into(),
+            file: at.input.clone(),
+            line: entry.line,
+            evidence: Some(c.evidence.clone()),
+            caveat: None,
+        });
+        out.overrides.push(reg_resolve::provenance::Claim {
+            kind: "class_version".into(),
+            locator: at,
+            identity: None,
+            provider: None,
+            register: None,
+            table: None,
+            release: None,
+            period: Some(class.period.clone()),
+            field: "inventory".into(),
+            value: Some(class.metadata.to_string()),
+            source_value: None,
+            statement: hash,
+        });
+        out.classifications.push(class);
+    }
+    let known = out
+        .classifications
+        .iter()
+        .map(|c| format!("class/{}/{}", c.family, c.version))
+        .collect::<BTreeSet<_>>();
+    for class in &out.classifications {
+        for target in class.metadata["succeeds"].as_array().into_iter().flatten() {
+            if !known.contains(target.as_str().expect("typed inventory reference")) {
+                return Err(format!(
+                    "{}:{}: classification-reference-unresolved: predecessor {target}",
+                    root.join(&class.locator.input).display(),
+                    class
+                        .locator
+                        .at
+                        .strip_prefix("line=")
+                        .unwrap_or(&class.locator.at)
+                ));
+            }
+        }
+    }
+    let predecessors = out
+        .classifications
+        .iter()
+        .map(|c| {
+            (
+                format!("class/{}/{}", c.family, c.version),
+                c.metadata["succeeds"]
+                    .as_array()
+                    .expect("typed succession list")
+                    .iter()
+                    .map(|v| v.as_str().expect("typed succession reference").to_owned())
+                    .collect::<Vec<_>>(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    for class in &out.classifications {
+        let origin = format!("class/{}/{}", class.family, class.version);
+        let mut pending = predecessors[&origin].clone();
+        let mut visited = BTreeSet::new();
+        while let Some(node) = pending.pop() {
+            if node == origin {
+                return Err(format!(
+                    "{}:{}: classification-succession-cycle: {origin}",
+                    root.join(&class.locator.input).display(),
+                    class
+                        .locator
+                        .at
+                        .strip_prefix("line=")
+                        .unwrap_or(&class.locator.at)
+                ));
+            }
+            if visited.insert(node.clone()) {
+                pending.extend(predecessors[&node].iter().cloned());
+            }
+        }
+    }
+    Ok(out)
 }
 
 /// Field-level old/new values, including additions and removals. Array indexes are
@@ -379,13 +531,7 @@ fn run_selected(
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
         .collect::<Vec<_>>();
-    if statements.is_empty() && !record {
-        return Ok(Applied {
-            records,
-            ..Applied::default()
-        });
-    }
-    let mut result = Applied::default();
+    let mut result = inventory(root, &records)?;
     let mut evaluated: Vec<(&LocatedStatement, Premise)> = Vec::new();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for statement in statements {
@@ -986,6 +1132,11 @@ fn run_selected(
         .as_ref()
         .unwrap_or(&result.overrides)
         .iter()
+        // Shared inventory claims have no register evaluation index. Their version
+        // identity conflicts are checked below; keep their claims for provenance.
+        .filter(|value| {
+            !(value.kind == "class_version" && value.locator.input == "classifications.toml")
+        })
         .map(|value| reg_resolve::curation::AppliedClaim {
             statement: indices[value.statement.as_str()],
             kind: &value.kind,

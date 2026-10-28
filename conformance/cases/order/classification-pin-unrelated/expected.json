@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "classification_incompatible",
+      "path": "/sources/0/bindings/0/classification",
+      "message": "demo/pins/kod has no curated window for class/other/v1 over the requested period.",
+      "source": "s",
+      "variable": "demo/pins/kod",
+      "table": "demo/pins",
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      }
+    }
+  ]
+}

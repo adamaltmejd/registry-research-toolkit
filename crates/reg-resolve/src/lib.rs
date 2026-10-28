@@ -270,6 +270,7 @@ pub struct Segment {
     pub length: Option<i64>,
     pub format: Option<String>,
     pub valueset: Option<String>,
+    pub classification: Option<String>,
     pub coded: &'static str,
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
@@ -939,7 +940,11 @@ pub fn resolve(
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
                 let o = &resolved[top].occurrence;
-                let agree = forms.len() == 1;
+                let classifications: BTreeSet<_> = covering
+                    .iter()
+                    .map(|&i| resolved[i].occurrence.classification.clone())
+                    .collect();
+                let agree = forms.len() == 1 && classifications.len() == 1;
                 // A form field is stated only where every occurrence agrees on it.
                 let agreed = |field: fn(&Form) -> &Option<String>| {
                     let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
@@ -1018,6 +1023,11 @@ pub fn resolve(
                     length,
                     format: o.format.clone(),
                     valueset: agreed(|f| &f.valueset),
+                    classification: if classifications.len() == 1 {
+                        classifications.into_iter().next().flatten()
+                    } else {
+                        None
+                    },
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
@@ -1174,7 +1184,8 @@ pub fn resolve(
                 .iter()
                 .all(|f| f.label == first.label && f.valueset == first.valueset)
             && own.iter().all(|r| {
-                r.occurrence.source_key == own[0].occurrence.source_key
+                r.occurrence.classification == own[0].occurrence.classification
+                    && r.occurrence.source_key == own[0].occurrence.source_key
                     && fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling)
             })
         {
@@ -1501,6 +1512,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             family(a.dtype.as_deref()),
             &a.format,
             &a.valueset,
+            &a.classification,
             a.coded,
             a.sensitive,
             a.identifier,
@@ -1510,6 +1522,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             family(b.dtype.as_deref()),
             &b.format,
             &b.valueset,
+            &b.classification,
             b.coded,
             b.sensitive,
             b.identifier,

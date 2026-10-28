@@ -254,11 +254,10 @@ impl SetFields {
         }
         if let Some(reference) = &self.classification {
             match reference.parse::<reg_core::Fqid>() {
-                Ok(reg_core::Fqid::Classification { .. } | reg_core::Fqid::ClassVersion { .. }) => {
-                }
+                Ok(reg_core::Fqid::ClassVersion { .. }) => {}
                 _ => {
                     return Err(
-                        "classification must be a class/<family>[/<version>] reference".into(),
+                        "classification must be a class/<family>/<version> reference".into(),
                     );
                 }
             }
