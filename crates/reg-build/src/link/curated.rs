@@ -15,7 +15,7 @@ pub(crate) struct Curated {
     pub succession_warnings: Vec<String>,
 }
 
-fn relation_kind(relation: &reg_frame::statement::Relation) -> &'static str {
+fn relation_kind(relation: reg_frame::statement::Relation) -> &'static str {
     match relation {
         reg_frame::statement::Relation::Continues => "continues",
         reg_frame::statement::Relation::DerivedFrom => "derived_from",
@@ -179,7 +179,7 @@ pub(crate) fn curate(
         let hash = statement
             .statement
             .scoped_identity(&statement.provider, &statement.register);
-        let kind = relation_kind(relation);
+        let kind = relation_kind(*relation);
         let matched = endpoints(
             registers,
             &statement.provider,
@@ -488,7 +488,7 @@ pub(crate) fn review(
         object,
         &premise.objects,
     )?;
-    let kind = relation_kind(relation);
+    let kind = relation_kind(*relation);
     pairs(kind, &subjects, &objects)?;
     let index = super::Index::new(registers);
     let days = validity(at.as_ref());
