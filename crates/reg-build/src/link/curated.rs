@@ -115,36 +115,7 @@ fn validity(at: Option<&reg_frame::address::PeriodSet>) -> Vec<(Option<String>, 
     let Some(at) = at else {
         return vec![(None, None)];
     };
-    let intervals = at
-        .to_string()
-        .split(',')
-        .map(|token| {
-            if let Some(end) = token.strip_prefix("..") {
-                (
-                    reg_frame::OPEN_START.into(),
-                    end.parse::<reg_core::Period>()
-                        .expect("typed period")
-                        .iso_bounds()
-                        .1,
-                )
-            } else if let Some(start) = token.strip_suffix("..") {
-                (
-                    start
-                        .parse::<reg_core::Period>()
-                        .expect("typed period")
-                        .iso_bounds()
-                        .0,
-                    reg_frame::OPEN_END.into(),
-                )
-            } else {
-                token
-                    .parse::<reg_core::Period>()
-                    .expect("typed period")
-                    .iso_bounds()
-            }
-        })
-        .collect();
-    reg_core::merge(intervals)
+    reg_core::merge(reg_resolve::curation::periods(at))
         .into_iter()
         .map(|(start, end)| (Some(start), Some(end)))
         .collect()

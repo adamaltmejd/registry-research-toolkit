@@ -74,7 +74,12 @@ impl SharedSources {
     }
 }
 
-fn periods(set: &PeriodSet) -> Vec<Interval> {
+/// Convert a validated period set to inclusive ISO date intervals.
+///
+/// # Panics
+/// Panics if a `PeriodSet` contains a period that cannot be parsed.
+#[must_use]
+pub fn periods(set: &PeriodSet) -> Vec<Interval> {
     set.to_string()
         .split(',')
         .map(|text| {
