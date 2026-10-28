@@ -649,34 +649,34 @@ catalog remains for a later release decision.
   the maintainer" questions before the dependent implementation:
   1. **e-design:** holdings design and this sequence, maintainer review only;
   2. **e-holdings:** inputs and schema/reader/compiler together: pin census, storage,
-     slug and selected document evidence; one-shot TOML → pinned transcription CSV;
-     convert routing/decisions and missing targets with ordinary ledgers/statements;
-     auto-map against the exact D pin; verify the catalog/holdings pair and scoped
-     admission. Q1 blocks its semantic model. No input-only PR depends on an unbuilt
-     reader or a new test suite;
-  3. **e-order:** materialization over the selected shared logical view, optional
-     project `extract_format` in the next minor version, hosted owner from
-     configuration, file manifest and existing conformance cases. Q1/Q4 block; Q2
-     confirms or explicitly reopens the existing union filter; Q6 applies only to a
-     needed companion;
-  4. **e-runner:** switch R and its corpus atomically, reconnect topology cases, repair
-     stale DESIGN links, preserve format/precision/refusals and MONA boundaries. Q6
-     blocks companion-specific support if needed;
-  5. **e-compare:** compare orderable physical columns, held intervals and
-     representative orders with the 0.64.0 SWECOV asset; classify every difference under
-     REBUILD's proof model. Fix defects/account for missing inputs before proceeding;
-  6. **e-types:** N1's adopted pattern table (Q3), review findings only. It changes the
-     catalog generation; rebuild/re-pin holdings and repeat the comparison/conformance;
+     slugs and selected document evidence; one-shot TOML → pinned transcription CSV;
+     reconcile reviewed and auto-mapped targets, including providers absent from D; add
+     per-column routes, interval-local matching, deterministic pooled clips and
+     unmatched notices. Q1 blocks provider-definition home; Q2 blocks missing-slot and
+     pre-2018 coding representation. Verify the catalog/holdings pair;
+  3. **e-order:** materialization over the selected semantic view; add project minor
+     5.2.0 with optional `extract_format` and explicit 5.1.0/5.2.0 admission, hosted
+     owner from configuration, manifest and existing conformance cases. Q2/Q4 block; Q3
+     confirms or reopens union filters; Q6 applies only to a needed companion;
+  4. **e-compare:** immediately compare orderable physical columns, held intervals and
+     representative plans with 0.64.0 SWECOV. Classify every difference under REBUILD's
+     proof model; distinguish target-resolution work, clipping notices and defects;
+  5. **e-runner:** switch R and corpus together, reconnect topology cases, fix stale
+     DESIGN links, preserve format/precision/refusals and MONA boundaries. Q6 blocks
+     companion-specific support if needed;
+  6. **e-types:** implement the conservative N1 pattern table and review findings; no
+     open pattern-policy question. Rebuild/re-pin holdings after the catalog generation
+     changes and repeat comparison/conformance;
   7. **e-mock:** local-only gate, deterministic mocks over the final plan, explicit seed
-     and size; Q5 blocks the writer/dependency scope. No project-inventory loading or
-     project mocks until a real received-file input exists;
-  8. **e-release:** `reg_meta_swecov.db.zst` paired with `reg_meta.db.zst`, deployment
-     with `--catalog swecov`, scheduled real-artifact checks and the final comparison.
-     Stop using `build_catalog.py` and Python `extend-db`; F deletes them;
-  9. **e-spa:** the flows below, then the maintainer's real MONA order and E audit. The
-     existing suites remain the proof surface under the no-new-tests rule; use the
-     comparison script and boundary-harness adaptations, never another resolver oracle.
-     Heavy builds/comparisons and MONA execution are maintainer scheduled.
+     and size; Q5 blocks writers/dependencies. Stdio mcp exposes no mocks. Project
+     inventories/loading/mocks remain deferred;
+  8. **e-release:** paired `reg_meta_swecov.db.zst`/`reg_meta.db.zst`, with publication
+     clearance for included definitions, deployment `--catalog swecov`, scheduled checks
+     and final comparison. Stop using `build_catalog.py`/Python `extend-db`; F deletes
+     them;
+  9. **e-spa:** the flows below, then the maintainer's real MONA order and E audit.
+     Existing suites, comparison scripts and boundary-harness adaptations are the proof
+     surface; never add a second resolver oracle. Heavy runs remain scheduled.
 - **Deferred beyond E:** project-received inventories (`owner.kind = project` remains in
   the schema), project loading/`scope=project`/project mocks until a real input contract
   exists; companions unless the exit order establishes their need (Q6).
