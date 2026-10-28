@@ -256,7 +256,10 @@ spelling and type. A D `set` states those.
   `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
   occurrences; text runs and segments derive from those occurrences. `period` changes
   occurrence bounds or the addressed release's placement. `description` on tables and
-  releases stays on those entities. `sets` belongs to variables; typed curation
+  releases stays on those entities. `coverage` replaces a table's source bound and
+  requires a table selector and one contiguous period; it lives in the table's existing
+  bounds. The overridden source bound remains evidence and the review premise, so a
+  source-bound change reopens review. `sets` belongs to variables; typed curation
   decisions resolve to variable memberships. `notice` resolves to a finding on its
   selected subject. The emitter serializes these resolved facts and never derives them
   from provenance. Occurrence descriptions live in the existing `override` table and are
@@ -303,11 +306,10 @@ spelling and type. A D `set` states those.
   ambiguous segments. F5 is currently a notice, F6 a review; neither independently
   blocks orders. Notice acknowledgements annotate; there is currently no separate
   generic review-finding order blocker to suppress. F7 edition findings remain warnings.
-- `coverage` is applied in D-5 (EKB); `classification` and `tags` in D-9. Their fields
-  remain accepted syntax but application refuses with the owning work package.
-  Sentinels, roles and unit types remain deferred to D's planned sentinel and
-  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
-  entity-name and search curation.
+- `classification` and `tags` are applied in D-9. Their fields remain accepted syntax
+  but application refuses with the owning work package. Sentinels, roles and unit types
+  remain deferred to D's planned sentinel and nondefault-role/unit-type work. Entity
+  names and synonyms remain deferred to D's entity-name and search curation.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination

@@ -1,0 +1,20 @@
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: besdatum"
+fields = { "identifier" = false }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx#Metadata - Variabelnivå!6. The definition states a decision date, represented YYYYMMDD. The source linkage flag describes temporal proximity across decisions, not a personal identifier. Preserve the linkage description as evidence."
+
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: besdatum"
+fields = { "identifier" = false }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx#Metadata - Variabelnivå!21. The definition states a decision date, represented YYYYMMDD. The source linkage flag describes temporal proximity across decisions, not a personal identifier. Preserve the linkage description as evidence."
+
+
+[[statement]]
+kind = "assert"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: avslut"
+fact = { entity = "value-set", items = [{ code = "1", label = "ja" }, { code = "2", label = "överflyttning till annat LVM-hem." }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx#Metadata - Variabelnivå!41. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."

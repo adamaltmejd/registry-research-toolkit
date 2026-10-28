@@ -22,3 +22,43 @@ kind = "set"
 subject = "lmed: varutyp"
 fields = { "description" = "Varutyp.", "label" = "Varutyp" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+
+[[statement]]
+kind = "set"
+subject = "lmed-vara-lmed: fddd"
+fields = { "table" = "lmed" }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!139. FDDD counts the defined daily doses in an individual withdrawal (förpackningens DDD * antal), so it belongs with the expeditions in Deldatamängder!2, LMED. The combined VARA/LMED token is not a separately declared table."
+
+
+[[statement]]
+kind = "set"
+subject = "lmed: varunr"
+fields = { "identifier" = false }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!45. Kopplingsvariabel marks a product/code linkage, not a person identifier: the definition describes a drug classification code or item number. Preserve its source linkage evidence; do not classify the occurrence as a personal identifier."
+
+
+[[statement]]
+kind = "set"
+subject = "lmed-vara: atc"
+fields = { "identifier" = false }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!62. Kopplingsvariabel marks a product/code linkage, not a person identifier: the definition describes a drug classification code or item number. Preserve its source linkage evidence; do not classify the occurrence as a personal identifier."
+
+
+[[statement]]
+kind = "set"
+subject = "lmed-vara: varunr"
+fields = { "identifier" = false }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!136. Kopplingsvariabel marks a product/code linkage, not a person identifier: the definition describes a drug classification code or item number. Preserve its source linkage evidence; do not classify the occurrence as a personal identifier."
+
+[[statement]]
+kind = "set"
+subject = "lmed: kon"
+fields = { value_set = "fbb0272fd75f50f380f272c3dac045caa823d0d5eaad6e05cdf3e96ff4b7be81" }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!21. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list. The exact Man/Kvinna code list already exists in the SOL source workbook, Metadata - Variabelnivå!20."
+
+[[statement]]
+kind = "assert"
+subject = "lmed: transtyp"
+fact = { entity = "value-set", items = [{ code = "ERAD", label = "Förskrivning till dospatienter (=otyp 0,1,2,3,4)" }, { code = "OORR", label = "Vanlig förskrivning (=otyp A,H,L,R)" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!40. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."

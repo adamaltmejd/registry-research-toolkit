@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "assert"
+subject = "table:lss"
+fact = { entity = "table", fields = { name = "LSS", description = "Uppgifter om kommunalt beslutade och verkställda insatser enligt lagen (1993:387) om stöd och service till vissa funktionshindrade", coverage = "1992.." } }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser enligt lagen om stöd och service till vissa funktionshindrade (LSS)_webb.xlsx#Metadata-Datamängd (DCAT-AP) !2,3,4. The dataset documents the register, description and 1992-start coverage. Metadata - Variabelnivå!2-38 names LSS throughout; no tables sheet declares it. Assert only this documented table; occurrence bounds remain as stated."

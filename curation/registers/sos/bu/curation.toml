@@ -502,3 +502,87 @@ kind = "set"
 subject = "bu-barn-19602013: ffodland_kod"
 fields = { "format" = "Uppgifter hämtas från Registret för totalbefolkningen , RTB , Statistiska centralbyrån                                                                                                                                    Se även Skatteverkets kodverk för landskoder https://www.skatteverket.se/landskoder" }
 evidence = "reg_meta_build/curation/registers/sos/bu.toml:496\n\nTwo supplied BU rows share the exact native field, table and period. Their description differs only by terminal punctuation; their reference prose differs only by the already supplied Skatteverket country-code URL. Select the fuller existing source literals after guarding both complete original alternatives. Retain both physical rows, original classification declaration, every source cell and all coding facts; no country-code list or modern edition is substituted. Proof Batch48-BU-FFODLAND-source-alternatives-proof.json."
+
+[[statement]]
+kind = "assert"
+subject = "bu-barn-19602013: pnrq"
+fact = { entity = "value-set", items = [{ code = "0", label = "giltigt pnr" }, { code = "8", label = "Ogiltigt pnr" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!4. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "assert"
+subject = "bu-barn-endastxnr: pnrq"
+fact = { entity = "value-set", items = [{ code = "8", label = "Ogiltigt pnr" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!20. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "assert"
+subject = "bu-barn-pnrq0: pnrq"
+fact = { entity = "value-set", items = [{ code = "0", label = "giltigt pnr" }, { code = "4", label = "samordningsnummer" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!26. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "assert"
+subject = "bu-insats: pnrq"
+fact = { entity = "value-set", items = [{ code = "0", label = "giltigt pnr" }, { code = "4", label = "samordningsnummer" }, { code = "8", label = "ogiltigt pnr" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!42. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-19602013: pnrq"
+fields = { value_set = "8b7b24951b1852c1a2e8294372647f667510ffdfb900ccd5534681ed1bc513fa" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!61. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "assert"
+subject = "bu-insats-19602013: vartbarn"
+fact = { entity = "value-set", items = [{ code = "01", label = "till moder" }, { code = "02", label = "till fader" }, { code = "03", label = "till båda föräldrarna" }, { code = "04", label = "till eget boende" }, { code = "05", label = "vård enlig SoL" }, { code = "06", label = "vård enligt LVU" }, { code = "07", label = "kvar i familjehemmet, vårdnad överflyttad till familjehemmet" }, { code = "08", label = "kvar i familjehemmet, adopterad av familjehemsföräldrana" }, { code = "09", label = "vårdplacering enligt SoL" }, { code = "10", label = "annat" }, { code = "11", label = "Uppgift saknas" }] }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!73. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: pnrq"
+fields = { value_set = "7e2ef23eef682cdc276fad85d609878ff433d67bfc66c5ea2a078f40483d6659" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!76. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: vartbarn"
+fields = { value_set = "4417c79b364dc44f7cdedc9da899352316a1c266245c10da299a2d9eba6f2dcb" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!89. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: pnrq"
+fields = { value_set = "db864fff94aabf1c766453d38085ae4050f27ecadf7a1f1b956ad315ff46154b" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!91. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: vartbarn"
+fields = { value_set = "4417c79b364dc44f7cdedc9da899352316a1c266245c10da299a2d9eba6f2dcb" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!104. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac: pnrq"
+fields = { value_set = "bcafdfbe6f9f39cd546f0ba9437403fc8bd4b451580483a5024a72d6fc8ac0cf" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!107. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-19602013: pnrq"
+fields = { value_set = "8b7b24951b1852c1a2e8294372647f667510ffdfb900ccd5534681ed1bc513fa" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!120. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-endastxnr: pnrq"
+fields = { value_set = "7e2ef23eef682cdc276fad85d609878ff433d67bfc66c5ea2a078f40483d6659" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!131. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-pnrq0: pnrq"
+fields = { value_set = "db864fff94aabf1c766453d38085ae4050f27ecadf7a1f1b956ad315ff46154b" }
+evidence = "catalog/source/Socialstyrelsen/Metadata_Insatser till barn och unga (BU)_webb.xlsx#Metadata - Variabelnivå!142. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
