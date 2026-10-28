@@ -453,13 +453,14 @@ overlapping curated overrides are refused at both locations.
   its occurrences disagree on label, type family or value set, except a family-only
   disagreement under one source key and one folded spelling. That exception leaves dtype
   unset and emits one `F6:source-conflict` review per segment for a D `set`, including
-  when case also differs. Within one family the published dtype is the lexically
-  greatest stated dtype (the frame's aliases carry no intrinsic width); the published
-  length is the greatest stated length. No length is invented. Adjacent agreeing
-  segments join with the same widest-form rule. Labels compare ignoring case and
-  spacing; label and value-set disagreements still block. Another variable claiming its
-  folded spelling in any overlap still makes the whole segment ambiguous, including an
-  exempt segment.
+  when case also differs. A family disagreement keeps a stated length only when all
+  stating occurrences agree, and joins adjacent segments only when their lengths agree.
+  Within one family the published dtype is the lexically greatest stated dtype (the
+  frame's aliases carry no intrinsic width); the published length is the greatest stated
+  length. No length is invented. Adjacent agreeing segments join with the same
+  widest-form rule. Labels compare ignoring case and spacing; label and value-set
+  disagreements still block. Another variable claiming its folded spelling in any
+  overlap still makes the whole segment ambiguous, including an exempt segment.
 - **The implicit table** takes its register's id, so `ident` holds that id once, as the
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps

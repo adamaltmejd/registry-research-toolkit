@@ -934,6 +934,7 @@ pub fn resolve(
                 }
             }
             let mut runs: Vec<Segment> = Vec::new();
+            let mut last_same_family = true;
             for (period, covering) in components {
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
@@ -984,10 +985,21 @@ pub fn resolve(
                     .map(|&i| &resolved[i].occurrence)
                     .filter(|o| o.dtype.is_some())
                     .max_by_key(|o| &o.dtype);
-                let length = covering
+                let lengths: BTreeSet<i64> = covering
                     .iter()
                     .filter_map(|&i| resolved[i].occurrence.length)
-                    .max();
+                    .collect();
+                let same_family = forms
+                    .iter()
+                    .map(|f| &f.dtype)
+                    .collect::<BTreeSet<_>>()
+                    .len()
+                    == 1;
+                let length = if same_family || lengths.len() == 1 {
+                    lengths.last().copied()
+                } else {
+                    None
+                };
                 let segment = Segment {
                     table: t,
                     period,
@@ -1005,15 +1017,19 @@ pub fn resolve(
                 let index = match runs.last_mut() {
                     Some(prev)
                         if next_iso_day(&prev.period.1) == segment.period.0
-                            && same_form(prev, &segment) =>
+                            && same_form(prev, &segment)
+                            && ((same_family && last_same_family)
+                                || prev.length == segment.length) =>
                     {
                         prev.period.1 = segment.period.1;
                         prev.spelling = segment.spelling;
                         prev.dtype = prev.dtype.take().max(segment.dtype);
                         prev.length = prev.length.max(segment.length);
+                        last_same_family &= same_family;
                         runs.len() - 1
                     }
                     _ => {
+                        last_same_family = same_family;
                         runs.push(segment);
                         runs.len() - 1
                     }
