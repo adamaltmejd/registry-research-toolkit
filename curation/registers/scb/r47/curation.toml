@@ -642,3 +642,1467 @@ kind = "set"
 subject = "grundutbildning-1977: ar"
 fields = { "description" = "År" }
 evidence = "reg_meta_build/curation/registers/scb/hreg.toml:325\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5159'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5159'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5157'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5158'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5157'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5158'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r3716'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5155'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r3716'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5155'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5154'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r927'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5154'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r927'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r1550'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5152'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r1550'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5152'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r2621'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5150'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r2621'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5150'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r3279'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5147'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r3279'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5147'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r3706'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5120'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r3706'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5120'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16418'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16418'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r4340'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r4928'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r4340'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r4928'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16417'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16417'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5102'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5269'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5102'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5269'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16416'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16416'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5594'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5594'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16415'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16415'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r5768'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r6179'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r5768'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r6179'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16414'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16414'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r11137'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r9855'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r11137'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r9855'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16413'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16413'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r11142'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r11272'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r11142'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r11272'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16412'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16412'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r12583'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r12948'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r12583'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r12948'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16411'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16411'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r13625'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r13626'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r13625'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r13626'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16409'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16409'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r14377'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r15066'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r14377'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r15066'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r16401'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r16401'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r16168'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r17701'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r16168'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r17701'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r17719'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r17719'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r18256'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r18422'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r18256'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r18422'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r18424'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r18424'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r18714'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r18914'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r18714'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r18914'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r18913'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r18913'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r19151'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r19453'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r19151'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r19453'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: kommun where key = 'v1311' and release = 'r19451'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: lan where key = 'v1312' and release = 'r19451'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r19866'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: kommun where key = 'v1311' and release = 'r20145'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r19866'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: lan where key = 'v1312' and release = 'r20145'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r1550'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r3716'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r5154'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r5155'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r5157'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r5158'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r5159'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v1315' and release = 'r927'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: suninr where key = 'v65' and release = 'r19804'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: suninr1 where key = 'v65' and release = 'r19804'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: suninr2 where key = 'v65' and release = 'r19804'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: suninr3 where key = 'v65' and release = 'r19804'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: suninr where key = 'v65' and release = 'r19802'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: suninr1 where key = 'v65' and release = 'r19802'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: suninr2 where key = 'v65' and release = 'r19802'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: suninr3 where key = 'v65' and release = 'r19802'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: suninr where key = 'v65' and release = 'r19805'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: suninr1 where key = 'v65' and release = 'r19805'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: suninr2 where key = 'v65' and release = 'r19805'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: suninr3 where key = 'v65' and release = 'r19805'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: suninr where key = 'v65' and release = 'r19806'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: suninr1 where key = 'v65' and release = 'r19806'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: suninr2 where key = 'v65' and release = 'r19806'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: suninr3 where key = 'v65' and release = 'r19806'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-examina: suninr3 where key = 'v65' and release = 'r20158'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r11137'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r11142'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r11272'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r12583'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r12948'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r13625'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r13626'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r14377'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r15066'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r16168'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r17701'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r18256'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r18422'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r18714'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r18914'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r19151'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r19453'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r19866'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r20145'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r2621'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r3279'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r3706'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r4340'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r4928'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5102'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5120'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5147'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5150'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5152'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5269'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5594'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r5768'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r6179'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: suninr3 where key = 'v65' and release = 'r9855'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16401'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16409'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16411'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16412'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16413'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16414'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16415'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16416'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16417'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r16418'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r17719'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r18424'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r18913'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: suninr3 where key = 'v65' and release = 'r19451'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r1550'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r3716'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r5154'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r5155'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r5157'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r5158'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r5159'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v1316' and release = 'r927'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: sunniva where key = 'v66' and release = 'r19805'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: sunniva1 where key = 'v66' and release = 'r19805'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: sunniva2 where key = 'v66' and release = 'r19805'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r11137'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r11142'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r11272'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r12583'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r12948'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r13625'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r13626'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r14377'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r15066'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r16168'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r17701'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r18256'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r18422'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r18714'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r18914'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r19151'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r19453'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r19866'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r20145'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r2621'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r3279'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r3706'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r4340'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r4928'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5102'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5120'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5147'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5150'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5152'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5269'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5594'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r5768'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r6179'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: sunniva3 where key = 'v66' and release = 'r9855'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16401'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16409'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16411'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16412'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16413'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16414'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16415'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16416'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16417'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r16418'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r17719'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r18424'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r18913'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: sunniva3 where key = 'v66' and release = 'r19451'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"

@@ -373,3 +373,693 @@ kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: peorgnrram @2011-04-01..2012-12-31,2014..2015"
 fields = { "description" = "Organisationsnummer" }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r563'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r1586'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r1636'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r3774'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r3776'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: astlan where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjulan where key = 'v49' and release = 'r11393'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98 where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98t where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lan98u where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lanf where key = 'v49' and release = 'r3777'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r1586'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r1636'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r3774'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r3776'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r3777'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: inst where key = 'v33' and release = 'r563'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r1586'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r1636'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r563'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98 where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98 where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98n where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98n where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98t where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98t where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98u where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98u where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98x where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bgr98x where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r3774'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v15169' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: bransch where key = 'v4027' and release = 'r11393'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r11393'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12636'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12639'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12640'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12641'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12793'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r12970'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r13382'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r14524'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r16440'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r18253'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjusni where key = 'v4027' and release = 'r18751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: lgrp where key = 'v4027' and release = 'r3774'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r11393'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r12636'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r12639'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r12640'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r12641'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: nggr1 where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: nggr1 where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: nggr2 where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: nggr2 where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngrp where key = 'v15149' and release = 'r3774'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngrp where key = 'v15149' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r12641'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r12793'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r12969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r12970'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r13382'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r14524'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r16440'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r18253'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r18751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r11393'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12636'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12639'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12640'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12641'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12793'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r12970'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r13382'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r14524'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r16440'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r18253'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r18751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r3774'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r3776'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v15149' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:37\n\nLegacy exact value-set label: Näringsgrupp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: snigrupp where key = 'v4027' and release = 'r3777'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"

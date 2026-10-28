@@ -5,3 +5,609 @@ subject = "var:riksnyckel"
 fields = { "sets" = ["legacy-riksnyckel"] }
 evidence = "reg_meta_build/curation/registers/scb/gdb.toml:120\nreg_meta_build/curation/registers/scb/gdb.toml:127\nreg_meta_build/curation/registers/scb/gdb.toml:139\nreg_meta_build/curation/registers/scb/gdb.toml:151\nreg_meta_build/curation/registers/scb/gdb.toml:163\nreg_meta_build/curation/registers/scb/gdb.toml:175\nreg_meta_build/curation/registers/scb/gdb.toml:187\nreg_meta_build/curation/registers/scb/gdb.toml:199\nreg_meta_build/curation/registers/scb/gdb.toml:211\nreg_meta_build/curation/registers/scb/gdb.toml:223\nreg_meta_build/curation/registers/scb/gdb.toml:235\nreg_meta_build/curation/registers/scb/gdb.toml:247\n\nComplete source-native address-key family: both simultaneously supplied columns have the identical source member and definition Officiell identitet för adress. Keep both physical encodings and original widths through checked per-column co-delivery; no equal observed values or corrected widths are asserted. Batch52-domain42b-role-review.json.\n\nExact source member simultaneously declares both physical address-ID forms with identical definition and empty coding, but different text widths. Preserve metadata on each column; do not change widths or claim equality of stored values. Full physical peer census confirms no competing native owner at these exact points."
 caveat = "The source simultaneously supplies two representations of the same declared address-key member, with text widths10 and4. Both original fields and widths are retained; the common width remains unknown."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r11244'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r160'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r2341'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r2346'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r2419'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r262'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r2793'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r310'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r312'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r3687'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r4258'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r4658'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r5462'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r6059'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: fs_20000101 where key = 'v577' and release = 'r8571'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r312'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r312'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r312'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r310'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r310'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r310'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r160'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r160'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r160'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r262'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r262'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r262'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r4664'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r4664'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r4664'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r2341'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r2341'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r2341'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r2346'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r2346'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r2346'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r2477'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r2478'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r2477'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r2478'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r2477'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r2478'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r2419'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r2419'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r2419'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r3043'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r3043'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r3043'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r2793'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r2793'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r2793'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r3787'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r3787'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r3787'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r3687'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r3687'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r3687'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r4263'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r4263'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r4263'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r4258'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r4258'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r4258'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r4663'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r4663'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r4663'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r4658'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r4658'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r4658'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r5789'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r5789'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r5789'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r5462'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r5462'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r5462'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: forsamling where key = 'v31' and release = 'r6060'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r6060'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r6060'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling where key = 'v31' and release = 'r6059'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r6059'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r6059'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r8596'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r8596'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r8571'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r8571'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: kommun where key = 'v36' and release = 'r11241'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser: lan where key = 'v49' and release = 'r11241'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun where key = 'v36' and release = 'r11244'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: lan where key = 'v49' and release = 'r11244'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r13392'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r13392'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r13681'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r13681'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r14482'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r14482'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r16395'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r16395'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r18793'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r18793'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: kommun where key = 'v36' and release = 'r18792'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: lan where key = 'v49' and release = 'r18792'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"

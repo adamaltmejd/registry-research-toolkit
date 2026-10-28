@@ -1918,3 +1918,1005 @@ kind = "set"
 subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r5796'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: makebost where key = 'v39851' and release = 'r13632'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tnlan where key = 'v39966' and release = 'r13817'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5811'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5815'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5820'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5822'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5847'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r2771'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r3442'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5796'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r3446'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r3720'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r4067'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r4306'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r4346'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r4978'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5226'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5521'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r5626'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r6156'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r7298'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r9811'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r9969'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kommun where key = 'v36' and release = 'r9811'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kommun where key = 'v36' and release = 'r9969'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r11480'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r11663'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r12573'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r13443'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r13544'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r13744'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r15780'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r15811'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r17695'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r17939'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r18513'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r18529'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r18903'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r18994'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r19421'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r19675'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r20144'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fodelselan where key = 'v256' and release = 'r20241'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r13459'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r13632'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r13817'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r15119'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r15130'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kusni where key = 'v21073' and release = 'r15150'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sni where key = 'v2702' and release = 'r13459'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sni where key = 'v2702' and release = 'r13632'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sni where key = 'v2702' and release = 'r13817'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sni where key = 'v2702' and release = 'r14485'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v21073' and release = 'r13388'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v21073' and release = 'r13457'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v21073' and release = 'r13458'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v21073' and release = 'r8651'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13388'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13457'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13458'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5847'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5889'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5893'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r8651'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5847'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5889'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5893'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r8651'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5796'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5811'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5815'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5820'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5796'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5811'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5815'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5820'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5822'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r11480'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r11663'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r12573'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r13443'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r13544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r13744'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r9811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bkungr where key = 'v2702' and release = 'r9969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r11480'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r11663'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r12573'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13443'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r13744'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r15780'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r15811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r17695'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r17939'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r18513'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r18529'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r18903'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r18994'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r19421'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r19675'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r20144'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r20241'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r2771'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r3442'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r3446'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r3720'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r4067'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r4306'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r4346'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r4978'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5226'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5521'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r5626'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r9811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngr where key = 'v2702' and release = 'r9969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r15780'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r15811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r17695'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r17939'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r18513'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r18529'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r18903'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r18994'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r19421'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r19675'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r20144'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngra where key = 'v2702' and release = 'r20241'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r11480'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r11663'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r12573'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r13443'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r13544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r13744'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r15780'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r15811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r17695'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r17939'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r18513'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r18529'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r18903'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r18994'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r19421'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r19675'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r20144'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r20241'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r2771'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r3442'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r3446'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r3720'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r4067'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r4306'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r4346'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r4978'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5226'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5521'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r5626'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r9811'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bngre where key = 'v2698' and release = 'r9969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r13268'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r13388'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r13457'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r13458'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r8651'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bsun where key = 'v8189' and release = 'r9926'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: utbildn where key = 'v8189' and release = 'r13459'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: utbildn where key = 'v8189' and release = 'r13632'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"

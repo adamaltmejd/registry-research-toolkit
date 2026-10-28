@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-lokaler: lan where key = 'v49' and release = 'r2805'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-lokaler: lan where key = 'v49' and release = 'r2844'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"

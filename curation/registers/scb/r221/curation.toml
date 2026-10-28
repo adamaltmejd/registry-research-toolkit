@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "arbetsplatsomraden-utanfor-tatort: <none> where key = 'v36' and release = 'r370'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsplatsomraden-utanfor-tatort: <none> where key = 'v36' and release = 'r3725'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsplatsomraden-utanfor-tatort: <none> where key = 'v15169' and release = 'r370'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsplatsomraden-utanfor-tatort: <none> where key = 'v15169' and release = 'r3725'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"

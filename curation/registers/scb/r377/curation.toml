@@ -26,3 +26,1425 @@ subject = "var:studielannamn-utb"
 relation = "label_of"
 object = "scb/yrkeshogskolan/studielan-utb"
 evidence = "reg_meta_build/curation/registers/scb/yrkeshogskolan.toml:20\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13794'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13793'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13792'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13791'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13790'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13789'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13788'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13787'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13786'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13742'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13741'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13740'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13739'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r13737'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r15749'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r16348'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: kommun where key = 'v6809' and release = 'r16340'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r18163'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_senaste_kod where key = 'v42960' and release = 'r18163'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_start_kod where key = 'v42434' and release = 'r18163'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: kommun where key = 'v6809' and release = 'r18164'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r20162'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_senaste_kod where key = 'v42960' and release = 'r20162'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_start_kod where key = 'v42434' and release = 'r20162'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: kommun where key = 'v6809' and release = 'r20111'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r20167'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_senaste_kod where key = 'v42960' and release = 'r20167'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_start_kod where key = 'v42434' and release = 'r20167'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: kommun where key = 'v6809' and release = 'r20112'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: kommun where key = 'v36' and release = 'r20191'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_senaste_kod where key = 'v42960' and release = 'r20191'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: studiekommun_start_kod where key = 'v42434' and release = 'r20191'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: kommun where key = 'v6809' and release = 'r20113'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov where key = 'v66' and release = 'r14093'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov_2014 where key = 'v66' and release = 'r13145'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov_2015 where key = 'v66' and release = 'r13144'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov_2016 where key = 'v66' and release = 'r13143'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov_2017 where key = 'v66' and release = 'r12494'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_grov_2018 where key = 'v66' and release = 'r13142'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_grov where key = 'v66' and release = 'r16340'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_grov where key = 'v66' and release = 'r18164'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_grov where key = 'v66' and release = 'r20111'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_grov where key = 'v66' and release = 'r20112'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_grov where key = 'v66' and release = 'r20113'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old where key = 'v66' and release = 'r14093'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old_2014 where key = 'v66' and release = 'r13145'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old_2015 where key = 'v66' and release = 'r13144'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old_2016 where key = 'v66' and release = 'r13143'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old_2017 where key = 'v66' and release = 'r12494'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva_old_2018 where key = 'v66' and release = 'r13142'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_old where key = 'v66' and release = 'r16340'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_old where key = 'v66' and release = 'r18164'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_old where key = 'v66' and release = 'r20111'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_old where key = 'v66' and release = 'r20112'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva_old where key = 'v66' and release = 'r20113'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020niva_old where key = 'v66' and release = 'r20172'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020niva_old_far where key = 'v8074' and release = 'r20172'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020niva_old_for where key = 'v32454' and release = 'r20172'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020niva_old_mor where key = 'v8073' and release = 'r20172'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13737'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13739'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13740'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13741'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13742'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13786'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13787'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13788'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13789'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13790'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13791'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13792'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13793'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r13794'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old where key = 'v66' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13737'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13739'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13740'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13741'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13742'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13786'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13787'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13788'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13789'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13790'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13791'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13792'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13793'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r13794'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_far where key = 'v8074' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13737'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13739'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13740'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13741'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13742'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13786'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13787'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13788'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13789'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13790'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13791'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13792'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13793'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r13794'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_for where key = 'v32454' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13737'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13739'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13740'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13741'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13742'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13786'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13787'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13788'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13789'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13790'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13791'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13792'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13793'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r13794'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_old_mor where key = 'v8073' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r15749'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r16348'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r18163'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r20162'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r20167'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old where key = 'v66' and release = 'r20191'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r15749'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r16348'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r18163'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r20162'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r20167'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_far where key = 'v8074' and release = 'r20191'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r15749'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r16348'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r18163'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r20162'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r20167'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_for where key = 'v32454' and release = 'r20191'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r15749'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r16348'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r18163'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r20121'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r20162'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r20167'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva_old_mor where key = 'v8073' and release = 'r20191'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13737'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13739'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13740'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13741'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13742'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13786'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13787'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13788'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13789'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13790'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13791'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13792'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13793'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r13794'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r15749'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r16348'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r18163'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r20121'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r20162'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r20167'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000inr where key = 'v65' and release = 'r20191'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020inr where key = 'v65' and release = 'r20172'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun1inr_utb where key = 'v49913' and release = 'r20121'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r15749'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r16348'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r18163'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r20121'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r20162'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r20167'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020inr where key = 'v65' and release = 'r20191'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun4inr_utb where key = 'v49913' and release = 'r20121'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r14093'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2000niva where key = 'v66' and release = 'r14093'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13737'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13739'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13740'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13741'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13742'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13786'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13787'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13788'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13789'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13790'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13791'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13792'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13793'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r13794'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2000niva where key = 'v30348' and release = 'r20121'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r13737'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r13739'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r13740'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r13741'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r13742'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva where key = 'v66' and release = 'r20121'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13786'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13787'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13788'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13789'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13790'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13791'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13792'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13793'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2000niva_1 where key = 'v66' and release = 'r13794'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r16340'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r18164'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20111'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20112'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20113'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva where key = 'v66' and release = 'r16340'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva where key = 'v66' and release = 'r18164'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva where key = 'v66' and release = 'r20111'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva where key = 'v66' and release = 'r20112'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "sokande: sun2020niva where key = 'v66' and release = 'r20113'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20172'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: sun2020niva where key = 'v66' and release = 'r20172'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r15749'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r16348'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r18163'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20121'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20162'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20167'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: gymnasiebakgrund_sun2020niva where key = 'v30348' and release = 'r20191'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r15749'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r16348'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r18163'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r20121'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r20162'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r20167'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun2020niva where key = 'v66' and release = 'r20191'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: sun3niva_utb_beraknad where key = 'v49784' and release = 'r20121'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"

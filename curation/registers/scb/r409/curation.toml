@@ -1,0 +1,90 @@
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: agkat where key = 'v74' and release = 'r19001'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: agkat where key = 'v74' and release = 'r19635'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: agkat where key = 'v74' and release = 'r19933'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: jurform where key = 'v34' and release = 'r19001'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: jurform where key = 'v34' and release = 'r19635'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: jurform where key = 'v34' and release = 'r19933'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: lansate where key = 'v1058' and release = 'r19001'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: sateskommun where key = 'v1054' and release = 'r19001'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: lansate where key = 'v1058' and release = 'r19635'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: sateskommun where key = 'v1054' and release = 'r19635'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: lansate where key = 'v1058' and release = 'r19933'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: sateskommun where key = 'v1054' and release = 'r19933'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: ng1 where key = 'v41711' and release = 'r19001'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: ng1 where key = 'v41711' and release = 'r19635'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: ng1 where key = 'v41711' and release = 'r19933'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"

@@ -76,3 +76,879 @@ kind = "set"
 subject = "lonestrukturstatistik-regioner: tjlom @2003..2011"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/slr.toml:273\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's own definition reads 'Tjänstledighetens omfattning, 0 - 100 procent', and SCB documents the same native variable with Mattenhet Procent in its 2012-2024 editions. Replace it with Procent; no value or scale is converted."
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1569'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1568'"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1557'"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1556'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1553'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1552'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1551'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1541'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r207'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1088'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1380'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r1381'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r2169'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r2875'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r3563'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r4136'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r4677'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r5346'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r6038'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r7525'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r11166'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r11907'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r13128'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r14479'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r16353'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r18202'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r18742'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r19216'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: lan where key = 'v49' and release = 'r19908'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r1088'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r11166'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r11907'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r13128'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r1380'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r1381'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r207'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r2169'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r2875'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r3563'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r4136'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r4677'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r5346'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r6038'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva_old where key = 'v5726' and release = 'r7525'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r14479'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r16353'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r18202'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r18742'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r19216'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020niva_old where key = 'v5726' and release = 'r19908'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r11907'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r13128'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r14479'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r16353'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r18202'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r18742'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r19216'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sni2007 where key = 'v4027' and release = 'r19908'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1541'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1551'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1552'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1553'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1556'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1557'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r1568'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk where key = 'v511' and release = 'r207'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r1088'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r1380'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r1381'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r2169'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r2875'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r3563'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r4136'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r4677'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r5346'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r11166'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r11907'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r13128'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r14479'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r16353'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r18202'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r18742'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r19216'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v120' and release = 'r19908'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r6038'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: ssyk4 where key = 'v511' and release = 'r7525'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000grp where key = 'v6416' and release = 'r16353'"
+fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000grp where key = 'v6416' and release = 'r18202'"
+fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020grp where key = 'v6416' and release = 'r18742'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020grp where key = 'v6416' and release = 'r19216'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020grp where key = 'v6416' and release = 'r19908'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1088'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r11166'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r11907'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r13128'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1380'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1381'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r14479'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1541'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1551'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r1552'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r207'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r2169'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r2875'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r3563'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r4136'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r4677'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r5346'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r6038'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr where key = 'v65' and release = 'r7525'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r1088'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r11166'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r11907'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r13128'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r1380'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r1381'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r14479'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r207'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r2169'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r2875'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r3563'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r4136'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r4677'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r5346'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r6038'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000inr1 where key = 'v65' and release = 'r7525'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr where key = 'v65' and release = 'r16353'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr where key = 'v65' and release = 'r18202'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr where key = 'v65' and release = 'r18742'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr where key = 'v65' and release = 'r19216'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr where key = 'v65' and release = 'r19908'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr1 where key = 'v65' and release = 'r16353'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr1 where key = 'v65' and release = 'r18202'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr1 where key = 'v65' and release = 'r18742'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr1 where key = 'v65' and release = 'r19216'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2020inr1 where key = 'v65' and release = 'r19908'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva where key = 'v5726' and release = 'r1541'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva where key = 'v5726' and release = 'r1551'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun2000niva where key = 'v5726' and release = 'r1552'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun where key = 'v17366' and release = 'r1557'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun where key = 'v17366' and release = 'r1568'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun where key = 'v17366' and release = 'r1569'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun96fem where key = 'v17366' and release = 'r1553'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun96fem where key = 'v17366' and release = 'r1556'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun96tre where key = 'v17366' and release = 'r1553'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: sun96tre where key = 'v17366' and release = 'r1556'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"

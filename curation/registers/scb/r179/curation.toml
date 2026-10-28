@@ -1,0 +1,270 @@
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12181'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12188'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12189'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12190'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12191'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12193'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12194'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r12196'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r14477'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r14478'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r14486'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r16374'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r18204'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r18754'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ng1 where key = 'v4027' and release = 'r19222'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12181'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12188'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12189'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12190'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12191'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12193'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12194'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r12196'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r14477'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r14478'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r14486'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r16374'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r18204'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r18754'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1 where key = 'v19052' and release = 'r19222'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12181'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12188'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12189'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12190'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12191'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12193'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12194'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r12196'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r14477'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r14478'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r14486'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r16374'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r18204'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r18754'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: ngs1ng1 where key = 'v8161' and release = 'r19222'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

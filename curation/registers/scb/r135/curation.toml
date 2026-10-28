@@ -52,3 +52,627 @@ kind = "set"
 subject = "industrins-varuproduktion: totkvant"
 fields = { "description" = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag." }
 evidence = "reg_meta_build/curation/registers/scb/ivp.toml:43\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v1641' and release = 'r328'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r1518'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3271'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3272'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3273'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3274'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r1518'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r3271'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r3272'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r1518'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3271'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3272'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3273'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3274'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r11252'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r11892'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r13391'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r14544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r16445'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r18197'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r18778'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r19291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r19976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r2705'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:43\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007, IVP2008"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r3098'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r3497'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r4154'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r4710'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r5383'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r6046'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asngnr where key = 'v1853' and release = 'r7539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r11252'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r11892'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r13391'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r14544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r16445'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r18197'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r18778'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r19291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r19976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r2705'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3098'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r3497'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r4154'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r4710'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r5383'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r6046'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v4027' and release = 'r7539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r11252'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r11892'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r13391'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r14544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r16445'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r18197'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r18778'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r19291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r19976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r2705'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:43\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007, IVP2008"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r3098'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r3497'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r4154'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r4710'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r5383'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r6046'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengnr where key = 'v1853' and release = 'r7539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r11252'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r11892'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r13391'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r14544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r16445'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r18197'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r18778'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r19291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r19976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r2705'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r3098'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r3497'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r4154'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r4710'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r5383'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r6046'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs where key = 'v4027' and release = 'r7539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r11252'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r11892'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r13391'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r14544'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r16445'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r18197'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r18778'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r19291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r19976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r2705'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3098'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r3497'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r4154'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r4710'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r5383'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r6046'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vsni where key = 'v4027' and release = 'r7539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1 where key = 'v19053' and release = 'r17601'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1 where key = 'v19053' and release = 'r18195'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1 where key = 'v19053' and release = 'r18779'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1 where key = 'v19053' and release = 'r19290'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1 where key = 'v19053' and release = 'r19975'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

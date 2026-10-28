@@ -1180,3 +1180,45 @@ kind = "set"
 subject = "distansundervisning-grundskola: vt_veckor_termin"
 fields = { "description" = "Terminens längd" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukskoterskor-utanfor-yrket: astkommun where key = 'v667' and release = 'r11815'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "doktorsexaminerades-villkor: kommun where key = 'v36' and release = 'r13104'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "doktorsexaminerades-villkor: lan where key = 'v49' and release = 'r13104'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: ssyk_4siffer where key = 'v23477' and release = 'r11797'"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
+
+[[statement]]
+kind = "set"
+subject = "lararforsorjningen-icke-aktiva: sun2000inr where key = 'v1545' and release = 'r14760'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:26\n\nLegacy exact value-set label: SUN2000Inriktning"
+
+[[statement]]
+kind = "set"
+subject = "internationell-rorlighet: sun2000niva where key = 'v66' and release = 'r11264'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "lararforsorjningen-icke-aktiva: sun2000niva where key = 'v15053' and release = 'r14760'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:47\n\nLegacy exact value-set label: SUN2000Niva"

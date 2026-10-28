@@ -1,0 +1,42 @@
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r19907'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20127'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20128'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20129'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20130'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20131'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "riksbankens-kreditdatabas-krita: legalform where key = 'v49713' and release = 'r20132'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"

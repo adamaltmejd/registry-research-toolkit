@@ -4,3 +4,81 @@ kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni @2003,2005..2007"
 fields = { "coded" = false }
 evidence = "reg_meta_build/curation/registers/scb/lastbilstrafik.toml:67\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: kommun where key = 'v36' and release = 'r1377'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: kommun where key = 'v36' and release = 'r1376'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: kommun where key = 'v36' and release = 'r1375'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: kommun where key = 'v36' and release = 'r1374'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: vv_kommun where key = 'v36' and release = 'r1373'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: vv_kommun where key = 'v36' and release = 'r203'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: vv_kommun where key = 'v36' and release = 'r354'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: vv_kommun where key = 'v36' and release = 'r696'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: vv_kommun where key = 'v36' and release = 'r1099'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni where key = 'v4027' and release = 'r1375'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni where key = 'v4027' and release = 'r1376'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni where key = 'v4027' and release = 'r1377'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni where key = 'v4027' and release = 'r1373'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"

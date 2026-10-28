@@ -1,0 +1,996 @@
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: agkat where key = 'v74' and release = 'r19019'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: agkat where key = 'v74' and release = 'r19053'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: agkat where key = 'v74' and release = 'r19054'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: agkat where key = 'v74' and release = 'r19572'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: agkat where key = 'v74' and release = 'r20164'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: agkat where key = 'v74' and release = 'r19017'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: agkat where key = 'v74' and release = 'r19055'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: agkat where key = 'v74' and release = 'r19056'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: agkat where key = 'v74' and release = 'r19573'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: agkat where key = 'v74' and release = 'r20163'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: agkat where key = 'v74' and release = 'r18938'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: agkat where key = 'v74' and release = 'r18943'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: agkat where key = 'v74' and release = 'r18944'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: agkat where key = 'v74' and release = 'r19494'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: agkat where key = 'v74' and release = 'r20165'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r18744'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r18762'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r18763'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r18764'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r19156'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: agkat where key = 'v74' and release = 'r19797'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: agkat where key = 'v74' and release = 'r18926'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: agkat where key = 'v74' and release = 'r18941'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: agkat where key = 'v74' and release = 'r18942'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: agkat where key = 'v74' and release = 'r19493'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: agkat where key = 'v74' and release = 'r20166'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: jurform where key = 'v34' and release = 'r18941'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jurform where key = 'v34' and release = 'r19019'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jurform where key = 'v34' and release = 'r19053'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jurform where key = 'v34' and release = 'r19054'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jurform where key = 'v34' and release = 'r19572'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jurform where key = 'v34' and release = 'r20164'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: jurform where key = 'v34' and release = 'r19017'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: jurform where key = 'v34' and release = 'r19055'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: jurform where key = 'v34' and release = 'r19056'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: jurform where key = 'v34' and release = 'r19573'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: jurform where key = 'v34' and release = 'r20163'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: jurform where key = 'v34' and release = 'r18938'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: jurform where key = 'v34' and release = 'r18943'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: jurform where key = 'v34' and release = 'r18944'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: jurform where key = 'v34' and release = 'r19494'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: jurform where key = 'v34' and release = 'r20165'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r18744'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r18762'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r18763'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r18764'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r19156'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: jurform where key = 'v34' and release = 'r19797'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: jurform where key = 'v34' and release = 'r18926'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: jurform where key = 'v34' and release = 'r18942'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: jurform where key = 'v34' and release = 'r19493'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: jurform where key = 'v34' and release = 'r20166'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astkommun where key = 'v667' and release = 'r19019'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astkommun where key = 'v667' and release = 'r19017'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: kommun where key = 'v36' and release = 'r19017'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astkommun where key = 'v667' and release = 'r18944'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: kommun where key = 'v36' and release = 'r18944'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: lan where key = 'v49' and release = 'r18944'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r18764'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r18764'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r18764'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astkommun where key = 'v667' and release = 'r18942'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: kommun where key = 'v36' and release = 'r18942'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: lan where key = 'v49' and release = 'r18942'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astkommun where key = 'v667' and release = 'r19053'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astkommun where key = 'v667' and release = 'r19055'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: kommun where key = 'v36' and release = 'r19055'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astkommun where key = 'v667' and release = 'r18943'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: kommun where key = 'v36' and release = 'r18943'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: lan where key = 'v49' and release = 'r18943'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r18763'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r18763'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r18763'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astkommun where key = 'v667' and release = 'r18941'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: kommun where key = 'v36' and release = 'r18941'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: lan where key = 'v49' and release = 'r18941'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astkommun where key = 'v667' and release = 'r19054'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astkommun where key = 'v667' and release = 'r19056'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: kommun where key = 'v36' and release = 'r19056'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astkommun where key = 'v667' and release = 'r18938'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: kommun where key = 'v36' and release = 'r18938'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: lan where key = 'v49' and release = 'r18938'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r18762'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r18762'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r18762'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astkommun where key = 'v667' and release = 'r18926'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: kommun where key = 'v36' and release = 'r18926'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: lan where key = 'v49' and release = 'r18926'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astkommun where key = 'v667' and release = 'r19572'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astkommun where key = 'v667' and release = 'r19573'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: kommun where key = 'v36' and release = 'r19573'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astkommun where key = 'v667' and release = 'r19494'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: kommun where key = 'v36' and release = 'r19494'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: lan where key = 'v49' and release = 'r19494'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r18744'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r18744'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r18744'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astkommun where key = 'v667' and release = 'r19493'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: kommun where key = 'v36' and release = 'r19493'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: lan where key = 'v49' and release = 'r19493'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astkommun where key = 'v667' and release = 'r20164'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astkommun where key = 'v667' and release = 'r20163'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: kommun where key = 'v36' and release = 'r20163'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astkommun where key = 'v667' and release = 'r20165'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: kommun where key = 'v36' and release = 'r20165'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: lan where key = 'v49' and release = 'r20165'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r19156'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r19156'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r19156'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astkommun where key = 'v667' and release = 'r20166'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: kommun where key = 'v36' and release = 'r20166'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: lan where key = 'v49' and release = 'r20166'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astkommun where key = 'v667' and release = 'r19797'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: kommun where key = 'v36' and release = 'r19797'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: lan where key = 'v49' and release = 'r19797'"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva_old where key = 'v66' and release = 'r18938'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva_old where key = 'v66' and release = 'r18943'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva_old where key = 'v66' and release = 'r18944'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva_old where key = 'v66' and release = 'r19494'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva_old where key = 'v66' and release = 'r20165'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astngs07 where key = 'v1641' and release = 'r19019'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astngs07 where key = 'v1641' and release = 'r19053'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astngs07 where key = 'v1641' and release = 'r19054'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astngs07 where key = 'v1641' and release = 'r19572'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: astngs07 where key = 'v1641' and release = 'r20164'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jengs07 where key = 'v16323' and release = 'r19019'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jengs07 where key = 'v16323' and release = 'r19053'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jengs07 where key = 'v16323' and release = 'r19054'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jengs07 where key = 'v16323' and release = 'r19572'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: jengs07 where key = 'v16323' and release = 'r20164'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astngs07 where key = 'v19054' and release = 'r19017'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astngs07 where key = 'v19054' and release = 'r19055'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astngs07 where key = 'v19054' and release = 'r19056'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astngs07 where key = 'v19054' and release = 'r19573'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: astngs07 where key = 'v19054' and release = 'r20163'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astngs07 where key = 'v19054' and release = 'r18938'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astngs07 where key = 'v19054' and release = 'r18943'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astngs07 where key = 'v19054' and release = 'r18944'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astngs07 where key = 'v19054' and release = 'r19494'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: astngs07 where key = 'v19054' and release = 'r20165'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18744'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18762'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18763'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18764'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r19156'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r19797'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18926'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18941'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r18942'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r19493'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: astngs07 where key = 'v1641' and release = 'r20166'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020grp where key = 'v6416' and release = 'r18938'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020grp where key = 'v6416' and release = 'r18943'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020grp where key = 'v6416' and release = 'r18944'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020grp where key = 'v6416' and release = 'r19494'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020grp where key = 'v6416' and release = 'r20165'"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020inr where key = 'v65' and release = 'r18938'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020inr where key = 'v65' and release = 'r18943'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020inr where key = 'v65' and release = 'r18944'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020inr where key = 'v65' and release = 'r19494'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020inr where key = 'v65' and release = 'r20165'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva where key = 'v66' and release = 'r18938'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva where key = 'v66' and release = 'r18943'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva where key = 'v66' and release = 'r18944'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva where key = 'v66' and release = 'r19494'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: sun2020niva where key = 'v66' and release = 'r20165'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"

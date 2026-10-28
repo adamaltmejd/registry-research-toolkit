@@ -94,3 +94,3837 @@ kind = "set"
 subject = "ovriga-fordonsslag: Status where key = 'v461' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15432'"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15502'"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15361'"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15638'"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15431'"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15501'"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15360'"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15637'"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15430'"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15500'"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15359'"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15636'"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15429'"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15499'"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15358'"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15633'"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15428'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15496'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15357'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15632'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15427'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15493'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15356'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15629'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15426'"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15355'"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15626'"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15425'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15489'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15354'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15625'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15424'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15465'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15353'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15624'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15423'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15464'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15352'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15621'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15388'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15463'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15324'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15619'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15386'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15457'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15323'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15618'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom where key = 'v36' and release = 'r15206'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15385'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15454'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15322'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15616'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom where key = 'v36' and release = 'r15205'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15384'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15453'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15311'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15615'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom where key = 'v36' and release = 'r15204'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15383'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15451'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15309'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15600'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom where key = 'v36' and release = 'r15201'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15377'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom where key = 'v36' and release = 'r15380'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15449'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom where key = 'v36' and release = 'r15450'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15306'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom where key = 'v36' and release = 'r15307'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15574'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom where key = 'v36' and release = 'r15577'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom where key = 'v36' and release = 'r15191'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15385'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15386'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15388'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15423'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15424'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15425'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15426'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15427'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15428'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15429'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15430'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15431'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15432'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15454'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15457'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15463'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15464'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15465'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15489'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15493'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15496'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15499'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15500'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15501'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15502'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15322'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15323'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15324'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15352'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15353'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15354'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15355'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15356'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15357'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15358'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15359'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15360'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15361'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15685'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15687'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15690'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15691'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15692'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15693'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15694'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15616'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15618'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15619'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15621'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15624'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15625'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15626'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15629'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15632'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15633'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15636'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15637'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15638'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15206'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15207'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15213'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15220'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15221'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15222'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15223'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15224'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15225'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15226'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15229'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15231'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15707'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:22\n\nLegacy exact value-set label: SNI69_6"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15709'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15712'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15713'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15754'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15755'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15756'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15757'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15758'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15759'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15761'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15763'"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15141'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15143'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15147'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15366'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15374'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15375'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15377'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15380'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15383'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 where key = 'v4027' and release = 'r15384'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni92 where key = 'v4027' and release = 'r15216'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni92 where key = 'v4027' and release = 'r15217'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni92 where key = 'v4027' and release = 'r15218'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni92 where key = 'v4027' and release = 'r15393'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15253'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15254'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15256'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15442'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15446'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15447'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15449'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15450'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15451'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 where key = 'v4027' and release = 'r15453'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_2 where key = 'v4027' and release = 'r15253'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_2 where key = 'v4027' and release = 'r15254'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_2 where key = 'v4027' and release = 'r15256'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_2 where key = 'v4027' and release = 'r15442'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_2 where key = 'v4027' and release = 'r15446'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_3 where key = 'v4027' and release = 'r15253'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_3 where key = 'v4027' and release = 'r15254'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_3 where key = 'v4027' and release = 'r15256'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_3 where key = 'v4027' and release = 'r15442'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92_3 where key = 'v4027' and release = 'r15446'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15063'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15084'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15099'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15303'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15304'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15305'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15306'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15307'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15309'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 where key = 'v4027' and release = 'r15311'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni92 where key = 'v4027' and release = 'r15527'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni92 where key = 'v4027' and release = 'r15529'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni92 where key = 'v4027' and release = 'r15530'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni92 where key = 'v4027' and release = 'r15532'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15233'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15246'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15287'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15289'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15596'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15599'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15606'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15645'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15679'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15680'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15681'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15682'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15683'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15684'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15688'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 where key = 'v4027' and release = 'r15689'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_2 where key = 'v4027' and release = 'r15233'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_2 where key = 'v4027' and release = 'r15246'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_2 where key = 'v4027' and release = 'r15287'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_2 where key = 'v4027' and release = 'r15289'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_2 where key = 'v4027' and release = 'r15596'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_3 where key = 'v4027' and release = 'r15233'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_3 where key = 'v4027' and release = 'r15246'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_3 where key = 'v4027' and release = 'r15287'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_3 where key = 'v4027' and release = 'r15289'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92_3 where key = 'v4027' and release = 'r15596'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15505'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15528'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15531'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15539'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15552'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15564'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15574'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15577'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15600'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 where key = 'v4027' and release = 'r15615'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15127'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15129'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15153'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15155'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15163'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15189'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15191'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15201'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15204'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 where key = 'v4027' and release = 'r15205'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15665'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15667'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15677'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15678'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15686'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15697'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15703'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15704'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15705'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 where key = 'v4027' and release = 'r15706'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r13530'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13425'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13426'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13427'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13428'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13429'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r13430'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15027'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15056'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15090'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15098'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15209'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15214'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002 where key = 'v4027' and release = 'r15215'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13425'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13426'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13427'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13428'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13429'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r13430'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r15027'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r15056'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r15090'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r15098'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2002_2 where key = 'v4027' and release = 'r15209'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r13524'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r13551'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r13552'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r13553'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r13554'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r14990'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r14991'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r15010'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r15011'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r15019'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r15022'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002 where key = 'v38738' and release = 'r15049'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r13508'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r13511'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r13514'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r13515'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r13516'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15055'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15075'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15188'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15238'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15239'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15240'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002 where key = 'v4027' and release = 'r15504'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13586'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13587'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13596'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13597'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13604'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13605'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v38738' and release = 'r13537'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v38738' and release = 'r13538'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v38738' and release = 'r13541'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v38738' and release = 'r13542'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15064'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15187'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15641'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15642'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15643'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15650'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027' and release = 'r15651'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13522'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13527'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13529'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13530'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13531'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13533'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13534'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13543'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13545'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r13805'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r15034'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r15069'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r15858'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r17969'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r18548'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r19062'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r19746'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007 where key = 'v4027' and release = 'r20281'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13413'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13416'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13424'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13425'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13426'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13427'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13428'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13429'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13430'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r13830'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r15027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r15056'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r15859'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r17973'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r18549'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r19022'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r19752'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007 where key = 'v4027' and release = 'r20284'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13413'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13416'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13424'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13425'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13426'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13427'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13428'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13429'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13430'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r13830'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r15027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r15056'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r15859'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r17973'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r18549'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r19022'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r19752'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni2007_2 where key = 'v4027' and release = 'r20284'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13412'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13438'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13439'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13464'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13479'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13488'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13491'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13512'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13532'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r13836'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r15052'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r15094'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r15860'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r17971'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r18550'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r19023'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r19753'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007 where key = 'v4027' and release = 'r20285'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13412'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13438'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13439'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13464'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13479'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13488'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13491'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13512'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13532'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r13836'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r15052'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r15094'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r15860'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r17971'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r18550'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r19023'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r19753'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_2 where key = 'v4027' and release = 'r20285'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13412'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13438'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13439'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13464'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13479'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13488'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13491'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13512'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13532'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r13836'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r15052'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r15094'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r15860'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r17971'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r18550'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r19023'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r19753'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni2007_3 where key = 'v4027' and release = 'r20285'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13431'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13519'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13521'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13523'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13524'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13551'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13553'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13554'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r13835'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r14990'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r14991'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r15942'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r17975'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r18551'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r19061'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r19766'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007 where key = 'v4027' and release = 'r20286'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13431'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13519'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13521'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13523'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13524'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13551'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13553'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13554'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r13835'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r14990'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r14991'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r15942'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r17975'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r18551'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r19061'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r19766'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2007_2 where key = 'v4027' and release = 'r20286'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13561'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13628'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13629'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13630'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13631'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13633'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13634'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13635'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13636'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r13812'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r15319'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r15320'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r15943'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r17974'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r18558'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r19029'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r19763'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007 where key = 'v4027' and release = 'r20293'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r11751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r12980'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r12993'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13332'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13342'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13406'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13407'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13410'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r13837'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r15054'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r15195'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r15958'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r17976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r18552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r19064'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r19770'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007 where key = 'v4027' and release = 'r20287'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r11751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r12980'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r12993'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13332'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13342'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13406'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13407'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13410'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r13837'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r15054'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r15195'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r15958'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r17976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r18552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r19064'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r19770'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_2 where key = 'v4027' and release = 'r20287'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r11751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r12980'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r12993'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r12996'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13332'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13342'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13406'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13407'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13410'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r13837'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r15054'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r15195'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r15958'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r17976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r18552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r19064'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r19770'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_3 where key = 'v4027' and release = 'r20287'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r11751'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r12980'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r12993'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r13837'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r15958'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r17976'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r18552'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r19064'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r19770'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2007_ag where key = 'v4027' and release = 'r20287'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13434'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13504'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13505'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13507'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13508'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13511'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13514'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13515'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13516'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r13816'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r15055'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r15075'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r15959'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r17972'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r18553'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r19063'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r19754'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007 where key = 'v4027' and release = 'r20288'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13518'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13583'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13585'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13586'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13587'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13588'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13589'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13590'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13591'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r13807'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r15058'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r15960'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r17977'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r18554'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r19060'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007 where key = 'v4027' and release = 'r19755'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13556'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13594'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13595'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13596'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13597'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13598'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13599'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13600'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13601'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r13808'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r15059'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r15961'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r17978'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r18555'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r19059'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r19758'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007 where key = 'v4027' and release = 'r20290'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13560'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13602'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13603'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13604'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13605'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13606'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13607'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13608'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13609'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r13809'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r15077'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r15115'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r15963'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r17979'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r18556'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r19058'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r19761'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007 where key = 'v4027' and release = 'r20291'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13494'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13510'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13536'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13537'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13538'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13539'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13540'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13541'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13542'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r13810'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r15064'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r15187'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r15945'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r17970'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r18557'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r19030'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007 where key = 'v4027' and release = 'r19762'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

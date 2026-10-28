@@ -5,3 +5,9 @@ subject = "var:hogskolenamn"
 relation = "label_of"
 object = "scb/distansutbildning/hogskolekod"
 evidence = "reg_meta_build/curation/registers/scb/distansutbildning.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "distansutbildning-i-hogskolan: kommun where key = 'v36' and release = 'r4404'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"

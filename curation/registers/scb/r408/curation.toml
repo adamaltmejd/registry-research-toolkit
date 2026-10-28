@@ -22,3 +22,195 @@ kind = "set"
 subject = "sus: peorgnrram"
 fields = { "description" = "Organisationsnummer" }
 evidence = "reg_meta_build/curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19731'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19788'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19789'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19792'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19794'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: agkat where key = 'v74' and release = 'r19795'"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19731'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19788'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19789'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19792'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19794'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jurform where key = 'v34' and release = 'r19795'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19246'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19296'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19299'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19300'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19303'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: jengs1 where key = 'v16323' and release = 'r19790'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19731'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19788'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19789'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19792'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19794'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: jengs1 where key = 'v16323' and release = 'r19795'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19281'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19305'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19307'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19309'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19316'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: jengs1 where key = 'v16323' and release = 'r19791'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sus: ngs1 where key = 'v4027' and release = 'r19312'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "sus: ngs1 where key = 'v4027' and release = 'r19799'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

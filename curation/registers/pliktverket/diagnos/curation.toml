@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "diagnos: sjnr @1997-01-01..2010-12-31 where key = 'n:sjnr'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/pliktverket.toml:793\n\nExplicit provider declaration: ICD-10-SE"

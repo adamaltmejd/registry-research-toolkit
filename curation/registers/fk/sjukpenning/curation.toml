@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-1: diagnos_kod @1994-01-01.. where key = 'n:diagnos_kod'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:1842\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-1: diagnos_kod_fullstandig @1994-01-01.. where key = 'n:diagnos_kod_fullstandig'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:1859\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "fall-1: diagnos_kod @1994-01-01.. where key = 'n:diagnos_kod'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:1842\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "fall-1: diagnos_kod_fullstandig @1994-01-01.. where key = 'n:diagnos_kod_fullstandig'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:1859\n\nExplicit provider declaration: ICD-10-SE"

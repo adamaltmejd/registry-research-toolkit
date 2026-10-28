@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "arbetsflode: atc4pos @2009-01-01.. where key = 'n:atc4pos'"
+fields = { "classification" = "class/atc/atc" }
+evidence = "reg_meta_build/curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"
+
+[[statement]]
+kind = "set"
+subject = "handlagda: atc4pos @2009-01-01.. where key = 'n:atc4pos'"
+fields = { "classification" = "class/atc/atc" }
+evidence = "reg_meta_build/curation/providers/lakemedelsverket.toml:117\n\nExplicit provider declaration: ATC"

@@ -12,3 +12,201 @@ subject = "var:riksdagsvalkrets-namn"
 relation = "label_of"
 object = "scb/ep-val-resultat/riksdagsvalkrets-kod"
 evidence = "reg_meta_build/curation/registers/scb/ep-val-resultat.toml:11\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r15135'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r15135'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r15125'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r15125'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r15108'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r15108'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: ll where key = 'v49' and release = 'r4949'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: llkk where key = 'v36' and release = 'r4949'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: ll where key = 'v49' and release = 'r4955'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: llkk where key = 'v36' and release = 'r4955'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r3703'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r3703'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: ll where key = 'v49' and release = 'r5923'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: llkk where key = 'v36' and release = 'r5923'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r5534'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r5534'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r13436'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r13436'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: ll where key = 'v49' and release = 'r19371'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: llkk where key = 'v36' and release = 'r19371'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: ll where key = 'v49' and release = 'r19370'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "valresultat: llkk where key = 'v36' and release = 'r19370'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000nivagrov where key = 'v23287' and release = 'r4949'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000nivagrov where key = 'v23287' and release = 'r4955'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000nivagrov where key = 'v23287' and release = 'r5923'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2020niva_grov where key = 'v23287' and release = 'r19371'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000inr where key = 'v65' and release = 'r4949'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000inr where key = 'v65' and release = 'r4955'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000inr where key = 'v65' and release = 'r5923'"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2020inr where key = 'v65' and release = 'r19371'"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000niva where key = 'v15053' and release = 'r4949'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000niva where key = 'v15053' and release = 'r4955'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000niva where key = 'v15053' and release = 'r5923'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"

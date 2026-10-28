@@ -4,3 +4,441 @@ kind = "set"
 subject = "investeringsenkaten-2019: referensar"
 fields = { "variable" = "undersokningsar" }
 evidence = "reg_meta_build/curation/registers/scb/investeringsenkaten.toml:459\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r313'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r315'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r878'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r879'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r884'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r911'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r1023'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r1024'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r1187'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r1227'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r1208'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r1228'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r1229'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r1230'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r1239'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49' and release = 'r1240'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v49' and release = 'r1240'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r2646'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49' and release = 'r2651'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49' and release = 'r2943'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v49' and release = 'r3666'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v49' and release = 'r2651'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v49' and release = 'r2943'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v49' and release = 'r3666'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r3731'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r4101'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r4616'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r5469'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r6085'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r7517'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r7518'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: lan where key = 'v49' and release = 'r11259'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r12024'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: kommun where key = 'v36' and release = 'r13323'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r313'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r878'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r884'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r315'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r879'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r911'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: ngs1 where key = 'v4027' and release = 'r18877'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: ngs1 where key = 'v4027' and release = 'r18920'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: ngs1 where key = 'v4027' and release = 'r18921'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: ngs1 where key = 'v4027' and release = 'r18922'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: ngs1 where key = 'v4027' and release = 'r18924'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ag where key = 'v2466' and release = 'r13323'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ag where key = 'v2466' and release = 'r7518'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: fg where key = 'v2467' and release = 'r13323'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: fg where key = 'v2467' and release = 'r7518'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r12024'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r13323'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: ngs1o where key = 'v19052' and release = 'r7518'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ag where key = 'v2466' and release = 'r11259'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ag where key = 'v2466' and release = 'r4616'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ag where key = 'v2466' and release = 'r5469'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ag where key = 'v2466' and release = 'r6085'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ag where key = 'v2466' and release = 'r7517'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v19052' and release = 'r2943'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkbyggm where key = 'v19052' and release = 'r3666'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v19052' and release = 'r2943'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: bkelinst where key = 'v19052' and release = 'r3666'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: fg where key = 'v2467' and release = 'r11259'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: fg where key = 'v2467' and release = 'r4616'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: fg where key = 'v2467' and release = 'r5469'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: fg where key = 'v2467' and release = 'r6085'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: fg where key = 'v2467' and release = 'r7517'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:39\n\nLegacy exact value-set label: Branschgruppering enligt SNI2007, som används för redovsning"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r11259'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r3731'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r4101'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r4616'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r5469'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r6085'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: ngs1o where key = 'v19052' and release = 'r7517'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"

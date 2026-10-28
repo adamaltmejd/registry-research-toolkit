@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-beslut: diagnos_1 @2014-01-01.. where key = 'n:diagnos_1'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:969\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-beslut: diagnos_2 @2014-01-01.. where key = 'n:diagnos_2'"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:979\n\nExplicit provider declaration: ICD-10-SE"

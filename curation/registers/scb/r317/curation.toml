@@ -1,0 +1,18 @@
+
+[[statement]]
+kind = "set"
+subject = "tiden-mellan-gymnasieskolan-och-universitetet-hogskolan: sun2000niva_grov_far where key = 'v8074' and release = 'r4345'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "tiden-mellan-gymnasieskolan-och-universitetet-hogskolan: sun2000niva_grov_mor where key = 'v8073' and release = 'r4345'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "tiden-mellan-gymnasieskolan-och-universitetet-hogskolan: sun2000niva_grov_up where key = 'v23287' and release = 'r4345'"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"

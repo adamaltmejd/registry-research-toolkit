@@ -334,3 +334,1161 @@ kind = "set"
 subject = "sokande-antagna-1985-1993: sektor6"
 fields = { "label" = "Utbildningssektor för sökt utbildning, val 6" }
 evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-sokande.toml:775\n\nComplete seven-family Gymnasieskola-sökande source audit: explicit operative definitions distinguish each application rank, residence/prior-education context and final admission. No role is inferred from a suffix alone. Retain all originals, raw types, definitions, operations, periods, source list facts and support. Missing response explanations remain unavailable. Proof: Batch49-Gymnasieskola-sokande7-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: jurform_ht where key = 'v34' and release = 'r9845'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r11553'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r12579'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r13646'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r15866'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r18335'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r11552'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r12578'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r13647'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r15867'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r18336'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r9844'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r19505'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r19511'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: jurform_ht where key = 'v34' and release = 'r20013'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r18458'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r19512'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: jurform where key = 'v34' and release = 'r19526'"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14100'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14100'"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14102'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14102'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14103'"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14103'"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14104'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14104'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14105'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14105'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r14106'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r14106'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r13950'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r13950'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgylän where key = 'v49' and release = 'r13947'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: igylän where key = 'v49' and release = 'r13947'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: hgyreg where key = 'v36' and release = 'r11403'"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11339'"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11338'"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_hkom where key = 'v36' and release = 'r11337'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11337'"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11336'"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_hkom where key = 'v36' and release = 'r11335'"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11335'"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: u_hkom where key = 'v36' and release = 'r11324'"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: u_hkom where key = 'v36' and release = 'r11342'"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_hkom where key = 'v36' and release = 'r11334'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11334'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: u_hkom where key = 'v36' and release = 'r11323'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: u_hkom where key = 'v36' and release = 'r11341'"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_hkom where key = 'v36' and release = 'r11321'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11321'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: u_hkom where key = 'v36' and release = 'r11322'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: u_hkom where key = 'v36' and release = 'r11320'"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_hkom where key = 'v36' and release = 'r11308'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: u_ukom where key = 'v36' and release = 'r11308'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: u_hkom where key = 'v36' and release = 'r11309'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: u_hkom where key = 'v36' and release = 'r11307'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: u_utbort where key = 'v36' and release = 'r11307'"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r11304'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r11304'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r11306'"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r11301'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r11301'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r11302'"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r11295'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r11295'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r11297'"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r9798'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r9798'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r9804'"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r9797'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r9797'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r9796'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r9794'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: skom where key = 'v36' and release = 'r9794'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r9793'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r9791'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r9791'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8781'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8776'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r8776'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8777'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8766'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r8766'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8765'"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8762'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r8762'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8761'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8752'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r8752'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8751'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8749'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun where key = 'v36' and release = 'r8749'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8748'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: utbort where key = 'v36' and release = 'r8750'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: hkom where key = 'v36' and release = 'r8746'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun_ht where key = 'v36' and release = 'r8746'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8745'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom_ans where key = 'v36' and release = 'r8745'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: utbort where key = 'v36' and release = 'r8747'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun_ht where key = 'v36' and release = 'r8593'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r8591'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom_ans where key = 'v36' and release = 'r8591'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: utbort where key = 'v36' and release = 'r8592'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: kommun_ht where key = 'v36' and release = 'r9845'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom where key = 'v36' and release = 'r9846'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: hkom_ans where key = 'v36' and release = 'r9846'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: lan where key = 'v32738' and release = 'r9844'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: utbort where key = 'v36' and release = 'r9844'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r11553'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r11553'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r11553'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r11552'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r12579'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r12579'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r12579'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r12578'"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r13646'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r13646'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r13646'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r13647'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r15866'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r15866'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r15866'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r15867'"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r18335'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r18335'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r18335'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r18336'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r19505'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r19505'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r19505'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r18458'"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r19511'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r19511'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r19511'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r19512'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun where key = 'v36' and release = 'r20013'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: hemkommun_ans where key = 'v36' and release = 'r20013'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: skolkommun_ht where key = 'v36' and release = 'r20013'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: skolkommun where key = 'v36' and release = 'r19526'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far where key = 'v8074' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far where key = 'v8074' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far where key = 'v8074' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far_grupperad where key = 'v8074' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far_grupperad where key = 'v8074' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_far_grupperad where key = 'v8074' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for where key = 'v32454' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for where key = 'v32454' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for where key = 'v32454' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for_grupperad where key = 'v32454' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for_grupperad where key = 'v32454' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_for_grupperad where key = 'v32454' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor where key = 'v8073' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor where key = 'v8073' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor where key = 'v8073' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r11553'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r12579'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r13646'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_1_far where key = 'v8074' and release = 'r8745'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_1_far where key = 'v8074' and release = 'r9804'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_1_mor where key = 'v8073' and release = 'r8745'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_1_mor where key = 'v8073' and release = 'r9804'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_3_far where key = 'v8074' and release = 'r8745'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_3_far where key = 'v8074' and release = 'r9793'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_3_mor where key = 'v8073' and release = 'r8745'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_3_mor where key = 'v8073' and release = 'r9793'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_far where key = 'v8074' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_far where key = 'v8074' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_far_grupperad where key = 'v8074' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_far_grupperad where key = 'v8074' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_for where key = 'v32454' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_for where key = 'v32454' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_for_grupperad where key = 'v32454' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_for_grupperad where key = 'v32454' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_mor where key = 'v8073' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_mor where key = 'v8073' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r8591'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r9846'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_far where key = 'v8074' and release = 'r15866'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_far where key = 'v8074' and release = 'r18335'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_far where key = 'v8074' and release = 'r19505'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_far where key = 'v8074' and release = 'r19511'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_far where key = 'v8074' and release = 'r20013'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_for where key = 'v32454' and release = 'r15866'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_for where key = 'v32454' and release = 'r18335'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_for where key = 'v32454' and release = 'r19505'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_for where key = 'v32454' and release = 'r19511'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_for where key = 'v32454' and release = 'r20013'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_mor where key = 'v8073' and release = 'r15866'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_mor where key = 'v8073' and release = 'r18335'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_mor where key = 'v8073' and release = 'r19505'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_mor where key = 'v8073' and release = 'r19511'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: sun2020niva_mor where key = 'v8073' and release = 'r20013'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"

@@ -3,3 +3,6 @@
 code = ["code", "vardekod"]
 label = ["label", "vardebenamning"]
 parent = ["parent_code"]
+
+# KS87-P declares a flat hierarchy; its parent cells refer to another book.
+flat = ["catalog/source/classifications/sos/ks87-p.csv"]

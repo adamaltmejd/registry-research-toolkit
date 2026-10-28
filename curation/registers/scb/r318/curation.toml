@@ -1,0 +1,18 @@
+
+[[statement]]
+kind = "set"
+subject = "produktionsindex-over-naringslivet: taggbranschgr where key = 'v4027' and release = 'r4322'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "produktionsindex-over-naringslivet: taggbranschgr where key = 'v4027' and release = 'r4692'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "produktionsindex-over-naringslivet: taggbranschgr where key = 'v4027' and release = 'r5374'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"

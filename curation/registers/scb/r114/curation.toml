@@ -1,0 +1,564 @@
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r11604'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r13677'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r15517'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r17721'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r18471'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r19599'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r19616'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r2338'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r3062'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r3114'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r3594'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r4403'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r5163'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r5651'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r7281'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: agkat where key = 'v74' and release = 'r9940'"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r11604'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r13677'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r15517'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r17721'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r18471'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r19599'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r19616'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r2338'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r3062'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r3114'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r3594'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r4403'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r5163'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r5651'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r7281'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: jurform where key = 'v34' and release = 'r9940'"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r2338'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r3062'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r3114'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r3594'"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r2338'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r3062'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r3114'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r3594'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v5056' and release = 'r2338'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v5056' and release = 'r3062'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v5056' and release = 'r3114'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v5056' and release = 'r3594'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r4403'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r4403'"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r5163'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r5163'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r5651'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r7281'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r9940'"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r5651'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r7281'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r9940'"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r11604'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r11604'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r13677'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r15517'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r13677'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r15517'"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r17721'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommun where key = 'v36' and release = 'r18471'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r17721'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r18471'"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: kommunsate where key = 'v1054' and release = 'r19599'"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r11604'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r2338'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r3062'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r3114'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r3594'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r4403'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r5163'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r5651'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r7281'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: sektor where key = 'v1141' and release = 'r9940'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ng1 where key = 'v19053' and release = 'r17721'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ng1 where key = 'v19053' and release = 'r18471'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ng1 where key = 'v19053' and release = 'r19599'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ng1 where key = 'v19053' and release = 'r19616'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r11604'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r13677'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r15517'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r17721'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r18471'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r19599'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r19616'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r3062'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r3114'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r3594'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r4403'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r5163'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r5651'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r7281'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: ngs1 where key = 'v19054' and release = 'r9940'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
