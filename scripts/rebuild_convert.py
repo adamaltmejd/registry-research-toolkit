@@ -308,6 +308,7 @@ class Converter:
         self.case_only = []
         self.field_demand = collections.Counter()
         self.selector_members = {}
+        self.selector_collapse = {}
         self.coordinate_spans = {}
         self.coordinate_labels = {}
         self.unscoped_year_coordinates = set()
