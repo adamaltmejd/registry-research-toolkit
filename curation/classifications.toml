@@ -8,12 +8,7 @@
 # value_set = "classifications/example.csv" # exact reader input locator
 # evidence = "Reviewed publisher documentation"
 # name = "Example edition"
-# name_en = "Example edition"
 # family_name = "Example classification"
 # publisher = "Publisher"
-# url = "https://example.org/classification"
 # period = "2010.."
-# aliases = ["Edition alias"]
-# family_aliases = ["Family alias"]
-# umbrellas = ["example-group"]
 # succeeds = ["class/example/v0"] # explicitly reviewed predecessor, also inventoried

@@ -1720,7 +1720,9 @@ pub fn resolve(
                 let facts = references
                     .get(reference)
                     .filter(|facts| !facts.is_empty())
-                    .ok_or_else(|| format!("unresolved classification reference {reference:?}"))?;
+                    .ok_or_else(|| {
+                        format!("classification-reference-unresolved: classification {reference:?}")
+                    })?;
                 objects.extend(facts.iter().cloned());
             }
             Ok(ResolvedStatement {

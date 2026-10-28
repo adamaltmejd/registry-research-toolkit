@@ -34,7 +34,43 @@ pub struct Classification {
     pub valueset: String,
     pub locator: Locator,
     pub period: Interval,
-    pub metadata: Value,
+    pub name: Option<String>,
+    pub family_name: Option<String>,
+    pub publisher: Option<String>,
+    pub succeeds: Vec<String>,
+}
+
+impl Classification {
+    /// Effective served family facts, shared by versions and inline assertions.
+    #[must_use]
+    pub fn family_facts<'a>(classes: &'a [Self], family: &'a str) -> (&'a str, Option<&'a str>) {
+        let versions = || classes.iter().filter(|c| c.family == family);
+        (
+            versions()
+                .find_map(|c| c.family_name.as_deref())
+                .unwrap_or(family),
+            versions().find_map(|c| c.publisher.as_deref()),
+        )
+    }
+
+    /// Facts emitted in classification tables and curated succession relations.
+    #[must_use]
+    pub fn facts(&self, classes: &[Self]) -> BTreeMap<String, Value> {
+        let (family_name, publisher) = Self::family_facts(classes, &self.family);
+        BTreeMap::from([
+            ("family".into(), json!(self.family)),
+            ("version".into(), json!(self.version)),
+            ("valueset".into(), json!(self.valueset)),
+            (
+                "name".into(),
+                json!(self.name.as_deref().unwrap_or(&self.version)),
+            ),
+            ("family_name".into(), json!(family_name)),
+            ("publisher".into(), json!(publisher)),
+            ("period".into(), json!(self.period)),
+            ("succeeds".into(), json!(self.succeeds)),
+        ])
+    }
 }
 
 /// Shared construction for hand-authored assertions and inventory reader references.
@@ -69,7 +105,10 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
         valueset: set.hash,
         locator: at.clone(),
         period: p[0].clone(),
-        metadata: Value::Null,
+        name: None,
+        family_name: None,
+        publisher: None,
+        succeeds: Vec::new(),
     })
 }
 
@@ -200,7 +239,9 @@ fn locator(value: &Value) -> Locator {
     serde_json::from_value(value["locator"].clone()).expect("frame locator")
 }
 
-fn rendered(value: &Value) -> Option<String> {
+/// Render a field for stored curation provenance.
+#[must_use]
+pub fn rendered(value: &Value) -> Option<String> {
     match value {
         Value::Null => None,
         Value::String(s) => Some(s.clone()),

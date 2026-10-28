@@ -36,17 +36,9 @@ pub struct Classification {
     pub value_set: String,
     pub evidence: String,
     pub name: Option<String>,
-    pub name_en: Option<String>,
     pub family_name: Option<String>,
     pub publisher: Option<String>,
-    pub url: Option<String>,
     pub period: Option<reg_frame::address::PeriodSet>,
-    #[serde(default)]
-    pub aliases: Vec<String>,
-    #[serde(default)]
-    pub family_aliases: Vec<String>,
-    #[serde(default)]
-    pub umbrellas: Vec<String>,
     #[serde(default)]
     pub succeeds: Vec<String>,
 }
@@ -103,20 +95,8 @@ pub fn load_classifications(root: &Path) -> Result<Vec<LocatedClassification>, R
                 "classification evidence and value_set must not be blank",
             ));
         }
-        for list in [
-            &mut c.aliases,
-            &mut c.family_aliases,
-            &mut c.umbrellas,
-            &mut c.succeeds,
-        ] {
-            list.sort();
-            list.dedup();
-        }
-        for member in &c.umbrellas {
-            if !reg_core::is_slug(member) {
-                return Err(error(&at, format!("invalid umbrella slug {member:?}")));
-            }
-        }
+        c.succeeds.sort();
+        c.succeeds.dedup();
         for predecessor in &c.succeeds {
             if !matches!(
                 predecessor.parse::<reg_core::Fqid>(),
@@ -127,13 +107,6 @@ pub fn load_classifications(root: &Path) -> Result<Vec<LocatedClassification>, R
                     "classification succeeds requires exact class/<family>/<version>",
                 ));
             }
-        }
-        if c.aliases
-            .iter()
-            .chain(&c.family_aliases)
-            .any(|a| a.trim().is_empty())
-        {
-            return Err(error(&at, "classification aliases must not be blank"));
         }
         out.push(LocatedClassification {
             classification: c,

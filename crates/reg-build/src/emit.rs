@@ -45,6 +45,14 @@ pub struct StatementRow {
     pub caveat: Option<String>,
 }
 
+impl StatementRow {
+    #[must_use]
+    pub fn for_locator<'a>(rows: &'a [Self], at: &reg_frame::Locator) -> Option<&'a Self> {
+        rows.iter()
+            .find(|s| s.file == at.input && format!("line={}", s.line) == at.at)
+    }
+}
+
 /// Everything the file holds, linked.
 pub struct Catalog {
     pub meta: BTreeMap<&'static str, String>,
@@ -982,13 +990,10 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
     let family_id = sorted_ids(catalog.classifications.iter().map(|c| c.family.as_str()));
     for (family, family_row) in &family_id {
-        let family_field = |field: &str| {
-            catalog
-                .classifications
-                .iter()
-                .filter(|c| c.family == *family)
-                .find_map(|c| c.metadata[field].as_str())
-        };
+        let (family_name, publisher) = reg_resolve::curation::apply::Classification::family_facts(
+            &catalog.classifications,
+            family,
+        );
         rows.push(
             "ident",
             vec![
@@ -1005,8 +1010,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(*family_row),
                 Cell::Str(format!("class/{family}")),
                 Cell::Str("classification".into()),
-                Cell::Text(family_field("family_name").unwrap_or(family).into()),
-                family_field("publisher").map_or(Cell::Null, |s| Cell::Text(s.into())),
+                Cell::Text(family_name.into()),
+                publisher.map_or(Cell::Null, |s| Cell::Text(s.into())),
                 Cell::Null,
             ],
         );
@@ -1035,20 +1040,10 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(cid),
                 Cell::Int(family_id[class.family.as_str()]),
                 Cell::Str(format!("class/{}/{}", class.family, class.version)),
-                Cell::Text(
-                    class.metadata["name"]
-                        .as_str()
-                        .unwrap_or(&class.version)
-                        .into(),
-                ),
+                Cell::Text(class.name.as_deref().unwrap_or(&class.version).into()),
                 Cell::Int(start(&class.period.0)),
                 Cell::Int(end(&class.period.1)),
                 Cell::Int(*vid),
-                if class.metadata.is_null() {
-                    Cell::Null
-                } else {
-                    Cell::Str(class.metadata.to_string())
-                },
             ],
         );
         write_provenance(
@@ -1062,8 +1057,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
 
     let mut successions = Vec::new();
     for class in &catalog.classifications {
-        for predecessor in class.metadata["succeeds"].as_array().into_iter().flatten() {
-            let target = predecessor.as_str().expect("typed inventory reference");
+        for target in &class.succeeds {
             let reg_core::Fqid::ClassVersion { family, version } = target
                 .parse()
                 .map_err(|e: reg_core::GrammarError| e.to_string())?
@@ -1072,12 +1066,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             };
             let subject = class_id[&(class.family.as_str(), class.version.as_str())];
             let object = class_id[&(family.as_str(), version.as_str())];
-            let statement = catalog
-                .statements
-                .iter()
-                .find(|s| {
-                    s.file == class.locator.input && format!("line={}", s.line) == class.locator.at
-                })
+            let statement = StatementRow::for_locator(&catalog.statements, &class.locator)
                 .ok_or("classification inventory statement missing")?;
             successions.push((subject, object, statement_id[statement.hash.as_str()]));
         }

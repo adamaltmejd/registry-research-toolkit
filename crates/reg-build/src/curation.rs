@@ -93,24 +93,19 @@ fn references(
                 .iter()
                 .find(|c| c.family == family && c.version == version)
             {
-                let fields = BTreeMap::from([
-                    ("family".into(), serde_json::json!(class.family)),
-                    ("version".into(), serde_json::json!(class.version)),
-                    ("period".into(), serde_json::json!(class.period)),
-                    ("inventory".into(), class.metadata.clone()),
-                    (
-                        "items".into(),
-                        records
-                            .iter()
-                            .find_map(|r| match r {
-                                Record::ValueSet(v) if v.hash == class.valueset => {
-                                    Some(serde_json::json!(v.items))
-                                }
-                                _ => None,
-                            })
-                            .unwrap_or(serde_json::Value::Null),
-                    ),
-                ]);
+                let mut fields = class.facts(classifications);
+                fields.insert(
+                    "items".into(),
+                    records
+                        .iter()
+                        .find_map(|r| match r {
+                            Record::ValueSet(v) if v.hash == class.valueset => {
+                                Some(serde_json::json!(v.items))
+                            }
+                            _ => None,
+                        })
+                        .unwrap_or(serde_json::Value::Null),
+                );
                 references.insert(
                     object.clone(),
                     vec![reg_resolve::curation::SourcePremise {
@@ -167,6 +162,18 @@ fn references(
     Ok(references)
 }
 
+fn inventory_error(
+    root: &Path,
+    at: &reg_frame::Locator,
+    message: impl std::fmt::Display,
+) -> String {
+    format!(
+        "{}:{}: {message}",
+        root.join(&at.input).display(),
+        at.at.strip_prefix("line=").unwrap_or(&at.at)
+    )
+}
+
 /// Resolve code-list references before register curation, through the same constructor
 /// used by inline classification assertions. No applicability is inferred here.
 #[allow(clippy::too_many_lines)]
@@ -181,13 +188,7 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
             input: "classifications.toml".into(),
             at: format!("line={}", entry.line),
         };
-        let located = |message: String| {
-            format!(
-                "{}:{}: {message}",
-                root.join(&at.input).display(),
-                entry.line
-            )
-        };
+        let located = |message: String| inventory_error(root, &at, message);
         for (field, value) in [("family_name", &c.family_name), ("publisher", &c.publisher)] {
             if let Some(value) = value {
                 let key = (c.family.clone(), field);
@@ -231,7 +232,10 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         statement.validate().map_err(located)?;
         let mut class =
             reg_resolve::curation::apply::classification(&statement, &at).map_err(located)?;
-        class.metadata = serde_json::to_value(c).map_err(|e| located(e.to_string()))?;
+        class.name.clone_from(&c.name);
+        class.family_name.clone_from(&c.family_name);
+        class.publisher.clone_from(&c.publisher);
+        class.succeeds.clone_from(&c.succeeds);
         let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
         out.statements.push(crate::emit::StatementRow {
             hash: hash.clone(),
@@ -241,20 +245,6 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
             evidence: Some(c.evidence.clone()),
             caveat: None,
         });
-        out.overrides.push(reg_resolve::provenance::Claim {
-            kind: "class_version".into(),
-            locator: at,
-            identity: None,
-            provider: None,
-            register: None,
-            table: None,
-            release: None,
-            period: Some(class.period.clone()),
-            field: "inventory".into(),
-            value: Some(class.metadata.to_string()),
-            source_value: None,
-            statement: hash,
-        });
         out.classifications.push(class);
     }
     let known = out
@@ -263,16 +253,12 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         .map(|c| format!("class/{}/{}", c.family, c.version))
         .collect::<BTreeSet<_>>();
     for class in &out.classifications {
-        for target in class.metadata["succeeds"].as_array().into_iter().flatten() {
-            if !known.contains(target.as_str().expect("typed inventory reference")) {
-                return Err(format!(
-                    "{}:{}: classification-reference-unresolved: predecessor {target}",
-                    root.join(&class.locator.input).display(),
-                    class
-                        .locator
-                        .at
-                        .strip_prefix("line=")
-                        .unwrap_or(&class.locator.at)
+        for target in &class.succeeds {
+            if !known.contains(target) {
+                return Err(inventory_error(
+                    root,
+                    &class.locator,
+                    format!("classification-reference-unresolved: predecessor {target:?}"),
                 ));
             }
         }
@@ -283,34 +269,47 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         .map(|c| {
             (
                 format!("class/{}/{}", c.family, c.version),
-                c.metadata["succeeds"]
-                    .as_array()
-                    .expect("typed succession list")
-                    .iter()
-                    .map(|v| v.as_str().expect("typed succession reference").to_owned())
-                    .collect::<Vec<_>>(),
+                c.succeeds.clone(),
             )
         })
         .collect::<BTreeMap<_, _>>();
+    // simplify: repeat the per-version walk because post-write SQL checks cannot
+    // locate inventory entries; remove this walk when verify reports source locations.
     for class in &out.classifications {
         let origin = format!("class/{}/{}", class.family, class.version);
         let mut pending = predecessors[&origin].clone();
         let mut visited = BTreeSet::new();
         while let Some(node) = pending.pop() {
             if node == origin {
-                return Err(format!(
-                    "{}:{}: classification-succession-cycle: {origin}",
-                    root.join(&class.locator.input).display(),
-                    class
-                        .locator
-                        .at
-                        .strip_prefix("line=")
-                        .unwrap_or(&class.locator.at)
+                return Err(inventory_error(
+                    root,
+                    &class.locator,
+                    format!("classification-succession-cycle: {origin}"),
                 ));
             }
             if visited.insert(node.clone()) {
                 pending.extend(predecessors[&node].iter().cloned());
             }
+        }
+    }
+    for class in &out.classifications {
+        let statement = crate::emit::StatementRow::for_locator(&out.statements, &class.locator)
+            .expect("inventory classifications have statements");
+        for (field, value) in class.facts(&out.classifications) {
+            out.overrides.push(reg_resolve::provenance::Claim {
+                kind: "class_version".into(),
+                locator: class.locator.clone(),
+                identity: None,
+                provider: None,
+                register: None,
+                table: None,
+                release: None,
+                period: Some(class.period.clone()),
+                field,
+                value: reg_resolve::curation::apply::rendered(&value),
+                source_value: None,
+                statement: statement.hash.clone(),
+            });
         }
     }
     Ok(out)
@@ -1167,9 +1166,9 @@ fn run_selected(
     for (a, b) in reg_resolve::curation::classification_conflicts(&result.classifications) {
         let (left, right) = (&result.classifications[a], &result.classifications[b]);
         for class in [left, right] {
-            if let Some(statement) = result.statements.iter().find(|s| {
-                s.file == class.locator.input && format!("line={}", s.line) == class.locator.at
-            }) {
+            if let Some(statement) =
+                crate::emit::StatementRow::for_locator(&result.statements, &class.locator)
+            {
                 conflicts.insert(statement.hash.clone());
             }
         }

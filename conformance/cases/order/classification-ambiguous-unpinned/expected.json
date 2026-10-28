@@ -1,0 +1,17 @@
+{
+  "findings": [
+    {
+      "level": "error",
+      "code": "ambiguous_window",
+      "path": "/sources/0/bindings/0",
+      "message": "demo/pins/kod cannot be placed on one form in demo/pins over [2015-01-01, 2016-01-01); the window needs curation",
+      "source": "s",
+      "variable": "demo/pins/kod",
+      "table": "demo/pins",
+      "period": {
+        "start": "2015-01-01",
+        "end": "2016-01-01"
+      }
+    }
+  ]
+}

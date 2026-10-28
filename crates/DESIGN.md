@@ -883,17 +883,17 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
-`period_default_on_dated_table`, `period_on_timeless_table`, `period_not_orderable` and
-`project_empty` (no sources; a whole-project finding) and `source_outside_window` (a
-dated source period wholly outside the study window). Warnings and infos do not:
-`classification_version_ambiguous`, `preliminary_data` (a window only a preliminary
-release covers; final wins where both exist), `edition_disagreement`,
-`variable_sensitive`, `variable_replaced`, `panel_row_keys_differ`, `period_clipped`,
-`form_change`, `table_succession_undated`, `identifier` and `coverage_end_unstated`.
-Each is an `Issue` whose `path` points at the source, binding or panel and whose
-`source`, `variable`, `table` and `period` say what it is about (`null` for a
-whole-project finding). The conditions are the order check's to state in its own tests;
-the rules that shape them:
+`classification_incompatible`, `period_default_on_dated_table`,
+`period_on_timeless_table`, `period_not_orderable` and `project_empty` (no sources; a
+whole-project finding) and `source_outside_window` (a dated source period wholly outside
+the study window). Warnings and infos do not: `classification_version_ambiguous`,
+`preliminary_data` (a window only a preliminary release covers; final wins where both
+exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
+`panel_row_keys_differ`, `period_clipped`, `form_change`, `table_succession_undated`,
+`identifier` and `coverage_end_unstated`. Each is an `Issue` whose `path` points at the
+source, binding or panel and whose `source`, `variable`, `table` and `period` say what
+it is about (`null` for a whole-project finding). The conditions are the order check's
+to state in its own tests; the rules that shape them:
 
 - A retired id reports "retired in <version>" and names no successor; no operation
   follows `ident_retired`.
@@ -902,6 +902,11 @@ the rules that shape them:
 - Design §9 blocks only the `ambiguous` window kind. A preliminary segment orders with a
   warning (selecting an edition is deferred until curation), and a class-version
   ambiguity the binding does not pin is a warning.
+- `classification_version_ambiguous` warns when an unpinned binding spans multiple
+  curated versions. `classification_incompatible` blocks at the binding's
+  `classification` field when the pinned version has no compatible curated windows. A
+  pin preserves `ambiguous_window` refusals, including ambiguous segments that state no
+  version; it cannot turn them into coverage clips.
 - Variables are register-scoped, so members of different registers never share a row-key
   variable. `panel_row_keys_differ` compares the row-key segments' identifier kinds
   (`segment.id_kind_id`, the full kind, pseudonymised form included) and warns only when
@@ -1176,11 +1181,11 @@ segments that deliver the same codes share one set, and a segment with no value 
 `value_set: null`. `values` reads a set by its hash, or lists the sets holding a code
 and label. The blank code `""` is an item like any other. Classifications (versions,
 codes, correspondences) use curated identities. `curation/classifications.toml` holds
-family/version metadata, names, publisher, URL, existence periods, aliases, umbrella
-membership and explicit succession edges. Its code lists reference reader value sets;
-they are never copied into inventory items. Inventory versions reuse the existing
-`assert classification-version` construction and emission path. Inline `items` remain
-available for genuinely hand-authored assertions.
+family/version metadata, served names, publisher, existence periods and explicit
+succession edges. Its code lists reference reader value sets; they are never copied into
+inventory items. Inventory versions reuse the existing `assert classification-version`
+construction and emission path. Inline `items` remain available for genuinely
+hand-authored assertions.
 
 Book periods describe existence only. They are neither inferred nor truncated, and
 versions of one family may overlap. Applicability comes exclusively from occurrence

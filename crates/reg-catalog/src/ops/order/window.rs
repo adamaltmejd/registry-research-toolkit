@@ -191,7 +191,8 @@ fn materialize(
         pieces.extend(served(scope, k, variable.id)?);
     }
     if let Some(version) = variable.classification {
-        pieces.retain(|p| p.class_version == Some(version));
+        // Ambiguous windows must still block: their unresolved version is not a clip.
+        pieces.retain(|p| p.state == "ambiguous" || p.class_version == Some(version));
         let mut compatible = !pieces.is_empty();
         for &table in scope.chain {
             if compatible {

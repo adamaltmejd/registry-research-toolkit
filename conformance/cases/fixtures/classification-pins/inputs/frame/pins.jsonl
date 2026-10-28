@@ -6,3 +6,9 @@
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2019","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2018","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
 {"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2019","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
+{"kind":"release","provider":"demo","register":"pins","table":"","release":"r2015","name":"2015","from":"2015-01-01","to":"2015-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"pins","table":"","release":"r2015pre","name":"2015 H1 preliminary","from":"2015-01-01","to":"2015-06-30","grain":"half","edition":"preliminary"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015pre","column":"Lopnr","source_key":"id","label":"Löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
+{"kind":"occurrence","provider":"demo","register":"pins","table":"","release":"r2015pre","column":"Kod","source_key":"code","label":"Code","dtype":"int","valueset":"kind"}
