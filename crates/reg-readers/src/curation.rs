@@ -9,7 +9,7 @@ use serde::Deserialize;
 use crate::{ReadError, error};
 
 /// A validated statement and its authoring location; identity excludes the location.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LocatedStatement {
     pub provider: String,
     pub register: String,

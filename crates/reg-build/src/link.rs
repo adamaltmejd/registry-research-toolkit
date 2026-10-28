@@ -10,6 +10,9 @@ use reg_resolve::Resolved;
 
 use crate::docs::Document;
 
+mod curated;
+pub(crate) use curated::{Curated, curate};
+
 /// A matched endpoint, by index into the resolved registers and their entities.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Entity {
@@ -42,12 +45,15 @@ impl Entity {
 }
 
 /// One `relation` row before row ids.
+#[derive(Clone)]
 pub struct Relation {
     pub kind: &'static str,
     pub subject: Entity,
     pub object: Entity,
     pub at: Option<String>,
     pub note: Option<String>,
+    pub end: Option<String>,
+    pub statement: Option<String>,
 }
 
 /// One notice finding before row ids.
@@ -190,6 +196,8 @@ pub fn resolve(
             object,
             at,
             note,
+            end: None,
+            statement: None,
         })
         .collect();
     linked.notices = notices

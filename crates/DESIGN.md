@@ -213,6 +213,9 @@ spelling and type. A D `set` states those.
 
 **Curation.**
 
+- A `link` or `ack` changes exactly its selected subjects or findings. Source links are
+  not displaced to accept a conflicting curated link. With no statements, artifact bytes
+  are unchanged.
 - Four statement kinds: `assert`, `set`, `link` and `ack`. `bind` and `assign` are gone:
   the ledger names registers and tables; moving a row or assigning its variable is a
   field change.
@@ -271,11 +274,38 @@ spelling and type. A D `set` states those.
   depend on type, existing value sets and population alternatives; period changes depend
   on release placement and parent coverage. Source changes reopen review. With no
   statements, artifact bytes remain unchanged.
+- `link` applies `continues`, `derived_from`, `equivalent` and `label_of` after field
+  application and identity resolution. Endpoints use the selected whole occurrences,
+  ledger variables or tables, or a resolved register/variable FQID. Release endpoints
+  remain refused. Optional `at` periods become merged validity intervals. Each relation
+  carries its statement and caveat. An exact source-edge duplicate gains curated
+  provenance without changing the graph's topology.
+- A table `continues` points from successor to predecessor. The real corpus drops no
+  successions, so no successor-choice or `reject` form exists. Curated links that close
+  a cycle or give a table a second successor on one day refuse at their statement
+  locations. The existing link stage still drops invalid source-only successions;
+  curation does not choose between them or change that evidence. `follow_successor` and
+  continuation proposals remain D-10 and D-6.
+- `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
+  legacy code/label pairs created presentation groups; D-3c does not synthesize those
+  legacy groups, change identity or alter order bindings.
+- `ack` retains the finding, its severity and message, and records the statement's file,
+  line, evidence and caveat through `ack_statement_id`. Its declared severity must match
+  the finding. The reviewed premise snapshots the finding and its supporting source
+  facts; a missing finding is a located `stale-ack` refusal. Legacy finding codes are
+  not guessed to be equivalent to new findings. Resolver findings are addressable
+  through their variable, occurrence or release; F5 markers retain their register-level
+  published finding but carry internal key metadata for exact acknowledgement.
+  Link-stage source notices are not resolver findings and cannot currently be
+  acknowledged. Acknowledgements do not change structural ambiguity: orders still refuse
+  ambiguous segments. F5 is currently a notice, F6 a review; neither independently
+  blocks orders. Notice acknowledgements annotate; there is currently no separate
+  generic review-finding order blocker to suppress. F7 edition findings remain warnings.
 - `coverage` is applied in D-5 (EKB); `classification` and `tags` in D-9. Their fields
-  remain accepted syntax but application refuses with the owning work package. `link`
-  and `ack` application wait for D-3c. Sentinels, roles and unit types remain deferred
-  to D's planned sentinel and nondefault-role/unit-type work. Entity names and synonyms
-  remain deferred to D's entity-name and search curation.
+  remain accepted syntax but application refuses with the owning work package.
+  Sentinels, roles and unit types remain deferred to D's planned sentinel and
+  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
+  entity-name and search curation.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
@@ -344,8 +374,9 @@ Source-shaped assertion fields have a separate closed schema, including table `n
 occurrence `type` and `length`. Lists of sets, tags, sentinels and synonyms normalize as
 sorted sets; asserted codes sort by code, while duplicate codes are refused. Addresses
 normalize folded spellings, expanded braces and sorted guards and period tokens before
-hashing. `set reject` has no form; succession acceptance/rejection belongs to D-3c's
-link work. Merged release changes update every claim to the release's final placement.
+hashing. Links add relations; conflicting successions refuse. There is no
+successor-choice or `reject` form. Merged release changes update every claim to the
+release's final placement.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate

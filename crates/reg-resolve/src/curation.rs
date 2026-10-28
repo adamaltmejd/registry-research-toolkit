@@ -2,6 +2,7 @@
 //! moved/asserted frame; other overrides never feed selector resolution. Selectors
 //! and premises describe the source the curator reviewed.
 
+pub mod ack;
 pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -73,7 +74,12 @@ impl SharedSources {
     }
 }
 
-fn periods(set: &PeriodSet) -> Vec<Interval> {
+/// Convert a validated period set to inclusive ISO date intervals.
+///
+/// # Panics
+/// Panics if a `PeriodSet` contains a period that cannot be parsed.
+#[must_use]
+pub fn periods(set: &PeriodSet) -> Vec<Interval> {
     set.to_string()
         .split(',')
         .map(|text| {
@@ -1514,7 +1520,18 @@ pub fn resolve(
             if matches.is_empty() && !matches!(statement, Statement::Assert { .. }) {
                 return Err("empty match".into());
             }
-            ambiguity(&matches, &view)?;
+            if !matches!(
+                statement,
+                Statement::Ack {
+                    subject: Address::Variable(_),
+                    ..
+                } | Statement::Link {
+                    subject: Address::Variable(_),
+                    ..
+                }
+            ) {
+                ambiguity(&matches, &view)?;
+            }
             whole?;
             let mut fields: BTreeSet<String> = [
                 "kind",
@@ -1663,7 +1680,9 @@ pub fn resolve(
                     if objects.is_empty() {
                         return Err("empty match for link object".into());
                     }
-                    ambiguity(&objects, &view)?;
+                    if !matches!(address, Address::Variable(_)) {
+                        ambiguity(&objects, &view)?;
+                    }
                     whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);
                     premise(&objects, &view, &fields)
