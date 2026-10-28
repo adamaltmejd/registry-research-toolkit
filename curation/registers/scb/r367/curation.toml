@@ -1,0 +1,524 @@
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _26 where key = 'v36451' and release = 'r11265'"
+fields = { "label" = "Annat hemarbete — _26" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2200\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _26 where key = 'v36451' and release = 'r12440'"
+fields = { "label" = "Annat hemarbete — _26" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2176\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _26 where key = 'v36451' and release = 'r14334'"
+fields = { "label" = "Annat hemarbete — _26" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2176\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _2611 where key = 'v36451' and release = 'r11265'"
+fields = { "label" = "Annat hemarbete — _2611" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2212\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _2611 where key = 'v36451' and release = 'r12440'"
+fields = { "label" = "Annat hemarbete — _2611" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2188\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _2611 where key = 'v36451' and release = 'r14334'"
+fields = { "label" = "Annat hemarbete — _2611" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2188\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: carbh09 where key = 'v18102' and release = 'r11265'"
+fields = { "label" = "Arbetsinkomst, familj — carbh09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1924\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: carbh10 where key = 'v18102' and release = 'r11265'"
+fields = { "label" = "Arbetsinkomst, familj — carbh10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1936\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: carbh11 where key = 'v18102' and release = 'r11265'"
+fields = { "label" = "Arbetsinkomst, familj — carbh11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1948\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: hreg where key = 'v3195' and release = 'r11265'"
+fields = { "label" = "H-region — HREG" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1912\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: hreg where key = 'v3195' and release = 'r12440'"
+fields = { "label" = "H-region — HREG" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1900\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: hreg where key = 'v3195' and release = 'r14334'"
+fields = { "label" = "H-region — HREG" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1888\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers2_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers2_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1612\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers3_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers3_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1624\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers4_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers4_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1636\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers5_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers5_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1648\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers6_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers6_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1660\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers7_kon where key = 'v44' and release = 'r11265'"
+fields = { "label" = "Kön — pers7_kon" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1672\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlont09 where key = 'v1198' and release = 'r11265'"
+fields = { "label" = "Löneinkomst — tlont09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1960\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlont10 where key = 'v1198' and release = 'r11265'"
+fields = { "label" = "Löneinkomst — tlont10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1972\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlont11 where key = 'v1198' and release = 'r11265'"
+fields = { "label" = "Löneinkomst — tlont11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1984\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlonth09 where key = 'v1618' and release = 'r11265'"
+fields = { "label" = "Löneinkomst, familj — tlonth09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1996\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlonth10 where key = 'v1618' and release = 'r11265'"
+fields = { "label" = "Löneinkomst, familj — tlonth10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2008\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: tlonth11 where key = 'v1618' and release = 'r11265'"
+fields = { "label" = "Löneinkomst, familj — tlonth11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2020\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: samvaro where key = 'v36359' and release = 'r12440'"
+fields = { "label" = "Närvarande person — SAMVARO" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2380\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: samvaro where key = 'v36359' and release = 'r14334'"
+fields = { "label" = "Närvarande person — SAMVARO" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2392\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers2 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers2" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2404\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers3 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers3" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2416\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers4 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers4" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2428\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers5 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers5" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2440\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers6 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers6" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2452\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers7 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers7" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2464\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers8 where key = 'v36359' and release = 'r11265'"
+fields = { "label" = "Närvarande person — pers8" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2476\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_1 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_1" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1708\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_2 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_2" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1720\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_3 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_3" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1732\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_4 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_4" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1744\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_5 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_5" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1756\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr11_6 where key = 'v38719' and release = 'r12440'"
+fields = { "label" = "Om den svarande använde dator i hemmet under dagboksdagen — fr11_6" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1768\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_1 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_1" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1780\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_2 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_2" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1792\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_3 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_3" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1804\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_4 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_4" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1816\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_5 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_5" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1828\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_6 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_6" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1840\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_7 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_7" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1852\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_8 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_8" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1864\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: fr12_9 where key = 'v38720' and release = 'r12440'"
+fields = { "label" = "Om den svarande var uppkopplad mot internet — fr12_9" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1876\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: flex3 where key = 'v38726' and release = 'r12440'"
+fields = { "label" = "Orsak varierad arbetstid — schemalagd varierande arbetstid eller koncentrerad deltid" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1696\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: flex4 where key = 'v38726' and release = 'r12440'"
+fields = { "label" = "Orsak varierad arbetstid — varierande krav på arbetsinsats eller egen vald variation" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:1684\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers2_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers2_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2488\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers3_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers3_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2500\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers4_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers4_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2512\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers5_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers5_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2524\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers6_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers6_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2536\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers7_reltyp where key = 'v35581' and release = 'r11265'"
+fields = { "label" = "Relation till urvalsperson — pers7_reltyp" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2548\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _30 where key = 'v36453' and release = 'r11265'"
+fields = { "label" = "Resor i sb med personliga behov — _30" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2236\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _30 where key = 'v36453' and release = 'r12440'"
+fields = { "label" = "Resor i sb med personliga behov — _30" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2236\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: _30 where key = 'v36453' and release = 'r14334'"
+fields = { "label" = "Resor i sb med personliga behov — _30" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2224\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfviki09 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfviki09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2032\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfviki10 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfviki10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2056\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfviki11 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfviki11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2080\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfvikih09 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2044\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfvikih10 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2068\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: cfvikih11 where key = 'v125' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvs- och kapitalinkomst — cfvikih11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2092\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvi09 where key = 'v99' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst — csfvi09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2104\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvi10 where key = 'v99' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst — csfvi10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2116\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvi11 where key = 'v99' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst — csfvi11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2128\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvih09 where key = 'v1290' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj — csfvih09" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2140\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvih10 where key = 'v1290' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj — csfvih10" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2152\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: csfvih11 where key = 'v1290' and release = 'r11265'"
+fields = { "label" = "Sammanräknad förvärvsinkomst, familj — csfvih11" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2164\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: bald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — BALD" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2296\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: bald where key = 'v241' and release = 'r12440'"
+fields = { "label" = "Ålder 31/12 — BALD" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2272\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsstudien: alderslut where key = 'v241' and release = 'r18374'"
+fields = { "label" = "Ålder 31/12 — Variabeln är härledd från personnumret i det register variabeln hämtas från." }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2284\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers2_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers2_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2308\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers3_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers3_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2320\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers4_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers4_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2332\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers5_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers5_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2344\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers6_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers6_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2356\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: pers7_ald where key = 'v241' and release = 'r11265'"
+fields = { "label" = "Ålder 31/12 — pers7_ald" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2368\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: aldgrp2 where key = 'v749' and release = 'r11265'"
+fields = { "label" = "Åldersgrupp — ALDGRP2" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2260\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: aldgrp2 where key = 'v749' and release = 'r12440'"
+fields = { "label" = "Åldersgrupp — ALDGRP2" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:2248\n\nComplete accepted source audit: Tidsanvandning19 native families/128 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Tidsanvandning19-source-proof.json."
+
+[[statement]]
+kind = "link"
+subject = "var:kommunnamn"
+relation = "label_of"
+object = "scb/tidsanvandning/kommun"
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:lansnamn"
+relation = "label_of"
+object = "scb/tidsanvandning/lan"
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: arbtimup where key = 'v25026'"
+fields = { "variable" = "arbtim" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:375\n\nShared-column succession fold 2026-10-21: SCB VarId 25026 'Arbetade timmar per vecka' sequential rename {ARBTIMUP 1990, arbtim 2000 and 2010} owned by 367.25026.arbtim; identical definition 'Arbetade timmar per vecka hos urvalspersonen', never co-delivered (reg_meta v0.57.0). The partner columns ARBTIMMS/arbtimms and the 2021 tidsstudien F10 keep their own owners. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: arbtup where key = 'v27259'"
+fields = { "variable" = "arbt" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:370\n\nShared-column succession fold 2026-10-21: SCB VarId 27259 'Heltid eller deltid' sequential rename {ARBTUP 1990, arbt 2000} owned by 367.27259.arbt; identical definition 'Visar hur urvalspersonen arbetar', the same 7 codes, never co-delivered (reg_meta v0.57.0). The partner columns ARBTMS/arbtms and the 2010 heldel/heldelms keep their own owners. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: syss where key = 'v28679'"
+fields = { "variable" = "sysselsattning-aktivitet" }
+evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:380\n\nShared-column succession fold 2026-10-21: SCB VarId 28679 'Sysselsättning/aktivitet' sequential rename {SYSSUP 1990, syss 2000 and 2010} owned by 367.28679.syss; identical definition 'Urvalspersonen', the same 14 codes (syss additionally lists the sentinel 22 'Okänt värde'), never co-delivered (reg_meta v0.57.0). The partner columns SYSSMS/syssms keep their own owner. Y-211/Y-276 sequential-rename policy."

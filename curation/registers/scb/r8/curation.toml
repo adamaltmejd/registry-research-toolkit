@@ -1,0 +1,618 @@
+
+[[statement]]
+kind = "set"
+subject = "bussar: drivm where key = 'v37378'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5105\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: drivm where key = 'v37378'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5114\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: drivm where key = 'v37378'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5078\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13536'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13537'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13538'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13539'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13540'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13541'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r13542'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15064'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15187'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15641'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15642'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15643'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15650'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15651'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15665'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15667'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5096\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15677'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5096\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15678'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15686'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15697'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15703'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15704'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15705'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15706'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15707'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15709'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15712'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15713'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15754'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15755'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15756'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15757'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15758'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15759'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15761'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: drivm where key = 'v37378' and release = 'r15763'"
+fields = { "variable" = "drivmedel" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:5087\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r13332'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r13342'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r13406'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r13407'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r13410'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15054'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15195'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15199'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15227'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15228'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15230'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002 where key = 'v4027' and release = 'r15232'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:283\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r13342'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r13406'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r13407'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r13410'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15054'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15195'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15199'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15227'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15228'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15230'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_2 where key = 'v4027' and release = 'r15232'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:307\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r13342'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r13406'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r13407'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r13410'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15054'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15195'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15199'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15227'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15228'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15230'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni2002_3 where key = 'v4027' and release = 'r15232'"
+fields = { "value_set" = "2c8f6ecbf97fbb2dd8e90ab9be41a1fd31ef45d36aa0e106f59d8513f8c59c35" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:319\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13588'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:247\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13589'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:247\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13590'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:247\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r13591'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:247\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 where key = 'v4027' and release = 'r15058'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:247\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13598'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:259\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13599'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:259\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13600'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:259\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r13601'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:259\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 where key = 'v4027' and release = 'r15059'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:259\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13606'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13607'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13608'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r13609'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15077'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15115'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15116'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15120'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15121'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15123'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 where key = 'v4027' and release = 'r15124'"
+fields = { "value_set" = "735f731a3fd931d3845d61df914a5d076f31c94218dae0826449c0526f551e88" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:295\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r13543'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r13545'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15034'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15069'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15093'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15097'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15103'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15138'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 where key = 'v4027' and release = 'r15140'"
+fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
+evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."

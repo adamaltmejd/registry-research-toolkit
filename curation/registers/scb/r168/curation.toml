@@ -1,0 +1,1274 @@
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr528 where key = 'v19656'"
+fields = { "variable" = "sociala-kostnader-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:637\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19656: 81 originals; one exported name (Sociala kostnader och andra personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr528 where key = 'v19656'"
+fields = { "variable" = "sociala-kostnader-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:637\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19656: 81 originals; one exported name (Sociala kostnader och andra personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr528 where key = 'v19656'"
+fields = { "variable" = "sociala-kostnader-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:637\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19656: 81 originals; one exported name (Sociala kostnader och andra personalkostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr6101 where key = 'v4098'"
+fields = { "variable" = "medelantal-anstallda" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:551\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4098: 98 originals; one exported name (Medelantal anställda) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr6101 where key = 'v4098'"
+fields = { "variable" = "medelantal-anstallda" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:551\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4098: 98 originals; one exported name (Medelantal anställda) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr6101 where key = 'v4098'"
+fields = { "variable" = "medelantal-anstallda" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:551\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4098: 98 originals; one exported name (Medelantal anställda) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr512 where key = 'v4263'"
+fields = { "variable" = "kostnader-loner-ersattningar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:567\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4263: 77 originals; one exported name (Kostnader för löner och andra ersättningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr512 where key = 'v4263'"
+fields = { "variable" = "kostnader-loner-ersattningar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:567\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4263: 77 originals; one exported name (Kostnader för löner och andra ersättningar) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar002_jmf where key = 'v4872'"
+fields = { "variable" = "forbrukningsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:598\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4872: 94 originals; one exported name (Förbrukningsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar002_jmf where key = 'v4872'"
+fields = { "variable" = "forbrukningsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:598\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4872: 94 originals; one exported name (Förbrukningsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vhar002_jmf where key = 'v4872'"
+fields = { "variable" = "forbrukningsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:598\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4872: 94 originals; one exported name (Förbrukningsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar001_jmf where key = 'v4873'"
+fields = { "variable" = "produktionsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:604\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4873: 98 originals; one exported name (Produktionsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar001_jmf where key = 'v4873'"
+fields = { "variable" = "produktionsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:604\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4873: 98 originals; one exported name (Produktionsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vhar001_jmf where key = 'v4873'"
+fields = { "variable" = "produktionsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:604\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4873: 98 originals; one exported name (Produktionsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: pveu001 where key = 'v4873'"
+fields = { "variable" = "produktionsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:604\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4873: 98 originals; one exported name (Produktionsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar400_jmf where key = 'v5028'"
+fields = { "variable" = "nettoomsattning-justerad-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:615\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5028: 92 originals; one exported name (Nettoomsättning (justerad för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar400_jmf where key = 'v5028'"
+fields = { "variable" = "nettoomsattning-justerad-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:615\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5028: 92 originals; one exported name (Nettoomsättning (justerad för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vhar400_jmf where key = 'v5028'"
+fields = { "variable" = "nettoomsattning-justerad-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:615\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5028: 92 originals; one exported name (Nettoomsättning (justerad för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar500_jmf where key = 'v5619'"
+fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:631\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5619: 76 originals; one exported name (Summa råvaror och handelsvaror (justerat för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar500_jmf where key = 'v5619'"
+fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:631\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5619: 76 originals; one exported name (Summa råvaror och handelsvaror (justerat för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vhar500_jmf where key = 'v5619'"
+fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:631\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5619: 76 originals; one exported name (Summa råvaror och handelsvaror (justerat för merchanting)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar003_jmf where key = 'v87'"
+fields = { "variable" = "foradlingsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:545\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.87: 98 originals; one exported name (Förädlingsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar003_jmf where key = 'v87'"
+fields = { "variable" = "foradlingsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:545\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.87: 98 originals; one exported name (Förädlingsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vhar003_jmf where key = 'v87'"
+fields = { "variable" = "foradlingsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:545\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.87: 98 originals; one exported name (Förädlingsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: fveu003 where key = 'v87'"
+fields = { "variable" = "foradlingsvarde" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:545\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.87: 98 originals; one exported name (Förädlingsvärde) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kga20 where key = 'v4080'"
+fields = { "variable" = "summa-nettoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1495\n\n2026-10-13 one-register batch (#1579). Native family 168.4080 in reg_meta 0.49.0: one exported name (Summa nettoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lga20 where key = 'v4080'"
+fields = { "variable" = "summa-nettoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1495\n\n2026-10-13 one-register batch (#1579). Native family 168.4080 in reg_meta 0.49.0: one exported name (Summa nettoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vga20 where key = 'v4080'"
+fields = { "variable" = "summa-nettoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1495\n\n2026-10-13 one-register batch (#1579). Native family 168.4080 in reg_meta 0.49.0: one exported name (Summa nettoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kga10 where key = 'v4175'"
+fields = { "variable" = "summa-bruttoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1501\n\n2026-10-13 one-register batch (#1579). Native family 168.4175 in reg_meta 0.49.0: one exported name (Summa bruttoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lga10 where key = 'v4175'"
+fields = { "variable" = "summa-bruttoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1501\n\n2026-10-13 one-register batch (#1579). Native family 168.4175 in reg_meta 0.49.0: one exported name (Summa bruttoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vga10 where key = 'v4175'"
+fields = { "variable" = "summa-bruttoinvesteringar" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1501\n\n2026-10-13 one-register batch (#1579). Native family 168.4175 in reg_meta 0.49.0: one exported name (Summa bruttoinvesteringar) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr400 where key = 'v4256'"
+fields = { "variable" = "nettoomsattning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr400 where key = 'v4256'"
+fields = { "variable" = "nettoomsattning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar400_jmf where key = 'v4256'"
+fields = { "variable" = "nettoomsattning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr400 where key = 'v4256'"
+fields = { "variable" = "nettoomsattning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr527 where key = 'v4273'"
+fields = { "variable" = "ovriga-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr527 where key = 'v4273'"
+fields = { "variable" = "ovriga-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr527 where key = 'v4273'"
+fields = { "variable" = "ovriga-personalkostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr555 where key = 'v19657'"
+fields = { "variable" = "ovriga-rorelsekostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:643\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19657: 71 originals; one exported name (Övriga rörelsekostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr555 where key = 'v19657'"
+fields = { "variable" = "ovriga-rorelsekostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:643\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19657: 71 originals; one exported name (Övriga rörelsekostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr555 where key = 'v19657'"
+fields = { "variable" = "ovriga-rorelsekostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:643\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.19657: 71 originals; one exported name (Övriga rörelsekostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr509 where key = 'v4255'"
+fields = { "variable" = "forandring-lager-pagaende-arbete" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:557\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4255: 83 originals; one exported name (Förändring av lager och pågående arbete) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr509 where key = 'v4255'"
+fields = { "variable" = "forandring-lager-pagaende-arbete" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:557\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4255: 83 originals; one exported name (Förändring av lager och pågående arbete) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr509 where key = 'v4255'"
+fields = { "variable" = "forandring-lager-pagaende-arbete" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:557\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4255: 83 originals; one exported name (Förändring av lager och pågående arbete) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr401 where key = 'v4257'"
+fields = { "variable" = "ovriga-rorelseintakter" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:562\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4257: 84 originals; one exported name (Övriga rörelseintäkter) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr401 where key = 'v4257'"
+fields = { "variable" = "ovriga-rorelseintakter" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:562\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4257: 84 originals; one exported name (Övriga rörelseintäkter) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr401 where key = 'v4257'"
+fields = { "variable" = "ovriga-rorelseintakter" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:562\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4257: 84 originals; one exported name (Övriga rörelseintäkter) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr530 where key = 'v4272'"
+fields = { "variable" = "ovriga-externa-kostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:573\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4272: 84 originals; one exported name (Övriga externa kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr530 where key = 'v4272'"
+fields = { "variable" = "ovriga-externa-kostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:573\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4272: 84 originals; one exported name (Övriga externa kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr530 where key = 'v4272'"
+fields = { "variable" = "ovriga-externa-kostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:573\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4272: 84 originals; one exported name (Övriga externa kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr402 where key = 'v4313'"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:578\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4313: 84 originals; one exported name (Aktiverat arbete för egen räkning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr402 where key = 'v4313'"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:578\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4313: 84 originals; one exported name (Aktiverat arbete för egen räkning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr402 where key = 'v4313'"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:578\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4313: 84 originals; one exported name (Aktiverat arbete för egen räkning) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr423 where key = 'v4820'"
+fields = { "variable" = "intakter-av-handel" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:583\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4820: 45 originals; one exported name (Intäkter av handel) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr422 where key = 'v4820'"
+fields = { "variable" = "intakter-av-handel" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:583\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4820: 45 originals; one exported name (Intäkter av handel) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr422 where key = 'v4821'"
+fields = { "variable" = "intakter-av-industri" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:588\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4821: 45 originals; one exported name (Intäkter av industri) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr423 where key = 'v4821'"
+fields = { "variable" = "intakter-av-industri" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:588\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4821: 45 originals; one exported name (Intäkter av industri) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr429 where key = 'v4822'"
+fields = { "variable" = "intakter-av-ovrigt" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:593\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4822: 45 originals; one exported name (Intäkter av övrigt) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr429 where key = 'v4822'"
+fields = { "variable" = "intakter-av-ovrigt" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:593\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.4822: 45 originals; one exported name (Intäkter av övrigt) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr598 where key = 'v5024'"
+fields = { "variable" = "totala-kostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:610\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5024: 28 originals; one exported name (Totala kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: fgr557 where key = 'v5024'"
+fields = { "variable" = "totala-kostnader" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:610\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5024: 28 originals; one exported name (Totala kostnader) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar6103 where key = 'v5487'"
+fields = { "variable" = "sysselsatta-rams" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:621\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5487: 38 originals; one exported name (Sysselsatta (RAMS)) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr498 where key = 'v5616'"
+fields = { "variable" = "totala-intakter-mm" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:626\n\n2026-10-01 SWECOV restoration, accepted prepared commit 1924eb7f3cfb00d047b0b30522758e7e8bc2f7cc. Complete native family 168.5616: 26 originals; one exported name (Totala intäkter mm) and one definition across these literal columns. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted; blank column records remain unattached original evidence."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgb219 where key = 'v4215'"
+fields = { "variable" = "varulager" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1507\n\n2026-10-13 one-register batch (#1579). Native family 168.4215 in reg_meta 0.49.0: one exported name (Varulager) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr500 where key = 'v4269'"
+fields = { "variable" = "summa-kostnader-ravaror-handelsvaror" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1523\n\n2026-10-13 one-register batch (#1579). Native family 168.4269 in reg_meta 0.49.0: one exported name (Summa kostnader för råvaror och handelsvaror) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lhar500_jmf where key = 'v4269'"
+fields = { "variable" = "summa-kostnader-ravaror-handelsvaror" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1523\n\n2026-10-13 one-register batch (#1579). Native family 168.4269 in reg_meta 0.49.0: one exported name (Summa kostnader för råvaror och handelsvaror) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr500 where key = 'v4269'"
+fields = { "variable" = "summa-kostnader-ravaror-handelsvaror" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1523\n\n2026-10-13 one-register batch (#1579). Native family 168.4269 in reg_meta 0.49.0: one exported name (Summa kostnader för råvaror och handelsvaror) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: lgr0140 where key = 'v4279'"
+fields = { "variable" = "rorelseresultat" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1539\n\n2026-10-13 one-register batch (#1579). Native family 168.4279 in reg_meta 0.49.0: one exported name (Rörelseresultat) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: vgr0140 where key = 'v4279'"
+fields = { "variable" = "rorelseresultat" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1539\n\n2026-10-13 one-register batch (#1579). Native family 168.4279 in reg_meta 0.49.0: one exported name (Rörelseresultat) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12808'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12809'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12810'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12811'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12813'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12815'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12816'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r12915'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r13718'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r14703'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r14704'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r14705'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r14706'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r15627'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r17891'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: fhar002_jmf where key = 'v4872' and release = 'r18473'"
+fields = { "description" = "Förbrukningsvärdet redovisas som ett negativt belopp, så att förädlingsvärde = produktionsvärde + förbrukningsvärde. Teckenkonventionen är kontrollerad på aggregerad nivå för FEK 2010 och 2015." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:129\n\nMaintainer MONA aggregate check (2026-10-12), whole-register sums only: FE2010 Förädlingsvärde 1.96e12, Produktionsvärde 5.09e12, Förbrukningsvärde -3.13e12 kronor; FE2015 2.34e12, 5.89e12, -3.54e12 kronor. In both years Förädlingsvärde = Produktionsvärde + Förbrukningsvärde, so Förbrukningsvärde is stored negative (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: SNI92 @1990,1991,1992,1993,1994,1995,1996"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SNI92", "definition" = "SCB delivery report documents SNI92 for FE1990-FE1996; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity." } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1469\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 129, documents SNI92 in FE1990-FE1996; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: KostnaderForOvrigaSocialaAvgifterOchPensionskostnader @1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "KostnaderForOvrigaSocialaAvgifterOchPensionskostnader", "definition" = "SCB delivery report documents KostnaderForOvrigaSocialaAvgifterOchPensionskostnader for FE1997-FE2002; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity." } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1447\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 97, documents KostnaderForOvrigaSocialaAvgifterOchPensionskostnader in FE1997-FE2002; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: LangfristigaAktierOchAndelar @1997,1998,1999,2000,2001,2002"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "LangfristigaAktierOchAndelar", "definition" = "SCB delivery report documents LangfristigaAktierOchAndelar for FE1997-FE2002; no substantive historical definition is supplied. Retained as a separate historical delivered-column identity." } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1458\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row 99, documents LangfristigaAktierOchAndelar in FE1997-FE2002; no FEK native item has the same scope (maintainer D6 + OP-2026-10-13-E)."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1990"
+fact = { "entity" = "release", "name" = "1990", "period" = "1990" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:741\n\nSWECOV holds FE1990, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1991"
+fact = { "entity" = "release", "name" = "1991", "period" = "1991" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:747\n\nSWECOV holds FE1991, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1992"
+fact = { "entity" = "release", "name" = "1992", "period" = "1992" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:753\n\nSWECOV holds FE1992, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1993"
+fact = { "entity" = "release", "name" = "1993", "period" = "1993" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:759\n\nSWECOV holds FE1993, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1994"
+fact = { "entity" = "release", "name" = "1994", "period" = "1994" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:765\n\nSWECOV holds FE1994, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1995"
+fact = { "entity" = "release", "name" = "1995", "period" = "1995" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:771\n\nSWECOV holds FE1995, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1996"
+fact = { "entity" = "release", "name" = "1996", "period" = "1996" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:777\n\nSWECOV holds FE1996, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1997"
+fact = { "entity" = "release", "name" = "1997", "period" = "1997" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:783\n\nSWECOV holds FE1997, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1998"
+fact = { "entity" = "release", "name" = "1998", "period" = "1998" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:789\n\nSWECOV holds FE1998, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/1999"
+fact = { "entity" = "release", "name" = "1999", "period" = "1999" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:795\n\nSWECOV holds FE1999, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/2000"
+fact = { "entity" = "release", "name" = "2000", "period" = "2000" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:801\n\nSWECOV holds FE2000, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/2001"
+fact = { "entity" = "release", "name" = "2001", "period" = "2001" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:807\n\nSWECOV holds FE2001, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "release:fek-slutdata/2002"
+fact = { "entity" = "release", "name" = "2002", "period" = "2002" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:813\n\nSWECOV holds FE2002, a FEK fek-slutdata delivery (maintainer D6, 2026-10-13); SCB's Registerinformation export documents fek-slutdata from 2003 only. SCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, documents the historical FE annual deliveries and their column periods."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: UppstallnForm @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Anger om företaget har kostnadsslagsindelat eller funktionsindelat bokslut.", "definition" = "Anger om företaget har kostnadsslagsindelat eller funktionsindelat bokslut." } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:76\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: ImputeradeForetag @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Imputerade företag", "definition" = "Imputerade företag" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: Stg @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej", "definition" = "Storleksgrupp anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1 eller ej" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:21\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: SummaFinansiellaTillg @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Summa finansiella anläggningstillgångar (SummaFinansiellaTillg)", "definition" = "Summa finansiella anläggningstillgångar" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:32\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: SummaKortfristigaFordringar @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Summa kortfristiga fordringar (SummaKortfristigaFordringar)", "definition" = "Summa kortfristiga fordringar" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:43\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: SummaKortfristigaPlaceringar @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Summa kortfristiga placeringar (SummaKortfristigaPlaceringar)", "definition" = "Summa kortfristiga placeringar" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:54\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: SummaMateriellaAnlaggningstillgangar @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Summa materiella anläggningstillgångar (SummaMateriellaAnlaggningstillgangar)", "definition" = "Summa materiella anläggningstillgångar" } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:65\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12808'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12809'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12810'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12811'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12813'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12815'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12816'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r12915'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r13718'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r14703'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r14704'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r14705'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r14706'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r15627'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r17891'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: antman where key = 'v16965' and release = 'r18473'"
+fields = { "description" = "Antal månader som omfattas av företagets bokslut." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:93\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12808'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12809'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12810'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12811'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12813'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12815'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12816'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r12915'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r13718'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r14703'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r14704'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r14705'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r14706'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r15627'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r17891'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: bokslutsman where key = 'v1820' and release = 'r18473'"
+fields = { "description" = "Bokslutsmånad" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:99\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12808'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12809'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12810'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12811'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12813'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12815'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12816'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r12915'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r13718'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r14703'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r14704'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r14705'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r14706'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r15627'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r17891'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: peorgnrhe where key = 'v56' and release = 'r18473'"
+fields = { "description" = "Företagets löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:117\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: fenr where key = 'v29' and release = 'r19231'"
+fields = { "description" = "Företagsenhetens löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: fenr where key = 'v29' and release = 'r19904'"
+fields = { "description" = "Företagsenhetens löpnummer" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:105\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12808'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12809'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12810'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12811'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12813'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12815'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12816'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12915'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r13718'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14703'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14704'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14705'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14706'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r15627'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r17891'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r18473'"
+fields = { "description" = "Juridisk form" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:111\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12808'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12809'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12810'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12811'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12813'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12815'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12816'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r12915'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r13718'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r14703'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r14704'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r14705'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r14706'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r15627'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r17891'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r18473'"
+fields = { "description" = "Klassificering av en institutionell enhets sektor. Tillhörande klassifikationen är Standard för klassificering av institutionella enheter efter institutionell sektor. Tidigare hette standarden Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:123\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12808'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12809'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12810'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12811'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12813'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12815'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12816'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12915'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r13718'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14703'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14704'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14705'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14706'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r15627'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r17891'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r18473'"
+fields = { "description" = "Ägarkontroll" }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

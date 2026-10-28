@@ -1,0 +1,403 @@
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r11106'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r11108'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r11705'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r11707'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r12977'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r12978'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r13761'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r13763'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r16114'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r16115'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r18078'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r18103'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r18104'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r19325'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r19326'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r19704'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r19910'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r19952'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r20327'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:575\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r4618'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r5206'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r5790'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: beskrivnsv where key = 'v23614' and release = 'r6244'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r11108'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r11705'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r12977'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r13761'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r16114'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r18103'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r19325'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r19326'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r19704'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r20327'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r4620'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r5205'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r5791'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn4namn where key = 'v119' and release = 'r6243'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:553\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r11108'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r11705'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r12977'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r13761'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r16114'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r18103'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r19325'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r19326'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r19704'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r20327'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r4620'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r5205'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r5791'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: kn8beskrivning where key = 'v119' and release = 'r6243'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:564\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
+caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
+
+[[statement]]
+kind = "set"
+subject = "ppi: period where key = 'v35935'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:431\n\nEvery exact variant/edition/literal coordinate for this quarterlyTPI source family simultaneously carries a monthlyPPI native source definition, with no physical table discriminator. The meanings and13-month vs5-quarter encodings are contradictory. Retain the complete family, dates, wording and ordered coding without an invented semantic owner."
+
+[[statement]]
+kind = "set"
+subject = "ppi: periodid where key = 'v35935'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:431\n\nEvery exact variant/edition/literal coordinate for this quarterlyTPI source family simultaneously carries a monthlyPPI native source definition, with no physical table discriminator. The meanings and13-month vs5-quarter encodings are contradictory. Retain the complete family, dates, wording and ordered coding without an invented semantic owner."
+
+[[statement]]
+kind = "link"
+subject = "var:kn4namn"
+relation = "label_of"
+object = "scb/prisindex/kn4kod"
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kn8beskrivning"
+relation = "label_of"
+object = "scb/prisindex/kn8kod-2"
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:14\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:prodnamn"
+relation = "label_of"
+object = "scb/prisindex/produktgrupp-sju-tpi"
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "ppi: ar where key = 'v73' and release = 'r11108'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:597\n\nThe exact exported name and definition identify calendar year, and the operational definition explicitly states the calendar year represented by the statistics. Its2017 input-delivery peer saysÅr while its output-delivery unit says genericPeriod. Normalize only this exact generic period wording to the supported calendar-year unit; preserve both complete originals, source periods and all source coding. No month/quarter/year conversion or date-precision equivalence is claimed."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn"
+fields = { "sets" = ["legacy-produktgruppsnamn"] }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:237\nreg_meta_build/curation/registers/scb/prisindex.toml:245\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json.\n\nSame complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."

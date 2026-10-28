@@ -1,0 +1,14 @@
+
+[[statement]]
+kind = "set"
+subject = "rivning-av-flerbostadshus: rivors where key = 'v17490'"
+fields = { "variable" = "rivors" }
+evidence = "reg_meta_build/curation/registers/scb/ombyggnad-och-rivning.toml:118\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "rivning-av-flerbostadshus: fastbet where key = 'v26'"
+fields = { "variable" = "fastighetsbeteckning" }
+evidence = "reg_meta_build/curation/registers/scb/ombyggnad-och-rivning.toml:61\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."

@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "ekb-manad: hhstatus @2014-01-01.. where key = 'n:hhstatus'"
+fields = { "period" = "2015..2023" }
+evidence = "reg_meta_build/curation/registers/sos/ekb.toml:897\n\nThe EKB_MANAD HHSTATUS row leaves Data från and Data till blank. Socialstyrelsen's delivery list for SWECOV includes HHSTATUS in the monthly person file SWECOV_SOS_EKB_PERS for 2015-2023, so the field is available in that window. The window claims no years outside the delivery and does not extend EKB_AR. All original prose, type, coding and bounds remain unchanged."

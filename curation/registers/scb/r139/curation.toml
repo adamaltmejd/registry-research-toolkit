@@ -1,0 +1,139 @@
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r11997'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r13244'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r14714'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r16471'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r16499'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r18436'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r18878'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r19322'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: lnamn where key = 'v16721' and release = 'r19853'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:507\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r12581'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r13294'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r14715'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r16472'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r16500'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r18438'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r18879'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r19323'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: lnamn where key = 'v16721' and release = 'r19854'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:518\n\nOnly both variants’ nine explicit 2017–2025 Landsnamn/Landnamn original windows document a stored label. Keep all earlier Landkod and blank operational definitions, every original codebook and declared classification. Do not infer an earlier text role or literal response domain."
+caveat = "The 2017–2025 source explicitly describes LNamn as country names. Attached numeric country lists remain reference evidence and do not establish literal name responses. Earlier LNamn wording is absent or says country code; that history and its coding claims remain unchanged, and an aggregate code-label relationship is unverified."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: text where key = 'v19509'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:502\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+
+[[statement]]
+kind = "link"
+subject = "var:bransleslag-namn"
+relation = "label_of"
+object = "scb/branslestatistik/bransleslag"
+evidence = "reg_meta_build/curation/registers/scb/branslestatistik.toml:7\n\nLegacy code_label_pair declaration"

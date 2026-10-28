@@ -1,0 +1,33 @@
+
+[[statement]]
+kind = "set"
+subject = "elever-vartermin: komgrupp23 where key = 'v8534'"
+fields = { "variable" = "kommungrupp-kod" }
+evidence = "reg_meta_build/curation/registers/scb/komvux.toml:329\n\nComplete64-original native family249.8534: Kommungrupp has an explicitly alphanumeric A1/B4/... source domain; Komgrupp17/KomGrupp17 and the three Komgrupp23 spellings have their own dated numeric nine-category lists; Kommungrupp_text explicitly delivers the municipality group in klartext. Retain three distinct source formats and all original dates, types, lists and version labels. No recoding or code-to-text equivalence is asserted. Batch50-Komvux-residual4-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: komgrupp23 where key = 'v8534'"
+fields = { "variable" = "kommungrupp-kod" }
+evidence = "reg_meta_build/curation/registers/scb/komvux.toml:329\n\nComplete64-original native family249.8534: Kommungrupp has an explicitly alphanumeric A1/B4/... source domain; Komgrupp17/KomGrupp17 and the three Komgrupp23 spellings have their own dated numeric nine-category lists; Kommungrupp_text explicitly delivers the municipality group in klartext. Retain three distinct source formats and all original dates, types, lists and version labels. No recoding or code-to-text equivalence is asserted. Batch50-Komvux-residual4-source-proof.json."
+
+[[statement]]
+kind = "link"
+subject = "var:gymnasieforbundets-namn"
+relation = "label_of"
+object = "scb/komvux/gymnasieforbund-id"
+evidence = "reg_meta_build/curation/registers/scb/komvux.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunalforbund-namn"
+relation = "label_of"
+object = "scb/komvux/kommunalforbund-id"
+evidence = "reg_meta_build/curation/registers/scb/komvux.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunalforbund-namn-2"
+relation = "label_of"
+object = "scb/komvux/kommunalforbund-id-2"
+evidence = "reg_meta_build/curation/registers/scb/komvux.toml:14\n\nLegacy code_label_pair declaration"

@@ -1,0 +1,48 @@
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-adoptivfar"
+fields = { "sets" = ["legacy-alder-31-12-adoptivfar"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:218\nreg_meta_build/curation/registers/scb/breg.toml:260\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-adoptivmor"
+fields = { "sets" = ["legacy-alder-31-12-adoptivmor"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:225\nreg_meta_build/curation/registers/scb/breg.toml:274\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-biologisk-far"
+fields = { "sets" = ["legacy-alder-31-12-biologisk-far"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:232\nreg_meta_build/curation/registers/scb/breg.toml:288\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-biologisk-mor"
+fields = { "sets" = ["legacy-alder-31-12-biologisk-mor"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:239\nreg_meta_build/curation/registers/scb/breg.toml:302\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bofar"
+fields = { "sets" = ["legacy-alder-31-12-bofar"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:246\nreg_meta_build/curation/registers/scb/breg.toml:316\nreg_meta_build/curation/registers/scb/breg.toml:330\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-bomor"
+fields = { "sets" = ["legacy-alder-31-12-bomor"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:253\nreg_meta_build/curation/registers/scb/breg.toml:344\nreg_meta_build/curation/registers/scb/breg.toml:358\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions.\n\nThe exact dated and annual source deliveries overlap only on31December2014. Their native definitions identify the same specified parent’s end-of-year age. Both operational formulations compute age31/12=calendar year minus birth year; the older formulation also documents Flergenerationsregistret derivation. Keep each literal, full source period and operation wording separately. No same-member co-delivery, differing parental role, date precision or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning"
+fields = { "sets" = ["legacy-familjestallning"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:188\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrar-doda"
+fields = { "sets" = ["legacy-foraldrar-doda"] }
+evidence = "reg_meta_build/curation/registers/scb/breg.toml:211\n\nComplete native family and same-register physical-peer census Batch53-six-source-review.json. The source-native names and definitions establish the same employee/parent/vehicle concept across literal spelling or label changes. Complete original evidence is guarded; periods, per-delivery operations and own domains remain intact, with no statistical-equivalence claim. Guardian2000-suffixed fields are separately located15 months later by explicit source operational definitions."

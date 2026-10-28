@@ -1,0 +1,108 @@
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r11123'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r11835'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r13133'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r14403'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r16394'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r18286'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r18708'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r19527'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r19873'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r5721'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r5825'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r6048'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: scb_upplatform where key = 'v30755' and release = 'r7390'"
+fields = { "description" = "Bostadens upplåtelseform" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: boarea where key = 'v17411' and release = 'r11123'"
+fields = { "description" = "Bostadsarea" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: boarea where key = 'v17411' and release = 'r5721'"
+fields = { "description" = "Bostadsarea" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: boarea where key = 'v17411' and release = 'r5825'"
+fields = { "description" = "Bostadsarea" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: boarea where key = 'v17411' and release = 'r6048'"
+fields = { "description" = "Bostadsarea" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individer: boarea where key = 'v17411' and release = 'r7390'"
+fields = { "description" = "Bostadsarea" }
+evidence = "reg_meta_build/curation/registers/scb/hushallens-boende.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

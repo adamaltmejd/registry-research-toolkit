@@ -1,0 +1,119 @@
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: medbdat where key = 'v269'"
+fields = { "variable" = "medborgarskapsdatum-3" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:355\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: medbdat where key = 'v269'"
+fields = { "variable" = "medborgarskapsdatum-3" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:355\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: arinv where key = 'v332'"
+fields = { "variable" = "senaste-invandringsdatum" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:362\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: arinv where key = 'v332'"
+fields = { "variable" = "senaste-invandringsdatum" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:362\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: seninvar where key = 'v332'"
+fields = { "variable" = "seninvar" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:362\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: seninvar where key = 'v332'"
+fields = { "variable" = "seninvar" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:362\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk3_2012_egf where key = 'v510'"
+fields = { "variable" = "ssyk3-2012-egf" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:383\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk3_2012_egf where key = 'v510'"
+fields = { "variable" = "ssyk3-2012-egf" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:383\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk4_2012 where key = 'v16225'"
+fields = { "variable" = "ssyk4-2012" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:390\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk4_2012 where key = 'v16225'"
+fields = { "variable" = "ssyk4-2012" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:390\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk4_2012_egf where key = 'v16225'"
+fields = { "variable" = "ssyk4-2012-egf" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:390\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk4_2012_egf where key = 'v16225'"
+fields = { "variable" = "ssyk4-2012-egf" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:390\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk3 where key = 'v510'"
+fields = { "variable" = "yrke-ssyk3-huvud" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:383\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk3 where key = 'v510'"
+fields = { "variable" = "yrke-ssyk3-huvud" }
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:383\n\nFull source-native family and full register physical-peer census reviewed. Distinct literal source fields, including sequential and different-variant histories, remain finite components; only case-equivalent literal spellings share a component key. Common source definition remains source evidence, not proof of semantic equivalence between different components. No ordinal slot meaning, equal values or co-delivery assertion. Batch53-hard-family-source-review.json and Batch53-hard-physical-peer-review.json."
+caveat = "Catalog components follow literal exported physical fields. Shared source-native descriptions do not independently establish component roles or ordinal meanings; every original description and own coding association remains available."
+
+[[statement]]
+kind = "link"
+subject = "var:partinamn"
+relation = "label_of"
+object = "scb/fortroendevalda/parti"
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skl-gruppnamn"
+relation = "label_of"
+object = "scb/fortroendevalda/skl-grupp"
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skl-gruppnamn-2011"
+relation = "label_of"
+object = "scb/fortroendevalda/skl-grupp-2011"
+evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:16\n\nLegacy code_label_pair declaration"

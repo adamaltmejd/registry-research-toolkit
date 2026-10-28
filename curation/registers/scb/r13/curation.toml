@@ -1,0 +1,1134 @@
+
+[[statement]]
+kind = "assert"
+subject = "momsdeklarationsregistret: DatumFDB @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Datum för FDB-uppgifter", "definition" = "Datum då uppgifterna från Företagsdatabasen (FDB) lades till.", "type" = "date" } }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:189\n\nSWECOV holds DatumFDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "momsdeklarationsregistret: FDB @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Markering att PeOrgNr finns i FDB", "definition" = "Markering om uppgifter för PeOrgNr finns i Företagsdatabasen (FDB).", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:200\n\nSWECOV holds FDB in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "momsdeklarationsregistret: IdPers_Typ @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av IdPers", "definition" = "Typ av sambandsnummer som IdPers avser (gruppmomsnummer, konkursnummer eller representant).", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:167\n\nSWECOV holds IdPers_Typ in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "momsdeklarationsregistret: IdPers @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Redovisande identitet (IdPers)", "definition" = "Identitet som momsredovisningen lämnas under. Avviker från PeOrgNr när redovisningen sker under ett sambandsnummer. Levereras löpnumrerad.", "type" = "integer", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:154\n\nSWECOV holds P1105_LopNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F2, maintainer round 5; the pseudonymised P1105_LopNr_IdPers matches by its stripped name)."
+
+[[statement]]
+kind = "assert"
+subject = "momsdeklarationsregistret: Samma_PeorgNr_IdPers @2015..2022"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Markering att PeOrgNr och IdPers är lika", "definition" = "Markering att redovisande identitet IdPers är densamma som PeOrgNr.", "type" = "text" } }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:178\n\nSWECOV holds Samma_PeorgNr_IdPers in Moms_2015..Moms_2022; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (Momsreg sheet) lists it as an SCB-added column for 2015-2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302)."
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r10012'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1124'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1128'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r11805'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r13114'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r13846'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r13847'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r15847'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1689'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r17961'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1841'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1842'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1843'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r1845'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r18577'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r19302'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r19772'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r2547'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r2620'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r3313'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r4712'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: imputerad where key = 'v15210' and release = 'r7380'"
+fields = { "description" = "Anger om deklarationen är modellberäknad (imputerad) eller rättad." }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r10012'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1124'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1128'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r11805'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r13114'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r13772'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r13774'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r13846'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r13847'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r15847'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1689'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r17961'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1841'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1842'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1843'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r1845'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r18577'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r19302'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r19772'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r2547'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r2620'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r3313'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r4712'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: anst where key = 'v972' and release = 'r7380'"
+fields = { "description" = "Antal anställda på företaget enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1124'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1689'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1841'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1842'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1843'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sni92 where key = 'v4027' and release = 'r1845'"
+fields = { "description" = "Bransch i FDB enligt SNI2002" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r10012'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1124'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1128'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r11805'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r13114'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r13772'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r13774'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r13846'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r13847'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r15847'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1689'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r17961'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1841'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1842'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1843'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r1845'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r18577'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r19302'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r19772'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r2547'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r2620'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r3313'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r4712'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: ng1 where key = 'v4027' and release = 'r7380'"
+fields = { "description" = "Bransch i FDB enligt SNI2007" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r10012'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1124'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1128'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r11805'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r13114'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r13772'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r13774'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r13846'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r13847'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r15847'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1689'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r17961'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1841'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1842'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1843'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r1845'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r18577'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r19302'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r19772'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r2547'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r2620'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r3313'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r4712'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: jform where key = 'v34' and release = 'r7380'"
+fields = { "description" = "Juridisk form enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r10012'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r11805'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r13114'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r13846'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r13847'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r15847'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r17961'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r18577'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r19302'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r19772'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r4712'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: period where key = 'v1006' and release = 'r7380'"
+fields = { "description" = "Redovisningsgrupp för moms" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r10012'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1124'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1128'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r11805'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r13114'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r13772'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r13774'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r13846'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r13847'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r15847'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1689'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r17961'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1841'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1842'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1843'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r1845'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r18577'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r19302'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r19772'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r2547'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r2620'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r3313'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r4712'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: sektor where key = 'v33' and release = 'r7380'"
+fields = { "description" = "Sektorkod enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r10012'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1124'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1128'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r11805'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r13114'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r13772'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r13774'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r13846'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r13847'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r15847'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1689'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r17961'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1841'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1842'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1843'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r1845'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r18577'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r19302'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r19772'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r2547'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r2620'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r3313'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r4712'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: stkl where key = 'v15241' and release = 'r7380'"
+fields = { "description" = "Storleksgrupp på företaget efter antal anställda enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r10012'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1124'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1128'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r11805'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r13114'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r13772'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r13774'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r13846'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r13847'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r15847'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1689'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r17961'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1841'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1842'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1843'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r1845'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r18577'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r19302'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r19772'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r2547'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r2620'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r3313'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r4712'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: agkat where key = 'v74' and release = 'r7380'"
+fields = { "description" = "Ägarkategori enligt FDB" }
+evidence = "reg_meta_build/curation/registers/scb/moms.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

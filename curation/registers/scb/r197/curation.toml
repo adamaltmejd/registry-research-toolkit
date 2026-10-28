@@ -1,0 +1,90 @@
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt"
+fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a11"
+fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a91"
+fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-totalt-a92"
+fields = { "sets" = ["legacy-antal-lagenheter-totalt"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:126\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsskatt"
+fields = { "sets" = ["legacy-fastighetsskatt"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:144\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal"
+fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-a41"
+fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:garage-bilplatser-antal-garf"
+fields = { "sets" = ["legacy-garage-bilplatser-antal"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["legacy-kommun"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-kommunnamn"
+fields = { "sets" = ["legacy-kommun"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:kommunregion"
+fields = { "sets" = ["legacy-kommunregion"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:120\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar-faeaar"
+fields = { "sets" = ["legacy-nybyggnadsar"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:150\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta"
+fields = { "sets" = ["legacy-total-bostadsyta"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:132\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:total-bostadsyta-y11"
+fields = { "sets" = ["legacy-total-bostadsyta"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:132\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:vardear"
+fields = { "sets" = ["legacy-vardear"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:156\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."

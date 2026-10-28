@@ -1,0 +1,1559 @@
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWSEU @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AWSEU (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSEU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34111, \"Tog emot beställningar via webbplats eller app från kunder i övriga EU\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19119, \"Tog emot beställningar via en webbplats eller app från kunder i övriga EU\" (2017–2024); (3) SCB-variabel 19120, \"Tog emot beställningar via webbplats eller app från kunder i resten av världen\" (2013, då SCB:s export knyter AWSEU till frågan om kunder i resten av världen). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9025\n\nSWECOV holds AWSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSEU with a verified native-question link, and later years attach the name to different questions (19120 in 2013; 34111 in 2015; 19119 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AWSEU kan avse webbeställningar från kunder i övriga EU eller i resten av världen; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWSHM @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AWSHM (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSHM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34106, \"Tog emot beställningar via webbplats eller app från kunder i Sverige\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19121, \"Tog emot beställningar via en webbplats eller app från kunder i Sverige\" (2017–2024); (3) SCB-variabel 19119, \"Tog emot beställningar via en webbplats eller app från kunder i övriga EU\" (2013, då SCB:s export knyter AWSHM till frågan om kunder i övriga EU). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9039\n\nSWECOV holds AWSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSHM with a verified native-question link, and later years attach the name to different questions (19119 in 2013; 34106 in 2015; 19121 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AWSHM kan avse webbeställningar från kunder i Sverige eller i övriga EU; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWSWW @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AWSWW (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AWSWW till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 34110, \"Tog emot beställningar via webbplats eller app från kunder i övriga världen\" (2015, exkl. EDI-beställningar); (2) SCB-variabel 19120, \"Tog emot beställningar via webbplats eller app från kunder i resten av världen\" (2017–2024); (3) SCB-variabel 19121, \"Tog emot beställningar via en webbplats eller app från kunder i Sverige\" (2013, då SCB:s export knyter AWSWW till frågan om kunder i Sverige). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9053\n\nSWECOV holds AWSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AWSWW with a verified native-question link, and later years attach the name to different questions (19121 in 2013; 34110 in 2015; 19120 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AWSWW kan avse webbeställningar från kunder i resten av världen eller i Sverige; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AXSEU @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AXSEU (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSEU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26893, \"Tog emot EDI-beställningar från kunder från övriga EU\" (2013); (2) SCB-variabel 34108, \"Tog emot beställningar via EDI från kunder i övriga EU\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9067\n\nSWECOV holds AXSEU in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSEU with a verified native-question link, and later years attach the name to two questions (26893 in 2013; 34108 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AXSEU kan avse EDI-beställningar från kunder i övriga EU enligt 2013 års fråga (26893) eller enligt frågan från 2015 (34108); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AXSHM @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AXSHM (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSHM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26892, \"Tog emot EDI-beställningar från kunder i Sverige\" (2013); (2) SCB-variabel 34109, \"Tog emot beställningar via EDI från kunder i Sverige\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9081\n\nSWECOV holds AXSHM in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSHM with a verified native-question link, and later years attach the name to two questions (26892 in 2013; 34109 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AXSHM kan avse EDI-beställningar från kunder i Sverige enligt 2013 års fråga (26892) eller enligt frågan från 2015 (34109); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AXSWW @2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AXSWW (enligt leverans)", "definition" = "SCB:s dokumentation för 2011 knyter inte kolumnnamnet AXSWW till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26894, \"Tog emot EDI-beställningar från kunder i resten av världen\" (2013); (2) SCB-variabel 34107, \"Tog emot beställningar via EDI från kunder i övriga världen\" (2015–2021, exkl. beställningar via webbplats eller app). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9095\n\nSWECOV holds AXSWW in ITftg_2011. Previously unmapped because the 2011 business-survey metadata contain no exact literal AXSWW with a verified native-question link, and later years attach the name to two questions (26894 in 2013; 34107 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen AXSWW kan avse EDI-beställningar från kunder i resten av världen enligt 2013 års fråga (26894) eller enligt frågan från 2015 (34107); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: EMPIUSEPCT @2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "EMPIUSEPCT (enligt leverans)", "definition" = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet EMPIUSEPCT till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17675, \"Andel av sysselsatta som arbetar vid internetanslutna datorer\" (2013–2015 och 2017–2019; i katalogen även 2008–2012 med antagen betydelse); (2) SCB-variabel 41949, \"Andel av anställda som i arbetet använder en dator, mobiltelefon, surfplatta eller liknande\" (2020–2024). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9305\n\nSWECOV holds EMPIUSEPCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPIUSEPCT, and other years attach the name to two questions (17675 in 2013–2015 and 2017–2019; 41949 from 2020). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPIUSEPCT entries (2008–2012 carry; 2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen EMPIUSEPCT kan avse andel sysselsatta som arbetar vid internetanslutna datorer (17675) eller andel anställda som i arbetet använder dator, mobiltelefon, surfplatta eller liknande (41949); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: EMPMD1PCT @2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "EMPMD1PCT (enligt leverans)", "definition" = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet EMPMD1PCT till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28822, \"Andel av de anställda som företaget tillhandahåller med andra bärbara enheter för företagsändamål som kan ansluta till internet via en mobil anslutning\" (2014–2015 och 2017–2018); (2) SCB-variabel 23393, \"Använder mobiltelefon med 3G,4G för internetuppkoppling\" (2017, då SCB:s export knyter EMPMD1PCT till både 23393 och 28822). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9319\n\nSWECOV holds EMPMD1PCT in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the exact question represented by EMPMD1PCT, and SCB attaches the name to 28822 (2014–2015, 2017–2018) and in 2017 also to 23393. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] EMPMD1PCT entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen EMPMD1PCT kan avse andel anställda med andra bärbara enheter med mobil internetanslutning (28822) eller användning av mobiltelefon med 3G/4G för internetuppkoppling (23393); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: FIXBB @2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "FIXBB (enligt leverans)", "definition" = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet FIXBB till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 15902, \"Internetanslutning via fast bredbandsanslutning via kabel-tv/fiber\" (frågetexten gäller anslutning via det fasta telefonnätet med ADSL eller annan DSL; kod 9 = inte svarat); (2) SCB-variabel 30783, \"Använder fast bredbandsanslutning till internet\" (all slags fast bredband, t.ex. DSL, fiber eller kabel; kod 9 = ska ej svara; FIXBB 2014–2015 och 2017–2025). SCB knyter FIXBB 2017 och 2018 även till 15902, som där är återkallad till förmån för 30783. Vilken av dessa betydelser den levererade kolumnen har 2016 är inte fastställd. Lagringstypen är varchar; variabeln anges som text.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9109\n\nSWECOV holds FIXBB in ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the catalog has no supported delivery for FIXBB in 2016, and the adjacent years attach the name to two source questions (15902: DSL through the telephone network; 30783: any fixed broadband, FIXBB 2014-2015 and 2017-2025), both using code 9 with different meanings (not answered vs should not answer). The 2017 and 2018 deliveries are documented through 30783 once 15902 is withdrawn there ([[errata.support]] contradictory_question, #1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen FIXBB kan avse DSL-anslutning via telefonnätet (15902) eller all slags fast bredbandsanslutning (30783), med olika betydelse för kod 9; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: GDIST @2009,2010,2011,2012"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "GDIST (enligt leverans)", "definition" = "SCB:s dokumentation för 2009–2012 knyter inte kolumnnamnet GDIST till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 19132, \"Sysselsatta som regelbundet arbetar utanför företaget\" (2013–2014); (2) SCB-variabel 38332, \"Anställda arbetar regelbundet utanför företaget\" (2015 och 2017–2020). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9123\n\nSWECOV holds GDIST in ITftg_2009..ITftg_2012. Previously unmapped because the 2009–2012 business-survey metadata contain no exact literal GDIST with a verified native-question link, and later years attach the name to two questions (19132 in 2013–2014; 38332 from 2015). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen GDIST kan avse sysselsatta (19132) eller anställda (38332) som regelbundet arbetar utanför företaget; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: GSOLOTH @2012,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "GSOLOTH (enligt leverans)", "definition" = "SCB:s dokumentation för 2012 och 2016 knyter inte kolumnnamnet GSOLOTH till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 38333, \"Använder företaget annan energibesparande it-lösning för att minska energiförbrukningen\" (2013–2014 och 2017–2020); (2) SCB-variabel 28818, \"Använde internet för att erbjuda varor eller tjänster i myndigheters elektroniska upphandlingssystem i övriga EU-länder\" (2015; SCB knyter GSOLOTH 2017 även till 28818, som där är återkallad till förmån för 38333). Vilken av dessa betydelser den levererade kolumnen har 2012 och 2016 är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9137\n\nSWECOV holds GSOLOTH in ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2012 and 2016 metadata link GSOLOTH to no question (maintainer review 2026-10-01), and SCB attaches the name to energy-saving IT solutions (38333; 2013-2014 and 2017-2020) and to electronic public procurement in other EU countries (28818; 2015). The 2017 deliveries are documented through 38333 once 28818 is withdrawn there ([[errata.support]] contradictory_question, #1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen GSOLOTH kan avse energibesparande it-lösningar (38333) eller elektronisk offentlig upphandling i övriga EU-länder (28818); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: GUSENRG @2009,2010,2011,2012,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "GUSENRG (enligt leverans)", "definition" = "SCB:s dokumentation för 2009–2012 och 2016 knyter inte kolumnnamnet GUSENRG till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 19139, \"Miljöpolicy för minskad energianvändning vid IT-användning\" (2013–2015); (2) SCB-variabel 38331, \"Miljöpolicy som innebär minskad energiförbrukning av it\" (2017–2020, med exempel som skärmsläckare och avstängda datorer). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9151\n\nSWECOV holds GUSENRG in ITftg_2009..ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2009–2012 and 2016 metadata contain no exact literal GUSENRG with a verified native-question link, and later years attach the name to two questions (19139 in 2013–2015; 38331 from 2017). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen GUSENRG kan avse miljöpolicy för minskad energianvändning vid it-användning enligt frågan 2013–2015 (19139) eller frågan från 2017 (38331); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2PREU @2011,2012,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2PREU (enligt leverans)", "definition" = "SCB:s dokumentation för 2011, 2012 och 2016 knyter inte kolumnnamnet IGOV2PREU till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26879, \"Lämnade anbud i myndigheters elektroniska upphandlingssystem i andra EU-länder än Sverige\" (2013, med referensår 2010 i definitionen); (2) SCB-variabel 28818, \"Använde internet för att erbjuda varor eller tjänster i myndigheters elektroniska upphandlingssystem i övriga EU-länder\" (2017–2018). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9165\n\nSWECOV holds IGOV2PREU in ITftg_2011, ITftg_2012 and ITftg_Stora_2016. Previously unmapped because the 2011, 2012 and 2016 metadata contain no exact literal IGOV2PREU with a verified native-question link, and later years attach the name to two questions (26879 in 2013; 28818 in 2017–2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen IGOV2PREU kan avse anbud i (26879) eller erbjudanden via (28818) myndigheters elektroniska upphandlingssystem i övriga EU-länder; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3R_PAP @2014,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INV3R_PAP (enligt leverans)", "definition" = "SCB:s dokumentation för 2014 och 2016 knyter inte kolumnnamnet INV3R_PAP till någon fråga i undersökningen; 2017 knyter den namnet till två frågor. Kandidaterna är (1) SCB-variabel 35491, \"Andel mottagna elektroniska fakturor som kan processas automatiskt\" (andel av alla fakturor företaget tog emot); (2) SCB-variabel 38334, \"Andel mottagna e-fakturor som kan processas automatiskt i mottagarens it-system\" (andel av fakturor från andra företag och offentlig sektor under föregående år). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är varchar i vissa tabeller och float i andra; variabeln anges som text.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9179\n\nSWECOV holds INV3R_PAP in ITftg_Mikro_2014, ITftg_Stora_2014 and ITftg_Stora_2016. Previously unmapped because the 2014 and 2016 metadata link INV3R_PAP to no question, and the 2017 export assigns it to native questions 35491 and 38334 with different supplier/denominator and reference-year wording (maintainer review 2026-10-01). The 2017 deliveries are not minted: two documented SCB owners, unsettled (#1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen INV3R_PAP kan avse andel automatiskt processbara e-fakturor med olika avsändarkrets och referensår (35491 eller 38334); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3R_PMP @2014,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INV3R_PMP (enligt leverans)", "definition" = "SCB:s dokumentation för 2014 och 2016 knyter inte kolumnnamnet INV3R_PMP till någon fråga i undersökningen; 2017 knyter den namnet till två frågor. Kandidaterna är (1) SCB-variabel 35490, \"Andel mottagna fakturor som inte kan processas automatiskt\" (pappersfakturor och e-fakturor som inte kan processas automatiskt, av alla mottagna fakturor); (2) SCB-variabel 38335, \"Andel mottagna e-fakturor och pappersfakturor som inte kan processas automatiskt i mottagarens it-system\" (andel av fakturor från företag och offentlig sektor under föregående år). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är varchar i vissa tabeller och float i andra; variabeln anges som text.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9193\n\nSWECOV holds INV3R_PMP in ITftg_Mikro_2014, ITftg_Stora_2014 and ITftg_Stora_2016. Previously unmapped because the 2014 and 2016 metadata link INV3R_PMP to no question, and the 2017 export assigns it to native questions 35490 and 38335 with different supplier/denominator and reference-year wording (maintainer review 2026-10-01). The 2017 deliveries are not minted: two documented SCB owners, unsettled (#1603 batch-e). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen INV3R_PMP kan avse andel fakturor som inte kan processas automatiskt, med olika avsändarkrets och referensår (35490 eller 38335); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ITERP1 @2010,2012"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ITERP1 (enligt leverans)", "definition" = "SCB:s dokumentation för 2010 och 2012 knyter inte kolumnnamnet ITERP1 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28811, \"Använder ERP-system (affärssystem) för att dela information elektroniskt mellan olika funktioner inom företaget\" (2013–2021); (2) SCB-variabel 46790, \"Företaget använder ERP-system\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9333\n\nSWECOV holds ITERP1 in ITftg_2010 and ITftg_2012. Previously unmapped because the 2010 and 2012 business-survey metadata contain no exact literal ITERP1 with a verified native-question link, and later years attach the name to two questions (28811 in 2013–2021; 46790 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] ITERP1 entries (2014; 2015) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen ITERP1 kan avse användning av ERP-system för att dela information mellan funktioner inom företaget enligt frågan 2013–2021 (28811) eller enligt frågan från 2023 (46790); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD @2012"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD (enligt leverans)", "definition" = "SCB:s dokumentation för 2012 knyter inte kolumnnamnet PMD till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 28819, \"Tillhandahåller de anställda med bärbara enheter för företagsändamål som kan ansluta till internet via en mobil anslutning\" (2013); (2) SCB-variabel 25333, \"Använder mobil bredbandsanslutning via 3G- eller 4G-nätet\" (2019–2021). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9207\n\nSWECOV holds PMD in ITftg_2012. Previously unmapped because the 2012 business-survey metadata contain no exact literal PMD with a verified native-question link, and later years attach the name to two questions (28819 in 2013; 25333 from 2019). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen PMD kan avse bärbara enheter med mobil anslutning till anställda (28819) eller mobil bredbandsanslutning via 3G/4G (25333); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISC @2008,2009,2010,2012"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISC (enligt leverans)", "definition" = "SCB:s dokumentation för 2008–2010 och 2012 knyter inte kolumnnamnet SISC till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16946, \"Delar information om lagertillgång elektroniskt via automatiserat informationsutbyte\" (2014–2015); (2) SCB-variabel 28804, \"Delar information om lagertillgång elektroniskt med kunder eller leverantörer\" (2017); (3) SCB-variabel 46794, \"Företaget delar data elektroniskt med leverantörer eller kunder i distributionskedjan\" (2023). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9347\n\nSWECOV holds SISC in ITftg_2008, ITftg_2009, ITftg_2010 and ITftg_2012. Previously unmapped because the 2008–2010 and 2012 business-survey metadata contain no exact literal SISC with a verified native-question link, and later years attach the name to three questions (16946 in 2014–2015; 28804 in 2017; 46794 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] SISC entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen SISC kan avse elektronisk delning av lagertillgång via automatiserat informationsutbyte (16946) eller med kunder eller leverantörer (28804), eller elektronisk delning av data i distributionskedjan (46794); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV2 @2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "UTVEGANV2 (enligt leverans)", "definition" = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet UTVEGANV2 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17641, \"Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning\" (2017); (2) SCB-variabel 38383, \"Andel av antalet årsverken som arbetar med programvaruutveckling som har karaktär av investering\" (2018). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9247\n\nSWECOV holds UTVEGANV2 in ITftg_Stora_2016. Previously unmapped because the 2016 source records do not identify the question represented by UTVEGANV2, and adjacent years attach the name to two questions (17641 in 2017; 38383 in 2018). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen UTVEGANV2 kan avse andel årsverken i programvaruutveckling för extern försäljning (17641) eller med karaktär av investering (38383); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF2 @2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "UTVEXF2 (enligt leverans)", "definition" = "SCB:s dokumentation för 2016 knyter inte kolumnnamnet UTVEXF2 till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 17642, \"Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - övriga\" (som SCB knyter till UTVEXF2 2017); (2) SCB-variabel 17641, \"Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning\" (levererad som UTVEXF 2013–2015). ITftg_Stora_2016 levererar också UTVSUP2, som 2016 redan bär 17642. Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9233\n\nSWECOV holds UTVEXF2 in ITftg_Stora_2016 beside UTVSUP2, which the catalog already places on native 17642 for 2016. SCB attaches UTVEXF2 to 17642 in 2017, while the name continues UTVEXF (17641, 2013-2015), so the same-name carry would give one table two columns for one variable. Contradicting evidence: minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema (varchar); flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen UTVEXF2 i 2016 kan avse andel årsverken i programvaruutveckling - övriga (17642) eller för extern försäljning (17641); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP2 @2017"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "UTVSUP2 (enligt leverans)", "definition" = "SCB:s dokumentation för 2017 knyter inte kolumnnamnet UTVSUP2 till någon fråga i undersökningen. Det enda kandidatbegreppet i SCB:s export är SCB-variabel 17642, \"Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - övriga\" (under namnet UTVSUP2 2016 och 2018); att den levererade kolumnen har samma betydelse är inte fastställt. SCB knyter 2017 i stället 17642 till UTVEXF2, som ITftg_Stora_2017 också levererar, och 17641 (programvaruutveckling för extern försäljning) till UTVEGANV2.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9375\n\nSWECOV holds UTVSUP2 in ITftg_Stora_2017. Previously unmapped because SCB's 2017 documentation has no UTVSUP2 row and attaches 17642, which UTVSUP2 carries in 2016 (delivered) and 2018, to UTVEXF2, which ITftg_Stora_2017 also holds, so carrying UTVSUP2 to 17642 would give one table two columns for one variable. Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] UTVSUP2 entry (2016) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen UTVSUP2 i 2017 kan avse andel årsverken i programvaruutveckling - övriga (17642), som kolumnnamnet betyder 2016 och 2018, men SCB knyter 2017 den frågan till UTVEXF2, som samma tabell också levererar; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBACC @2008,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBACC (enligt leverans)", "definition" = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBACC till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16914, \"Produktkatalog eller prislista finns på företagets webbplats\" (2013–2021); (2) SCB-variabel 46822, \"På företagets webbplats erbjuds beskrivning av varor och/eller tjänster, prisinformation\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9261\n\nSWECOV holds WEBACC in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBACC with a verified native-question link, and later years attach the name to two questions (16914 in 2013–2021; 46822 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen WEBACC kan avse produktkatalog eller prislista (16914) eller beskrivning av varor och tjänster med prisinformation (46822) på företagets webbplats; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBCTM @2008,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBCTM (enligt leverans)", "definition" = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBCTM till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16915, \"På företagets webbplats finns möjlighet för besökare att kundanpassa/designa produkter\" (2013–2021); (2) SCB-variabel 46823, \"På företagets webbplats erbjuds funktioner för att avgränsa en sökning på webbplatsen\" (2023). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9275\n\nSWECOV holds WEBCTM in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBCTM with a verified native-question link, and later years attach the name to two questions (16915 in 2013–2021; 46823 in 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen WEBCTM kan avse kundanpassning av produkter (16915) eller avgränsning av sökningar (46823) på företagets webbplats; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBORD @2008,2011,2012,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBORD (enligt leverans)", "definition" = "SCB:s dokumentation för 2008, 2011, 2012 och 2016 knyter inte kolumnnamnet WEBORD till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 26864, \"På företagets webbplats finns möjlighet att lägga beställningar, göra bokningar eller reservationer\" (2013–2021); (2) SCB-variabel 16917, \"På företagets webbplats erbjuds möjlighet att beställa, reservera eller boka on-line\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9361\n\nSWECOV holds WEBORD in ITftg_2008, ITftg_2011, ITftg_2012, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008, 2011, 2012 and 2016 metadata contain no exact literal WEBORD with a verified native-question link, and later years attach the name to two questions (26864 in 2013–2021; 16917 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. Shares the (variant, column) key with the existing [[errata.delivered]] WEBORD entry (2014) on disjoint named versions (#1652). data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen WEBORD kan avse möjlighet att beställa eller boka på företagets webbplats enligt frågan 2013–2021 (26864) eller enligt frågan från 2023 (16917); vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBPER @2008,2016"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBPER (enligt leverans)", "definition" = "SCB:s dokumentation för 2008 och 2016 knyter inte kolumnnamnet WEBPER till någon fråga i undersökningen. Kandidaterna är (1) SCB-variabel 16919, \"På företagets webbplats finns möjlighet till individuellt anpassat innehåll för återkommande besökare\" (2013–2021); (2) SCB-variabel 46824, \"På företagets webbplats erbjuds igenkänning av kunder via inloggning och personanpassat innehåll\" (2023 och 2025). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9289\n\nSWECOV holds WEBPER in ITftg_2008, ITftg_Mikro_2016 and ITftg_Stora_2016. Previously unmapped because the 2008 and 2016 metadata contain no exact literal WEBPER with a verified native-question link, and later years attach the name to two questions (16919 in 2013–2021; 46824 from 2023). Minted as its own variable with the candidate meanings named in data_warning; no candidate is chosen and no code set is borrowed. data_type follows SWECOV's SQL Server storage schema; flags follow the candidates' documented flags (non-sensitive, non-identifier). maintainer orderable rule 2026-10-16 (#1603 batch-e: ambiguity is not a hold reason)."
+caveat = "Den levererade kolumnen WEBPER kan avse individuellt anpassat innehåll för återkommande besökare (16919) eller kundigenkänning via inloggning (46824) på företagets webbplats; vilken betydelse den har är inte fastställd."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: JERel @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "JERel", "definition" = "JERel" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1201\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds and of the micro-enterprise deliveries for 2013–2017 and 2019; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: lillan @2008..2018"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "lillan", "definition" = "lillan" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:8986\n\nSWECOV holds lillan in ITftg_2008..ITftg_2011, ITftg_Stora_2013..2018, ITftg_Mikro_2015..2018; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2018; SCB's Registerinformation export carries no row for it on this variant. The same name on befolkningens-it-anvandning is a person-survey design variable, not this one. (#1302)"
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: storaN @2008..2018"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "storaN", "definition" = "storaN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:8998\n\nSWECOV holds storaN in ITftg_2008..ITftg_2011, ITftg_Stora_2013..2018, ITftg_Mikro_2015..2018; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2018; SCB's Registerinformation export carries no row for it on this variant. The same name on befolkningens-it-anvandning is a person-survey design variable, not this one. (#1302)"
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Oms2 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Oms2", "definition" = "Oms2" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1282\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2008 and 2009 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: FEStat @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "FEStat", "definition" = "FEStat" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:833\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro- and large-enterprise deliveries for 2015–2017; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: FtgStat @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "FtgStat", "definition" = "FtgStat" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:857\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro- and large-enterprise deliveries for 2015–2017; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: JEAnt @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "JEAnt", "definition" = "JEAnt" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1189\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro-enterprise deliveries for 2014–2017 and 2019; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: FETyp @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "FETyp", "definition" = "FETyp" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:845\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds and of the micro-enterprise deliveries for 2015–2017; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AgKat @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AgKat", "definition" = "AgKat" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:655\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BGrupp @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "BGrupp", "definition" = "BGrupp" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:689\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: JurForm @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "JurForm", "definition" = "JurForm" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1213\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Lansate @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Lansate", "definition" = "Lansate" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1248\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SGrupp @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SGrupp", "definition" = "SGrupp" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1780\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Sektor @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Sektor", "definition" = "Sektor" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1768\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2010 and 2011 rounds; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: KommunSate @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "KommunSate", "definition" = "KommunSate" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1236\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row of the 2011 round; the value is not stated here."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Oms2_ny @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Oms2_ny", "definition" = "Oms2_ny" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1294\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+caveat = "In the deliveries reviewed, this column holds a single value in every row; the value is not stated here."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h8 where key = 'v17588'"
+fields = { "variable" = "sysselsattningstyp-skapad" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6353\n\nApproved source-native question identity; exact noncolliding edition/literal only. Preserve all source facts, coding changes and periods. Other-native simultaneous contradictory question claims and unspecified text companions remain unresolved; no availability or statistical equivalence inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: sy where key = 'v17588'"
+fields = { "variable" = "sysselsattningstyp-skapad" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6335\n\nApproved source-native question identity; exact noncolliding edition/literal only. Preserve all source facts, coding changes and periods. Other-native simultaneous contradictory question claims and unspecified text companions remain unresolved; no availability or statistical equivalence inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: sy2 where key = 'v17588'"
+fields = { "variable" = "sysselsattningstyp-skapad" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6344\n\nApproved source-native question identity; exact noncolliding edition/literal only. Preserve all source facts, coding changes and periods. Other-native simultaneous contradictory question claims and unspecified text companions remain unresolved; no availability or statistical equivalence inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r13562'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r14842'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r17768'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h13antal where key = 'v16088' and release = 'r11917'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6077\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: h13antal where key = 'v16088' and release = 'r12613'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6077\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: d5 where key = 'v35520' and release = 'r12032'"
+fields = { "unit" = "Kronor (SEK)" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6125\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: fodelsear where key = 'v1378' and release = 'r1715'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6089\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: fodelsear where key = 'v1378' and release = 'r2757'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6089\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: utvantp where key = 'v17581' and release = 'r5213'"
+fields = { "unit" = "Årspersoner" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6101\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2008"
+fact = { "entity" = "release", "name" = "2008", "period" = "2008" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6728\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2009"
+fact = { "entity" = "release", "name" = "2009", "period" = "2009" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6734\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2010"
+fact = { "entity" = "release", "name" = "2010", "period" = "2010" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6740\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2011"
+fact = { "entity" = "release", "name" = "2011", "period" = "2011" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6746\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2012"
+fact = { "entity" = "release", "name" = "2012", "period" = "2012" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6752\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "assert"
+subject = "release:it-anvandning-i-foretag/2016"
+fact = { "entity" = "release", "name" = "2016", "period" = "2016" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6758\n\nExact annual edition positively supplied by both SWECOV holding CSVs in IT-absent-holdings-maximal-grouped-proposal.json, with accepted storage-schema declarations. Explicitly curated missing delivery edition; not an SCB original/native edition. No adjacent years or period hull."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r17809'"
+fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r18927'"
+fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r19517'"
+fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r17809'"
+fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r18927'"
+fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r19517'"
+fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV @2008..2010"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Använde internet för kontakter med myndigheter", "definition" = "Om företaget använde internet för kontakter med myndigheter, kommuner eller landsting under föregående år (ja/nej)." } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1090\n\nSWECOV holds IGOV in ITftg_2008..ITftg_2010; SCB's IT0101 SCBDOK 2008 and the Eurostat ENT2008–2010 model questionnaires (B5) document it as the parent of the IGOV* sub-items minted here; SCB's Registerinformation export carries no row for it on this variant (#1509; maintainer 2026-10-13)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PAP @2014-01-01..2014-12-31 where key = 'v30724' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade elektroniska fakturor som kan processas automatiskt i mottgarens IT-system", "definition" = "Anger hur stor andel av alla fakturor som företaget skickade under var elektroniska fakturor som kan processas automatiskt.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:76\n\nSWECOV holds INV3SBG_PAP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PEMP @2014-01-01..2014-12-31 where key = 'v30723' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade fakturor som skickades som e-fakturor som inte kan processas automatiskt i mottagarens it-system", "definition" = "Andel av alla fakturor företaget skickade till andra företag och offentlig sektor under föregående år, som skickades som e-fakturor som inte kan processas automatiskt i mottagarens it-system, t.ex. fakturor i pdf-format som skickas via e-post.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:85\n\nSWECOV holds INV3SBG_PEMP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PPMP @2014-01-01..2014-12-31 where key = 'v30722' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade fakturor som skickades som pappersfakturor", "definition" = "Andel av alla fakturor företaget skickade till andra företag eller offentlig sektor som skickades som pappersfakturor under föregående år.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:94\n\nSWECOV holds INV3SBG_PPMP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: LAN @2008..2010"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "LAN", "definition" = "LAN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:9010\n\nSWECOV holds LAN in ITftg_2008..ITftg_2010; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (ITFtg sheet) lists it for 2008-2010; SCB's Registerinformation export carries no row for it on this variant. ITftg_2010 holds both LAN and Lansate, so LAN is not a Lansate alias. (#1302)"
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: NPOP @2020-01-01..2020-12-31 where key = 'v4613' and release = 'r15409'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Populationsstorlek per stratum", "definition" = "Populationsstorlek per stratum", "type" = "decimal", "length" = 11, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:168\n\nSWECOV holds NPOP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: NPOP @2020-01-01..2020-12-31 where key = 'v4613' and release = 'r15409'"
+fields = { "operational_definition" = "Härledd genom att summera antalet företagsenheter per stratrum i urvalsramen." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:168\n\nSWECOV holds NPOP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: NRESP @2020-01-01..2020-12-31 where key = 'v6211' and release = 'r15409'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Svarande per stratum", "definition" = "Antal svarande per stratum", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:177\n\nSWECOV holds NRESP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: NRESP @2020-01-01..2020-12-31 where key = 'v6211' and release = 'r15409'"
+fields = { "operational_definition" = "Härledd genom att summera antal svarande företagsenheter per stratrum i det dragna urvalet." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:177\n\nSWECOV holds NRESP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Outlier @2020-01-01..2020-12-31 where key = 'v2468' and release = 'r15409'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Outlier", "definition" = "Rapportenhet som ej är representativ för sitt stratum. Bidrar endast med sitt eget värde vid summeringen.", "type" = "int", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:222\n\nSWECOV holds Outlier in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: Outlier @2020-01-01..2020-12-31 where key = 'v2468' and release = 'r15409'"
+fields = { "operational_definition" = "Binär variabel som anger om företagsenheten är en outlier eller inte." }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:222\n\nSWECOV holds Outlier in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFAC1 @2014-01-01..2014-12-31 where key = 'v19126' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "RFID för produktidentifiering", "definition" = "anger om företaget använder RFID för produktidentifiering.\r\nRFID= radiofrekvensidentifiering.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:240\n\nSWECOV holds RFAC1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: RFAC1 @2014-01-01..2014-12-31 where key = 'v19126' and release = 'r5763'"
+fields = { "operational_definition" = "För produktidentifiering efter produktionsprocessen, t.ex. övervaka stöld, förfalskning, allergeinformation" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:240\n\nSWECOV holds RFAC1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFASPRI1 @2014-01-01..2014-12-31 where key = 'v19131' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "RFID för  identifiering av personer/kontroll av access.", "definition" = "Anger om företaget använder RFID för identifiering av personer eller kontroll av behörigheter och access. \r\nRFID= radiofrekvensidentifiering.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:249\n\nSWECOV holds RFASPRI1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFPSDP1 @2014-01-01..2014-12-31 where key = 'v19127' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "RFID för övervakning och kontroll av produktion", "definition" = "Anger om företaget använder RFID för övervakning och kontroll av produktion. \r\nRFID= radiofrekvensidentifiering.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:258\n\nSWECOV holds RFPSDP1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: RFPSDP1 @2014-01-01..2014-12-31 where key = 'v19127' and release = 'r5763'"
+fields = { "operational_definition" = "Inom produktions- och servivekedjan" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:258\n\nSWECOV holds RFPSDP1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2014-01-01..2014-12-31 where key = 'v28839' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:304\n\nSWECOV holds TURN in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2014-01-01..2014-12-31 where key = 'v17648' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:323\n\nSWECOV holds UTVEGANV in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2014-01-01..2014-12-31 where key = 'v17641' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:332\n\nSWECOV holds UTVEXF in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2014-01-01..2014-12-31 where key = 'v17642' and release = 'r5763'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:350\n\nSWECOV holds UTVSUP in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there (the variable's 2014 rows carry a blank Kolumnnamn); its named rows are in 2013, 2015."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Vikt @2017-01-01..2017-12-31 where key = 'v19538' and release = 'r11568'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Uppräkningsfaktor", "definition" = "Uppräkningsfaktor", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Vikt @2018-01-01..2018-12-31 where key = 'v19538' and release = 'r12688'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Uppräkningsfaktor", "definition" = "Uppräkningsfaktor", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Vikt @2020-01-01..2020-12-31 where key = 'v19538' and release = 'r15409'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Uppräkningsfaktor", "definition" = "Uppräkningsfaktor", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: Vikt @2017-01-01..2017-12-31 where key = 'v19538' and release = 'r11568'"
+fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: Vikt @2018-01-01..2018-12-31 where key = 'v19538' and release = 'r12688'"
+fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: Vikt @2020-01-01..2020-12-31 where key = 'v19538' and release = 'r15409'"
+fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADE @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADE", "definition" = "ADE" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:391\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADECU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADECU", "definition" = "ADECU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:402\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEFEDI @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEFEDI", "definition" = "ADEFEDI" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:413\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEFPRO @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEFPRO", "definition" = "ADEFPRO" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:424\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEFXML @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEFXML", "definition" = "ADEFXML" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:435\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEGOV @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEGOV", "definition" = "ADEGOV" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:446\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEGOV1 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEGOV1", "definition" = "ADEGOV1" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:457\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEINFO @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEINFO", "definition" = "ADEINFO" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:468\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEPAY @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEPAY", "definition" = "ADEPAY" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:479\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADEPAY1 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADEPAY1", "definition" = "ADEPAY1" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:490\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADESU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADESU", "definition" = "ADESU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:501\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADETDOC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ADETDOC", "definition" = "ADETDOC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:512\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBCLS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AEBCLS", "definition" = "AEBCLS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:523\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBEU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AEBEU", "definition" = "AEBEU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:534\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBHM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AEBHM", "definition" = "AEBHM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:545\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBWW @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AEBWW", "definition" = "AEBWW" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:556\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESELL @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESELL", "definition" = "AESELL" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:567\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESHM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESHM", "definition" = "AESHM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:578\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPEU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESPEU", "definition" = "AESPEU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:589\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPHM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESPHM", "definition" = "AESPHM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:600\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPWEB @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESPWEB", "definition" = "AESPWEB" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:611\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPWW @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESPWW", "definition" = "AESPWW" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:622\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPXML @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESPXML", "definition" = "AESPXML" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:633\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESVALPCT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AESVALPCT", "definition" = "AESVALPCT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:644\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AnstS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "AnstS", "definition" = "AnstS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:667\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Ar @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Ar", "definition" = "Ar" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:678\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BlNr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "BlNr", "definition" = "BlNr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:712\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIGSIGN @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DIGSIGN", "definition" = "DIGSIGN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:723\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DOM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DOM", "definition" = "DOM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:734\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DOMANN @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DOMANN", "definition" = "DOMANN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:745\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DOME @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DOME", "definition" = "DOME" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:756\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DOMHEM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DOMHEM", "definition" = "DOMHEM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:767\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DOMS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "DOMS", "definition" = "DOMS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:778\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: EMPCUSEPCT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "EMPCUSEPCT", "definition" = "EMPCUSEPCT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:789\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: EMPIACC3GPCT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "EMPIACC3GPCT", "definition" = "EMPIACC3GPCT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:800\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: EXTRA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "EXTRA", "definition" = "EXTRA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:811\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: FENr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "FENr", "definition" = "FENr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:822\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: GCOP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "GCOP", "definition" = "GCOP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:869\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: GSOLNRG @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "GSOLNRG", "definition" = "GSOLNRG" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:880\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: HRS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "HRS", "definition" = "HRS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:891\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IBK @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IBK", "definition" = "IBK" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:902\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IEDU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IEDU", "definition" = "IEDU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:913\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2AL @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2AL", "definition" = "IGOV2AL" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:924\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2PRXCCS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2PRXCCS", "definition" = "IGOV2PRXCCS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:935\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2PRXNAW @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2PRXNAW", "definition" = "IGOV2PRXNAW" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:946\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2PRXOTH @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2PRXOTH", "definition" = "IGOV2PRXOTH" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:957\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOV2PRXXPS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOV2PRXXPS", "definition" = "IGOV2PRXXPS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:968\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVAL @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVAL", "definition" = "IGOVAL" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:979\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVBCMP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVBCMP", "definition" = "IGOVBCMP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:990\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVBNAW @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVBNAW", "definition" = "IGOVBNAW" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1001\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVBPAP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVBPAP", "definition" = "IGOVBPAP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1012\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVBSEC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVBSEC", "definition" = "IGOVBSEC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1023\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVDCE @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVDCE", "definition" = "IGOVDCE" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1034\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVDCT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVDCT", "definition" = "IGOVDCT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1045\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVDSC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVDSC", "definition" = "IGOVDSC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1056\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVDVAT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVDVAT", "definition" = "IGOVDVAT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1067\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVFM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVFM", "definition" = "IGOVFM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1078\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVIF @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVIF", "definition" = "IGOVIF" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1101\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVPR @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVPR", "definition" = "IGOVPR" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1112\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: IGOVRT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "IGOVRT", "definition" = "IGOVRT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1123\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INTRA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INTRA", "definition" = "INTRA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1134\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INV3SBG", "definition" = "INV3SBG" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1145\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INVREC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INVREC", "definition" = "INVREC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1156\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INVSND @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "INVSND", "definition" = "INVSND" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1167\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ITERP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "ITERP", "definition" = "ITERP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1178\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: KOM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "KOM", "definition" = "KOM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1225\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: MAXSPD @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "MAXSPD", "definition" = "MAXSPD" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1260\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: MOB @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "MOB", "definition" = "MOB" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1271\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: OSOPEN @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "OSOPEN", "definition" = "OSOPEN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1328\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: OmsAr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "OmsAr", "definition" = "OmsAr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1306\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: OmsMnKr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "OmsMnKr", "definition" = "OmsMnKr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1317\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PHD @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PHD", "definition" = "PHD" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1339\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PHRS @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PHRS", "definition" = "PHRS" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1350\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMC", "definition" = "PMC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1361\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_APP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_APP", "definition" = "PMD_APP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1372\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_DOC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_DOC", "definition" = "PMD_DOC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1383\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_EM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_EM", "definition" = "PMD_EM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1394\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_OCOST @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_OCOST", "definition" = "PMD_OCOST" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1405\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_OCP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_OCP", "definition" = "PMD_OCP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1416\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_ONEED @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_ONEED", "definition" = "PMD_ONEED" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1427\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_OOTH @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_OOTH", "definition" = "PMD_OOTH" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1438\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_OSEC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_OSEC", "definition" = "PMD_OSEC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1449\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_OTEC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_OTEC", "definition" = "PMD_OTEC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1460\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PMD_WEB @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PMD_WEB", "definition" = "PMD_WEB" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1471\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: PostNr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "PostNr", "definition" = "PostNr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1482\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Q13E_SCAN @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Q13E_SCAN", "definition" = "Q13E_SCAN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1493\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Q13E_SIV @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Q13E_SIV", "definition" = "Q13E_SIV" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1504\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RA", "definition" = "RA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1515\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFAC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFAC", "definition" = "RFAC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1526\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFASPRI @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFASPRI", "definition" = "RFASPRI" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1537\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFID @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFID", "definition" = "RFID" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1548\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFMC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFMC", "definition" = "RFMC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1559\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFPRI @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFPRI", "definition" = "RFPRI" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1570\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RFPSDP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RFPSDP", "definition" = "RFPSDP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1581\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RMFC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RMFC", "definition" = "RMFC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1592\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RMPA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RMPA", "definition" = "RMPA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1603\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: RMSM @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "RMSM", "definition" = "RMSM" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1614\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECCONT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECCONT", "definition" = "SECCONT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1625\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECCTP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECCTP", "definition" = "SECCTP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1636\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECICNFA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECICNFA", "definition" = "SECICNFA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1647\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECIDD @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECIDD", "definition" = "SECIDD" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1658\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECIUSA @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECIUSA", "definition" = "SECIUSA" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1669\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECIUSF @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECIUSF", "definition" = "SECIUSF" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1680\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECLOG @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECLOG", "definition" = "SECLOG" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1691\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECOSBU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECOSBU", "definition" = "SECOSBU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1702\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECPOL @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECPOL", "definition" = "SECPOL" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1713\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECPRO @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECPRO", "definition" = "SECPRO" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1724\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECSPSW @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECSPSW", "definition" = "SECSPSW" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1735\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECUIHT @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECUIHT", "definition" = "SECUIHT" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1746\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECVTGI @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SECVTGI", "definition" = "SECVTGI" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1757\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SICU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SICU", "definition" = "SICU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1792\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SICU2 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SICU2", "definition" = "SICU2" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1803\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SICUIPF @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SICUIPF", "definition" = "SICUIPF" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1814\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SICUPDE @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SICUPDE", "definition" = "SICUPDE" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1825\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SIPUACC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SIPUACC", "definition" = "SIPUACC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1836\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SIPUINV @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SIPUINV", "definition" = "SIPUINV" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1847\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISAACC @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISAACC", "definition" = "SISAACC" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1858\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISADIST @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISADIST", "definition" = "SISADIST" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1869\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISAINV @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISAINV", "definition" = "SISAINV" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1880\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISAPROD @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISAPROD", "definition" = "SISAPROD" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1891\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISU @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISU", "definition" = "SISU" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1902\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISU2 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISU2", "definition" = "SISU2" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1913\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISUIPF @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISUIPF", "definition" = "SISUIPF" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1924\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SISUPDE @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "SISUPDE", "definition" = "SISUPDE" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1935\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: StatusKod @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "StatusKod", "definition" = "StatusKod" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1946\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: StatusTillaggKod @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "StatusTillaggKod", "definition" = "StatusTillaggKod" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1957\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOMPR @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOMPR", "definition" = "TOPPDOMPR" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2067\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOMPR_Annat @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOMPR_Annat", "definition" = "TOPPDOMPR_Annat" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2078\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_1 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_1", "definition" = "TOPPDOM_1" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1968\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_2 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_2", "definition" = "TOPPDOM_2" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1979\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_3 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_3", "definition" = "TOPPDOM_3" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:1990\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_4 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_4", "definition" = "TOPPDOM_4" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2001\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_5 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_5", "definition" = "TOPPDOM_5" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2012\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_6 @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_6", "definition" = "TOPPDOM_6" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2023\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_6a @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_6a", "definition" = "TOPPDOM_6a" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2034\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_6b @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_6b", "definition" = "TOPPDOM_6b" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2045\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TOPPDOM_6c @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "TOPPDOM_6c", "definition" = "TOPPDOM_6c" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2056\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBCMP @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBCMP", "definition" = "WEBCMP" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2089\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBPAY @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WEBPAY", "definition" = "WEBPAY" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2100\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WLAN @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "WLAN", "definition" = "WLAN" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2111\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: XGrupp @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "XGrupp", "definition" = "XGrupp" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2122\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: blankettnr @2008..2020"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "blankettnr", "definition" = "blankettnr" } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:701\n\nSWECOV's survey-wave delivery lists hold the column on this variant (SWECOV delivery lists, registry-catalog-inputs swecov-delivery-docs/); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: data4b where key = 'v15901' and release = 'r1193'"
+fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6662\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: data4c where key = 'v15902' and release = 'r1193'"
+fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6674\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: data4e where key = 'v15904' and release = 'r1193'"
+fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6686\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: vikt_hus_se where key = 'v31026' and release = 'r19400'"
+fields = { "unit" = "Kvot" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6363\n\nThe complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: vikt_hus_se where key = 'v31026' and release = 'r20119'"
+fields = { "unit" = "Kvot" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6363\n\nThe complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: xoth where key = 'v36993' and release = 'r12316'"
+fields = { "value_set" = "f0e1869f4c50784f7e0a6713cd5f65c717bbee16ad8b49f23dbb4ed6f47e0ca2" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:8924\n\nThe exact XOTH source column in the accepted individual-survey native question is explicitly linked to its own complete2014 Ja/Nej list. The2013 and2014 original XOTH projections have the same supplied quantity name/definition and numeric storage; under the maintainer-approved explicit variable-to-coding-link validity policy, apply that own linked list to this exact2013 window. Retain the original generic specify-reason prose, all raw types/scopes/associations and later text-field deliveries. No domain is assigned to A4htxt or A4HTXTx, no source values are recoded, and no new missing token is invented."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r11917'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12032'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12033'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12034'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12316'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12613'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r13562'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r14842'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r17768'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r18409'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r19400'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r20119'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: a3c where key = 'v25333'"
+fields = { "variable" = "anvander-mobilt-bredband-3g-4g" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2870\n\nY-211 2026-09-19: 258.25333 'Använder mobil bredbandsanslutning via 3G- eller 4G-nätet' sequential rename {A3C 2014 (variant 557), MOBBB 2013-2018, PMD 2019-2021} owned by anvander-mobilt-bredband-3g-4g (diagnostic v17 rename-worklist-258)"
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: pmd where key = 'v25333'"
+fields = { "variable" = "anvander-mobilt-bredband-3g-4g" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2870\n\nY-211 2026-09-19: 258.25333 'Använder mobil bredbandsanslutning via 3G- eller 4G-nätet' sequential rename {A3C 2014 (variant 557), MOBBB 2013-2018, PMD 2019-2021} owned by anvander-mobilt-bredband-3g-4g (diagnostic v17 rename-worklist-258)"

@@ -1,0 +1,42 @@
+
+[[statement]]
+kind = "assert"
+subject = "sus: Id @2024..2024"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Löpnummer för sjukfall", "definition" = "Unikt löpnummer för varje sjukfall. Levereras i kolumnen P1105_LopNr_Id.", "type" = "integer", "identifier" = true, "sensitive" = false } }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:163\n\nSWECOV holds P1105_LopNr_Id in SuS_2024; Utkast_P1105_Variabellista_uppd2025_v5.xlsx lists it with source SUS for 2024; SCB's Registerinformation export carries no row for it on this variant; data_type from the SWECOV storage schema of these tables (#1302 F6, maintainer round 5)."
+
+[[statement]]
+kind = "set"
+subject = "sus: imp_ind_anst where key = 'v1810' and release = 'r19312'"
+fields = { "description" = "Anger om antal anställningar är imputerat eller inte." }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sus: imp_ind_anst where key = 'v1810' and release = 'r19799'"
+fields = { "description" = "Anger om antal anställningar är imputerat eller inte." }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sus: ersdagar where key = 'v7171' and release = 'r19312'"
+fields = { "description" = "Antal ersättningsdagar" }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sus: ersdagar where key = 'v7171' and release = 'r19799'"
+fields = { "description" = "Antal ersättningsdagar" }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sus: peorgnrram where key = 'v56' and release = 'r19312'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sus: peorgnrram where key = 'v56' and release = 'r19799'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

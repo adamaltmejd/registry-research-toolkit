@@ -1,0 +1,7 @@
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/grundskola-prov-ak5/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak5.toml:6\n\nLegacy code_label_pair declaration"

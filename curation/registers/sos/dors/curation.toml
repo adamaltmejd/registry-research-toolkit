@@ -1,0 +1,66 @@
+
+[[statement]]
+kind = "set"
+subject = "dors: pnr @1952-01-01.. where key = 'n:pnr'"
+fields = { "description" = "Den avlidnes personnummer" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:503\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-avi: dodsdat where key = 'n:dodsdat'"
+fields = { "label" = "Dödsdatum" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:539\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-cov: dodsdat @2020-01-01.. where key = 'n:dodsdat'"
+fields = { "label" = "Dödsdatum" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:551\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-avi: dodsdatn where key = 'n:dodsdatn'"
+fields = { "label" = "Dödsdatum, SAS-datum" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:563\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-cov: dodsdatn @2020-01-01.. where key = 'n:dodsdatn'"
+fields = { "label" = "Dödsdatum, SAS-datum" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:575\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-avi: alder where key = 'n:alder'"
+fields = { "label" = "Dödsålder i år" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:515\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors-cov: alder @2020-01-01.. where key = 'n:alder'"
+fields = { "label" = "Dödsålder i år" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:527\n\nReviewed DORS same-native source peers use equivalent wording for the same supplied construct. ALDER descriptions explicitly agree on age in years at death; date and SAS-date representations remain distinct. PNR differs only by a terminal full stop. Normalize only this exact supplied prose; original fields, dates, types, coding and contexts remain unchanged. Batch48-text-conflict-originals.json.gz."
+
+[[statement]]
+kind = "set"
+subject = "dors: distrikt @2016-01-01.. where key = 'n:distrikt'"
+fields = { "label" = "Distrikt från folkbokföring" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:959\n\nThe same source-native field has identical description, type and representation in each delivery. Distrikt and Distrikt från folkbokföring denote the same geographical district construct; preserve each delivery source attribution. Complete same-native source-authority guard. Proof: Batch51-SOS-final-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "dors-cov: pseudo @2020-01-01.. where key = 'n:pseudo'"
+fields = { "label" = "Pseudonummer" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:974\n\nThe same source-native field has identical description, type and representation in each delivery. The COV heading calls PSEUDO a PNR quality variable, but its own description explicitly says Anonymt id nummer, representation says Alfanumeriskt anonymiserats id, and identifier=true. The main DORS source names that same anonymous identifier Pseudonummer. Retain the contradictory COV heading in original evidence; apply this source-witnessed name only, with all original storage, identifier flags and coverage unchanged. Complete same-native source-authority guard. Proof: Batch51-SOS-final-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "dors: diabetes @1987-01-01.. where key = 'n:diabetes'"
+fields = { "value_set" = "3e70eaa03e414c5881e02fef816391f1111633af2beeaae7bc8c23dda8a91a05" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:848\n\nThe source sheet supplies the period at the first coded row of this complete physical block; subsequent blank period cells belong to that block until the next explicitly dated row. Preserve all original periods, memberships and associations. No scope is borrowed across blocks."
+
+[[statement]]
+kind = "set"
+subject = "dors: alkohol @1987-01-01.. where key = 'n:alkohol'"
+fields = { "value_set" = "cc32b3c099259c97853c2c6466b952e3e5a8e2b89b7f1527724ac339135d19a9" }
+evidence = "reg_meta_build/curation/registers/sos/dors.toml:826\n\nThe source sheet supplies the period at the first coded row of this complete physical block; subsequent blank period cells belong to that block until the next explicitly dated row. Preserve all original periods, memberships and associations. No scope is borrowed across blocks."

@@ -1,0 +1,440 @@
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r11223'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r11858'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r12912'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13273'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13274'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13276'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13277'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13278'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13279'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13280'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13281'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13282'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13283'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13284'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13285'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13316'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r14391'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r16518'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r18332'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r19460'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r19467'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r20011'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r8588'"
+fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r8588'"
+fields = { "label" = "Bostadskommun, senaste årsuppgiften" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:336\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r5438'"
+fields = { "label" = "Folkbokföringskommun, senaste årsuppgiften" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:324\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r6065'"
+fields = { "label" = "Folkbokföringskommun, senaste årsuppgiften" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:324\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r12912'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13273'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13274'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13276'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13277'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13278'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13279'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13280'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13281'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13282'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:312\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13283'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13284'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: hemkommun where key = 'v36' and release = 'r13285'"
+fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
+
+[[statement]]
+kind = "link"
+subject = "var:kommunalforbund-namn"
+relation = "label_of"
+object = "scb/komvux-sfi/kommunalforbund-id"
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunalforbund-namn-2"
+relation = "label_of"
+object = "scb/komvux-sfi/kommunalforbund-id-2"
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r12912'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13273'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13274'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13276'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13277'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13278'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13279'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13280'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13281'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13282'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13283'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13284'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r13285'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r4341'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r4555'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: elevtim where key = 'v14673' and release = 'r4886'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r12912'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13273'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13274'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13276'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13277'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13278'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13279'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13280'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13281'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13282'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13283'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13284'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r13285'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r4341'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:122\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r4555'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:110\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: utbildning where key = 'v14675' and release = 'r4886'"
+fields = { "unit" = "År" }
+evidence = "reg_meta_build/curation/registers/scb/komvux-sfi.toml:110\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."

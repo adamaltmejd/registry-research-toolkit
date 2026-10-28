@@ -1,0 +1,144 @@
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r10076'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r11753'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r13055'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r13820'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r15842'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r18033'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r18594'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r19033'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r19732'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: landskod where key = 'v45' and release = 'r20302'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:768\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r10079'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r11755'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r13056'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r13821'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r15843'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r18034'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r18595'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r19034'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r19733'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: landskod where key = 'v45' and release = 'r20301'"
+fields = { "description" = "Partnerland (export: bestämmelseland, import: avsändningsland). Tvåställig bokstavskod enligt landnomenklaturen (EU) 2020/1470." }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:756\n\nSCB concept 45 'Land' carries the NABS 2007 socio-economic-objective description of an R&D variable; on this register the column is the trade partner country (the record's own definition is 'Indelning i länder.'). First sentence: SCB HA0201 Kvalitetsdeklaration version 1, 2026-02-27, §1.2.2 Variabler, p. 4 (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_kd_2026_260227.pdf). Second sentence: the same document, p. 16 (country nomenclature (EU) 2020/1470), and SCBDOK 3.2 HA0201 2014, pp. 18-19 (two-letter code) (https://www.scb.se/contentassets/4584f3f1df19400a885428aaa914d06e/ha0201_do_2014_ma_140521.pdf). Applies from reference year 1996: import was by country of origin until 1995. Maintainer decision on #1617 (2026-10-19)."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: SPIN2002 @1997..2011"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Produktgrupp enligt SPIN 2002", "definition" = "Produktgrupp enligt SPIN 2002." } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:171\n\nSWECOV holds SPIN2002 in UHV_1997..UHV_2011; Utkast_P1105_Variabellista_uppd2025_v5.xlsx (UHV sheet) lists it for 1997-2011; SCB's Registerinformation export carries no row for it on this variant (the catalog has SPIN2007/SPIN2015 only) (#1302)."
+
+[[statement]]
+kind = "assert"
+subject = "release:varu-landfordelat-intrastat/1997"
+fact = { "entity" = "release", "name" = "1997", "period" = "1997" }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:184\n\nSWECOV holds UHV_1997 with the variant's layout (InfUtf, Landskod, Varde, Vikt, AnnanKvant, …); SCB's Registerinformation export documents this variant from 1999. HA0201 DO 2011 pp. 4 and 18 describe the same foreign-trade-by-goods-and-country statistics before 1999. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "release:varu-landfordelat-intrastat/1998"
+fact = { "entity" = "release", "name" = "1998", "period" = "1998" }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:190\n\nSWECOV holds UHV_1998 with the variant's layout (InfUtf, Landskod, Varde, Vikt, AnnanKvant, …); SCB's Registerinformation export documents this variant from 1999. HA0201 DO 2011 pp. 4 and 18 describe the same foreign-trade-by-goods-and-country statistics before 1999. Named in the variant's own YYYY convention."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: KN8 @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)", "definition" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)" } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."

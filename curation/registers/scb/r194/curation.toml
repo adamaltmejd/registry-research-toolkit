@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "kostnader-for-skolvasendet: skelev where key = 'v14871'"
+fields = { "variable" = "none" }
+evidence = "reg_meta_build/curation/registers/scb/skolvasendet-kostnader.toml:99\n\nAll supplied SkElev coordinates also bind native30485 with a different generic pupil-count definition. Retain the full native14871 municipality-specific family without an invented semantic owner. Full physical-peer closure and 32 complete originals: Batch52-directfacts4-source-review.json."

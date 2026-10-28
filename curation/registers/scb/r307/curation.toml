@@ -1,0 +1,7 @@
+
+[[statement]]
+kind = "link"
+subject = "var:huvudman-namn"
+relation = "label_of"
+object = "scb/forskola/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/forskola.toml:6\n\nLegacy code_label_pair declaration"

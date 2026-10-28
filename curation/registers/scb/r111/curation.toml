@@ -1,0 +1,540 @@
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f19_08 where key = 'v29907' and release = 'r11641'"
+fields = { "label" = "Färdighetsträning - använda kritiskt tänkande — nöjd eller missnöjd (F19_08)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3187\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f24_08 where key = 'v29907' and release = 'r5139'"
+fields = { "label" = "Färdighetsträning - använda kritiskt tänkande — nöjd eller missnöjd (F24_08)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3199\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f5_02 where key = 'v29889' and release = 'r5139'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — fick ett arbete som matchade utbildningen" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3307\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_01 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — kände inte till examenskraven" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3247\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_01 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — fanns inga arbeten inom området (F13_01)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3331\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_01 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — fanns inga arbeten inom området (F8_01)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3319\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_06_txt where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning, fritext (F5_06_txt)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3163\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_txt where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning, fritext (F5_txt)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3175\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_txt where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning, fritext (F5_txt)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3175\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_01 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — fanns inga arbeten inom området (F5_01)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3151\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — annat (F7)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3235\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_01 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — svårt att få arbete där jag vill bo (F12_01)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3211\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_01 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — svårt att få arbete där jag vill bo (F7_01)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3223\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f10_07 where key = 'v29906' and release = 'r17802'"
+fields = { "label" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper — F10_07" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2556\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f15_09 where key = 'v29906' and release = 'r11641'"
+fields = { "label" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper — F15_09" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2544\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f19_06 where key = 'v29907' and release = 'r17802'"
+fields = { "label" = "Färdighetsträning - använda kritiskt tänkande — nöjd eller missnöjd (F19_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2580\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f23_txt where key = 'v42179' and release = 'r18866'"
+fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? — Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2340\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f1_txt where key = 'v5068' and release = 'r15321'"
+fields = { "label" = "Huvudsaklig sysselsättning — F1_txt" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2316\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f1_txt where key = 'v5068' and release = 'r18866'"
+fields = { "label" = "Huvudsaklig sysselsättning — F1_txt" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2328\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: help2 where key = 'v37407' and release = 'r18866'"
+fields = { "label" = "Kalibreringsvariabel — Kalibreringsvariabel som består av information om , kön och programtyp\nHelp2" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2772\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: help4 where key = 'v37407' and release = 'r18866'"
+fields = { "label" = "Kalibreringsvariabel — Kalibreringsvariabel som består av information om genomsnittligt meritpoäng i gymnasieskolan\nHelp4" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2784\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: help5 where key = 'v37407' and release = 'r18866'"
+fields = { "label" = "Kalibreringsvariabel — Kalibreringsvariabel som består av information om program (utifrån designöversyn)\nHelp5" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2796\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: help6 where key = 'v37407' and release = 'r18866'"
+fields = { "label" = "Kalibreringsvariabel — Kalibreringsvariabel som består av information om programtyp och arbetsmarknadsstatus (från BAS)\nHelp 6" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2808\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f10_ny where key = 'v37056' and release = 'r15321'"
+fields = { "label" = "Nytta med olika typer av ämnen i arbetet — Vilken nytta har du haft av yrkesämnena när du utför dina huvudsakliga arbetsuppgifter?\n\nImputerat värde om värde saknas i fråga 10." }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2880\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f12_02 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …få kompetensutveckling?" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2496\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f12_03 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär? (F12_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2508\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f17_02 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …göra karriär? (F17_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2400\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f12_04 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj? (F12_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2520\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f17_03 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med familj? (F17_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2412\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f12_05 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen? (F12_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2532\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f17_04 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller möjligheterna att …kombinera arbete med fritidsintressen? (F17_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2424\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f11_04 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… anställningstryggheten?" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2460\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f11_03 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna? (F11_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2448\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f16_03 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… arbetstiderna? (F16_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2376\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f11_05 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön? (F11_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2472\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f16_04 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den fysiska arbetsmiljön? (F16_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2352\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f11_06 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön? (F11_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2484\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f16_05 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… den psykiska arbetsmiljön? (F16_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2388\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f11_02 where key = 'v5215' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen? (F11_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2436\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f16_02 where key = 'v5215' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med arbete — Hur nöjd eller missnöjd är du med ditt arbete när det gäller… lönen? (F16_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2364\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f19_07 where key = 'v29907' and release = 'r17802'"
+fields = { "label" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper — F19_07" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2592\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f19_09 where key = 'v29907' and release = 'r11641'"
+fields = { "label" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper — F19_09" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2568\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_10 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — annan orsak" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2820\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_08 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — ekonomiska skäl" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2868\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_05 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — svårt att kombinera studier med arbete" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2844\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_07 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — tappade motivationen/trivdes inte" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2856\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f3_04 where key = 'v29889' and release = 'r11641'"
+fields = { "label" = "Orsak till att examenskrav inte nåtts — utbildningen hade fel inriktning" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2832\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_06 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — annan anledning (F13_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2940\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_07 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — annan anledning (F8_07)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3012\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_06 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — förändrade arbetsuppgifter pga. pandemin (F8_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:3000\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_02 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade erfarenhet som krävdes (F13_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2892\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_02 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade erfarenhet som krävdes (F8_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2952\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_04 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade kontakter till arbetsgivare (F13_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2916\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_04 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade kontakter till arbetsgivare (F8_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2976\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_03 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade legitimation e.d. som krävdes (F13_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2904\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_03 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — saknade legitimation e.d. som krävdes (F8_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2964\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f13_05 where key = 'v37053' and release = 'r11641'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — ville arbeta med annat (F13_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2928\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: f8_05 where key = 'v37053' and release = 'r17802'"
+fields = { "label" = "Orsaker till ej överenstämmande arbete — ville arbeta med annat (F8_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2988\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f3_02 where key = 'v45910' and release = 'r18492'"
+fields = { "label" = "Skäl att studera på YH — Vilket/vilka var skälen till att du valde att studera\npå YH? Jag var arbetslös och ville förbättra mina\nmöjligheter på arbetsmarknaden" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2604\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f3_03 where key = 'v45910' and release = 'r18492'"
+fields = { "label" = "Skäl att studera på YH — Vilket/vilka var skälen till att du valde att studera\npå YH? Jag ville byta yrke" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2616\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_06 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning (F5_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2160\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_6 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning (F5_6)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2232\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_6 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — annan anledning (F5_6)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2304\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_1 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — fanns inga arbeten inom området (F5_1)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2244\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_1 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — fanns inga arbeten inom området (F5_1)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2244\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_03 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade certifiering, yrkesprov e.d. som krävdes (F5_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2172\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_3 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade certifiering, yrkesprov e.d. som krävdes (F5_3)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2256\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_3 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade certifiering, yrkesprov e.d. som krävdes (F5_3)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2256\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_02 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade erfarenhet som krävdes (F5_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2184\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_2 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade erfarenhet som krävdes (F5_2)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2268\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_2 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade erfarenhet som krävdes (F5_2)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2268\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_04 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade kontakter till arbetsgivare (F5_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2196\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_4 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade kontakter till arbetsgivare (F5_4)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2280\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_4 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — saknade kontakter till arbetsgivare (F5_4)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2280\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_07 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — vet inte (F5_07)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2208\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_05 where key = 'v37054' and release = 'r11643'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — ville arbeta med annat (F5_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2220\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_5 where key = 'v37054' and release = 'r15321'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — ville arbeta med annat (F5_5)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2292\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f5_5 where key = 'v37054' and release = 'r18866'"
+fields = { "label" = "Skäl till att arbetet inte överensstämmer med utbildningen — ville arbeta med annat (F5_5)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2292\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — annat (f12)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2628\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_07 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — familjeskäl (F7_07)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2760\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_03 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — har annan utbildning och arbetar inom det området (F12_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2652\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_03 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — har annan utbildning och arbetar inom det området (F7_03)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2712\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_04 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — nuvarande arbete är mer attraktivt (F12_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2664\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_04 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — nuvarande arbete är mer attraktivt (F7_04)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2724\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_06 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — saknar erfarenhet som krävs (F12_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2676\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_06 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — saknar erfarenhet som krävs (F7_06)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2748\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_02 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — svårt att få arbete överhuvudtaget (F12_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2688\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_02 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — svårt att få arbete överhuvudtaget (F7_02)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2700\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f12_05 where key = 'v39569' and release = 'r18492'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — valt att vara kvar på gamla arbetet (F12_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2640\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: f7_05 where key = 'v39569' and release = 'r18493'"
+fields = { "label" = "Skäl varför arbete inte överensstämmer med utbildningen — valt att vara kvar på gamla arbetet (F7_05)" }
+evidence = "reg_meta_build/curation/registers/scb/intradet-pa-arbetsmarknaden.toml:2736\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."

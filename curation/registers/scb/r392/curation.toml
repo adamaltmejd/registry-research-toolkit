@@ -1,0 +1,324 @@
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FARTYGETS_NAMN @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Fartygets namn", "definition" = "Fartygets namn; glest ifyllt. Levereras pseudonymiserat som löpnummer. SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:873\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FARTYGSSIGNAL @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Fartygssignal", "definition" = "Fartygets signal (anropssignal); glest ifyllt. Levereras pseudonymiserad som löpnummer. SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:886\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: KONTROLLSTATUS @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Kontrollstatus", "definition" = "Status för SCB:s granskning av individuppgiften (koderna KONTROLLERAD, FARDIGBEARBETAD_MAN, FARDIGBEARBETAD_MASK, SKA_ATGARDAS). SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:860\n\nSWECOV holds the column in its AGI tables (reg_webapp/stewards/swecov/series); SCB's Registerinformation export carries no row for it. Meaning from the aggregate check on MONA, reported as a conclusion only (#1497; maintainer decision 2026-10-16, #1579 default route)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FORSTA_ANSTALLD @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "1:a anställd", "definition" = "1:a anställd" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:417\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: UTSAND_UNDER_TID @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Betalningsmottagaren utsänd under tid", "definition" = "Betalningsmottagaren utsänd under tid" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:538\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: DIST_HU_SAKNAS @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden.", "definition" = "Inkommen förekomst av individuppgift där en huvuduppgift saknas för redovisningsperioden." } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:406\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: KONVENTION_MED @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Konvention med", "definition" = "Konvention med" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:428\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: LANDSKOD_TIN @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod TIN", "definition" = "Landskod TIN" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:472\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: LANDSKOD_ARBETSLAND @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod arbetsland", "definition" = "Landskod arbetsland" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:439\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: LANDSKOD_MEDBORGARE @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod medborgarskap ej svenskt", "definition" = "Landskod medborgarskap ej svenskt" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:450\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: LANDSKOD_POSTORT @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Landskod postort (om ifylld)", "definition" = "Landskod postort (om ifylld)" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:461\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: LOKALANSTALLD @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Lokalanställd", "definition" = "Lokalanställd" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:483\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: NARFART_FJARRFART @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Närfart/Fjärrfart", "definition" = "Närfart/Fjärrfart" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:494\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: PERSONALOPTION @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel", "definition" = "Personaloption som inte ska förmånbeskattas har utnyttjats för förvärv av andel" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:516\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: PERIOD @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Redovisningsperiod", "definition" = "Redovisningsperiod" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:505\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SKATTEBEFR_ENL_AVTAL @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Skattebefriad enligt skatteavtal", "definition" = "Skattebefriad enligt skatteavtal" } }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:527\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avdr_prel_skatt where key = 'v21816' and release = 'r14575'"
+fields = { "description" = "Avdragen preliminär skatt" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avdr_prel_skatt where key = 'v21816' and release = 'r17967'"
+fields = { "description" = "Avdragen preliminär skatt" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:586\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avdr_skatt_sink where key = 'v41324' and release = 'r14575'"
+fields = { "description" = "Avdragen skatt, SINK" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avdr_skatt_sink where key = 'v41324' and release = 'r17967'"
+fields = { "description" = "Avdragen skatt, SINK" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:580\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avrakning_avgiftsfri_ers where key = 'v41333' and release = 'r14575'"
+fields = { "description" = "Avräkning från avgiftsfri ersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: avrakning_avgiftsfri_ers where key = 'v41333' and release = 'r17967'"
+fields = { "description" = "Avräkning från avgiftsfri ersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:592\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bilersattning where key = 'v6060' and release = 'r14575'"
+fields = { "description" = "Bilersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bilersattning where key = 'v6060' and release = 'r17967'"
+fields = { "description" = "Bilersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:598\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_smahus_ej_ulag_sa where key = 'v16099' and release = 'r14575'"
+fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_smahus_ej_ulag_sa where key = 'v16099' and release = 'r17967'"
+fields = { "description" = "Bostadsförmån som inte är underlag för socialavgifter där bostaden finns i en småhusfastighet (ej semesterbostad)" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:616\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ag where key = 'v16099' and release = 'r14575'"
+fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ag where key = 'v16099' and release = 'r17967'"
+fields = { "description" = "Bostadsförmån som är underlag för arbetsgivaravgifter och SLF där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:604\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ea where key = 'v16099' and release = 'r14575'"
+fields = { "description" = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: bostadsf_ej_smahus_ulag_ea where key = 'v16099' and release = 'r17967'"
+fields = { "description" = "Bostadsförmån som är underlag för egenavgifter där bostaden inte finns i en småhusfastighet (ej semesterbostad)." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:610\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ers_forman_bostad_mm_sink where key = 'v6104' and release = 'r14575'"
+fields = { "description" = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ers_forman_bostad_mm_sink where key = 'v6104' and release = 'r17967'"
+fields = { "description" = "Ers/förm avs bostad/resa till/från anställning/förrättning (enbart SINK)" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:634\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ers_ej_soc_avg_ej_jobbavd where key = 'v21879' and release = 'r14575'"
+fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ers_ej_soc_avg_ej_jobbavd where key = 'v21879' and release = 'r17967'"
+fields = { "description" = "Ersättning som inte är underlag för sociala avgifter och som inte ger rätt till jobbskatteavdrag." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:658\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ag where key = 'v21831' and release = 'r14575'"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ag where key = 'v21831' and release = 'r17967'"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för arbetsgivaravgifter och SLF." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:622\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ea where key = 'v21831' and release = 'r14575'"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: dm_vid_bilforman_ulag_ea where key = 'v21831' and release = 'r17967'"
+fields = { "description" = "Förmån av fritt drivmedel vid bilförmån som är underlag för egenavgifter." }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:628\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: forman_som_pension_ej_ulag_sa where key = 'v22251' and release = 'r14575'"
+fields = { "description" = "Förmån som pension som inte är underlag för socialavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: forman_som_pension_ej_ulag_sa where key = 'v22251' and release = 'r17967'"
+fields = { "description" = "Förmån som pension som inte är underlag för socialavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:640\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: hyresersattning where key = 'v6093' and release = 'r14575'"
+fields = { "description" = "Hyresersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: hyresersattning where key = 'v6093' and release = 'r17967'"
+fields = { "description" = "Hyresersättning" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:646\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: kontant_ersattning_ulag_ea where key = 'v6090' and release = 'r14575'"
+fields = { "description" = "Kontant ersättning som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: kontant_ersattning_ulag_ea where key = 'v6090' and release = 'r17967'"
+fields = { "description" = "Kontant ersättning som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:652\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_bilforman_ulag_ag where key = 'v6087' and release = 'r14575'"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_bilforman_ulag_ag where key = 'v6087' and release = 'r17967'"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för arbetsgivaravgifter och SLF" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:664\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_bilforman_ulag_ea where key = 'v6087' and release = 'r14575'"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_bilforman_ulag_ea where key = 'v6087' and release = 'r17967'"
+fields = { "description" = "Skattepliktig bilförmån som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:670\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: underlag_rotarbete where key = 'v24169' and release = 'r14575'"
+fields = { "description" = "Underlag för skattereduktion för rotarbete" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: underlag_rotarbete where key = 'v24169' and release = 'r17967'"
+fields = { "description" = "Underlag för skattereduktion för rotarbete" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:688\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ag where key = 'v1195' and release = 'r14575'"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ag where key = 'v1195' and release = 'r17967'"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för arbetsgivaravgifter och SLF" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:676\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ea where key = 'v1195' and release = 'r14575'"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ea where key = 'v1195' and release = 'r17967'"
+fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
+evidence = "reg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

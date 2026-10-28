@@ -1,0 +1,42 @@
+
+[[statement]]
+kind = "link"
+subject = "var:fodelselandvdnamn"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/fodelseland-varldsdel-2"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommungrupp-2017-namn"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/grupp"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:29\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kgruppnamn2011"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/kgruppnr2011"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:25\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommunnamn"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/kommun"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:kommungrupp-namn"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/kommungrupp-kod"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:21\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:medborgarland-varldsdel-namn"
+relation = "label_of"
+object = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:14\n\nLegacy code_label_pair declaration"

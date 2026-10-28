@@ -1,0 +1,218 @@
+
+[[statement]]
+kind = "set"
+subject = "individregister: bkungr02 where key = 'v38738' and release = 'r15748'"
+fields = { "value_set" = "3630a63a86ee38d3f6465248b8e806acae0075a258df61fda632afbacd4d81f6" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1020\n\nThe exact source-native quantity positively names SNI2002 in every supplied definition. Apply its own complete agreeing source SNI2002 domain to the missing 2008 window under the approved classification-continuity policy; preserve every original code, label, association and date, including source nonstandard codes."
+caveat = "The 2008 SNI2002 domain is assumed continuous from this same source field’s explicitly associated neighboring editions; historical storage has not been independently checked."
+
+[[statement]]
+kind = "set"
+subject = "individregister: blareg where key = 'v47' and release = 'r11725'"
+fields = { "notice" = "The source declares integer storage for BLAREG in 2015 but associates the textual LA1501–LA1569 response codes. Both declarations are retained; the physical encoding is unverified." }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1898\n\nAll 69 response associations explicitly name native member 494131 and the LA15 descriptor. The same original declares Datatyp=int and data length 0. Neither the source type nor the response codes can safely be corrected without delivery evidence."
+caveat = "The source declares integer storage for BLAREG in 2015 but associates the textual LA1501–LA1569 response codes. Both declarations are retained; the physical encoding is unverified."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp04hb_trif where key = 'v31839' and release = 'r13003'"
+fields = { "label" = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1846\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp04hb_trif where key = 'v31839' and release = 'r14155'"
+fields = { "label" = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1834\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp04hb_trif where key = 'v31839' and release = 'r15727'"
+fields = { "label" = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1834\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp04hb_trif where key = 'v31839' and release = 'r16506'"
+fields = { "label" = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1834\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp04hb_trif where key = 'v31839' and release = 'r18388'"
+fields = { "label" = "Disponibel inkomst individualiserad från familj, 2004 års definition — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1834\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp504hb_trif where key = 'v22306' and release = 'r13003'"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1822\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp504hb_trif where key = 'v22306' and release = 'r14155'"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1810\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp504hb_trif where key = 'v22306' and release = 'r15727'"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1810\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp504hb_trif where key = 'v22306' and release = 'r16506'"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1810\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: cdisp504hb_trif where key = 'v22306' and release = 'r18388'"
+fields = { "label" = "Disponibel inkomst, exkl. kapitalvinst, 2004 års def — TRIF" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1810\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: btv852 where key = 'v38215' and release = 'r12572'"
+fields = { "label" = "Mer än en tandvårdsåtgärd 852" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1858\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: btv852 where key = 'v38215' and release = 'r12985'"
+fields = { "label" = "Mer än en tandvårdsåtgärd 852" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1858\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: btv852 where key = 'v38215' and release = 'r13028'"
+fields = { "label" = "Mer än en tandvårdsåtgärd 852" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1858\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: btv852 where key = 'v38215' and release = 'r13105'"
+fields = { "label" = "Mer än en tandvårdsåtgärd 852" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1858\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: askad1 where key = 'v1220' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av arbetsskadeavgift — 1 januari–30 april" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1762\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: askad2 where key = 'v1220' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av arbetsskadeavgift — 1 maj–31 juli" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1774\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: asfavg1 where key = 'v21834' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 % — 1 januari–30 april" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1786\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: asfavg2 where key = 'v21834' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av föräldraförsäkringsavgift, 2,20 % — 1 maj–31 juli" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1798\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: asjukm1 where key = 'v1218' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp — 1 januari–30 april" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1738\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: asjukm2 where key = 'v1218' and release = 'r13011'"
+fields = { "label" = "Underlag för beräkning av sjukförsäkringsavgift på ink. <7,5 basbelopp — 1 maj–31 juli" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1750\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "register-k10: z4720 where key = 'v26716'"
+fields = { "variable" = "gransbelopp-avyttring-fore-utdelning" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1339\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: z0621 where key = 'v26716'"
+fields = { "variable" = "gransbelopp-avyttring-fore-utdelning" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1339\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: zomkostb where key = 'v26655'"
+fields = { "variable" = "omkostnadsbelopp-punkt-2-2" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1303\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: nskout where key = 'v16791'"
+fields = { "variable" = "outnyttjat-underskott-fran-tidigare-ar" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1297\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: zsparina where key = 'v37708'"
+fields = { "variable" = "sparat-utdelningsutrymme" }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:1411\n\nComplete accepted FASIT26 source review:428 cohort originals plus actual panel/support originals. Native definitions and source operations determine catalog identity; explicit 2015 fee subperiods, FASIT/TRIF calculation methods and dental procedures remain distinct. Varying year/form column labels follow the stable source-native quantity only where the complete family has no simultaneous fields. Preserve all original formulas, rates, dates, storage types and raw coding. Proof: Batch51-FASIT26-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r11725'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r12997'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r13052'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r13072'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r13085'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r13331'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r15748'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r18232'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: bvxbarn where key = 'v37546' and release = 'r18509'"
+fields = { "coded" = false }
+evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."

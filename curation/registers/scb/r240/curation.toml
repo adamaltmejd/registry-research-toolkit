@@ -1,0 +1,14 @@
+
+[[statement]]
+kind = "link"
+subject = "var:partinamn"
+relation = "label_of"
+object = "scb/ep-val-resultat/partikod"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-resultat.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:riksdagsvalkrets-namn"
+relation = "label_of"
+object = "scb/ep-val-resultat/riksdagsvalkrets-kod"
+evidence = "reg_meta_build/curation/registers/scb/ep-val-resultat.toml:11\n\nLegacy code_label_pair declaration"

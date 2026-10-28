@@ -1,0 +1,1077 @@
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallk1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Markering för sjukfall, kvinna, oviktade", "definition" = "Markering för sjukfall där individen är en kvinna, oviktade", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:65\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 19) lists fallk1 as \"Vikt som justerar för ej inkomna månader, för kvinna (0 för man), oviktade\", the unweighted (oviktade) counterpart of fallk (row 18); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, kvinna\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallk (is_sensitive=true, is_identifier=false)."
+caveat = "SCB's P1105 delivery variable lists (2022, 2023-2024, 2025) label this column as a weight adjusting for months not received, which contradicts its weighted sibling fallk, documented by SCB's Registerinformation as a sick-case marker. The name follows the sibling."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallm1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Markering för sjukfall, man, oviktade", "definition" = "Markering för sjukfall där individen är en man, oviktade", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:79\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 21) lists fallm1 as \"Vikt som justerar för ej inkomna månader, för man (0 för kvinna), oviktade\", the unweighted (oviktade) counterpart of fallm (row 20); that label contradicts the sibling's Registerinformation name \"Markering för sjukfall, man\", which the name follows. SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling fallm (is_sensitive=true, is_identifier=false)."
+caveat = "SCB's P1105 delivery variable lists (2022, 2023-2024, 2025) label this column as a weight adjusting for months not received, which contradicts its weighted sibling fallm, documented by SCB's Registerinformation as a sick-case marker. The name follows the sibling."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: BAS @2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "BAS (enligt leverans)", "definition" = "Odokumenterad kolumn: SCB dokumenterar ingen variabel BAS för KSju, och betydelsen är okänd. Kolumnen levereras bara för 2023 kvartal 3 och 4 och innehåller enbart värdet 1 eller saknat värde.", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:8\n\nSWECOV holds BAS in KSju_20233 and KSju_20234 (storage varchar(1)). SCB's Registerinformation export and P1105 delivery variable list carry no BAS row for KSju; an aggregate check on MONA, reported as a conclusion only, found the value 1 or null and nothing else. Minted as an undocumented column so it can be ordered, with no code list (maintainer decision 2026-10-16: an undocumented column is orderable, marked undocumented; #1496 stays open for SCB's definition). is_sensitive follows the KSju sick-leave neighbours conservatively. (#1603 batch-e; maintainer orderable rule 2026-10-16)."
+caveat = "Undocumented column: SCB documents no BAS variable for KSju, so its meaning is unknown. It is delivered only in the 2023-Q3 and 2023-Q4 tables."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r11393'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12636'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12639'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12640'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12641'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12793'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12969'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r12970'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r13382'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r14524'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r1586'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r1636'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r16440'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r18253'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r18751'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r3774'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r3776'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r3777'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersk where key = 'v7174' and release = 'r563'"
+fields = { "description" = "Antal ersättningsdagar för kvinna, viktade (0 för man)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:198\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r11393'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12636'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12639'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12640'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12641'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12793'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12969'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r12970'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r13382'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r14524'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r1586'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r1636'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r16440'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r18253'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r18751'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r3774'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r3776'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r3777'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersm where key = 'v8147' and release = 'r563'"
+fields = { "description" = "Antal ersättningsdagar för man, viktade (0 för kvinna)" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:204\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r11393'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12636'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12639'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12640'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12641'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12793'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12969'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r12970'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r13382'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r14524'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r1586'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r1636'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r16440'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r18253'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r18751'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r3774'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r3776'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r3777'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ersdagar where key = 'v7171' and release = 'r563'"
+fields = { "description" = "Antal ersättningsdagar, viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:192\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r11393'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12636'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12639'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12640'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12641'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12793'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12969'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r12970'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r13382'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r14524'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r1586'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r1636'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r16440'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r18253'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r18751'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r3774'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r3776'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r3777'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagk where key = 'v8154' and release = 'r563'"
+fields = { "description" = "Antal kalenderdagar för kvinna (0 för man), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:210\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r11393'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12636'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12639'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12640'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12641'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12793'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12969'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r12970'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r13382'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r14524'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r1586'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r1636'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r16440'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r18253'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r18751'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r3774'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r3776'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r3777'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: kdagm where key = 'v8155' and release = 'r563'"
+fields = { "description" = "Antal kalenderdagar för man (0 för kvinna), viktade" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:216\n\nBilaga 2 - Variabellista.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: delantdagar where key = 'v8152' and release = 'r12641'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1379\n\nSCB states neither flag for scb/ksju/delantdagar-2015 and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: helantdagar where key = 'v8152' and release = 'r11393'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1394\n\nSCB states neither flag for scb/ksju/helantdagar and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ng1 where key = 'v4027' and release = 'r1586'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1472\n\nSCB states neither flag for scb/ksju/naringsgren-ng1-2007 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1_2002 where key = 'v4027' and release = 'r1636'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1457\n\nSCB states neither flag for scb/ksju/naringsgren-ngs1-2002-2008 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r563'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1412\n\nSCB states neither flag for scb/ksju/naringsgren-ngs1-2006 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ngs1 where key = 'v4027' and release = 'r1586'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1442\n\nSCB states neither flag for scb/ksju/naringsgren-ngs1-2007 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: sni2 where key = 'v4027' and release = 'r563'"
+fields = { "sensitive" = true, "identifier" = false }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1427\n\nSCB states neither flag for scb/ksju/naringsgren-sni2-2006 and no auxiliary join supplies one, so unresolved_flag withheld it. SCB marks the same näringsgren quantity sensitive where it states the flag (bgr98, member 21655) and on every other flagged näringsgren owner in the register, none as an identifier; sensitivity takes that value and the identifier flag stays false (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-16)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: ersk1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Antal ersättningsdagar för kvinna, oviktade (0 för man)", "definition" = "Antal ersättningsdagar för kvinna, oviktade (0 för man)", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:39\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 13) documents ersk1 verbatim as the unweighted (oviktade) counterpart of ersk (row 12, Registerinformation \"Antal ersättningsdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersk (is_sensitive=true, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: ersm1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Antal ersättningsdagar för man, oviktade (0 för kvinna)", "definition" = "Antal ersättningsdagar för man, oviktade (0 för kvinna)", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:52\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 15) documents ersm1 verbatim as the unweighted (oviktade) counterpart of ersm (row 14, Registerinformation \"Antal ersättningsdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling ersm (is_sensitive=true, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: kdagk1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Antal kalenderdagar för kvinna (0 för man), oviktade", "definition" = "Antal kalenderdagar för kvinna (0 för man), oviktade", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:93\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 31) documents kdagk1 verbatim as the unweighted (oviktade) counterpart of kdagk (row 30, Registerinformation \"Antal sjukdagar, kvinna\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagk (is_sensitive=true, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: kdagm1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Antal kalenderdagar för man (0 för kvinna), oviktade", "definition" = "Antal kalenderdagar för man (0 för kvinna), oviktade", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:106\n\nSCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 33) documents kdagm1 verbatim as the unweighted (oviktade) counterpart of kdagm (row 32, Registerinformation \"Antal sjukdagar, man\"). SWECOV holds the column as float in every KSju quarterly table, KSju_20151 through KSju_20234 (registry-catalog-inputs swecov/swecov/derived/swecov_column_types.csv), and SCB's delivery report (Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet Postbeskrivning uppd 2023-2024) types it float; SCB's Registerinformation export carries no row for it. holdings_period is the span of SWECOV's held tables, which SCB's P1105 variable lists cover together with the same wording: P1105_Variabellista 2022.xlsx 20151-20204, Bilaga 2 20151-20224, Utkast_P1105_Variabellista_uppd2025_v5.xlsx 20231-20234. is_sensitive/is_identifier follow sibling kdagm (is_sensitive=true, is_identifier=false)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2015-01-01..2015-12-31 where key = 'v63' and release = 'r12641'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2016-01-01..2016-12-31 where key = 'v63' and release = 'r12793'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2017-01-01..2017-12-31 where key = 'v63' and release = 'r12969'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2018-01-01..2018-12-31 where key = 'v63' and release = 'r12970'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2019-01-01..2019-12-31 where key = 'v63' and release = 'r13382'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2020-01-01..2020-12-31 where key = 'v63' and release = 'r14524'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2021-01-01..2021-12-31 where key = 'v63' and release = 'r16440'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2022-01-01..2022-12-31 where key = 'v63' and release = 'r18253'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2023-01-01..2023-12-31 where key = 'v63' and release = 'r18751'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sysselsättningsstatus, november", "definition" = "Klassificering av skattad sysselsättningsstatus (förvärvsarbete) under november månad. Som förvärvsarbete räknas inkomstbringande arbete under i genomsnitt en timma per vecka under november.", "type" = "char", "length" = 1, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2015-01-01..2015-12-31 where key = 'v63' and release = 'r12641'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2016-01-01..2016-12-31 where key = 'v63' and release = 'r12793'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2017-01-01..2017-12-31 where key = 'v63' and release = 'r12969'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2018-01-01..2018-12-31 where key = 'v63' and release = 'r12970'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2019-01-01..2019-12-31 where key = 'v63' and release = 'r13382'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2020-01-01..2020-12-31 where key = 'v63' and release = 'r14524'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2021-01-01..2021-12-31 where key = 'v63' and release = 'r16440'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2022-01-01..2022-12-31 where key = 'v63' and release = 'r18253'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: SyssStat @2023-01-01..2023-12-31 where key = 'v63' and release = 'r18751'"
+fields = { "operational_definition" = "Härleds utifrån uppgifter i registren Lönesummestatistik, Anställningar - nattbefolkning och Inkomst och taxering, Skattskyld., folkbokf, dödsbon samt Arbetskraftsundersökningar, AKU from april 2005." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1507\n\nSWECOV holds SyssStat in the quarterly KSju tables 2015 Q1–2023 Q2 (the column is absent from 2023 Q3); SCB documents it on this variant for 2011 Q2–Q4. The aggregate check found only the values 1 and null in every quarter, with no coding or level shift, so it stays one owner. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2015-01-01..2015-12-31 where key = 'v8152' and release = 'r12641'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2016-01-01..2016-12-31 where key = 'v8152' and release = 'r12793'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2017-01-01..2017-12-31 where key = 'v8152' and release = 'r12969'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2018-01-01..2018-12-31 where key = 'v8152' and release = 'r12970'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2019-01-01..2019-12-31 where key = 'v8152' and release = 'r13382'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2020-01-01..2020-12-31 where key = 'v8152' and release = 'r14524'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2021-01-01..2021-12-31 where key = 'v8152' and release = 'r16440'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2022-01-01..2022-12-31 where key = 'v8152' and release = 'r18253'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: fallangd @2023-01-01..2023-12-31 where key = 'v8152' and release = 'r18751'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal sjukdagar", "definition" = "Alla kalenderdagar i ett sjukfall.", "type" = "decimal", "sensitive" = true, "identifier" = false, "unit" = "Dagar" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1486\n\nSWECOV holds fallangd in every quarterly KSju table 2015–2023; SCB documents it on this variant 2006–2011 Q1 as the length of the sickness case in days. The aggregate check found it equal to the sickness-period span (end date minus start date plus one) in every quarter, so the definition is unchanged. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only). Unit: SCB's documented 2006-2011 unit (days); the aggregate check above shows the 2015-2023 values are the case length in days."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: ersdag1 @2015..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Antal ersättningsdagar, oviktade", "definition" = "Antal ersättningsdagar, oviktade", "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:26\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. SCB's P1105 delivery variable list (Bilaga 2 - Variabellista.xlsx, sheet KSju, row 10) documents it as the unweighted counterpart of ersdagar (row 11). SWECOV holds it as float in every KSju quarterly table, KSju_20151 through KSju_20234, and ordered the same variables in each, so holdings are 2015-2023 (2026-10-13 maintainer decision, replacing the pooled 1990-2024 range from Y-213). is_sensitive/is_identifier follow sibling ersdagar."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: one_sni @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "1 eller NULL (1 om det bara finns ett arbetsställe)", "definition" = "1 eller NULL (1 om det bara finns ett arbetsställe)" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:130\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: pnra @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "? - (inehåller värde 0 eller 1)", "definition" = "? - (inehåller värde 0 eller 1)" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:141\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: tillagg @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Alltid tom för de godkända, men kod för de med statuskod 18", "definition" = "Alltid tom för de godkända, men kod för de med statuskod 18" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:152\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Felaktig @1990..2024"
+fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Är alltid 0 (eller NULL)", "definition" = "Är alltid 0 (eller NULL)" } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:119\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: glappantdag where key = 'v8152' and release = 'r11393'"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: glappantdag where key = 'v8152' and release = 'r12636'"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: glappantdag where key = 'v8152' and release = 'r12639'"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: glappantdag where key = 'v8152' and release = 'r12640'"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: glappantdag where key = 'v8152' and release = 'r12641'"
+fields = { "description" = "Dagar mellan sjukdagar" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:163\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r11393'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12636'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12639'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12640'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12641'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12793'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12969'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r12970'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r13382'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r14524'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r16440'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r18253'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: stratam where key = 'v8164' and release = 'r18751'"
+fields = { "description" = "Grupp satt av bransch och storleksklass (finns A-strata och B-strata). B-strata har en extra siffra som har med månad att göra" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:181\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: peorgnrram where key = 'v56' and release = 'r11393'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: peorgnrram where key = 'v56' and release = 'r12636'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: peorgnrram where key = 'v56' and release = 'r12640'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: peorgnrram where key = 'v56' and release = 'r12641'"
+fields = { "description" = "Organisationsnummer" }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:175\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt"
+fields = { "sets" = ["legacy-antal-svarande-objekt"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1160\nreg_meta_build/curation/registers/scb/ksju.toml:651\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalle-storleksklass"
+fields = { "sets" = ["legacy-arbetsstalle-storleksklass"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1069\nreg_meta_build/curation/registers/scb/ksju.toml:639\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "sets" = ["legacy-cfar-nummer"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:609\nreg_meta_build/curation/registers/scb/ksju.toml:861\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-astlan"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98t"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lan98u"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lan-lanf"
+fields = { "sets" = ["legacy-lan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:615\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall"
+fields = { "sets" = ["legacy-lopnummer-sjukfall"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:676\nreg_meta_build/curation/registers/scb/ksju.toml:965\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp"
+fields = { "sets" = ["legacy-naringsgrupp"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:663\nreg_meta_build/curation/registers/scb/ksju.toml:900\nreg_meta_build/curation/registers/scb/ksju.toml:913\nreg_meta_build/curation/registers/scb/ksju.toml:926\nreg_meta_build/curation/registers/scb/ksju.toml:939\nreg_meta_build/curation/registers/scb/ksju.toml:952\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad"
+fields = { "sets" = ["legacy-referensmanad"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1173\nreg_meta_build/curation/registers/scb/ksju.toml:1186\nreg_meta_build/curation/registers/scb/ksju.toml:1199\nreg_meta_build/curation/registers/scb/ksju.toml:1212\nreg_meta_build/curation/registers/scb/ksju.toml:1225\nreg_meta_build/curation/registers/scb/ksju.toml:1238\nreg_meta_build/curation/registers/scb/ksju.toml:621\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:storan"
+fields = { "sets" = ["legacy-storan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:657\nreg_meta_build/curation/registers/scb/ksju.toml:874\nreg_meta_build/curation/registers/scb/ksju.toml:887\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum"
+fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1056\nreg_meta_build/curation/registers/scb/ksju.toml:633\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "sets" = ["legacy-urvalsstratum"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1082\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."

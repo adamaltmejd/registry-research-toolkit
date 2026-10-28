@@ -1,0 +1,21 @@
+
+[[statement]]
+kind = "link"
+subject = "var:huvudman-namn"
+relation = "label_of"
+object = "scb/forskoleklass/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/forskoleklass.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolenhetens-namn"
+relation = "label_of"
+object = "scb/forskoleklass/skolenhetskod"
+evidence = "reg_meta_build/curation/registers/scb/forskoleklass.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "link"
+subject = "var:skolans-namn"
+relation = "label_of"
+object = "scb/forskoleklass/skolkod"
+evidence = "reg_meta_build/curation/registers/scb/forskoleklass.toml:14\n\nLegacy code_label_pair declaration"

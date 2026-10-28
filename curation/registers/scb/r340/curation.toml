@@ -1,0 +1,1693 @@
+
+[[statement]]
+kind = "link"
+subject = "var:hmannamn"
+relation = "label_of"
+object = "scb/grundskola-betyg-ak6/huvudman"
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:144\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r11494'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r12607'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r13576'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r14988'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r17730'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r18323'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r18983'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r19486'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r20157'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r7314'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: antalf where key = 'v3594' and release = 'r9823'"
+fields = { "description" = "Antal ämnen som eleven har ej godkänt betyg (A-E)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r11494'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r12607'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r13576'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r14988'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r17730'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r18323'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r18983'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r19486'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r20157'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r5326'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r5628'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r7314'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ma where key = 'v3613' and release = 'r9823'"
+fields = { "description" = "Betyg i matematik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: no where key = 'v3619' and release = 'r18323'"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: no where key = 'v3619' and release = 'r18983'"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: no where key = 'v3619' and release = 'r19486'"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: no where key = 'v3619' and release = 'r20157'"
+fields = { "description" = "Betyg i naturorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r11494'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r12607'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r13576'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r14988'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r17730'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r18323'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r18983'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r19486'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r20157'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r5326'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r5628'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r7314'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: so where key = 'v3624' and release = 'r9823'"
+fields = { "description" = "Betyg i samhällsorienterade ämnen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bl where key = 'v3599' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet bild" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: bi where key = 'v3597' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet biologi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: en where key = 'v3602' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet engelska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: fy where key = 'v3604' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet fysik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ge where key = 'v3605' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet geografi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hkk where key = 'v3607' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet hem- och konsumentkunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: hi where key = 'v3606' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet historia" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: idh where key = 'v3609' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet idrott och hälsa" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: ke where key = 'v3610' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet kemi" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: mu where key = 'v3618' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet musik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: re where key = 'v3620' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet religion" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sh where key = 'v3621' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet samhällskunskap" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sl where key = 'v3622' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet slöjd" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: sv where key = 'v3625' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet svenska" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tn where key = 'v3629' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet teckenspråk" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r11494'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r12607'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r13576'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r14988'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r17730'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r18323'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r18983'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r19486'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r20157'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r5326'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r5628'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r7314'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: tk where key = 'v3627' and release = 'r9823'"
+fields = { "description" = "Betyg i ämnet teknik" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r11494'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r12607'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r13576'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r14988'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r17730'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r18323'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r18983'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r19486'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r20157'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r5326'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r5628'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r7314'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: personnr where key = 'v57' and release = 'r9823'"
+fields = { "description" = "Löpnummer i populationen" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:126\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r11494'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r12607'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r13576'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r14988'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r17730'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r18323'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r18983'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r19486'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r20157'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r5628'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r7314'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolenhetskod where key = 'v30366' and release = 'r9823'"
+fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:132\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r11494'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r12607'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r13576'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r14988'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r17730'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r18323'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r18983'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r5326'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r5628'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r7314'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-arskurs-6: skolkod where key = 'v104' and release = 'r9823'"
+fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
+evidence = "reg_meta_build/curation/registers/scb/grundskola-betyg-ak6.toml:138\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

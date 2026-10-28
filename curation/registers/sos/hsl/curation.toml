@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "hsl: ar @2007-01-01.. where key = 'n:ar'"
+fields = { "description" = "Det år då kommunal hälso- och sjukvård getts.", "label" = "Statistikår" }
+evidence = "reg_meta_build/curation/registers/sos/hsl.toml:115\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hsl: pnr @2007-01-01.. where key = 'n:pnr'"
+fields = { "description" = "Om personnummer inte finns, ska samordningsnummer anges. Om inget av dessa finns, ska \"n/a\" anges." }
+evidence = "reg_meta_build/curation/registers/sos/hsl.toml:123\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hsl2: ar @2019-01-01.. where key = 'n:ar'"
+fields = { "description" = "Ska lämnas av kommuner med stadsdelsnämnd eller motsvarande. Om sådan indelning inte finns, ska utrymmet för uppgiften lämnas tomt.", "label" = "År" }
+evidence = "reg_meta_build/curation/registers/sos/hsl.toml:115\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hsl2: pnr @2007-01-01.. where key = 'n:pnr'"
+fields = { "description" = "Ska registreras enligt Statistiska centralbyråns förteckning över läns och kommunkoder." }
+evidence = "reg_meta_build/curation/registers/sos/hsl.toml:123\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
