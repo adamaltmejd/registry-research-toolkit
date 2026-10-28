@@ -198,3 +198,9 @@ kind = "set"
 subject = "ppi: ar where release = 'r11108'"
 fields = { "unit" = "År" }
 evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:597\n\nThe exact exported name and definition identify calendar year, and the operational definition explicitly states the calendar year represented by the statistics. Its2017 input-delivery peer saysÅr while its output-delivery unit says genericPeriod. Normalize only this exact generic period wording to the supported calendar-year unit; preserve both complete originals, source periods and all source coding. No month/quarter/year conversion or date-precision equivalence is claimed."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: sni"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"

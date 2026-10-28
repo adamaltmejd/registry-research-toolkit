@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "nvr: vaccin"
+fields = { "classification" = "class/atc/atc" }
+evidence = "reg_meta_build/curation/providers/fohm.toml:239\n\nExplicit provider declaration: ATC"

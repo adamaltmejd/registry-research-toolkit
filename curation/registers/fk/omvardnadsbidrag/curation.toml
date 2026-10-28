@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "barn: diagnoskod"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:2327\n\nExplicit provider declaration: ICD-10-SE"
+
+[[statement]]
+kind = "set"
+subject = "beviljanden: diagnoskod"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:2327\n\nExplicit provider declaration: ICD-10-SE"

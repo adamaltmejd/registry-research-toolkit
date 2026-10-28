@@ -5,3 +5,501 @@ subject = "fastigheter: ytabosth where key = 'v3274'"
 fields = { "variable" = "total-bostadsyta" }
 evidence = "reg_meta_build/curation/registers/scb/ftr.toml:258\nreg_meta_build/curation/registers/scb/ftr.toml:840\nreg_meta_build/curation/registers/scb/ftr.toml:850\nreg_meta_build/curation/registers/scb/ftr.toml:860\nreg_meta_build/curation/registers/scb/ftr.toml:870\n\nComplete source-reviewed native family and exact positive source-edition overrides. Map only previously proved positive literal defaults; partly unsupported literals stay unassigned and scoped positive histories override that disposition. Entire accepted original family pinned including all raw fields, parents, coding references and multiplicity. Batch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; Batch51-FTR14660-complete-peer-source-review.json where applicable. No inferred meaning, dates, flags, domain, co-delivery or equivalence.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact.\n\nBatch51-Fordons-FTR41-complete-source-review.json; operative-role-review.json; complete physical-coordinate-collisions.json. Exact accepted own originals, complete source field/parent/coding/peer guards. No inferred suffix semantics or statistical equivalence; historical operations and storage remain intact."
 caveat = "Exact source limitations for this native family: detailed operations remain unavailable on records where absent; existing generic physical quantities retain changing source-operative roles per edition, without asserting fixed-role or statistical equivalence. Explicitly contrary simultaneous coordinates remain unassigned."
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2018-01-01"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2018-01-01"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2018-01-01"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2019-01-01"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2019-01-01"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2019-01-01"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2020-01-01"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: kommun @2020-01-01"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {kommun,lan} @2020-01-01"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2021-01-01"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2021-01-01"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: folkbokfkom @2020-01-01,2021-01-01"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {kommun,lan} @2021-01-01"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2022-01-01"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2022-01-01"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2022-01-01"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2023-01-01"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2023-01-01"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2023-01-01"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @1998-01-01"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @1998-01-01"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @1998-01-01"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @1999-01-01"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @1999-01-01"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @1999-01-01"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2000-01-01"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2000-01-01"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2000-01-01"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2001-01-01"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2001-01-01"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2001-01-01"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2002-01-01"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2002-01-01"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2002-01-01"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2003-01-01"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2003-01-01"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2003-01-01"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2004-01-01"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2004-01-01"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2004-01-01"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2005-01-01"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2005-01-01"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {forsamling,kommun,lan} @2005-01-01"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: folkbokfkom @2006-01-01,2007-01-01"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2006-01-01"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2006-01-01"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2006-01-01"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {forsamling,kommun,lan} @2007-01-01"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2007-01-01"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2007-01-01"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2008-01-01"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2008-01-01"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2008-01-01"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2009-01-01"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2009-01-01"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2009-01-01"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2010-01-01"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2010-01-01"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2010-01-01"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2011-01-01"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2011-01-01"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2011-01-01"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2012-01-01"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2012-01-01"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2012-01-01"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2013-01-01"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {forsamling,kommun,lan} @2013-01-01"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2013-01-01"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2014-01-01"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: forsamling @2014-01-01,2015-01-01"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2014-01-01,2015-01-01,2016-01-01"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2014-01-01"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,forsamling,kommun,lan} @2015-01-01"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,forsamling,kommun,lan} @2015-01-01"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2016-01-01"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2016-01-01"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "agare: {folkbokfkom,kommun,lan} @2017-01-01"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: {kommun,lan} @2017-01-01"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: {folkbokfkom,kommun,lan} @2017-01-01"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: sni @2008-01-01,2009-01-01,2010-01-01,2011-01-01,2012-01-01,2014-01-01,2015-01-01,2016-01-01,2017-01-01,2018-01-01"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: sni @2003-01-01,2004-01-01,2005-01-01,2006-01-01,2007-01-01"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: sni2002"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: sni @1998-01-01,1999-01-01,2000-01-01,2001-01-01,2002-01-01"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"

@@ -136,3 +136,21 @@ kind = "set"
 subject = "bistandshushall: sbelsep"
 fields = { "definition" = "Belopp för socialbidrag under den levererade månaden." }
 evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:719\n\nThe existing explicit monthly dimension retains the original month-bearing column/name. These own definitions differ only by that already represented month, whitespace and punctuation. Normalize only that redundant monthly qualifier; every literal original stays evidence. SBelDec is deliberately excluded: its December label contradicts a November definition, so that separate conflict stays visible. No month values, units, dates or encoding are altered. Batch53-SCB-finish-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "bistandshushall: {kommun,lan}"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bistandsmottagare: {fbfkommun,fbflan,fodlan,forsamling,kommun,lan}"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "ekonomiskt-bistand: {kommun,kommunnamn,lan}"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"

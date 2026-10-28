@@ -94,3 +94,663 @@ kind = "set"
 subject = "ovriga-fordonsslag: Status where key = 'v461' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1980-12-31"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1980-12-31"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1980-12-31"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1980-12-31"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1981-12-31"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1981-12-31"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1981-12-31"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1981-12-31"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1982-12-31"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1982-12-31"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1982-12-31"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1982-12-31"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1983-12-31"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1983-12-31"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1983-12-31"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1983-12-31"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1984-12-31"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1984-12-31"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1984-12-31"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1984-12-31"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1985-12-31"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1985-12-31"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1985-12-31"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1985-12-31"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1986-12-31"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1986-12-31"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1986-12-31"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1987-12-31"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1987-12-31"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1987-12-31"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1987-12-31"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1988-12-31"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1988-12-31"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1988-12-31"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1988-12-31"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1989-12-31"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1989-12-31"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1989-12-31"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1989-12-31"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1990-12-31"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1990-12-31"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1990-12-31"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1990-12-31"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1991-12-31"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1991-12-31"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1991-12-31"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1991-12-31"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom @1992-12-31"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1992-12-31"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1992-12-31"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1992-12-31"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1992-12-31"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom @1993-12-31"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1993-12-31"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1993-12-31"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1993-12-31"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1993-12-31"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom @1994-12-31"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1994-12-31"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1994-12-31"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1994-12-31"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1994-12-31"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom @1995-12-31"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: kom @1995-12-31,1996-12-31"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: kom @1995-12-31,1996-12-31"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: kom @1995-12-31,1996-12-31"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: kom @1995-12-31,1996-12-31"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: kom @1996-12-31"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: {sni2007,sni2007_2}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: {sni2007,sni2007_2,sni2007_3}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: {sni2007,sni2007_2}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: {sni2007,sni2007_2,sni2007_3,sni2007_ag}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: sni92"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 @1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:22\n\nLegacy exact value-set label: SNI69_6"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni2002 @2015-12-31"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: {sni2002,sni2002_2}"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni2002"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: {sni2002,sni2002_2,sni2002_3} @2015-12-31"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni2002"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: sni2002 @2014-12-31,2015-12-31"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: sni2002 @2014-12-31,2015-12-31"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni2002 @2014-12-31,2015-12-31"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v38738'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni2002 where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1986-12-31,1987-12-31,1988-12-31,1989-12-31,1990-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1987-12-31,1988-12-31,1989-12-31,1990-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1986-12-31,1987-12-31,1988-12-31,1989-12-31,1990-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 @1986-12-31,1987-12-31,1988-12-31,1989-12-31,1990-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1986-12-31,1987-12-31,1988-12-31,1989-12-31,1990-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1986-12-31,1987-12-31,1988-12-31,1989-12-31,1991-12-31,1992-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 @1980-12-31,1981-12-31,1982-12-31,1983-12-31,1984-12-31,1985-12-31,1986-12-31,1987-12-31,1988-12-31,1990-12-31,1991-12-31"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: {sni92_2,sni92_3}"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 @1981-12-31,1983-12-31,1984-12-31,1985-12-31,1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: {sni92_2,sni92_3}"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 @2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "bussar: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: sni92"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "personbilar: sni92 @1980-12-31,1982-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "traktorer: sni92 @1993-12-31,1994-12-31,1995-12-31,1996-12-31,1997-12-31,1998-12-31,1999-12-31,2000-12-31,2001-12-31,2002-12-31"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"

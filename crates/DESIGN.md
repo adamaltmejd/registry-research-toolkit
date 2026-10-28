@@ -147,7 +147,8 @@ tracks the milestones. This section holds the design decisions that outlive the 
    documented columns (occurrences, each with a period), value sets and source-side
    links. Every fact keeps a locator back to its input. Readers are the only code that
    names a provider or a file format. Their config (header aliases, type tables, the
-   delivery-name grammar) is data under `curation/readers/`.
+   delivery-name grammar) is data under `curation/readers/`. Value-set normalization
+   drops parents absent from the same set; classification readers report the count.
 2. **Resolve.** One register's frame plus that register's curation becomes a resolved
    register: variables, segments, coverage, findings and provenance. Resolve is a pure
    function per register, run in parallel and cached by content hash. It never sees

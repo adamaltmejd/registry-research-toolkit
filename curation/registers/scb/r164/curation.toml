@@ -502,3 +502,171 @@ kind = "set"
 subject = "november: vprvfu where key = 'v7778' and type = 'decimal' and release = 'r15247'"
 fields = { type = "integer" }
 evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2018-05-01..2018-05-31,2018-11-01..2018-11-30"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2019-05-01..2019-05-31,2019-11-01..2019-11-30,2020-05-01..2020-05-31,2020-11-01..2020-11-30"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2021-05-01..2021-05-31,2021-11-01..2021-11-30"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2022-05-01..2022-05-31,2022-11-01..2022-11-30"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2023-05-01..2023-05-31"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2024-05-01..2024-05-31"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2000-05-01..2000-05-31,2000-11-01..2000-11-30"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2001-05-01..2001-05-31,2001-11-01..2001-11-30"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2002-05-01..2002-05-31,2002-11-01..2002-11-30"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2003-05-01..2003-05-31,2003-11-01..2003-11-30"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2004-05-01..2004-05-31,2004-11-01..2004-11-30"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2005-05-01..2005-05-31,2005-11-01..2005-11-30"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2006-05-01..2006-05-31,2006-11-01..2006-11-30"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2007-05-01..2007-05-31,2007-11-01..2007-11-30"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2008-05-01..2008-05-31,2008-11-01..2008-11-30"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2009-05-01..2009-05-31,2009-11-01..2009-11-30"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2010-05-01..2010-05-31,2010-11-01..2010-11-30"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2011-05-01..2011-05-31,2011-11-01..2011-11-30"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2012-05-01..2012-05-31,2012-11-01..2012-11-30"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2013-05-01..2013-05-31,2013-11-01..2013-11-30"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2014-05-01..2014-05-31,2014-11-01..2014-11-30"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {forsamling,kommun,lan} @2015-05-01..2015-05-31,2015-11-01..2015-11-30"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2016-05-01..2016-05-31,2016-11-01..2016-11-30"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2017-05-01..2017-05-31,2017-11-01..2017-11-30"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: {kommun,lan} @2025-05-01..2025-05-31"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "november: ssyk2012"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
+
+[[statement]]
+kind = "set"
+subject = "november: utbildn @2003-05-01..2003-05-31,2003-11-01..2003-11-30,2004-05-01..2004-05-31,2004-11-01..2004-11-30,2005-05-01..2005-05-31,2005-11-01..2005-11-30,2006-05-01..2006-05-31,2006-11-01..2006-11-30,2007-05-01..2007-05-31,2007-11-01..2007-11-30,2008-05-01..2008-05-31,2008-11-01..2008-11-30,2009-05-01..2009-05-31,2009-11-01..2009-11-30,2010-05-01..2010-05-31,2010-11-01..2010-11-30,2011-05-01..2011-05-31,2011-11-01..2011-11-30,2012-05-01..2012-05-31,2012-11-01..2012-11-30,2013-05-01..2013-05-31,2013-11-01..2013-11-30,2014-05-01..2014-05-31,2014-11-01..2014-11-30,2015-05-01..2015-05-31,2015-11-01..2015-11-30,2016-05-01..2016-05-31,2016-11-01..2016-11-30,2017-05-01..2017-05-31,2017-11-01..2017-11-30,2018-05-01..2018-05-31,2018-11-01..2018-11-30,2019-05-01..2019-05-31,2019-11-01..2019-11-30,2020-05-01..2020-05-31,2020-11-01..2020-11-30,2021-05-01..2021-05-31,2021-11-01..2021-11-30,2022-05-01..2022-05-31,2022-11-01..2022-11-30,2023-05-01..2023-05-31"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "november: utbildn @2024-05-01..2024-05-31,2025-05-01..2025-05-31"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
