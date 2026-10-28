@@ -968,7 +968,7 @@ pub fn validate_assignments(
     ledger: &Ledger,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
 ) -> Result<(), String> {
-    crate::resolve(records, ledger, &BTreeMap::new(), assignments).map(|_| ())
+    crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[]).map(|_| ())
 }
 
 /// Resolve pinned variable memberships without changing the frame.
@@ -980,7 +980,7 @@ pub fn variable_members(
     ledger: &Ledger,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
 ) -> Result<BTreeMap<String, BTreeSet<crate::OccurrenceKey>>, String> {
-    let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments)?;
+    let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[])?;
     let mut variables: BTreeMap<String, BTreeSet<crate::OccurrenceKey>> = BTreeMap::new();
     let context = crate::OccurrenceContext::new(records);
     for occurrence in &resolved.occurrences {

@@ -1,0 +1,23 @@
+[[statement]]
+kind = "set"
+subject = "domains: Edition @2018"
+fields.classification = "class/kind/old"
+evidence = "Both variables bind the same family; Local changes its response domain in 2019."
+
+[[statement]]
+kind = "set"
+subject = "domains: Local @2018"
+fields.classification = "class/kind/old"
+evidence = "Both variables bind the same family; Local changes its response domain in 2019."
+
+[[statement]]
+kind = "set"
+subject = "domains: Edition @2019"
+fields.classification = "class/kind/new"
+evidence = "Both variables bind the same family; Local changes its response domain in 2019."
+
+[[statement]]
+kind = "set"
+subject = "domains: Local @2019"
+fields.classification = "class/kind/new"
+evidence = "Both variables bind the same family; Local changes its response domain in 2019."

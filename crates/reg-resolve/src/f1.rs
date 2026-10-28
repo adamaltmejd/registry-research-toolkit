@@ -18,8 +18,13 @@ pub(crate) fn changes(
     tables: &[ResolvedTable],
     releases: &[ResolvedRelease],
     valuesets: &BTreeMap<&str, &ValueSet>,
+    classifications: &[crate::curation::apply::Classification],
     findings: &mut Vec<Finding>,
 ) {
+    let classifications: BTreeMap<_, _> = classifications
+        .iter()
+        .map(|c| (format!("class/{}/{}", c.family, c.version), c))
+        .collect();
     let table_name = |t: usize| tables[t].table.name.clone().unwrap_or_default();
     // One finding per (variable, sub-kind, table or none, day the new form starts).
     let mut seen: BTreeSet<(usize, &'static str, Option<usize>, String)> = BTreeSet::new();
@@ -71,7 +76,52 @@ pub(crate) fn changes(
                     format!("{} → {} in {table}", shape(a), shape(b)),
                 );
             }
-            if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" {
+            let edition_only = a.valueset != b.valueset
+                && a.classification
+                    .as_ref()
+                    .and_then(|id| classifications.get(id))
+                    .zip(
+                        b.classification
+                            .as_ref()
+                            .and_then(|id| classifications.get(id)),
+                    )
+                    .is_some_and(|(old, new)| {
+                        if old.family != new.family || old.version == new.version {
+                            return false;
+                        }
+                        let codes = |hash: Option<&str>| -> Option<BTreeSet<&str>> {
+                            Some(
+                                valuesets
+                                    .get(hash?)?
+                                    .items
+                                    .iter()
+                                    .map(|item| item.code.as_str())
+                                    .collect(),
+                            )
+                        };
+                        let (
+                            Some(observed_old),
+                            Some(observed_new),
+                            Some(edition_old),
+                            Some(edition_new),
+                        ) = (
+                            codes(a.valueset.as_deref()),
+                            codes(b.valueset.as_deref()),
+                            codes(Some(&old.valueset)),
+                            codes(Some(&new.valueset)),
+                        )
+                        else {
+                            return false;
+                        };
+                        observed_old.is_subset(&edition_old)
+                            && observed_new.is_subset(&edition_new)
+                            && observed_old
+                                .symmetric_difference(&observed_new)
+                                .all(|code| {
+                                    edition_old.contains(code) != edition_new.contains(code)
+                                })
+                    });
+            if a.valueset != b.valueset && a.coded != "no" && b.coded != "no" && !edition_only {
                 // A side that states no set but whose occurrence states one set per
                 // population is split, not emptied.
                 let per_population = |side: &Segment, segment: usize| {

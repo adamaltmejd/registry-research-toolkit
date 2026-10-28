@@ -364,6 +364,7 @@ pub fn resolve(
     ledger: &Ledger,
     valuesets: &BTreeMap<&str, &ValueSet>,
     assignments: &BTreeMap<OccurrenceKey, String>,
+    classifications: &[curation::apply::Classification],
 ) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
@@ -386,7 +387,13 @@ pub fn resolve(
     let defaults = if assignments.keys().any(|key| {
         key.identity.provider == register.provider && key.identity.register == register.register
     }) {
-        Some(resolve(records, ledger, valuesets, &BTreeMap::new())?)
+        Some(resolve(
+            records,
+            ledger,
+            valuesets,
+            &BTreeMap::new(),
+            classifications,
+        )?)
     } else {
         None
     };
@@ -1266,6 +1273,7 @@ pub fn resolve(
         &tables,
         &releases,
         valuesets,
+        classifications,
         &mut findings,
     );
 

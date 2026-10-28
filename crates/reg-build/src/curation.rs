@@ -372,6 +372,7 @@ enum Phase {
     Variables,
     Fields,
     Relations,
+    Acknowledgements,
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> Phase {
@@ -386,7 +387,8 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
-        Statement::Link { .. } | Statement::Ack { .. } => Phase::Relations,
+        Statement::Link { .. } => Phase::Relations,
+        Statement::Ack { .. } => Phase::Acknowledgements,
         Statement::Set { .. } => Phase::Fields,
     }
 }
@@ -571,6 +573,7 @@ fn run_selected(
         Phase::Variables,
         Phase::Fields,
         Phase::Relations,
+        Phase::Acknowledgements,
     ] {
         let fields_stage = matches!(stage, Phase::Coverage | Phase::Periods | Phase::Fields);
         let structural_stage = matches!(stage, Phase::Parents | Phase::Moves | Phase::Facts);
@@ -586,6 +589,13 @@ fn run_selected(
         };
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
+        let finding_catalog = if stage == Phase::Acknowledgements
+            && statements.iter().any(|s| phase(&s.statement) == stage)
+        {
+            Some(complete_findings(root, &records, &result)?)
+        } else {
+            None
+        };
         let mut accepted = Vec::new();
         let mut field_applications = BTreeMap::new();
         let mut ack_indices = BTreeMap::new();
@@ -663,24 +673,11 @@ fn run_selected(
                     }
                 }
             }
-            let finding_view = if stage == Phase::Relations
-                && group
-                    .iter()
-                    .any(|s| matches!(s.statement, reg_frame::statement::Statement::Ack { .. }))
-            {
-                let sets = records
-                    .iter()
-                    .filter_map(|r| match r {
-                        Record::ValueSet(v) => Some((v.hash.as_str(), v)),
-                        _ => None,
-                    })
-                    .collect();
-                let mut resolved = reg_resolve::resolve(&source, ledger, &sets, &result.variables)?;
-                reg_resolve::curation::apply_metadata(&mut resolved, &result.metadata);
-                Some(resolved)
-            } else {
-                None
-            };
+            let finding_view = finding_catalog.as_ref().and_then(|catalog| {
+                catalog.iter().find(|r| {
+                    r.register.provider == **provider && r.register.register == **register
+                })
+            });
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
             let references = references(
                 root,
@@ -852,7 +849,7 @@ fn run_selected(
             } else {
                 Vec::new()
             };
-            if stage == Phase::Relations {
+            if matches!(stage, Phase::Relations | Phase::Acknowledgements) {
                 match &statement.statement {
                     reg_frame::statement::Statement::Link { .. } => {
                         result.links.push(((*statement).clone(), premise.clone()));
@@ -883,7 +880,9 @@ fn run_selected(
                 Phase::Variables => assignments
                     .remove(&publication_identity(statement))
                     .expect("evaluated assignment"),
-                Phase::Relations => Ok(reg_resolve::curation::apply::Applied::default()),
+                Phase::Relations | Phase::Acknowledgements => {
+                    Ok(reg_resolve::curation::apply::Applied::default())
+                }
                 Phase::Coverage | Phase::Periods | Phase::Fields => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
@@ -1091,7 +1090,13 @@ fn run_selected(
         }
     }
     if !result.links.is_empty() {
-        let resolved = resolve_catalog(root, &records, &result.variables, &result.metadata)?;
+        let resolved = resolve_catalog(
+            root,
+            &records,
+            &result.variables,
+            &result.metadata,
+            &result.classifications,
+        )?;
         let linked = crate::link::curate(root, &resolved, &records, &result.links)?;
         if !linked.refusals.is_empty() {
             let messages = linked
@@ -1284,12 +1289,40 @@ fn run_selected(
     Ok(result)
 }
 
+/// The complete review surface shared by acknowledgement validation and publication.
+pub(super) fn complete_findings(
+    root: &Path,
+    records: &[Record],
+    applied: &Applied,
+) -> Result<Vec<reg_resolve::Resolved>, String> {
+    let mut resolved = resolve_catalog(
+        root,
+        records,
+        &applied.variables,
+        &applied.metadata,
+        &applied.classifications,
+    )?;
+    let mut sets = BTreeMap::new();
+    for record in records {
+        if let Record::ValueSet(set) = record {
+            sets.entry(set.hash.as_str()).or_insert(set);
+        }
+    }
+    let mut linked = crate::link::resolve(&resolved, records, &[])?;
+    if !applied.links.is_empty() {
+        linked.relations = crate::link::curate(root, &resolved, records, &applied.links)?.relations;
+    }
+    crate::proposals::generate(&mut resolved, &applied.classifications, &sets, &linked)?;
+    Ok(resolved)
+}
+
 /// Resolve the curated source snapshot for post-resolve curation validation.
 pub(super) fn resolve_catalog(
     root: &Path,
     records: &[Record],
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     metadata: &[reg_resolve::curation::apply::Metadata],
+    classifications: &[reg_resolve::curation::apply::Classification],
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let sets = records
         .iter()
@@ -1318,7 +1351,8 @@ pub(super) fn resolve_catalog(
             } else {
                 reg_resolve::Ledger::default()
             };
-            let mut resolved = reg_resolve::resolve(&source, &ledger, &sets, variables)?;
+            let mut resolved =
+                reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
             reg_resolve::curation::apply_metadata(&mut resolved, metadata);
             Ok(resolved)
         })
