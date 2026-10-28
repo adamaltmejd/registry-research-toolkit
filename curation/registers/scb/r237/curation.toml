@@ -1,607 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "individer-16-74-ar-ulf: ba0021 where key = 'v15'"
-fields = { "variable" = "civilstand" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:5429\n\nComplete404-original source-member/field/domain audit: Batch51-ULF15-complete-source-review.json. BA0021 and BA0019 never coexist in the same variant/edition; BA0170 is independently co-present with either register field in24 contexts, with own source members and contrary code assignments. Do not infer equality of stored values."
-caveat = "The provider links these independent literal source fields to its civil-state question. BA0021 and BA0019 form a nonsimultaneous register-category history, retaining every own annual domain. Simultaneous BA0170 has its own source members and materially different category assignments; retain its literal field identity without claiming value equivalence or expanded questionnaire semantics. PB190 retains its own later categories, including separated status. No codes are converted; source attribution, all domains and original metadata remain evidence."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0070 where key = 'v17351' and release = 'r747'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0070 where key = 'v17351' and release = 'r748'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0070 where key = 'v17351' and release = 'r749'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0070 where key = 'v17351' and release = 'r750'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0070 where key = 'v17351' and release = 'r751'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r15419'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r15494'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r16007'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r16298'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r16497'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r17596'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r18408'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r722'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r723'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r727'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r728'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r729'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r730'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r731'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r732'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r733'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r735'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0070 where key = 'v17351' and release = 'r746'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0070 where key = 'v17351' and release = 'r20238'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4561\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0070 where key = 'v17351' and release = 'r717'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4561\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0070 where key = 'v17351' and release = 'r720'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4561\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0070 where key = 'v17351' and release = 'r721'"
-fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4561\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r15419'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r15494'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r16007'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r16298'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r16497'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r17596'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r18408'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r733'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r735'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ut2360 where key = 'v13329' and release = 'r746'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut2360 where key = 'v13329' and release = 'r20238'"
-fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4528\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0643 where key = 'v9801' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4572\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0643 where key = 'v9801' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4572\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0644 where key = 'v9802' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4583\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0644 where key = 'v9802' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4583\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0645 where key = 'v9803' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4594\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0645 where key = 'v9803' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4594\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0646 where key = 'v9804' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4605\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0646 where key = 'v9804' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4605\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0647 where key = 'v9805' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4616\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0647 where key = 'v9805' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4616\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0648 where key = 'v9806' and release = 'r15419'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4627\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ha0648 where key = 'v9806' and release = 'r746'"
-fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4627\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r722'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r723'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r727'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r728'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r729'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r730'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r731'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r732'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r733'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0087 where key = 'v11557' and release = 'r735'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0087 where key = 'v11557' and release = 'r717'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2024\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0087 where key = 'v11557' and release = 'r720'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2024\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0087 where key = 'v11557' and release = 'r721'"
-fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2024\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r722'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r723'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r727'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r728'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r729'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r730'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r731'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r732'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r733'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0086 where key = 'v11556' and release = 'r735'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0086 where key = 'v11556' and release = 'r717'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2000\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0086 where key = 'v11556' and release = 'r720'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2000\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0086 where key = 'v11556' and release = 'r721'"
-fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2000\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r722'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r723'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r727'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r728'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r729'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r730'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r731'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r732'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r733'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0082 where key = 'v11553' and release = 'r735'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0082 where key = 'v11553' and release = 'r717'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1976\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0082 where key = 'v11553' and release = 'r720'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1976\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0082 where key = 'v11553' and release = 'r721'"
-fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1976\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143'"
-fields = { "variable" = "ssyk12up" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2338\n\nShared-column succession fold 2026-10-21: SCB VarId 31143 'Yrke, huvudsakliga sysselsättningen' sequential rename {SSYK12UP_1 2014-2019, SSYK12UP 2020} owned by 237.31143.ssyk12up; identical operational definition (SSYK 2012, question PL050A_1), the same 636 codes, never co-delivered (reg_meta v0.57.0). The SSYK 96 columns SSYKUP_1/SSYKUp_1 keep their own owner. Y-211/Y-276 sequential-rename policy."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0352 where key = 'v9050' and release = 'r737'"
-fields = { "unit" = "Antal personer" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1562\n\nThe source defines Antal anställda i företaget and the units differ only by letter case. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm1040 where key = 'v9427' and release = 'r20238'"
-fields = { "unit" = "Antal timmar" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1490\n\nThe source defines hours per week in the main employment, Kod = Antal timmar per vecka. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: at0040 where key = 'v9428' and release = 'r20238'"
-fields = { "unit" = "Antal timmar" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1502\n\nThe source defines hours per week in the main employment, Kod = Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0311 where key = 'v9414' and release = 'r737'"
-fields = { "unit" = "Antal gånger" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1478\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0321 where key = 'v9413' and release = 'r737'"
-fields = { "unit" = "Antal gånger" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1466\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0230 where key = 'v14914' and release = 'r20238'"
-fields = { "unit" = "Antal personer" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1550\n\nThe source field Arbetsställets storlek and its companion 1989 occurrence explicitly describe the number of employees from the business register. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut0670 where key = 'v13945' and release = 'r737'"
-fields = { "unit" = "Antal månader" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1514\n\nThe source field is named Utbildning3 antal mån; its companion 1989 occurrence explicitly defines the number of months beyond the reported years of schooling. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut0730 where key = 'v13946' and release = 'r737'"
-fields = { "unit" = "Antal timmar" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1526\n\nThe source field is named Utbildning3 antal tim and its companion 1989 occurrence declares Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut0640 where key = 'v13947' and release = 'r737'"
-fields = { "unit" = "Antal år" }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1538\n\nThe source field is named Utbildning3 antal år; its companion 1989 occurrence declares Antal år for the vocational training duration. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-bostaden-annat"
 fields = { "sets" = ["legacy-arbete-bostaden-annat"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2373\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
@@ -672,55 +71,6 @@ caveat = "Catalog identity follows the complete own exported question and review
 
 [[statement]]
 kind = "set"
-subject = "var:at0562"
-fields = { "sets" = ["legacy-at0562"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2775\nreg_meta_build/curation/registers/scb/ulf.toml:3974\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:at0571"
-fields = { "sets" = ["legacy-at0571"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2553\nreg_meta_build/curation/registers/scb/ulf.toml:4039\nreg_meta_build/curation/registers/scb/ulf.toml:4052\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:avstand-livsmedelsbutik"
-fields = { "sets" = ["legacy-avstand-livsmedelsbutik"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2421\nreg_meta_build/curation/registers/scb/ulf.toml:3883\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:besvar-svarighetsgrad-2"
-fields = { "sets" = ["legacy-besvar-svarighetsgrad-2"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2439\nreg_meta_build/curation/registers/scb/ulf.toml:3558\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:besvar-svarighetsgrad-3"
-fields = { "sets" = ["legacy-besvar-svarighetsgrad-3"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2445\nreg_meta_build/curation/registers/scb/ulf.toml:3571\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:besvar-svarighetsgrad-5"
-fields = { "sets" = ["legacy-besvar-svarighetsgrad-5"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2457\nreg_meta_build/curation/registers/scb/ulf.toml:3597\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:besvar-svarighetsgrad-6"
-fields = { "sets" = ["legacy-besvar-svarighetsgrad-6"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2463\nreg_meta_build/curation/registers/scb/ulf.toml:3610\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
 subject = "var:bo00"
 fields = { "sets" = ["legacy-bo00"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2793\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
@@ -738,20 +88,6 @@ kind = "set"
 subject = "var:diabetes-fraga"
 fields = { "sets" = ["legacy-diabetes-fraga"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2499\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:fardtjanst-resor-manad"
-fields = { "sets" = ["legacy-fardtjanst-resor-manad"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2361\nreg_meta_build/curation/registers/scb/ulf.toml:4065\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:fast-lakare"
-fields = { "sets" = ["legacy-fast-lakare"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2541\nreg_meta_build/curation/registers/scb/ulf.toml:3623\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
 
 [[statement]]
@@ -801,6 +137,195 @@ kind = "set"
 subject = "var:fordel-arbete-i-bostaden-7"
 fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-7"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2595\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-1"
+fields = { "sets" = ["legacy-hemarbete-nackdel-1"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2679\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-3"
+fields = { "sets" = ["legacy-hemarbete-nackdel-3"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2691\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-4"
+fields = { "sets" = ["legacy-hemarbete-nackdel-4"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2697\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-5"
+fields = { "sets" = ["legacy-hemarbete-nackdel-5"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2703\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-6"
+fields = { "sets" = ["legacy-hemarbete-nackdel-6"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2709\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hemarbete-nackdel-7"
+fields = { "sets" = ["legacy-hemarbete-nackdel-7"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2715\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hy02"
+fields = { "sets" = ["legacy-hy02"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2847\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap"
+fields = { "sets" = ["legacy-medborgarskap"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2787\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:mojligt-arbeta-hemmet"
+fields = { "sets" = ["legacy-mojligt-arbeta-hemmet"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2673\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:mojligt-timmar-hemmet"
+fields = { "sets" = ["legacy-mojligt-timmar-hemmet"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2667\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva"
+fields = { "sets" = ["legacy-sun2000niva"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2781\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:sy1"
+fields = { "sets" = ["legacy-sy1"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2685\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:sy12"
+fields = { "sets" = ["legacy-sy12"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2811\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tillfalligt-arbete-i-bostaden"
+fields = { "sets" = ["legacy-tillfalligt-arbete-i-bostaden"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2817\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:utb02"
+fields = { "sets" = ["legacy-utb02"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2853\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete"
+fields = { "sets" = ["legacy-yrke-tillfalligt-arbete"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2805\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt"
+fields = { "sets" = ["legacy-sysselsatt"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2739\nreg_meta_build/curation/registers/scb/ulf.toml:3870\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tk0"
+fields = { "sets" = ["legacy-tk0"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2751\nreg_meta_build/curation/registers/scb/ulf.toml:3961\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:at0562"
+fields = { "sets" = ["legacy-at0562"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2775\nreg_meta_build/curation/registers/scb/ulf.toml:3974\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:at0571"
+fields = { "sets" = ["legacy-at0571"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2553\nreg_meta_build/curation/registers/scb/ulf.toml:4039\nreg_meta_build/curation/registers/scb/ulf.toml:4052\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-livsmedelsbutik"
+fields = { "sets" = ["legacy-avstand-livsmedelsbutik"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2421\nreg_meta_build/curation/registers/scb/ulf.toml:3883\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-2"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-2"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2439\nreg_meta_build/curation/registers/scb/ulf.toml:3558\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-3"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-3"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2445\nreg_meta_build/curation/registers/scb/ulf.toml:3571\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-5"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-5"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2457\nreg_meta_build/curation/registers/scb/ulf.toml:3597\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvar-svarighetsgrad-6"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-6"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2463\nreg_meta_build/curation/registers/scb/ulf.toml:3610\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fardtjanst-resor-manad"
+fields = { "sets" = ["legacy-fardtjanst-resor-manad"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2361\nreg_meta_build/curation/registers/scb/ulf.toml:4065\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fast-lakare"
+fields = { "sets" = ["legacy-fast-lakare"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2541\nreg_meta_build/curation/registers/scb/ulf.toml:3623\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
 
 [[statement]]
@@ -868,48 +393,6 @@ caveat = "Catalog identity follows the complete own exported question and review
 
 [[statement]]
 kind = "set"
-subject = "var:hemarbete-nackdel-1"
-fields = { "sets" = ["legacy-hemarbete-nackdel-1"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2679\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:hemarbete-nackdel-3"
-fields = { "sets" = ["legacy-hemarbete-nackdel-3"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2691\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:hemarbete-nackdel-4"
-fields = { "sets" = ["legacy-hemarbete-nackdel-4"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2697\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:hemarbete-nackdel-5"
-fields = { "sets" = ["legacy-hemarbete-nackdel-5"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2703\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:hemarbete-nackdel-6"
-fields = { "sets" = ["legacy-hemarbete-nackdel-6"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2709\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:hemarbete-nackdel-7"
-fields = { "sets" = ["legacy-hemarbete-nackdel-7"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2715\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
 subject = "var:hjalp-av-annan"
 fields = { "sets" = ["legacy-hjalp-av-annan"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2631\nreg_meta_build/curation/registers/scb/ulf.toml:4247\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
@@ -924,44 +407,9 @@ caveat = "Catalog identity follows the complete own exported question and review
 
 [[statement]]
 kind = "set"
-subject = "var:hy02"
-fields = { "sets" = ["legacy-hy02"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2847\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
 subject = "var:in0113"
 fields = { "sets" = ["legacy-in0113"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2649\nreg_meta_build/curation/registers/scb/ulf.toml:3844\nreg_meta_build/curation/registers/scb/ulf.toml:3857\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:legat-pa-sjukhus-sjukhem"
-fields = { "sets" = ["legacy-legat-pa-sjukhus-sjukhem"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2655\nreg_meta_build/curation/registers/scb/ulf.toml:3935\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:medborgarskap"
-fields = { "sets" = ["legacy-medborgarskap"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2787\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:mojligt-arbeta-hemmet"
-fields = { "sets" = ["legacy-mojligt-arbeta-hemmet"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2673\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:mojligt-timmar-hemmet"
-fields = { "sets" = ["legacy-mojligt-timmar-hemmet"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2667\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
 
 [[statement]]
@@ -976,13 +424,6 @@ kind = "set"
 subject = "var:sm0069"
 fields = { "sets" = ["legacy-sm0069"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2727\nreg_meta_build/curation/registers/scb/ulf.toml:3987\nreg_meta_build/curation/registers/scb/ulf.toml:4000\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva"
-fields = { "sets" = ["legacy-sun2000niva"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2781\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
 
 [[statement]]
@@ -1036,62 +477,6 @@ caveat = "Catalog identity follows the complete own exported question and review
 
 [[statement]]
 kind = "set"
-subject = "var:sy1"
-fields = { "sets" = ["legacy-sy1"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2685\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:sy12"
-fields = { "sets" = ["legacy-sy12"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2811\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsatt"
-fields = { "sets" = ["legacy-sysselsatt"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2739\nreg_meta_build/curation/registers/scb/ulf.toml:3870\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:tillfalligt-arbete-i-bostaden"
-fields = { "sets" = ["legacy-tillfalligt-arbete-i-bostaden"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2817\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:tillgang-lantbrevbarare"
-fields = { "sets" = ["legacy-tillgang-lantbrevbarare"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2757\nreg_meta_build/curation/registers/scb/ulf.toml:4013\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:tk0"
-fields = { "sets" = ["legacy-tk0"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2751\nreg_meta_build/curation/registers/scb/ulf.toml:3961\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:tk0095"
-fields = { "sets" = ["legacy-tk0095"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2763\nreg_meta_build/curation/registers/scb/ulf.toml:4026\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:tr0056"
-fields = { "sets" = ["legacy-tr0056"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2721\nreg_meta_build/curation/registers/scb/ulf.toml:4325\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
-caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
-
-[[statement]]
-kind = "set"
 subject = "var:ut0020"
 fields = { "sets" = ["legacy-ut0020"] }
 evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2547\nreg_meta_build/curation/registers/scb/ulf.toml:3896\nreg_meta_build/curation/registers/scb/ulf.toml:3909\nreg_meta_build/curation/registers/scb/ulf.toml:3922\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
@@ -1141,14 +526,197 @@ caveat = "Catalog identity follows the complete own exported question and review
 
 [[statement]]
 kind = "set"
-subject = "var:utb02"
-fields = { "sets" = ["legacy-utb02"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2853\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+subject = "var:legat-pa-sjukhus-sjukhem"
+fields = { "sets" = ["legacy-legat-pa-sjukhus-sjukhem"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2655\nreg_meta_build/curation/registers/scb/ulf.toml:3935\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
 
 [[statement]]
 kind = "set"
-subject = "var:yrke-tillfalligt-arbete"
-fields = { "sets" = ["legacy-yrke-tillfalligt-arbete"] }
-evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2805\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+subject = "var:tillgang-lantbrevbarare"
+fields = { "sets" = ["legacy-tillgang-lantbrevbarare"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2757\nreg_meta_build/curation/registers/scb/ulf.toml:4013\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
 caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tk0095"
+fields = { "sets" = ["legacy-tk0095"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2763\nreg_meta_build/curation/registers/scb/ulf.toml:4026\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tr0056"
+fields = { "sets" = ["legacy-tr0056"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2721\nreg_meta_build/curation/registers/scb/ulf.toml:4325\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: ba0021"
+fields = { "variable" = "civilstand" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:5429\n\nComplete404-original source-member/field/domain audit: Batch51-ULF15-complete-source-review.json. BA0021 and BA0019 never coexist in the same variant/edition; BA0170 is independently co-present with either register field in24 contexts, with own source members and contrary code assignments. Do not infer equality of stored values."
+caveat = "The provider links these independent literal source fields to its civil-state question. BA0021 and BA0019 form a nonsimultaneous register-category history, retaining every own annual domain. Simultaneous BA0170 has its own source members and materially different category assignments; retain its literal field identity without claiming value equivalence or expanded questionnaire semantics. PB190 retains its own later categories, including separated status. No codes are converted; source attribution, all domains and original metadata remain evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: ba0070"
+fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4539\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0070 @1980..1987,1991,1993..2001"
+fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4550\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0070 @1989,2002..2004"
+fields = { "value_set" = "5961b2cbe2c35ea059c92a0ad3072497041d638deebac001ea84f19831edbb86" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4561\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ut2360 @1980..1987,1991,1993"
+fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4517\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut2360 @1989"
+fields = { "value_set" = "67ba2b2fc7b6df9b3bc333792cffeb762106032b23c6263dd822ec559b216341" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4528\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0643"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4572\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0644"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4583\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0645"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4594\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0646"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4605\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0647"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4616\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ha0648"
+fields = { "value_set" = "aadbf4eca6c0a9f545eb738d5eeb5444b141c75bea059a9d2338141954e24d90" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:4627\n\nCertify the complete own source response domain that positively establishes this reviewed source role. Preserve every supplied code, label, association and period; this neither replaces a list nor extends coverage or borrows another field."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0087 @1991,1993..2001"
+fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2012\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0087 @2002..2004"
+fields = { "value_set" = "602037ada94f5c0fb250a551dd9392385c5cb62e93533e2d672c010ea3967f94" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2024\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0086 @1991,1993..2001"
+fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1988\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0086 @2002..2004"
+fields = { "value_set" = "80e9cacecbf27dcf15e78a29ce572164c35a75b2419a7c1ef4a3a066521f03b1" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2000\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0082 @1991,1993..2001"
+fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1964\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0082 @2002..2004"
+fields = { "value_set" = "b9375b2f5d0140f9e698c238988d714d3474997817494a410a7c51a5199e2eb6" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1976\n\nMaintainer-approved classification/domain continuity for the exact source-native municipal grouping: the exported definition and quantity identity remain unchanged in these established annual deliveries. This same variant and literal has its own complete witnessed source domain; every independently bound list for the complete literal history agrees on all code-label pairs, and the sister delivery history corroborates the same domain. Retain the historical1972/1977 scheme identity where named, literal range codes and999 missing code where supplied. Preserve all original associations, dates, fields and each literal storage type. Do not substitute modern municipality codes, alter observed group membership or infer any new delivery coverage."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ssyk12up_1"
+fields = { "variable" = "ssyk12up" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2338\n\nShared-column succession fold 2026-10-21: SCB VarId 31143 'Yrke, huvudsakliga sysselsättningen' sequential rename {SSYK12UP_1 2014-2019, SSYK12UP 2020} owned by 237.31143.ssyk12up; identical operational definition (SSYK 2012, question PL050A_1), the same 636 codes, never co-delivered (reg_meta v0.57.0). The SSYK 96 columns SSYKUP_1/SSYKUp_1 keep their own owner. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy0352 where release = 'r737'"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1562\n\nThe source defines Antal anställda i företaget and the units differ only by letter case. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sm1040 @1989"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1490\n\nThe source defines hours per week in the main employment, Kod = Antal timmar per vecka. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: at0040 @1989"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1502\n\nThe source defines hours per week in the main employment, Kod = Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy0311 where release = 'r737'"
+fields = { "unit" = "Antal gånger" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1478\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy0321 where release = 'r737'"
+fields = { "unit" = "Antal gånger" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1466\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy0230 @1989"
+fields = { "unit" = "Antal personer" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1550\n\nThe source field Arbetsställets storlek and its companion 1989 occurrence explicitly describe the number of employees from the business register. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut0670 where release = 'r737'"
+fields = { "unit" = "Antal månader" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1514\n\nThe source field is named Utbildning3 antal mån; its companion 1989 occurrence explicitly defines the number of months beyond the reported years of schooling. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut0730 where release = 'r737'"
+fields = { "unit" = "Antal timmar" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1526\n\nThe source field is named Utbildning3 antal tim and its companion 1989 occurrence declares Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut0640 where release = 'r737'"
+fields = { "unit" = "Antal år" }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:1538\n\nThe source field is named Utbildning3 antal år; its companion 1989 occurrence declares Antal år for the vocational training duration. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."

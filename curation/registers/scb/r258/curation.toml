@@ -294,7 +294,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6353\n\nApp
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: sy where key = 'v17588'"
+subject = "befolkningens-it-anvandning: sy"
 fields = { "variable" = "sysselsattningstyp-skapad" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6335\n\nApproved source-native question identity; exact noncolliding edition/literal only. Preserve all source facts, coding changes and periods. Other-native simultaneous contradictory question claims and unspecified text companions remain unresolved; no availability or statistical equivalence inferred."
 
@@ -306,55 +306,31 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6344\n\nApp
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r13562'"
+subject = "befolkningens-it-anvandning: h13 @2019..2021"
 fields = { "unit" = "Antal personer" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r14842'"
-fields = { "unit" = "Antal personer" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: h13 where key = 'v16088' and release = 'r17768'"
-fields = { "unit" = "Antal personer" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6113\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: h13antal where key = 'v16088' and release = 'r11917'"
+subject = "befolkningens-it-anvandning: h13antal where key = 'v16088'"
 fields = { "unit" = "Antal personer" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6077\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: h13antal where key = 'v16088' and release = 'r12613'"
-fields = { "unit" = "Antal personer" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6077\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: d5 where key = 'v35520' and release = 'r12032'"
+subject = "befolkningens-it-anvandning: d5 @2016"
 fields = { "unit" = "Kronor (SEK)" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6125\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: fodelsear where key = 'v1378' and release = 'r1715'"
+subject = "befolkningens-it-anvandning: fodelsear @2008..2009"
 fields = { "unit" = "År" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6089\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: fodelsear where key = 'v1378' and release = 'r2757'"
-fields = { "unit" = "År" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6089\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: utvantp where key = 'v17581' and release = 'r5213'"
+subject = "it-anvandning-i-foretag: utvantp @2013"
 fields = { "unit" = "Årspersoner" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6101\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
@@ -396,37 +372,13 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6758\n\nExa
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r17809'"
+subject = "it-anvandning-i-foretag: e_ai_aos"
 fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r18927'"
-fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r19517'"
-fields = { "definition" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5944\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r17809'"
-fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r18927'"
-fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: e_ai_aos where key = 'v44742' and release = 'r19517'"
+subject = "it-anvandning-i-foretag: e_ai_aos"
 fields = { "label" = "AI-mjukvara eller system med öppen källkod modifierades av egen personal (inklusive personal i moder- eller dotterföretag)." }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5932\n\nSCB official IT-use 2024 questionnaire question26(b)/(c) distinguishes commercial AI software/systems modified by own staff from open-source software/systems modified by own staff (including parent/affiliate staff): https://www.scb.se/contentassets/9cfc4627e5954d109ab39dda9df1ba69/nv0116_staf_2024.pdf. Eurostat official 2023 compilers manual model question E3b/E3c and indicator table explicitly map E_AI_AMOWN to the commercial construct and E_AI_AOS to the open-source construct, with source2021: https://ec.europa.eu/eurostat/documents/3859598/18369750/KS-GQ-23-012-EN-N.pdf/20fb6a79-2c43-df3d-1551-7366c72f5f8c?t=1706102581439&version=2.0. The exported commercial prose on E_AI_AOS contradicts those primary question/code definitions. Keep both constructs independent, and correct only effective AOS name/definition at the exact reviewed editions. Preserve every erroneous original, operational omission, SCB response code, unit/type, period, provenance and separate native44743 commercial peers. No code normalization, inferred annual questionnaire equivalence or statistical comparability."
 
@@ -468,7 +420,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:168\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: NPOP @2020-01-01..2020-12-31 where key = 'v4613' and release = 'r15409'"
+subject = "it-anvandning-i-foretag: npop @2020"
 fields = { "operational_definition" = "Härledd genom att summera antalet företagsenheter per stratrum i urvalsramen." }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:168\n\nSWECOV holds NPOP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
 
@@ -480,7 +432,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:177\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: NRESP @2020-01-01..2020-12-31 where key = 'v6211' and release = 'r15409'"
+subject = "it-anvandning-i-foretag: nresp @2020"
 fields = { "operational_definition" = "Härledd genom att summera antal svarande företagsenheter per stratrum i det dragna urvalet." }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:177\n\nSWECOV holds NRESP in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
 
@@ -492,7 +444,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:222\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: Outlier @2020-01-01..2020-12-31 where key = 'v2468' and release = 'r15409'"
+subject = "it-anvandning-i-foretag: outlier @2020"
 fields = { "operational_definition" = "Binär variabel som anger om företagsenheten är en outlier eller inte." }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:222\n\nSWECOV holds Outlier in ITftg_Mikro_2020, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
 
@@ -504,7 +456,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:240\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: RFAC1 @2014-01-01..2014-12-31 where key = 'v19126' and release = 'r5763'"
+subject = "it-anvandning-i-foretag: rfac1 @2014"
 fields = { "operational_definition" = "För produktidentifiering efter produktionsprocessen, t.ex. övervaka stöld, förfalskning, allergeinformation" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:240\n\nSWECOV holds RFAC1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
 
@@ -522,7 +474,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:258\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: RFPSDP1 @2014-01-01..2014-12-31 where key = 'v19127' and release = 'r5763'"
+subject = "it-anvandning-i-foretag: rfpsdp1 @2014"
 fields = { "operational_definition" = "Inom produktions- och servivekedjan" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:258\n\nSWECOV holds RFPSDP1 in ITftg_Mikro_2014, ITftg_Stora_2014; SCB's export documents IT-användning i företag 2014 but carries no row with this Kolumnnamn there; its named rows are in 2017."
 
@@ -570,19 +522,7 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "it-anvandning-i-foretag: Vikt @2017-01-01..2017-12-31 where key = 'v19538' and release = 'r11568'"
-fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: Vikt @2018-01-01..2018-12-31 where key = 'v19538' and release = 'r12688'"
-fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
-
-[[statement]]
-kind = "set"
-subject = "it-anvandning-i-foretag: Vikt @2020-01-01..2020-12-31 where key = 'v19538' and release = 'r15409'"
+subject = "it-anvandning-i-foretag: vikt @2017..2018,2020"
 fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:359\n\nSWECOV holds Vikt in ITftg_Mikro_2017, ITftg_Mikro_2018, ITftg_Mikro_2020, ITftg_Stora_2017, ITftg_Stora_2018, ITftg_Stora_2020; SCB's export documents IT-användning i företag 2017, 2018, 2020 but carries no row with this Kolumnnamn there; its named rows are in 2021, 2022, 2023, 2024, 2025."
 
@@ -1440,109 +1380,37 @@ evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:701\n\nSWEC
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: data4b where key = 'v15901' and release = 'r1193'"
+subject = "befolkningens-it-anvandning: data4b @2007"
 fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6662\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: data4c where key = 'v15902' and release = 'r1193'"
+subject = "befolkningens-it-anvandning: data4c @2007"
 fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6674\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: data4e where key = 'v15904' and release = 'r1193'"
+subject = "befolkningens-it-anvandning: data4e @2007"
 fields = { "value_set" = "d90af33bd8780d2d8cda15dce2b32d91552a055bb0c7884dd78a1d8123d1d194" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6686\n\nThe accepted historical holding is explicitly owned by this exact native SCB quantity. Its 2007 and 2008 literal question names and definitions agree; use its complete own-native 2008 dictionary for 2007 under the approved explicit-link policy. Later explicitly different coding regimes remain unchanged. Apply the user-approved explicit variable-to-coding-link validity policy to this exact finite holding only. Preserve all original fields, periods, raw coding associations and copy_coding=False on the holding; no anchor coding, physical width or statistical equivalence is inferred."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: vikt_hus_se where key = 'v31026' and release = 'r19400'"
+subject = "befolkningens-it-anvandning: vikt_hus_se"
 fields = { "unit" = "Kvot" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6363\n\nThe complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: vikt_hus_se where key = 'v31026' and release = 'r20119'"
-fields = { "unit" = "Kvot" }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6363\n\nThe complete supplied native names, definitions and operations establish the same quantity. Normalize only this source-local unit label to the positively supplied canonical label. Retain all original fields, formula prose, coding and scopes. No observed-value scaling, recomputation, statistical equivalence or physical YYYYMM encoding is asserted."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: xoth where key = 'v36993' and release = 'r12316'"
+subject = "befolkningens-it-anvandning: xoth @2013"
 fields = { "value_set" = "f0e1869f4c50784f7e0a6713cd5f65c717bbee16ad8b49f23dbb4ed6f47e0ca2" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:8924\n\nThe exact XOTH source column in the accepted individual-survey native question is explicitly linked to its own complete2014 Ja/Nej list. The2013 and2014 original XOTH projections have the same supplied quantity name/definition and numeric storage; under the maintainer-approved explicit variable-to-coding-link validity policy, apply that own linked list to this exact2013 window. Retain the original generic specify-reason prose, all raw types/scopes/associations and later text-field deliveries. No domain is assigned to A4htxt or A4HTXTx, no source values are recoded, and no new missing token is invented."
 
 [[statement]]
 kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r11917'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12032'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12033'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12034'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12316'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r12613'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r13562'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r14842'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r17768'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r18409'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r19400'"
-fields = { "coded" = false }
-evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
-
-[[statement]]
-kind = "set"
-subject = "befolkningens-it-anvandning: alder where key = 'v241' and release = 'r20119'"
+subject = "befolkningens-it-anvandning: alder @2013..2022,2024..2025"
 fields = { "coded" = false }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:5772\n\nThe exact annual source defines age as a number of years at year end, with unit År and numeric storage. Retain these delivered numeric-age windows without a finite value set; do not extend the earlier 15–74-year list to the later population. Other coding windows remain unchanged."
 

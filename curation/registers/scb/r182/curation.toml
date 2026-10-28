@@ -8,28 +8,28 @@ caveat = "Exact source limitations for this native family; applies only to annot
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: hskodklartext where key = 'v7591'"
+subject = "uoh-personal: hskodklartext"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16573\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: name_inst where key = 'v7591' and release = 'r18431'"
-fields = { "variable" = "larosate" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:16524\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: name_inst where key = 'v7591' and release = 'r18511'"
+subject = "uoh-personal: name_inst @2019"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16535\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: name_inst where key = 'v7591' and release = 'r19506'"
+subject = "uoh-personal: name_inst @2021"
+fields = { "variable" = "larosate" }
+evidence = "reg_meta_build/curation/registers/scb/fou.toml:16524\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
+caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: name_inst @2023"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16545\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
@@ -316,28 +316,28 @@ caveat = "In the deliveries reviewed, this column holds a single value in every 
 
 [[statement]]
 kind = "set"
-subject = "svenska-internationella-koncerner: scbid where key = 'v3578' and release = 'r13223'"
+subject = "svenska-internationella-koncerner: scbid @2017"
 fields = { "variable" = "orgnr-12" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:15606\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently."
 caveat = "Retain the native12-digit organisation identifier with each literal’s own source facts. Detailed operation remains unavailable where absent; no suffix encoding is inferred. Only SCBID in Svenska internationella koncerner (four originals) explicitly identifies the mother-company organisation number but reports raw unit Procent. Preserve that contrary source unit as a warning, without percentage interpretation or conversion."
 
 [[statement]]
 kind = "set"
-subject = "svenska-internationella-koncerner: scbid where key = 'v3578' and release = 'r17625'"
+subject = "svenska-internationella-koncerner: scbid @2019"
 fields = { "variable" = "orgnr-12" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:15616\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently."
 caveat = "Retain the native12-digit organisation identifier with each literal’s own source facts. Detailed operation remains unavailable where absent; no suffix encoding is inferred. Only SCBID in Svenska internationella koncerner (four originals) explicitly identifies the mother-company organisation number but reports raw unit Procent. Preserve that contrary source unit as a warning, without percentage interpretation or conversion."
 
 [[statement]]
 kind = "set"
-subject = "svenska-internationella-koncerner: scbid where key = 'v3578' and release = 'r18919'"
+subject = "svenska-internationella-koncerner: scbid @2021"
 fields = { "variable" = "orgnr-12" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:15626\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently."
 caveat = "Retain the native12-digit organisation identifier with each literal’s own source facts. Detailed operation remains unavailable where absent; no suffix encoding is inferred. Only SCBID in Svenska internationella koncerner (four originals) explicitly identifies the mother-company organisation number but reports raw unit Procent. Preserve that contrary source unit as a warning, without percentage interpretation or conversion."
 
 [[statement]]
 kind = "set"
-subject = "svenska-internationella-koncerner: scbid where key = 'v3578' and release = 'r20147'"
+subject = "svenska-internationella-koncerner: scbid @2023"
 fields = { "variable" = "orgnr-12" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:15636\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently. The exact SCBID source originals explicitly declare the same 12-digit CFAR organisation identifier for the mother-company population already named by its register variant; retain its own source attribution, operation and raw unit/type independently."
 caveat = "Retain the native12-digit organisation identifier with each literal’s own source facts. Detailed operation remains unavailable where absent; no suffix encoding is inferred. Only SCBID in Svenska internationella koncerner (four originals) explicitly identifies the mother-company organisation number but reports raw unit Procent. Preserve that contrary source unit as a warning, without percentage interpretation or conversion."
@@ -484,577 +484,553 @@ caveat = "Undocumented weight: SCB does not document which weight these rounds d
 
 [[statement]]
 kind = "set"
-subject = "uoh-ekonomi: hskod where key = 'v7591'"
+subject = "uoh-ekonomi: hskod"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16515\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 
 [[statement]]
 kind = "set"
-subject = "uoh-ekonomi: scbname where key = 'v7591' and release = 'r18417'"
+subject = "uoh-ekonomi: scbname @2021"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16555\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 
 [[statement]]
 kind = "set"
-subject = "uoh-ekonomi: scbname where key = 'v7591' and release = 'r19356'"
+subject = "uoh-ekonomi: scbname @2023"
 fields = { "variable" = "larosate" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:16564\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0401 where key = 'v3335' and release = 'r394'"
+subject = "foretagssektorn: v0401 where key = 'v3335'"
 fields = { "spelling" = "v0205" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:3320\n\nSCB UF0302 Beskrivning av statistiken 2003 (FoU i företagssektorn, variable list) places 'Därav driftkostnader för forskning: Driftkostnader för grundforskning och tillämpad forskning' in the operating-cost block after Programvarurelaterad FoU (v0204) and before the 2004 budget item (v0206), i.e. column v0205; the product-group item ('FoU-verksamhetens inriktning på produktgrupper') is the separate block v040x/v0401/v0402 per product. SCB's own 2003 metadata names v0411-v0471 'Driftkostnader för FoU avs. produkt 2-8', and native 4372 'Driftkostnader för FoU avs. produkt 1' is the v0401 column at the same edition. Native 3335's v0401 column name contradicts that layout; this corrects its column name to v0205 for this edition only. Name, definition, unit, type and coding are unchanged. (#1603 batch-e; Operator under maintainer delegation 2026-10-16)."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: viktrev where key = 'v3402' and release = 'r394'"
+subject = "foretagssektorn: viktrev @2003"
 fields = { "unit" = "Uppräkningstal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:3335\n\nSCB documents ViktRev (native 3402, Reviderad vikt) only in the 2003 edition, with the generic Mattenhet placeholder 'värde, antal eller %'. The 2009-2017 deliveries added by errata.delivered carry Uppräkningstal. Maintainer ruling 2026-10-24 (#1509): the variable is labelled Uppräkningstal on all its deliveries, including the documented 2003 state; Uppräkningstal is a description of the weight more than a unit, and this is a curation matter. The label replaces the placeholder only; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "pnp: forskandegfou where key = 'v14614' and release = 'r1005'"
+subject = "pnp: forskandegfou"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18618\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Andel forskning av egen FoU as the share of own R&D expenditure that is research, and documents the same native variable with Mattenhet Procent in its 2005 and 2007 editions. Replace it with Procent; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: lillan where key = 'v3573' and release = 'r394'"
+subject = "foretagssektorn: lillan @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18546\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Lilla n as 'Antal enheter i urvalet', a number of sampled units. Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: storan where key = 'v3582' and release = 'r394'"
+subject = "foretagssektorn: storan @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18570\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Stora N as 'Antal enheter i aktuellt stratum i populationen', a number of population units. Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r12470'"
+subject = "uoh-personal: tjomf @2007,2009,2011,2013,2017"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17454\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r1714'"
-fields = { "unit" = "Procent" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:17454\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r3655'"
-fields = { "unit" = "Procent" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:17454\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r4472'"
-fields = { "unit" = "Procent" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:17454\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r5770'"
-fields = { "unit" = "Procent" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:17454\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: tjomf where key = 'v109' and release = 'r9956'"
+subject = "uoh-personal: tjomf @2015"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17466\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: upphandling where key = 'v109' and release = 'r693'"
+subject = "uoh-personal: upphandling where key = 'v109'"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17478\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines Tjänstgöringsomfattning as actual working time relative to a full-time post; SCB documents the same native variable with Mattenhet Procent in its 2019, 2021 and 2023 mobility editions. Replace it with Procent; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: lillanrev where key = 'v3574' and release = 'r394'"
+subject = "foretagssektorn: lillanrev"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18558\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines lilla n reviderat as the number of sampled units revised for overcoverage. Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: storanrev where key = 'v3583' and release = 'r394'"
+subject = "foretagssektorn: storanrev"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18582\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB defines stora N reviderat as the number of population units in the stratum revised for overcoverage. Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v013 where key = 'v3323' and release = 'r394'"
+subject = "foretagssektorn: v013 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17514\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v014 where key = 'v3324' and release = 'r394'"
+subject = "foretagssektorn: v014 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17526\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v015 where key = 'v3325' and release = 'r394'"
+subject = "foretagssektorn: v015"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17538\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v016 where key = 'v3326' and release = 'r394'"
+subject = "foretagssektorn: v016"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17550\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v017 where key = 'v3328' and release = 'r394'"
+subject = "foretagssektorn: v017"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17562\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v018 where key = 'v3329' and release = 'r394'"
+subject = "foretagssektorn: v018"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17574\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v023 where key = 'v3340' and release = 'r394'"
+subject = "foretagssektorn: v023 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17610\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v024 where key = 'v3341' and release = 'r394'"
+subject = "foretagssektorn: v024 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17622\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v025 where key = 'v3342' and release = 'r394'"
+subject = "foretagssektorn: v025"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17634\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v026 where key = 'v3343' and release = 'r394'"
+subject = "foretagssektorn: v026"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17646\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v027 where key = 'v3344' and release = 'r394'"
+subject = "foretagssektorn: v027"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17658\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v035 where key = 'v3356' and release = 'r394'"
+subject = "foretagssektorn: v035"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17730\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v036 where key = 'v3357' and release = 'r394'"
+subject = "foretagssektorn: v036"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17742\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v037 where key = 'v3358' and release = 'r394'"
+subject = "foretagssektorn: v037"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17754\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v038 where key = 'v3359' and release = 'r394'"
+subject = "foretagssektorn: v038"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17766\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v043 where key = 'v3362' and release = 'r394'"
+subject = "foretagssektorn: v043 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17802\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v044 where key = 'v3363' and release = 'r394'"
+subject = "foretagssektorn: v044 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17814\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v045 where key = 'v3364' and release = 'r394'"
+subject = "foretagssektorn: v045"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17826\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v046 where key = 'v3365' and release = 'r394'"
+subject = "foretagssektorn: v046"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17838\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v047 where key = 'v3366' and release = 'r394'"
+subject = "foretagssektorn: v047"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17850\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v048 where key = 'v3367' and release = 'r394'"
+subject = "foretagssektorn: v048"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17862\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v053 where key = 'v3370' and release = 'r394'"
+subject = "foretagssektorn: v053 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17898\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v054 where key = 'v3371' and release = 'r394'"
+subject = "foretagssektorn: v054 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17910\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0571 where key = 'v3488' and release = 'r394'"
+subject = "foretagssektorn: v0571 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18282\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0581 where key = 'v3490' and release = 'r394'"
+subject = "foretagssektorn: v0581 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18294\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0591 where key = 'v3492' and release = 'r394'"
+subject = "foretagssektorn: v0591 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18306\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0601 where key = 'v3494' and release = 'r394'"
+subject = "foretagssektorn: v0601 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18318\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0611 where key = 'v3496' and release = 'r394'"
+subject = "foretagssektorn: v0611 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18330\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0621 where key = 'v3498' and release = 'r394'"
+subject = "foretagssektorn: v0621 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18342\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v063 where key = 'v3378' and release = 'r394'"
+subject = "foretagssektorn: v063 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17994\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0631 where key = 'v3500' and release = 'r394'"
+subject = "foretagssektorn: v0631 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18354\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v064 where key = 'v3379' and release = 'r394'"
+subject = "foretagssektorn: v064 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18006\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0641 where key = 'v3502' and release = 'r394'"
+subject = "foretagssektorn: v0641 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18366\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v065 where key = 'v3380' and release = 'r394'"
+subject = "foretagssektorn: v065"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18018\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0651 where key = 'v3504' and release = 'r394'"
+subject = "foretagssektorn: v0651 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18378\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v066 where key = 'v3381' and release = 'r394'"
+subject = "foretagssektorn: v066"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18030\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0661 where key = 'v3506' and release = 'r394'"
+subject = "foretagssektorn: v0661 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18390\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v067 where key = 'v3382' and release = 'r394'"
+subject = "foretagssektorn: v067"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18042\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0671 where key = 'v3508' and release = 'r394'"
+subject = "foretagssektorn: v0671 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18402\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0681 where key = 'v3510' and release = 'r394'"
+subject = "foretagssektorn: v0681 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18414\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0691 where key = 'v3512' and release = 'r394'"
+subject = "foretagssektorn: v0691 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18426\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0701 where key = 'v3514' and release = 'r394'"
+subject = "foretagssektorn: v0701 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18438\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0711 where key = 'v3516' and release = 'r394'"
+subject = "foretagssektorn: v0711 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18450\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0721 where key = 'v3518' and release = 'r394'"
+subject = "foretagssektorn: v0721 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18462\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0731 where key = 'v3520' and release = 'r394'"
+subject = "foretagssektorn: v0731 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18474\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0741 where key = 'v3522' and release = 'r394'"
+subject = "foretagssektorn: v0741 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18486\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0751 where key = 'v3524' and release = 'r394'"
+subject = "foretagssektorn: v0751 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18498\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v076 where key = 'v3384' and release = 'r394'"
+subject = "foretagssektorn: v076"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18066\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0761 where key = 'v3526' and release = 'r394'"
+subject = "foretagssektorn: v0761 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18510\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v077 where key = 'v3385' and release = 'r394'"
+subject = "foretagssektorn: v077"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18078\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0771 where key = 'v3528' and release = 'r394'"
+subject = "foretagssektorn: v0771 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18522\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v0781 where key = 'v3530' and release = 'r394'"
+subject = "foretagssektorn: v0781 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18534\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v080 where key = 'v3386' and release = 'r394'"
+subject = "foretagssektorn: v080"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18090\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v081 where key = 'v3387' and release = 'r394'"
+subject = "foretagssektorn: v081"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18102\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v082 where key = 'v3388' and release = 'r394'"
+subject = "foretagssektorn: v082"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18114\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v083 where key = 'v3389' and release = 'r394'"
+subject = "foretagssektorn: v083"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18126\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v084 where key = 'v3390' and release = 'r394'"
+subject = "foretagssektorn: v084"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18138\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v085 where key = 'v3391' and release = 'r394'"
+subject = "foretagssektorn: v085"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18150\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v086 where key = 'v3392' and release = 'r394'"
+subject = "foretagssektorn: v086"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18162\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v087 where key = 'v3393' and release = 'r394'"
+subject = "foretagssektorn: v087"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18174\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v090 where key = 'v3394' and release = 'r394'"
+subject = "foretagssektorn: v090"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18186\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v091 where key = 'v3395' and release = 'r394'"
+subject = "foretagssektorn: v091"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18198\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v092 where key = 'v3396' and release = 'r394'"
+subject = "foretagssektorn: v092"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18210\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v093 where key = 'v3397' and release = 'r394'"
+subject = "foretagssektorn: v093"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18222\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v094 where key = 'v3398' and release = 'r394'"
+subject = "foretagssektorn: v094"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18234\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v095 where key = 'v3399' and release = 'r394'"
+subject = "foretagssektorn: v095"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18246\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v096 where key = 'v3400' and release = 'r394'"
+subject = "foretagssektorn: v096"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18258\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v098 where key = 'v3401' and release = 'r394'"
+subject = "foretagssektorn: v098"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:18270\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition measures FoU work in årsverken: 'Årsverk = det arbete en heltidsanställd utför under ett år' (or 'Årsverk för FoU …', 'Antal årsverk för ämne …'). Replace it with Antal, the register's majority SCB spelling for these quantities (the quantity, årsverken, stays in the variable name and definition); no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v011 where key = 'v3321' and release = 'r394'"
+subject = "foretagssektorn: v011 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17490\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v012 where key = 'v3322' and release = 'r394'"
+subject = "foretagssektorn: v012 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17502\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v021 where key = 'v3338' and release = 'r394'"
+subject = "foretagssektorn: v021 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17586\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v022 where key = 'v3339' and release = 'r394'"
+subject = "foretagssektorn: v022 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17598\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v031 where key = 'v3348' and release = 'r394'"
+subject = "foretagssektorn: v031 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17682\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v032 where key = 'v3351' and release = 'r394'"
+subject = "foretagssektorn: v032 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17694\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v041 where key = 'v3360' and release = 'r394'"
+subject = "foretagssektorn: v041 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17778\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v042 where key = 'v3361' and release = 'r394'"
+subject = "foretagssektorn: v042 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17790\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v052 where key = 'v3369' and release = 'r394'"
+subject = "foretagssektorn: v052 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17886\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v061 where key = 'v3376' and release = 'r394'"
+subject = "foretagssektorn: v061 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17970\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
 [[statement]]
 kind = "set"
-subject = "foretagssektorn: v062 where key = 'v3377' and release = 'r394'"
+subject = "foretagssektorn: v062 @2003"
 fields = { "unit" = "Antal" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17982\n\nSCB's Mattenhet for this occurrence is the generic placeholder 'värde, antal eller %', which names no unit (#1881). SCB's definition states a number of persons ('Antal kvinnor'/'Antal män' or the persons in the named education group). Replace it with Antal; no value or scale is converted."
 
@@ -8860,12 +8836,12 @@ evidence = "reg_meta_build/curation/registers/scb/fou.toml:3864\n\nSWECOV's surv
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: employ_scope_net where key = 'v109' and release = 'r18421'"
+subject = "uoh-personal: employ_scope_net where release = 'r18421'"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17290\n\nSame native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: employ_scope_net where key = 'v109' and release = 'r19474'"
+subject = "uoh-personal: employ_scope_net where release = 'r19474'"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17290\n\nSame native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."

@@ -7,36 +7,18 @@ evidence = "reg_meta_build/curation/registers/scb/anst.toml:163\n\nSWECOV holds 
 
 [[statement]]
 kind = "set"
-subject = "sus: imp_ind_anst where key = 'v1810' and release = 'r19312'"
+subject = "sus: imp_ind_anst"
 fields = { "description" = "Anger om antal anställningar är imputerat eller inte." }
 evidence = "reg_meta_build/curation/registers/scb/anst.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "sus: imp_ind_anst where key = 'v1810' and release = 'r19799'"
-fields = { "description" = "Anger om antal anställningar är imputerat eller inte." }
-evidence = "reg_meta_build/curation/registers/scb/anst.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sus: ersdagar where key = 'v7171' and release = 'r19312'"
+subject = "sus: ersdagar"
 fields = { "description" = "Antal ersättningsdagar" }
 evidence = "reg_meta_build/curation/registers/scb/anst.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "sus: ersdagar where key = 'v7171' and release = 'r19799'"
-fields = { "description" = "Antal ersättningsdagar" }
-evidence = "reg_meta_build/curation/registers/scb/anst.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sus: peorgnrram where key = 'v56' and release = 'r19312'"
-fields = { "description" = "Organisationsnummer" }
-evidence = "reg_meta_build/curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "sus: peorgnrram where key = 'v56' and release = 'r19799'"
+subject = "sus: peorgnrram"
 fields = { "description" = "Organisationsnummer" }
 evidence = "reg_meta_build/curation/registers/scb/anst.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

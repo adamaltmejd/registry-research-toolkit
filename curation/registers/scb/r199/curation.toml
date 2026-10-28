@@ -1,13 +1,13 @@
 
 [[statement]]
 kind = "set"
-subject = "hyror-i-bostadslagenheter: regionny where key = 'v22862'"
+subject = "hyror-i-bostadslagenheter: regionny"
 fields = { "variable" = "kommunregion-regionny" }
 evidence = "reg_meta_build/curation/registers/scb/hib.toml:119\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 caveat = "Exact source limitations for this native family, applying only to annotated owner originals:\nKOMMUN: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire.\nRegionny: The exact source delivery supplies a positive native quantity definition and physical type, but no substantive operation/question wording. Retain its explicit literal/native identity, known original domain and metadata; the detailed formula, reference context or subquestion wording remains unspecified. No meaning is inferred from the column suffix or a neighbouring questionnaire."
 
 [[statement]]
 kind = "set"
-subject = "hyror-i-bostadslagenheter: lghyta where key = 'v4555'"
+subject = "hyror-i-bostadslagenheter: lghyta"
 fields = { "variable" = "boende-bostadsyta-i-kvadratmeter-lghyta" }
 evidence = "reg_meta_build/curation/registers/scb/hib.toml:404\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."

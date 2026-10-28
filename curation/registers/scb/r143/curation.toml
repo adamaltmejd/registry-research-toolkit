@@ -1,24 +1,24 @@
 
 [[statement]]
 kind = "set"
-subject = "outhyrda-allmannyttiga: lghgrp where key = 'v2304' and release = 'r1848'"
+subject = "outhyrda-allmannyttiga: lghgrp @2008"
 fields = { "value_set" = "b8730d57ff2f540f9eea828d34b0c1d96cf09c5d785848b3e30931e5cc8b11dd" }
 evidence = "reg_meta_build/curation/registers/scb/oha.toml:162\n\nCertify only the complete own source domain that identifies this source-supplied room-category role. No other year/domain is copied and no independent delivered meaning is asserted."
 
 [[statement]]
 kind = "set"
-subject = "outhyrda-allmannyttiga: vardetyp where key = 'v2304' and release = 'r330'"
+subject = "outhyrda-allmannyttiga: vardetyp @2006"
 fields = { "value_set" = "b8730d57ff2f540f9eea828d34b0c1d96cf09c5d785848b3e30931e5cc8b11dd" }
 evidence = "reg_meta_build/curation/registers/scb/oha.toml:151\n\nCertify only the complete own source domain that identifies this source-supplied room-category role. No other year/domain is copied and no independent delivered meaning is asserted."
 
 [[statement]]
 kind = "set"
-subject = "outhyrda-allmannyttiga: vardetyp where key = 'v2304'"
+subject = "outhyrda-allmannyttiga: vardetyp"
 fields = { "variable" = "klassificering-av-lagenhetsbestandet" }
 evidence = "reg_meta_build/curation/registers/scb/oha.toml:48\n\nComplete OHA own source construct review, exact literal/edition scopes and complete physical collision scan. Preserve all source facts and separately held own coding. Batch52-OHA-constructs-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "outhyrda-privatagda: vardetyp where key = 'v2304'"
+subject = "outhyrda-privatagda: vardetyp"
 fields = { "variable" = "klassificering-av-lagenhetsbestandet" }
 evidence = "reg_meta_build/curation/registers/scb/oha.toml:48\n\nComplete OHA own source construct review, exact literal/edition scopes and complete physical collision scan. Preserve all source facts and separately held own coding. Batch52-OHA-constructs-source-proof.json."

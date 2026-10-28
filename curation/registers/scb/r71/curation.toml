@@ -120,12 +120,6 @@ caveat = "The source links these literal forms to the same native quantity/membe
 
 [[statement]]
 kind = "set"
-subject = "var:namn"
-fields = { "sets" = ["legacy-namn"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:601\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:614\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "var:om-eller-tillbyggnar"
 fields = { "sets" = ["legacy-om-eller-tillbyggnar"] }
 evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:220\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:822\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:835\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
@@ -221,3 +215,9 @@ subject = "var:vardegrundande-yta-i-smahus"
 fields = { "sets" = ["legacy-vardegrundande-yta-i-smahus"] }
 evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:244\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:432\n\nComplete own native member/edition review: identical substantive name and definition, same member reference within each co-delivery context; physical metadata retained per literal. Explicit different operations are separately scoped roles. No suffix interpretation or value equality assumed. Batch51-fastighetspriser-identity-proof.json.\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
 caveat = "The source links these literal forms to the same native quantity/member. Exact operational definitions that distinguish property contexts are separate guarded roles; unnamed historical contexts are not assigned to those roles. Keep every original storage, scope, flag and own domain. Detailed suffix meanings and value equality are not assumed."
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "sets" = ["legacy-namn"] }
+evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:601\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:614\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."

@@ -1,684 +1,684 @@
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f13 where key = 'v30035' and release = 'r5579'"
+subject = "utlandska-doktorander: f13 where key = 'v30035'"
 fields = { "label" = "Andel avklarade forskarstudier — Enkätfråga: \"Om du räknar med hela vårterminen 2013, hur stor andel av dina studier på forskarnivå kommer du då ha genomfört?\" (F13)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1416\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18 where key = 'v30035' and release = 'r5579'"
+subject = "utlandska-doktorander: f18"
 fields = { "label" = "Andel avklarade forskarstudier — Enkätfråga: \"Om du räknar med hela vårterminen 2013, hur stor andel av dina studier på forskarnivå kommer du då ha genomfört?\" (F18)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1428\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_06 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_06"
 fields = { "label" = "Anledning inte stanna i Sverige — annat" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1440\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_05 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_05"
 fields = { "label" = "Anledning inte stanna i Sverige — jag/min familj trivs inte socialt" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1464\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_01 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_01"
 fields = { "label" = "Anledning inte stanna i Sverige — små möjligheter till uppehållstillstånd/medborgarskap" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1452\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_04 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_04"
 fields = { "label" = "Anledning inte stanna i Sverige — språkliga barriärer på arbetsmarknaden" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1476\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_02 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_02"
 fields = { "label" = "Anledning inte stanna i Sverige — svenska arbetsmarknaden är inte intressant" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1488\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f29_03 where key = 'v30080' and release = 'r5579'"
+subject = "utlandska-doktorander: f29_03"
 fields = { "label" = "Anledning inte stanna i Sverige — svenska arbetsmarknaden är svår att komma in på" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1500\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_06 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_06"
 fields = { "label" = "Anledning stanna i Sverige — annat" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1512\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_01 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_01"
 fields = { "label" = "Anledning stanna i Sverige — goda möjligheter till uppehållstillstånd/medborgarskap" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1572\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_04 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_04"
 fields = { "label" = "Anledning stanna i Sverige — inga eller små språkliga barriärer på arbetsmarknaden" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1524\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_05 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_05"
 fields = { "label" = "Anledning stanna i Sverige — jag/min familj trivs socialt" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1536\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_02 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_02"
 fields = { "label" = "Anledning stanna i Sverige — svenska arbetsmarknaden är intressant" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1548\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f28_03 where key = 'v30073' and release = 'r5579'"
+subject = "utlandska-doktorander: f28_03"
 fields = { "label" = "Anledning stanna i Sverige — svenska arbetsmarknaden är lätt att komma in på" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1560\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_04 where key = 'v30103' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_04 where key = 'v30103'"
 fields = { "label" = "Ansökan till forskarutbildningen annat sätt — Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\" Svar: \"Annat sätt\" (F10_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1584\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f14_05 where key = 'v30103' and release = 'r5579'"
+subject = "utlandska-doktorander: f14_05"
 fields = { "label" = "Ansökan till forskarutbildningen annat sätt — Enkätfråga: \"På vilka av följande sätt ansökte du till svensk utbildning på forskarnivå?\" Svar: \"Annat sätt\" (F14_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1596\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_02 where key = 'v30023' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_02 where key = 'v30023'"
 fields = { "label" = "Ansökan till forskarutbildningen efter uppmaning — uppmanad av handledare/lärare (F10)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1608\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f14_02 where key = 'v30023' and release = 'r5579'"
+subject = "utlandska-doktorander: f14_02"
 fields = { "label" = "Ansökan till forskarutbildningen efter uppmaning — uppmanad av handledare/lärare (F14)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1620\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_03 where key = 'v30024' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_03 where key = 'v30024'"
 fields = { "label" = "Ansökan till forskarutbildningen via information — informerad av annan person (F10)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1632\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f14_03 where key = 'v30024' and release = 'r5579'"
+subject = "utlandska-doktorander: f14_03"
 fields = { "label" = "Ansökan till forskarutbildningen via information — informerad av annan person (F14)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1644\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_01 where key = 'v30022' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_01 where key = 'v30022'"
 fields = { "label" = "Ansökan till forskarutbildningen via utannonsering — utannonsering på universitetet/högskolan (F10)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1656\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f14_01 where key = 'v30022' and release = 'r5579'"
+subject = "utlandska-doktorander: f14_01"
 fields = { "label" = "Ansökan till forskarutbildningen via utannonsering — utannonsering på universitetet/högskolan (F14)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1668\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f5 where key = 'v16740' and release = 'r5579'"
+subject = "utlandska-doktorander: f5"
 fields = { "label" = "Antal barn i hushållet — Enkätfråga: \"Har du hemmaboende barn i Sverige i åldern 0-18 år?\" (F5)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1296\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7 where key = 'v16740' and release = 'r5579'"
+subject = "utlandska-doktorander: f7"
 fields = { "label" = "Antal barn i hushållet — Enkätfråga: \"Har du hemmaboende barn i Sverige i åldern 0-18 år?\" (F7)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1308\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21 where key = 'v30072' and release = 'r5579'"
+subject = "utlandska-doktorander: f21"
 fields = { "label" = "Avsikt stanna i Sverige — Enkätfråga: \"Har du för avsikt att stanna i Sverige efter avslutad utbildning?\" (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1680\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f27 where key = 'v30072' and release = 'r5579'"
+subject = "utlandska-doktorander: f27"
 fields = { "label" = "Avsikt stanna i Sverige — Enkätfråga: \"Har du för avsikt att stanna i Sverige efter avslutad utbildning?\" (F27)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1692\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f4 where key = 'v29973' and release = 'r5579'"
+subject = "utlandska-doktorander: f4"
 fields = { "label" = "Boendesituation — Enkätfråga: \"Bor du för närvarande med make/maka/sambo i Sverige?\" (F4)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1320\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f6 where key = 'v29973' and release = 'r5579'"
+subject = "utlandska-doktorander: f6"
 fields = { "label" = "Boendesituation — Enkätfråga: \"Bor du för närvarande med make/maka/sambo i Sverige?\" (F6)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1332\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f20_02 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f20_02"
 fields = { "label" = "Diskriminerad — på grund av etnisk tillhörighet eller religion (F20)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1704\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f26_02 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f26_02"
 fields = { "label" = "Diskriminerad — på grund av etnisk tillhörighet eller religion (F26)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1716\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f20_01 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f20_01"
 fields = { "label" = "Diskriminerad — på grund av könstillhörighet (F20)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1728\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f26_01 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f26_01"
 fields = { "label" = "Diskriminerad — på grund av könstillhörighet (F26)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1740\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f20_03 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f20_03"
 fields = { "label" = "Diskriminerad — på grund av språksvårigheter (F20)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1752\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f26_03 where key = 'v30069' and release = 'r5579'"
+subject = "utlandska-doktorander: f26_03"
 fields = { "label" = "Diskriminerad — på grund av språksvårigheter (F26)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1764\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f11 where key = 'v30026' and release = 'r5579'"
+subject = "utlandska-doktorander: f11 where key = 'v30026'"
 fields = { "label" = "Erbjudande i annat land — Enkätfråga: \"Har du fått erbjudande om utbildning på forskarnivå i annat land än Sverige?\" (F11)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1776\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15 where key = 'v30026' and release = 'r5579'"
+subject = "utlandska-doktorander: f15"
 fields = { "label" = "Erbjudande i annat land — Enkätfråga: \"Har du fått erbjudande om utbildning på forskarnivå i annat land än Sverige?\" (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1788\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f6_02 where key = 'v30006' and release = 'r5579'"
+subject = "utlandska-doktorander: f6_02"
 fields = { "label" = "Faders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Pappa\" (F6_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1344\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f9_02 where key = 'v30006' and release = 'r5579'"
+subject = "utlandska-doktorander: f9_02"
 fields = { "label" = "Faders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Pappa\" (F9_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1356\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_08 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_08"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" SVar: \"Anställning utanför högskolan (utan tid för egen forskning)\" (F10_08)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1920\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_08 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_08"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" SVar: \"Anställning utanför högskolan (utan tid för egen forskning)\" (F7_08)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1932\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_02 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_02 where key = 'v30008'"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Annan anställning inom högskolan\" (F10_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1896\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_02 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_02"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Annan anställning inom högskolan\" (F7_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1908\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_10 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_10"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Annan finansiering\" (F10_10)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1800\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_10 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_10"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Annan finansiering\" (F7_10)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1812\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_07 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_07"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Anställning utanför högskolan (med tid för egen forskning)\" (F10_07)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1824\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_07 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_07"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Anställning utanför högskolan (med tid för egen forskning)\" (F7_07)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1836\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_01 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_01 where key = 'v30008'"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Doktorandanställning\" (F10_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1848\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_01 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_01"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Doktorandanställning\" (F7_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1860\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_09 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_09"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Egen finsansiering\" (F10_09)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1872\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_09 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_09"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Egen finsansiering\" (F7_09)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1884\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_05 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_05"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Stipendium från Sverige (t.ex. SI)\" (F10_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1968\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_05 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_05"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Stipendium från Sverige (t.ex. SI)\" (F7_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1980\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_06 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_06"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Stipendium från annat land än Sverige\" (F10_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1944\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_06 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_06"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Stipendium från annat land än Sverige\" (F7_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1956\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_04 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_04 where key = 'v30008'"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Studiemedel CSN\" (F10_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1992\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_04 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_04"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Studiemedel CSN\" (F7_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2004\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f10_03 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f10_03 where key = 'v30008'"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Utbildningsbidrag\" (F10_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2016\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f7_03 where key = 'v30008' and release = 'r5579'"
+subject = "utlandska-doktorander: f7_03"
 fields = { "label" = "Försörjningssituation doktorandanställning — Enkätfråga: \"Hur försörjer du dig under vårterminen 2013?\" Svar: \"Utbildningsbidrag\" (F7_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2028\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18_02 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f18_02"
 fields = { "label" = "Handledares insats — Enklätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt brister i handledningen som varit till hinder i ditt forskningsarbete?\" (F18_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2040\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_02 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_02"
 fields = { "label" = "Handledares insats — Enklätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt brister i handledningen som varit till hinder i ditt forskningsarbete?\" (F24_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2052\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_07 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_07"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat dina framtidsplaner efter forskarutbildningen med dig?\" (F17_07)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2064\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_07 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_07"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat dina framtidsplaner efter forskarutbildningen med dig?\" (F23_07)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2076\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_03 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_03"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat metodfrågor med dig?\" (F17_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2088\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_03 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_03"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat metodfrågor med dig?\" (F23_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2100\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_04 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_04"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat teori med dig?\" (F17_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2112\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_04 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_04"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare diskuterat teori med dig?\" (F23_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2124\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_05 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_05"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare gett dig råd kring vilken tidigare forskning du behöver läsa in dig på?\" (F17_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2136\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_05 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_05"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare gett dig råd kring vilken tidigare forskning du behöver läsa in dig på?\" (F23_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2148\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_06 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_06"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare gett konstruktiv kritik på ditt forskningsarbete?\" (F17_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2160\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_06 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_06"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare gett konstruktiv kritik på ditt forskningsarbete?\" (F23_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2172\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_01 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_01"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare låtit dina egna intressen styra valet av avhandlingsämne?\" (F23_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2184\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17_02 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f17_02"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare visat intresse för dina studier på forskarnivå?\" (F17_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2196\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f23_02 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f23_02"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har din/dina handledare visat intresse för dina studier på forskarnivå?\" (F23_02)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2208\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18_03 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f18_03"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 allvarligt övervägt att byta handledare?\" (F18_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2220\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_03 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_03"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 allvarligt övervägt att byta handledare?\" (F24_03)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2232\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_01 where key = 'v30049' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_01"
 fields = { "label" = "Handledares insats — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 fått handledning i den omfattning du önskat?\" (F24_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2244\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16 where key = 'v30048' and release = 'r5579'"
+subject = "utlandska-doktorander: f16"
 fields = { "label" = "Handledningstimmar — Enkätfråga: \"Hur många timmar handledning får du i genomsnitt per månad under vårterminen 2013?\" (F16)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2256\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f22 where key = 'v30048' and release = 'r5579'"
+subject = "utlandska-doktorander: f22"
 fields = { "label" = "Handledningstimmar — Enkätfråga: \"Hur många timmar handledning får du i genomsnitt per månad under vårterminen 2013?\" (F22)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2268\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f12 where key = 'v30034' and release = 'r5579'"
+subject = "utlandska-doktorander: f12 where key = 'v30034'"
 fields = { "label" = "Huvudsakligt motiv till forskarutbildning — Enkätfråga: \"Vilket var ditt huvudsakliga motiv med forskarutbildning?\" (F12)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2280\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f17 where key = 'v30034' and release = 'r5579'"
+subject = "utlandska-doktorander: f17"
 fields = { "label" = "Huvudsakligt motiv till forskarutbildning — Enkätfråga: \"Vilket var ditt huvudsakliga motiv med forskarutbildning?\" (F17)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2292\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f6_01 where key = 'v30007' and release = 'r5579'"
+subject = "utlandska-doktorander: f6_01"
 fields = { "label" = "Moders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Mamma\" (F6_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1368\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f9_01 where key = 'v30007' and release = 'r5579'"
+subject = "utlandska-doktorander: f9_01"
 fields = { "label" = "Moders högsta utbildningsnivå — Enkätfråga: \"Vilken är dina föräldrars högsta utbildning? Mamma\" (F9_01)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1380\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18_05 where key = 'v30065' and release = 'r5579'"
+subject = "utlandska-doktorander: f18_05"
 fields = { "label" = "Möjlighet att påverka verksamhet — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 haft möjlighet att påverka verksamheten på institutionen?\" (F18_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2304\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_05 where key = 'v30065' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_05"
 fields = { "label" = "Möjlighet att påverka verksamhet — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 haft möjlighet att påverka verksamheten på institutionen?\" (F24_05)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2316\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_03 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_03"
 fields = { "label" = "Nöjd eller missnöjd — vid start: förhandsinformation om utbildning på forskarnivå (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2400\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_03 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_03"
 fields = { "label" = "Nöjd eller missnöjd — vid start: förhandsinformation om utbildning på forskarnivå (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2412\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_05 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_05"
 fields = { "label" = "Nöjd eller missnöjd — vid start: information om rättigheter och skyldigheter (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2328\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_05 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_05"
 fields = { "label" = "Nöjd eller missnöjd — vid start: information om rättigheter och skyldigheter (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2340\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_04 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_04"
 fields = { "label" = "Nöjd eller missnöjd — vid start: introduktion för nyantagna (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2424\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_04 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_04"
 fields = { "label" = "Nöjd eller missnöjd — vid start: introduktion för nyantagna (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2436\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_02 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_02"
 fields = { "label" = "Nöjd eller missnöjd — vid start: stöd och stimulans från andra att gå vidare till forskarnivå (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2352\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_02 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_02"
 fields = { "label" = "Nöjd eller missnöjd — vid start: stöd och stimulans från andra att gå vidare till forskarnivå (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2364\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_01 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_01"
 fields = { "label" = "Nöjd eller missnöjd — vid start: stöd och stimulans från lärare att gå vidare till forskarnivå (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2376\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_01 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_01"
 fields = { "label" = "Nöjd eller missnöjd — vid start: stöd och stimulans från lärare att gå vidare till forskarnivå (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2388\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f15_06 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f15_06"
 fields = { "label" = "Nöjd eller missnöjd — vid start: tydlighet i antagningskraven (F15)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2448\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f21_06 where key = 'v30038' and release = 'r5579'"
+subject = "utlandska-doktorander: f21_06"
 fields = { "label" = "Nöjd eller missnöjd — vid start: tydlighet i antagningskraven (F21)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2460\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_07 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_07"
 fields = { "label" = "Orsak till val av Sverige — Sverige är ett tryggt land" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2496\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_08 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_08"
 fields = { "label" = "Orsak till val av Sverige — annat" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2472\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_03 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_03"
 fields = { "label" = "Orsak till val av Sverige — möjlighet till utbildningsbidrag/doktorandtjänst" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2544\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_05 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_05"
 fields = { "label" = "Orsak till val av Sverige — studiemiljön har gott rykte" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2532\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_06 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_06"
 fields = { "label" = "Orsak till val av Sverige — svenska arbetsmarknaden lockar/karriärmöjligheter" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2484\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_02 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_02"
 fields = { "label" = "Orsak till val av Sverige — utbildningen är avgiftsfri" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2508\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_01 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_01"
 fields = { "label" = "Orsak till val av Sverige — utbildningen är på engelska" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2556\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f16_04 where key = 'v30027' and release = 'r5579'"
+subject = "utlandska-doktorander: f16_04"
 fields = { "label" = "Orsak till val av Sverige — utbildningens kvalitet har gott rykte" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2520\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f19 where key = 'v30067' and release = 'r5579'"
+subject = "utlandska-doktorander: f19 where key = 'v30067'"
 fields = { "label" = "Tidsåtgång för studier — Enkätfråga: \"Hur uppfattar du den tid dina forskarstudier tar i anspråk?\" (F19)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2568\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f25 where key = 'v30067' and release = 'r5579'"
+subject = "utlandska-doktorander: f25"
 fields = { "label" = "Tidsåtgång för studier — Enkätfråga: \"Hur uppfattar du den tid dina forskarstudier tar i anspråk?\" (F25)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2580\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f12 where key = 'v30020' and release = 'r5579'"
+subject = "utlandska-doktorander: f12 where key = 'v30020'"
 fields = { "label" = "Tillräcklig inkomstnivå — Enkätfråga: \"Hur lätt eller svårt tycker du att det har varit att få ekonomin att gå ihop under vårterminen 2013?\" (F12)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2592\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f8 where key = 'v30020' and release = 'r5579'"
+subject = "utlandska-doktorander: f8"
 fields = { "label" = "Tillräcklig inkomstnivå — Enkätfråga: \"Hur lätt eller svårt tycker du att det har varit att få ekonomin att gå ihop under vårterminen 2013?\" (F8)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2604\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18_06 where key = 'v30066' and release = 'r5579'"
+subject = "utlandska-doktorander: f18_06"
 fields = { "label" = "Upplevda krav — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt att kraven på dig som doktorand varit tydliga?\" (F18_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2616\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_06 where key = 'v30066' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_06"
 fields = { "label" = "Upplevda krav — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt att kraven på dig som doktorand varit tydliga?\" (F24_06)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2628\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f18_04 where key = 'v30064' and release = 'r5579'"
+subject = "utlandska-doktorander: f18_04"
 fields = { "label" = "Upplevelse av stress — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt press/stress som gett negativa konsekvenser?\" (F18_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2640\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f24_04 where key = 'v30064' and release = 'r5579'"
+subject = "utlandska-doktorander: f24_04"
 fields = { "label" = "Upplevelse av stress — Enkätfråga: \"I vilken grad har du inom dina forskarstudier under vårterminen 2013 upplevt press/stress som gett negativa konsekvenser?\" (F24_04)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:2652\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f14 where key = 'v30036' and release = 'r5579'"
+subject = "utlandska-doktorander: f14"
 fields = { "label" = "Utbildning 3 månader i annat land — Enkätfråga: \"Har du eller kommer du inom ramen för din forskarutbildning tillfälligt studera minst 3 månader i annat land än Sverige?\" (F14)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1392\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "utlandska-doktorander: f19 where key = 'v30036' and release = 'r5579'"
+subject = "utlandska-doktorander: f19 where key = 'v30036'"
 fields = { "label" = "Utbildning 3 månader i annat land — Enkätfråga: \"Har du eller kommer du inom ramen för din forskarutbildning tillfälligt studera minst 3 månader i annat land än Sverige?\" (F19)" }
 evidence = "reg_meta_build/curation/registers/scb/utlandska-doktorander.toml:1404\n\nComplete accepted source audit: Utlandska-doktorander26 native families/116 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-Utlandska-doktorander26-source-proof.json."

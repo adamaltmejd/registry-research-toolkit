@@ -1,7 +1,10 @@
 """One-shot case-selector audit; deleted at milestone F (REBUILD.md)."""
 
+import calendar
 import collections
+import datetime as dt
 import json
+import re
 
 ALIASES = {
     "name": "label",
@@ -12,6 +15,55 @@ ALIASES = {
     "column_name": "spelling",
 }
 SOURCE_FIELDS = {"type": "dtype", "spelling": "column"}
+
+
+def period_intervals(scope):
+    """Calendar scopes as inclusive ISO intervals; refuse unfamiliar period syntax."""
+
+    def endpoint(text, end):
+        if not text:
+            return "9999-12-31" if end else "0001-01-01"
+        if re.fullmatch(r"\d{4}", text):
+            return text + ("-12-31" if end else "-01-01")
+        if re.fullmatch(r"\d{4}-\d{2}", text):
+            year, month = map(int, text.split("-"))
+            return f"{text}-{calendar.monthrange(year, month)[1] if end else 1:02}"
+        return dt.date.fromisoformat(text).isoformat()
+
+    if not scope:
+        return [("0001-01-01", "9999-12-31")]
+    result = []
+    for piece in scope.split(","):
+        bounds = piece.split("..")
+        if len(bounds) == 1:
+            bounds *= 2
+        if len(bounds) != 2:
+            raise ValueError("unfamiliar period syntax")
+        start, end = endpoint(bounds[0], False), endpoint(bounds[1], True)
+        if start > end:
+            raise ValueError("reversed period")
+        result.append((start, end))
+    return result
+
+
+def parse_selector(subject):
+    """The converter's literal occurrence addresses, never a partial guard parse."""
+    match = re.fullmatch(r"([^:]+): (.*?)(?: @([^ ]+))?(?: where (.*))?", subject)
+    if not match:
+        return None
+    table, column, scope, source_guards = match.groups()
+    if not column or any(c.isspace() for c in column) or "@" in column:
+        return None
+    guards = {}
+    for guard in source_guards.split(" and ") if source_guards else []:
+        match = re.fullmatch(r"(key|release|type|label|unit) = '([^']*)'", guard)
+        if not match or match[1] in guards:
+            return None
+        guards[match[1]] = match[2]
+    try:
+        return table, column.lower(), period_intervals(scope), guards
+    except ValueError:
+        return None
 
 
 def value_key(value):
@@ -206,36 +258,7 @@ class CaseSafety:
 
 def audit_cached(converter, root):
     """Static reclassification of cached proposals, never a substitute for lock."""
-    import re
     import tomllib
-
-    def interval(scope):
-        if not scope:
-            return [("0001-01-01", "9999-12-31")]
-        result = []
-        for piece in scope.split(","):
-            bounds = piece.split("..")
-            if len(bounds) == 1:
-                bounds *= 2
-            start, end = bounds
-            if len(start) == 4:
-                start += "-01-01"
-            if len(end) == 4:
-                end += "-12-31"
-            result.append((start or "0001-01-01", end or "9999-12-31"))
-        return result
-
-    def parse(subject):
-        match = re.fullmatch(r"([^:]+): (.*?)(?: @([^ ]+))?(?: where (.*))?", subject)
-        if not match:
-            return None
-        table, column, scope, guards = match.groups()
-        return (
-            table,
-            column,
-            interval(scope),
-            dict(re.findall(r"(key|release|type) = '([^']*)'", guards or "")),
-        )
 
     counts = collections.Counter()
     cause_counts = collections.Counter()
@@ -261,7 +284,7 @@ def audit_cached(converter, root):
         ]
         candidates = []
         for statement, line in zip(parsed, lines, strict=True):
-            address = parse(statement["subject"])
+            address = parse_selector(statement["subject"])
             if address is None or statement["kind"] not in {"set", "assert"}:
                 continue
             table, column, scope, guards = address

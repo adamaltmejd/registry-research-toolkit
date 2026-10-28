@@ -41,66 +41,12 @@ evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:10\n\
 
 [[statement]]
 kind = "set"
-subject = "examens-studiebevis-teknikprogrammet-ak4: utokad where key = 'v30671' and release = 'r5910'"
+subject = "examens-studiebevis-teknikprogrammet-ak4: utokad"
 fields = { "description" = "Kursen är en s.k. utökad kurs." }
 evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "examens-studiebevis-teknikprogrammet-ak4: utokad where key = 'v30671' and release = 'r5911'"
-fields = { "description" = "Kursen är en s.k. utökad kurs." }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "examens-studiebevis-teknikprogrammet-ak4: utokad where key = 'v30671' and release = 'r5912'"
-fields = { "description" = "Kursen är en s.k. utökad kurs." }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:38\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14244'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14246'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14248'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14249'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14250'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14251'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14252'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "avgangna-fran-waldorf: skolkod where key = 'v104' and release = 'r14253'"
+subject = "avgangna-fran-waldorf: skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
 evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:32\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

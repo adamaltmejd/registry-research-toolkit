@@ -8,612 +8,120 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:126\n
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: so_prov"
 fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r12860'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r13648'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r18325'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r18950'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r19637'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r20203'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r5751'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r5818'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r7316'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: so_prov where key = 'v30843' and release = 'r9824'"
-fields = { "description" = "Ange vilket so-prov eleven har deltagit i" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:102\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: sv_kursplan"
 fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r12860'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r13648'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r18325'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r18950'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r19637'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r20203'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r7316'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_kursplan where key = 'v30454' and release = 'r9824'"
-fields = { "description" = "Anger vilken kursplan i svenska eleven följer" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:42\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: sva where key = 'v7817' and release = 'r5845'"
+subject = "amne-sv-eng-ma: sva @2003-01-01..2003-06-30"
 fields = { "description" = "Elever deltar i SVA (Svenska som andrasspråk)" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-no: personnr where key = 'v57' and release = 'r5831'"
+subject = "amne-no: personnr"
 fields = { "description" = "Löpnummer i populationen" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-no: personnr where key = 'v57' and release = 'r5832'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: personnr where key = 'v57' and release = 'r5833'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: personnr where key = 'v57' and release = 'r5834'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:48\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: bi_provbet where key = 'v24276' and release = 'r5831'"
+subject = "amne-no: bi_provbet"
 fields = { "description" = "Provbetyg i biologi" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-no: bi_provbet where key = 'v24276' and release = 'r5832'"
-fields = { "description" = "Provbetyg i biologi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: bi_provbet where key = 'v24276' and release = 'r5833'"
-fields = { "description" = "Provbetyg i biologi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: bi_provbet where key = 'v24276' and release = 'r5834'"
-fields = { "description" = "Provbetyg i biologi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: en_provbet where key = 'v8502' and release = 'r5840'"
+subject = "amne-sv-eng-ma: en_provbet @2005-01-01..2005-06-30,2006-01-01..2006-06-30,2007-01-01..2007-06-30,2008-01-01..2008-06-30"
 fields = { "description" = "Provbetyg i engelska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma: en_provbet where key = 'v8502' and release = 'r5841'"
-fields = { "description" = "Provbetyg i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: en_provbet where key = 'v8502' and release = 'r5842'"
-fields = { "description" = "Provbetyg i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: en_provbet where key = 'v8502' and release = 'r5843'"
-fields = { "description" = "Provbetyg i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: fy_provbet where key = 'v24275' and release = 'r5831'"
+subject = "amne-no: fy_provbet"
 fields = { "description" = "Provbetyg i fysik" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-no: fy_provbet where key = 'v24275' and release = 'r5832'"
-fields = { "description" = "Provbetyg i fysik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: fy_provbet where key = 'v24275' and release = 'r5833'"
-fields = { "description" = "Provbetyg i fysik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: fy_provbet where key = 'v24275' and release = 'r5834'"
-fields = { "description" = "Provbetyg i fysik" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:54\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: ge_provbet"
 fields = { "description" = "Provbetyg i geografi" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r12860'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r13648'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r18325'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r18950'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r19637'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r20203'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r5751'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r5818'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r7316'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: ge_provbet where key = 'v30642' and release = 'r9824'"
-fields = { "description" = "Provbetyg i geografi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:60\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: hi_provbet"
 fields = { "description" = "Provbetyg i historia" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r12860'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r13648'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r18325'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r18950'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r19637'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r20203'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r5751'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r5818'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r7316'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: hi_provbet where key = 'v30643' and release = 'r9824'"
-fields = { "description" = "Provbetyg i historia" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:66\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: ke_provbet where key = 'v24277' and release = 'r5831'"
+subject = "amne-no: ke_provbet"
 fields = { "description" = "Provbetyg i kemi" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-no: ke_provbet where key = 'v24277' and release = 'r5832'"
-fields = { "description" = "Provbetyg i kemi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: ke_provbet where key = 'v24277' and release = 'r5833'"
-fields = { "description" = "Provbetyg i kemi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-no: ke_provbet where key = 'v24277' and release = 'r5834'"
-fields = { "description" = "Provbetyg i kemi" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:72\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: ma_provbet where key = 'v8245' and release = 'r5845'"
+subject = "amne-sv-eng-ma: ma_provbet @2003-01-01..2003-06-30"
 fields = { "description" = "Provbetyg i matematik" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:78\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: re_provbet"
 fields = { "description" = "Provbetyg i religion" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r12860'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r13648'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r18325'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r18950'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r19637'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r20203'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r5751'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r5818'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r7316'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: re_provbet where key = 'v30645' and release = 'r9824'"
-fields = { "description" = "Provbetyg i religion" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:84\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r11516'"
+subject = "amne-sv-eng-ma-no-so: sh_provbet"
 fields = { "description" = "Provbetyg i samhällskunskap" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r12860'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r13648'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r18325'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r18950'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r19637'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r20203'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r5751'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r5818'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r7316'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sh_provbet where key = 'v30644' and release = 'r9824'"
-fields = { "description" = "Provbetyg i samhällskunskap" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:90\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: sv_provbet where key = 'v8480' and release = 'r5840'"
+subject = "amne-sv-eng-ma: sv_provbet @2005-01-01..2005-06-30,2006-01-01..2006-06-30,2007-01-01..2007-06-30,2008-01-01..2008-06-30"
 fields = { "description" = "Provbetyg i svenska / svenska som andra språk" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma: sv_provbet where key = 'v8480' and release = 'r5841'"
-fields = { "description" = "Provbetyg i svenska / svenska som andra språk" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: sv_provbet where key = 'v8480' and release = 'r5842'"
-fields = { "description" = "Provbetyg i svenska / svenska som andra språk" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma: sv_provbet where key = 'v8480' and release = 'r5843'"
-fields = { "description" = "Provbetyg i svenska / svenska som andra språk" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:96\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_a_prp where key = 'v28165' and release = 'r19637'"
+subject = "amne-sv-eng-ma-no-so: en_a_prp"
 fields = { "description" = "Resultat på delprov A i engelska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_a_prp where key = 'v28165' and release = 'r20203'"
-fields = { "description" = "Resultat på delprov A i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_a_prp where key = 'v27376' and release = 'r19637'"
+subject = "amne-sv-eng-ma-no-so: sv_a_prp"
 fields = { "description" = "Resultat på delprov A i svenska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_a_prp where key = 'v27376' and release = 'r20203'"
-fields = { "description" = "Resultat på delprov A i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:120\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_b_prp where key = 'v28167' and release = 'r19637'"
+subject = "amne-sv-eng-ma-no-so: en_b_prp"
 fields = { "description" = "Resultat på delprov B i engelska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_b_prp where key = 'v28167' and release = 'r20203'"
-fields = { "description" = "Resultat på delprov B i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_b_prp where key = 'v27377' and release = 'r19637'"
+subject = "amne-sv-eng-ma-no-so: sv_b_prp"
 fields = { "description" = "Resultat på delprov B i svenska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_b_prp where key = 'v27377' and release = 'r20203'"
-fields = { "description" = "Resultat på delprov B i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:108\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_c_prp where key = 'v28168' and release = 'r19637'"
+subject = "amne-sv-eng-ma-no-so: en_c_prp"
 fields = { "description" = "Resultat på delprov C i engelska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "amne-sv-eng-ma-no-so: en_c_prp where key = 'v28168' and release = 'r20203'"
-fields = { "description" = "Resultat på delprov C i engelska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_c_prp where key = 'v27378' and release = 'r19637'"
-fields = { "description" = "Resultat på delprov C i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "amne-sv-eng-ma-no-so: sv_c_prp where key = 'v27378' and release = 'r20203'"
+subject = "amne-sv-eng-ma-no-so: sv_c_prp"
 fields = { "description" = "Resultat på delprov C i svenska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak9.toml:114\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

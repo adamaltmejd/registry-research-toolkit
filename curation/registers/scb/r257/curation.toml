@@ -1,5 +1,460 @@
 
 [[statement]]
+kind = "set"
+subject = "var:geografisk-marknad-nationellt"
+fields = { "sets" = ["legacy-geografisk-marknad-nationellt"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10960\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8265\n\nY-311 2026-09-29: 257.15555 reviewed native-question identity {A2b, MARNAT, Q2b} owned by geografisk-marknad-nationellt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:geografisk-marknad-eu-efta"
+fields = { "sets" = ["legacy-geografisk-marknad-eu-efta"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8271\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9366\n\nY-311 2026-09-29: 257.15556 reviewed native-question identity {A2c, MAREUR, Q2c} owned by geografisk-marknad-eu-efta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:geografisk-marknad-ovriga-lander"
+fields = { "sets" = ["legacy-geografisk-marknad-ovriga-lander"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10985\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8277\n\nY-311 2026-09-29: 257.15559 reviewed native-question identity {A2d, MAROTH, Q2d} owned by geografisk-marknad-ovriga-lander; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-marknad"
+fields = { "sets" = ["legacy-produktinnovation-ny-for-marknad"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11010\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8283\n\nY-311 2026-09-29: 257.15562 reviewed native-question identity {B6a, INNO_PRD_NEW_MKT, NEWMKT, Q6a} owned by produktinnovation-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:produktinnovation-ny-for-foretaget"
+fields = { "sets" = ["legacy-produktinnovation-ny-for-foretaget"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11035\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8289\n\nY-311 2026-09-29: 257.15563 reviewed native-question identity {B6b, INNO_PRD_NEW_ENT, NEWFRM, Q6b} owned by produktinnovation-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-inno-ny-for-marknad"
+fields = { "sets" = ["legacy-omsattningsandel-inno-ny-for-marknad"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8295\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8917\n\nY-311 2026-09-29: 257.15568 reviewed native-question identity {B7a, Q7a, TURNMAR, TUR_PRD_NEW_MKT} owned by omsattningsandel-inno-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-inno-ny-for-foretaget"
+fields = { "sets" = ["legacy-omsattningsandel-inno-ny-for-foretaget"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8301\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8937\n\nY-311 2026-09-29: 257.15569 reviewed native-question identity {B7b, Q7b, TURNIN, TUR_PRD_NEW_ENT} owned by omsattningsandel-inno-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:omsattningsandel-oforandrade-varor"
+fields = { "sets" = ["legacy-omsattningsandel-oforandrade-varor"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8307\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8957\n\nY-311 2026-09-29: 257.15570 reviewed native-question identity {B7c, Q7c, TURNTOT, TUR_PRD_NINN} owned by omsattningsandel-oforandrade-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-av-produktionsmetoder"
+fields = { "sets" = ["legacy-introduktion-av-produktionsmetoder"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8313\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9386\n\nY-311 2026-09-29: 257.15571 reviewed native-question identity {C8a, INNO_PCS_PRD, INPSPD, Q8a} owned by introduktion-av-produktionsmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-av-leveransmetoder"
+fields = { "sets" = ["legacy-introduktion-av-leveransmetoder"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8319\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9406\n\nY-311 2026-09-29: 257.15578 reviewed native-question identity {C8b, INNO_PCS_LOG, INPSLG, Q8b} owned by introduktion-av-leveransmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-av-stodverksamheter"
+fields = { "sets" = ["legacy-introduktion-av-stodverksamheter"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8325\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9426\n\nY-311 2026-09-29: 257.15579 reviewed native-question identity {C8c, INNO_PCS_ACCT, INPSSU, Q8c} owned by introduktion-av-stodverksamheter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utvecklare-av-processinnovationer"
+fields = { "sets" = ["legacy-utvecklare-av-processinnovationer"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11060\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8331\n\nY-311 2026-09-29: 257.15580 reviewed native-question identity {C81, Q81} owned by utvecklare-av-processinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-av-varor"
+fields = { "sets" = ["legacy-introduktion-av-varor"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8337\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9446\n\nY-311 2026-09-29: 257.15582 reviewed native-question identity {B5a, INNO_PRD_GD, INPDGD, Q5a} owned by introduktion-av-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-av-tjanster"
+fields = { "sets" = ["legacy-introduktion-av-tjanster"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8343\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9466\n\nY-311 2026-09-29: 257.15583 reviewed native-question identity {B5b, INNO_PRD_SERV, INPDSV, Q5b} owned by introduktion-av-tjanster; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utvecklare-av-produktinnovationer"
+fields = { "sets" = ["legacy-utvecklare-av-produktinnovationer"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8349\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8976\n\nY-311 2026-09-29: 257.15584 reviewed native-question identity {B51, Q51} owned by utvecklare-av-produktinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudkontoret-belaget"
+fields = { "sets" = ["legacy-huvudkontoret-belaget"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11085\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8355\n\nY-311 2026-09-29: 257.15593 reviewed native-question identity {A1a, Q1a} owned by huvudkontoret-belaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:innovationssamarbete"
+fields = { "sets" = ["legacy-innovationssamarbete"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8361\n\nY-311 2026-09-29: 257.15600 reviewed native-question identity {CO, F12, Q12} owned by innovationssamarbete; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-forvarv-maskiner-programvara"
+fields = { "sets" = ["legacy-utgifter-forvarv-maskiner-programvara"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8367\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8995\n\nY-311 2026-09-29: 257.15612 reviewed native-question identity {E11c, Q11c} owned by utgifter-forvarv-maskiner-programvara; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-forvarv-existerande-kunskap"
+fields = { "sets" = ["legacy-utgifter-forvarv-existerande-kunskap"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8373\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9014\n\nY-311 2026-09-29: 257.15613 reviewed native-question identity {E11d, Q11d, ROEKX} owned by utgifter-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-egen-fou"
+fields = { "sets" = ["legacy-inna-egen-fou"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8379\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9506\n\nY-311 2026-09-29: 257.15614 reviewed native-question identity {E10a, EGFOU, INNA_IH_RND, Q10a} owned by inna-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-utlagd-fou"
+fields = { "sets" = ["legacy-inna-utlagd-fou"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8385\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9525\n\nY-311 2026-09-29: 257.15616 reviewed native-question identity {E10b, INNA_RND_CONTR_OUT, Q10b, RRDEX} owned by inna-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-forvarv-maskiner"
+fields = { "sets" = ["legacy-inna-forvarv-maskiner"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8391\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9545\n\nY-311 2026-09-29: 257.15617 reviewed native-question identity {E10c, Q10c, RMAC} owned by inna-forvarv-maskiner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-forvarv-existerande-kunskap"
+fields = { "sets" = ["legacy-inna-forvarv-existerande-kunskap"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8397\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9565\n\nY-311 2026-09-29: 257.15618 reviewed native-question identity {E10d, Q10d, ROEK} owned by inna-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-utbildning"
+fields = { "sets" = ["legacy-inna-utbildning"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8403\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9585\n\nY-311 2026-09-29: 257.15619 reviewed native-question identity {E10e, Q10e, RTR} owned by inna-utbildning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-marknadsintroduktion"
+fields = { "sets" = ["legacy-inna-marknadsintroduktion"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8409\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9605\n\nY-311 2026-09-29: 257.15620 reviewed native-question identity {E10f, Q10f, RMAR} owned by inna-marknadsintroduktion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:inna-andra-forberedelser"
+fields = { "sets" = ["legacy-inna-andra-forberedelser"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8415\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9625\n\nY-311 2026-09-29: 257.15621 reviewed native-question identity {E10g, Q10g} owned by inna-andra-forberedelser; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:geografisk-marknad-regional-lokal"
+fields = { "sets" = ["legacy-geografisk-marknad-regional-lokal"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8421\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9644\n\nY-311 2026-09-29: 257.15642 reviewed native-question identity {A2a, MARLOC, Q2a} owned by geografisk-marknad-regional-lokal; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-innovationsutgifter"
+fields = { "sets" = ["legacy-totala-innovationsutgifter"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8427\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9034\n\nY-311 2026-09-29: 257.15643 reviewed native-question identity {E11e, Q11e, RALLX} owned by totala-innovationsutgifter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:mest-vardefull-samarbetspartner"
+fields = { "sets" = ["legacy-mest-vardefull-samarbetspartner"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8433\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9053\n\nY-311 2026-09-29: 257.15665 reviewed native-question identity {F14, PMOS, Q14} owned by mest-vardefull-samarbetspartner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:koncerntillhorighet"
+fields = { "sets" = ["legacy-koncerntillhorighet"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8439\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9921\n\nY-311 2026-09-29: 257.17402 reviewed native-question identity {ENTGRP_PART, Koncern} owned by koncerntillhorighet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:avbruten-innovationsaktivitet"
+fields = { "sets" = ["legacy-avbruten-innovationsaktivitet"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8445\n\nY-311 2026-09-29: 257.20900 reviewed native-question identity {D9a, INABA, INNA_ABDN} owned by avbruten-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-innovationsaktivitet"
+fields = { "sets" = ["legacy-pagaende-innovationsaktivitet"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8451\n\nY-311 2026-09-29: 257.20901 reviewed native-question identity {D9b, INNA_ONGO, INONG} owned by pagaende-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-metoder-ansvar-beslut"
+fields = { "sets" = ["legacy-introduktion-metoder-ansvar-beslut"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8463\n\nY-311 2026-09-29: 257.20941 reviewed native-question identity {H16b, INNO_PCS_WR_DEC_HRM, ORGWKP} owned by introduktion-metoder-ansvar-beslut; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-metoder-externa-relationer"
+fields = { "sets" = ["legacy-introduktion-metoder-externa-relationer"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8469\n\nY-311 2026-09-29: 257.20942 reviewed native-question identity {H16c, INNO_PCS_OPROC_EXTREL, ORGEXR} owned by introduktion-metoder-externa-relationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:introduktion-metoder-marknadsforing"
+fields = { "sets" = ["legacy-introduktion-metoder-marknadsforing"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8481\n\nY-311 2026-09-29: 257.20949 reviewed native-question identity {I18b, INNO_PCS_SLS_SERV, MKTPDP} owned by introduktion-metoder-marknadsforing; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-minskad-materialatgang"
+fields = { "sets" = ["legacy-miljoinnovation-minskad-materialatgang"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10041\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8499\n\nY-311 2026-09-29: 257.20955 reviewed native-question identity {ECO_MAT, ECO_MAT_SG, J20a} owned by miljoinnovation-minskad-materialatgang; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:j20c"
+fields = { "sets" = ["legacy-j20c"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8505\n\nY-311 2026-09-29: 257.20957 reviewed native-question identity {ECO_ENO, ECO_ENO_SG, J20c} owned by j20c; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-materialersattning"
+fields = { "sets" = ["legacy-miljoinnovation-materialersattning"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10081\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8511\n\nY-311 2026-09-29: 257.20958 reviewed native-question identity {ECO_SUB, ECO_SUB_SG, J20d} owned by miljoinnovation-materialersattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-fororeningar-foretaget"
+fields = { "sets" = ["legacy-miljoinnovation-fororeningar-foretaget"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10101\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8517\n\nY-311 2026-09-29: 257.20959 reviewed native-question identity {ECO_POL, ECO_POL_SG, J20e} owned by miljoinnovation-fororeningar-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinnovation-atervinning-avfall"
+fields = { "sets" = ["legacy-miljoinnovation-atervinning-avfall"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10121\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8523\n\nY-311 2026-09-29: 257.20960 reviewed native-question identity {ECO_REC, ECO_REC_SG, J20f} owned by miljoinnovation-atervinning-avfall; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-fororeningar-slutkonsumtion"
+fields = { "sets" = ["legacy-miljoinno-fororeningar-slutkonsumtion"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10141\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8529\n\nY-311 2026-09-29: 257.20962 reviewed native-question identity {ECO_POS, ECO_POS_SG, J20h} owned by miljoinno-fororeningar-slutkonsumtion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "sets" = ["legacy-outlier"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11135\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8229\n\nY-311 2026-09-29: 257.2468 reviewed native-question identity {OUTLFL, Outlier} owned by outlier; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: same reviewed native construct and complete matching supplied coding, with separate literal operational descriptions and physical type/width. Retain original operation, source attribution and storage per column; no wording normalization, sibling donor, coding union or changed source period."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:fenr"
+fields = { "sets" = ["legacy-fenr"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11155\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8217\n\nY-311 2026-09-29: 257.29 reviewed native-question identity {FENr, SCBID} owned by fenr; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: same reviewed native construct and complete matching supplied coding, with separate literal operational descriptions and physical type/width. Retain original operation, source attribution and storage per column; no wording normalization, sibling donor, coding union or changed source period."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:ipr-patent"
+fields = { "sets" = ["legacy-ipr-patent"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10181\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8547\n\nY-311 2026-09-29: 257.32713 reviewed native-question identity {IPR_OUT_PAT, PROPAT} owned by ipr-patent; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:ipr-monsterskydd"
+fields = { "sets" = ["legacy-ipr-monsterskydd"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10241\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8565\n\nY-311 2026-09-29: 257.37076 reviewed native-question identity {IPR_OUT_IDESG, PRODSG} owned by ipr-monsterskydd; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:ipr-varumarke"
+fields = { "sets" = ["legacy-ipr-varumarke"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10261\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8571\n\nY-311 2026-09-29: 257.37077 reviewed native-question identity {IPR_OUT_TRDM, PROTM} owned by ipr-varumarke; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:ipr-salt"
+fields = { "sets" = ["legacy-ipr-salt"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10281\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8577\n\nY-311 2026-09-29: 257.37078 reviewed native-question identity {IPR_OUT_SELL, PROLEX} owned by ipr-salt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-innovationsaktiviteter-eu-h2020"
+fields = { "sets" = ["legacy-stod-innovationsaktiviteter-eu-h2020"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10301\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8589\n\nY-311 2026-09-29: 257.39094 reviewed native-question identity {FUND_EU_HP2020_RNDINN, FUND_EU_HP_RNDINN} owned by stod-innovationsaktiviteter-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-fran-eu-h2020"
+fields = { "sets" = ["legacy-stod-fran-eu-h2020"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10321\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8595\n\nY-311 2026-09-29: 257.39096 reviewed native-question identity {FUND_EU_HP, FUND_EU_HP2020} owned by stod-fran-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:samarbete-inom-ovriga-aktiviteter"
+fields = { "sets" = ["legacy-samarbete-inom-ovriga-aktiviteter"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8601\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9073\n\nY-311 2026-09-29: 257.39102 reviewed native-question identity {COOP_NO, COOP_OTH} owned by samarbete-inom-ovriga-aktiviteter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:coop-pub-clcu-neu-nefta"
+fields = { "sets" = ["legacy-coop-pub-clcu-neu-nefta"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11110\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8607\n\nY-311 2026-09-29: 257.39126 reviewed native-question identity {COOP_PUB_CLCU_NEU_EFTA, COOP_PUB_CLCU_NEU_NEFTA} owned by coop-pub-clcu-neu-nefta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "sets" = ["legacy-antal-anstallda-foretaget"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8235\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8838\n\nY-311 2026-09-29: 257.4032 reviewed native-question identity {A4, Q4FDB} owned by antal-anstallda-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:koncernmarkering"
+fields = { "sets" = ["legacy-koncernmarkering"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8241\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8857\n\nY-311 2026-09-29: 257.4045 reviewed native-question identity {A1, GP, Q1} owned by koncernmarkering; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning"
+fields = { "sets" = ["legacy-nettoomsattning"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10780\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8247\n\nY-311 2026-09-29: 257.4256 reviewed native-question identity {TUR, TUR2022} owned by nettoomsattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-livscykel"
+fields = { "sets" = ["legacy-miljoinno-livscykel"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10341\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8613\n\nY-311 2026-09-29: 257.46481 reviewed native-question identity {ECO_EXT, ECO_EXT_SG} owned by miljoinno-livscykel; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-atervinning"
+fields = { "sets" = ["legacy-miljoinno-atervinning"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10361\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8619\n\nY-311 2026-09-29: 257.46482 reviewed native-question identity {ECO_REA, ECO_REA_SG} owned by miljoinno-atervinning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:eco-enu-sg"
+fields = { "sets" = ["legacy-eco-enu-sg"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10381\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8625\n\nY-311 2026-09-29: 257.46483 reviewed native-question identity {ECO_ENU, ECO_ENU_SG} owned by eco-enu-sg; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-mangfald-kons"
+fields = { "sets" = ["legacy-miljoinno-mangfald-kons"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10401\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8631\n\nY-311 2026-09-29: 257.46484 reviewed native-question identity {ECO_BIU, ECO_BIU_SG} owned by miljoinno-mangfald-kons; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-mangfald-intern"
+fields = { "sets" = ["legacy-miljoinno-mangfald-intern"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10421\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8637\n\nY-311 2026-09-29: 257.46485 reviewed native-question identity {ECO_BIO, ECO_BIO_SG} owned by miljoinno-mangfald-intern; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:miljoinno-fossila"
+fields = { "sets" = ["legacy-miljoinno-fossila"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10441\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8643\n\nY-311 2026-09-29: 257.46492 reviewed native-question identity {ECO_REP, ECO_REP_SG} owned by miljoinno-fossila; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:turpop"
+fields = { "sets" = ["legacy-turpop"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10800\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8649\n\nY-311 2026-09-29: 257.46650 reviewed native-question identity {LillaNs_TUR, TURPOP} owned by turpop; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:turresp"
+fields = { "sets" = ["legacy-turresp"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10820\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8655\n\nY-311 2026-09-29: 257.46654 reviewed native-question identity {StoraN_TUR, TURRESP} owned by turresp; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "sets" = ["legacy-antal-anstallda"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10900\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8223\n\nY-311 2026-09-29: 257.690 reviewed native-question identity {EMP, EMP2022} owned by antal-anstallda; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-egen-fou"
+fields = { "sets" = ["legacy-utgifter-for-egen-fou"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8253\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8877\n\nY-311 2026-09-29: 257.7705 reviewed native-question identity {E11a, EXP_INNO_RND_IH, Q11a, RRDINX} owned by utgifter-for-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
+kind = "set"
+subject = "var:utgifter-for-utlagd-fou"
+fields = { "sets" = ["legacy-utgifter-for-utlagd-fou"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8259\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8897\n\nY-311 2026-09-29: 257.7708 reviewed native-question identity {E11b, EXP_INNO_RND_CONTR_OUT, Q11b, RRDEXX} owned by utgifter-for-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
+caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
+
+[[statement]]
 kind = "assert"
 subject = "innovation-i-foretagssektorn: COOP_NO @2020..2020"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "COOP_NO (enligt leverans)", "definition" = "I CIS2020 finns både COOP_NO och COOP_OTH. SCB:s dokumentation för 2020 knyter fråga 39102 till COOP_OTH, medan COOP_NO 2016–2018 användes för samma fråga. Kandidaterna är (1) SCB-variabel 39102, \"Samarbete inom övriga aktiviteter\" (samarbete med andra företag eller organisationer inom andra affärsrelaterade aktiviteter än innovation och FoU); (2) svarsalternativet om inget samarbete i 2020 års frågeblankett (saknar egen variabel i SCB:s export). Vilken av dessa betydelser den levererade kolumnen har är inte fastställd. Lagringstypen är float; SCB dokumenterar fråga 39102 som text, så variabeln anges här som decimal efter lagringen.", "sensitive" = false, "identifier" = false } }
@@ -242,6 +697,42 @@ fact = { "entity" = "occurrence", "fields" = { "label" = "Typ av avtal", "defini
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:12001\n\nApply the exact physically held CIS2012 literal to its already reviewed source-native quantity/component owner, using complete own native families and globally unique same-variant literal donors. The complete raw source and both holding CSV cell/digest witnesses plus accepted storage-schema evidence are retained in Holdings-nonIT15-omitted-delivery-proposal.json. Exact supplied2010–2012 survey scope only. Preserve the shared negative omnibus original as source evidence; materialize independent component deliveries rather than rewriting it. Do not copy donor width, flags or code membership, recode source domains, or add adjacent editions."
 
 [[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "sets" = ["legacy-257-5696", "legacy-stora-n-per-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10840\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9102\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "sets" = ["legacy-257-5697", "legacy-lilla-n-per-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10860\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9107\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "sets" = ["legacy-257-73", "legacy-ar"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10581\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9117\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["legacy-257-4027", "legacy-naringsgren"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9092\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9664\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+
+[[statement]]
+kind = "set"
+subject = "var:strat-enligt-leverans"
+fields = { "sets" = ["legacy-257-462", "legacy-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9097\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9683\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "sets" = ["legacy-257-462", "legacy-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9097\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9683\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
+
+[[statement]]
 kind = "assert"
 subject = "release:innovation-i-foretagssektorn/2000 - 2002"
 fact = { "entity" = "release", "name" = "2000 - 2002", "period" = "2000..2002" }
@@ -315,7 +806,7 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:539\n\
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: ENMRG @2010-01-01..2012-12-31 where key = 'v36987' and release = 'r5168'"
+subject = "innovation-i-foretagssektorn: enmrg @2010..2012"
 fields = { "operational_definition" = "Gick företaget ihop med eller köpte ett annat företag eller köpte delar av ett annat företag" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:539\n\nSWECOV holds ENMRG in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
 
@@ -327,7 +818,7 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:548\n\
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: ENOUT @2010-01-01..2012-12-31 where key = 'v36989' and release = 'r5168'"
+subject = "innovation-i-foretagssektorn: enout @2010..2012"
 fields = { "operational_definition" = "Sålde, stängde ner eller outsourcade delar av företaget" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:548\n\nSWECOV holds ENOUT in CIS2012 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2010 - 2012 without a row for this column; its named rows are in 2014 - 2016."
 
@@ -429,13 +920,7 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:755\n\
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: LillaNs @2004-01-01..2006-12-31 where key = 'v6211' and release = 'r1182'"
-fields = { "operational_definition" = "Antal svarande företagsenheter per stratum i undersökning" }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:755\n\nSWECOV holds LillaNs in CIS2006, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: LillaNs @2016-01-01..2018-12-31 where key = 'v6211' and release = 'r13272'"
+subject = "innovation-i-foretagssektorn: lillans @2004..2006,2016..2018"
 fields = { "operational_definition" = "Antal svarande företagsenheter per stratum i undersökning" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:755\n\nSWECOV holds LillaNs in CIS2006, CIS2018 (CIS<Y> = the <Y-2> - <Y> wave, matched on exact Kolumnnamn: the columns SCB names only in 2016 - 2018 / 2018 - 2020 sit in CIS2018 / CIS2020); SCB's export documents 2004 - 2006, 2016 - 2018 without a row for this column; its named rows are in 2020 - 2022."
 
@@ -4107,509 +4592,18 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:7538\n
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: lillan where key = 'v5697' and release = 'r18898'"
+subject = "innovation-i-foretagssektorn: lillan"
 fields = { "unit" = "antal företag" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11175\n\nThe complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: lillans where key = 'v6211' and release = 'r18898'"
+subject = "innovation-i-foretagssektorn: lillans @2020..2022"
 fields = { "unit" = "antal företag" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11199\n\nThe complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: storan where key = 'v5696' and release = 'r18898'"
+subject = "innovation-i-foretagssektorn: storan"
 fields = { "unit" = "antal företag" }
 evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11187\n\nThe complete native-family definition explicitly names the same stratum population, sample or respondent count for both literal columns. Within this enterprise survey, the companion NPOP, NSAMP or NRESP column positively supplies antal företag for that exact count. Clarify only the generic Antal unit label; preserve each distinct count definition, all original units, coding associations, periods, names, columns, operational prose, types and scale. No observed values are recoded and no statistical equivalence is asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren"
-fields = { "sets" = ["legacy-257-4027", "legacy-naringsgren"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9092\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9664\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-
-[[statement]]
-kind = "set"
-subject = "var:strat-enligt-leverans"
-fields = { "sets" = ["legacy-257-462", "legacy-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9097\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9683\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-
-[[statement]]
-kind = "set"
-subject = "var:stratum"
-fields = { "sets" = ["legacy-257-462", "legacy-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:9097\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9683\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-
-[[statement]]
-kind = "set"
-subject = "var:stora-n-per-stratum"
-fields = { "sets" = ["legacy-257-5696", "legacy-stora-n-per-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10840\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9102\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n-per-stratum"
-fields = { "sets" = ["legacy-257-5697", "legacy-lilla-n-per-stratum"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10860\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9107\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:ar"
-fields = { "sets" = ["legacy-257-73", "legacy-ar"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10581\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9117\n\nPrepared SCB source: reviewed literals have identical native names, definitions and operations for this survey-frame construct. Preserve all original coding versions, observation periods, source units, storage types and widths. Counts remain distinct for population, sample and respondents; this mapping does not claim invariant strata or codebook membership across years, statistical comparability or equivalence of questionnaire answers.\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda"
-fields = { "sets" = ["legacy-antal-anstallda"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10900\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8223\n\nY-311 2026-09-29: 257.690 reviewed native-question identity {EMP, EMP2022} owned by antal-anstallda; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-foretaget"
-fields = { "sets" = ["legacy-antal-anstallda-foretaget"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8235\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8838\n\nY-311 2026-09-29: 257.4032 reviewed native-question identity {A4, Q4FDB} owned by antal-anstallda-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:avbruten-innovationsaktivitet"
-fields = { "sets" = ["legacy-avbruten-innovationsaktivitet"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8445\n\nY-311 2026-09-29: 257.20900 reviewed native-question identity {D9a, INABA, INNA_ABDN} owned by avbruten-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:coop-pub-clcu-neu-nefta"
-fields = { "sets" = ["legacy-coop-pub-clcu-neu-nefta"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11110\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8607\n\nY-311 2026-09-29: 257.39126 reviewed native-question identity {COOP_PUB_CLCU_NEU_EFTA, COOP_PUB_CLCU_NEU_NEFTA} owned by coop-pub-clcu-neu-nefta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:eco-enu-sg"
-fields = { "sets" = ["legacy-eco-enu-sg"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10381\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8625\n\nY-311 2026-09-29: 257.46483 reviewed native-question identity {ECO_ENU, ECO_ENU_SG} owned by eco-enu-sg; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:fenr"
-fields = { "sets" = ["legacy-fenr"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11155\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8217\n\nY-311 2026-09-29: 257.29 reviewed native-question identity {FENr, SCBID} owned by fenr; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: same reviewed native construct and complete matching supplied coding, with separate literal operational descriptions and physical type/width. Retain original operation, source attribution and storage per column; no wording normalization, sibling donor, coding union or changed source period."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-eu-efta"
-fields = { "sets" = ["legacy-geografisk-marknad-eu-efta"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8271\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9366\n\nY-311 2026-09-29: 257.15556 reviewed native-question identity {A2c, MAREUR, Q2c} owned by geografisk-marknad-eu-efta; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-nationellt"
-fields = { "sets" = ["legacy-geografisk-marknad-nationellt"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10960\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8265\n\nY-311 2026-09-29: 257.15555 reviewed native-question identity {A2b, MARNAT, Q2b} owned by geografisk-marknad-nationellt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-ovriga-lander"
-fields = { "sets" = ["legacy-geografisk-marknad-ovriga-lander"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10985\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8277\n\nY-311 2026-09-29: 257.15559 reviewed native-question identity {A2d, MAROTH, Q2d} owned by geografisk-marknad-ovriga-lander; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-regional-lokal"
-fields = { "sets" = ["legacy-geografisk-marknad-regional-lokal"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8421\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9644\n\nY-311 2026-09-29: 257.15642 reviewed native-question identity {A2a, MARLOC, Q2a} owned by geografisk-marknad-regional-lokal; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:huvudkontoret-belaget"
-fields = { "sets" = ["legacy-huvudkontoret-belaget"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11085\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8355\n\nY-311 2026-09-29: 257.15593 reviewed native-question identity {A1a, Q1a} owned by huvudkontoret-belaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-andra-forberedelser"
-fields = { "sets" = ["legacy-inna-andra-forberedelser"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8415\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9625\n\nY-311 2026-09-29: 257.15621 reviewed native-question identity {E10g, Q10g} owned by inna-andra-forberedelser; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-egen-fou"
-fields = { "sets" = ["legacy-inna-egen-fou"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8379\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9506\n\nY-311 2026-09-29: 257.15614 reviewed native-question identity {E10a, EGFOU, INNA_IH_RND, Q10a} owned by inna-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-forvarv-existerande-kunskap"
-fields = { "sets" = ["legacy-inna-forvarv-existerande-kunskap"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8397\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9565\n\nY-311 2026-09-29: 257.15618 reviewed native-question identity {E10d, Q10d, ROEK} owned by inna-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-forvarv-maskiner"
-fields = { "sets" = ["legacy-inna-forvarv-maskiner"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8391\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9545\n\nY-311 2026-09-29: 257.15617 reviewed native-question identity {E10c, Q10c, RMAC} owned by inna-forvarv-maskiner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-marknadsintroduktion"
-fields = { "sets" = ["legacy-inna-marknadsintroduktion"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8409\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9605\n\nY-311 2026-09-29: 257.15620 reviewed native-question identity {E10f, Q10f, RMAR} owned by inna-marknadsintroduktion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-utbildning"
-fields = { "sets" = ["legacy-inna-utbildning"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8403\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9585\n\nY-311 2026-09-29: 257.15619 reviewed native-question identity {E10e, Q10e, RTR} owned by inna-utbildning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:inna-utlagd-fou"
-fields = { "sets" = ["legacy-inna-utlagd-fou"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8385\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9525\n\nY-311 2026-09-29: 257.15616 reviewed native-question identity {E10b, INNA_RND_CONTR_OUT, Q10b, RRDEX} owned by inna-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete"
-fields = { "sets" = ["legacy-innovationssamarbete"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8361\n\nY-311 2026-09-29: 257.15600 reviewed native-question identity {CO, F12, Q12} owned by innovationssamarbete; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder"
-fields = { "sets" = ["legacy-introduktion-av-leveransmetoder"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8319\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9406\n\nY-311 2026-09-29: 257.15578 reviewed native-question identity {C8b, INNO_PCS_LOG, INPSLG, Q8b} owned by introduktion-av-leveransmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder"
-fields = { "sets" = ["legacy-introduktion-av-produktionsmetoder"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8313\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9386\n\nY-311 2026-09-29: 257.15571 reviewed native-question identity {C8a, INNO_PCS_PRD, INPSPD, Q8a} owned by introduktion-av-produktionsmetoder; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter"
-fields = { "sets" = ["legacy-introduktion-av-stodverksamheter"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8325\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9426\n\nY-311 2026-09-29: 257.15579 reviewed native-question identity {C8c, INNO_PCS_ACCT, INPSSU, Q8c} owned by introduktion-av-stodverksamheter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster"
-fields = { "sets" = ["legacy-introduktion-av-tjanster"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8343\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9466\n\nY-311 2026-09-29: 257.15583 reviewed native-question identity {B5b, INNO_PRD_SERV, INPDSV, Q5b} owned by introduktion-av-tjanster; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor"
-fields = { "sets" = ["legacy-introduktion-av-varor"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8337\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9446\n\nY-311 2026-09-29: 257.15582 reviewed native-question identity {B5a, INNO_PRD_GD, INPDGD, Q5a} owned by introduktion-av-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: the reviewed native-question owner has these exact literal columns in distinct pooled survey editions. All supplied normalized names, definitions, operational definitions, types, lengths and units agree, as do finite coding values, labels, descriptors and validity windows (member order is not value meaning). Admit both literal delivery representations only for their exact intersection; retain every original wave scope, coding association and provenance. This does not assert annual questionnaire or statistical equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-metoder-ansvar-beslut"
-fields = { "sets" = ["legacy-introduktion-metoder-ansvar-beslut"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8463\n\nY-311 2026-09-29: 257.20941 reviewed native-question identity {H16b, INNO_PCS_WR_DEC_HRM, ORGWKP} owned by introduktion-metoder-ansvar-beslut; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-metoder-externa-relationer"
-fields = { "sets" = ["legacy-introduktion-metoder-externa-relationer"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8469\n\nY-311 2026-09-29: 257.20942 reviewed native-question identity {H16c, INNO_PCS_OPROC_EXTREL, ORGEXR} owned by introduktion-metoder-externa-relationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-metoder-marknadsforing"
-fields = { "sets" = ["legacy-introduktion-metoder-marknadsforing"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8481\n\nY-311 2026-09-29: 257.20949 reviewed native-question identity {I18b, INNO_PCS_SLS_SERV, MKTPDP} owned by introduktion-metoder-marknadsforing; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-monsterskydd"
-fields = { "sets" = ["legacy-ipr-monsterskydd"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10241\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8565\n\nY-311 2026-09-29: 257.37076 reviewed native-question identity {IPR_OUT_IDESG, PRODSG} owned by ipr-monsterskydd; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-patent"
-fields = { "sets" = ["legacy-ipr-patent"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10181\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8547\n\nY-311 2026-09-29: 257.32713 reviewed native-question identity {IPR_OUT_PAT, PROPAT} owned by ipr-patent; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-salt"
-fields = { "sets" = ["legacy-ipr-salt"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10281\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8577\n\nY-311 2026-09-29: 257.37078 reviewed native-question identity {IPR_OUT_SELL, PROLEX} owned by ipr-salt; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-varumarke"
-fields = { "sets" = ["legacy-ipr-varumarke"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10261\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8571\n\nY-311 2026-09-29: 257.37077 reviewed native-question identity {IPR_OUT_TRDM, PROTM} owned by ipr-varumarke; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:j20c"
-fields = { "sets" = ["legacy-j20c"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8505\n\nY-311 2026-09-29: 257.20957 reviewed native-question identity {ECO_ENO, ECO_ENO_SG, J20c} owned by j20c; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:koncernmarkering"
-fields = { "sets" = ["legacy-koncernmarkering"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8241\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8857\n\nY-311 2026-09-29: 257.4045 reviewed native-question identity {A1, GP, Q1} owned by koncernmarkering; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:koncerntillhorighet"
-fields = { "sets" = ["legacy-koncerntillhorighet"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8439\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9921\n\nY-311 2026-09-29: 257.17402 reviewed native-question identity {ENTGRP_PART, Koncern} owned by koncerntillhorighet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:mest-vardefull-samarbetspartner"
-fields = { "sets" = ["legacy-mest-vardefull-samarbetspartner"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8433\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9053\n\nY-311 2026-09-29: 257.15665 reviewed native-question identity {F14, PMOS, Q14} owned by mest-vardefull-samarbetspartner; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-atervinning"
-fields = { "sets" = ["legacy-miljoinno-atervinning"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10361\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8619\n\nY-311 2026-09-29: 257.46482 reviewed native-question identity {ECO_REA, ECO_REA_SG} owned by miljoinno-atervinning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-fororeningar-slutkonsumtion"
-fields = { "sets" = ["legacy-miljoinno-fororeningar-slutkonsumtion"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10141\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8529\n\nY-311 2026-09-29: 257.20962 reviewed native-question identity {ECO_POS, ECO_POS_SG, J20h} owned by miljoinno-fororeningar-slutkonsumtion; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-fossila"
-fields = { "sets" = ["legacy-miljoinno-fossila"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10441\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8643\n\nY-311 2026-09-29: 257.46492 reviewed native-question identity {ECO_REP, ECO_REP_SG} owned by miljoinno-fossila; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-livscykel"
-fields = { "sets" = ["legacy-miljoinno-livscykel"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10341\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8613\n\nY-311 2026-09-29: 257.46481 reviewed native-question identity {ECO_EXT, ECO_EXT_SG} owned by miljoinno-livscykel; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-mangfald-intern"
-fields = { "sets" = ["legacy-miljoinno-mangfald-intern"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10421\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8637\n\nY-311 2026-09-29: 257.46485 reviewed native-question identity {ECO_BIO, ECO_BIO_SG} owned by miljoinno-mangfald-intern; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-mangfald-kons"
-fields = { "sets" = ["legacy-miljoinno-mangfald-kons"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10401\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8631\n\nY-311 2026-09-29: 257.46484 reviewed native-question identity {ECO_BIU, ECO_BIU_SG} owned by miljoinno-mangfald-kons; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-atervinning-avfall"
-fields = { "sets" = ["legacy-miljoinnovation-atervinning-avfall"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10121\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8523\n\nY-311 2026-09-29: 257.20960 reviewed native-question identity {ECO_REC, ECO_REC_SG, J20f} owned by miljoinnovation-atervinning-avfall; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-fororeningar-foretaget"
-fields = { "sets" = ["legacy-miljoinnovation-fororeningar-foretaget"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10101\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8517\n\nY-311 2026-09-29: 257.20959 reviewed native-question identity {ECO_POL, ECO_POL_SG, J20e} owned by miljoinnovation-fororeningar-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-materialersattning"
-fields = { "sets" = ["legacy-miljoinnovation-materialersattning"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10081\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8511\n\nY-311 2026-09-29: 257.20958 reviewed native-question identity {ECO_SUB, ECO_SUB_SG, J20d} owned by miljoinnovation-materialersattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-minskad-materialatgang"
-fields = { "sets" = ["legacy-miljoinnovation-minskad-materialatgang"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10041\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8499\n\nY-311 2026-09-29: 257.20955 reviewed native-question identity {ECO_MAT, ECO_MAT_SG, J20a} owned by miljoinnovation-minskad-materialatgang; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning"
-fields = { "sets" = ["legacy-nettoomsattning"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10780\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8247\n\nY-311 2026-09-29: 257.4256 reviewed native-question identity {TUR, TUR2022} owned by nettoomsattning; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-inno-ny-for-foretaget"
-fields = { "sets" = ["legacy-omsattningsandel-inno-ny-for-foretaget"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8301\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8937\n\nY-311 2026-09-29: 257.15569 reviewed native-question identity {B7b, Q7b, TURNIN, TUR_PRD_NEW_ENT} owned by omsattningsandel-inno-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-inno-ny-for-marknad"
-fields = { "sets" = ["legacy-omsattningsandel-inno-ny-for-marknad"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8295\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8917\n\nY-311 2026-09-29: 257.15568 reviewed native-question identity {B7a, Q7a, TURNMAR, TUR_PRD_NEW_MKT} owned by omsattningsandel-inno-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-oforandrade-varor"
-fields = { "sets" = ["legacy-omsattningsandel-oforandrade-varor"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8307\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8957\n\nY-311 2026-09-29: 257.15570 reviewed native-question identity {B7c, Q7c, TURNTOT, TUR_PRD_NINN} owned by omsattningsandel-oforandrade-varor; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:outlier"
-fields = { "sets" = ["legacy-outlier"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11135\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8229\n\nY-311 2026-09-29: 257.2468 reviewed native-question identity {OUTLFL, Outlier} owned by outlier; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: same reviewed native construct and complete matching supplied coding, with separate literal operational descriptions and physical type/width. Retain original operation, source attribution and storage per column; no wording normalization, sibling donor, coding union or changed source period."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:pagaende-innovationsaktivitet"
-fields = { "sets" = ["legacy-pagaende-innovationsaktivitet"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8451\n\nY-311 2026-09-29: 257.20901 reviewed native-question identity {D9b, INNA_ONGO, INONG} owned by pagaende-innovationsaktivitet; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)"
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-foretaget"
-fields = { "sets" = ["legacy-produktinnovation-ny-for-foretaget"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11035\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8289\n\nY-311 2026-09-29: 257.15563 reviewed native-question identity {B6b, INNO_PRD_NEW_ENT, NEWFRM, Q6b} owned by produktinnovation-ny-for-foretaget; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:produktinnovation-ny-for-marknad"
-fields = { "sets" = ["legacy-produktinnovation-ny-for-marknad"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11010\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8283\n\nY-311 2026-09-29: 257.15562 reviewed native-question identity {B6a, INNO_PRD_NEW_MKT, NEWMKT, Q6a} owned by produktinnovation-ny-for-marknad; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:samarbete-inom-ovriga-aktiviteter"
-fields = { "sets" = ["legacy-samarbete-inom-ovriga-aktiviteter"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8601\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9073\n\nY-311 2026-09-29: 257.39102 reviewed native-question identity {COOP_NO, COOP_OTH} owned by samarbete-inom-ovriga-aktiviteter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:stod-fran-eu-h2020"
-fields = { "sets" = ["legacy-stod-fran-eu-h2020"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10321\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8595\n\nY-311 2026-09-29: 257.39096 reviewed native-question identity {FUND_EU_HP, FUND_EU_HP2020} owned by stod-fran-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:stod-innovationsaktiviteter-eu-h2020"
-fields = { "sets" = ["legacy-stod-innovationsaktiviteter-eu-h2020"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10301\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8589\n\nY-311 2026-09-29: 257.39094 reviewed native-question identity {FUND_EU_HP2020_RNDINN, FUND_EU_HP_RNDINN} owned by stod-innovationsaktiviteter-eu-h2020; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export: reviewed native-question ownership, literal source editions and columns; names, definitions, operational meanings, units, finite coding and validity agree. Physical storage metadata is column-specific: retain each exact original type and width on its own representation window, including text widths200/18, SQLfloat precision53 versus integer0, and text1 versus integer0 where supplied. No sibling donor, datatype normalization, availability extension or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:totala-innovationsutgifter"
-fields = { "sets" = ["legacy-totala-innovationsutgifter"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8427\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9034\n\nY-311 2026-09-29: 257.15643 reviewed native-question identity {E11e, Q11e, RALLX} owned by totala-innovationsutgifter; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:turpop"
-fields = { "sets" = ["legacy-turpop"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10800\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8649\n\nY-311 2026-09-29: 257.46650 reviewed native-question identity {LillaNs_TUR, TURPOP} owned by turpop; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:turresp"
-fields = { "sets" = ["legacy-turresp"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:10820\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8655\n\nY-311 2026-09-29: 257.46654 reviewed native-question identity {StoraN_TUR, TURRESP} owned by turresp; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nAccepted prepared SCB export and reviewed source-native quantity ownership: names, definitions and operational meanings agree. Exact source columns retain their supplied types and widths independently. Actual posting-list binding establishes Tal as nonmembership on both columns, with no finite coding claims, segments or issues; preserve every raw marker association, account suffix and supplied validity. Source units remain literal, including Antal versus antal företag; no unit correction, coding union, date extension, donor or statistical equivalence is asserted."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou"
-fields = { "sets" = ["legacy-utgifter-for-egen-fou"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8253\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8877\n\nY-311 2026-09-29: 257.7705 reviewed native-question identity {E11a, EXP_INNO_RND_IH, Q11a, RRDINX} owned by utgifter-for-egen-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou"
-fields = { "sets" = ["legacy-utgifter-for-utlagd-fou"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8259\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8897\n\nY-311 2026-09-29: 257.7708 reviewed native-question identity {E11b, EXP_INNO_RND_CONTR_OUT, Q11b, RRDEXX} owned by utgifter-for-utlagd-fou; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-existerande-kunskap"
-fields = { "sets" = ["legacy-utgifter-forvarv-existerande-kunskap"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8373\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:9014\n\nY-311 2026-09-29: 257.15613 reviewed native-question identity {E11d, Q11d, ROEKX} owned by utgifter-forvarv-existerande-kunskap; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-maskiner-programvara"
-fields = { "sets" = ["legacy-utgifter-forvarv-maskiner-programvara"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8367\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8995\n\nY-311 2026-09-29: 257.15612 reviewed native-question identity {E11c, Q11c} owned by utgifter-forvarv-maskiner-programvara; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utvecklare-av-processinnovationer"
-fields = { "sets" = ["legacy-utvecklare-av-processinnovationer"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11060\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8331\n\nY-311 2026-09-29: 257.15580 reviewed native-question identity {C81, Q81} owned by utvecklare-av-processinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nThe complete checked native question has identical quantity names and definitions across these literal source columns. Their explicit finite domains differ only by the supplied nonresponse token (. = Skall ej svara or 9 = Ej godkänt värde, bortfall). Preserve each column’s complete source domain, native list label, and physical storage; no common-domain or recoding claim."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."
-
-[[statement]]
-kind = "set"
-subject = "var:utvecklare-av-produktinnovationer"
-fields = { "sets" = ["legacy-utvecklare-av-produktinnovationer"] }
-evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:8349\nreg_meta_build/curation/registers/scb/innovation-foretag.toml:8976\n\nY-311 2026-09-29: 257.15584 reviewed native-question identity {B51, Q51} owned by utvecklare-av-produktinnovationer; accepted exported-native-meaning policy for the finite 74-family Innovation cohort (Innovation74 accepted prepared-export audit)\n\nPrepared SCB export: approved native-question owner; exact pooled source editions overlap only in this window. Literal columns have identical normalized type, length and operational definition and identical supplied coding content and validity windows. Preserve both original wave scopes and facts; this representation decision does not assert annual questionnaire equivalence."
-caveat = "Catalog identity follows the exported question ID and definition across changing column names; annual questionnaire equivalence has not been independently verified."

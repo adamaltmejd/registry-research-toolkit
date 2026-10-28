@@ -1,1159 +1,1159 @@
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f3 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f3"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Gymnasial yrkesutbildning, som lärling/trainee/praktikant (F3)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5519\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: ivetmob where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: ivetmob"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Gymnasial yrkesutbildning, som lärling/trainee/praktikant (IVETMOB)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5423\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: secmob where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: secmob"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: SECMOB (av frågorna 1, 3, 6)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5495\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: termob where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: termob"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: TERMOB (av frågorna 9, 10)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5507\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: mobeftergy where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: mobeftergy"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: eftergymnasial utbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5435\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: mobfullflangeftergy where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: mobfullflangeftergy"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: fullföljd eftergymnasial utbildning minst 2 år, minst 2 veckor" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5447\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: mobfullflangeftergymin3 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: mobfullflangeftergymin3"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: fullföljd eftergymnasial utbildning minst 2 år, minst 3 månader" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5459\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: mobgrundskola where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: mobgrundskola"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: grundskolan" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5471\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: mobgym where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: mobgym"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Härledd: gymnasieskolan" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5483\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_01 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_01"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, på högstadiet (grundskolan årskurs 7-9)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5411\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: distansvt21_intervall where key = 'v45101' and release = 'r18191'"
+subject = "distansundervisning-grundskola: distansvt21_intervall"
 fields = { "description" = "Perioder av undervisning på distans under VT 2021 - intervall" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:12\n\nBilaga 2 - Variabellista.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: distansla2021_intervall where key = 'v45102' and release = 'r18191'"
+subject = "distansundervisning-grundskola: distansla2021_intervall"
 fields = { "description" = "Perioder av undervisning på distans under läsåret 2020/21 - intervall" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:6\n\nBilaga 2 - Variabellista.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f40_1 where key = 'v109' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f40_1"
 fields = { "label" = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — andra arbete — F40_1" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5131\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f40_2 where key = 'v109' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f40_2"
 fields = { "label" = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — andra arbete — F40_2" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5119\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f30_1 where key = 'v109' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f30_1"
 fields = { "label" = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — huvudsakligt arbete — F30_1" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5155\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f30_2 where key = 'v109' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f30_2"
 fields = { "label" = "Formell tjänstgöringsomfattning, genomsnittliga timmar per vecka — huvudsakligt arbete — F30_2" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5143\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20a where key = 'v46048' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20a"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4315\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20a where key = 'v46048' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20a"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4243\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20a_01 where key = 'v46048' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20a_01"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4291\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20a_01 where key = 'v46048' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20a_01"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4267\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20a_02 where key = 'v46048' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20a_02"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4279\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20a_02 where key = 'v46048' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20a_02"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4255\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20a_04 where key = 'v46048' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20a_04"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4303\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20a_04 where key = 'v46048' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20a_04"
 fields = { "label" = "Fortbildning i att använda digitala verktyg — F20a_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4231\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20c where key = 'v46050' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20c"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4411\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20c where key = 'v46050' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20c"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4339\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20c_01 where key = 'v46050' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20c_01"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4387\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20c_01 where key = 'v46050' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20c_01"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4363\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20c_02 where key = 'v46050' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20c_02"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4375\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20c_02 where key = 'v46050' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20c_02"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4351\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20c_04 where key = 'v46050' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20c_04"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4399\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20c_04 where key = 'v46050' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20c_04"
 fields = { "label" = "Fortbildning i pedagogik vid undervisning på distans — F20c_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4327\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32a_06 where key = 'v30817' and release = 'r11797'"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32a_06"
 fields = { "label" = "Framtidsplaner_Andra studier, t.ex. Komvux, folkhögskola — Till dem som arbetar:\nVad planerar du att göra det närmaste året?\nSvarsalternativ Läsa på folkhögskola" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5239\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32b_04 where key = 'v30817' and release = 'r11797'"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32b_04"
 fields = { "label" = "Framtidsplaner_Andra studier, t.ex. Komvux, folkhögskola — Till dem som inte arbetar:\nVad planerar du att göra det närmaste året?\nSvarsalternativ Läsa på folkhögskola" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5251\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32a_08 where key = 'v30816' and release = 'r11797'"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32a_08"
 fields = { "label" = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola — Till dem som arbetar:\nVad planerar du att göra det närmaste året?\nSvarsalternativ Läsa på universitet/högskola" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5263\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32b_06 where key = 'v30816' and release = 'r11797'"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f32b_06"
 fields = { "label" = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola — Till dem som inte arbetar:\nVad planerar du att göra det närmaste året?\nSvarsalternativ Läsa på universitet/högskola" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5275\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2006 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2006"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2006" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4855\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2007 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2007"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2007" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4867\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2008 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2008"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2008" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4879\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2009 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2009"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2009" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4891\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2010 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2010"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2010" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4903\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2011 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2011"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2011" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4915\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2012 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2012"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2012" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4927\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2013 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2013"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2013" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4939\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2014 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2014"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2014" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4951\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2015 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2015"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2015" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4963\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2016 where key = 'v37047' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: forpeng_bdag_lisa2016"
 fields = { "label" = "Föräldrapenning, antal bruttodagar — ForPeng_Bdag_LISA2016" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4975\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag7 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag7"
 fields = { "label" = "Karriärvägar — Ansvarig för internationella frågor" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4087\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag6 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag6"
 fields = { "label" = "Karriärvägar — Ansvarig för kontakter och samarbete med forskning, andra skolor, andra organisationer eller myndigheter" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4075\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag5 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag5"
 fields = { "label" = "Karriärvägar — Handledareansvarig/ansvarig för lärarstuderande" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4063\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag1 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag1"
 fields = { "label" = "Karriärvägar — Läromedelsansvarig" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4015\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag3 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag3"
 fields = { "label" = "Karriärvägar — Pedagogik- eller ämnesexpert" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4039\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag4 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag4"
 fields = { "label" = "Karriärvägar — Speciella tjänster för lärare med längre utbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4051\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: karrvag2 where key = 'v41933' and release = 'r14883'"
+subject = "lararforsorjningen: karrvag2"
 fields = { "label" = "Karriärvägar — Utbildningsansvarig" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4027\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2006 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2006"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2006" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4987\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2007 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2007"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2007" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4999\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2008 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2008"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2008" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5011\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2009 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2009"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2009" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5023\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2010 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2010"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2010" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5035\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2011 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2011"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2011" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5047\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2012 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2012"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2012" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5059\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2013 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2013"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2013" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5071\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2014 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2014"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2014" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5083\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2015 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2015"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2015" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5095\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: loneink_lisa2016 where key = 'v19568' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: loneink_lisa2016"
 fields = { "label" = "Kontant bruttolön m.m. — LoneInk_LISA2016" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5107\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam8 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam8"
 fields = { "label" = "Krav för att ta examen — Annat" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3787\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam2 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam2"
 fields = { "label" = "Krav för att ta examen — Att lönen ökar med minst 10%" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3715\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam6 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam6"
 fields = { "label" = "Krav för att ta examen — Bättre möjligheter att kunna kombinera studier med arbete" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3763\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam5 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam5"
 fields = { "label" = "Krav för att ta examen — Bättre möjligheter till distansutbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3751\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam7 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam7"
 fields = { "label" = "Krav för att ta examen — Enklare kunna komplettera nuvarande utbildning för att få behörighet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3775\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam3 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam3"
 fields = { "label" = "Krav för att ta examen — Förbättrade arbetsförhållanden inom grund- eller gymnasieutbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3727\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam4 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam4"
 fields = { "label" = "Krav för att ta examen — Förbättrat studiestöd i form av lån eller bidrag" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3739\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: kravexam1 where key = 'v41941' and release = 'r14883'"
+subject = "lararforsorjningen: kravexam1"
 fields = { "label" = "Krav för att ta examen — Ändrade privata/sociala förhållanden" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3703\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7h_02 where key = 'v38917' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7h_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3115\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7h_01 where key = 'v38917' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7h_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3127\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7h_03 where key = 'v38917' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7h_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3151\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7h_04 where key = 'v38917' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7h_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Annan/okänd anledning — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3139\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7b_02 where key = 'v38911' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7b_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3163\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7b_01 where key = 'v38911' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7b_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3175\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7b_03 where key = 'v38911' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7b_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3199\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7b_04 where key = 'v38911' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7b_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Etnisk tillhörighet — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3187\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7f_02 where key = 'v38915' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7f_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3211\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7f_01 where key = 'v38915' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7f_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3223\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7f_03 where key = 'v38915' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7f_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3247\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7f_04 where key = 'v38915' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7f_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Funktionsnedsättning — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3235\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7c_02 where key = 'v38912' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7c_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Kön — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3259\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7c_01 where key = 'v38912' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7c_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Kön — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3271\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7c_03 where key = 'v38912' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7c_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Kön — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3295\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7c_04 where key = 'v38912' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7c_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Kön — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3283\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7d_02 where key = 'v38913' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7d_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3307\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7d_01 where key = 'v38913' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7d_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3319\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7d_03 where key = 'v38913' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7d_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3343\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7d_04 where key = 'v38913' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7d_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Könsöverskridande identitet eller uttryck — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3331\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7a_02 where key = 'v38910' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7a_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3355\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7a_01 where key = 'v38910' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7a_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3367\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7a_03 where key = 'v38910' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7a_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3391\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7a_04 where key = 'v38910' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7a_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Religion eller trosuppfattning — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3379\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7e_02 where key = 'v38914' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7e_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3403\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7e_01 where key = 'v38914' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7e_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3415\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7e_03 where key = 'v38914' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7e_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Sexuell läggning — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3439\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7e_04 where key = 'v38914' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7e_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Sexuell läggning — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3427\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7g_02 where key = 'v38916' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7g_02"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Ålder — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3451\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7g_01 where key = 'v38916' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7g_01"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Ålder — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3463\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7g_03 where key = 'v38916' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7g_03"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Ålder — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3487\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f7g_04 where key = 'v38916' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f7g_04"
 fields = { "label" = "Kränkande särbehandling under utbildningen - Ålder — Nej, aldrig/inte aktuellt" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3475\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20e where key = 'v46052' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20e"
 fields = { "label" = "Löpande möten i personalgruppen — F20e" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4507\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20e where key = 'v46052' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20e"
 fields = { "label" = "Löpande möten i personalgruppen — F20e" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4435\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20e_01 where key = 'v46052' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20e_01"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4483\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20e_01 where key = 'v46052' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20e_01"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4459\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20e_02 where key = 'v46052' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20e_02"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4471\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20e_02 where key = 'v46052' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20e_02"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4447\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20e_04 where key = 'v46052' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20e_04"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4495\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20e_04 where key = 'v46052' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20e_04"
 fields = { "label" = "Löpande möten i personalgruppen — F20e_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4423\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20b where key = 'v46049' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20b"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4603\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20b where key = 'v46049' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20b"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4531\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20b_01 where key = 'v46049' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20b_01"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4579\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20b_01 where key = 'v46049' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20b_01"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_01" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4555\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20b_02 where key = 'v46049' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20b_02"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4567\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20b_02 where key = 'v46049' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20b_02"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_02" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4543\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20b_04 where key = 'v46049' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20b_04"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4591\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20b_04 where key = 'v46049' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20b_04"
 fields = { "label" = "Löpande stöd för att använda digitala verktyg — F20b_04" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4519\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20d_02 where key = 'v46051' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20d_02"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Inte under någon period (VT2020 - mars 2022)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4675\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20d_02 where key = 'v46051' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20d_02"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Inte under någon period (VT2020 - mars 2022)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4639\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20d_04 where key = 'v46051' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20d_04"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under HT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4699\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20d_04 where key = 'v46051' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20d_04"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under HT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4615\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20d where key = 'v46051' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20d"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under VT2020 - VT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4723\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20d where key = 'v46051' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20d"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under VT2020 - VT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4627\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20d_03 where key = 'v46051' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20d_03"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under januari - mars 2022" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4711\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20d_03 where key = 'v46051' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20d_03"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Under januari - mars 2022" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4651\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f20d_01 where key = 'v46051' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f20d_01"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Vet inte" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4687\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-gymnasieskolan: f20d_01 where key = 'v46051' and release = 'r18504'"
+subject = "distansundervisning-gymnasieskolan: f20d_01"
 fields = { "label" = "Löpande stöd för att utveckla pedagogiken vid undervisning på distans — Vet inte" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4663\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f8_06 where key = 'v38918' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f8_06"
 fields = { "label" = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Annat:" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3499\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f8_04 where key = 'v38918' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f8_04"
 fields = { "label" = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Genom härskartekniker, t.ex. osynliggöranden eller förlöjligande" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3511\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f8_05 where key = 'v38918' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f8_05"
 fields = { "label" = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Jag blev utfryst" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3523\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f8_03 where key = 'v38918' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f8_03"
 fields = { "label" = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Jag undanhölls information, service eller hjälp jag hade rätt till" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3535\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f8_02 where key = 'v38918' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f8_02"
 fields = { "label" = "Negativ särbehandling under utbildningen — Vilken/vilka former av negativ särbehandling utsattes du för under forskarutbildningen?\n- Mina handlingar eller yttranden ignorerades" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3547\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak1 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak1"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetets innehåll" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4099\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak6 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak6"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetsbelastning i yrket" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4171\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak10 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak10"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Arbetsledningen/arbetets organisation" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4111\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak8 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak8"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Fysiska arbetsmiljön" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4195\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak5 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak5"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Karriärmöjligheter i yrket" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4159\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak3 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak3"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Lönen" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4135\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak2 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak2"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Möjligheter till kompetensutveckling" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4123\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak7 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak7"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Möjligheter till medverkan/påverkan vid beslut" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4183\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak9 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak9"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Psykosociala arbetsmiljön" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4207\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: arbfak4 where key = 'v41922' and release = 'r14883'"
+subject = "lararforsorjningen: arbfak4"
 fields = { "label" = "Nuvarande huvudsakliga arbete jämfört med tidigare — Yrkets status" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4147\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12a_02 where key = 'v38921' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12a_02"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3559\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12a_01 where key = 'v38921' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12a_01"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3571\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12a_03 where key = 'v38921' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12a_03"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3595\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12a_04 where key = 'v38921' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12a_04"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Fysisk beröring, tafsande — Nej, aldrig" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3583\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12c_02 where key = 'v38923' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12c_02"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3607\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12c_01 where key = 'v38923' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12c_01"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3619\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12c_03 where key = 'v38923' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12c_03"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3643\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12c_04 where key = 'v38923' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12c_04"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Kommentarer, bilder, texter, blickar, kroppsspråk eller liknande — Nej, aldrig" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3631\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12b_02 where key = 'v38922' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12b_02"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av annan person på lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3655\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12b_01 where key = 'v38922' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12b_01"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av handledare och/eller lärare" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3667\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12b_03 where key = 'v38922' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12b_03"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Av person utanför lärosätet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3691\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: f12b_04 where key = 'v38922' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: f12b_04"
 fields = { "label" = "Sexuellt kränkande handlingar under utbildningen - Sexuellt övergrepp — Nej, aldrig" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3679\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f19_02 where key = 'v46054' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f19_02"
 fields = { "label" = "Skolan har vid behov ordnat att elever fick komma till skolan — Inte under någon period (VT2020 - mars 2022)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4735\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f19_04 where key = 'v46054' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f19_04"
 fields = { "label" = "Skolan har vid behov ordnat att elever fick komma till skolan — Under HT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4759\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f19 where key = 'v46054' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f19 where key = 'v46054'"
 fields = { "label" = "Skolan har vid behov ordnat att elever fick komma till skolan — Under VT2020 - VT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4783\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f19_03 where key = 'v46054' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f19_03"
 fields = { "label" = "Skolan har vid behov ordnat att elever fick komma till skolan — Under januari - mars 2022" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4771\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f19_01 where key = 'v46054' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f19_01"
 fields = { "label" = "Skolan har vid behov ordnat att elever fick komma till skolan — Vet inte" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4747\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f18_02 where key = 'v46053' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f18_02"
 fields = { "label" = "Skolan har vid behov ordnat bredband hos elever — Inte under någon period (VT2020 - mars 2022)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4795\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f18_04 where key = 'v46053' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f18_04"
 fields = { "label" = "Skolan har vid behov ordnat bredband hos elever — Under HT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4807\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f18 where key = 'v46053' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f18"
 fields = { "label" = "Skolan har vid behov ordnat bredband hos elever — Under VT2020 - VT2021" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4831\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f18_03 where key = 'v46053' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f18_03"
 fields = { "label" = "Skolan har vid behov ordnat bredband hos elever — Under januari - mars 2022" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4819\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: f18_01 where key = 'v46053' and release = 'r18503'"
+subject = "distansundervisning-grundskola: f18_01"
 fields = { "label" = "Skolan har vid behov ordnat bredband hos elever — Vet inte" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4843\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt18 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt18"
 fields = { "label" = "Skäl byta arbete som lärare — Annat" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3907\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt9 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt9"
 fields = { "label" = "Skäl byta arbete som lärare — Arbetsledningen/brister i arbetsorganisationen" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4003\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt5 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt5"
 fields = { "label" = "Skäl byta arbete som lärare — Bristande karriärmöjligheter i yrket" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3955\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt13 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt13"
 fields = { "label" = "Skäl byta arbete som lärare — Dåliga möjligheter till kompetensutveckling" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3847\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt16 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt16"
 fields = { "label" = "Skäl byta arbete som lärare — Dåligt handledarstöd" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3883\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt7 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt7"
 fields = { "label" = "Skäl byta arbete som lärare — Fysiska arbetsmiljön" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3979\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt3 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt3"
 fields = { "label" = "Skäl byta arbete som lärare — För liten/för stor tjänstgöringsomfattning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3931\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt10 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt10"
 fields = { "label" = "Skäl byta arbete som lärare — Lite flexibilitet i dispositionen av egen arbetstid" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3811\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt11 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt11"
 fields = { "label" = "Skäl byta arbete som lärare — Lite tid att planera arbetet" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3823\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt4 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt4"
 fields = { "label" = "Skäl byta arbete som lärare — Låg lön" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3943\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt15 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt15"
 fields = { "label" = "Skäl byta arbete som lärare — Mycket administrativa arbetsuppgifter" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3871\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt6 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt6"
 fields = { "label" = "Skäl byta arbete som lärare — Mycket övertidsarbete" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3967\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt17 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt17"
 fields = { "label" = "Skäl byta arbete som lärare — Privata/sociala skäl" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3895\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt8 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt8"
 fields = { "label" = "Skäl byta arbete som lärare — Psykosociala arbetsmiljön" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3991\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt14 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt14"
 fields = { "label" = "Skäl byta arbete som lärare — Stora barn-/elev-/studerandegrupper" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3859\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt1 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt1"
 fields = { "label" = "Skäl byta arbete som lärare — Svårt att få förlängd tjänst/tillsvidaretjänst" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3799\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt12 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt12"
 fields = { "label" = "Skäl byta arbete som lärare — Svårt att kunna medverka i eller påverka beslut" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3835\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lararforsorjningen: skalbyt2 where key = 'v41928' and release = 'r14883'"
+subject = "lararforsorjningen: skalbyt2"
 fields = { "label" = "Skäl byta arbete som lärare — Ville prova på ett annat yrke" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:3919\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_03 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_03"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom 2- till 3-årig gymnasieutbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5167\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_04 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_04"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom 4-årig gymnasieutbildning" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5179\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_06 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_06"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom eftergymnasial utbildning kortare än 2 år" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5203\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_02 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_02"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom gymnasieutbildning kortare än 2 år" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5191\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_05 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_05"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: ja, inom vuxenutbildning eller folkhögskola" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5215\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "internationell-rorlighet: f6_07 where key = 'v36194' and release = 'r11264'"
+subject = "internationell-rorlighet: f6_07"
 fields = { "label" = "Utlandsvistelse inom olika utbildningsformer — Svar: nej" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5227\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f18_2 where key = 'v6267' and release = 'r11797'"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: f18_2"
 fields = { "label" = "Ålder — Hur gammal var du när du fick det arbetet? (F18_2)" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:4219\n\nComplete accepted source audit: Utbildningsanalyser36 native families/314 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Utbildningsanalyser36-source-proof.json."
 
@@ -1171,12 +1171,12 @@ evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:5305\
 
 [[statement]]
 kind = "set"
-subject = "doktorsexaminerades-villkor: personnr where key = 'v57' and release = 'r13104'"
+subject = "doktorsexaminerades-villkor: personnr"
 fields = { "description" = "Löpnummer i populationen" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "distansundervisning-grundskola: vt_veckor_termin where key = 'v46080' and release = 'r18503'"
+subject = "distansundervisning-grundskola: vt_veckor_termin"
 fields = { "description" = "Terminens längd" }
 evidence = "reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

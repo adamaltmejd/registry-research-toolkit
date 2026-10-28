@@ -1,1098 +1,420 @@
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu732 where key = 'v85' and release = 'r16154'"
+subject = "individregister: isu732"
 fields = { "label" = "Faktorinkomst — definition 2, eget hem taxeringsmässigt (ISU732)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6126\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r14912'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r14977'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r15462'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r16132'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r16243'"
+subject = "kosthushall: cfaktz @1996"
 fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6114\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r2804'"
+subject = "kosthushall: cfaktz @1997..2000,2004..2008"
 fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r3702'"
+subject = "kosthushall: cfaktz @2009..2010,2012..2013"
 fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6102\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r3860'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6102\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r3879'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r3997'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6102\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r4935'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6102\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r5823'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6102\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r6131'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r6180'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cfaktz where key = 'v85' and release = 'r6197'"
-fields = { "label" = "Faktorinkomst — lön, blandad inkomst, kapitalinkomst och kapitalvinst brutto (CFAKTZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6090\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r12271'"
+subject = "individregister: cfakt"
 fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r14913'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r14993'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r15459'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r16154'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r16160'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r17528'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r3105'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r3742'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r3818'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r3897'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r3998'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r4233'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r4933'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r5814'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r6129'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r6182'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cfakt where key = 'v85' and release = 'r6198'"
-fields = { "label" = "Faktorinkomst — lön, företagarinkomst, fåmansföretag, ränta, utdelning och kapitalvinst (CFAKT)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6078\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r14912'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r14977'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r15462'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r16132'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r16243'"
+subject = "kosthushall: cftagz @1996"
 fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6174\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r2804'"
+subject = "kosthushall: cftagz @1997..2000,2004..2010,2012..2013"
 fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r3702'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r3860'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r3879'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r3997'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r4935'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r5823'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r6131'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r6180'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "kosthushall: cftagz where key = 'v4502' and release = 'r6197'"
-fields = { "label" = "Företagarinkomst — aktiv/passiv näringsverksamhet inkl. egenavgiftsgrundande inkomst m.m. (CFTAGZ)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6162\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ifa707 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: ifa707"
 fields = { "label" = "Företagarinkomst — hyresfastighet (IFA707)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6222\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r12271'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r14913'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r14993'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r15459'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r16154'"
+subject = "individregister: cftag @1975"
 fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6150\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r16160'"
+subject = "individregister: cftag @1996..2000,2003..2013"
 fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r17528'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r3105'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r3742'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r3818'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r3897'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r3998'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r4233'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r4933'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r5814'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r6129'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r6182'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: cftag where key = 'v4502' and release = 'r6198'"
-fields = { "label" = "Företagarinkomst — inkomst/underskott av näringsverksamhet (CFTAG)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6138\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ijb719 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: ijb719"
 fields = { "label" = "Företagarinkomst — jordbruksfastighet (IJB719)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6210\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: irr716 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: irr716"
 fields = { "label" = "Företagarinkomst — rörelse (IRR716)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6198\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu701 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: isu701"
 fields = { "label" = "Företagarinkomst — taxeringsmässigt alternativ 1, rörelse och jordbruk (ISU701)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6186\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu003 where key = 'v1173' and release = 'r16154'"
+subject = "individregister: isu003"
 fields = { "label" = "Inkomst av tjänst — A-inkomst" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6234\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: itp073 where key = 'v1173' and release = 'r16154'"
+subject = "individregister: itp073"
 fields = { "label" = "Inkomst av tjänst — B-inkomst" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6246\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r3105'"
+subject = "individregister: ttj"
 fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r3742'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
+subject = "individregister: bngr @2004..2006"
+fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
+evidence = "reg_meta_build/curation/registers/scb/hek.toml:6378\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r3818'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r3897'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r3998'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r4233'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r4933'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r5814'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r6129'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r6182'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ttj where key = 'v1173' and release = 'r6198'"
-fields = { "label" = "Inkomst av tjänst — beräknad från deklarerade belopp" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6258\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r3105'"
+subject = "individregister: bngr @2007..2011"
 fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r3742'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r3818'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r3897'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r3998'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r4233'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6354\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r4933'"
+subject = "individregister: bngr @2012..2013"
 fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6366\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r5814'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6366\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r6129'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6378\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r6182'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6378\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr where key = 'v2702' and release = 'r6198'"
-fields = { "label" = "Näringsgren för individ — kontrolluppgifter och Företagsdatabasen inkl. näringsidkare" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6378\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r3105'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6318\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r3742'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6318\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r3818'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6318\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r3897'"
+subject = "individregister: bkungr @2004..2007"
 fields = { "label" = "Näringsgren för individ — största anställningen" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6330\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r3998'"
+subject = "individregister: bkungr @2008..2011"
 fields = { "label" = "Näringsgren för individ — största anställningen" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6318\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r4233'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6318\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r4933'"
+subject = "individregister: bkungr @2012..2013"
 fields = { "label" = "Näringsgren för individ — största anställningen" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6342\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r5814'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6342\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r6129'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6330\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r6182'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6330\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr where key = 'v2702' and release = 'r6198'"
-fields = { "label" = "Näringsgren för individ — största anställningen" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6330\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: afahhalv where key = 'v19806' and release = 'r5814'"
+subject = "individregister: afahhalv"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,15 % (AFAHHALV)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6294\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r3105'"
+subject = "individregister: afa02"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r3742'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r3818'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r3998'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r4233'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: afa02 where key = 'v19806' and release = 'r4933'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AFA02)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6270\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ahy02 where key = 'v19806' and release = 'r3897'"
+subject = "individregister: ahy02"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — avgift 0,2 % (AHY02)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6282\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ahy085 where key = 'v19806' and release = 'r15459'"
+subject = "individregister: ahy085"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:6306\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ahy085 where key = 'v19806' and release = 'r16160'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6306\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ahy085 where key = 'v19806' and release = 'r17528'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,85 %, värdeår 1985–1988 (AHY085)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:6306\n\nA sibling in a family of subquestions under one SCB label (#1261). SCB names it with the bare label, so it cannot be told apart from its siblings; name the distinguishing subquestion from its own supplied definition, which stays unchanged."
-
-[[statement]]
-kind = "set"
-subject = "individregister: carb03 where key = 'v75' and release = 'r12271'"
+subject = "individregister: carb03"
 fields = { "label" = "Arbetsinkomst — CARB03" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5133\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cmix03 where key = 'v1080' and release = 'r12271'"
+subject = "individregister: cmix03"
 fields = { "label" = "Blandad inkomst — CMIX03" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5145\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu733 where key = 'v85' and release = 'r16154'"
+subject = "individregister: isu733"
 fields = { "label" = "Faktorinkomst — definition 3, eget hem som ränta på eget kapital med medelränta (ISU733)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5109\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu734 where key = 'v85' and release = 'r16154'"
+subject = "individregister: isu734"
 fields = { "label" = "Faktorinkomst — definition 4, eget hem som ränta på eget kapital 3 % (ISU734)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5121\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cfakt03 where key = 'v85' and release = 'r12271'"
+subject = "individregister: cfakt03"
 fields = { "label" = "Faktorinkomst — oklar definition (CFAKT03)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5097\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu703 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: isu703"
 fields = { "label" = "Företagarinkomst — definition 1, rörelse, jordbruk och hyresfastighet (ISU703)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5181\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu704 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: isu704"
 fields = { "label" = "Företagarinkomst — definition 2, rörelse, jordbruk och hyresfastighet (ISU704)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5193\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: cftag03 where key = 'v4502' and release = 'r12271'"
+subject = "individregister: cftag03"
 fields = { "label" = "Företagarinkomst — oklar definition (CFTAG03)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5157\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu702 where key = 'v4502' and release = 'r16154'"
+subject = "individregister: isu702"
 fields = { "label" = "Företagarinkomst — taxeringsmässigt alternativ 2, rörelse, jordbruk och hyresfastighet (ISU702)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5169\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knapris where key = 'v40363' and release = 'r14993'"
+subject = "individregister: knapris"
 fields = { "label" = "Försäljningspris vid avyttring av näringsfastighet — KNAPRIS" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5445\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knapris2 where key = 'v40363' and release = 'r12271'"
+subject = "individregister: knapris2"
 fields = { "label" = "Inkomst av näringsfastighet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nFörekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5457\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: isu1161 where key = 'v1173' and release = 'r16154'"
+subject = "individregister: isu1161"
 fields = { "label" = "Inkomst av tjänst — summa av högst 5 delposter" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5337\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa1012 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa1012"
 fields = { "label" = "Län — Länskod för det län i vilken fastigheten (egna hem) är belägen.\n\nVariabeln kan ha max 4 förekomster.\nDetta är förekomst nummer 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5529\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa1013 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa1013"
 fields = { "label" = "Län — Länskod för det län i vilken fastigheten (egna hem) är belägen.\n\nVariabeln kan ha max 4 förekomster.\nDetta är förekomst nummer 3." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5541\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa1014 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa1014"
 fields = { "label" = "Län — Länskod för det län i vilken fastigheten (egna hem) är belägen.\n\nVariabeln kan ha max 4 förekomster.\nDetta är förekomst nummer 4." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5553\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa2011 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa2011"
 fields = { "label" = "Län — Länskod för det län i vilken fritidsfastigheten är belägen.\nMax 4 förekomster.\n\nDetta är förekomst 1" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5565\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa2012 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa2012"
 fields = { "label" = "Län — Länskod för det län i vilken fritidsfastigheten är belägen.\nMax 4 förekomster.\n\nDetta är förekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5577\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa2013 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa2013"
 fields = { "label" = "Län — Länskod för det län i vilken fritidsfastigheten är belägen.\nMax 4 förekomster.\n\nDetta är förekomst 3." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5589\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfa2014 where key = 'v49' and release = 'r16154'"
+subject = "individregister: kfa2014"
 fields = { "label" = "Län — Länskod för det län i vilken fritidsfastigheten är belägen.\nMax 4 förekomster.\n\nDetta är förekomst 4." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5601\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bkungr02 where key = 'v2702' and release = 'r3105'"
+subject = "individregister: bkungr02"
 fields = { "label" = "Näringsgren för individ — största anställningen, SNI2002" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5397\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bkungr02 where key = 'v2702' and release = 'r3742'"
-fields = { "label" = "Näringsgren för individ — största anställningen, SNI2002" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5397\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr02 where key = 'v2702' and release = 'r3818'"
-fields = { "label" = "Näringsgren för individ — största anställningen, SNI2002" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5397\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr02 where key = 'v2702' and release = 'r3998'"
-fields = { "label" = "Näringsgren för individ — största anställningen, SNI2002" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5397\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bkungr07 where key = 'v2702' and release = 'r3897'"
+subject = "individregister: bkungr07"
 fields = { "label" = "Näringsgren för individ — största anställningen, SNI2007" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5409\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r12271'"
+subject = "individregister: bngr2 @1996..2000,2003"
 fields = { "label" = "Näringsgren — BNGR2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r14913'"
+subject = "individregister: bngr2 @2004..2006"
 fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+evidence = "reg_meta_build/curation/registers/scb/hek.toml:5229\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r14993'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r15459'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r16160'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r17528'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5241\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r3105'"
+subject = "individregister: bngr2 @2007..2009,2011..2013"
 fields = { "label" = "Näringsgren — BNGR2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r3742'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r3818'"
+subject = "individregister: bngr2 where release = 'r3818'"
 fields = { "label" = "Näringsgren — BNGR2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5253\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r3897'"
+subject = "individregister: bngr2 where release = 'r3998'"
 fields = { "label" = "Näringsgren — BNGR2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r3998'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r4233'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r4933'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r5814'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5217\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r6129'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5229\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r6182'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5229\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bngr2 where key = 'v4027' and release = 'r6198'"
-fields = { "label" = "Näringsgren — BNGR2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5229\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: knavm1 where key = 'v40365' and release = 'r12271'"
+subject = "individregister: knavm1"
 fields = { "label" = "Omkostnadsbelopp för näringsfastighet, förekomst1" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5421\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knavm2 where key = 'v40365' and release = 'r12271'"
+subject = "individregister: knavm2"
 fields = { "label" = "Omkostnadsbelopp för näringsfastighet, förekomst2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5433\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kskop2 where key = 'v40340' and release = 'r12271'"
-fields = { "label" = "Omkostnadsbeloppet — KSKOP2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5481\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: kskop2 where key = 'v40340' and release = 'r14993'"
+subject = "individregister: kskop2 @1999"
 fields = { "label" = "Omkostnadsbeloppet — KSKOP2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5469\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knakop1 where key = 'v40340' and release = 'r12271'"
+subject = "individregister: kskop2 @2003"
+fields = { "label" = "Omkostnadsbeloppet — KSKOP2" }
+evidence = "reg_meta_build/curation/registers/scb/hek.toml:5481\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: knakop1"
 fields = { "label" = "Omkostnadsbeloppet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nOmkostnadsbelopp för näringsfastighet.\nFörekomst 1." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5493\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knakop2 where key = 'v40340' and release = 'r12271'"
+subject = "individregister: knakop2"
 fields = { "label" = "Omkostnadsbeloppet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nOmkostnadsbelopp för näringsfastighet.\nFörekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5505\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfna2 where key = 'v4733' and release = 'r12271'"
+subject = "individregister: kfna2"
 fields = { "label" = "Reaförlust, näringsfastighet — Från DEK - Realisationsvinst/realisationsförlust från deklaration\n\nFörekomst 2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5313\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kfna2 where key = 'v4733' and release = 'r14913'"
-fields = { "label" = "Reaförlust, näringsfastighet — Från DEK - Realisationsvinst/realisationsförlust från deklaration\n\nFörekomst 2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5313\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: kvna2 where key = 'v4734' and release = 'r12271'"
+subject = "individregister: kvna2"
 fields = { "label" = "Reavinst, näringsfastighet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nFörekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5325\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kvna2 where key = 'v4734' and release = 'r14913'"
-fields = { "label" = "Reavinst, näringsfastighet — Uppgifter från deklarationsbilagor från Skatteverket.\n\nFörekomst 2." }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5325\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bksreg2 where key = 'v41429' and release = 'r14993'"
+subject = "individregister: bksreg2"
 fields = { "label" = "Typ av regel, deklaration — Uppgifter från deklarationsbilagor från Skatteverket.\n\nTyp av regel vid avyttring av fastighet, förekomst 2. Från bilaga K5." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5517\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: bksreg2 where key = 'v41429' and release = 'r15459'"
-fields = { "label" = "Typ av regel, deklaration — Uppgifter från deklarationsbilagor från Skatteverket.\n\nTyp av regel vid avyttring av fastighet, förekomst 2. Från bilaga K5." }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5517\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bksreg2 where key = 'v41429' and release = 'r16160'"
-fields = { "label" = "Typ av regel, deklaration — Uppgifter från deklarationsbilagor från Skatteverket.\n\nTyp av regel vid avyttring av fastighet, förekomst 2. Från bilaga K5." }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5517\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: bksreg2 where key = 'v41429' and release = 'r17528'"
-fields = { "label" = "Typ av regel, deklaration — Uppgifter från deklarationsbilagor från Skatteverket.\n\nTyp av regel vid avyttring av fastighet, förekomst 2. Från bilaga K5." }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5517\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ahy075 where key = 'v19806' and release = 'r15459'"
+subject = "individregister: ahy075"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 0,75 %, värdeår 1987–1990, nybyggnation 1991–1992 (AHY075)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5361\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ahy15 where key = 'v19806' and release = 'r15459'"
+subject = "individregister: ahy15"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,5 %, värdeår 1986 eller tidigare (AHY15)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5373\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ahy17 where key = 'v19806' and release = 'r15459'"
+subject = "individregister: ahy17 @1996..1997"
+fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)" }
+evidence = "reg_meta_build/curation/registers/scb/hek.toml:5349\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: ahy17 @1998"
 fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5385\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: ahy17 where key = 'v19806' and release = 'r16160'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5349\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: ahy17 where key = 'v19806' and release = 'r17528'"
-fields = { "label" = "Underlag för fastighetsavgift avseende hyreshus — skatt 1,7 %, värdeår före 1983 (AHY17)" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5349\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: kbtupp2 where key = 'v4719' and release = 'r12271'"
+subject = "individregister: kbtupp2"
 fields = { "label" = "Uppskovsavdrag bostadsrätt — Uppgifter från deklarationsbilagor från Skatteverket.\n\nAvser Tidigare uppskovsavdrag för bostadsrätt. Förekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5205\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: kbtupp2 where key = 'v4719' and release = 'r14993'"
-fields = { "label" = "Uppskovsavdrag bostadsrätt — Uppgifter från deklarationsbilagor från Skatteverket.\n\nAvser Tidigare uppskovsavdrag för bostadsrätt. Förekomst 2." }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5205\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: kstupp2 where key = 'v40348' and release = 'r12271'"
-fields = { "label" = "Uppskovsbelopp — KSTUPP2" }
-evidence = "reg_meta_build/curation/registers/scb/hek.toml:5277\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "individregister: kstupp2 where key = 'v40348' and release = 'r14993'"
+subject = "individregister: kstupp2 @1999"
 fields = { "label" = "Uppskovsbelopp — KSTUPP2" }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5265\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knatupp1 where key = 'v40348' and release = 'r12271'"
+subject = "individregister: kstupp2 @2003"
+fields = { "label" = "Uppskovsbelopp — KSTUPP2" }
+evidence = "reg_meta_build/curation/registers/scb/hek.toml:5277\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individregister: knatupp1"
 fields = { "label" = "Uppskovsbelopp — Uppgifter från deklarationsbilagor från Skatteverket.\n\nAvser Tidigare uppskovsbelopp, näringsfastighet.\nFörekomst 1." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5289\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individregister: knatupp2 where key = 'v40348' and release = 'r12271'"
+subject = "individregister: knatupp2"
 fields = { "label" = "Uppskovsbelopp — Uppgifter från deklarationsbilagor från Skatteverket.\n\nAvser Tidigare uppskovsbelopp, näringsfastighet.\nFörekomst 2." }
 evidence = "reg_meta_build/curation/registers/scb/hek.toml:5301\n\nComplete accepted source audit: HEK19/420 originals or Inträdet16/229 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-HEK19-Intradet16-source-proof.json."

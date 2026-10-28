@@ -30,6 +30,7 @@ from rebuild_convert_classifications import convert as classifications
 from rebuild_convert_deferred import convert as deferred
 from rebuild_convert_groups import normalize_sets
 from rebuild_convert_identity import IdentityProjection
+from rebuild_convert_selectors import collapse
 
 ROOT = Path(__file__).resolve().parents[1]
 # simplify: resolver finding codes are string literals; replace this inventory if codes become computed.
@@ -1292,6 +1293,7 @@ class Converter:
             "source_entries": len(self.results),
             "outcomes": dict(outcomes),
             "statement_counts": dict(sorted(self.counts.items())),
+            "selector_collapse": self.selector_collapse,
             "identity_audit": dict(self.identity_audit),
             "grouping_audit": getattr(self, "grouping_audit", {}),
             "grouping_deferred": getattr(self, "grouping_deferred", []),
@@ -1495,6 +1497,7 @@ def main():
         converter.results.append(result)
     converter.normalize_identity()
     normalize_sets(converter)
+    collapse(converter)
     converter.write(args.write_curation)
     lock = {"status": "not run", "refusals": []}
     converter.report(lock)

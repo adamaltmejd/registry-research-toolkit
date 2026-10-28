@@ -8,288 +8,36 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:48\n\
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r11515'"
+subject = "grundskola-nationella-prov-ak-6: personnr"
 fields = { "description" = "Löpnummer i populationen" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r12859'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r13645'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r18326'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r18949'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r19606'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r20202'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r4335'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r5508'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r5629'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r7315'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: personnr where key = 'v57' and release = 'r9915'"
-fields = { "description" = "Löpnummer i populationen" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:6\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_b_prp where key = 'v27377' and release = 'r19606'"
+subject = "grundskola-nationella-prov-ak-6: sv_b_prp"
 fields = { "description" = "Resultat på delprov B i svenska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_b_prp where key = 'v27377' and release = 'r20202'"
-fields = { "description" = "Resultat på delprov B i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:30\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_c_prp where key = 'v27378' and release = 'r19606'"
+subject = "grundskola-nationella-prov-ak-6: sv_c_prp"
 fields = { "description" = "Resultat på delprov C i svenska" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: sv_c_prp where key = 'v27378' and release = 'r20202'"
-fields = { "description" = "Resultat på delprov C i svenska" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:36\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r11515'"
+subject = "grundskola-nationella-prov-ak-6: skolenhetskod"
 fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r12859'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r13645'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r18326'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r18949'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r19606'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r20202'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r5629'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r7315'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolenhetskod where key = 'v30366' and release = 'r9915'"
-fields = { "description" = "Skolenhetskod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:12\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r11515'"
+subject = "grundskola-nationella-prov-ak-6: skolkod"
 fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
 
 [[statement]]
 kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r12859'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r13645'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r18326'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r18949'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r4335'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r5508'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r5629'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r7315'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: skolkod where key = 'v104' and release = 'r9915'"
-fields = { "description" = "Skolkod (löpnummersätts vid leverans)" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:18\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r11515'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r12859'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r13645'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r18326'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r18949'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r19606'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r20202'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r4335'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r5508'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r5629'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r7315'"
-fields = { "description" = "Skolkommun" }
-evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-[[statement]]
-kind = "set"
-subject = "grundskola-nationella-prov-ak-6: kommun where key = 'v14815' and release = 'r9915'"
+subject = "grundskola-nationella-prov-ak-6: kommun"
 fields = { "description" = "Skolkommun" }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-prov-ak6.toml:24\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"

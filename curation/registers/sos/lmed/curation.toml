@@ -1,24 +1,24 @@
 
 [[statement]]
 kind = "set"
-subject = "lmed-vara: varuid @2005-07-01.. where key = 'n:varuid'"
+subject = "lmed-vara: varuid"
 fields = { "description" = "Anger ID för varan", "label" = "ID för varan" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lmed-vara: varutyp @2005-07-01.. where key = 'n:varutyp'"
+subject = "lmed-vara: varutyp"
 fields = { "description" = "Artikelns varutyp", "label" = "Artikelns varutyp" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lmed: varuid @2005-07-01.. where key = 'n:varuid'"
+subject = "lmed: varuid"
 fields = { "description" = "Expedierad varuidentitet. Apoteket AB:s varuidentitet på en expedierad vara. Id-begreppet användes fram till oktober 2010.", "label" = "Varuidentitet expedierad" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:267\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "lmed: varutyp @2005-07-01.. where key = 'n:varutyp'"
+subject = "lmed: varutyp"
 fields = { "description" = "Varutyp.", "label" = "Varutyp" }
 evidence = "reg_meta_build/curation/registers/sos/lmed.toml:275\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
