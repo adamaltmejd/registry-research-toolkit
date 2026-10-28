@@ -260,7 +260,8 @@ impl ValueSet {
 /// public id. `kind` is `register`, `table`, `release` or `variable`. Exactly one of `register`
 /// (a register handle) and `register_name` (a register *name* as the source writes it, matched
 /// by fold) is set. `table` is a table handle (table and release ends); `key` a release handle
-/// (release) or a source key (variable).
+/// (release) or a source key (variable). A variable key `var:<local-ledger-slug>`
+/// instead addresses exactly one resolved variable, for reviewed document attachment.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Endpoint {

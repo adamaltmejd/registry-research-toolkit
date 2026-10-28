@@ -6,7 +6,8 @@
 //! A document's subject is stated in source coordinates and resolved by the link stage:
 //! a markdown document whose frontmatter names a variable is about that variable of the
 //! input's register, with the key folded by [`name_key`] (the key the LISA reader gives
-//! its columns); one without is about the register. A listed PDF is about the register
+//! its columns), unless the config translates that key to reviewed endpoints.
+//! One without is about the register. A listed PDF is about the register
 //! whose handle is its list key. A subject that matches nothing leaves the document
 //! searchable, and the link stage warns.
 //!
@@ -31,6 +32,11 @@ pub struct MarkdownConfig {
     /// markdown derived from them.
     sources: String,
     frontmatter: Frontmatter,
+    /// Reviewed translations of folded variable keys to endpoints; variable keys may
+    /// use `var:<local-ledger-slug>` to avoid source-key fanout. Missing keys retain
+    /// their original subjects, so unresolved documents remain searchable.
+    #[serde(default)]
+    subjects: BTreeMap<String, Vec<Endpoint>>,
 }
 
 /// The frontmatter keys read.
@@ -175,9 +181,16 @@ pub fn markdown(
             table: None,
             key,
         };
-        let subject = match key(&config.frontmatter.variable) {
-            Some(variable) => endpoint("variable", Some(name_key(variable))),
-            None => endpoint("register", None),
+        let subjects = match key(&config.frontmatter.variable) {
+            Some(variable) => {
+                let key = name_key(variable);
+                config
+                    .subjects
+                    .get(&key)
+                    .cloned()
+                    .unwrap_or_else(|| vec![endpoint("variable", Some(key))])
+            }
+            None => vec![endpoint("register", None)],
         };
         records.push(Record::Doc(Doc {
             hash: hex(&Sha256::digest(&bytes)),
@@ -190,10 +203,10 @@ pub fn markdown(
             url,
             sections: sections(body),
             content: None,
-            subjects: vec![DocSubject {
-                endpoint: subject,
-                page: 0,
-            }],
+            subjects: subjects
+                .into_iter()
+                .map(|endpoint| DocSubject { endpoint, page: 0 })
+                .collect(),
             locator: Locator {
                 input: path,
                 at: String::new(),

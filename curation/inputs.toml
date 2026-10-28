@@ -79,14 +79,9 @@ path = "current-scb-inputs.zip"
 sha256 = "a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff"
 provider = "scb"
 
-# The LISA variable list. Its register handle holds through C; D's `bind` attaches its
-# sheets to the export's LISA tables.
-[[input]]
-name = "scb-lisa"
-reader = "lisa"
-path = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx"
-provider = "scb"
-register = "lisa-workbook"
+# The LISA workbook is attached to r34 through ordinary curation (D-8), generated
+# by scripts/rebuild_attach_lisa.py from the lisa reader's frames and section map.
+# Its standalone register is retired; the reader remains available for inspection.
 
 [[input]]
 name = "scb-transcription"
@@ -94,14 +89,14 @@ reader = "transcription"
 path = "catalog/source/transcriptions/scb"
 provider = "scb"
 
-# Parsed LISA documents. Their subjects are keyed like the LISA variable list's, so the
-# register is its handle; D's `bind` joins that to the export's LISA register.
+# Parsed LISA documents. markdown.toml translates workbook subjects through the same
+# reviewed attachment map; names without a match remain unresolved and searchable.
 [[input]]
 name = "lisa-docs"
 reader = "markdown"
 path = "catalog/docs/markdown/lisa"
 provider = "scb"
-register = "lisa-workbook"
+register = "r34"
 
 # PDFs pinned by hash in related_documents.toml; their subjects are the list's register keys.
 [[input]]

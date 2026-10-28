@@ -5,6 +5,106 @@ import json
 import re
 from typing import Any
 
+from rebuild_convert_cases import parse_selector
+from rebuild_convert_selectors import Snapshot
+
+
+def _selection(converter, owner):
+    lookup = collections.defaultdict(list)
+    for row in converter.rows[owner]:
+        try:
+            subject = converter.selector(row)
+        except ValueError:
+            continue
+        lookup[subject].append(row)
+        base = re.sub(r" and release = '[^']*'$", "", subject)
+        if base != subject:
+            lookup[base].append(row)
+    snapshot = None
+    row_count = len(converter.rows[owner])
+
+    def selected(subject):
+        nonlocal snapshot
+        match = re.fullmatch(r"(.*) and type = '([^']*)'", subject)
+        rows = lookup.get(match[1] if match else subject, [])
+        if match:
+            rows = [row for row in rows if row.get("dtype") == match[2]]
+        if rows:
+            return rows
+        address = parse_selector(subject)
+        if address is None:
+            return []
+        if snapshot is None:
+            snapshot = Snapshot(converter, owner, converter.statements[owner])
+        if snapshot.problem:
+            raise ValueError(f"{'/'.join(owner)}: {snapshot.problem}")
+        indices, whole = snapshot.select(address)
+        if not whole:
+            raise ValueError(
+                f"{'/'.join(owner)}: selector cuts an occurrence: {subject}"
+            )
+        # Snapshot appends constructor copies after the converter's existing rows;
+        # return only those original objects, including already hydrated assertions.
+        rows = [
+            converter.rows[owner][index]
+            for index in sorted(indices)
+            if index < row_count
+        ]
+        lookup[subject] = rows
+        return rows
+
+    return selected
+
+
+def final_variables(converter, owner):
+    """Project existing assignments onto placed local ledger identities."""
+    statements = converter.statements[owner]
+    selected = _selection(converter, owner)
+    assignments = collections.defaultdict(set)
+    for record in statements.values():
+        statement = record["statement"]
+        target = statement.get("fields", {}).get("variable")
+        if target is not None:
+            for row in selected(statement["subject"]):
+                assignments[id(row)].add(target)
+    ledger = converter.ledgers.get(owner, {}).get("variables", {})
+    folds = collections.defaultdict(set)
+    for row in converter.rows[owner]:
+        if row["column"]:
+            folds[row["source_key"]].add(row["column"].lower())
+    asserted_keys = set()
+    for record in statements.values():
+        statement = record["statement"]
+        if (
+            statement["kind"] != "assert"
+            or statement.get("fact", {}).get("entity") != "occurrence"
+        ):
+            continue
+        subject = statement["subject"]
+        key = re.search(r"(?:where | and )key = '([^']*)'", subject)
+        if key is None:
+            continue
+        asserted_keys.add(key[1])
+        spelling = subject.split(": ", 1)[-1].split(" @", 1)[0]
+        spelling = spelling.split(" where ", 1)[0]
+        folds[key[1]].add(spelling.lower())
+    effective = {}
+    used = set()
+    for row in converter.rows[owner]:
+        if converter.identity.status(row) not in {"used", "shadowed", "rejected"}:
+            continue
+        targets = assignments.get(id(row), set())
+        if len(targets) > 1:
+            continue
+        target = (
+            next(iter(targets)) if targets else converter.identity.default_slug(row)
+        )
+        if target in ledger:
+            effective[id(row)] = target
+            if converter.identity.status(row) == "used":
+                used.add(target)
+    return effective, used, assignments, folds, asserted_keys
+
 
 def normalize_sets(converter):
     """Emit one positive membership list per known final local variable.
@@ -23,67 +123,11 @@ def normalize_sets(converter):
             and set(record["statement"].get("fields", {})) == {"sets"}
         }
         counts["before"] += len(grouping)
-        lookup = collections.defaultdict(list)
-        for row in converter.rows[owner]:
-            try:
-                subject = converter.selector(row)
-            except ValueError:
-                continue
-            lookup[subject].append(row)
-            base = re.sub(r" and release = '[^']*'$", "", subject)
-            if base != subject:
-                lookup[base].append(row)
-
-        def selected(subject, lookup=lookup):
-            match = re.fullmatch(r"(.*) and type = '([^']*)'", subject)
-            rows = lookup.get(match[1] if match else subject, [])
-            if match:
-                rows = [row for row in rows if row.get("dtype") == match[2]]
-            return rows
-
-        assignments = collections.defaultdict(set)
-        for record in statements.values():
-            statement = record["statement"]
-            target = statement.get("fields", {}).get("variable")
-            if target is not None:
-                for row in selected(statement["subject"]):
-                    assignments[id(row)].add(target)
+        effective, used, assignments, folds, asserted_keys = final_variables(
+            converter, owner
+        )
+        selected = _selection(converter, owner)
         ledger = converter.ledgers.get(owner, {}).get("variables", {})
-        folds = collections.defaultdict(set)
-        for row in converter.rows[owner]:
-            if row["column"]:
-                folds[row["source_key"]].add(row["column"].lower())
-        asserted_keys = set()
-        for record in statements.values():
-            statement = record["statement"]
-            if (
-                statement["kind"] != "assert"
-                or statement.get("fact", {}).get("entity") != "occurrence"
-            ):
-                continue
-            subject = statement["subject"]
-            key = re.search(r"(?:where | and )key = '([^']*)'", subject)
-            if key is None:
-                continue
-            asserted_keys.add(key[1])
-            spelling = subject.split(": ", 1)[-1].split(" @", 1)[0]
-            spelling = spelling.split(" where ", 1)[0]
-            folds[key[1]].add(spelling.lower())
-        effective = {}
-        used = set()
-        for row in converter.rows[owner]:
-            if converter.identity.status(row) not in {"used", "shadowed", "rejected"}:
-                continue
-            targets = assignments.get(id(row), set())
-            if len(targets) > 1:
-                continue
-            target = (
-                next(iter(targets)) if targets else converter.identity.default_slug(row)
-            )
-            if target in ledger:
-                effective[id(row)] = target
-                if converter.identity.status(row) == "used":
-                    used.add(target)
         provider, register = owner
         public = converter.ledgers.get(owner, {}).get("public", register)
 
