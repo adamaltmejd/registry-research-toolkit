@@ -35,7 +35,8 @@ SELECT o.id FROM occurrence o
   JOIN spelling sp ON sp.id = o.spelling_id
 WHERE o.variable_id <> s.variable_id OR o.table_id <> s.table_id OR sp.fold_id <> s.fold_id
    OR o.start < s.start OR o.end > s.end
-   OR (s.state <> 'ambiguous' AND o.valueset_id IS NOT s.valueset_id);
+   OR (s.state <> 'ambiguous' AND (o.valueset_id IS NOT s.valueset_id
+       OR o.class_version_id IS NOT s.class_version_id));
 -- Type agreement uses reg-frame's family map in verify.rs.
 
 -- (8) variables have segments; hull matches
@@ -55,9 +56,8 @@ SELECT v.id FROM valueset v JOIN (SELECT valueset_id, COUNT(*) n FROM vs_item GR
 SELECT i.valueset_id, i.ord FROM vs_item i WHERE i.parent_ord IS NOT NULL AND NOT EXISTS (
   SELECT 1 FROM vs_item p WHERE p.valueset_id = i.valueset_id AND p.ord = i.parent_ord);
 
--- (11) class versions do not overlap within a family
-SELECT id FROM (SELECT id, start, LAG(end) OVER (PARTITION BY family_id ORDER BY start) pe
-                FROM class_version) WHERE start < pe;
+-- Class-version periods describe book existence. Same-family overlaps are allowed;
+-- applicability belongs to exact-version occurrence bindings.
 
 -- (12) continues is acyclic (variables and tables)
 WITH RECURSIVE walk(k, origin, node, depth) AS (

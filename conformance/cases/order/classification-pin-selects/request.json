@@ -1,0 +1,26 @@
+{
+  "note": "The v1 pin must select only the curated 2018 window, although v1 still exists in 2019 and the code lists are identical. Fails when a pin only suppresses ambiguity without filtering, or bypasses ordinary coverage clipping. Oracle: classification-pins inventory and occurrence statements, existing period_clipped behavior.",
+  "fixture": "classification-pins",
+  "project": {
+    "schema_version": "5.1.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pins",
+        "period": {
+          "from": 2018,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/pins/kod",
+            "type": "categorical",
+            "classification": "class/kind/v1"
+          }
+        ]
+      }
+    ]
+  }
+}

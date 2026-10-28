@@ -361,6 +361,7 @@ impl Context<'_> {
         out
     }
 
+    #[allow(clippy::too_many_lines)]
     fn variables(
         &mut self,
         sheet: &str,
@@ -460,6 +461,7 @@ impl Context<'_> {
                 length: None,
                 format: None,
                 valueset,
+                classification: None,
                 population_valuesets: Vec::new(),
                 coded: None,
                 code_system,

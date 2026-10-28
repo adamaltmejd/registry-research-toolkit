@@ -623,7 +623,8 @@ fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
 /// Capture raw evidence behind a curated field, including defaults derived from
 /// source facts. Keep derived values out of the source premise.
 fn field_dependencies(fields: &mut BTreeSet<String>) {
-    if fields.contains("coded") || fields.contains("value_set") {
+    if fields.contains("coded") || fields.contains("value_set") || fields.contains("classification")
+    {
         fields.extend(
             ["type", "code_system", "value_set", "population_valuesets"].map(str::to_owned),
         );
@@ -888,16 +889,13 @@ pub fn applied_conflicts(
     conflicts.into_iter().collect()
 }
 
-/// Classification versions of one family have distinct names and disjoint periods.
+/// Classification versions of one family have distinct names; existence may overlap.
 #[must_use]
 pub fn classification_conflicts(classes: &[apply::Classification]) -> Vec<(usize, usize)> {
     let mut conflicts = Vec::new();
     for (a, left) in classes.iter().enumerate() {
         for (b, right) in classes.iter().enumerate().skip(a + 1) {
-            if left.family == right.family
-                && (left.version == right.version
-                    || intersect(&left.period, &right.period).is_some())
-            {
+            if left.family == right.family && left.version == right.version {
                 conflicts.push((a, b));
             }
         }
@@ -1574,7 +1572,7 @@ pub fn resolve(
                     }
                     for field in stated_fields(values).keys() {
                         let package = match field.as_str() {
-                            "classification" | "tags" => Some("D-9"),
+                            "tags" => Some("D-9"),
                             "sentinels" => Some("D (sentinels)"),
                             "role" | "unit_type" => {
                                 Some("D (unit types and roles beyond defaults)")
@@ -1715,6 +1713,18 @@ pub fn resolve(
                     &dependencies,
                 )?
             };
+            let mut objects = objects;
+            if let Statement::Set { fields: values, .. } = statement
+                && let Some(reference) = &values.classification
+            {
+                let facts = references
+                    .get(reference)
+                    .filter(|facts| !facts.is_empty())
+                    .ok_or_else(|| {
+                        format!("classification-reference-unresolved: classification {reference:?}")
+                    })?;
+                objects.extend(facts.iter().cloned());
+            }
             Ok(ResolvedStatement {
                 premise: Premise {
                     subjects: premise(&matches, &view, &fields),

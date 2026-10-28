@@ -178,6 +178,9 @@ pub struct Occurrence {
     pub format: Option<String>,
     /// The content hash of a value set stated in the same frame.
     pub valueset: Option<String>,
+    /// Exact curated version; readers leave this unset. Existence is checked by curation.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub classification: Option<String>,
     /// Value sets that differ by population, in place of `valueset`.
     #[serde(default)]
     pub population_valuesets: Vec<PopulationValueSet>,

@@ -1,0 +1,26 @@
+{
+  "note": "The unrelated version exists and shares the identical code list, but has no curated applicability to this variable. Fails if an existing pin is accepted solely because it resolves or shares codes. Oracle: no occurrence statement references class/other/v1; the refusal is located at the classification field.",
+  "fixture": "classification-pins",
+  "project": {
+    "schema_version": "5.1.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pins",
+        "period": {
+          "from": 2018,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/pins/kod",
+            "type": "categorical",
+            "classification": "class/other/v1"
+          }
+        ]
+      }
+    ]
+  }
+}

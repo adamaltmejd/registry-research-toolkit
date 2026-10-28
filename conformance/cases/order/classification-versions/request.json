@@ -1,0 +1,25 @@
+{
+  "note": "Two editions of one family have overlapping existence and identical code lists. Only occurrence curation establishes applicability: v1 in 2018, v2 in 2019. Fails if class-only segment boundaries merge away or the unpinned binding stops warning. Oracle: classification-pins CSV, inventory and occurrence statements; existence is not applicability. The hash is SHA-256 of the two canonical source items.",
+  "fixture": "classification-pins",
+  "project": {
+    "schema_version": "5.1.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pins",
+        "period": {
+          "from": 2018,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/pins/kod",
+            "type": "categorical"
+          }
+        ]
+      }
+    ]
+  }
+}

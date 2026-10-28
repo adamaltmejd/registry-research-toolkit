@@ -148,6 +148,7 @@ pub fn read(
                     length: None,
                     format: None,
                     valueset: valueset.clone(),
+                    classification: None,
                     population_valuesets: Vec::new(),
                     coded: None,
                     code_system: field(&row, "code_system"),

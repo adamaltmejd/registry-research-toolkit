@@ -1,0 +1,27 @@
+# Existence overlaps; occurrence curation alone chooses applicability.
+[[classification]]
+family = "kind"
+version = "v1"
+name = "First synthetic edition"
+family_name = "Synthetic kinds"
+publisher = "Fixture publisher"
+value_set = "codes/kind.csv"
+period = "2010.."
+evidence = "Synthetic first edition, still exists after the second appears."
+
+[[classification]]
+family = "kind"
+version = "v2"
+name = "Second synthetic edition"
+family_name = "Synthetic kinds"
+publisher = "Fixture publisher"
+succeeds = ["class/kind/v1"]
+value_set = "codes/kind.csv"
+period = "2015.."
+evidence = "Synthetic second edition with identical delivered codes."
+
+[[classification]]
+family = "other"
+version = "v1"
+value_set = "codes/kind.csv"
+evidence = "An unrelated classification may share the same code-list content."

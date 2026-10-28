@@ -49,6 +49,9 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
             if object.contains_key("locator") || object.contains_key("also") {
                 return Err(located("locator is assigned by the reader"));
             }
+            if object.contains_key("classification") {
+                return Err(located("classification is curated; use set classification"));
+            }
             let locator = Locator {
                 input: path.clone(),
                 at: format!("line={n}"),
