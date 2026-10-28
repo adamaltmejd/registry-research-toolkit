@@ -19,7 +19,7 @@ import re
 import tomllib
 from pathlib import Path
 
-from rebuild_convert import ROOT, Converter, literal, table_slug
+from rebuild_convert import ROOT, Converter, literal
 from rebuild_convert_cases import parse_selector, period_intervals
 from rebuild_convert_groups import final_variables, normalize_sets
 from rebuild_convert_identity import IdentityProjection
@@ -66,6 +66,16 @@ def main():
     converter = Converter(filtered, args.out)
     path = ROOT / "curation/registers/scb/r34/curation.toml"
     original = base(path)
+    generated_section = path.read_text().partition(MARKER)[2]
+    authored_sets = []
+    for block in re.split(
+        r"(?=^\[\[statement\]\]$)", generated_section, flags=re.MULTILINE
+    ):
+        if not block.strip():
+            continue
+        statement = tomllib.loads(block)["statement"][0]
+        if statement["kind"] == "set" and "sets" in statement.get("fields", {}):
+            authored_sets.append(block)
     for number, statement in enumerate(tomllib.loads(original)["statement"]):
         converter.add(f"existing:{number}", *OWNER, statement)
     statements = converter.statements[OWNER]
@@ -137,7 +147,6 @@ def main():
     report = {
         "rows": [],
         "original_unmatched": [],
-        "headings": [],
         "lineage_unresolved": [],
         "identity_gaps": [],
     }
@@ -321,148 +330,7 @@ def main():
                 },
             )
 
-    # Explicit source-reviewed members, never every variable under a heading.
-    # The amount and receipt code of a named aggregate are one concept; its
-    # distinct constituent benefits are not promoted by their shared section.
-    reviewed = {
-        "lisa-delpension": {
-            "delpension",
-            "delpenstyp",
-        },
-        "lisa-disponibel-inkomst": {
-            "delkomponent-disponibel-inkomst",
-            "delkomponent-disponibel-inkomst-2004",
-            "dispinkkehb04",
-            "disponibel-inkomst",
-            "disponibel-inkomst-familj",
-            "disponibel-inkomst-familj-2004",
-            "disponibel-inkomst-per-ke-familj",
-            "disponibel-inkomst-per-ke-familj-2004",
-        },
-        "lisa-efterlevandeforman": {
-            "folkatpfam",
-            "sumeftpens",
-        },
-        "lisa-foraldraledighet": {
-            "foraldrapenning-antal-bruttodagar",
-            "foraldrapenning-antal-bruttodagar-midas",
-            "foraldrapenning-antal-nettodagar",
-            "foraldrapenning-antal-nettodagar-midas",
-            "foraldrapenning-barns-fodelse",
-            "foraldrapenning-ersattningsbelopp",
-            "foraldrapenning-ersattningsbelopp-midas",
-        },
-        "lisa-kapitalinkomst": {
-            "inkomst-av-kapital",
-            "kapinkvinst",
-        },
-        "lisa-pension": {
-            "alderspension-folkpension-atp",
-            "alderspension-inkomst-premie-garanti",
-            "allman-pension-folkpension-atp",
-            "andel-inkomstpension",
-            "andel-premiepension",
-            "folkald",
-            "garantipension",
-            "garpensand",
-            "inkomstpension",
-            "premiepension",
-            "sarskilt-pensionstillagg",
-            "tillaggspension",
-            "tillpensand",
-        },
-        "lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag": {
-            "fortidtyp",
-            "inkomst-foranledd-fortidspension",
-        },
-        "lisa-studier": {
-            "inkomst-foranledd-studier-2",
-            "studtyp",
-        },
-        "lisa-tjanstepension": {
-            "ovriga-tillaggspensioner",
-            "statlig-tjanstepension-inkl-kapan",
-            "sumtjp",
-            "tjanstepension",
-            "tjanstepension-itp",
-            "tjanstepension-kpa",
-            "tjanstepension-statliga-bolag",
-            "tjanstepension-stp",
-            "tjanstepension-tjanst",
-            "tjanstepension-tjanst-agi",
-        },
-        "lisa-yrkes-och-arbetsskadelivranta": {
-            "arbetsskadelivranta",
-            "livrta",
-            "livyrke",
-            "yrkarbtyp",
-        },
-    }
-    unseen = set(reviewed)
-    for section in sections:
-        targets = (
-            set().union(*(targets_by_row[r["at"]] for r in section["rows"]))
-            if section["rows"]
-            else set()
-        )
-        text = (section["text"] or "").rstrip(":")
-        slug = "lisa-" + table_slug(text)
-        members = reviewed.get(slug, set())
-        if members:
-            if len(members) < 2:
-                raise ValueError(f"{slug}: a set needs at least two members")
-            if not members <= targets:
-                raise ValueError(
-                    f"{slug}: reviewed members no longer match section: {sorted(members - targets)}"
-                )
-            unseen.discard(slug)
-        reason = (
-            "note"
-            if section["kind"] == "note"
-            else "unheaded block"
-            if section["kind"] == "unheaded"
-            else "empty parent/repeated timeless block"
-            if not section["rows"]
-            else "set"
-            if members
-            else "no reviewed single-concept membership"
-        )
-        report["headings"].append(
-            {
-                "at": section["locator"]["at"],
-                "heading": section["text"],
-                "decision": reason,
-                "variables": len(targets),
-                "set": slug if members else None,
-                "members": sorted(members),
-            }
-        )
-        for target in sorted(members):
-            converter.add(
-                f"{section['locator']['input']}:{section['locator']['at']}",
-                *OWNER,
-                {
-                    "kind": "set",
-                    "subject": f"var:{target}",
-                    "fields": {"sets": [slug]},
-                    "evidence": f"Reviewed LISA section: {text}; membership through whole-occurrence attachment.",
-                },
-            )
-    if unseen:
-        raise ValueError(f"reviewed sections no longer present: {sorted(unseen)}")
     normalize_sets(converter)
-    normalized = collections.defaultdict(set)
-    for record in converter.statements[OWNER].values():
-        statement = record["statement"]
-        for slug in statement.get("fields", {}).get("sets", []):
-            if slug in reviewed:
-                subject = statement["subject"]
-                if not subject.startswith("var:"):
-                    raise ValueError(f"{slug}: membership was not normalized")
-                normalized[slug].add(subject.removeprefix("var:"))
-    for slug, members in reviewed.items():
-        if normalized[slug] != members:
-            raise ValueError(f"{slug}: normalized membership differs from review")
     collapse(converter)
     generated = [
         r["statement"]
@@ -492,6 +360,7 @@ def main():
             + "\n".join(f"{k} = {literal(v)}" for k, v in statement.items())
             + "\n"
         )
+    text += "".join(authored_sets)
     (args.out / "curation.toml").write_text(text)
     markdown_path = ROOT / "curation/readers/markdown.toml"
     markdown = base(markdown_path) + "\n" + MARKER + "\n[subjects]\n"
