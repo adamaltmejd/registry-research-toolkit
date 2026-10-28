@@ -1,3 +1,53 @@
+# D-4b: committed curation
+
+Output committed at `8471d6c3b297c14ce904bd39a3164358a9e2d745`. Rerun only to regenerate
+before D-13 freezes the old tree.
+
+The converter's explicit `--write-curation` mode writes into this checkout's
+`curation/`; its default still writes to a new scratch root. Each statement includes its
+legacy source file:line in evidence. There are 122 register statement/lock pairs, with
+no generated comments or empty statement files. Two conversions and locks on inputs
+`9186fcbceeb2283a50c7f684764869e4dda5765e` reproduced all 244 files byte for byte. The
+SCB asset digest remains
+`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`.
+
+Both locks passed with 177 redundant-set notices and zero refusals. The committed-tree
+dev build and explicit verify passed. Applied: 2,599 assert, 10,867 set, 103 link, zero
+ack. Relative to uncurated: +1,912 variables, +2,370 segments, -67 ambiguous segments,
++155 withheld occurrences. The dev report retains 6,927 unminted variables; this does
+not certify D's release/minting exit gate.
+
+  | Command      | Exit | Wall seconds |
+  | ------------ | ---: | -----------: |
+  | read         |    0 |       65.964 |
+  | uncurated    |    0 |      132.013 |
+  | convert      |    0 |       79.184 |
+  | convert-lock |    0 |      187.085 |
+  | rerun        |    0 |       68.820 |
+  | rerun-lock   |    0 |      187.572 |
+  | curated      |    0 |      266.903 |
+  | verify       |    0 |       23.423 |
+  | diff         |    1 |        1.170 |
+
+The diff's exit 1 means expected catalog differences. Rust data commands ran
+sequentially. Initial Python environment synchronization briefly overlapped the dev
+build, so its wall time is not an isolated performance benchmark. The first release
+compile failed in the host sccache; disabling RUSTC_WRAPPER succeeded.
+
+CI's Rust build and conformance use their own synthetic curation roots; the legacy suite
+reads `reg_meta_build/curation`. No inspected CI step applies this real tree. Default
+build paths, fixtures and tests are unchanged.
+
+`uv run --no-project scripts/gate.py g0 rust` passed in 62.404 seconds:
+lint/type/schema/vocabulary checks, Rust Clippy/tests/dependency checks, 116 script
+tests, byte-identical synthetic rebuilds, and 194 conformance cases (2 skipped).
+Independent converter and generated-file review passed. No new tests were added.
+
+Not run: legacy real-seed build, release gate, R suites, `gate.py regen`, or curated
+release build. Task-owned scratch artifacts are removed after reporting.
+
+The earlier converter reports below are historical measurements.
+
 ## D-3c fix round 01: current finding codes and a smaller link stage
 
 Deleted at milestone F (REBUILD.md).

@@ -1186,9 +1186,7 @@ class Converter:
         for (provider, register), records in sorted(self.statements.items()):
             if not records:
                 continue
-            path = (
-                self.curation / "registers" / provider / register / "curation.toml"
-            )
+            path = self.curation / "registers" / provider / register / "curation.toml"
             path.parent.mkdir(parents=True, exist_ok=True)
             text = ""
             next_line = 1
