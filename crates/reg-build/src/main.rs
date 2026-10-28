@@ -260,7 +260,7 @@ fn build(args: &Args) -> Result<(), String> {
 
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
-    warnings.extend(applied.findings);
+    warnings.extend(applied.findings.iter().cloned());
     for (input, output) in manifest.input.iter().zip(&outputs) {
         // A release asset is its pin (the reader verified it); its locators name
         // archive members, not files under the inputs root.
@@ -350,28 +350,11 @@ fn build(args: &Args) -> Result<(), String> {
         registers.entry(key).or_default().push(record.clone());
     }
 
-    let set_by_hash: BTreeMap<&str, &reg_frame::ValueSet> = valuesets
-        .iter()
-        .map(|(hash, (set, _))| (hash.as_str(), set))
-        .collect();
-    let mut resolved = Vec::new();
+    let mut resolved = curation::complete_findings(&args.curation, &applied.records, &applied)?;
     let mut report = BTreeMap::new();
-    for ((provider, register), records) in &registers {
+    for r in &mut resolved {
+        let (provider, register) = (&r.register.provider, &r.register.register);
         let path = ledger_path(&args.curation, provider, register);
-        let ledger = if path.is_file() {
-            toml_file(&path)?
-        } else {
-            reg_resolve::Ledger::default()
-        };
-        let mut r = reg_resolve::resolve(
-            records,
-            &ledger,
-            &set_by_hash,
-            &applied.variables,
-            &applied.classifications,
-        )
-        .map_err(|e| format!("{provider}/{register}: {e}"))?;
-        reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
         if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
             r.acknowledgements.extend(acks.clone());
         }
@@ -399,7 +382,6 @@ fn build(args: &Args) -> Result<(), String> {
                 r.report.unminted.len()
             ));
         }
-        resolved.push(r);
     }
     // A public name is one register's within its provider: no other register's public
     // name or handle.
@@ -431,12 +413,6 @@ fn build(args: &Args) -> Result<(), String> {
         linked.relations = curated.relations;
         applied.statements.extend(curated.statements);
     }
-    proposals::generate(
-        &mut resolved,
-        &applied.classifications,
-        &set_by_hash,
-        &linked,
-    )?;
     let link_unresolved = linked.warnings.len();
     let succession_dropped = linked.succession_warnings.len();
     let doc_subject_unresolved = linked.doc_warnings.len();

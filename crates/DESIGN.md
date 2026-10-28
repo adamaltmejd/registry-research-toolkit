@@ -274,7 +274,7 @@ Accepting one requires reviewed curation and a premise lock.
   writes resolved decisions.
 - Application is one ordered pass: parent table/release assertions, table coverage
   overrides, occurrence/release period overrides, table moves, remaining assertions,
-  variable assignments, ordinary fields, then links and acknowledgements. Each stage
+  variable assignments, ordinary fields, then links, then acknowledgements. Each stage
   reads an immutable snapshot; later stages see the accepted corrections. Coverage
   precedes period checks, and corrected periods precede moves and occurrence assertions.
   A coverage or period override must be a separate statement without other fields.
@@ -347,6 +347,8 @@ Accepting one requires reviewed curation and a premise lock.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
+- Acknowledgement validation and publication share the complete finding collector,
+  including F3 and V1 proposals after curated links.
 - `ack` retains the finding, its severity and message, and records the statement's file,
   line, evidence and caveat through `ack_statement_id`. Its declared severity must match
   the finding. The reviewed premise snapshots the finding and its supporting source
