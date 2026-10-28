@@ -19,6 +19,7 @@ import json
 import re
 import shutil
 import subprocess
+import time
 import tomllib
 from pathlib import Path
 
@@ -49,6 +50,7 @@ ALIASES = {
 FIELDS = {
     "label",
     "definition",
+    "operational_definition",
     "description",
     "unit",
     "type",
@@ -121,72 +123,57 @@ def entries(path):
 
 
 def round_summary(data):
-    """Keep the reviewable summary derivable from the retained aggregate report."""
-    audit = data.get("previous_proposal_audit", {})
-    notes = collections.defaultdict(set)
-    for item in data["identity_deferred"]:
-        for source in item["sources"]:
-            notes[source, item["variable"]].add(item["reason"])
-    dispositions = collections.Counter()
-    for item in audit.get("missing_ledger", []):
-        reasons = set().union(
-            *(notes[source, item["target"]] for source in item["sources"])
-        )
-        dispositions["; ".join(sorted(reasons)) or "needs source review"] += 1
+    """Record the operator's decisions separately from remaining prerequisites."""
+    resolved = {
+        "classification clearing (52)": "new reader binds no source classification; dropped",
+        "parallel metadata (592)": "211 case aliases need no statement; 236 co-delivered and 145 ordinary declarations use set sets, preserving each column's own source metadata; disagreements use F6/ambiguity",
+        "operational_definition (191 previously deferred declarations)": "emit set operational_definition; d-set-fields adds the field; missing endpoints or conflicting donors remain separately listed",
+        "noncalendar placement (33)": "dropped with reason D-7",
+    }
     targets = {
         (item["register"], item["variable"])
         for item in data["identity_deferred"]
         if item["reason"].startswith("D-12:")
     }
-    data["round01_summary"] = {
-        "historical_missing_ledger_dispositions": dict(dispositions),
+    data["round02_summary"] = {
+        "resolved_operator_rulings": resolved,
         "changed_targets_without_local_ledger_id": len(targets),
     }
-    text = [
-        "## Fix round 01",
+    text = ["## Open decisions", "", "Resolved by the operator in fix round 02:", ""]
+    text.extend(f"- **{topic}:** {decision}." for topic, decision in resolved.items())
+    text += [
         "",
-        "No real-frame lock, real-seed build, or reader run was performed this round. The static audit reads the retained d-lock-perf frame/proposal cache. The previous full lock log was deleted with scratch; the reconstruction below matches its aggregate diagnostic counts but is not a fresh CLI acceptance result.",
+        "Remaining genuinely open items:",
         "",
-        "| Historical refusal | Static reconstruction | Cause |",
-        "| --- | ---: | --- |",
-        "| Missing local ledger slug | 2,987 | 2,421 absent everywhere; 566 same-named only in another register |",
-        "| curation-overlap | 184 (92 pairs) | duplicate partition/column-owner effects; converter noise |",
-        "| Unplaced occurrence | 151 | 76 partition assignments, 75 column-owner assignments; release placement needs D-7 |",
+        "- Source-attribution provenance has no reviewed four-kind field mapping.",
+        "- Ambiguous donor facts, unsupported release-name coverage, partial source windows, and indistinguishable case-only owners still require documentary selection.",
+        "- Missing authored tables/releases and changed variable targets without local IDs remain prerequisites; no routing or ID is guessed. Noncalendar placement is already assigned to D-7.",
+        "- Overlapping release assertions remain blocked by the current assertion-conflict policy.",
         "",
-        "The missing-ledger reconstruction observes the lock validation order: 3,023 proposed targets are absent locally, but 36 first fail placement validation. A same-named slug elsewhere is not an authorized rename. No cross-register ID is borrowed.",
+        f"Changed targets awaiting D-12: {len(targets)}. Register/variable names and original source lines are retained in report.json.",
         "",
-        "| Historical missing-ledger disposition after projection | Statements |",
-        "| --- | ---: |",
-        *[f"| {reason} | {count} |" for reason, count in sorted(dispositions.items())],
+        "The d-set-fields addition of operational_definition is an implementation prerequisite, not an unresolved model decision.",
         "",
-        f"There are {len(targets)} distinct changed `(register, variable)` targets without a local ledger ID in the expanded pass. They wait for D-12; their names and source origins are retained in report.json. Unplaced assignments are counted separately and are not assumed to need minting.",
-        "",
-        f"`set variable`: **12,151 before; {data['statement_counts'].get('set.fields.variable', 0)} after**. The expanded pass projects every expressible partition, including ones skipped by the earlier heuristic. Whole default groups with obsolete unminted owner names are no-ops; explicit different existing ledger IDs remain assignments.",
-        "",
-        "Of the original 982 case drops, **940 are harmless**: 926 are already separated by source-coordinate guards, and 14 permit actual folded-selector widening to the same outcome. **42 remain dropped**: 40 have distinct explicit owners; two retain an explicitly excluded/unassigned sibling outcome (FoU NgSredo/NgsRedo and school-cost Sform/SForm). The complete register/variable/column list is in report.json.",
-        "",
-        "| Deferred category | Source declarations | Emitted declarations | Four-kind form / remaining decision |",
-        "| --- | ---: | ---: | --- |",
+        "| Category | Source declarations | Converted | Refused by observed lock | Dropped/no statement | Mapping |",
+        "| --- | ---: | ---: | ---: | ---: | --- |",
     ]
     mappings = {
-        "errata.delivered": "assert occurrence from unique new-frame donor facts; existing identity/table/release required; 191 declarations also need an operational_definition field decision; no invented key, inherited unit, or implicit donor coding",
-        "representation.parallel": "236 co-delivered, 211 case aliases, 145 ordinary declarations; sharing vs preserving per-column metadata needs a field-source decision; sets alone is insufficient",
-        "errata.version": "assert release; unsupported names and missing authored tables stay listed; GDB January tokens describe the preceding year end",
-        "errata.occurrence_period": "set period for 118 calendar declarations; 33 year-independent declarations need D-7",
-        "representation.delivery_metadata": "set description and, for five declarations, label; pinned alternatives must agree and cover whole source occurrences",
-        "errata.classification_reference": "52 clear erroneous classification references; needs explicit clear syntax, not coded=false or a fabricated class ID",
+        "errata.delivered": "assert occurrence plus set operational_definition where uniquely stated; preserve source key and release guards",
+        "representation.parallel": "case aliases: no statement; other declarations: set sets only; source metadata stays on each occurrence",
+        "errata.version": "assert release where coverage and an existing table are known",
+        "errata.occurrence_period": "set period for calendar coverage; noncalendar: D-7",
+        "representation.delivery_metadata": "set description/label from agreeing pinned alternatives",
+        "errata.classification_reference": "new reader binds no source classification; no statement",
     }
     for category, mapping in mappings.items():
         rows = [r for r in data["entries"] if r["category"] == category]
+        counts = collections.Counter(r["outcome"] for r in rows)
         text.append(
-            f"| `{category}` | {len(rows)} | {sum(r['outcome'] == 'converted' for r in rows)} | {mapping} |"
+            f"| `{category}` | {len(rows)} | {counts['converted']} | {counts['refused']} | {counts['dropped']} | {mapping} |"
         )
-    current = data.get("current_proposal_audit", {}).get("counts", {})
     text += [
         "",
-        f"Current static proposal audit: `{json.dumps(current, sort_keys=True)}`. Empty results do not certify lock acceptance.",
-        "",
-        "Remaining decisions: classification clearing; parallel metadata field sources; noncalendar/unparsed release placement; operational_definition (191 delivery declarations have no lossless current field); source_attribution provenance; missing table/release/ID prerequisites; ambiguous donor facts and overlapping release assertions.",
+        "Converted means emitted without an observed located refusal. If the whole-root lock fails before evaluation completes, other proposals remain uncertified; unreported errors are not assumed absent.",
         "",
     ]
     return "\n".join(text)
@@ -501,10 +488,24 @@ class Converter:
         return f"{table}: {spelling}{scope} where " + " and ".join(guards)
 
     def add(self, at, provider, register, statement):
-        key = json.dumps(statement, sort_keys=True, ensure_ascii=False)
-        self.statements[provider, register].setdefault(
-            key, {"statement": statement, "origins": []}
-        )["origins"].append(at)
+        grouping = statement["kind"] == "set" and "sets" in statement.get("fields", {})
+        payload = {
+            k: v
+            for k, v in statement.items()
+            if not grouping or k not in {"evidence", "caveat"}
+        }
+        key = json.dumps(payload, sort_keys=True, ensure_ascii=False)
+        record = self.statements[provider, register].setdefault(
+            key, {"statement": statement, "origins": [], "contexts": {}}
+        )
+        record["origins"].append(at)
+        if grouping:
+            for field in ("evidence", "caveat"):
+                if statement.get(field):
+                    values = record["contexts"].setdefault(field, [])
+                    if statement[field] not in values:
+                        values.append(statement[field])
+                    record["statement"][field] = "\n\n".join(values)
 
     def compact(self, proposals, provider, register):
         # Remove release guards only when every source occurrence of the remaining
@@ -840,6 +841,7 @@ class Converter:
                     # A warning is statement context, not an occurrence source field.
                     # It is retained in caveat below.
                     fields.pop("notice", None)
+                    operational_definition = fields.pop("operational_definition", None)
                     if "classification" in fields:
                         raise ValueError(
                             "asserted column classification needs reviewed family/version mapping"
@@ -860,6 +862,16 @@ class Converter:
                             "fact": {"entity": "occurrence", "fields": fields},
                         }
                     )
+                    if operational_definition is not None:
+                        proposals.append(
+                            {
+                                "kind": "set",
+                                "subject": proposals[-1]["subject"],
+                                "fields": {
+                                    "operational_definition": operational_definition
+                                },
+                            }
+                        )
                 elif kind == "identity.split":
                     if entry.get("by") != "data_type":
                         raise ValueError(
@@ -1021,6 +1033,14 @@ class Converter:
                             f"{kind}: requires reviewed translation of legacy payload/guards"
                         )
                 if not proposals:
+                    if kind == "representation.parallel" and entry.get("case_aliases"):
+                        result.update(
+                            outcome="dropped",
+                            reason="case aliases covered by folded spellings; no statement",
+                            statements=0,
+                        )
+                        self.results.append(result)
+                        continue
                     raise ValueError("no expressible selected occurrence")
                 if not evidence:
                     raise ValueError("legacy declaration supplies no evidence")
@@ -1093,6 +1113,11 @@ class Converter:
                     r"overlapping overrides with .*", "overlapping overrides", error
                 )
                 category = re.sub(
+                    r"^unknown field (`[^`]+`), expected.*",
+                    r"unknown field \1",
+                    category,
+                )
+                category = re.sub(
                     r'^variable "[^"]+" is not a ledger slug$',
                     "variable is not a ledger slug",
                     category,
@@ -1162,6 +1187,10 @@ class Converter:
             ],
             "lock": lock,
             "entries": self.results,
+            "uncertified_converted_entries": sum(
+                r.get("lock_status", "").startswith("not certified")
+                for r in self.results
+            ),
         }
         summary = round_summary(data)
         (self.out / "report.json").write_text(
@@ -1205,9 +1234,7 @@ class Converter:
                 if key.startswith("set.fields.")
             ],
             "",
-            "Mechanically expressible mappings also blocked by endpoint prerequisites remain in scope: `period` (118 calendar declarations; 33 noncalendar declarations need D-7), `description`/`label` (74 delivery-metadata declarations). `errata.delivered` maps to assert occurrence, and `errata.version` to assert release; neither adds a set field.",
-            "",
-            "Open decisions: classification clearing syntax (52); parallel metadata preservation/sharing (592); noncalendar placement (33); donor disagreement and missing tables/releases/ledger ids. These are not guessed setters.",
+            "The counts include translated parallel grouping (`sets`) and delivered donor wording (`operational_definition`). The latter is emitted for the upcoming d-set-fields implementation. Calendar corrections use `period`; the 33 noncalendar declarations stay dropped as D-7. Classification clearing and parallel metadata semantics are resolved below.",
             "",
             "## Identity and case audit",
             "",
@@ -1215,7 +1242,7 @@ class Converter:
             "",
             f"Projection audit: `{json.dumps(dict(self.identity_audit), sort_keys=True)}`.",
             "",
-            f"Case safety: `{json.dumps(dict(self.case_safety.counts), sort_keys=True)}`. Original 982 case drops: `{json.dumps(data['previous_case_drops'], sort_keys=True)}`. Remaining cases are listed in report.json.",
+            f"Case safety: `{json.dumps(dict(self.case_safety.counts), sort_keys=True)}`. Remaining cases are listed in report.json.",
             "",
             f"Cached proposal audit: `{json.dumps(self.cached_audit.get('counts', {}), sort_keys=True)}`. This is a static reconstruction, not a new real-frame lock.",
             "",
@@ -1346,11 +1373,13 @@ def main():
         converter.context_tables.clear()
         converter.context_registers.clear()
         gc.collect()
+        started = time.monotonic()
         result = subprocess.run(command, capture_output=True, text=True, check=False)
         (args.out / "lock.log").write_text(result.stdout + result.stderr)
         lock = {
             "status": "accepted" if result.returncode == 0 else "refused",
             "exit_code": result.returncode,
+            "elapsed_seconds": round(time.monotonic() - started, 3),
             "refusals": result.stderr.splitlines(),
         }
     converter.report(lock)

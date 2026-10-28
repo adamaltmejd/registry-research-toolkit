@@ -5,9 +5,9 @@ import re
 D3B_SCOPE = {
     "errata.occurrence_period": ["period"],
     "representation.delivery_metadata": ["description", "label"],
-    "errata.delivered": [],
+    "errata.delivered": ["operational_definition"],
     "errata.version": [],
-    "representation.parallel": [],
+    "representation.parallel": ["sets"],
     "errata.classification_reference": [],
 }
 
@@ -15,7 +15,7 @@ D3B_SCOPE = {
 def period(scope):
     """Translate stated calendar intervals without inventing noncalendar coverage."""
     if scope.get("kind") != "intervals" or not scope.get("intervals"):
-        raise ValueError("D-7: noncalendar occurrence coverage needs a design decision")
+        raise ValueError("D-7")
     tokens = []
     for interval in scope["intervals"]:
         start, end = interval.get("start", ""), interval.get("end", "")
@@ -60,13 +60,51 @@ def convert(converter, provider, register, kind, entry, pins, variants):
             for row in rows
         ]
     if kind == "errata.classification_reference":
-        raise ValueError(
-            "classification clearing needs a design decision; no replacement family is declared"
-        )
+        raise ValueError("new reader binds no source classification")
     if kind == "representation.parallel":
-        raise ValueError(
-            "parallel metadata sharing/preservation needs reviewed per-field translation; grouping alone is not equivalent"
+        if entry.get("case_aliases"):
+            return []
+        group = "legacy-" + pins.get(
+            entry["variable"], entry["variable"].replace(".", "-")
         )
+        proposals = []
+        for column in entry["columns"]:
+            endpoint = {
+                "variable": entry["variable"],
+                "variant": entry["variant"],
+                "column": column["column"],
+                "source_editions": column["source_editions"],
+                "valid_from": column["valid_from"],
+                "valid_to": column["valid_to"],
+            }
+            try:
+                rows = converter.match(provider, register, endpoint, pins, variants)
+            except ValueError as error:
+                if str(error) != "no exact new-frame occurrence endpoint":
+                    raise
+                unbounded = {
+                    k: v
+                    for k, v in endpoint.items()
+                    if k not in {"valid_from", "valid_to"}
+                }
+                try:
+                    converter.match(provider, register, unbounded, pins, variants)
+                except ValueError:
+                    raise ValueError(
+                        "parallel declared occurrence absent from new frames; reviewed assertion required"
+                    ) from error
+                raise ValueError(
+                    "D-7: parallel legacy window disagrees with new-reader release placement"
+                ) from error
+            for row in rows:
+                proposals.append(
+                    {
+                        "kind": "set",
+                        "subject": converter.selector(row),
+                        "fields": {"sets": [group]},
+                    }
+                )
+        return proposals
     if kind == "representation.delivery_metadata":
         proposals = []
         for record in entry["records"]:
@@ -168,10 +206,12 @@ def delivered(converter, provider, register, entry, variants):
             "delivered donor has multiple source keys; identity requires review"
         )
     source_key = keys.pop()
-    if any(row.get("operational_definition") for row in rows):
+    operational_definitions = {row.get("operational_definition") for row in rows}
+    if len(operational_definitions) != 1:
         raise ValueError(
-            "delivered donor operational_definition has no four-kind field"
+            "delivered donor facts disagree in operational_definition; reviewed edition-specific mapping required"
         )
+    operational_definition = operational_definitions.pop()
     if "'" in source_key:
         raise ValueError("delivered donor key cannot be expressed by address guard")
     # A curator's delivery has no inherited unit. Coding is separately opted into.
@@ -275,4 +315,13 @@ def delivered(converter, provider, register, entry, variants):
                 "fact": {"entity": "occurrence", "fields": fields},
             }
         )
+        if operational_definition:
+            # d-set-fields will add the stated field; keep it out of today's closed assert schema.
+            proposals.append(
+                {
+                    "kind": "set",
+                    "subject": proposals[-1]["subject"],
+                    "fields": {"operational_definition": operational_definition},
+                }
+            )
     return proposals

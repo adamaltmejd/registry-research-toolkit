@@ -22,6 +22,13 @@ def outcomes(kind, entry, pins):
     """Only explicit legacy outcomes; missing claims retain their source value."""
     if kind == "identity.column_owner":
         return {"variable": pins.get(entry["owner"], entry["owner"])}
+    if kind == "representation.parallel":
+        return {
+            "sets": [
+                "legacy-"
+                + pins.get(entry["variable"], entry["variable"].replace(".", "-"))
+            ]
+        }
     if kind == "identity.unassigned":
         return {"variable": "none"}
     if kind == "errata.field" and not entry.get("clear"):
@@ -66,6 +73,38 @@ class CaseSafety:
     def prepare(self, provider, register, declarations, pins, variants):
         self.pins = pins
         for kind, _line, entry in declarations:
+            if kind == "representation.parallel":
+                if entry.get("case_aliases"):
+                    continue
+                for column in entry["columns"]:
+                    endpoint = {k: entry[k] for k in ("variable", "variant")}
+                    endpoint.update(
+                        {
+                            k: column[k]
+                            for k in (
+                                "column",
+                                "source_editions",
+                                "valid_from",
+                                "valid_to",
+                            )
+                        }
+                    )
+                    try:
+                        rows = self.converter.match(
+                            provider,
+                            register,
+                            endpoint,
+                            pins,
+                            variants,
+                            check_case=False,
+                        )
+                    except ValueError:
+                        continue
+                    for row in rows:
+                        self.claims[self.identity(row)]["sets"].add(
+                            value_key(outcomes(kind, entry, pins)["sets"])
+                        )
+                continue
             if kind == "identity.partition":
                 for column, owner in entry.get("columns", {}).items():
                     selected = entry | {"column": column}
