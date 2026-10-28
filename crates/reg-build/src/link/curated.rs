@@ -1,18 +1,16 @@
-//! Curated endpoint decisions share source-link validation and keep losing links as evidence.
-use super::{Entity, Relation, pairs, reaches, resolve_inner, successions};
+//! Curated relation rows share the link stage's endpoint and graph constraints.
+use super::{Entity, Relation, pairs, reaches, resolve};
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_frame::{Record, address::Address, statement::Statement};
 use reg_readers::curation::LocatedStatement;
-use reg_resolve::{Resolved, curation::Premise, provenance};
+use reg_resolve::{Resolved, curation::Premise};
 
 #[derive(Default)]
 pub(crate) struct Curated {
     pub relations: Vec<Relation>,
     pub statements: Vec<crate::emit::StatementRow>,
-    pub evidence: Vec<provenance::FinalValue>,
     pub refusals: Vec<(String, String)>,
-    pub succession_warnings: Vec<String>,
 }
 
 fn relation_kind(relation: reg_frame::statement::Relation) -> &'static str {
@@ -160,7 +158,7 @@ pub(crate) fn curate(
     records: &[Record],
     statements: &[(LocatedStatement, Premise)],
 ) -> Result<Curated, String> {
-    let source = resolve_inner(registers, records, &[], false)?;
+    let source = resolve(registers, records, &[])?;
     let mut result = Curated::default();
     let mut curated = Vec::new();
     let mut origins = BTreeMap::new();
@@ -218,10 +216,6 @@ pub(crate) fn curate(
                             end,
                             note: caveat.clone(),
                             statement: Some(hash.clone()),
-                            locator: reg_frame::Locator {
-                                input: statement.path.to_string_lossy().into_owned(),
-                                at: format!("line={}", statement.line),
-                            },
                         });
                     }
                 }
@@ -232,7 +226,7 @@ pub(crate) fn curate(
         }
     }
     check_conflicts(&curated, &origins, &mut result);
-    let mut relations = source_precedence(registers, source.relations, &curated, &mut result);
+    let mut relations = source.relations;
     relations.extend(curated.iter().cloned());
     validate_graph(relations, &curated, &origins, &mut result);
     result.refusals.sort();
@@ -287,146 +281,32 @@ fn check_conflicts(
                     "overlapping curated relations for one subject",
                 );
             }
-            if left.kind == "continues"
-                && right.kind == "continues"
-                && matches!(left.subject, Entity::Table(..))
-                && left.object == right.object
-                && left.at == right.at
-            {
-                refuse(
-                    result,
-                    origins,
-                    left,
-                    "successors of one table on the same day",
-                );
-                refuse(
-                    result,
-                    origins,
-                    right,
-                    "successors of one table on the same day",
-                );
-            }
         }
-    }
-}
-
-fn source_precedence(
-    registers: &[Resolved],
-    source: Vec<Relation>,
-    curated: &[Relation],
-    result: &mut Curated,
-) -> Vec<Relation> {
-    let mut relations = Vec::new();
-    for rel in source {
-        let winners = curated
-            .iter()
-            .filter(|c| {
-                (c.kind == rel.kind && c.subject == rel.subject)
-                    || (c.kind == "continues"
-                        && rel.kind == "continues"
-                        && matches!(c.subject, Entity::Table(..))
-                        && c.object == rel.object
-                        && c.at == rel.at)
-            })
-            .collect::<Vec<_>>();
-        if winners.is_empty() {
-            relations.push(rel);
-            continue;
-        }
-        {
-            if rel.kind == "continues" && winners.iter().all(|winner| winner.subject != rel.subject)
-            {
-                result.succession_warnings.push(super::warning(
-                    &rel.locator,
-                    "unchosen successor of one table on the same day",
-                ));
-            }
-            let subject = match rel.subject {
-                Entity::Register(r) => provenance::Subject::Register(r),
-                Entity::Table(r, t) => provenance::Subject::Table(r, t),
-                Entity::Variable(r, v) => provenance::Subject::Variable(r, v),
-                Entity::Release(..) => unreachable!("release relations refused"),
-            };
-            for winner in winners {
-                let hash = winner.statement.clone().expect("curated");
-                result.evidence.push(provenance::FinalValue {
-                    subject: subject.clone(), field: format!("relation:{}:{hash}", rel.kind),
-                    value: Some(serde_json::json!({"object":entity_name(registers, winner.object),"at":winner.at,"end":winner.end}).to_string()),
-                    source_value: Some(serde_json::json!({"object":entity_name(registers, rel.object),"at":rel.at,"note":rel.note,"locator":rel.locator}).to_string()),
-                    origin: provenance::Origin::Curated(hash),
-                });
-            }
-        }
-    }
-    relations
-}
-
-fn collect_evidence(result: &mut Curated) {
-    // One override cell holds losing edges for this subject/relation/statement.
-    // The override table is keyed by subject and field, not by relation endpoint.
-    let mut evidence = BTreeMap::<_, (Vec<serde_json::Value>, BTreeSet<String>, String)>::new();
-    for value in result.evidence.drain(..) {
-        let provenance::Origin::Curated(hash) = value.origin else {
-            unreachable!("curated evidence")
-        };
-        let entry = evidence
-            .entry((value.subject, value.field))
-            .or_insert_with(|| (Vec::new(), BTreeSet::new(), hash));
-        entry.0.push(
-            serde_json::from_str(value.source_value.as_deref().expect("source link"))
-                .expect("serialized link"),
-        );
-        if let Some(value) = value.value {
-            entry.1.insert(value);
-        }
-    }
-    for ((subject, field), (mut source, winners, hash)) in evidence {
-        source.sort_by_key(reg_frame::canonical_line);
-        source.dedup();
-        result.evidence.push(provenance::FinalValue {
-            subject,
-            field,
-            value: Some(serde_json::to_string(&winners).expect("endpoints serialize")),
-            source_value: Some(serde_json::to_string(&source).expect("links serialize")),
-            origin: provenance::Origin::Curated(hash),
-        });
     }
 }
 
 fn validate_graph(
-    mut relations: Vec<Relation>,
+    relations: Vec<Relation>,
     curated: &[Relation],
     origins: &BTreeMap<String, &LocatedStatement>,
     result: &mut Curated,
 ) {
-    let mut candidates = super::Relations::new();
-    for rel in &relations {
-        let locator = rel.locator.clone();
-        candidates.insert(
-            (rel.kind, rel.subject, rel.object, rel.at.clone()),
-            (locator, rel.note.clone()),
-        );
-    }
-    let dropped = super::drop_same_day(&mut candidates);
-    result.succession_warnings.extend(
-        dropped
-            .iter()
-            .map(|(locator, reason)| super::warning(locator, reason)),
-    );
-    relations.retain(|rel| {
-        candidates.contains_key(&(rel.kind, rel.subject, rel.object, rel.at.clone()))
-    });
-    for rel in curated {
-        if rel.kind != "continues" {
-            continue;
-        }
+    for rel in curated.iter().filter(|rel| rel.kind == "continues") {
         let mut edges = BTreeMap::<_, Vec<_>>::new();
-        for other in &relations {
-            if other.kind == "continues"
-                && !(other.subject == rel.subject
-                    && other.object == rel.object
-                    && other.at == rel.at)
+        for other in relations.iter().filter(|other| other.kind == "continues") {
+            if matches!(rel.subject, Entity::Table(..))
+                && other.object == rel.object
+                && other.at == rel.at
+                && other.subject != rel.subject
             {
+                refuse(
+                    result,
+                    origins,
+                    rel,
+                    "successors of one table on the same day",
+                );
+            }
+            if other.subject != rel.subject || other.object != rel.object {
                 edges.entry(other.subject).or_default().push(other.object);
             }
         }
@@ -434,90 +314,10 @@ fn validate_graph(
             refuse(result, origins, rel, "continues closes a cycle");
         }
     }
-    collect_evidence(result);
-    successions(&mut candidates, &mut result.succession_warnings);
-    result.relations = relations
-        .into_iter()
-        .filter(|rel| candidates.contains_key(&(rel.kind, rel.subject, rel.object, rel.at.clone())))
-        .collect();
-}
-
-fn entity_name(registers: &[Resolved], entity: Entity) -> String {
-    let r = &registers[entity.register()];
-    let prefix = format!("{}/{}", r.register.provider, r.public);
-    match entity {
-        Entity::Register(_) => prefix,
-        Entity::Variable(_, v) => format!("{prefix}/{}", r.variables[v].slug),
-        Entity::Table(_, t) => format!(
-            "{prefix}:table:{}",
-            r.tables[t].slug.as_deref().unwrap_or_default()
-        ),
-        Entity::Release(_, x) => format!("{prefix}:release:{}", r.releases[x].release.release),
+    // An exact source edge gains curated provenance without changing topology.
+    let mut distinct = BTreeMap::new();
+    for rel in relations {
+        distinct.insert((rel.kind, rel.subject, rel.object, rel.at.clone()), rel);
     }
-}
-
-/// Link review pins only source candidates affected by precedence or the selected
-/// predecessor/day choice. A new or changed candidate reopens that review.
-pub(crate) fn review(
-    registers: &[Resolved],
-    records: &[Record],
-    statement: &LocatedStatement,
-    premise: &mut Premise,
-) -> Result<(), String> {
-    let Statement::Link {
-        subject,
-        relation,
-        object,
-        at,
-        ..
-    } = &statement.statement
-    else {
-        return Ok(());
-    };
-    let subjects = endpoints(
-        registers,
-        &statement.provider,
-        &statement.register,
-        &subject.to_string(),
-        &premise.subjects,
-    )?;
-    let objects = endpoints(
-        registers,
-        &statement.provider,
-        &statement.register,
-        object,
-        &premise.objects,
-    )?;
-    let kind = relation_kind(*relation);
-    pairs(kind, &subjects, &objects)?;
-    let index = super::Index::new(registers);
-    let days = validity(at.as_ref());
-    let mut candidates = Vec::new();
-    for record in records {
-        let Record::Link(link) = record else {
-            continue;
-        };
-        if link.kind != kind {
-            continue;
-        }
-        let selected_subject = index
-            .entities(&link.subject)
-            .is_ok_and(|ends| ends.iter().any(|end| subjects.contains(end)));
-        let selected_choice = kind == "continues"
-            && subjects.iter().any(|s| matches!(s, Entity::Table(..)))
-            && index
-                .entities(&link.object)
-                .is_ok_and(|ends| ends.iter().any(|end| objects.contains(end)))
-            && days.iter().any(|(day, _)| *day == link.at);
-        if selected_subject || selected_choice {
-            candidates.push(serde_json::to_value(link).map_err(|e| e.to_string())?);
-        }
-    }
-    candidates.sort_by_key(reg_frame::canonical_line);
-    if let Some(first) = premise.subjects.first_mut() {
-        first
-            .fields
-            .insert("source_links".into(), serde_json::Value::Array(candidates));
-    }
-    Ok(())
+    result.relations = distinct.into_values().collect();
 }

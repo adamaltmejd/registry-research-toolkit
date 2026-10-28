@@ -1,7 +1,5 @@
 //! Acknowledgements retain findings and record exactly what the curator reviewed.
 
-use std::collections::BTreeMap;
-
 use reg_frame::address::Address;
 use reg_frame::statement::{Severity, Statement};
 use serde_json::{Value, json};
@@ -155,8 +153,4 @@ pub fn review(
             .insert("acknowledged_findings".into(), Value::Array(snapshots));
     }
     Ok(indices)
-}
-
-pub fn apply(resolved: &mut Resolved, acknowledgements: &BTreeMap<usize, Acknowledgement>) {
-    resolved.acknowledgements.extend(acknowledgements.clone());
 }

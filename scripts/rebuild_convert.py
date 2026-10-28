@@ -31,6 +31,12 @@ from rebuild_convert_groups import normalize_sets
 from rebuild_convert_identity import IdentityProjection
 
 ROOT = Path(__file__).resolve().parents[1]
+# simplify: resolver finding codes are string literals; replace this inventory if codes become computed.
+CURRENT_FINDING_CODES = {
+    code
+    for path in (ROOT / "crates/reg-resolve/src").rglob("*.rs")
+    for code in re.findall(r'"([A-Z][0-9]+:[a-z][a-z-]+)"', path.read_text())
+}
 EXPECTED = {
     "No statement": 1461,
     "set variable": 97,
@@ -1030,6 +1036,8 @@ class Converter:
                             }
                         )
                 elif kind == "acknowledge":
+                    if entry["code"] not in CURRENT_FINDING_CODES:
+                        raise ValueError("legacy finding code; no new-model finding")
                     subject = entry.get("subject", "")
                     slug = subject.rsplit("/", 1)[-1]
                     if slug not in self.ledgers.get((provider, register), {}).get(

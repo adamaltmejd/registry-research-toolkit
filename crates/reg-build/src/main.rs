@@ -330,7 +330,7 @@ fn build(args: &Args) -> Result<(), String> {
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
         if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
-            reg_resolve::curation::ack::apply(&mut r, acks);
+            r.acknowledgements.extend(acks.clone());
         }
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
@@ -366,12 +366,9 @@ fn build(args: &Args) -> Result<(), String> {
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     let mut linked = link::resolve(&resolved, &links, &docs)?;
-    let mut link_evidence = Vec::new();
     if let Some(curated) = applied.linked {
         linked.relations = curated.relations;
-        linked.succession_warnings = curated.succession_warnings;
         applied.statements.extend(curated.statements);
-        link_evidence = curated.evidence;
     }
     let link_unresolved = linked.warnings.len();
     let succession_dropped = linked.succession_warnings.len();
@@ -435,13 +432,12 @@ fn build(args: &Args) -> Result<(), String> {
     for &i in &order {
         sorted_inputs.push(by_index[i].take().expect("each input once"));
     }
-    let mut provenance = reg_resolve::provenance::finalize(
+    let provenance = reg_resolve::provenance::finalize(
         &resolved,
         &valuesets.values().map(|(set, _)| set).collect::<Vec<_>>(),
         &applied.classifications,
         &applied.overrides,
     );
-    provenance.values.extend(link_evidence);
     let catalog = emit::Catalog {
         meta,
         inputs: sorted_inputs,

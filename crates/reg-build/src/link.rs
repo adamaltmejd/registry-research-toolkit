@@ -11,7 +11,7 @@ use reg_resolve::Resolved;
 use crate::docs::Document;
 
 mod curated;
-pub(crate) use curated::{Curated, curate, review};
+pub(crate) use curated::{Curated, curate};
 
 /// A matched endpoint, by index into the resolved registers and their entities.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -54,7 +54,6 @@ pub struct Relation {
     pub note: Option<String>,
     pub end: Option<String>,
     pub statement: Option<String>,
-    pub locator: Locator,
 }
 
 /// One notice finding before row ids.
@@ -105,16 +104,6 @@ pub fn resolve(
     registers: &[Resolved],
     records: &[Record],
     docs: &[Document],
-) -> Result<Linked, String> {
-    resolve_inner(registers, records, docs, true)
-}
-
-#[allow(clippy::too_many_lines)]
-fn resolve_inner(
-    registers: &[Resolved],
-    records: &[Record],
-    docs: &[Document],
-    prune: bool,
 ) -> Result<Linked, String> {
     let index = Index::new(registers);
     let mut linked = Linked::default();
@@ -198,12 +187,10 @@ fn resolve_inner(
         }
     }
     linked.doc_links = doc_links.into_iter().collect();
-    if prune {
-        successions(&mut relations, &mut linked.succession_warnings);
-    }
+    successions(&mut relations, &mut linked.succession_warnings);
     linked.relations = relations
         .into_iter()
-        .map(|((kind, subject, object, at), (locator, note))| Relation {
+        .map(|((kind, subject, object, at), (_, note))| Relation {
             kind,
             subject,
             object,
@@ -211,7 +198,6 @@ fn resolve_inner(
             note,
             end: None,
             statement: None,
-            locator,
         })
         .collect();
     linked.notices = notices
@@ -228,7 +214,7 @@ type Relations =
 /// Drop the `continues` relations the post-write checks would refuse, each as one
 /// warning: tables that take over from one table on the same day (none is the
 /// successor), then, in locator order, a link that closes a cycle.
-fn drop_same_day(relations: &mut Relations) -> Vec<(Locator, &'static str)> {
+fn successions(relations: &mut Relations, warnings: &mut Vec<String>) {
     let mut same_day: BTreeMap<(Entity, Option<String>), Vec<_>> = BTreeMap::new();
     for (key, (locator, _)) in relations.iter() {
         if key.0 == "continues" && matches!(key.1, Entity::Table(..)) {
@@ -247,11 +233,6 @@ fn drop_same_day(relations: &mut Relations) -> Vec<(Locator, &'static str)> {
         }
     }
 
-    dropped
-}
-
-fn successions(relations: &mut Relations, warnings: &mut Vec<String>) {
-    let mut dropped = drop_same_day(relations);
     let mut edges: Vec<_> = relations
         .iter()
         .filter(|(key, _)| key.0 == "continues")

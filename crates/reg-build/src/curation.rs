@@ -454,15 +454,6 @@ fn run_selected(
         };
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
-        let link_view = if stage == 5
-            && statements
-                .iter()
-                .any(|s| matches!(s.statement, reg_frame::statement::Statement::Link { .. }))
-        {
-            resolve_catalog(root, &records, &result.variables, &result.metadata)?
-        } else {
-            Vec::new()
-        };
         let mut accepted = Vec::new();
         let mut field_applications = BTreeMap::new();
         let mut ack_indices = BTreeMap::new();
@@ -635,15 +626,6 @@ fn run_selected(
                             continue;
                         }
                     }
-                }
-                if matches!(
-                    statement.statement,
-                    reg_frame::statement::Statement::Link { .. }
-                ) && let Err(error) =
-                    crate::link::review(&link_view, &records, statement, &mut resolved.premise)
-                {
-                    refusals.push(format!("{at}: {error}"));
-                    continue;
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {

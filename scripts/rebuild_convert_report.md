@@ -1,202 +1,74 @@
-## Round 04 verified on merged main
-
-Merged `origin/main` at `33e975de1731500c655e531d23ccb5e5f7355cc3` (#2005) with a normal
-merge, `d79d3a058fedfb7fad07922425bdeb72114f9dd3`. No temporary dependency merge
-remains. The release binary was rebuilt from that merged head. Both comparison catalogs
-use the same binary and inputs worktree/manifest commit
-`9186fcbceeb2283a50c7f684764869e4dda5765e`. This is a curated **dev** build, not a
-release or activation.
-
-The regenerated proposals and every curation/config file are byte-identical to round 03.
-No converter emission changes were needed for the merged review fixes. No type or length
-setters are requested by the retained proposals; the sole legacy data-type correction
-still lacks an exact frame endpoint. No sentinel, role or unit-type setters are emitted.
-The one format setter remains valid. The 243 sets statements now produce memberships
-through resolve: **235 sets and 250 members**, unchanged from round 03.
-
-All heavy runs were sequential. Process listing remains unavailable (`pgrep` cannot
-access sysmond); this operator-scheduled run did not overlap another heavy job from this
-worker. `/usr/bin/time -l` was invoked, but its detailed output is blocked by
-`sysctl kern.clockrate`. Exact Rust-child exits, wall times and peak RSS were captured
-separately with `wait`/monotonic time/`getrusage(RUSAGE_CHILDREN)`; Darwin RSS is bytes.
-The outer timing wrapper returns 1 for its sandbox error even when the recorded Rust
-child returns 0.
-
-  | Run                        | Rust exit | Wall seconds | Peak RSS bytes | Round 03 wall | Wall delta |
-  | -------------------------- | --------: | -----------: | -------------: | ------------: | ---------: |
-  | Final lock                 |         0 |      174.452 |  8,148,647,936 |       175.973 |     -1.521 |
-  | Curated dev build          |         0 |      246.673 |  8,793,587,712 |       246.339 |     +0.334 |
-  | Explicit curated verify    |         0 |       22.945 |     81,281,024 |        22.911 |     +0.034 |
-  | Uncurated comparison build |         0 |      112.849 |  8,989,655,040 |       112.420 |     +0.429 |
-
-All reported catalog counts, statement/override counts, memberships, source outcomes,
-and diagnostic families are unchanged from round 03. Restored type/length application
-has no retained setters to affect. Removing format from blocking forms/type-change
-findings causes no aggregate difference on these inputs. Moving memberships into resolve
-preserves the observed memberships. Timing/RSS variation is measured host/run variation,
-not evidence of a performance change.
-
-The final lock wrote **169 files containing 14,792 reviewed premises** and had **zero
-refusals**. The curated catalog passed its built-in post-write checks and the explicit
-`reg-build verify` command. It published **13,466 applied statement rows: 2,599 assert
-and 10,867 set**, with **zero missing-premise diagnostics**. The uncurated comparison
-has zero statements and zero curated overrides.
-
-The remaining 1,326 locked proposals are 177 redundant sets, 103 links and 1,046
-acknowledgements. Links/acks are premise-only until D-3c; they are not reported as
-applied. There are zero acknowledged findings in this catalog.
-
-### D-3b field scope: applied set statements and winning override cells
-
-Counts below come from the published SQLite `statement` and `override` boundaries. One
-applied statement may affect several cells; these are not source-entry counts. Seven
-sensitive setters were wholly redundant and produced no winning setter override.
-
-  | Field                    | Proposed sets | Applied set statements | Set override cells |
-  | ------------------------ | ------------: | ---------------------: | -----------------: |
-  | `coded`                  |           144 |                     32 |                 32 |
-  | `definition`             |           264 |                    264 |                264 |
-  | `description`            |         4,947 |                  4,947 |              4,948 |
-  | `format`                 |             1 |                      1 |                  2 |
-  | `identifier`             |             8 |                      1 |                  1 |
-  | `length`                 |             0 |                      0 |                  0 |
-  | `label`                  |         4,141 |                  4,127 |              4,129 |
-  | `notice`                 |             1 |                      1 |                  1 |
-  | `operational_definition` |           104 |                    104 |                104 |
-  | `period`                 |           114 |                    114 |                114 |
-  | `sensitive`              |             7 |                      0 |                  0 |
-  | `sets`                   |           243 |                    243 |                243 |
-  | `spelling`               |           146 |                    146 |                146 |
-  | `type`                   |             0 |                      0 |                  0 |
-  | `unit`                   |           280 |                    280 |                280 |
-  | `value_set`              |           174 |                    116 |                116 |
-  | `variable`               |           491 |                    491 |              3,654 |
-
-Period setters also detached 11 source-release references; those 11 `release` override
-cells are side effects, not a new set field.
-
-All curated override cells, including asserted source-shaped facts:
-
-  | Field                    | Cells |
-  | ------------------------ | ----: |
-  | `coded`                  |    32 |
-  | `definition`             | 3,009 |
-  | `description`            | 4,948 |
-  | `edition`                |    47 |
-  | `format`                 |     2 |
-  | `grain`                  |    47 |
-  | `identifier`             |   841 |
-  | `label`                  | 6,874 |
-  | `length`                 |   510 |
-  | `name`                   |    47 |
-  | `notice`                 |     1 |
-  | `operational_definition` |   104 |
-  | `period`                 | 2,361 |
-  | `population_valuesets`   | 2,745 |
-  | `populations`            |    47 |
-  | `provider`               | 2,792 |
-  | `register`               | 2,792 |
-  | `release`                |   603 |
-  | `sensitive`              |   840 |
-  | `sets`                   |   243 |
-  | `source_key`             | 2,745 |
-  | `spelling`               | 2,891 |
-  | `table`                  | 2,792 |
-  | `type`                   | 2,745 |
-  | `unit`                   |   317 |
-  | `value_set`              |   116 |
-  | `variable`               | 3,654 |
-
-### Catalog-level deltas
-
-  | Measure              | Uncurated | Curated | Delta  |
-  | -------------------- | --------: | ------: | -----: |
-  | Variables            |    56,009 |  57,921 | +1,912 |
-  | Segments             |   169,825 | 172,195 | +2,370 |
-  | Clear segments       |   166,182 | 168,619 | +2,437 |
-  | Ambiguous segments   |     3,627 |   3,560 |    -67 |
-  | Preliminary segments |        16 |      16 |     +0 |
-  | Withheld occurrences |       397 |     552 |   +155 |
-
-Withheld is an occurrence status; no count of unpublished “withheld variables” is
-inferred. Both catalogs have zero withheld-gap rows.
-
-### Remaining diagnostics
-
-Curation: **0 missing premises; 177 redundant-set notices; 0 other located curation
-errors**. Reader warnings: **50,349**. The following are retained catalog findings, not
-missing-premise failures:
-
-  | Family                         | Findings |
-  | ------------------------------ | -------: |
-  | `C0:curated-notice`            |        1 |
-  | `F1:definition-change`         |   20,678 |
-  | `F1:domain-change`             |   17,314 |
-  | `F1:label-differs`             |       50 |
-  | `F1:label-drift`               |      181 |
-  | `F1:type-change`               |   15,544 |
-  | `F1:unit-change`               |    5,977 |
-  | `F2:ambiguous`                 |    3,560 |
-  | `F5:documented-without-column` |    2,211 |
-  | `F6:source-conflict`           |    1,174 |
-  | `F7:edition-disagreement`      |       12 |
-  | `F9:unparsed-delivery`         |       39 |
-  | `S0:source-notice`             |      140 |
-  | `T1:clamp`                     |      657 |
-
-### Emission repairs and deferrals
-
-- **Gap marker:** one `identity.unassigned` proposal for the `ant6` family is deferred,
-  preserving the default marker and its finding
-  (`kommunalekonomisk-utjamning.toml:403`). No gap guard is weakened.
-- **65 unsupported-year proposals:** 64 LOVA period setters plus one label setter, from
-  66 source entries, are retained using exact source guards without the unrepresentable
-  1893 period qualifier. The table/fold/key peers have identical whole-source spans. No
-  year is clamped.
-- **Variable-wide grouping:** 1,597 per-occurrence grouping proposals normalize to 243
-  proved local-variable statements, preserving positive memberships/evidence. Unproved
-  groups are deferred with source records (731 lack a proved placed local variable; 18
-  have assertion-dependent identity). No IDs are guessed.
-- **Absent endpoints:** 200 legacy acknowledgements and two code-label links are
-  deferred with named endpoint reasons.
-- **Scalar scope:** release guards remain on scalar corrections; authored names and
-  literal label guards distinguish the three ambiguous corrections. This avoids five
-  assertion/unit duplicate effects.
-- **Period shape:** two disjoint corrections are deferred because `set period` needs one
-  contiguous period; one EKB correction needs an explicit parent-coverage correction. No
-  scope is shrunk.
-- **D-11:** 18 assignments merging concurrent different spellings in one table are
-  deferred with original source accounting. They cover exactly the 11 variables
-  responsible for the observed structural failure. Existing source facts and ambiguity
-  rules remain.
-
-In round 03, the first lock failed after 183.62 seconds with 9,331 located diagnostics
-(929 empty matches, 8,395 overlap diagnostics, and seven other errors). After those
-fixes, a lock passed, but the first curated build failed after 232.289 seconds at the
-occurrence/segment invariant. A diagnostic rerun retained the rejected stage: 38 fold
-mismatches across 11 variables; zero variable/table/period/value-set/dtype mismatches. A
-tiny real-CLI fixture reproduced the invalid concurrent-fold assignment. Temporary
-diagnostic retention was restored before the final measured run; verifier checks and
-publication guards were never changed. Failed stages were not published.
-
-Every deferred proposal retains origins/reason in report.json, including partially
-converted source entries. “Converted” below means a source entry retained at least one
-accepted proposal, not that every legacy feature was expressible. Full legacy
-fingerprint certification is not claimed.
-
-Final source outcomes: **7,004 converted / 11,137 dropped or no-op / 0 refused** across
-18,141 scoped declarations; register curation alone is **7,004 / 10,295 / 0** across
-17,299 entries.
-
-Detailed JSON, final locks, both catalogs and run metrics are retained locally under
-`.local/d-converter-round04/` (round 03 evidence is retained separately). Generated TOML
-and catalogs stay out of Git. Frames, rejected stages and temporary tools are removed
-after reporting. No PR was merged, no release gate or regen ran, and no legacy real-seed
-build ran.
-
-# One-shot curation conversion report
+## D-3c fix round 01: current finding codes and a smaller link stage
 
 Deleted at milestone F (REBUILD.md).
+
+The regenerated converter root now locks directly. All 2,296 legacy acknowledge source
+declarations are dropped with the exact reason
+`legacy finding code; no new-model finding`. The previous 1,046 normalized ack proposals
+become **zero**. There are no current-code acknowledge declarations in this corpus; the
+converter retains the translation branch for any such declaration. The current code
+vocabulary comes from the resolver's finding-code literals.
+
+Source accounting: **5,603 converted / 12,538 dropped / 0 refused**, across 18,141
+declarations. Other proposals remain unchanged: 2,599 assertions, 11,044 setters, and
+103 `label_of` links.
+
+Removed predecessor/day successor choice, source-edge displacement, displaced-edge
+`override` cells and JSON aggregation, the unpruned source-link mode and extra relation
+locator, source-candidate premise snapshots, a duplicate full-catalog resolve, and the
+trivial `ack::apply` wrapper. Curated links add relation rows with provenance and
+optional validity. The existing source link stage owns endpoint matching and source-only
+dropping. A curated cycle or second table successor on one day is a located refusal.
+Exact endpoint and finding selection, F5 marker matching, finding premises, identity
+rekeying and conflict guards remain because the explicit plan needs them. No
+successor-choice or reject form exists.
+
+Implementation/docs/converter diff, excluding this report: **+811/−73**, down from
+**+1057/−77**. `link/curated.rs`: **523 → 323 lines**; `curation/ack.rs`: **162 → 156**.
+The generated report below replaces the previous round's snapshot and removes its stale
+ack proposal counts. The full PR diff, including this report refresh, is reported in the
+PR.
+
+Measurements use the runtime and converter sources in this report's commit. Inputs
+remain at `9186fcbceeb2283a50c7f684764869e4dda5765e`; the SCB asset is pinned by
+`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`. It was downloaded
+inside this checkout. The main checkout and accepted inputs were not modified. All heavy
+commands ran sequentially. Wall time and Darwin child peak RSS were recorded with
+monotonic time and `getrusage(RUSAGE_CHILDREN)`.
+
+  | Command                     | Exit | Wall seconds | Peak RSS bytes |
+  | --------------------------- | ---: | -----------: | -------------: |
+  | Release binary build        |    0 |        7.569 |    704,987,136 |
+  | Pinned input read           |    0 |       54.617 |  7,666,188,288 |
+  | Converter regeneration      |    0 |       67.105 |  5,519,065,088 |
+  | Real lock, regenerated root |    0 |      184.839 |  7,941,341,184 |
+  | Curated dev build           |    0 |      256.252 |  8,306,671,616 |
+  | Explicit verify             |    0 |       23.123 |     81,772,544 |
+
+The real lock accepted **13,746 premises in 122 files**, with **zero stale-ack
+refusals**. No proposals were removed after regeneration and no locks were copied from
+another root. The dev build and explicit `reg-build verify` passed. Applied statements:
+**2,599 assert / 10,867 set / 103 link / 0 ack**. All 103 curated relation rows are
+`label_of`; `continues`, `derived_from` and `equivalent` have zero applied rows in this
+corpus. The build report has **0 located refusals, 0 stale acks and 0 missing
+premises**. `succession_dropped` remains **0**; the previous round's uncurated
+comparison also had zero. The current corpus needs no curated choice or reject
+operation.
+
+Curated digest: `2bb6876508555e7fc61570b6df8466532fd5f5e152c9f41721f8a5eeb0289285`.
+
+`g0 rust` passed: formatting, Ruff, type/schema/vocabulary checks, Rust Clippy/tests and
+dependency checks, 116 script tests, byte-identical fixture rebuilds, and 194 runtime
+conformance cases passed (2 skipped). Independent read-only review found no remaining
+issue. No new tests were added. Final Markdown formatting/lint also passed.
+
+Not run this round: legacy real-seed build, release gate, `gate.py regen`, R suites,
+additional uncurated or pre-change byte-comparison builds, or new ack/successor
+synthetic cases. No rebase, force push, PR merge, or main-checkout mutation occurred.
+Generated frames, curation, catalogs and logs used task-local `.local/d-link-ack-r1/`
+and are removed after reporting.
+
+# One-shot curation conversion report
 
 Proposals only. Lock records current premises; old fingerprints have not been certified.
 
@@ -206,55 +78,39 @@ additional statements.
 
   | Outcome   | Entries |
   | --------- | ------: |
-  | converted |    7004 |
-  | dropped   |   11137 |
+  | converted |    5603 |
+  | dropped   |   12538 |
 
-  | Statement / field / subtype                               | Count |
-  | --------------------------------------------------------- | ----: |
-  | `ack`                                                     |  1046 |
-  | `ack.finding.ambiguous_sibling_shape`                     |    46 |
-  | `ack.finding.conflicting_code_memberships`                |   106 |
-  | `ack.finding.conflicting_coding_labels`                   |     4 |
-  | `ack.finding.conflicting_occurrence_facts`                |    24 |
-  | `ack.finding.conflicting_variable_fact`                   |     1 |
-  | `ack.finding.missing_coding_period`                       |   374 |
-  | `ack.finding.no_supported_states`                         |    41 |
-  | `ack.finding.unknown_code_membership`                     |     8 |
-  | `ack.finding.unknown_data_type`                           |     2 |
-  | `ack.finding.unresolved_column_representation`            |    13 |
-  | `ack.finding.unresolved_flag`                             |     3 |
-  | `ack.finding.unresolved_lineage_ambiguous_source_variant` |     3 |
-  | `ack.finding.unresolved_native_identity`                  |   343 |
-  | `ack.finding.unsupported_occurrence`                      |    64 |
-  | `ack.finding.unsupported_representation_coding`           |    14 |
-  | `assert`                                                  |  2599 |
-  | `assert.entity.occurrence`                                |  2552 |
-  | `assert.entity.release`                                   |    47 |
-  | `assert.fields.definition`                                |  2552 |
-  | `assert.fields.identifier`                                |   663 |
-  | `assert.fields.label`                                     |  2552 |
-  | `assert.fields.length`                                    |   510 |
-  | `assert.fields.sensitive`                                 |   663 |
-  | `assert.fields.type`                                      |  2552 |
-  | `assert.fields.unit`                                      |    37 |
-  | `link`                                                    |   103 |
-  | `link.relation.label_of`                                  |   103 |
-  | `set`                                                     | 11044 |
-  | `set.fields.coded`                                        |   144 |
-  | `set.fields.definition`                                   |   264 |
-  | `set.fields.description`                                  |  4947 |
-  | `set.fields.format`                                       |     1 |
-  | `set.fields.identifier`                                   |     8 |
-  | `set.fields.label`                                        |  4141 |
-  | `set.fields.notice`                                       |     1 |
-  | `set.fields.operational_definition`                       |   104 |
-  | `set.fields.period`                                       |   114 |
-  | `set.fields.sensitive`                                    |     7 |
-  | `set.fields.sets`                                         |   243 |
-  | `set.fields.spelling`                                     |   146 |
-  | `set.fields.unit`                                         |   280 |
-  | `set.fields.value_set`                                    |   174 |
-  | `set.fields.variable`                                     |   491 |
+  | Statement / field / subtype         | Count |
+  | ----------------------------------- | ----: |
+  | `assert`                            |  2599 |
+  | `assert.entity.occurrence`          |  2552 |
+  | `assert.entity.release`             |    47 |
+  | `assert.fields.definition`          |  2552 |
+  | `assert.fields.identifier`          |   663 |
+  | `assert.fields.label`               |  2552 |
+  | `assert.fields.length`              |   510 |
+  | `assert.fields.sensitive`           |   663 |
+  | `assert.fields.type`                |  2552 |
+  | `assert.fields.unit`                |    37 |
+  | `link`                              |   103 |
+  | `link.relation.label_of`            |   103 |
+  | `set`                               | 11044 |
+  | `set.fields.coded`                  |   144 |
+  | `set.fields.definition`             |   264 |
+  | `set.fields.description`            |  4947 |
+  | `set.fields.format`                 |     1 |
+  | `set.fields.identifier`             |     8 |
+  | `set.fields.label`                  |  4141 |
+  | `set.fields.notice`                 |     1 |
+  | `set.fields.operational_definition` |   104 |
+  | `set.fields.period`                 |   114 |
+  | `set.fields.sensitive`              |     7 |
+  | `set.fields.sets`                   |   243 |
+  | `set.fields.spelling`               |   146 |
+  | `set.fields.unit`                   |   280 |
+  | `set.fields.value_set`              |   174 |
+  | `set.fields.variable`               |   491 |
 
 Explicit legacy set-field requests, including entries whose selectors or payloads still
 need review (counts are source entries, not expanded statements):
@@ -385,9 +241,9 @@ not a resolver equivalence proof.
   | identity.edition_split: requires reviewed translation of legacy payload/guards                                                                                            |      37 |
   | identity.rename: requires reviewed translation of legacy payload/guards                                                                                                   |       1 |
   | identity.route: requires reviewed translation of legacy payload/guards                                                                                                    |      20 |
-  | legacy diagnostic subject has no public ledger endpoint                                                                                                                   |     688 |
-  | legacy diagnostic/link endpoint has no placed final local variable; reviewed current finding/link required                                                                |     209 |
+  | legacy diagnostic/link endpoint has no placed final local variable; reviewed current finding/link required                                                                |       2 |
   | legacy field has no four-kind field                                                                                                                                       |      12 |
+  | legacy finding code; no new-model finding                                                                                                                                 |    2296 |
   | legacy period cuts a whole source occurrence                                                                                                                              |       8 |
   | new reader binds no source classification                                                                                                                                 |      52 |
   | no exact new-frame occurrence endpoint                                                                                                                                    |     257 |
@@ -418,7 +274,7 @@ not a resolver equivalence proof.
 
 ## Lock
 
-Status: accepted. See report.json for located refusals and their source origins.
+Status: accepted by the separately measured real lock above; zero located refusals.
 
   | Lock error | Located refusals |
   | ---------- | ---------------: |
@@ -448,8 +304,8 @@ Resolved by the operator in fix round 02:
   145 ordinary declarations use set sets, preserving each column's own source metadata;
   disagreements use F6/ambiguity.
 - **operational_definition (191 previously deferred declarations):** emit set
-  operational_definition; merged d-set-fields supplies field application; missing
-  endpoints or conflicting donors remain separately listed.
+  operational_definition; d-set-fields supplies field application in the validation
+  integration; missing endpoints or conflicting donors remain separately listed.
 - **noncalendar placement (33):** dropped with reason D-7.
 
 Remaining genuinely open items:
@@ -481,20 +337,3 @@ report records the exact runtime revision used for validation.
 Converted means emitted without an observed located refusal. If the whole-root lock
 fails before evaluation completes, other proposals remain uncertified; unreported errors
 are not assumed absent.
-
-## Final gate and reproducibility
-
-`uv run --no-project scripts/gate.py g0 rust` passed on the merged tree: lint,
-format/type/schema checks, Rust fmt/clippy/tests and dependency audit, 116 script tests,
-byte-identical synthetic builds, and 194 conformance tests (2 skipped). Independent
-review found no material converter merge blocker. No permanent tests were added. The
-first standalone formatter invocation could not create its default uv tool directory;
-the formatter and full gate then succeeded with a checkout-local tool directory.
-
-The measured converter sources are unchanged from `aea16f0b1`; runtime validation uses
-the normal main merge `d79d3a058`. The JSON evidence records curation digests, exact
-commands and child results. The locked-curation file manifest SHA-256 (sorted relative
-paths mapped to content SHA-256, excluding locks) is
-`5631703867465d59d1b0b0273b44e8ccd6f903f449e72e62b197c00121db16ca`. Final locks, both
-catalogs and metrics remain local. The PR diff contains only the six converter scripts
-and this report. No PR merge, release gate, regen or legacy real-seed build was run.
