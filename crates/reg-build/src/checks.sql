@@ -35,14 +35,8 @@ SELECT o.id FROM occurrence o
   JOIN spelling sp ON sp.id = o.spelling_id
 WHERE o.variable_id <> s.variable_id OR o.table_id <> s.table_id OR sp.fold_id <> s.fold_id
    OR o.start < s.start OR o.end > s.end
-   OR (s.state <> 'ambiguous' AND (
-     o.valueset_id IS NOT s.valueset_id
-     -- A type-only conflict keeps no segment type and has its own review finding.
-     OR (o.dtype IS NOT s.dtype AND NOT (s.dtype IS NULL AND EXISTS (
-       SELECT 1 FROM finding f
-       WHERE f.subject_kind = 'segment' AND f.subject_id = s.id
-         AND f.code = 'F6:source-conflict' AND f.severity = 'review'
-         AND f.start = s.start AND f.end = s.end)))));
+   OR (s.state <> 'ambiguous' AND o.valueset_id IS NOT s.valueset_id);
+-- Type agreement uses reg-frame's family map in verify.rs.
 
 -- (8) variables have segments; hull matches
 SELECT v.id FROM variable v LEFT JOIN (

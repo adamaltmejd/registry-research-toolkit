@@ -1,5 +1,5 @@
 {
-  "note": "Two variables claim the column `Del` in `amb` in 2019 (F2 rival claimants), so `Del`'s 2019 segment is ambiguous; its 2018 segment (another length) is clear. Fails if ordering 2018..2019 stops being `order_blocked` with exactly one `ambiguous_window` over 2019, or reports the clear 2018 too. Oracle: the fixture's JSONL, reg-resolve's F2 rule and logical-order.md §2.",
+  "note": "Two variables claim the column `Del` in `amb` in 2019 (F2 rival claimants). Del's adjacent 2018 and 2019 occurrences differ only in length and join as one form; the rival makes that whole segment ambiguous. Fails if ordering 2018..2019 stops being `order_blocked` with exactly one `ambiguous_window` over the joined segment. Oracle: the fixture's JSONL, crates/DESIGN.md's family agreement and whole-segment rival rule, and logical-order.md §2.",
   "fixture": "orders",
   "project": {
     "schema_version": "5.1.0",

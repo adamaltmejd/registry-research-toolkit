@@ -160,7 +160,17 @@ tracks the milestones. This section holds the design decisions that outlive the 
 form), on that day. Neighbours are compared: an `ambiguous` segment is skipped and a gap
 is not a change.
 
-- `F1:type-change`: dtype or length differs between consecutive segments of one table.
+- `F1:type-change`: the stated type family differs between consecutive segments of one
+  table. Width and length differences never create findings or reviews. One closed map
+  in `reg-frame` assigns the exact frame dtype names to families; an unmapped dtype is
+  refused at its source locator. Occurrences retain their normalized dtype and length.
+  The neutral frame vocabulary is `int`/`integer` (integer), `decimal` (a separate
+  family), `char`/`text` (text), `date`/`datetime` (temporal), `boolean`, `geometry`,
+  `uuid`, `binary`, `unspecified` and `identifier`. Reader config normalizes source and
+  format literals before they enter the frame. `unspecified` is recognized unknown
+  evidence, not a family or a fallback for unmapped names. An unknown side never creates
+  a type-change finding. Integer/decimal, text/integer, text/decimal and transitions
+  between those families and temporal remain changes.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
   uncoded. The message counts codes added, removed and relabelled.
 - `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs
@@ -274,10 +284,10 @@ spelling and type. A D `set` states those.
   returned with segment evidence; they do not replace definitions or operational
   definitions. No field gets a second home. A value-set override chooses the
   occurrence's own set while retaining its source population alternatives as evidence.
-  Unsupported entity/field combinations are located refusals. Type and length
-  corrections participate in F6 and ambiguity resolution; corrected conflict markers
-  clear while the original premises remain evidence. Format is carried and published
-  without changing agreement or F1 findings.
+  Unsupported entity/field combinations are located refusals. Type corrections that
+  change the family participate in F6 and ambiguity resolution; length corrections do
+  not. Corrected conflict markers clear while the original premises remain evidence.
+  Format is carried and published without changing agreement or F1 findings.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -442,12 +452,22 @@ overlapping curated overrides are refused at both locations.
   starts is refused, located at its source row.
 - **Segments hold whole occurrences.** The variable's overlapping occurrences in one
   table form one segment; adjacent ones of one form join. A segment is ambiguous when
-  its occurrences disagree on label, type or value set, except a type-only disagreement
-  under one source key and one folded spelling. That exception leaves dtype unset and
-  emits one `F6:source-conflict` review per segment for a D `set`, including when case
-  or length also differs. Labels compare ignoring case and spacing; label and value-set
-  disagreements still block. Another variable claiming its folded spelling in any
-  overlap still makes the whole segment ambiguous, including an exempt segment.
+  its occurrences disagree on label, type family or value set, except a family-only
+  disagreement under one source key and one folded spelling. That exception leaves dtype
+  unset and emits one `F6:source-conflict` review per segment for a D `set`, including
+  when case also differs. A family disagreement keeps a stated length only when all
+  stating occurrences agree, and joins adjacent segments only when their lengths agree.
+  Type agreement ignores unknown occurrences: only multiple known families can cause
+  ambiguity or a type-only F6. Unknown evidence cannot conceal a disagreement between
+  known families. Within temporal the widening order is `date` < `datetime`; within
+  other families equivalent aliases use lexical order. The published length is the
+  greatest stated length among known forms when any exist, else among unknown forms.
+  Unknown-only components remain separate from adjacent known-family runs, like gaps; F1
+  skips comparisons with an unknown side. An overlapping segment with known evidence
+  never publishes `unspecified`. No length is invented. Adjacent agreeing known forms
+  join with the same widest-form rule. Labels compare ignoring case and spacing; label
+  and value-set disagreements still block. Another variable claiming its folded spelling
+  in any overlap still makes the whole segment ambiguous, including an exempt segment.
 - **The implicit table** takes its register's id, so `ident` holds that id once, as the
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
@@ -506,10 +526,11 @@ overlapping curated overrides are refused at both locations.
   §2.3: the public id is stable through the ledger; §7 allows ledger entries; audit
   B-1). Rows that differ only by population are one occurrence with every row as a
   locator; the release lists its populations, with a reference day when one date is
-  stated. A label, definition, operational definition, unit, type or length the rows
-  disagree on keeps the first row's as provisional and names the field in the
-  occurrence's `conflicts`, which resolve reports as F6 (source conflict), once per
-  variable.
+  stated. Compatible known type forms widen as above; a known type replaces an unknown
+  provisional type, and unknown rows do not widen known lengths. A label, definition,
+  operational definition, unit or known type family the rows disagree on keeps the first
+  row's as provisional and names the field in the occurrence's `conflicts`, which
+  resolve reports as F6 (source conflict), once per variable.
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items

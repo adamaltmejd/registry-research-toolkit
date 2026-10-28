@@ -23,7 +23,7 @@
       },
       "spelling": "Kod",
       "type": "char",
-      "length": null,
+      "length": 3,
       "value_set": null,
       "classification": null
     }

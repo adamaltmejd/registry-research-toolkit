@@ -107,7 +107,7 @@ pub fn label_key(label: &str) -> String {
 }
 
 /// What two overlapping occurrences of one variable must agree on (crates/DESIGN.md
-/// "Segments hold whole occurrences"). Resolve exempts type-only disagreement under
+/// "Segments hold whole occurrences"). Resolve exempts family-only disagreement under
 /// one source key and folded spelling. The spelling is not part of the form; the label
 /// compares by [`label_key`].
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -118,7 +118,7 @@ pub struct Form {
 }
 
 impl Form {
-    /// The form of an occurrence's raw label, type and value set.
+    /// The form of an occurrence's label, type family and value set.
     #[must_use]
     pub fn new(label: Option<&str>, dtype: Option<&str>, valueset: Option<&str>) -> Self {
         Self {
@@ -126,19 +126,6 @@ impl Form {
             dtype: dtype.map(str::to_owned),
             valueset: valueset.map(str::to_owned),
         }
-    }
-}
-
-/// The length covering occurrences state, and whether they conflict: the one length when
-/// every stating occurrence agrees, else `None`; the flag is set when two differ.
-#[must_use]
-pub fn agreed_length(lengths: impl IntoIterator<Item = Option<i64>>) -> (Option<i64>, bool) {
-    let stated: std::collections::BTreeSet<i64> = lengths.into_iter().flatten().collect();
-    let mut all = stated.iter();
-    match (all.next(), all.next()) {
-        (Some(&n), None) => (Some(n), false),
-        (_, Some(_)) => (None, true),
-        _ => (None, false),
     }
 }
 
