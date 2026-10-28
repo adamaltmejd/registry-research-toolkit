@@ -376,3 +376,141 @@ kind = "set"
 subject = "var:bransleslaget-i-klartext-btext"
 fields = { "sets" = ["legacy-bransleslaget-i-klartext-btext"] }
 evidence = "reg_meta_build/curation/registers/scb/isen.toml:2004\nreg_meta_build/curation/registers/scb/isen.toml:2017\n\nExact same native source member declares both BText and BTEXT with identical substantive fields in this edition. Retain both literal physical forms under their known native klartext quantity, with per-column metadata. No field dropped, code value merged or suffix meaning inferred. Batch51-ISEN25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2021..2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ng2007 @2013,2019..2024"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: ng2007 @2007..2012,2014..2018"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: näringsgren2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

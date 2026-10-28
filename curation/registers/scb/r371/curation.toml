@@ -4212,3 +4212,609 @@ kind = "set"
 subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r19835'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: {blan,blk} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: {blan,blk} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blan @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2021..2022"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blan @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: {blan,blk} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: {blan,blk} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: blk @2009"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2006..2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: blk @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan} @2008..2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk,blkf} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: {bfastlk,blk} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk,blkf} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: {bfastlk,blk} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk,blkf} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: {bfastlk,blk} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk,blkf} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: blk @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: blk @2014 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: blk where key = 'v38859'"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blk,blkf} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: blk @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blk} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: blan @2017"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: blk @2016..2017"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: {bfastlk,blk} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: blk"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: blk @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: {blan,blk} @2017..2018"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: <none> where key = 'v17678'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: bfastlk @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bflan,blan,blk} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bkungr @2008..2018"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bngr @2007..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bngr2 where key = 'v2698'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: {bngra,bngre}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bkungr07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bssyk @2013..2014"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bssyk12 @2014..2015"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:41\n\nLegacy exact value-set label: SSYK2012_4"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsuninr @2006..2021"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsunniv where key = 'v2714'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsunniv where key = 'v66'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsunold where key = 'v774'"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsuninr @2022..2023"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bsektor @2006..2012,2015"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bngr2 where key = 'v37730'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bkungr @2006..2007"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bkungr02 @2009..2010"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bssyk @2006..2012"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "individregister: bssyk12 @2016..2023"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"

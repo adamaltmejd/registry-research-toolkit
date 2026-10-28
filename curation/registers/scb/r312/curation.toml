@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "tjansteforetagens-forbrukning: ngs"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "tjansteforetagens-forbrukning: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"

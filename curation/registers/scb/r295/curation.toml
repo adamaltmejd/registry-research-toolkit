@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "luftrakenskaper: <none> where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:36\n\nLegacy exact value-set label: SNI 2007 MIR"
+
+[[statement]]
+kind = "set"
+subject = "miljosektorn: nr_agg_2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:36\n\nLegacy exact value-set label: SNI 2007 MIR"

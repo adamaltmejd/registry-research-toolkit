@@ -12,3 +12,207 @@ subject = "var:studievag-namn"
 relation = "label_of"
 object = "scb/kompletterande-utbildning/studievag"
 evidence = "reg_meta_build/curation/registers/scb/kompletterande-utbildning.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {hkom,kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {hkom,kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: hkom @2002-07-01..2002-12-31"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: hkom @2002-07-01..2002-12-31"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: hkom @2003-07-01..2003-12-31"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: hkom @2003-07-01..2003-12-31"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: hkom @2004-07-01..2004-12-31"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: hkom @2004-07-01..2004-12-31"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: hkom @2005-07-01..2005-12-31"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: hkom @2005-07-01..2005-12-31"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: hkom @2006-07-01..2006-12-31"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: hkom @2006-07-01..2006-12-31"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: {kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: {sun2000inr,suninr_ku}"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: {sun2000niva_1,sun2000niva_1_far,sun2000niva_1_mor,sun2000niva_3,sun2000niva_3_far,sun2000niva_3_mor}"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: sun2000niva"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"

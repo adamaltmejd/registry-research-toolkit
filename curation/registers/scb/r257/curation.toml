@@ -4817,3 +4817,21 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: IPR_OUT_SELL where key = 'v46615' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: seat"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: {indu_main_act,sni}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: agkat"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"

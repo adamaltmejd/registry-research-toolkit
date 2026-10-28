@@ -59,3 +59,105 @@ kind = "set"
 subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r5518'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: forsaml @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: kommun @2008 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {forsaml,lan} @2008"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {forsaml,kommun,lan} @2009..2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {forsaml,kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {forsaml,kommun,lan} @2012..2013"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: {kommun,lan} @2025"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"

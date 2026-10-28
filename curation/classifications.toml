@@ -1,14 +1,799 @@
-# Shared classification inventory. Applicability is set on occurrences in register
-# curation; period here describes only documented book existence and may be omitted.
-# No old classification tree is converted in this PR.
-#
-# [[classification]]
-# family = "example"
-# version = "v1"
-# value_set = "classifications/example.csv" # exact reader input locator
-# evidence = "Reviewed publisher documentation"
-# name = "Example edition"
-# family_name = "Example classification"
-# publisher = "Publisher"
-# period = "2010.."
-# succeeds = ["class/example/v0"] # explicitly reviewed predecessor, also inventoried
+# Converted classification inventory; book periods describe existence only.
+
+[[classification]]
+family = "agarkat"
+version = "agarkat2000"
+value_set = "catalog/source/classifications/agarkat2000.csv"
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för indelning efter ägarkategori 2000"
+publisher = "SCB"
+period = "2000..2019"
+
+[[classification]]
+family = "agarkat"
+version = "agarkat2020"
+value_set = "catalog/source/classifications/agarkat2020.csv"
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för indelning efter ägarkategori 2020"
+publisher = "SCB"
+period = "2020.."
+succeeds = ["class/agarkat/agarkat2000"]
+
+[[classification]]
+family = "atc"
+version = "atc"
+value_set = "catalog/source/classifications/sos/atc.csv"
+evidence = "reg_meta_build/curation/classifications/ATC.toml:1; reviewed D-9 family/version mapping"
+name = "Anatomisk Terapeutisk Kemisk klassifikation (ATC)"
+publisher = "Läkemedelsverket"
+
+[[classification]]
+family = "distrikt"
+version = "distrikt2016"
+value_set = "catalog/source/classifications/district2016.csv"
+evidence = "reg_meta_build/curation/classifications/DISTR2016.toml:1; reviewed D-9 family/version mapping"
+name = "Distriktsindelning från 2016"
+publisher = "Lantmäteriet / SCB"
+period = "2016.."
+
+[[classification]]
+family = "drg"
+version = "drg"
+value_set = "catalog/source/classifications/sos/drg.csv"
+evidence = "reg_meta_build/curation/classifications/DRG.toml:1; reviewed D-9 family/version mapping"
+name = "NordDRG — diagnosrelaterade grupper"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+
+[[classification]]
+family = "icd"
+version = "icd-10-se"
+value_set = "catalog/source/classifications/sos/icd-10-se.csv"
+evidence = "reg_meta_build/curation/classifications/ICD-10-SE.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
+name = "Internationell statistisk klassifikation av sjukdomar och relaterade hälsoproblem, svensk version (ICD-10-SE)"
+period = "1997.."
+succeeds = ["class/icd/icd-9-ks87"]
+
+[[classification]]
+family = "icd"
+version = "icd-11-se"
+value_set = "catalog/source/classifications/sos/icd-11-se.csv"
+evidence = "reg_meta_build/curation/classifications/ICD-11-SE.toml:1; reviewed D-9 family/version mapping; edition publisher: WHO"
+name = "ICD-11 för statistik över dödlighet och sjuklighet, svensk version"
+period = "2027.."
+succeeds = ["class/icd/icd-10-se"]
+
+[[classification]]
+family = "icd"
+version = "icd-8-ks68"
+value_set = "catalog/source/classifications/sos/icd-8.csv"
+evidence = "reg_meta_build/curation/classifications/ICD-8-KS68.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
+name = "Klassifikation av sjukdomar 1968 (ICD-8 / KS68)"
+period = "1969..1986"
+
+[[classification]]
+family = "icd"
+version = "icd-9-ks87"
+value_set = "catalog/source/classifications/sos/icd-9-ks87.csv"
+evidence = "reg_meta_build/curation/classifications/ICD-9-KS87.toml:1; reviewed D-9 family/version mapping; edition publisher: Socialstyrelsen"
+name = "Klassifikation av sjukdomar 1987 (ICD-9 / KS87)"
+period = "1987..1996"
+succeeds = ["class/icd/icd-8-ks68"]
+
+[[classification]]
+family = "icf"
+version = "icf"
+value_set = "catalog/source/classifications/sos/icf.csv"
+evidence = "reg_meta_build/curation/classifications/ICF.toml:1; reviewed D-9 family/version mapping"
+name = "Internationell klassifikation av funktionstillstånd, funktionshinder och hälsa (ICF)"
+publisher = "Socialstyrelsen"
+
+[[classification]]
+family = "isced-f"
+version = "isced-f2013"
+value_set = "catalog/source/classifications/isced-f2013.csv"
+evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:1; reviewed D-9 family/version mapping"
+name = "ISCED Fields of Education and Training 2013"
+publisher = "UNESCO"
+period = "2013.."
+
+[[classification]]
+family = "isced"
+version = "isced2011"
+value_set = "catalog/source/classifications/isced2011.csv"
+evidence = "reg_meta_build/curation/classifications/ISCED2011.toml:1; reviewed D-9 family/version mapping"
+name = "International Standard Classification of Education 2011 — Level"
+publisher = "UNESCO"
+period = "2011.."
+
+[[classification]]
+family = "jurform"
+version = "jurform2000"
+value_set = "catalog/source/classifications/jurform2000.csv"
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för indelning efter juridisk form 2000"
+publisher = "SCB"
+period = "2000..2019"
+
+[[classification]]
+family = "jurform"
+version = "jurform2020"
+value_set = "catalog/source/classifications/jurform2020.csv"
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för indelning efter juridisk form 2020"
+publisher = "SCB"
+period = "2020.."
+succeeds = ["class/jurform/jurform2000"]
+
+[[classification]]
+family = "ks87-p"
+version = "ks87-p"
+value_set = "catalog/source/classifications/sos/ks87-p.csv"
+evidence = "reg_meta_build/curation/classifications/KS87-P.toml:1; reviewed D-9 family/version mapping; declared flat hierarchy; reader config suppresses external parents"
+name = "Klassifikation av sjukdomar 1987, primärvård (KS87-P)"
+publisher = "Socialstyrelsen"
+period = "1987..1996"
+
+[[classification]]
+family = "ksi"
+version = "ksi"
+value_set = "catalog/source/classifications/sos/ksi.csv"
+evidence = "reg_meta_build/curation/classifications/KSI.toml:1; reviewed D-9 family/version mapping"
+name = "Klassifikation av socialtjänstens insatser och aktiviteter (KSI)"
+publisher = "Socialstyrelsen"
+
+[[classification]]
+family = "kva"
+version = "kva"
+value_set = "catalog/source/classifications/sos/kva.csv"
+evidence = "reg_meta_build/curation/classifications/KVA.toml:12; reviewed D-9 family/version mapping"
+name = "Klassifikation av vårdåtgärder (KVÅ)"
+publisher = "Socialstyrelsen"
+
+[[classification]]
+family = "lkf"
+version = "lkf1980"
+value_set = "catalog/source/classifications/lkf1980.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1980.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1980"
+publisher = "SCB"
+period = "1980..1980"
+
+[[classification]]
+family = "lkf"
+version = "lkf1981"
+value_set = "catalog/source/classifications/lkf1981.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1981"
+publisher = "SCB"
+period = "1981..1981"
+succeeds = ["class/lkf/lkf1980"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1982"
+value_set = "catalog/source/classifications/lkf1982.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1982"
+publisher = "SCB"
+period = "1982..1982"
+succeeds = ["class/lkf/lkf1981"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1983"
+value_set = "catalog/source/classifications/lkf1983.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1983"
+publisher = "SCB"
+period = "1983..1983"
+succeeds = ["class/lkf/lkf1982"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1984"
+value_set = "catalog/source/classifications/lkf1984.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1984"
+publisher = "SCB"
+period = "1984..1984"
+succeeds = ["class/lkf/lkf1983"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1985"
+value_set = "catalog/source/classifications/lkf1985.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1985"
+publisher = "SCB"
+period = "1985..1985"
+succeeds = ["class/lkf/lkf1984"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1986"
+value_set = "catalog/source/classifications/lkf1986.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1986"
+publisher = "SCB"
+period = "1986..1986"
+succeeds = ["class/lkf/lkf1985"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1987"
+value_set = "catalog/source/classifications/lkf1987.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1987"
+publisher = "SCB"
+period = "1987..1987"
+succeeds = ["class/lkf/lkf1986"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1988"
+value_set = "catalog/source/classifications/lkf1988.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1988"
+publisher = "SCB"
+period = "1988..1988"
+succeeds = ["class/lkf/lkf1987"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1989"
+value_set = "catalog/source/classifications/lkf1989.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1989"
+publisher = "SCB"
+period = "1989..1989"
+succeeds = ["class/lkf/lkf1988"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1990"
+value_set = "catalog/source/classifications/lkf1990.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1990"
+publisher = "SCB"
+period = "1990..1990"
+succeeds = ["class/lkf/lkf1989"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1991"
+value_set = "catalog/source/classifications/lkf1991.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1991"
+publisher = "SCB"
+period = "1991..1991"
+succeeds = ["class/lkf/lkf1990"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1992"
+value_set = "catalog/source/classifications/lkf1992.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1992"
+publisher = "SCB"
+period = "1992..1992"
+succeeds = ["class/lkf/lkf1991"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1993"
+value_set = "catalog/source/classifications/lkf1993.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1993"
+publisher = "SCB"
+period = "1993..1993"
+succeeds = ["class/lkf/lkf1992"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1994"
+value_set = "catalog/source/classifications/lkf1994.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1994"
+publisher = "SCB"
+period = "1994..1994"
+succeeds = ["class/lkf/lkf1993"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1995"
+value_set = "catalog/source/classifications/lkf1995.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1995"
+publisher = "SCB"
+period = "1995..1995"
+succeeds = ["class/lkf/lkf1994"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1996"
+value_set = "catalog/source/classifications/lkf1996.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1996"
+publisher = "SCB"
+period = "1996..1996"
+succeeds = ["class/lkf/lkf1995"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1997"
+value_set = "catalog/source/classifications/lkf1997.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1997"
+publisher = "SCB"
+period = "1997..1997"
+succeeds = ["class/lkf/lkf1996"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1998"
+value_set = "catalog/source/classifications/lkf1998.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1998"
+publisher = "SCB"
+period = "1998..1998"
+succeeds = ["class/lkf/lkf1997"]
+
+[[classification]]
+family = "lkf"
+version = "lkf1999"
+value_set = "catalog/source/classifications/lkf1999.csv"
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 1999"
+publisher = "SCB"
+period = "1999..1999"
+succeeds = ["class/lkf/lkf1998"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2000"
+value_set = "catalog/source/classifications/lkf2000.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2000"
+publisher = "SCB"
+period = "2000..2000"
+succeeds = ["class/lkf/lkf1999"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2001"
+value_set = "catalog/source/classifications/lkf2001.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2001"
+publisher = "SCB"
+period = "2001..2001"
+succeeds = ["class/lkf/lkf2000"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2002"
+value_set = "catalog/source/classifications/lkf2002.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2002"
+publisher = "SCB"
+period = "2002..2002"
+succeeds = ["class/lkf/lkf2001"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2003"
+value_set = "catalog/source/classifications/lkf2003.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2003"
+publisher = "SCB"
+period = "2003..2003"
+succeeds = ["class/lkf/lkf2002"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2004"
+value_set = "catalog/source/classifications/lkf2004.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2004"
+publisher = "SCB"
+period = "2004..2004"
+succeeds = ["class/lkf/lkf2003"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2005"
+value_set = "catalog/source/classifications/lkf2005.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2005"
+publisher = "SCB"
+period = "2005..2005"
+succeeds = ["class/lkf/lkf2004"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2006"
+value_set = "catalog/source/classifications/lkf2006.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2006"
+publisher = "SCB"
+period = "2006..2006"
+succeeds = ["class/lkf/lkf2005"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2007"
+value_set = "catalog/source/classifications/lkf2007.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2007"
+publisher = "SCB"
+period = "2007..2007"
+succeeds = ["class/lkf/lkf2006"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2008"
+value_set = "catalog/source/classifications/lkf2008.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2008"
+publisher = "SCB"
+period = "2008..2008"
+succeeds = ["class/lkf/lkf2007"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2009"
+value_set = "catalog/source/classifications/lkf2009.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2009"
+publisher = "SCB"
+period = "2009..2009"
+succeeds = ["class/lkf/lkf2008"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2010"
+value_set = "catalog/source/classifications/lkf2010.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2010"
+publisher = "SCB"
+period = "2010..2010"
+succeeds = ["class/lkf/lkf2009"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2011"
+value_set = "catalog/source/classifications/lkf2011.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2011"
+publisher = "SCB"
+period = "2011..2011"
+succeeds = ["class/lkf/lkf2010"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2012"
+value_set = "catalog/source/classifications/lkf2012.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2012"
+publisher = "SCB"
+period = "2012..2012"
+succeeds = ["class/lkf/lkf2011"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2013"
+value_set = "catalog/source/classifications/lkf2013.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2013"
+publisher = "SCB"
+period = "2013..2013"
+succeeds = ["class/lkf/lkf2012"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2014"
+value_set = "catalog/source/classifications/lkf2014.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2014"
+publisher = "SCB"
+period = "2014..2014"
+succeeds = ["class/lkf/lkf2013"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2015"
+value_set = "catalog/source/classifications/lkf2015.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2015"
+publisher = "SCB"
+period = "2015..2015"
+succeeds = ["class/lkf/lkf2014"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2016"
+value_set = "catalog/source/classifications/lkf2016.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2016"
+publisher = "SCB"
+period = "2016..2016"
+succeeds = ["class/lkf/lkf2015"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2017"
+value_set = "catalog/source/classifications/lkf2017.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2017"
+publisher = "SCB"
+period = "2017..2017"
+succeeds = ["class/lkf/lkf2016"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2018"
+value_set = "catalog/source/classifications/lkf2018.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2018"
+publisher = "SCB"
+period = "2018..2018"
+succeeds = ["class/lkf/lkf2017"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2019"
+value_set = "catalog/source/classifications/lkf2019.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2019"
+publisher = "SCB"
+period = "2019..2019"
+succeeds = ["class/lkf/lkf2018"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2020"
+value_set = "catalog/source/classifications/lkf2020.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2020"
+publisher = "SCB"
+period = "2020..2020"
+succeeds = ["class/lkf/lkf2019"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2021"
+value_set = "catalog/source/classifications/lkf2021.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2021"
+publisher = "SCB"
+period = "2021..2021"
+succeeds = ["class/lkf/lkf2020"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2022"
+value_set = "catalog/source/classifications/lkf2022.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2022"
+publisher = "SCB"
+period = "2022..2022"
+succeeds = ["class/lkf/lkf2021"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2023"
+value_set = "catalog/source/classifications/lkf2023.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2023"
+publisher = "SCB"
+period = "2023..2023"
+succeeds = ["class/lkf/lkf2022"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2024"
+value_set = "catalog/source/classifications/lkf2024.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2024"
+publisher = "SCB"
+period = "2024..2024"
+succeeds = ["class/lkf/lkf2023"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2025"
+value_set = "catalog/source/classifications/lkf2025.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2025"
+publisher = "SCB"
+period = "2025..2025"
+succeeds = ["class/lkf/lkf2024"]
+
+[[classification]]
+family = "lkf"
+version = "lkf2026"
+value_set = "catalog/source/classifications/lkf2026.csv"
+evidence = "reg_meta_build/curation/classifications/LKF2026.toml:1; reviewed D-9 family/version mapping"
+name = "Län, kommuner och församlingar 2026"
+publisher = "SCB"
+period = "2026..2026"
+succeeds = ["class/lkf/lkf2025"]
+
+[[classification]]
+family = "mdc"
+version = "mdc"
+value_set = "catalog/source/classifications/sos/mdc.csv"
+evidence = "reg_meta_build/curation/classifications/MDC.toml:1; reviewed D-9 family/version mapping"
+name = "Större diagnosgrupper (MDC, NordDRG)"
+publisher = "Socialstyrelsen / Nordic Casemix Centre"
+
+[[classification]]
+family = "niva-grov"
+version = "niva-grovv1"
+value_set = "catalog/source/classifications/niva-grov.csv"
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:15; reviewed D-9 family/version mapping"
+name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
+publisher = "SCB"
+period = "2000.."
+
+[[classification]]
+family = "niva-old"
+version = "niva-oldv1"
+value_set = "catalog/source/classifications/niva-old.csv"
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:15; reviewed D-9 family/version mapping"
+name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
+publisher = "SCB"
+period = "2000.."
+
+[[classification]]
+family = "sektor"
+version = "sektor2000"
+value_set = "catalog/source/classifications/sektor2000.csv"
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:6; reviewed D-9 family/version mapping"
+name = "Institutionell sektorindelning 2000"
+publisher = "SCB"
+period = "2000.."
+
+[[classification]]
+family = "sektorkod"
+version = "sektorkod"
+value_set = "catalog/source/classifications/sektorkod.csv"
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:17; reviewed D-9 family/version mapping"
+name = "Sektorkod (RAMS/LISA)"
+publisher = "SCB"
+period = "1993.."
+
+[[classification]]
+family = "sni"
+version = "sni2002"
+value_set = "catalog/source/classifications/sni2002.csv"
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk standard för näringsgrensindelning 2002"
+publisher = "SCB"
+period = "2002..2007"
+succeeds = ["class/sni/sni1992"]
+
+[[classification]]
+family = "sni"
+version = "sni2007"
+value_set = "catalog/source/classifications/sni2007.csv"
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk standard för näringsgrensindelning 2007"
+publisher = "SCB"
+period = "2008.."
+succeeds = ["class/sni/sni2002"]
+
+[[classification]]
+family = "sni"
+version = "sni2025"
+value_set = "catalog/source/classifications/sni2025.csv"
+evidence = "reg_meta_build/curation/classifications/SNI2025.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk standard för näringsgrensindelning 2025"
+publisher = "SCB"
+succeeds = ["class/sni/sni2007"]
+
+[[classification]]
+family = "sni"
+version = "sni1969"
+value_set = "catalog/source/classifications/sni69.csv"
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk standard för näringsgrensindelning 1969"
+publisher = "SCB"
+period = "1969..1991"
+
+[[classification]]
+family = "sni"
+version = "sni1992"
+value_set = "catalog/source/classifications/sni92.csv"
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk standard för näringsgrensindelning 1992"
+publisher = "SCB"
+period = "1992..2001"
+succeeds = ["class/sni/sni1969"]
+
+[[classification]]
+family = "ssyk"
+version = "ssyk2012"
+value_set = "catalog/source/classifications/ssyk2012.csv"
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för svensk yrkesklassificering 2012"
+publisher = "SCB"
+period = "2014.."
+succeeds = ["class/ssyk/ssyk1996"]
+
+[[classification]]
+family = "ssyk"
+version = "ssyk1996"
+value_set = "catalog/source/classifications/ssyk96.csv"
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:1; reviewed D-9 family/version mapping"
+name = "Standard för svensk yrkesklassificering 1996"
+publisher = "SCB"
+period = "1996..2013"
+
+[[classification]]
+family = "sun"
+version = "sun1996"
+value_set = "catalog/source/classifications/sun1996.csv"
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 1996"
+publisher = "SCB"
+period = "1996..1999"
+
+[[classification]]
+family = "sun-grupp"
+version = "sun2000-grupp"
+value_set = "catalog/source/classifications/sun2000-grupp.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper"
+publisher = "SCB"
+period = "2000..2019"
+succeeds = ["class/sun/sun1996"]
+
+[[classification]]
+family = "sun-inriktning"
+version = "sun2000-inriktning"
+value_set = "catalog/source/classifications/sun2000-inriktning.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning"
+publisher = "SCB"
+period = "2000..2019"
+succeeds = ["class/sun/sun1996"]
+
+[[classification]]
+family = "sun-niva"
+version = "sun2000-niva"
+value_set = "catalog/source/classifications/sun2000-niva.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:16; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå"
+publisher = "SCB"
+period = "2000..2019"
+succeeds = ["class/sun/sun1996"]
+
+[[classification]]
+family = "sun-grupp"
+version = "sun2020-grupp"
+value_set = "catalog/source/classifications/sun2020-grupp.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper"
+publisher = "SCB"
+period = "2020.."
+succeeds = ["class/sun-grupp/sun2000-grupp"]
+
+[[classification]]
+family = "sun-inriktning"
+version = "sun2020-inriktning"
+value_set = "catalog/source/classifications/sun2020-inriktning.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning"
+publisher = "SCB"
+period = "2020.."
+succeeds = ["class/sun-inriktning/sun2000-inriktning"]
+
+[[classification]]
+family = "sun-niva"
+version = "sun2020-niva"
+value_set = "catalog/source/classifications/sun2020-niva.csv"
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:1; reviewed D-9 family/version mapping"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå"
+publisher = "SCB"
+period = "2020.."
+succeeds = ["class/sun-niva/sun2000-niva"]

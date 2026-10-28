@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: {ng1,ngs1,ngs1ng1}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

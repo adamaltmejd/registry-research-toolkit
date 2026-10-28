@@ -221,3 +221,165 @@ kind = "set"
 subject = "var:namn"
 fields = { "sets" = ["legacy-namn"] }
 evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:601\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:614\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @1999"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2000"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2007..2008"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {forsamling,kommun,lan} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2025"
+fields = { "classification" = "class/lkf/lkf2025" }
+evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: {kommun,lan} @2026"
+fields = { "classification" = "class/lkf/lkf2026" }
+evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"

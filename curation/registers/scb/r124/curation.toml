@@ -1996,3 +1996,45 @@ kind = "set"
 subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: {hssni2007_2,hssni2007_3,hssni2007_4,hssni2007_5,husni2007_2,husni2007_3,husni2007_4,husni2007_5}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: {husni2007_1,husni2007_2,husni2007_3,husni2007_4,husni2007_5}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: hussyk4"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:56\n\nLegacy exact value-set label: SSYK 96, AKU Undergrupp"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: hussyk3"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:55\n\nLegacy exact value-set label: SSYK 96, AKU Yrkesgrupp"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: {hssni2007_1,husni2007_1}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: {hussyk1,hussyk2}"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: {hsssyk1,hsssyk2,hsssyk3,hsssyk4,hussyk1,hussyk2,hussyk3,hussyk4}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"

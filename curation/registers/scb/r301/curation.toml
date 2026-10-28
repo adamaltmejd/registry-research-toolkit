@@ -1522,3 +1522,27 @@ kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infmedia"
 fields = { "label" = "Undervisningsmetod, informell utbildning — TV eller lyssna på radio" }
 evidence = "reg_meta_build/curation/registers/scb/aes.toml:5758\n\nComplete accepted AES20 family audit (636 originals), explicit supplied operation identifies every reviewed role. Finite edition and complete-field ownership preserves response components, explicit training occurrences, methods and cost roles. Contrary role changes remain separate. Original definition, operation, type, unit, date and bound coding remain. Proof: Batch49-AES20-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {dropeduclevel,fedlevel,hatlevel} @2016"
+fields = { "classification" = "class/isced/isced2011" }
+evidence = "reg_meta_build/curation/classifications/ISCED2011.toml:18\n\nLegacy exact value-set label: ISCED 2011 AES"
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {fedfield,hatfield,nfefield1,nfefield2} @2016,2022"
+fields = { "classification" = "class/isced-f/isced-f2013" }
+evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield @2011-07-01..2012-06-30"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {finr1,finr2,ifinr1,ifinr2,ifinr3,inffield1,inffield2,infinr1,infinr2,infinr3}"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"

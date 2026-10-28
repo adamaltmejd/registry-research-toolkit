@@ -4,3 +4,153 @@ kind = "set"
 subject = "var:lopnummer-urvalsenheter"
 fields = { "sets" = ["legacy-lopnummer-urvalsenheter"] }
 evidence = "reg_meta_build/curation/registers/scb/pin.toml:1391\n\nThe same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: bltyp @2011-04-01..2015-03-31"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:40\n\nLegacy exact value-set label: BlTyp SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2006-04-01..2007-03-31"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2007-04-01..2008-03-31"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2008-04-01..2009-03-31"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2009-04-01..2010-03-31"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2010-04-01..2011-03-31"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2011-04-01..2013-03-31"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2013-04-01..2014-03-31"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: kommun @2014-04-01..2015-03-31"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: al2undeju where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: {aktsni07,cu_branschtext,ngs1id}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: {aktsni07,ngs1id}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: ngs1id"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: {aktsni07,ngs1id}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "produktionsvardeindex-pvi: ngs1id"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: ngs1id"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: {sni2007,sni2007upp} @2011-04-01..2015-03-31"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: <none> where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: branschgr where key = 'v15169'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: sni2007 where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: {sni2007,sni2007upp} @2009-04-01..2011-03-31"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "produktionsvardeindex-pvi: <none> where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: <none> where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: {sni92,sni92upp}"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: aktsni92 @1998..2002"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"

@@ -83,3 +83,975 @@ kind = "set"
 subject = "jobbregistret: LonFInk where key = 'v16899' and type = 'decimal' and release = 'r1876'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 22 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer: {kommun,lan} @2017..2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2017..2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun1 @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: astkommun1 @2019..2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun1 @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun2 @2020"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: astkommun1 @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun1 @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun2 @2021"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: astkommun1 @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: astkommun2 @2021"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2021"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: astkommun2 @2022"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: astkommun2 @2022"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1986"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1986"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1986"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1986"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1987"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1987"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1987"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1987"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1988"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1988"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1988"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1988"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1989"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1989"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1989"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1989"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1991"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1991"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1991"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1991"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1992"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1992"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1992"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1992"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1993"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1993"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1993"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1993"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: {astforsamling,astkommun} @1994"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1994"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1994"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1994"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: {astforsamling,astkommun} @1995"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1995"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1995"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1995"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: {astforsamling,astkommun} @1996"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1996"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1996"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,kommun,lan} @1996"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: {astforsamling,astkommun} @1997"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1997"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astkommun,astlan,forsamling,kommun,lan} @1997"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @1997"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: astforsamling @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {astkommun,astlan,forsamling,kommun,lan} @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astforsamling,astkommun,astlan,forsamling,kommun,lan} @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @1999"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @1999"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @1999"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2000"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2000"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2000"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2001"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2003"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2004"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2005"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2006"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2007"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2007"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2007"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2008"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2008"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2008"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2009"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2009"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2009"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2010"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2011"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2012"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2013"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2014"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {forsamling,kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,forsamling,kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2015"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "foretag: {ftgkommun,ftglan} @2016"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer: {kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astkommun,astlan,kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: sektorkod @1993..2002"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: {sektorkod1,sektorkod2}"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: {sektorkod1,sektorkod2}"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "individer: sektorkod @1993..2001,2003..2021 where key = 'v1819'"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: sektorkod"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftgsni07 @2007..2016"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: astsni07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "individer: {hutbsun,sutbsun}"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2000grp"
+fields = { "classification" = "class/sun-grupp/sun2000-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2000inr"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2000niva"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2000niva_old"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2020grp"
+fields = { "classification" = "class/sun-grupp/sun2020-grupp" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2020inr"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2020niva"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "individer: sun2020niva_old"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "individer: sektorkod @2002"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\n\nLegacy exact value-set label: Sektor 2000"
+
+[[statement]]
+kind = "set"
+subject = "foretag: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: jurform @1999..2008"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: {jurform1,jurform2}"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "foretag: agkat @2001..2021"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: agkat @1999..2008"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: {agkat1,agkat2}"
+fields = { "classification" = "class/agarkat/agarkat2020" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2020.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2020"
+
+[[statement]]
+kind = "set"
+subject = "foretag: sektor @1999..2013"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "individer: sektor where key = 'v2692'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: sektor @1999..2008"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftgsni02"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftgsni69"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "individer: astsni69"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astsni69,ftgsni69}"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
+
+[[statement]]
+kind = "set"
+subject = "foretag: ftgsni92"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "individer: astsni92"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: astsni92 where key = 'v19053'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: astsni92 where key = 'v19054'"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: {astsni,ftgsni92}"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:2\nreg_meta_build/curation/classifications/SEKTORKOD.toml:32\nreg_meta_build/curation/classifications/SEKTORKOD.toml:55\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000\n\nLegacy exact value-set label: RAMS SektorKod fr.o.m. 1993"

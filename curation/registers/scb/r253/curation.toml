@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "rakenskapssammandrag: <none> where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"

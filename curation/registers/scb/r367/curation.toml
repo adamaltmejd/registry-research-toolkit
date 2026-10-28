@@ -504,3 +504,39 @@ kind = "set"
 subject = "tidsanvandningsundersokningen: syss"
 fields = { "variable" = "sysselsattning-aktivitet" }
 evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:380\n\nShared-column succession fold 2026-10-21: SCB VarId 28679 'Sysselsättning/aktivitet' sequential rename {SYSSUP 1990, syss 2000 and 2010} owned by 367.28679.syss; identical definition 'Urvalspersonen', the same 14 codes (syss additionally lists the sentinel 22 'Okänt värde'), never co-delivered (reg_meta v0.57.0). The partner columns SYSSMS/syssms keep their own owner. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "tidsstudien: {kommun,lan}"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: {sun,sunms}"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v7018'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v801'"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: sun2000nivams"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tidsstudien: sun2020niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"

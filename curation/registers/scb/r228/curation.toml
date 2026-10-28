@@ -1,0 +1,42 @@
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2000-12-31"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2001-12-31"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2002-12-31"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2003-12-31"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2004-12-31"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2005-12-31,2006-12-31"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {blk_eg1,blk_eg2,blk_egj,blk_fr1,blk_fr2} @2007-12-31"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"

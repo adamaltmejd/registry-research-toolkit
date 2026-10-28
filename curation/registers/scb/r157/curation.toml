@@ -12,3 +12,51 @@ subject = "var:lannamn"
 relation = "label_of"
 object = "scb/smaorter/lan"
 evidence = "reg_meta_build/curation/registers/scb/smaorter.toml:10\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2023"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @1995"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2000"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "smaorter: {kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"

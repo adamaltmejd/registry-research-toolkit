@@ -1,0 +1,72 @@
+
+[[statement]]
+kind = "set"
+subject = "individ: {arbstkom,arbstlan,forsamling,kommun,lan} @1980"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: {forsamling,kommun,lan} @1980"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: {arbstkom,arbstlan,forsamling,kommun,lan} where release = 'r19241'"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {arbstkom,arbstlan,forsamling,kommun,lan} @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: {forsamling,kommun,lan} @1985"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: {arbstkom,arbstlan,forsamling,kommun,lan} where release = 'r18279'"
+fields = { "classification" = "class/lkf/lkf1986" }
+evidence = "reg_meta_build/curation/classifications/LKF1986.toml:20\n\nLegacy exact value-set label: LKF 1986-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "familj: {forsamling,kommun,lan}"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {arbstkom,arbstlan,forsamling,kommun,lan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individ: {kyrkbofors,kyrkbokom,kyrkbolan}"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: {forsamling,kommun,lan} @1990"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: {arbstkom,arbstlan,forsamling,kommun,lan} where release = 'r18614'"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: {kyrkbofors,kyrkbokom,kyrkbolan}"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"

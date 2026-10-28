@@ -52,3 +52,51 @@ kind = "set"
 subject = "industrins-varuproduktion: totkvant"
 fields = { "description" = "Kvantitet på varor som har tillverkats under året (behöver inte ha levererats/sålts). Uppgiften samlas endast in för en mindre del av varunumren och ingår inte alltid i mikrodatauppdrag." }
 evidence = "reg_meta_build/curation/registers/scb/ivp.toml:43\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: {asngnr,vengnr} @2019..2024"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:41\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: {asngnr,vengnr} @2008"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:43\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI 2007, IVP2008"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: {asngnr,vengnr} @2009..2018"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:42\n\nLegacy exact value-set label: NR:s näringsgrensindelning SNI2007"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: {asni,vengs,vsni} @2008..2024"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "returravara: ng1"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: asni where key = 'v1641'"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: vengs @2005..2007"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: {asni,vsni} @2003..2007"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"

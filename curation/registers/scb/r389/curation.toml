@@ -1,0 +1,120 @@
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbkommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: sun2000inr"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbildningsinriktning_kod @2015..2019"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: sunniva @2015..2019"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: {gymnasiebakgrund_sun2000niva,sun2000niva}"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: {sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor}"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: sun2020inr"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: utbildningsinriktning_kod @2020..2024"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: sunniva @2020..2024"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: {gymnasiebakgrund_sun2020niva,sun2020niva}"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor}"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"

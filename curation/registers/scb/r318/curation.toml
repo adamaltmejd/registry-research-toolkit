@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "produktionsindex-over-naringslivet: taggbranschgr"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"

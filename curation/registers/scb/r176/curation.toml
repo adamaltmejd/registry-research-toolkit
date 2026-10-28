@@ -16,3 +16,51 @@ kind = "set"
 subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: EAN_KVAL where key = 'v17607' and type = 'decimal' and release = 'r213'"
 fields = { type = "integer" }
 evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2008..2010"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2012..2016,2018,2020"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je @2015..2018,2020..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: {ng1moms,ng1sammanslag,ng1samu}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform @2005..2010"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2017,2019"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je @2019"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"

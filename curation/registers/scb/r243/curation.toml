@@ -12,3 +12,213 @@ subject = "var:partinamn"
 relation = "label_of"
 object = "scb/allmanna-val-valresultat/partikod"
 evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:6\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2018..2019"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: lanssnamn"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2018"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: ll @1988 where key = 'v49'"
+fields = { "classification" = "class/lkf/lkf1988" }
+evidence = "reg_meta_build/curation/classifications/LKF1988.toml:20\n\nLegacy exact value-set label: LKF 1988-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @1998"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2002"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2006"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2010"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: llkk @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: {ll,llkk} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {ll,llkk} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: {ll,llkk} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000inr"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2000niva"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: {sun2000niva_grov,sun2000nivagrov,sun2020niva_grov}"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2020inr"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: sun2020niva"
+fields = { "classification" = "class/sun-niva/sun2020-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"

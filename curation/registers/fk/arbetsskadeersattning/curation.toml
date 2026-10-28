@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "beslut: diagnoskod"
+fields = { "classification" = "class/icd/icd-10-se" }
+evidence = "reg_meta_build/curation/providers/fk.toml:231\n\nExplicit provider declaration: ICD-10-SE"

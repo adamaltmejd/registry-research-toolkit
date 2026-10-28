@@ -1,0 +1,18 @@
+
+[[statement]]
+kind = "set"
+subject = "rantebarande: <none> where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "rantebarande: snicode @2024"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "rantebarande: <none> @2014,2016..2019 where key = 'v33'"
+fields = { "classification" = "class/sektor/sektor2000" }
+evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"

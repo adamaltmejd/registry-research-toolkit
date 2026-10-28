@@ -237,3 +237,195 @@ kind = "set"
 subject = "fortroendevalda: vakant where key = 'v17667' and type = 'decimal' and release = 'r5001'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: rk @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: llkk @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: rk @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: llkk @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: astkommun"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: astkommun"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: {kommun,l_kod}"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: k_rtb"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kommunkod @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: landstingskod @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kommunkod @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kommunkod @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kommunkod @2015"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: sun2000inr"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: sun2000inr"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: {sun2000niva,sun2020niva}"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: {sun2000niva,sun2020niva}"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: sun2020inr"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: sun2020inr"
+fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: sektorkod where key = 'v2692'"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\n\nLegacy exact value-set label: Sektor 2000"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: sektorkod where key = 'v2692'"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\n\nLegacy exact value-set label: Sektor 2000"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk3"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk4 where key = 'v16225'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: ssyk4 where key = 'v511'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk3"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk4 where key = 'v16225'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: ssyk4 where key = 'v511'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: {ssyk3_2012,ssyk3_2012_egf,ssyk4_2012,ssyk4_2012_egf}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: {ssyk3_2012,ssyk3_2012_egf,ssyk4_2012,ssyk4_2012_egf}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: astsni"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: astsni"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:sektor"
+fields = { "classification" = "class/sektorkod/sektorkod" }
+evidence = "reg_meta_build/curation/classifications/SEKTORKOD.toml:32\nreg_meta_build/curation/classifications/SEKTORKOD.toml:47\n\ncurated:Y-170 RAMS/LISA ownership-sector code (was SEKTOR2000 by label collision)\n\nLegacy exact value-set label: Sektor 2000"
