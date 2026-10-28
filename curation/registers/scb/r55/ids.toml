@@ -149,4 +149,4 @@ public = "yrkesreg"
 "yrkesverksam-under-aret" = ["Grundregister (Yrkesreg): YrkVerksStat"]
 "yrkstallnkomb" = ["Förvärvsarbetande: YrkStallnKomb"]
 "yseg-egf" = ["Förvärvsarbetande: YsEg_EGF"]
-"antal-sysselsatta-pa-foretaget-enligt" = ["Yrkesverksamma: KU1AntalSysS # v15549"]
+"antal-sysselsatta-pa-foretaget-enligt-ku1antalsyss" = ["Yrkesverksamma: KU1AntalSysS # v15549"]

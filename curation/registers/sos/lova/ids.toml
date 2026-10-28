@@ -149,7 +149,7 @@
 "kodens-giltighetsslut" = ["LOVA LANDSKOD: TOM_DATUM"]
 "kodens-giltighetsstart" = ["LOVA HOSPKODER: FROM_AR"]
 "kodens-typ" = ["LOVA HOSPKODER: TYP"]
-"kommun-2" = ["LOVA REGION: LK"]
+"kommun-lk" = ["LOVA REGION: LK"]
 "landskod" = ["LOVA LANDSKOD: LANDSKOD"]
 "sos-egen-kod-for-sjukskoterskors-specialistexamen" = ["LOVA EXAMENSKODER: SPEC"]
 "start-for-kodens-giltighetstid" = ["LOVA LANDSKOD: FROM_DATUM"]

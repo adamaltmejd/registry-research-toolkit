@@ -49,5 +49,5 @@ public = "stuv"
 "utlsvbakg" = ["Studieförbund (STUV) 2012 - 2019: UtlSvBakg"]
 "utlsvbakgalt" = ["Studieförbund (STUV) 2020 -: UtlSvBakgAlt"]
 "vform" = ["Studieförbund (STUV) 2012 - 2019: Vform"]
-"kon-2" = ["Studieförbund (STUV) 2012 - 2019: Kon_PNR"]
-"personnummer" = ["Studieförbund (STUV) 2012 - 2019: PersonNr_SCB"]
+"kon-kon-pnr" = ["Studieförbund (STUV) 2012 - 2019: Kon_PNR"]
+"personnummer-personnr-scb" = ["Studieförbund (STUV) 2012 - 2019: PersonNr_SCB"]

@@ -66,5 +66,5 @@ public = "ivp"
 "vsni" = ["Industrins varuproduktion: Vsni @ 2002-01-01"]
 "vsni-4027" = ["Industrins varuproduktion: Vsni @ 2003-01-01"]
 "anger-vilken-kvantitetsenhet-som-galler-for-levererad-och" = ["Industrins varuproduktion: kvanttext"]
-"antal-anstallda-vid-rapportenheten" = ["Returråvara: AntAnst"]
+"antal-anstallda-vid-rapportenheten-antanst" = ["Returråvara: AntAnst"]
 "ivp-typkod" = ["Industrins varuproduktion: Typkod # v20973"]

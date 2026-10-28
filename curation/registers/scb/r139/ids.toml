@@ -71,5 +71,5 @@ public = "branslestatistik"
 "upprakningsfaktor" = ["Industrins bränsleförbrukning och lager: Faktor"]
 "utgaende-lager" = ["Industrins bränsleförbrukning och lager: LagerUt"]
 "varde" = ["Industrins bränsleförbrukning och lager: Varde"]
-"bransleforbrukning-elprod-2" = ["Värmeverkens energiförbrukning, energianvändning och lager: ElEl"]
+"bransleforbrukning-elprod-elel" = ["Värmeverkens energiförbrukning, energianvändning och lager: ElEl"]
 "branslekoder-for-alla-redovisningsenheters-forbrukade" = ["Industrins bränsleförbrukning och lager: Bid # v2601"]

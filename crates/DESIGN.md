@@ -523,12 +523,15 @@ overlapping curated overrides are refused at both locations.
   for their historical scope, and obsolete merged aliases, are removed without
   redirects. New variable ids use the existing label-slug rule
   (`reg_meta_build.fqid_slugs`'s `_name_slug`): NFKD ASCII folding, lowercase
-  hyphenation, pure unit parentheticals removed, and truncation at 60 characters,
-  preferring a hyphen boundary (keeping the full slug if truncation is invalid). There
-  is no general stop-word removal. An unusable label falls back to the fold proposal;
-  clashes take the first free numeric suffix from `-2`, reserving table and existing
-  variable ids. Existing ids, including manually shortened label slugs, are never
-  renamed by minting.
+  hyphenation and pure unit parentheticals removed, without general stop-word removal.
+  Prefer the latest label when its slug is unique among the register's variables, then
+  the latest unique label from another canonical period. Otherwise append the anchor's
+  full column spelling slug to the label slug, shortening only the label at a hyphen
+  boundary to keep the id within 60 characters. Only remaining collisions take numeric
+  suffixes from `-2`, in anchor order, with the same length limit and the column intact.
+  With no usable canonical label, use the column alone. Reserve existing, retired and
+  table ids before allocating new ones. Existing ids, including manually shortened label
+  slugs, are never renamed by minting.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.

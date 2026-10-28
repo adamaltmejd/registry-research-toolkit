@@ -16,5 +16,5 @@ public = "natpriser-naturgas"
 "i4" = ["Nätpriser: I4"]
 "i5" = ["Nätpriser: I5"]
 "orgnr" = ["Nätpriser: orgnr"]
-"naturgas-byte-leverantor" = ["Leverantörsbyten: ÖvrAnl"]
-"naturgas-byte-leverantor-2" = ["Leverantörsbyten: ÖvrKund"]
+"naturgas-byte-leverantor-ovranl" = ["Leverantörsbyten: ÖvrAnl"]
+"naturgas-byte-leverantor-ovrkund" = ["Leverantörsbyten: ÖvrKund"]

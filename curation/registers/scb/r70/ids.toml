@@ -65,4 +65,4 @@ public = "gdb"
 "valdistrikt" = ["Adresser: Valdistrikt"]
 "ykoord-adr" = ["Adresser, fastigheter och koordinater: YKOORD_Adr"]
 "ykoord-fst" = ["Adresser, fastigheter och koordinater: YKOORD_Fst"]
-"riksnyckel-2" = ["Adresser: RNPADRPL"]
+"riksnyckel-rnpadrpl" = ["Adresser: RNPADRPL"]

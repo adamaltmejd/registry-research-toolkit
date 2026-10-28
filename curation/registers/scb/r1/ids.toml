@@ -123,5 +123,5 @@ public = "fdb"
 "vestat" = ["Verksamhetsenheter: VEStat"]
 "webbadress" = ["Juridiska enheter: WebbAdress"]
 "avregistreringsar" = ["Arbetsställeenheter: avregdatktid"]
-"juridisk-form-2" = ["Arbetsställeenheter: jurform"]
+"juridisk-form-jurform" = ["Arbetsställeenheter: jurform"]
 "regdatktid" = ["Arbetsställeenheter: regdatktid"]

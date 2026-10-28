@@ -25,4 +25,4 @@ public = "laps"
 "ngs1ng1" = ["Lönesummor, arbetsgivaravgifter och preliminär A-skatt: NGS1NG1"]
 "person-orgnr" = ["Lönesummor, arbetsgivaravgifter och preliminär A-skatt: PEORGNR"]
 "prelim-a-skatt-inkl-soc" = ["Lönesummor, arbetsgivaravgifter och preliminär A-skatt: KSKATTINKLSOC"]
-"arbetsgivaravgift-ambassad" = ["Lönesummor, arbetsgivaravgifter och preliminär A-skatt: KAVGUSAKANADA # v7163"]
+"arbetsgivaravgift-ambassad-kavgusakanada" = ["Lönesummor, arbetsgivaravgifter och preliminär A-skatt: KAVGUSAKANADA # v7163"]

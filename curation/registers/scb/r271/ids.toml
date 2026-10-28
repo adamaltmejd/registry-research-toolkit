@@ -18,4 +18,4 @@ public = "namnstatistik"
 "personnr" = ["Folkbokförda - personer: PersonNr"]
 "tilltal" = ["Folkbokförda - personer: Tilltal"]
 "tilltalsnamn" = ["Folkbokförda - personer: Tilltalsnamn"]
-"tilltalsnamn-2" = ["Folkbokförda - namn: Namn"]
+"tilltalsnamn-namn" = ["Folkbokförda - namn: Namn"]

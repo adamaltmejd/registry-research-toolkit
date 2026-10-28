@@ -60,5 +60,5 @@ public = "energianvandning-fiske"
 "upprakningstal" = ["Energianvändningen inom fiskesektorn: Vikt"]
 "value" = ["Energianvändningen inom fiskesektorn: Value"]
 "value-num" = ["Energianvändningen inom fiskesektorn: Value_num"]
-"bransleforbrukning-3" = ["Energianvändningen inom fiskesektorn: Forbr MWh"]
-"bransleforbrukning-4" = ["Energianvändningen inom fiskesektorn: Forbr naturligt mått"]
+"bransleforbrukning-forbr-mwh" = ["Energianvändningen inom fiskesektorn: Forbr MWh"]
+"bransleforbrukning-forbr-naturligt-matt" = ["Energianvändningen inom fiskesektorn: Forbr naturligt mått"]
