@@ -721,20 +721,23 @@ def row_value(row):
 
 
 def form_boundary(db, table, variable, boundary, tables):
-    """An adjacent catalog type/value-set change, independent of order partitions."""
+    """Adjacent catalog form and class-version changes, independent of order partitions."""
     before, after = set(), set()
-    for tid, start, end, dtype, valueset in db.execute(
-        "SELECT t.pid, s.start, s.end, s.dtype, s.valueset_id FROM segment s"
+    for tid, start, end, dtype, valueset, version in db.execute(
+        "SELECT t.pid, s.start, s.end, s.dtype, s.valueset_id, s.class_version_id FROM segment s"
         " JOIN variable v ON v.id = s.variable_id JOIN tbl t ON t.id = s.table_id"
         " WHERE v.pid = ? AND (s.start = ? OR s.end = ?)",
         (variable, boundary, boundary),
     ):
         if tables.get(tid, tid.rsplit("/", 1)[-1]) == table:
             if end == boundary:
-                before.add((dtype, valueset))
+                before.add((dtype, valueset, version))
             if start == boundary:
-                after.add((dtype, valueset))
-    return len(before) == len(after) == 1 and before != after
+                after.add((dtype, valueset, version))
+    if len(before) != 1 or len(after) != 1:
+        return False, False
+    left, right = next(iter(before)), next(iter(after))
+    return left[:2] != right[:2], left[2] != right[2]
 
 
 def row_differences(old, new, db, tables):
@@ -762,7 +765,9 @@ def row_differences(old, new, db, tables):
         supported = {}
         for point in extra:
             adjacent = [r for r in sides[1] if point in row_days(r)]
-            forms = any(form_boundary(db, table, r[1], point, tables) for r in adjacent)
+            changes = [form_boundary(db, table, r[1], point, tables) for r in adjacent]
+            forms = any(change[0] for change in changes)
+            versions = any(change[1] for change in changes)
             before = {
                 r[4] for r in sides[1] if row_days(r)[0] < point <= row_days(r)[1]
             }
@@ -780,8 +785,9 @@ def row_differences(old, new, db, tables):
                 old_identity and new_identity and old_identity != new_identity
             )
             supported[point] = (
-                not (before and after) or forms or spelling or identity,
+                not (before and after) or forms or versions or spelling or identity,
                 forms,
+                versions,
             )
         for lo, hi in pairwise(sorted(partitions[0] | partitions[1])):
             active = [
@@ -820,6 +826,7 @@ def row_differences(old, new, db, tables):
                 ]
                 valid = all(supported[p][0] for p in boundaries)
                 forms = any(supported[p][1] for p in boundaries)
+                versions = any(supported[p][2] for p in boundaries)
                 # A removed old boundary is explained by a case or identity change,
                 # never by a redundant split with the same spelling and ID.
                 removed = [
@@ -839,7 +846,7 @@ def row_differences(old, new, db, tables):
                         if row_days(r)[0] <= point < row_days(r)[1]
                     }
                     valid &= not (before and after) or before != after
-                if pair[0] == pair[1] and valid and not forms:
+                if pair[0] == pair[1] and valid and not forms and not versions:
                     continue
                 yield (
                     *pair,
@@ -847,6 +854,7 @@ def row_differences(old, new, db, tables):
                         "supported": valid,
                         "equal_coverage": equal_coverage,
                         "form_boundary": forms,
+                        "classification_version": versions,
                         "original_old": row_value(left),
                         "original_new": row_value(right),
                     },
@@ -862,6 +870,7 @@ CLASSES = {
     "unplaced release": "D curation",
     "clipped period": "intended",
     "form boundary": "intended",
+    "classification version": "intended",
     "spelling": "intended",
     "representation only": "intended",
     "table split or merge": "defect",
@@ -1439,6 +1448,15 @@ def classify_difference(
             ),
         )
     if old is not None and new is not None and record.get("alignment") is not None:
+        if (
+            old[4] == new[4]
+            and alignment["supported"]
+            and alignment["classification_version"]
+        ):
+            return result(
+                "classification version",
+                "Equal covered days; catalog classification-version changes explain additional splits, alongside any type/value-set changes.",
+            )
         if old[4] == new[4] and alignment["supported"] and alignment["form_boundary"]:
             return result(
                 "form boundary",
@@ -1514,7 +1532,7 @@ def classification_summary(records, mappings):
         "",
         "## Classes",
         "",
-        "Whole-order refusals take precedence. Otherwise: old monthly curation, identity change, unplaced release, old curation, preliminary data, clipped period, spelling, form boundary, representation only, table split or merge, missing, other.",
+        "Whole-order refusals take precedence. Otherwise: old monthly curation, identity change, unplaced release, old curation, preliminary data, clipped period, spelling, classification version, form boundary, representation only, table split or merge, missing, other.",
         "Refusal records are counted separately from affected rows. Old refusals and unexplained differences require Operator review.",
         "",
         "| class | rows | refusals | register-only records | registers | owner |",
