@@ -511,11 +511,77 @@ The remaining C checklist:
 
 **Exit:**
 
-- every old entry is converted, dropped with a named reason, or refused at its file and
-  line in the converter's report;
-- the curated strict build passes;
-- no variable is unminted;
-- the comparison is re-run, and every curated difference is explained.
+- [x] every old entry is converted, dropped with a named reason, or refused at its file
+  and line in the converter's report;
+- [x] the curated strict build passes;
+- [x] no variable is unminted;
+- [ ] the comparison is re-run, and every curated difference is explained.
+
+**D-X outcome (2026-10-28): blocked on the comparison; no release.** Checks used the
+committed tree `8cc73d5fe` and clean inputs `9186fcbceeb2283a50c7f684764869e4dda5765e`,
+with the pinned SCB archive. The release binary's second strict build exited 0 in
+393.923 s, peaking at 10,340,057,088 bytes RSS. The first took 363.41 s; its
+`/usr/bin/time -l` wrapper failed on a sandbox-denied `sysctl` after writing the
+catalog, so its builder exit and peak RSS were not captured. Independent
+`reg-build verify` passed (exit 0, 27.617 s). Both catalog files and JSON reports were
+byte-identical. Catalog size: 1,181,515,776 bytes; SHA-256:
+`23ddf88880a0821b1d50693bf718c82781c37c7649fb91ec300e34fcd4268aa2`.
+
+- Retained catalog: this worktree's `.local/d-exit/strict/reg_meta.db`.
+- Generation: `6b0b6bc63bef882a6dafb4d5fdd453d5dbdcf7b56147a9f3afd4b4fd22c07083`.
+- Curation digest: `dd835cefa6c133f6fe75cd4cd7463f560177d88088cfabaf92ed255df2d6e598`.
+- Unminted, unplaced, split and merged ledger ids: all zero. Skipped statements: zero;
+  redundant-set notices: 45; source successions dropped: zero.
+- F1 counts: definition-change 20,677; domain-change 16,040; label-differs 47;
+  label-drift 181; type-change 6,713; unit-change 5,977; population-change zero.
+- Source disposition evidence remains in `scripts/rebuild_convert_report.md`,
+  `scripts/rebuild_convert_classifications_report.md` and
+  `scripts/rebuild_convert_sets_tags_report.md`. These are overlapping stage reports,
+  not additive final counts: base conversion 5,603 converted / 12,538 named drops / zero
+  refused; classification conversion 288 / 218 / six; set/tag report 551 converted
+  membership rows, 115 missing-ID refusals, 11 deferred rows and 729 drops. The reports
+  retain source locations and reasons; later D work supersedes some early deferrals. The
+  converters were not rerun.
+- Rust `reg-build diff` against the downloaded 0.65.0 asset exited 1 (differences), with
+  no schema change. It reports 28 changed table counts, 6,687 added and 5,149 removed
+  public ids, 29 shared table changes, 5,411 shared variable changes and eight added
+  value sets. Aggregate/provenance review reconciles these to D's statements, minted
+  identities, sets/tags, classifications, LISA attachment and descriptions; no
+  unexplained dbdiff category was found. This does not independently certify every
+  changed text or selector.
+
+The full random-order comparison against downloaded 0.64.0 ran with n=20 for each of
+seeds 0 and 1. Both commands exited 0, but their classifications fail the exit
+criterion:
+
+  | Class            | C seed 0 | D seed 0 | C seed 1 | D seed 1 |
+  | ---------------- | -------: | -------: | -------: | -------: |
+  | Blocked window   |     4211 |     2939 |     3437 |     8453 |
+  | Identity change  |        0 |        5 |      330 |      155 |
+  | Old curation     |        1 |        0 |      606 |      538 |
+  | Unplaced release |        0 |        0 |       33 |       33 |
+  | Form boundary    |       99 |      130 |      833 |      861 |
+  | Spelling         |       13 |       13 |       77 |       72 |
+  | Other            |        0 |       24 |        0 |      720 |
+
+All other classes have zero rows. Blocked-window refusals: seven and six (C: six each);
+register-only difference records: zero. Retiring the standalone workbook register
+changes the sampling pool from 291 to 290; only 13 and 14 sampled registers respectively
+overlap C, so these totals are not a fixed-register trend.
+
+**Comparator-classified `other` rows: 744.** Seed 0 has 24 on `scb/moms/sateskommun`;
+seed 1 has 720 across seven registers. The comparator's `form_boundary()` checks type
+and value-set changes but omits classification versions. A read-only audit of the
+complete saved responses and catalog explains all 501 unsupported interior boundaries by
+classification-version transitions (eight in seed 0, 493 in seed 1). No unexplained
+boundary remains; no catalog defect was established. The comparator defect remains
+unfixed, and its corrected replay is unrun. No code was changed. D's comparison box
+remains open.
+
+Stopped at the defect as instructed. Release-tier conformance, full gates, synthetic
+suites, legacy real-seed builds, converter replay, `gate.py regen`, release publication
+and PR merge were not run. The replay catalog and downloaded comparison artifacts are
+removed after reporting; the strict catalog is retained for a later release decision.
 
 **Outside:** G0 runs ~160 s against its 60 s budget; fixed in a separate task.
 
