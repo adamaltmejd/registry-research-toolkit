@@ -1,11 +1,18 @@
-## Round 03 verified application
+## Round 04 verified on merged main
 
-Validated locally with d-set-fields #2005 at `b6105257d4505df60e9c810dfca7ecbd02706ca7`;
-#2005 was OPEN at validation. The temporary dependency merge was removed before the
-final gate and is not pushed; only converter changes are replayed onto the published
-history. Both comparison catalogs use the same release binary and inputs
-worktree/manifest commit `9186fcbceeb2283a50c7f684764869e4dda5765e`. This is a curated
-**dev** build, not a release or activation.
+Merged `origin/main` at `33e975de1731500c655e531d23ccb5e5f7355cc3` (#2005) with a normal
+merge, `d79d3a058fedfb7fad07922425bdeb72114f9dd3`. No temporary dependency merge
+remains. The release binary was rebuilt from that merged head. Both comparison catalogs
+use the same binary and inputs worktree/manifest commit
+`9186fcbceeb2283a50c7f684764869e4dda5765e`. This is a curated **dev** build, not a
+release or activation.
+
+The regenerated proposals and every curation/config file are byte-identical to round 03.
+No converter emission changes were needed for the merged review fixes. No type or length
+setters are requested by the retained proposals; the sole legacy data-type correction
+still lacks an exact frame endpoint. No sentinel, role or unit-type setters are emitted.
+The one format setter remains valid. The 243 sets statements now produce memberships
+through resolve: **235 sets and 250 members**, unchanged from round 03.
 
 All heavy runs were sequential. Process listing remains unavailable (`pgrep` cannot
 access sysmond); this operator-scheduled run did not overlap another heavy job from this
@@ -15,12 +22,19 @@ separately with `wait`/monotonic time/`getrusage(RUSAGE_CHILDREN)`; Darwin RSS i
 The outer timing wrapper returns 1 for its sandbox error even when the recorded Rust
 child returns 0.
 
-  | Run                        | Rust exit | Wall seconds | Peak RSS bytes |
-  | -------------------------- | --------: | -----------: | -------------: |
-  | Final lock                 |         0 |      175.973 |  9,671,802,880 |
-  | Curated dev build          |         0 |      246.339 |  8,867,004,416 |
-  | Explicit curated verify    |         0 |       22.911 |     81,641,472 |
-  | Uncurated comparison build |         0 |      112.420 |  8,314,290,176 |
+  | Run                        | Rust exit | Wall seconds | Peak RSS bytes | Round 03 wall | Wall delta |
+  | -------------------------- | --------: | -----------: | -------------: | ------------: | ---------: |
+  | Final lock                 |         0 |      174.452 |  8,148,647,936 |       175.973 |     -1.521 |
+  | Curated dev build          |         0 |      246.673 |  8,793,587,712 |       246.339 |     +0.334 |
+  | Explicit curated verify    |         0 |       22.945 |     81,281,024 |        22.911 |     +0.034 |
+  | Uncurated comparison build |         0 |      112.849 |  8,989,655,040 |       112.420 |     +0.429 |
+
+All reported catalog counts, statement/override counts, memberships, source outcomes,
+and diagnostic families are unchanged from round 03. Restored type/length application
+has no retained setters to affect. Removing format from blocking forms/type-change
+findings causes no aggregate difference on these inputs. Moving memberships into resolve
+preserves the observed memberships. Timing/RSS variation is measured host/run variation,
+not evidence of a performance change.
 
 The final lock wrote **169 files containing 14,792 reviewed premises** and had **zero
 refusals**. The curated catalog passed its built-in post-write checks and the explicit
@@ -32,7 +46,7 @@ The remaining 1,326 locked proposals are 177 redundant sets, 103 links and 1,046
 acknowledgements. Links/acks are premise-only until D-3c; they are not reported as
 applied. There are zero acknowledged findings in this catalog.
 
-### Applied set statements and winning override cells
+### D-3b field scope: applied set statements and winning override cells
 
 Counts below come from the published SQLite `statement` and `override` boundaries. One
 applied statement may affect several cells; these are not source-entry counts. Seven
@@ -45,6 +59,7 @@ sensitive setters were wholly redundant and produced no winning setter override.
   | `description`            |         4,947 |                  4,947 |              4,948 |
   | `format`                 |             1 |                      1 |                  2 |
   | `identifier`             |             8 |                      1 |                  1 |
+  | `length`                 |             0 |                      0 |                  0 |
   | `label`                  |         4,141 |                  4,127 |              4,129 |
   | `notice`                 |             1 |                      1 |                  1 |
   | `operational_definition` |           104 |                    104 |                104 |
@@ -52,6 +67,7 @@ sensitive setters were wholly redundant and produced no winning setter override.
   | `sensitive`              |             7 |                      0 |                  0 |
   | `sets`                   |           243 |                    243 |                243 |
   | `spelling`               |           146 |                    146 |                146 |
+  | `type`                   |             0 |                      0 |                  0 |
   | `unit`                   |           280 |                    280 |                280 |
   | `value_set`              |           174 |                    116 |                116 |
   | `variable`               |           491 |                    491 |              3,654 |
@@ -154,9 +170,9 @@ missing-premise failures:
   responsible for the observed structural failure. Existing source facts and ambiguity
   rules remain.
 
-The first lock failed after 183.62 seconds with 9,331 located diagnostics (929 empty
-matches, 8,395 overlap diagnostics, and seven other errors). After those fixes, a lock
-passed, but the first curated build failed after 232.289 seconds at the
+In round 03, the first lock failed after 183.62 seconds with 9,331 located diagnostics
+(929 empty matches, 8,395 overlap diagnostics, and seven other errors). After those
+fixes, a lock passed, but the first curated build failed after 232.289 seconds at the
 occurrence/segment invariant. A diagnostic rerun retained the rejected stage: 38 fold
 mismatches across 11 variables; zero variable/table/period/value-set/dtype mismatches. A
 tiny real-CLI fixture reproduced the invalid concurrent-fold assignment. Temporary
@@ -173,9 +189,10 @@ Final source outcomes: **7,004 converted / 11,137 dropped or no-op / 0 refused**
 17,299 entries.
 
 Detailed JSON, final locks, both catalogs and run metrics are retained locally under
-`.local/d-converter-round03/`. Generated TOML and catalogs stay out of Git. Frames,
-rejected stages and temporary tools are removed after reporting. No PR was merged, no
-release gate or regen ran, and no legacy real-seed build ran.
+`.local/d-converter-round04/` (round 03 evidence is retained separately). Generated TOML
+and catalogs stay out of Git. Frames, rejected stages and temporary tools are removed
+after reporting. No PR was merged, no release gate or regen ran, and no legacy real-seed
+build ran.
 
 # One-shot curation conversion report
 
@@ -431,8 +448,8 @@ Resolved by the operator in fix round 02:
   145 ordinary declarations use set sets, preserving each column's own source metadata;
   disagreements use F6/ambiguity.
 - **operational_definition (191 previously deferred declarations):** emit set
-  operational_definition; d-set-fields supplies field application in the validation
-  integration; missing endpoints or conflicting donors remain separately listed.
+  operational_definition; merged d-set-fields supplies field application; missing
+  endpoints or conflicting donors remain separately listed.
 - **noncalendar placement (33):** dropped with reason D-7.
 
 Remaining genuinely open items:
@@ -467,15 +484,17 @@ are not assumed absent.
 
 ## Final gate and reproducibility
 
-`g0 rust` passed on the publishable converter tree after removing the temporary
-dependency merge: lint/type/schema checks, Rust tests and checks, 116 script tests,
-byte-identical synthetic builds, and 194 conformance tests (2 skipped). The first gate
-attempt found a mixed-dictionary type-inference error in the grouping audit; an
-annotation fixed it and the full gate reran successfully. No permanent tests were added.
+`uv run --no-project scripts/gate.py g0 rust` passed on the merged tree: lint,
+format/type/schema checks, Rust fmt/clippy/tests and dependency audit, 116 script tests,
+byte-identical synthetic builds, and 194 conformance tests (2 skipped). Independent
+review found no material converter merge blocker. No permanent tests were added. The
+first standalone formatter invocation could not create its default uv tool directory;
+the formatter and full gate then succeeded with a checkout-local tool directory.
 
-The measured generator sources match converter commit `dc48c2c0f`; the final follow-up
-changes only the audit-record type annotation and this validation text. Runtime
-validation used #2005 commit `b6105257d4505df60e9c810dfca7ecbd02706ca7` in the local
-integration. The JSON report records source and locked-curation digests, exact commands
-and raw child results. The curated and uncurated databases, final locks and metrics
-remain available locally for verification.
+The measured converter sources are unchanged from `aea16f0b1`; runtime validation uses
+the normal main merge `d79d3a058`. The JSON evidence records curation digests, exact
+commands and child results. The locked-curation file manifest SHA-256 (sorted relative
+paths mapped to content SHA-256, excluding locks) is
+`5631703867465d59d1b0b0273b44e8ccd6f903f449e72e62b197c00121db16ca`. Final locks, both
+catalogs and metrics remain local. The PR diff contains only the six converter scripts
+and this report. No PR merge, release gate, regen or legacy real-seed build was run.
