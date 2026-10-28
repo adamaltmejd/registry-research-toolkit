@@ -117,3 +117,123 @@ subject = "var:skl-gruppnamn-2011"
 relation = "label_of"
 object = "scb/fortroendevalda/skl-grupp-2011"
 evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:16\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r15029'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r15095'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r19124'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r5164'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r8594'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r14432'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r19122'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r4427'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r5001'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: AlderSlut where key = 'v241' and type = 'decimal' and release = 'r8587'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: facknamnd where key = 'v17669' and type = 'decimal' and release = 'r15029'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: facknamnd where key = 'v17669' and type = 'decimal' and release = 'r5001'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: Kod where key = 'v17655' and type = 'decimal' and release = 'r5001'"
+fields = { type = "integer" }
+evidence = "value set: 553 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kod where key = 'v17655' and type = 'decimal' and release = 'r4427'"
+fields = { type = "integer" }
+evidence = "value set: 553 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: poskod where key = 'v17647' and type = 'decimal' and release = 'r15095'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: poskod where key = 'v17647' and type = 'decimal' and release = 'r14432'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: styr_fullm where key = 'v17670' and type = 'decimal' and release = 'r15029'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: styr_fullm where key = 'v17670' and type = 'decimal' and release = 'r5001'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: vakant where key = 'v17667' and type = 'decimal' and release = 'r15029'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: vakant where key = 'v17667' and type = 'decimal' and release = 'r5001'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

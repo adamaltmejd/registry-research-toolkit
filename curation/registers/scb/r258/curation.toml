@@ -1425,3 +1425,213 @@ kind = "set"
 subject = "it-anvandning-i-foretag: pmd where key = 'v25333'"
 fields = { "variable" = "anvander-mobilt-bredband-3g-4g" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:2870\n\nY-211 2026-09-19: 258.25333 'Använder mobil bredbandsanslutning via 3G- eller 4G-nätet' sequential rename {A3C 2014 (variant 557), MOBBB 2013-2018, PMD 2019-2021} owned by anvander-mobilt-bredband-3g-4g (diagnostic v17 rename-worklist-258)"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: B2 where key = 'v15910' and type = 'decimal' and release = 'r12613'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: B2 where key = 'v15910' and type = 'decimal' and release = 'r13562'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: B2 where key = 'v15910' and type = 'decimal' and release = 'r14842'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: B2 where key = 'v15910' and type = 'decimal' and release = 'r17768'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: C2 where key = 'v15910' and type = 'decimal' and release = 'r11917'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: C2 where key = 'v15910' and type = 'decimal' and release = 'r12033'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IFU where key = 'v15910' and type = 'decimal' and release = 'r12034'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IFU where key = 'v15910' and type = 'decimal' and release = 'r12316'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r11917'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12032'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12033'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12034'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12316'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12386'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r12613'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r13562'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r14842'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r17768'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r18409'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass where key = 'v17589' and type = 'decimal' and release = 'r18905'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r11917'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r12032'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r12033'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r12034'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r12316'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r12613'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r13562'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r14842'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r17768'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r18409'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Aux_AldKon where key = 'v17593' and type = 'decimal' and release = 'r18905'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: aklass_k where key = 'v17593' and type = 'decimal' and release = 'r12386'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: stratum where key = 'v17593' and type = 'decimal' and release = 'r19400'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: stratum where key = 'v17593' and type = 'decimal' and release = 'r20119'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: UtbNiv where key = 'v779' and type = 'decimal' and release = 'r11917'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"

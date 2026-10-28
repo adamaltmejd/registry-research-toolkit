@@ -4,3 +4,321 @@ kind = "set"
 subject = "var:hut-del"
 fields = { "sets" = ["legacy-86-46210", "legacy-hut-del"] }
 evidence = "reg_meta_build/curation/registers/scb/hut.toml:330\nreg_meta_build/curation/registers/scb/hut.toml:741\n\nBatch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period.\n\nBoth supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r1525'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r1526'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r1527'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r1528'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r2253'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r469'"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r1523'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r1524'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r1529'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r1530'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r2252'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BCDZ where key = 'v3194' and type = 'decimal' and release = 'r467'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r1523'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r1524'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r1529'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r1530'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r2252'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BHREG where key = 'v3195' and type = 'decimal' and release = 'r467'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r1525'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r1526'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r1527'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r1528'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r2253'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKON where key = 'v44' and type = 'decimal' and release = 'r469'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r1523'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r1524'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r1529'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r1530'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r2252'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVIZ where key = 'v3221' and type = 'decimal' and release = 'r467'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVZ where key = 'v3222' and type = 'int' and release = 'r2941'"
+fields = { type = "decimal" }
+evidence = "value set: 8 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BKVZ where key = 'v3222' and type = 'int' and release = 'r5174'"
+fields = { type = "decimal" }
+evidence = "value set: 8 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKF where key = 'v16075' and type = 'decimal' and release = 'r1526'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKF where key = 'v16075' and type = 'decimal' and release = 'r1527'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKF where key = 'v16075' and type = 'decimal' and release = 'r1528'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BKF where key = 'v16075' and type = 'decimal' and release = 'r2253'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: bkf where key = 'v16075' and type = 'decimal' and release = 'r1525'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: bkf where key = 'v16075' and type = 'decimal' and release = 'r469'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r1523'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r1524'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r1529'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r1530'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r2252'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-2003-2012: BEGSZ where key = 'v29408' and type = 'decimal' and release = 'r467'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: NYSTRAT where key = 'v462' and type = 'decimal' and release = 'r13897'"
+fields = { type = "integer" }
+evidence = "value set: 45 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: NYSTRAT where key = 'v462' and type = 'decimal' and release = 'r15192'"
+fields = { type = "integer" }
+evidence = "value set: 45 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: NYSTRAT where key = 'v462' and type = 'decimal' and release = 'r15193'"
+fields = { type = "integer" }
+evidence = "value set: 45 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r1525'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r1526'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r1527'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r1528'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r2253'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individ-2003-2012: BSYSSEL where key = 'v3270' and type = 'decimal' and release = 'r469'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"

@@ -526,3 +526,495 @@ kind = "set"
 subject = "punktskatter-for-energi: oljprivfb @2008"
 fields = { "unit" = "m3 (kubikmeter)" }
 evidence = "reg_meta_build/curation/registers/scb/frida.toml:11081\n\nThe complete native25961 source family states the same Privat förbrukning olja MK1 quantity in the same2008 variant and physical OLJPRIVFB column. Kubikmeter and m3 (kubikmeter) explicitly denote the same unit. Preserve both original unit spellings and every source field/period/coding reference. Complete source proof: Batch51-FRIDA116-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BANNANF where key = 'v696' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12295'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12296'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12297'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12298'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12299'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12300'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12301'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BKKSTAT where key = 'v26070' and type = 'decimal' and release = 'r12302'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12295'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12296'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12297'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12298'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12299'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12300'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12301'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BLISTAT where key = 'v26078' and type = 'decimal' and release = 'r12302'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BRANTEF where key = 'v1071' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BRESE where key = 'v21504' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BTJRESI where key = 'v21506' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BTJRESU where key = 'v21507' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BKUFOAB where key = 'v6089' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BKUPARK where key = 'v16411' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BKOSTF where key = 'v6095' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BLOGI where key = 'v6097' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r16184'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18293'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18815'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19331'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19886'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r16491'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18299'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18809'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19336'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r20060'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r16489'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18302'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18806'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19339'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r20064'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r16490'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18301'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18807'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19338'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r20063'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r16486'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18306'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r18801'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r19343'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r20069'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: SK_FORM where key = 'v2758' and type = 'decimal' and release = 'r15628'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BTRAKTI where key = 'v1833' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: BTRAKTU where key = 'v1831' and type = 'decimal' and release = 'r12393'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r16184'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18293'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18815'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19331'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19886'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r16491'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18299'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18809'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19336'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r20060'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r16489'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18302'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18806'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19339'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r20064'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r16490'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18301'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18807'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19338'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r20063'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r16486'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18306'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r18801'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r19343'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r20069'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: TYP_MOMS where key = 'v26134' and type = 'decimal' and release = 'r15628'"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"

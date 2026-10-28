@@ -1,0 +1,30 @@
+
+[[statement]]
+kind = "set"
+subject = "individer: BRELKBO where key = 'v35584' and type = 'decimal' and release = 'r9947'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individer: BVXBARN where key = 'v35580' and type = 'decimal' and release = 'r9947'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individer: BKHF where key = 'v35579' and type = 'decimal' and release = 'r9947'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individer: BKVARBO where key = 'v4543' and type = 'decimal' and release = 'r9947'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individer: BRELUP where key = 'v35581' and type = 'decimal' and release = 'r9947'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"

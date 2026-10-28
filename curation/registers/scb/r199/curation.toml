@@ -11,3 +11,51 @@ kind = "set"
 subject = "hyror-i-bostadslagenheter: lghyta"
 fields = { "variable" = "boende-bostadsyta-i-kvadratmeter-lghyta" }
 evidence = "reg_meta_build/curation/registers/scb/hib.toml:404\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r3808'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r4339'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r4994'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r5518'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r3808'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r4339'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r4994'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r5518'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"

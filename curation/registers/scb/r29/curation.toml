@@ -1204,3 +1204,693 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: civr where key = 'v15'"
 fields = { "variable" = "civ" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:5658\n\nShared-column succession fold 2026-10-21: SCB VarId 15 'Civilstånd' sequential rename {CIVR 1978-1986, CIV 1987-1992} owned by 29.15.civ; identical operational definition, the same 23 codes (CIV additionally lists the sentinel 00 'Okänt värde'), never co-delivered in any LINDA variant (reg_meta v0.57.0). The later BCIV, BCIVAKT, BCIVR and BCIVRTB keep their own owners. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BFOAB where key = 'v1229' and type = 'decimal' and release = 'r13103'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BFOAB where key = 'v1229' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BKYRKA where key = 'v1067' and type = 'decimal' and release = 'r13103'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BKYRKA where key = 'v1067' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BPRELSN where key = 'v1236' and type = 'decimal' and release = 'r13103'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BPRELSN where key = 'v1236' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16370'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16372'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16156'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16208'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16210'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16211'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16212'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16213'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16214'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16233'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16239'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16241'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16244'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16264'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16265'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16271'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16299'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16302'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16304'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16305'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16319'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16329'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16338'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16341'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16342'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16368'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16369'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16183'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16207'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16209'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16229'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16230'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16231'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16232'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16234'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16240'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16242'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16262'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16267'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16270'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16307'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16308'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16321'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16326'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16327'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16328'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16344'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16345'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16346'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16347'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16396'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r16399'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BFODMAN where key = 'v5593' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BFORV where key = 'v2679' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-yrke-och-lon: REGKOD where key = 'v21909' and type = 'decimal' and release = 'r11549'"
+fields = { type = "integer" }
+evidence = "value set: 14 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BURVKODF where key = 'v5670' and type = 'decimal' and release = 'r16370'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BURVKODF where key = 'v5670' and type = 'decimal' and release = 'r16372'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BURVKODF where key = 'v5670' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16156'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16208'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16210'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16211'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16212'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16213'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16214'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16233'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16239'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16241'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16244'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16264'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16265'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16271'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16299'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16302'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16304'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16305'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16319'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16329'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16338'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16341'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16342'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16368'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16369'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16183'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16207'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16209'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16229'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16230'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16231'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16234'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16240'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16242'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16262'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16267'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16270'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16307'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16308'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16321'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16326'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16327'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16328'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16344'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16345'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16346'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16347'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16396'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BURVKODU where key = 'v5643' and type = 'decimal' and release = 'r16399'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BURVKODI where key = 'v5643' and type = 'decimal' and release = 'r13231'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"

@@ -40,3 +40,27 @@ subject = "var:vsnamn"
 relation = "label_of"
 object = "scb/vaxtskyddsmedel/vsid"
 evidence = "reg_meta_build/curation/registers/scb/vaxtskyddsmedel.toml:26\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: Fanggroda where key = 'v42778' and type = 'decimal' and release = 'r18479'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: Trada where key = 'v42778' and type = 'decimal' and release = 'r18479'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: Vallbrott where key = 'v42778' and type = 'decimal' and release = 'r18479'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: HarAnvantGlyfosat where key = 'v5256' and type = 'decimal' and release = 'r18479'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

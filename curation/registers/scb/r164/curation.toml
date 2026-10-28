@@ -1,0 +1,504 @@
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r11486'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r11487'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r12030'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15074'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15081'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15091'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15139'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15144'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15178'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15196'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15234'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15241'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15242'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15243'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15255'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3718'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3746'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3768'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3769'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3773'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r3924'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4352'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4391'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4392'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4791'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4951'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4996'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r4997'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r5590'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r5591'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r5753'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r6126'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r8581'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: region where key = 'v14850' and type = 'decimal' and release = 'r8586'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vbrvffu where key = 'v7772' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vprvffu where key = 'v7772' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rbsffu where key = 'v7774' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rpsffu where key = 'v7774' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vbrvffu where key = 'v7771' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vprvffu where key = 'v7771' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rbsffu where key = 'v7773' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rpsffu where key = 'v7773' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rbsfu where key = 'v7776' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r11486'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r11487'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r12030'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15074'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15081'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15091'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15139'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15144'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15178'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15196'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15234'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15241'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15242'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15243'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15255'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r15257'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3718'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3746'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3768'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3769'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3773'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r3924'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4352'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4391'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4392'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4791'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4951'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4996'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r4997'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r5590'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r5591'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r5753'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r6126'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r8581'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: riksd_valkrets where key = 'v14775' and type = 'decimal' and release = 'r8586'"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: rpsfu where key = 'v7775' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vbrvfu where key = 'v7777' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "november: vprvfu where key = 'v7778' and type = 'decimal' and release = 'r15247'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"

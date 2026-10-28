@@ -1,0 +1,78 @@
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_21 where key = 'v2975' and type = 'decimal' and release = 'r17533'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_21 where key = 'v2975' and type = 'decimal' and release = 'r18589'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_21 where key = 'v2975' and type = 'decimal' and release = 'r18590'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_22 where key = 'v2975' and type = 'decimal' and release = 'r18590'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_22 where key = 'v2975' and type = 'decimal' and release = 'r18592'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_40 where key = 'v2975' and type = 'decimal' and release = 'r17533'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_40 where key = 'v2975' and type = 'decimal' and release = 'r18588'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_40 where key = 'v2975' and type = 'decimal' and release = 'r18589'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_40 where key = 'v2975' and type = 'decimal' and release = 'r18591'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_9 where key = 'v2975' and type = 'decimal' and release = 'r17533'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_9 where key = 'v2975' and type = 'decimal' and release = 'r18589'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_9 where key = 'v2975' and type = 'decimal' and release = 'r18590'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: PartielltBortfall_Dar_9 where key = 'v2975' and type = 'decimal' and release = 'r18591'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

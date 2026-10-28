@@ -114,3 +114,4101 @@ kind = "set"
 subject = "individregister: bvxbarn @2006..2013,2015"
 fields = { "coded" = false }
 evidence = "reg_meta_build/curation/registers/scb/fasit.toml:972\n\nRetain only the uncoded residual outside documented coding windows; do not infer vintage codes for the gap."
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALD where key = 'v241' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 127 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEXPROI where key = 'v5591' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEXPROI where key = 'v5591' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BACKINK where key = 'v687' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS where key = 'v37920' and type = 'decimal' and release = 'r15726'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS where key = 'v37920' and type = 'decimal' and release = 'r16504'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS where key = 'v37920' and type = 'decimal' and release = 'r18386'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS where key = 'v37920' and type = 'decimal' and release = 'r18826'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERS where key = 'v37920' and type = 'decimal' and release = 'r18951'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERSNIV where key = 'v37922' and type = 'decimal' and release = 'r15726'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERSNIV where key = 'v37922' and type = 'decimal' and release = 'r16504'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERSNIV where key = 'v37922' and type = 'decimal' and release = 'r18386'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERSNIV where key = 'v37922' and type = 'decimal' and release = 'r18826'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: BAEERSNIV where key = 'v37922' and type = 'decimal' and release = 'r18951'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAEXPD where key = 'v688' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r16510'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r18228'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r18289'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r18392'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r18832'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r18960'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BAGBYT where key = 'v37633' and type = 'decimal' and release = 'r19837'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAKFORV where key = 'v694' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALTEX where key = 'v695' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BALTEX where key = 'v695' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BANDR where key = 'v1223' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BANDR where key = 'v1223' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BANNANF where key = 'v696' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BANNANF where key = 'v696' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPGP where key = 'v36947' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPIP where key = 'v36946' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAPTP where key = 'v36945' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASFORV where key = 'v703' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BASKAP where key = 'v704' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVKAP where key = 'v19845' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVPEN where key = 'v19847' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BAVSTPOP where key = 'v38511' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r15739'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r16505'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r18387'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r18827'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r18964'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABETTOT where key = 'v37990' and type = 'decimal' and release = 'r19832'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r15739'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r16505'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r18387'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r18827'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r18964'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBABO where key = 'v37988' and type = 'decimal' and release = 'r19832'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r15739'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r16505'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r18387'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r18827'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r18964'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BBAVRD where key = 'v37991' and type = 'decimal' and release = 'r19832'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBEFOLK where key = 'v36943' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBILERS where key = 'v19849' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r16510'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r18228'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r18289'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r18392'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r18832'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r18960'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BBOFAST where key = 'v37628' and type = 'decimal' and release = 'r19837'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORM8HB where key = 'v36932' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOREG where key = 'v27162' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEGSH where key = 'v36926' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BEGSHB where key = 'v3188' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BEGSZ where key = 'v38569' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BFAMBRN where key = 'v37954' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOPTYP where key = 'v27027' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r16511'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r18230'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r18283'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r18393'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r18833'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r18958'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: BFPKOD where key = 'v37977' and type = 'decimal' and release = 'r19838'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARH where key = 'v37432' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHELARHB where key = 'v37433' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHEM where key = 'v36917' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHOB where key = 'v37557' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9AHB where key = 'v38484' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHT9HB where key = 'v3188' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BIBIDN where key = 'v27042' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BIBIDN where key = 'v27042' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BIMP where key = 'v37929' and type = 'decimal' and release = 'r18236'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BIMP where key = 'v37929' and type = 'decimal' and release = 'r18288'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BINVGR where key = 'v38512' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK5 where key = 'v37637' and type = 'decimal' and release = 'r16514'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK5 where key = 'v37637' and type = 'decimal' and release = 'r18397'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK5 where key = 'v37637' and type = 'decimal' and release = 'r18837'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK5 where key = 'v37637' and type = 'decimal' and release = 'r18954'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK5 where key = 'v37637' and type = 'decimal' and release = 'r19841'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK6 where key = 'v37636' and type = 'decimal' and release = 'r16514'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK6 where key = 'v37636' and type = 'decimal' and release = 'r18397'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK6 where key = 'v37636' and type = 'decimal' and release = 'r18837'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK6 where key = 'v37636' and type = 'decimal' and release = 'r18954'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BK6 where key = 'v37636' and type = 'decimal' and release = 'r19841'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKF where key = 'v38624' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKF where key = 'v38624' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BKLIMATZ where key = 'v21371' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKONH where key = 'v37971' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BKONHB where key = 'v37760' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUFACK06 where key = 'v44578' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BKVARBOH where key = 'v37972' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKYRKA where key = 'v1067' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKYRKA where key = 'v1067' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BBOFORMZ where key = 'v3210' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMHB where key = 'v3210' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMZ where key = 'v3210' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOFORMZ where key = 'v3210' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BBOFORMZ where key = 'v3210' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r16510'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r18228'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r18392'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r18832'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r18960'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BOFRI where key = 'v37627' and type = 'decimal' and release = 'r19837'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BOPTYP where key = 'v27036' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTOF where key = 'v705' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBOSTSF where key = 'v706' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPRELSK where key = 'v1235' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPRELSK where key = 'v1235' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPRELSN where key = 'v1236' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPRELSN where key = 'v1236' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRANTEF where key = 'v1071' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRANTEF where key = 'v1071' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRELK where key = 'v4860' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRELK where key = 'v4860' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRESE where key = 'v21504' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRESE where key = 'v21504' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBIN where key = 'v27067' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRTBUT where key = 'v27068' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSAAVTYP where key = 'v36883' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSBOA where key = 'v37556' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJATYP where key = 'v38492' and type = 'decimal' and release = 'r16515'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJATYP where key = 'v38492' and type = 'decimal' and release = 'r18398'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJATYP where key = 'v38492' and type = 'decimal' and release = 'r18838'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJATYP where key = 'v38492' and type = 'decimal' and release = 'r18953'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJATYP where key = 'v38492' and type = 'decimal' and release = 'r19842'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJF where key = 'v37935' and type = 'decimal' and release = 'r18236'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJF where key = 'v37935' and type = 'decimal' and release = 'r18288'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJST where key = 'v37939' and type = 'decimal' and release = 'r18236'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: BSJST where key = 'v37939' and type = 'decimal' and release = 'r18288'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r12967'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r12997'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r13011'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r13052'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r13072'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r13085'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r13331'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r14148'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r15748'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSPT where key = 'v26982' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTJRESI where key = 'v21506' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTJRESI where key = 'v21506' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTJRESU where key = 'v21507' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTJRESU where key = 'v21507' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r15734'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r16516'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r18399'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r18839'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r18952'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVATG where key = 'v38289' and type = 'decimal' and release = 'r19843'"
+fields = { type = "integer" }
+evidence = "value set: 209 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r15734'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r16516'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r18399'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r18839'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r18952'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: BTVPER where key = 'v38293' and type = 'decimal' and release = 'r19843'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPP where key = 'v37639' and type = 'decimal' and release = 'r16514'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPP where key = 'v37639' and type = 'decimal' and release = 'r18397'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPP where key = 'v37639' and type = 'decimal' and release = 'r18837'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPP where key = 'v37639' and type = 'decimal' and release = 'r18954'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPP where key = 'v37639' and type = 'decimal' and release = 'r19841'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPPT where key = 'v37652' and type = 'decimal' and release = 'r16514'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPPT where key = 'v37652' and type = 'decimal' and release = 'r18397'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPPT where key = 'v37652' and type = 'decimal' and release = 'r18837'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPPT where key = 'v37652' and type = 'decimal' and release = 'r18954'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: BTYPUPPT where key = 'v37652' and type = 'decimal' and release = 'r19841'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BUPPSK where key = 'v27017' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r11725'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r12967'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r12997'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r13011'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r13052'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r13072'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r13085'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r13331'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r14148'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVBDEL where key = 'v37440' and type = 'int' and release = 'r15748'"
+fields = { type = "decimal" }
+evidence = "value set: 4 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVUNR where key = 'v37561' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARN where key = 'v37546' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVXBARNH where key = 'v38514' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BYRNGR2 where key = 'v37538' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BCIV06 where key = 'v39147' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BCIV where key = 'v5584' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BCIV where key = 'v5584' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUFOAB where key = 'v6089' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUFOAB where key = 'v6089' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPENSF where key = 'v22251' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUPARK where key = 'v16411' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKUPARK where key = 'v16411' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHELARHB where key = 'v3198' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BHELARZ where key = 'v3198' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BHT9Z where key = 'v29408' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEJTERR where key = 'v264' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEJTERR where key = 'v264' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKON where key = 'v44' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKOSTF where key = 'v6095' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BKOSTF where key = 'v6095' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BLOGI where key = 'v6097' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BLOGI where key = 'v6097' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: Z61PINKP where key = 'v41149' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: Z61PINKP where key = 'v41149' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: ZRIKTALD where key = 'v41149' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: ZRIKTALD where key = 'v41149' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: ZRIKTALD where key = 'v41149' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: ZRIKTALD where key = 'v41149' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BARBINK where key = 'v697' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEJTAX where key = 'v1228' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BEJTAX where key = 'v1228' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BHINK where key = 'v24449' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BPTYP where key = 'v5639' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kosthushallsregister: BHREGZ where key = 'v38570' and type = 'decimal' and release = 'r18233'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r15738'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r16509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r18391'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r18831'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r18965'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BRFORH where key = 'v37549' and type = 'decimal' and release = 'r19836'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BFOAB where key = 'v22329' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BRSTOD where key = 'v30838' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BIBIDO where key = 'v27049' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BIBIDO where key = 'v27049' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSYSS where key = 'v36876' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r16510'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r18228'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r18289'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r18392'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r18832'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r18960'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: BTOMTR where key = 'v27048' and type = 'decimal' and release = 'r19837'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r15727'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r16506'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r18388'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r18828'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r18961'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: BTRIF where key = 'v37763' and type = 'decimal' and release = 'r19833'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTRAKTI where key = 'v1833' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTRAKTI where key = 'v1833' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTRAKTU where key = 'v1831' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BTRAKTU where key = 'v1831' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r15739'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r16505'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r18387'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r18827'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r18964'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPU where key = 'v38483' and type = 'decimal' and release = 'r19832'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r15739'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r16505'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r18387'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r18827'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r18964'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "barnregister: BUTYPI where key = 'v38482' and type = 'decimal' and release = 'r19832'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r15736'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r16503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r18232'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r18394'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r18509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r18834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r18957'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individregister: BBSTYP where key = 'v19853' and type = 'decimal' and release = 'r19844'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BYRKSTH where key = 'v1821' and type = 'decimal' and release = 'r18226'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: BYRKSTH where key = 'v1821' and type = 'decimal' and release = 'r18347'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r16512'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r18234'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r18395'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r18835'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r18956'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZALT where key = 'v37705' and type = 'decimal' and release = 'r19839'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r16512'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r18234'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r18395'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r18835'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r18956'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "register-k10: ZLKRAVN where key = 'v37709' and type = 'decimal' and release = 'r19839'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r16507'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18389'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18829'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18962'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r19834'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r16508'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18390'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18830'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r18963'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: ZPASNRV where key = 'v37738' and type = 'decimal' and release = 'r19835'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

@@ -77,3 +77,9 @@ kind = "set"
 subject = "arbetsstallen: antalsyss @2019"
 fields = { "operational_definition" = "Antalet sysselsatta har räknats fram genom att summera personer som är placerade på arbetsstället i sysselsättningsregistret (summerat på AstNr)." }
 evidence = "reg_meta_build/curation/registers/scb/rams.toml:515\n\nSWECOV holds AntalSysS in RAMS_ASTRA_2019; AM0207 KD 2019 p. 9 documents the workplace employment count for 2019, the same design SCB documents on this variant for 2020–2021. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced). Unit: a count of employed persons (AM0207 KD 2019 p. 9; RAMS target quantities are counts, KD 2019 p. 2), as SCB documents for 2020-2021."
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: LonFInk where key = 'v16899' and type = 'decimal' and release = 'r1876'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 22 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"

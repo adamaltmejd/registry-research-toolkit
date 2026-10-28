@@ -8845,3 +8845,9 @@ kind = "set"
 subject = "uoh-personal: employ_scope_net where release = 'r19474'"
 fields = { "unit" = "Procent" }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:17290\n\nSame native109, exact EMPLOY_SCOPE_NET calendar-year delivery and source definition; another explicitly supplied source edition for this same year states Procent. Replace only the generic placeholder värde, antal eller % with that precise contemporaneous unit. Raw placeholder and all original metadata remain evidence; no stored magnitude or scaling is changed. Complete peer/family review: Batch52-domain42b-role-review.json."
+
+[[statement]]
+kind = "set"
+subject = "landsting: FoUUtgKomAr where key = 'v7743' and type = 'decimal' and release = 'r1007'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
