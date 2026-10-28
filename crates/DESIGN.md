@@ -1198,11 +1198,11 @@ question 2; a genuine provider correction through reviewed global curation; or a
 explicit hold/unmap with a reason. `*-enligt-leverans` definitions are accepted as
 ordinary global curation when evidence records what a provider delivery actually
 contains: D already has 55 such ids in provider registers. SWECOV facts may inform
-global curation (Operator ruling S3). Missing `kva-typ-enligt-leverans` follows that
-same global provider-register home, using reviewed assertions and the ordinary ledger,
-rather than being moved solely because its evidence comes from SWECOV. The 17 uses need
-normal definitions and ledgers for those five registers, not a redirect to a similarly
-named provider register.
+global curation (Operator ruling S3). Delivery-only wide slots may use that accepted
+global class or steward slot definitions under Q2; legacy long-concept targets are
+retargeting evidence, not a requirement to mint a dangling long concept. The 17 uses
+need normal definitions and ledgers for those five registers, not a redirect to a
+similarly named provider register.
 
 The separate automatic-mapping worklist includes **1,747** inventory mapping entries
 whose provider is absent from D's `curation/inputs.toml` provider list, including
@@ -1264,10 +1264,11 @@ different explicitly declared register. Under Q2-A, SV's default remains `sos/pa
 while a missing diagnosis slot may target `swecov/par-sv-slots`; that column does not
 inherit the default's register restriction. Its target register/table must exist in the
 semantic home chosen under Q1, the variable must belong there, and evidence must explain
-the cross-register route. The same mechanism covers positional `kva_typ` slots without
-relocating their global `kva-typ-enligt-leverans` concept. No new register is introduced
-by a route alone. Missing target routes are `holdings_table_route_unresolved`, not a
-fallback to the whole register; member tables may narrow the default list.
+the cross-register route. The same mechanism covers positional `kva_typ` slots; Q2
+decides global provider slots versus steward slots, without requiring a separate long
+kva-typ concept. No new register is introduced by a route alone. Missing target routes
+are `holdings_table_route_unresolved`, not a fallback to the whole register; member
+tables may narrow the default list.
 
 The generic compiler does the following against the exact catalog/semantic-view pin:
 
@@ -1302,21 +1303,25 @@ The generic compiler does the following against the exact catalog/semantic-view 
    explicitly routed tables is one owner, grouped by variable identity within each table
    coordinate; it yields two valid placements, not two rival variables. Different
    variable ids claiming the same folded column in one routed table/window remain
-   `ambiguous_delivered_owners`. Do not select by longest coverage, first id or label.
+   `ambiguous_delivered_owners`: a publish-time notice/worklist row with no orderable
+   placement over the contested interval (Operator F2). Do not select by longest
+   coverage, first id or label. Uncontested intervals remain independently eligible.
    Explicit `select_owner` names an evidence-backed variable per column/table/window; it
    cannot clear an ambiguous catalog segment. Partition/projection and duplicate
    placement checks still apply after owner grouping.
 5. Emit keys `(table_pid, variable_pid, interval)` pointing to the literal physical
    column. An unmatched or empty-intersection column is retained with a
    `mapping_missing` notice and worklist row, without an orderable mapping. It does
-   **not** block publication or require an invented unmap reason. Explicit hold/unmap
-   decisions retain their own reasons. Every census column must still be accounted in
-   the artifact. Invalid authored routes/targets/windows, unaccounted census columns and
-   illegal duplicate placements remain located refusals
-   (`holdings_table_route_unresolved`, `stale_declared_mapping_target`,
-   `inventory_window_invalid`, `inventory_cell_conflict`). At request time, a missing
-   placement is `mapping_missing`, an uncovered requested remainder `coverage_gap`, and
-   a request outside an authored column window `column_window_unavailable`, inside
+   **not** block publication or require an invented unmap reason.
+   `ambiguous_delivered_owners` is likewise a notice with no contested placement, not
+   one of the refusal codes below. Explicit hold/unmap decisions retain their own
+   reasons. Every census column must still be accounted in the artifact. Invalid
+   authored routes/targets/windows, unaccounted census columns and illegal duplicate
+   placements remain located refusals (`holdings_table_route_unresolved`,
+   `stale_declared_mapping_target`, `inventory_window_invalid`,
+   `inventory_cell_conflict`). At request time, a missing placement is
+   `mapping_missing`, an uncovered requested remainder `coverage_gap`, and a request
+   outside an authored column window `column_window_unavailable`, inside
    `order_blocked`.
 
 The standing target is every held column orderable (maintainer, 2026-10-16), but
@@ -1409,7 +1414,9 @@ relative metadata locations.
 `reg-build verify` is the sole publication validator. It checks exact census accounting
 (one disposition per table; every physical column represented), referential integrity,
 form/window containment, complete storage facts for orderable columns, key roles and
-presence, disjointness/uniqueness of placements, projection rules and located caveats.
+presence, disjointness/uniqueness of emitted placements, projection rules and located
+caveats. Competing candidate owners have already become `ambiguous_delivered_owners`
+notices with their contested placements omitted, so they do not violate uniqueness.
 Partitions authorize several explicitly disjoint locations; projections and carried keys
 authorize duplicates only under their stated rules. A warning cannot license an
 otherwise ambiguous mapping. Unmatched columns are notices/worklist entries, not
@@ -1483,10 +1490,12 @@ caller with no holdings gets the logical result only.
 Materialization takes the project and configured steward view, resolves its format, and
 binds artifact identity to the result. It first calls the logical check, then intersects
 each resulting table/variable/form interval with accepted holdings windows. Partial
-possession is an explicit physical clip, wholly unheld selections block, and ambiguous
-rival placements block with located findings. Catalog ambiguity remains blocking even if
-only one rival is held. Physical findings never disappear into the logical `validate.ok`
-result. The separate physical operation reports its own success/refusal.
+possession is an explicit physical clip and wholly unheld selections block. A
+publish-time `ambiguous_delivered_owners` notice has no accepted contested placement; a
+request for that cell therefore blocks as `mapping_missing`, not a second runtime
+holdings-rival resolution. Catalog ambiguity remains blocking even if only one rival is
+held. Physical findings never disappear into the logical `validate.ok` result. The
+separate physical operation reports its own success/refusal.
 
 Select all explicit partition members needed for the requested interval. Projection
 duplicates use the parent's serving placement for an ordered shared key and retain the
@@ -1535,13 +1544,14 @@ implementation.
 
 For example, in the recommended SV slot model, select the thirty adopted slot variables
 as a set; each maps to exactly one literal `DIA<N>` column, and the person row key is
-added once. For CIS, first resolve physical `emp04` to D's
-`scb/innovation-foretag/emp04-enligt-leverans` where its documented delivery interval
-matches; preserve that existing id and the source's reference-year meaning, rather than
-minting a new 2004 slot merely from the old member index. This selects a column; it
-never means a row filter or a new delivery inferred from the name. These examples depend
-on the e-holdings conversion/minting worklist; they are not claims that D already
-contains the slot ids.
+added once. CIS has two distinct `emp04` cases: `CIS2006.emp04` fold-matches D's
+`scb/innovation-foretag/emp04-enligt-leverans`, asserted over 2006
+(`scb/r257/curation.toml:613`). `CIS2004.emp04` does not fold-match that target at 2004:
+D documents `antal-anstallda` as `EMP`. It needs the explicit reviewed mapping from
+`series/cis.toml:1907–1909` to `antal-anstallda` at 2004, or stays `mapping_missing`.
+Neither case mints a duplicate year slot or uses reference-year meaning to extend
+documented delivery coverage. The SV slot ids above remain illustrative pending the Q2
+decision and normal ledger review.
 
 Column windows narrow a mapping independently of slot metadata. In
 `swecov-sos-barn-insats.toml`, `P1105_LopNr_PersonNr` serves the current BU shape over
@@ -1705,13 +1715,15 @@ means no physical-parity claim; the reference logical result remains usable.
 
 For the FK child projection, a small mock produces separate parent and child files,
 reuses synthetic recipient keys, and adds synthetic child keys without asserting the
-real number of children or observations. For `emp04`, it preserves the adopted D
-column/type/window and its documented reference-year meaning, without minting a new long
-person-year table. Mocks preserve file topology, columns and type boundaries; they do
-not claim representative missingness, frequencies or valid causal relations. The seed,
-generator version and plan generation determine bytes. Use the same column/name limits
-as the extract plan. The mock writer scope and its runtime dependencies are question 5,
-not an adopted multi-format writer abstraction.
+real number of children or observations. For `CIS2006.emp04`, it uses the existing D
+`emp04-enligt-leverans` type/window; `CIS2004.emp04` is mockable only after the reviewed
+`antal-anstallda` mapping at 2004 is adopted, otherwise its `mapping_missing` blocks the
+plan. No mock invents that association or a new long person-year table. Mocks preserve
+file topology, columns and type boundaries; they do not claim representative
+missingness, frequencies or valid causal relations. The seed, generator version and plan
+generation determine bytes. Use the same column/name limits as the extract plan. The
+mock writer scope and its runtime dependencies are question 5, not an adopted
+multi-format writer abstraction.
 
 ### Vocabulary checklist and proof
 
@@ -1830,19 +1842,25 @@ open question. Each question names the first PR it blocks in REBUILD §E.
    concrete cost: expose a separately labelled steward result group with its own FTS
    ranking, counts and cursor, alongside the reference group; never merge independent
    bm25 ranks. A global home would use the existing base index.
-2. **How are missing long-to-wide slots and pre-2018 current coding represented?**
-   Blocks **e-holdings/e-order**. Option A: ordinary separate slot variables and coding
-   tables, with reviewed per-column routes and lineage; option B: explicit holdings-only
-   expansion/exception records. Recommend A, using the semantic home chosen in Q1 and
-   separate steward result grouping wherever that home is supplemental. Existing
-   interval-valid D variables win before either mechanism; no new slots replace them.
-   The accepted global `*-enligt-leverans` class, including the missing kva-typ concept,
-   follows ordinary provider-register curation under S3. D32's separate documented wide
-   variables are not reopened. New physical `DIA<N>` slots can route to a new declared
-   steward register without changing SV's default `sos/par` route. Pre-2018 current
-   coding preserves the Operator's warn-not-hold call without widening global validity;
-   PLACDAT1 on existing `bu-insats-pnrq0` is outside this exception. Option B still
-   needs Q1's ordinary provider definitions, and does not remove their search cost.
+2. **Where do delivery-only wide slots live, and how is pre-2018 coding represented?**
+   Blocks **e-holdings/e-order**. For `DIA1`…`DIA30` and `kva_typ1`…`kva_typ30`, choose
+   explicitly between A: separate steward slot variables with reviewed per-column routes
+   (such as `swecov/par-sv-slots`); B: separate global `sos/par` `*-enligt-leverans`
+   slot variables using S3's accepted delivery-fact class; or C: holdings-only expansion
+   records from an evidenced logical concept. Recommend A for delivery-only pivots:
+   their physical shape need not become a global provider form; B is allowed with
+   reviewed global delivery evidence, not forbidden by provenance. No dangling global
+   long kva-typ concept is minted by default. C would need an independently justified
+   concept definition before compilation. Existing interval-valid D variables win before
+   all three choices, and D32's separate documented wide variables are not reopened. Q1
+   still decides the home of the ordinary provider definitions; it does not choose this
+   slot home. Any supplemental slot search uses the separate steward result group, never
+   merged bm25 ranks. For pre-2018 current coding, choose explicit ordinary coding-table
+   definitions or holdings-only exception records; recommend explicit coding tables with
+   preserved provenance and the Operator's warn-not-hold call, without widening global
+   validity. PLACDAT1 on existing `bu-insats-pnrq0` is outside that exception. Neither
+   an expansion nor a coding exception substitutes for Q1's ordinary provider
+   definitions.
 3. **Confirm union filters, or reopen them?** Blocks **e-order** only if reopened. V3
    step 6 already chooses the union of entry periods as one `ranges[]` OR filter per
    physical file. Recommend confirming it, with explicit inclusion-over-request notices.
