@@ -57,6 +57,16 @@ fn belongs(record: &Record, provider: &str, register: &str) -> bool {
     coordinates.0 == provider && coordinates.1 == register
 }
 
+/// Application reads local coordinates and explicitly named code lists. Other
+/// shared facts remain in the frame without being copied for each statement.
+fn application_record(record: &Record, provider: &str, register: &str, hash: Option<&str>) -> bool {
+    match record {
+        Record::ValueSet(set) => hash == Some(set.hash.as_str()),
+        Record::Link(_) | Record::Notice(_) | Record::Doc(_) => false,
+        _ => belongs(record, provider, register),
+    }
+}
+
 /// Catalog references resolve through each register's ledger, then snapshot source
 /// facts. Classes/providers without source entities cannot silently acquire a premise.
 fn references(
@@ -421,22 +431,67 @@ fn run_selected(
                 }
             }
         }
+        // Identity assignments share the phase snapshot and never rewrite facts.
+        let mut assignments = BTreeMap::new();
+        if stage == 3 {
+            for (provider, register) in groups.keys() {
+                let group = accepted
+                    .iter()
+                    .filter(|(_, _, p, r)| *p == provider && *r == register)
+                    .collect::<Vec<_>>();
+                if group.is_empty() {
+                    continue;
+                }
+                let source = records
+                    .iter()
+                    .filter(|r| application_record(r, provider, register, None))
+                    .cloned()
+                    .collect::<Vec<_>>();
+                let phase = reg_resolve::curation::apply::AssignmentPhase::new(&source);
+                for (statement, premise, _, _) in group {
+                    assignments.insert(
+                        publication_identity(statement),
+                        phase.apply(&statement.statement, premise),
+                    );
+                }
+            }
+        }
         for (statement, premise, provider, register) in accepted {
             let (_, ledger, _) = &locks[&(provider, register)];
-            let source = records
-                .iter()
-                .filter(|r| belongs(r, provider, register))
-                .cloned()
-                .collect::<Vec<_>>();
             let locator = statement_locator(root, statement)?;
             let file = locator.input.clone();
-            let applied = match reg_resolve::curation::apply::apply(
-                &source,
-                ledger,
-                &statement.statement,
-                &locator,
-                &premise,
-            ) {
+            let asserted =
+                reg_resolve::curation::apply::asserted_value_set(&statement.statement, &locator);
+            let hash = match &statement.statement {
+                reg_frame::statement::Statement::Assert {
+                    fact: reg_frame::statement::AssertFact::Occurrence { fields },
+                    ..
+                } => fields.value_set.as_deref(),
+                _ => asserted.as_ref().map(|set| set.hash.as_str()),
+            };
+            let source = if stage < 3 {
+                records
+                    .iter()
+                    .filter(|r| application_record(r, provider, register, hash))
+                    .cloned()
+                    .collect::<Vec<_>>()
+            } else {
+                Vec::new()
+            };
+            let application = match stage {
+                3 => assignments
+                    .remove(&publication_identity(statement))
+                    .expect("evaluated assignment"),
+                4 => Ok(reg_resolve::curation::apply::Applied::default()),
+                _ => reg_resolve::curation::apply::apply(
+                    &source,
+                    ledger,
+                    &statement.statement,
+                    &locator,
+                    &premise,
+                ),
+            };
+            let applied = match application {
                 Ok(a) => a,
                 Err(e) => {
                     let refusal = format!("{}: {e}", location(statement));
@@ -498,9 +553,10 @@ fn run_selected(
                     .classifications
                     .extend(applied.classifications.iter().cloned());
             }
-            let before = source.into_iter().collect::<BTreeSet<_>>();
-            records.retain(|r| !before.contains(r));
-            records.extend(applied.records);
+            if stage < 3 {
+                records.retain(|r| !application_record(r, provider, register, hash));
+                records.extend(applied.records);
+            }
         }
         if stage == 3 {
             for ((provider, register), (_, ledger, _)) in &locks {
@@ -517,7 +573,7 @@ fn run_selected(
                 }
                 let source = records
                     .iter()
-                    .filter(|r| belongs(r, provider, register))
+                    .filter(|r| application_record(r, provider, register, None))
                     .cloned()
                     .collect::<Vec<_>>();
                 if let Err(error) =

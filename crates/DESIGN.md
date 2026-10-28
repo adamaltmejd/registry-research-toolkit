@@ -253,6 +253,12 @@ spelling and type. A D `set` states those.
   rewriting. Missing or changed premises, empty or ambiguous selectors, and conflicts
   are located refusals. Release builds fail; dev builds skip refused statements and
   report them. A `set` equal to the source is a redundant-set finding.
+- Evaluation indexes selectors and application dependencies once per register phase.
+  Conflict candidates share source locators, assertion addresses or table moves; the
+  identity and overlap rules still decide each candidate. Identity assignments share an
+  immutable application snapshot and emit only assignments and provenance. Frame
+  application copies local facts and explicitly referenced code lists, while unrelated
+  shared facts stay in the frame.
 - `reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR]` evaluates
   every register's statements and records only the requested locks (all by default). It
   refuses invalid statements before writing any lock; empty selections remove stale

@@ -36,12 +36,92 @@ pub struct Classification {
     pub period: Interval,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Applied {
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
     pub assignments: BTreeMap<crate::OccurrenceKey, String>,
+}
+
+/// Assign variables against one immutable phase snapshot without copying its facts.
+pub struct AssignmentPhase<'a> {
+    records: &'a [Record],
+    context: crate::OccurrenceContext<'a>,
+    locators: BTreeMap<&'a Locator, Vec<usize>>,
+}
+
+impl<'a> AssignmentPhase<'a> {
+    #[must_use]
+    pub fn new(records: &'a [Record]) -> Self {
+        let mut locators = BTreeMap::<_, Vec<_>>::new();
+        for (index, record) in records.iter().enumerate() {
+            if let Record::Occurrence(row) = record {
+                for at in std::iter::once(&row.locator).chain(&row.also) {
+                    locators.entry(at).or_default().push(index);
+                }
+            }
+        }
+        Self {
+            records,
+            context: crate::OccurrenceContext::new(records),
+            locators,
+        }
+    }
+
+    /// Return assignment/provenance changes only; the source records stay unchanged.
+    ///
+    /// # Errors
+    /// The statement is not a pure variable assignment or its source cannot serialize.
+    ///
+    /// # Panics
+    /// Only if a typed frame record stops serializing to its declared JSON shape.
+    pub fn apply(&self, statement: &Statement, premise: &Premise) -> Result<Applied, String> {
+        let Statement::Set { fields, .. } = statement else {
+            return Err("assignment phase requires set variable".into());
+        };
+        let Some(variable) = fields
+            .variable
+            .as_deref()
+            .filter(|_| fields.table.is_none())
+        else {
+            return Err("assignment phase requires set variable without set table".into());
+        };
+        let candidates = premise
+            .subjects
+            .iter()
+            .flat_map(|p| self.locators.get(&p.locator).into_iter().flatten().copied())
+            .collect::<BTreeSet<_>>();
+        let mut out = Applied::default();
+        for index in candidates {
+            let record = &self.records[index];
+            let Record::Occurrence(row) = record else {
+                unreachable!("locator index contains occurrences")
+            };
+            let value = tree(record);
+            if premise.subjects.iter().any(|p| {
+                matches_occurrence(
+                    &p.fields,
+                    std::slice::from_ref(&p.locator),
+                    row,
+                    &value,
+                    &self.context,
+                )
+            }) {
+                let period = span(&value, self.records, &self.context)?;
+                assign(
+                    &mut out.assignments,
+                    &mut out.changes,
+                    &self.context,
+                    row,
+                    &value,
+                    variable,
+                    period,
+                )?;
+            }
+        }
+        Ok(out)
+    }
 }
 
 /// Define an asserted code list before applying occurrences that consume its hash.
@@ -167,6 +247,30 @@ fn change(
         value: rendered(winning),
         source_value: rendered(losing),
     })
+}
+
+fn assign(
+    assignments: &mut BTreeMap<crate::OccurrenceKey, String>,
+    changes: &mut Vec<Change>,
+    context: &crate::OccurrenceContext<'_>,
+    row: &Occurrence,
+    value: &Value,
+    variable: &str,
+    period: Interval,
+) -> Result<(), String> {
+    assignments.insert(
+        crate::OccurrenceKey::new(context.identity(row), &row.locator),
+        variable.into(),
+    );
+    changes.push(change(
+        context,
+        value,
+        "variable",
+        &json!(variable),
+        &Value::Null,
+        Some(period),
+    )?);
+    Ok(())
 }
 
 fn decode(value: Value) -> Result<Record, String> {
@@ -364,19 +468,16 @@ pub fn apply(
                     }
                 }
                 if let Some(variable) = &fields.variable {
-                    out.assignments.insert(
-                        crate::OccurrenceKey::new(context.identity(row), &row.locator),
-                        variable.clone(),
-                    );
                     let value = tree(&Record::Occurrence(row.clone()));
-                    out.changes.push(change(
+                    assign(
+                        &mut out.assignments,
+                        &mut out.changes,
                         &context,
+                        row,
                         &value,
-                        "variable",
-                        &json!(variable),
-                        &Value::Null,
-                        Some(period),
-                    )?);
+                        variable,
+                        period,
+                    )?;
                 }
             }
         }
