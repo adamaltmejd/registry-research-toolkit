@@ -2,7 +2,7 @@
   "note": "A list period `[2016, 2019, 2020]` on `imp` (from 2018) is the requested days 2016 and 2019-2020 (reg-core merges the adjacent years). Fails if the binding stops giving one clip whose `requested` lists every requested piece and whose `ordered` holds only 2019-2020, if 2017-2018 is ordered or clipped (they were never requested), or if the clip stops being reported once as `period_clipped` over 2016. Oracle: the fixture's JSONL, `reg_core::merge` and logical-order.md §1.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

@@ -18,7 +18,7 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"5.0.0"`. Set `reg_meta_version` (required)
+1. Set the document's `schema_version` to `"5.1.0"`. Set `reg_meta_version` (required)
    to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
@@ -41,7 +41,7 @@ the `register-metadata-search` skill.
 
 ## Questions about my project
 
-1. Read the user's `project_data.json`. If its `schema_version` is not `"5.0.0"`, say so
+1. Read the user's `project_data.json`. If its `schema_version` is not `"5.1.0"`, say so
    and stop: the server reads one version exactly.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the

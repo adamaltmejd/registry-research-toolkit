@@ -2,7 +2,7 @@
   "note": "`len` has a final year release (`Kod` length 2) and a final second-half release (`Kod` length 3) for 2019, so the two releases overlap over 2019-H2 with different lengths. That piece's length is null, and the entry, whose latest piece it is, carries null, neither 2 nor 3. Fails if the entry carries 2 or 3 (a length picked from one of two disagreeing releases). Oracle: the fixture's JSONL and the builder's length rule (equal lengths keep, unequal drop).",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

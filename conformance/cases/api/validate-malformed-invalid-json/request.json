@@ -1,11 +1,11 @@
 {
-  "note": "Fails if a body that is not JSON (a truncated 5.0.0 project) is not refused with `malformed_request` before any validation runs.",
+  "note": "Fails if a body that is not JSON (a truncated 5.1.0 project) is not refused with `malformed_request` before any validation runs.",
   "requests": [
     {
       "operation": "validate",
       "method": "POST",
       "path": "/api/project/validate",
-      "content": "{\"schema_version\": \"5.0.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"Order case\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\"}]}]"
+      "content": "{\"schema_version\": \"5.1.0\", \"reg_meta_version\": \"0.64.0\", \"name\": \"Order case\", \"sources\": [{\"name\": \"source\", \"table\": \"demo/reg/t\", \"period\": 2019, \"bindings\": [{\"variable\": \"demo/reg/svar\", \"type\": \"categorical\"}]}]"
     }
   ]
 }

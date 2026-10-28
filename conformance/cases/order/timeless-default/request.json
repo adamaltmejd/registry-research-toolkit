@@ -2,7 +2,7 @@
   "note": "`tid` has no stated bound and no dated occurrence, so it is timeless (reg-resolve). Fails if `_default` on it stops giving one entry with `period: {start: null, end: null}`, or if its open-sentinel span raises a clip or `coverage_end_unstated`. Oracle: the fixture's JSONL and logical-order.md §1.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

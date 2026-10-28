@@ -192,3 +192,13 @@ pub(super) fn panel(
         successor_fqid: None,
     }])
 }
+
+/// Suppress duplicate window findings already reported by an explicit binding.
+pub(super) fn unbound(findings: &mut Vec<Issue>, bound: &[Issue]) {
+    // A bound row key already has its binding's finding of that code in that table.
+    findings.retain(|k| {
+        !bound
+            .iter()
+            .any(|f| (&f.code, &f.variable, &f.table) == (&k.code, &k.variable, &k.table))
+    });
+}

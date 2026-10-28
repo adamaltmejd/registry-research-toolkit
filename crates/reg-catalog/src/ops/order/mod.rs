@@ -18,6 +18,7 @@
 //! succession and the panel for a panel finding.
 
 mod rows;
+mod successor;
 mod window;
 
 use std::collections::BTreeSet;
@@ -267,6 +268,7 @@ pub struct OrderClip {
 }
 
 /// A resolved table with what the check reads of it.
+#[derive(Clone)]
 struct Table {
     id: i64,
     pid: String,
@@ -452,7 +454,7 @@ fn check_source(
         return Ok(checked);
     };
     let requested = merge(items.clone());
-    let (serving, undated, chain) = serving(server, conn, table, &requested)?;
+    let (mut serving, undated, chain) = serving(server, conn, table, &requested)?;
     for (successor, continued, past) in undated {
         let mut finding = issue(
             IssueLevel::Info,
@@ -472,6 +474,7 @@ fn check_source(
     own.sort_by_key(Issue::key);
     checked.findings = own;
     let table_pid = table_pid.unwrap_or_default();
+    let mut followed = Vec::new();
     let scope = window::Scope {
         server,
         conn,
@@ -489,20 +492,39 @@ fn check_source(
         checked.findings.extend(found);
         checked.entries.extend(outcome.entries);
         checked.clips.extend(outcome.clip);
+        followed.extend(outcome.serving);
+    }
+    if !followed.is_empty() {
+        serving = combine_serving(serving, followed);
     }
     let (row_keys, mut keyed) = rows::row_keys(server, conn, index, source, &serving)?;
-    // A bound row key already has its binding's finding of that code in that table.
-    keyed.retain(|k| {
-        !checked
-            .findings
-            .iter()
-            .any(|f| (&f.code, &f.variable, &f.table) == (&k.code, &k.variable, &k.table))
-    });
+    rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
     checked.row_keys = row_keys;
     checked.served = Some(serving);
     Ok(checked)
+}
+
+/// Coalesce followed table windows once for row keys and panel comparisons.
+fn combine_serving(mut serving: Vec<Serving>, followed: Vec<Serving>) -> Vec<Serving> {
+    serving.extend(followed);
+    // Several bindings can follow into the same table; row keys and panels see its
+    // requested days once.
+    serving.sort_by_key(|s| s.table.id);
+    let mut combined: Vec<Serving> = Vec::new();
+    for s in serving {
+        match combined.last_mut() {
+            Some(last) if last.table.id == s.table.id => {
+                last.requested.extend(s.requested);
+                last.requested = merge(std::mem::take(&mut last.requested));
+            }
+            _ => combined.push(s),
+        }
+    }
+    let mut serving = combined;
+    serving.sort_by_key(|s| (s.requested[0].0.clone(), s.table.pid.clone()));
+    serving
 }
 
 /// The days of each period item (`None` when the table did not resolve; one item, the

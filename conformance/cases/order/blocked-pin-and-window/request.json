@@ -2,7 +2,7 @@
   "note": "`demo/amb/del` resolves but its classification pin `class/absent/v1` does not, and its 2019 segment is ambiguous (F2 rival claimants). A blocked order reports every finding at once, so both the pin's `fqid_unresolved` and the variable's `ambiguous_window` appear. Fails if a refused pin hides the resolved variable's window checks (codex r8 on #1985). Oracle: the fixture's JSONL, reg-resolve's F2 rule and the every-finding-at-once rule in crates/DESIGN.md.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

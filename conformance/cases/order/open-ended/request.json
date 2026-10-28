@@ -2,7 +2,7 @@
   "note": "`opn`'s only column is documented from 2018 with no end, so its segment ends at the open sentinel. Fails if ordering 2019..2020 stops giving one entry over the request (the entry is the clipped request over the segment, so its end is the request's, not `null`), clips anything, or stops reporting `coverage_end_unstated` over the ordered days. Oracle: the fixture's JSONL, reg-resolve's open bound (an unstated `to` is open) and logical-order.md §1 and §3.",
   "fixture": "orders",
   "project": {
-    "schema_version": "5.0.0",
+    "schema_version": "5.1.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

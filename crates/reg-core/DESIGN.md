@@ -18,6 +18,12 @@ algebra. It does no IO, so the server, the MCP tools and the build (through
   binding names a three-segment binding FQID in `variable`. The optional top-level
   `window: {"from": <year>, "to": <year>}` is the study period the semantic layer
   measures a source period against; absent means the full history.
+- **`Binding.follow_successor`** is an optional boolean in contract 5.1.0. Absent or
+  false orders only the named variable. True permits the catalog order layer to extend
+  along `continues` successors after that variable ends; the precise chain and refusal
+  rules live in [../DESIGN.md](../DESIGN.md). The structural layer refuses non-boolean
+  values, including explicit `null`; catalog resolution ensures the binding names a
+  variable. Other object types remain closed and refuse this field.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
@@ -100,9 +106,11 @@ The crate splits a shape layer from a rule layer:
 
 - **Types** (`project.rs`) are pure shape. They keep each value's raw spelling (an int
   year stays an int, `"2018"` stays a string) and serialize every optional field, absent
-  as `null`; that encoding is what the project hash covers. Structural rules are not
-  re-encoded as deserialization failures: that would turn the issue-accumulating
-  contract into a fail-fast one, and every consumer needs the full list.
+  as `null`; that encoding is what the project hash covers. `follow_successor` retains
+  absence separately from explicit false, although both disable following. Structural
+  rules are not re-encoded as deserialization failures: that would turn the
+  issue-accumulating contract into a fail-fast one, and every consumer needs the full
+  list.
 - **The structural validator** (`structural.rs`) reads the raw JSON tree, not the types.
   A wrong enum value must surface as an accumulated `invalid_enum_value`, not a
   deserialization error, and the validator must report on documents the types cannot
@@ -141,7 +149,7 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `missing_required_field`               | A required field (top level, source, binding, panel, member) is absent.                                                                                                                                                                                                                                             |
   | `invalid_field_type`                   | A field has the wrong JSON type (`members` not an array, `period` null). An int is a JSON integer that fits `i64`.                                                                                                                                                                                                  |
   | `invalid_enum_value`                   | `type`, `id_subtype` or `numeric_subtype` is outside its allowed set.                                                                                                                                                                                                                                               |
-  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `extract_format`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.0.0).                                                                                                                                |
+  | `unexpected_field`                     | An unknown key on a closed object, whatever its value (`steward`, `extract_format`, `register_variant`, `value_set`, `representation` and a panel's keys are unknown keys in 5.1.0).                                                                                                                                |
   | `invalid_fqid`                         | A binding `variable` is not `<provider>/<register>/<slug>`, a `classification` is not `class/<family>/<version>`, or a `table` is not `<provider>/<register>[/<table>]`. Segments are exactly `[A-Za-z0-9_-]+`, so the retired `@version` pin is a stray `@`.                                                       |
   | `fqid_table_mismatch`                  | A binding's provider and register differ from its source's `table`. The table lives once, on the source.                                                                                                                                                                                                            |
   | `invalid_period`                       | A `Source.period` is not an int year in 1900–2099, a period token, bare `"_default"`, a range with valid finite endpoints, or a valid list (empty, a non-segment member, an inverted member, unsorted or overlapping members; member paths `/period/<i>`). A calendar-impossible day (`2019-02-29`) is invalid too. |
@@ -156,7 +164,7 @@ Issue codes are stable: tests pin them and new codes are additive.
   | `panel_member_unknown_source`          | A panel member's `source` names no source.                                                                                                                                                                                                                                                                          |
 
 **Codes other layers emit.** The order check adds the catalog rules of project document
-5.0.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
+5.1.0 ([../DESIGN.md](../DESIGN.md), "The logical order"); the version decision adds
 `unsupported_schema_version`. All belong to the same stable registry.
 
 ## One grammar
