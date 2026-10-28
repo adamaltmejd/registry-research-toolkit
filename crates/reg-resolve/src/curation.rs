@@ -5,6 +5,7 @@
 pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Arc;
 
 use reg_core::{Interval, fold_identity, intersect};
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
@@ -39,8 +40,9 @@ pub struct ResolvedStatement {
     pub conflicts: Vec<usize>,
 }
 
+#[derive(Clone)]
 struct Source {
-    fields: BTreeMap<String, Value>,
+    fields: Arc<BTreeMap<String, Value>>,
     locators: Vec<Locator>,
     period: Option<Interval>,
 }
@@ -48,6 +50,26 @@ struct Source {
 impl Source {
     fn text(&self, name: &str) -> Option<&str> {
         self.fields.get(name).and_then(Value::as_str)
+    }
+}
+
+/// Shared value-set facts serialized once for an immutable application phase.
+#[derive(Default)]
+pub struct SharedSources {
+    records: Vec<Record>,
+    sources: Vec<Source>,
+}
+
+impl SharedSources {
+    #[must_use]
+    pub fn new(records: &[Record]) -> Self {
+        let records = records
+            .iter()
+            .filter(|record| matches!(record, Record::ValueSet(_)))
+            .cloned()
+            .collect::<Vec<_>>();
+        let sources = sources(&records, &Ledger::default());
+        Self { records, sources }
     }
 }
 
@@ -179,7 +201,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             );
             fields.insert("coverage".into(), serde_json::json!(bounds(&fields)));
             Some(Source {
-                fields,
+                fields: Arc::new(fields),
                 locators,
                 period,
             })
@@ -192,7 +214,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 && s.text("provider") == Some(register.provider.as_str())
                 && s.text("register") == Some(register.register.as_str())
         }) {
-            let mut fields = source.fields.clone();
+            let mut fields = source.fields.as_ref().clone();
             fields.insert("kind".into(), Value::String("table".into()));
             fields.insert("table".into(), Value::String(String::new()));
             fields.insert(
@@ -205,7 +227,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 ),
             );
             sources.push(Source {
-                fields,
+                fields: Arc::new(fields),
                 locators: source.locators.clone(),
                 period: source.period.clone(),
             });
@@ -231,14 +253,122 @@ fn guard_name(field: GuardField) -> &'static str {
     }
 }
 
+/// Candidate rows from one immutable phase snapshot. The selector still checks
+/// guards and periods; indexes only remove rows that cannot match.
+struct SelectorIndex {
+    addresses: BTreeMap<(String, String, String), Vec<usize>>,
+    variables: BTreeMap<String, Vec<usize>>,
+}
+
+impl SelectorIndex {
+    fn new(view: &[Source], variables: &BTreeMap<String, BTreeSet<crate::OccurrenceKey>>) -> Self {
+        let mut addresses = BTreeMap::<_, Vec<_>>::new();
+        let mut memberships = BTreeMap::<_, Vec<_>>::new();
+        for (variable, members) in variables {
+            for member in members {
+                memberships.entry(member).or_default().push(variable);
+            }
+        }
+        let mut selected_variables = BTreeMap::<String, Vec<usize>>::new();
+        for (index, source) in view.iter().enumerate() {
+            let kind = source.text("kind").unwrap_or_default();
+            let table = source.text("table_slug").unwrap_or_default();
+            let detail = match kind {
+                "occurrence" => match source.text("spelling").unwrap_or_default() {
+                    "" => "<none>".into(),
+                    spelling => fold_identity(spelling),
+                },
+                "release" => source.text("release").unwrap_or_default().into(),
+                _ => String::new(),
+            };
+            addresses
+                .entry((kind.into(), table.into(), detail))
+                .or_default()
+                .push(index);
+            if !memberships.is_empty()
+                && let Some(identity) = crate::OccurrenceIdentity::from_fields(&source.fields)
+            {
+                let mut names = BTreeSet::new();
+                for at in &source.locators {
+                    if let Some(variables) =
+                        memberships.get(&crate::OccurrenceKey::new(identity.clone(), at))
+                    {
+                        names.extend(variables.iter().copied());
+                    }
+                }
+                for name in names {
+                    selected_variables
+                        .entry(name.clone())
+                        .or_default()
+                        .push(index);
+                }
+            }
+        }
+        Self {
+            addresses,
+            variables: selected_variables,
+        }
+    }
+
+    fn select(
+        &self,
+        address: &Address,
+        view: &[Source],
+        variables: &BTreeMap<String, BTreeSet<crate::OccurrenceKey>>,
+    ) -> Vec<Match> {
+        let mut candidates = Vec::new();
+        let mut add = |kind: &str, table: &str, detail: &str| {
+            if let Some(indices) = self
+                .addresses
+                .get(&(kind.into(), table.into(), detail.into()))
+            {
+                candidates.extend(indices.iter().copied());
+            }
+        };
+        match address {
+            Address::Occurrence {
+                table, spellings, ..
+            } => {
+                for spelling in spellings {
+                    add("occurrence", table, spelling);
+                }
+            }
+            Address::Table(table) => add("table", table, ""),
+            Address::Release { table, handle } => add("release", table, handle),
+            Address::Variable(id) => {
+                candidates.extend(self.variables.get(id).into_iter().flatten().copied());
+            }
+        }
+        candidates.sort_unstable();
+        candidates.dedup();
+        select_from(address, view, variables, candidates.into_iter())
+    }
+}
+
 fn select(
     address: &Address,
     view: &[Source],
     variables: &BTreeMap<String, BTreeSet<crate::OccurrenceKey>>,
 ) -> Vec<Match> {
-    view.iter()
-        .enumerate()
-        .filter_map(|(index, source)| {
+    select_from(address, view, variables, 0..view.len())
+}
+
+fn select_from(
+    address: &Address,
+    view: &[Source],
+    variables: &BTreeMap<String, BTreeSet<crate::OccurrenceKey>>,
+    candidates: impl Iterator<Item = usize>,
+) -> Vec<Match> {
+    let scope = match address {
+        Address::Occurrence {
+            periods: Some(scope),
+            ..
+        } => Some(periods(scope)),
+        _ => None,
+    };
+    candidates
+        .filter_map(|index| {
+            let source = &view[index];
             let selected = match address {
                 Address::Occurrence {
                     table,
@@ -286,11 +416,12 @@ fn select(
             let spans = match (address, &source.period) {
                 (
                     Address::Occurrence {
-                        periods: Some(scope),
-                        ..
+                        periods: Some(_), ..
                     },
                     Some(period),
-                ) => periods(scope)
+                ) => scope
+                    .as_ref()
+                    .expect("scoped selector")
                     .iter()
                     .filter_map(|s| intersect(s, period))
                     .collect(),
@@ -478,7 +609,12 @@ fn field_dependencies(fields: &mut BTreeSet<String>) {
     }
 }
 
-fn states_value_set(source: &Source, items: &[reg_frame::Item], records: &[Record]) -> bool {
+fn states_value_set(
+    source: &Source,
+    items: &[reg_frame::Item],
+    records: &[Record],
+    shared: &SharedSources,
+) -> bool {
     let populations = source
         .fields
         .get("population_valuesets")
@@ -492,7 +628,7 @@ fn states_value_set(source: &Source, items: &[reg_frame::Item], records: &[Recor
     let mut expected = items.to_vec();
     expected.sort();
     hashes.into_iter().any(|hash| {
-        records.iter().any(|record| {
+        records.iter().chain(&shared.records).any(|record| {
             let Record::ValueSet(set) = record else {
                 return false;
             };
@@ -569,7 +705,7 @@ fn premise_source(premise: &SourcePremise) -> Source {
                 .map(|(a, b)| (a.to_owned(), b.to_owned()))
         });
     Source {
-        fields: premise.fields.clone(),
+        fields: Arc::new(premise.fields.clone()),
         locators: vec![premise.locator.clone()],
         period,
     }
@@ -626,11 +762,10 @@ fn premise_overlap(
         let address = subject(other);
         premise.subjects.iter().any(|row| {
             let mut source = premise_source(row);
-            source
-                .fields
+            Arc::make_mut(&mut source.fields)
                 .insert("table_slug".into(), Value::String(table.clone()));
             // Table moves detach dated release rows; a release guard no longer matches.
-            source.fields.insert("release".into(), Value::Null);
+            Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
             !select(address, &[source], &BTreeMap::new()).is_empty()
         })
     };
@@ -658,11 +793,23 @@ pub fn applied_conflicts(
                 premise
                     .subjects
                     .iter()
-                    .map(premise_source)
+                    .map(|row| {
+                        let source = premise_source(row);
+                        let spans = subject_spans(statement, &source);
+                        (source, spans)
+                    })
                     .collect::<Vec<_>>(),
             )
         })
         .collect();
+    let mut by_locator = BTreeMap::<_, Vec<_>>::new();
+    for (index, (_, sources)) in evaluated.iter().enumerate() {
+        for (row, (source, _)) in sources.iter().enumerate() {
+            for locator in &source.locators {
+                by_locator.entry(locator).or_default().push((index, row));
+            }
+        }
+    }
     for claim in claims {
         let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
         for (field, value) in [
@@ -681,7 +828,7 @@ pub fn applied_conflicts(
             fields.insert("period".into(), serde_json::json!(identity.period));
         }
         let source = Source {
-            fields,
+            fields: Arc::new(fields),
             locators: vec![claim.locator.clone()],
             period: claim.period.cloned(),
         };
@@ -695,22 +842,21 @@ pub fn applied_conflicts(
             ],
         };
         let field = BTreeSet::from([claim.field.to_owned()]);
-        for (index, ((statement, _), (effects, sources))) in
-            statements.iter().zip(&evaluated).enumerate()
-        {
+        for &(index, row) in by_locator.get(claim.locator).into_iter().flatten() {
+            let (effects, sources) = &evaluated[index];
             if index == claim.statement || !effects_overlap(effects, &field) {
                 continue;
             }
-            if sources.iter().any(|selected| {
-                same_subject(selected, &source)
-                    && overlaps(
-                        &Match {
-                            source: 0,
-                            spans: subject_spans(statement, selected),
-                        },
-                        &claimed,
-                    )
-            }) {
+            let (selected, spans) = &sources[row];
+            if same_subject(selected, &source)
+                && overlaps(
+                    &Match {
+                        source: 0,
+                        spans: spans.clone(),
+                    },
+                    &claimed,
+                )
+            {
                 conflicts.insert((index.min(claim.statement), index.max(claim.statement)));
             }
         }
@@ -839,8 +985,10 @@ pub fn reference(
     ledger: &Ledger,
     variable: Option<&str>,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
+    shared: &SharedSources,
 ) -> Result<Vec<SourcePremise>, String> {
-    let view = sources(records, ledger);
+    let mut view = sources(records, ledger);
+    view.extend(shared.sources.iter().cloned());
     let variables = if variable.is_some() {
         variable_members(records, ledger, assignments)?
     } else {
@@ -878,6 +1026,77 @@ pub fn reference(
     Ok(premise(&matches, &view, &fields))
 }
 
+type DependencyCoordinate = (
+    String,
+    String,
+    String,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+    Option<String>,
+);
+
+fn coordinate(source: &Source, register: &str, table: Option<&str>) -> DependencyCoordinate {
+    let kind = source.text("kind").unwrap_or_default();
+    (
+        kind.to_owned(),
+        source.text("provider").unwrap_or_default().to_owned(),
+        register.to_owned(),
+        table.map(str::to_owned),
+        if kind == "release" {
+            source.text("release").map(str::to_owned)
+        } else {
+            None
+        },
+        if kind == "occurrence" {
+            source.text("key").map(str::to_owned)
+        } else {
+            None
+        },
+        if kind == "occurrence" {
+            source.text("spelling").map(fold_identity)
+        } else {
+            None
+        },
+    )
+}
+
+#[derive(Default)]
+struct DependencyIndex {
+    coordinates: BTreeMap<DependencyCoordinate, Vec<usize>>,
+    table_occurrences: BTreeMap<(String, String, Option<String>), Vec<usize>>,
+    sets: BTreeMap<String, Vec<usize>>,
+}
+
+impl DependencyIndex {
+    fn new(view: &[Source]) -> Self {
+        let mut out = Self::default();
+        for (index, source) in view.iter().enumerate() {
+            if let Some(register) = source.text("register") {
+                out.coordinates
+                    .entry(coordinate(source, register, source.text("table")))
+                    .or_default()
+                    .push(index);
+                if source.text("kind") == Some("occurrence") {
+                    out.table_occurrences
+                        .entry((
+                            source.text("provider").unwrap_or_default().to_owned(),
+                            register.to_owned(),
+                            source.text("table").map(str::to_owned),
+                        ))
+                        .or_default()
+                        .push(index);
+                }
+            } else if source.text("kind") == Some("value_set")
+                && let Some(hash) = source.text("hash")
+            {
+                out.sets.entry(hash.to_owned()).or_default().push(index);
+            }
+        }
+        out
+    }
+}
+
 /// Extra source facts consumed while applying a table move or assertion. Keep these out of
 /// `subjects`: they are evidence, never additional rows selected for rewriting.
 #[allow(clippy::too_many_lines)]
@@ -887,59 +1106,19 @@ fn application_dependencies(
     statement: &Statement,
     selected: &[Match],
     view: &[Source],
+    index: &DependencyIndex,
 ) -> Result<Vec<SourcePremise>, String> {
+    if !matches!(statement, Statement::Assert { .. }) && !moves_table(statement) {
+        return Ok(Vec::new());
+    }
+    let DependencyIndex {
+        coordinates,
+        table_occurrences,
+        sets,
+    } = index;
     let mut needed = BTreeSet::new();
     let mut contexts = BTreeSet::new();
     let mut hashes = BTreeSet::new();
-    let coordinate = |source: &Source, register: &str, table: Option<&str>| {
-        let kind = source.text("kind").unwrap_or_default();
-        (
-            kind.to_owned(),
-            source.text("provider").unwrap_or_default().to_owned(),
-            register.to_owned(),
-            table.map(str::to_owned),
-            if kind == "release" {
-                source.text("release").map(str::to_owned)
-            } else {
-                None
-            },
-            if kind == "occurrence" {
-                source.text("key").map(str::to_owned)
-            } else {
-                None
-            },
-            if kind == "occurrence" {
-                source.text("spelling").map(fold_identity)
-            } else {
-                None
-            },
-        )
-    };
-    let mut coordinates = BTreeMap::<_, Vec<usize>>::new();
-    let mut table_occurrences = BTreeMap::<_, Vec<usize>>::new();
-    let mut sets = BTreeMap::<_, Vec<usize>>::new();
-    for (index, source) in view.iter().enumerate() {
-        if let Some(register) = source.text("register") {
-            coordinates
-                .entry(coordinate(source, register, source.text("table")))
-                .or_default()
-                .push(index);
-            if source.text("kind") == Some("occurrence") {
-                table_occurrences
-                    .entry((
-                        source.text("provider").unwrap_or_default().to_owned(),
-                        register.to_owned(),
-                        source.text("table").map(str::to_owned),
-                    ))
-                    .or_default()
-                    .push(index);
-            }
-        } else if source.text("kind") == Some("value_set")
-            && let Some(hash) = source.text("hash")
-        {
-            sets.entry(hash).or_default().push(index);
-        }
-    }
     let context = |s: &Source| {
         s.text("provider").zip(s.text("register")).map(|(p, r)| {
             (
@@ -1116,6 +1295,72 @@ fn application_dependencies(
     Ok(dependencies)
 }
 
+fn conflict_candidates(
+    statements: &[&Statement],
+    premises: &[&Premise],
+) -> BTreeSet<(usize, usize)> {
+    let mut locators = BTreeMap::<_, BTreeSet<_>>::new();
+    let mut assertions = BTreeMap::<_, BTreeSet<_>>::new();
+    let mut moves = BTreeSet::new();
+    for (index, (statement, premise)) in statements.iter().zip(premises).enumerate() {
+        for row in &premise.subjects {
+            locators.entry(&row.locator).or_default().insert(index);
+        }
+        if moves_table(statement) {
+            moves.insert(index);
+        }
+        if !matches!(statement, Statement::Assert { .. }) {
+            continue;
+        }
+        match subject(statement) {
+            Address::Occurrence {
+                table, spellings, ..
+            } => {
+                for spelling in spellings {
+                    assertions
+                        .entry((0, table.as_str(), spelling.as_str()))
+                        .or_default()
+                        .insert(index);
+                }
+            }
+            Address::Table(table) => {
+                assertions
+                    .entry((1, table.as_str(), ""))
+                    .or_default()
+                    .insert(index);
+            }
+            Address::Release { table, handle } => {
+                assertions
+                    .entry((2, table.as_str(), handle.as_str()))
+                    .or_default()
+                    .insert(index);
+            }
+            Address::Variable(variable) => {
+                assertions
+                    .entry((3, variable.as_str(), ""))
+                    .or_default()
+                    .insert(index);
+            }
+        }
+    }
+    let mut candidates = BTreeSet::new();
+    // A shared locator is necessary even when missing coordinates act as wildcards.
+    // Assertions also conflict at empty addresses; chained moves can select new coordinates.
+    // simplify: pair moves within a register; index destinations if thousands of moves accumulate.
+    for bucket in locators
+        .values()
+        .chain(assertions.values())
+        .chain(std::iter::once(&moves))
+    {
+        for &a in bucket {
+            for &b in bucket.range((std::ops::Bound::Excluded(a), std::ops::Bound::Unbounded)) {
+                candidates.insert((a, b));
+            }
+        }
+    }
+    candidates
+}
+
 /// Compute premises in statement order. This function performs no IO and applies no
 /// statements. The caller supplies the immutable view for the current application
 /// phase; ordinary selectors see the moved frame plus asserted facts.
@@ -1133,11 +1378,13 @@ pub fn resolve(
     statements: &[&Statement],
     references: &BTreeMap<String, Vec<SourcePremise>>,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
+    shared: &SharedSources,
 ) -> Vec<Result<ResolvedStatement, String>> {
     if statements.is_empty() {
         return Vec::new();
     }
-    let view = sources(records, ledger);
+    let mut view = sources(records, ledger);
+    view.extend(shared.sources.iter().cloned());
     let needs_variables = statements.iter().any(|statement| {
         matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
@@ -1148,11 +1395,27 @@ pub fn resolve(
     };
     let empty_variables = BTreeMap::new();
     let variables = variable_result.as_ref().unwrap_or(&empty_variables);
+    let index = SelectorIndex::new(&view, variables);
+    let dependencies = if statements
+        .iter()
+        .any(|s| matches!(s, Statement::Assert { .. }) || moves_table(s))
+    {
+        DependencyIndex::new(&view)
+    } else {
+        DependencyIndex::default()
+    };
+    let all_fields: BTreeSet<_> = view.iter().flat_map(|s| s.fields.keys().cloned()).collect();
+    let evidence_fields: BTreeSet<_> = all_fields
+        .iter()
+        .filter(|k| !matches!(k.as_str(), "locator" | "also"))
+        .cloned()
+        .collect();
+    let statement_effects: Vec<_> = statements.iter().map(|s| effects(s)).collect();
     let mut out = Vec::new();
     let mut selected = Vec::new();
-    for statement in statements {
+    for (statement_index, statement) in statements.iter().enumerate() {
         let address = subject(statement);
-        let mut matches = select(address, &view, variables);
+        let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
         if let Statement::Link {
             at: Some(scope), ..
@@ -1172,9 +1435,8 @@ pub fn resolve(
             }
             matches.retain(|m| !m.spans.is_empty());
         }
-        let fields = view.iter().flat_map(|s| s.fields.keys().cloned()).collect();
         selected.push(Premise {
-            subjects: premise(&matches, &view, &fields),
+            subjects: premise(&matches, &view, &all_fields),
             objects: Vec::new(),
         });
         let result = (|| {
@@ -1204,7 +1466,7 @@ pub fn resolve(
             .into_iter()
             .map(str::to_owned)
             .collect();
-            let mut affected = effects(statement);
+            let mut affected = statement_effects[statement_index].clone();
             field_dependencies(&mut affected);
             fields.extend(affected);
             dependency_fields(address, &mut fields);
@@ -1216,7 +1478,7 @@ pub fn resolve(
                     ..
                 } => {
                     if values.table.is_some() {
-                        fields.extend(view.iter().flat_map(|s| s.fields.keys().cloned()));
+                        fields.extend(all_fields.iter().cloned());
                     }
                     if values.variable.is_some() {
                         fields.extend(
@@ -1287,7 +1549,7 @@ pub fn resolve(
                     if let AssertFact::ValueSet { items } = fact
                         && matches
                             .iter()
-                            .any(|m| states_value_set(&view[m.source], items, records))
+                            .any(|m| states_value_set(&view[m.source], items, records, shared))
                     {
                         return Err("redundant assert: the source now states this value set".into());
                     }
@@ -1300,17 +1562,12 @@ pub fn resolve(
                     }
                 }
                 Statement::Ack { .. } | Statement::Link { .. } => {
-                    fields.extend(view.iter().flat_map(|s| {
-                        s.fields
-                            .keys()
-                            .filter(|k| !matches!(k.as_str(), "locator" | "also"))
-                            .cloned()
-                    }));
+                    fields.extend(evidence_fields.iter().cloned());
                 }
             }
             let objects = if let Statement::Link { object, .. } = statement {
                 if let Ok(address) = object.parse::<Address>() {
-                    let objects = select(&address, &view, variables);
+                    let objects = index.select(&address, &view, variables);
                     if objects.is_empty() {
                         return Err("empty match for link object".into());
                     }
@@ -1328,7 +1585,14 @@ pub fn resolve(
                         })?
                 }
             } else {
-                application_dependencies(records, ledger, statement, &matches, &view)?
+                application_dependencies(
+                    records,
+                    ledger,
+                    statement,
+                    &matches,
+                    &view,
+                    &dependencies,
+                )?
             };
             Ok(ResolvedStatement {
                 premise: Premise {
@@ -1341,48 +1605,48 @@ pub fn resolve(
         })();
         out.push(result);
     }
-    // simplify: pair scan of register-local statements; index by field and locator if
-    // registers accumulate thousands of statements after the curation converter.
-    for a in 0..statements.len() {
-        for b in a + 1..statements.len() {
-            let a_effects = effects(statements[a]);
-            let b_effects = effects(statements[b]);
-            if !effects_overlap(&a_effects, &b_effects)
-                || [a, b]
-                    .into_iter()
-                    .any(|i| out[i].as_ref().is_err_and(|error| error != "empty match"))
-            {
-                continue;
-            }
-            if premise_overlap(
-                statements[a],
-                out[a].as_ref().map_or(&selected[a], |r| &r.premise),
-                statements[b],
-                out[b].as_ref().map_or(&selected[b], |r| &r.premise),
-            ) || (matches!(statements[a], Statement::Assert { .. })
-                && matches!(statements[b], Statement::Assert { .. })
-                && addresses_overlap(subject(statements[a]), subject(statements[b])))
-            {
-                for i in [a, b] {
-                    if out[i].is_err() {
-                        out[i] = Ok(ResolvedStatement {
-                            premise: selected[i].clone(),
-                            redundant: false,
-                            conflicts: Vec::new(),
-                        });
-                    }
+    let premises = out
+        .iter()
+        .zip(&selected)
+        .map(|(result, fallback)| result.as_ref().map_or(fallback, |r| &r.premise))
+        .collect::<Vec<_>>();
+    let candidates = conflict_candidates(statements, &premises);
+    for (a, b) in candidates {
+        if !effects_overlap(&statement_effects[a], &statement_effects[b])
+            || [a, b]
+                .into_iter()
+                .any(|i| out[i].as_ref().is_err_and(|error| error != "empty match"))
+        {
+            continue;
+        }
+        if premise_overlap(
+            statements[a],
+            out[a].as_ref().map_or(&selected[a], |r| &r.premise),
+            statements[b],
+            out[b].as_ref().map_or(&selected[b], |r| &r.premise),
+        ) || (matches!(statements[a], Statement::Assert { .. })
+            && matches!(statements[b], Statement::Assert { .. })
+            && addresses_overlap(subject(statements[a]), subject(statements[b])))
+        {
+            for i in [a, b] {
+                if out[i].is_err() {
+                    out[i] = Ok(ResolvedStatement {
+                        premise: selected[i].clone(),
+                        redundant: false,
+                        conflicts: Vec::new(),
+                    });
                 }
-                out[a]
-                    .as_mut()
-                    .expect("successful evaluation")
-                    .conflicts
-                    .push(b);
-                out[b]
-                    .as_mut()
-                    .expect("successful evaluation")
-                    .conflicts
-                    .push(a);
             }
+            out[a]
+                .as_mut()
+                .expect("successful evaluation")
+                .conflicts
+                .push(b);
+            out[b]
+                .as_mut()
+                .expect("successful evaluation")
+                .conflicts
+                .push(a);
         }
     }
     out
