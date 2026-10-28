@@ -41,7 +41,10 @@ pub fn load(root: &Path) -> Result<Vec<Retired>, String> {
         return Ok(Vec::new());
     }
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let line = |offset| text[..offset].bytes().filter(|&b| b == b'\n').count() + 1;
+    let line_starts: Vec<_> = std::iter::once(0)
+        .chain(text.match_indices('\n').map(|(offset, _)| offset + 1))
+        .collect();
+    let line = |offset| line_starts.partition_point(|&start| start <= offset);
     let entries: BTreeMap<toml::Spanned<String>, Entry> = toml::from_str(&text).map_err(|e| {
         format!(
             "{}:{}: {e}",

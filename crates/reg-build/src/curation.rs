@@ -520,6 +520,7 @@ fn checked_premise(
 
 pub(super) fn run(
     root: &Path,
+    retired: &[crate::retired::Retired],
     statements: &[LocatedStatement],
     outputs: &[reg_readers::ReadOutput],
     record: bool,
@@ -528,6 +529,7 @@ pub(super) fn run(
 ) -> Result<Applied, String> {
     run_selected(
         root,
+        retired,
         &statements.iter().collect::<Vec<_>>(),
         outputs,
         record,
@@ -542,13 +544,13 @@ pub(super) fn run(
 #[allow(clippy::too_many_lines)]
 fn run_selected(
     root: &Path,
+    retired: &[crate::retired::Retired],
     statements: &[&LocatedStatement],
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
     release: bool,
 ) -> Result<Applied, String> {
-    let retired = crate::retired::load(root)?;
     let mut records = outputs
         .iter()
         .flat_map(|o| o.frame.records.iter().cloned())
@@ -575,7 +577,7 @@ fn run_selected(
         selected.insert((*register).clone());
         let directory = root.join("registers").join(provider).join(register);
         let path = directory.join("curation.lock");
-        let ledger = ledger(root, provider, register, &retired)?;
+        let ledger = ledger(root, provider, register, retired)?;
         let old = previous(&path, record)?;
         locks.insert((provider, register), (path, ledger, old));
     }
@@ -608,7 +610,7 @@ fn run_selected(
         let finding_catalog = if stage == Phase::Acknowledgements
             && statements.iter().any(|s| phase(&s.statement) == stage)
         {
-            Some(complete_findings(root, &records, &result)?)
+            Some(complete_findings(root, retired, &records, &result)?)
         } else {
             None
         };
@@ -702,7 +704,7 @@ fn run_selected(
                 &result.classifications,
                 &result.variables,
                 &shared,
-                &retired,
+                retired,
             )?;
             let evaluations = reg_resolve::curation::resolve(
                 &source,
@@ -954,8 +956,9 @@ fn run_selected(
                         .copied()
                         .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
-                    let mut rerun =
-                        run_selected(root, &retained, outputs, record, registers, release)?;
+                    let mut rerun = run_selected(
+                        root, retired, &retained, outputs, record, registers, release,
+                    )?;
                     rerun
                         .findings
                         .push(format!("{refusal} (statement skipped)"));
@@ -1109,6 +1112,7 @@ fn run_selected(
     if !result.links.is_empty() {
         let resolved = resolve_catalog(
             root,
+            retired,
             &records,
             &result.variables,
             &result.metadata,
@@ -1134,7 +1138,9 @@ fn run_selected(
                 .copied()
                 .filter(|s| !refused.contains(&publication_identity(s)))
                 .collect::<Vec<_>>();
-            let mut rerun = run_selected(root, &retained, outputs, record, registers, release)?;
+            let mut rerun = run_selected(
+                root, retired, &retained, outputs, record, registers, release,
+            )?;
             rerun.findings.extend(
                 messages
                     .into_iter()
@@ -1208,7 +1214,9 @@ fn run_selected(
             .copied()
             .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(root, &retained, outputs, record, registers, release)?;
+        let mut rerun = run_selected(
+            root, retired, &retained, outputs, record, registers, release,
+        )?;
         rerun.findings.extend(
             refusals
                 .into_iter()
@@ -1309,11 +1317,13 @@ fn run_selected(
 /// The complete review surface shared by acknowledgement validation and publication.
 pub(super) fn complete_findings(
     root: &Path,
+    retired: &[crate::retired::Retired],
     records: &[Record],
     applied: &Applied,
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
     let mut resolved = resolve_catalog(
         root,
+        retired,
         records,
         &applied.variables,
         &applied.metadata,
@@ -1336,12 +1346,12 @@ pub(super) fn complete_findings(
 /// Resolve the curated source snapshot for post-resolve curation validation.
 pub(super) fn resolve_catalog(
     root: &Path,
+    retired: &[crate::retired::Retired],
     records: &[Record],
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
     metadata: &[reg_resolve::curation::apply::Metadata],
     classifications: &[reg_resolve::curation::apply::Classification],
 ) -> Result<Vec<reg_resolve::Resolved>, String> {
-    let retired = crate::retired::load(root)?;
     let sets = records
         .iter()
         .filter_map(|r| match r {
@@ -1363,7 +1373,7 @@ pub(super) fn resolve_catalog(
     groups
         .into_iter()
         .map(|((provider, register), source)| {
-            let ledger = ledger(root, provider, register, &retired)?;
+            let ledger = ledger(root, provider, register, retired)?;
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
             reg_resolve::curation::apply_metadata(&mut resolved, metadata);
