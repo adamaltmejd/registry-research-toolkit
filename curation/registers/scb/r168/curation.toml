@@ -636,3 +636,51 @@ kind = "set"
 subject = "fek-preliminara-data-fe: agkat"
 fields = { "description" = "Ägarkontroll" }
 evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxkl"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:fetyp"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetens-status"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:gemkalla"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hjenhet"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:infi"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:invenkat"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"

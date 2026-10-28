@@ -1,0 +1,24 @@
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-21"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-22"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-40"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partielltbortfall-dar-9"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

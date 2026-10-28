@@ -4,3 +4,9 @@ kind = "set"
 subject = "var:person-orgnr"
 fields = { "sets" = ["legacy-person-orgnr"] }
 evidence = "reg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:102\nreg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:114\nreg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:126\nreg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:138\nreg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:78\nreg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:90\n\nThe same supplied member names both literal case fields as this exact legal-unit identifier. Preserve every field, raw type and width, including contradictory12/255 declarations. Per-column metadata does not establish equal observed values or correct a storage declaration. Complete source peer census Batch52-native3-source-review.json."
+
+[[statement]]
+kind = "set"
+subject = "var:ean-kval"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"

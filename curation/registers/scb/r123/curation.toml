@@ -1,0 +1,864 @@
+
+[[statement]]
+kind = "set"
+subject = "var:andra6"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:andraupp"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:andrbrak"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:annandat"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:annat"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:annatarb-3851"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:antalarb"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-bil-i-arbetet"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-datormus"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-persondator"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-tangentbord"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetar-framatbojd"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-dagtid"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-enbart-vardagar"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-fysiskt-tungt-latt"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-hemifran"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsle"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsti"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetstid-i-bilen"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arbskift"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:arstalle"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:axlararm"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:barbar"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bearbdat"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:belysnin"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:besttide"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bevkontr"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bildskar"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bildtide"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bliforet"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bullrarm"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bundfrit"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bytaarbe"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:chefbrak"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:cheferst"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:chefkam6"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:chefkvin"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:chefupps"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:chekasex"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:datatide"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:datormus"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:drar-in-pa-luncher-arbetar-over"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:enformig"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:flextid"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:foranarb"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagshalsovard"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:h2o"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hander-upplyfta-axelhojd"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:handlede"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:handmask"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hinner-inte-prata-om-arbetet"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-vid-svara-uppgifter"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hoftoben"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hogtitak"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hotomval"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudont"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:inflytan"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:isolkont"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kamratst"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kamrbrak"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kan-inte-koppla-av-tankarna"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kassaapp"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kemikali"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:klienter"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:koncentr"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:konforeh"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kontroll"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:korta-pauser-nar-som-helst"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kravprob"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kritik95"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kroppsligt-anstrangande-arbete"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kvallsarbete-frekvens"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kvinnman"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:likvarbe"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:lonetyp"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:lsansvar"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:lyft1525"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:lyfter25"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:magoroli"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:manadsta"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:manadyrk"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:manuearb"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:matainda"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:meningsf"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:merarbta"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:merensid"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:mersmuts"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:mervald"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:minskarb"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:missnojd"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:mobbing"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-lara-och-utvecklas"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:mycklite"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:nattarbete-frekvens"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:nedkylda"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:ogonirri"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:oljorhud"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:olust"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:oorgadam"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:orgadamm"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:overtid-utan-ersattning"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:overvaka"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:permitte-3922"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:prataarb"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:problemp"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:produkti"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:psykiskt-pafrestande"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rengorni"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rorelser"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rormask"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rullboll"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:ryggenne"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:ryggenup"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:skaraned"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:snabbare"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:sovsvari"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnin"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:statmask"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:stodhjal"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:streckko"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:stress"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:svaraarb"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:svaratid"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:svarenkl"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:svettasv"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:taktbest"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:tidopeng"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:tobakrok"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:trotthog"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:tunga-arbetsmoment-tidigare"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:tungaarb"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:undkvinn"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:upplarningstid"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:upprepningar-av-moment-i-timmen"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildni"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-pa-betald-arbetstid"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:utsondri"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:uttrotta"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:varabere"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:verktygs"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vibrahan"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vibrahel"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vriden-arbetsstallning"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vridenmy"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"

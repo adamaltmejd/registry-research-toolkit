@@ -526,3 +526,111 @@ kind = "set"
 subject = "punktskatter-for-energi: oljprivfb @2008"
 fields = { "unit" = "m3 (kubikmeter)" }
 evidence = "reg_meta_build/curation/registers/scb/frida.toml:11081\n\nThe complete native25961 source family states the same Privat förbrukning olja MK1 quantity in the same2008 variant and physical OLJPRIVFB column. Kubikmeter and m3 (kubikmeter) explicitly denote the same unit. Preserve both original unit spellings and every source field/period/coding reference. Complete source proof: Batch51-FRIDA116-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:bannanf"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bbilers"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bkkstat"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:blistat"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-ej-smahusfastighet"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsforman-smahusfastighet"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:brantef"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:brese"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:btjresi"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:btjresu"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:delagare-i-famansbolag"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:fri-parkering"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kostforman"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:logiersattning"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:sk-form"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-inom-riket"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:traktamente-utom-riket"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-moms"
+fields = { type = "integer" }
+evidence = "value set: 27 integer codes"

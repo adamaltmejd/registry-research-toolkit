@@ -4,3 +4,63 @@ kind = "set"
 subject = "var:hut-del"
 fields = { "sets" = ["legacy-86-46210", "legacy-hut-del"] }
 evidence = "reg_meta_build/curation/registers/scb/hut.toml:330\nreg_meta_build/curation/registers/scb/hut.toml:741\n\nBatch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period.\n\nBoth supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
+
+[[statement]]
+kind = "set"
+subject = "var:bald"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bcdz"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bhreg"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bkon"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bkviz"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bkvz"
+fields = { type = "decimal" }
+evidence = "value set: 8 codes, including non-integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandare"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-kosthushall"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { type = "integer" }
+evidence = "value set: 45 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningstyp"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"

@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"

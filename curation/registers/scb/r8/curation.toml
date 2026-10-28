@@ -70,3 +70,27 @@ kind = "set"
 subject = "bussar: sni2002 @2003-12-31,2004-12-31,2005-12-31,2006-12-31,2007-12-31,2008-12-31,2009-12-31,2010-12-31,2011-12-31"
 fields = { "value_set" = "f7be25860fe751729f8ea73aa8f3c1b47819e80ffbac27e3e66fd35a7cde9838" }
 evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintainer-approved classification continuity: these exact snapshot deliveries positively name SNI2002 in their source operational definition and retain text storage width5. The same native quantity, variant and literal later binds the complete SNI2002 source domain; every bound list for this literal agrees on all code-label pairs. Use those exact pairs, including source extension/missing codes, only for these established snapshot points. Preserve all original association/item dates and original metadata. Explicit SNI2007 contrary windows are excluded; no annual coverage or storage conversion is inferred."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:dirimp"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:leas"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"

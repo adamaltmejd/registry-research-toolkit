@@ -86,3 +86,15 @@ kind = "set"
 subject = "uppdragsregistret: po"
 fields = { "variable" = "po8" }
 evidence = "reg_meta_build/curation/registers/scb/lbr.toml:293\n\nShared-column succession fold 2026-10-21: SCB VarId 2432 'Produktionsområde' sequential rename {PO/po 1989-1991, 1998-1999 and 2005-2014, po8 2014-2025} owned by 10.2432.po8; identical definition 'Geografisk indelning i 8 områden.', the same eight area codes (po additionally lists the sentinel 0 'Okänt produktionsområde'), never co-delivered in arealer, foretag or uppdragsregistret (reg_meta v0.57.0). po18 is the separate concurrent 18-area grouping. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "var:avlidna"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:stoppas"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

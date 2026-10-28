@@ -1,0 +1,60 @@
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-forrforra"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partiblockval-riksdagsval-idag-forrforra"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-forrforra"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:partival-riksdagsval-idag-forrforra"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rbsfu"
+fields = { type = "integer" }
+evidence = "value set: 16 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:riksdagsvalkrets-kod"
+fields = { type = "integer" }
+evidence = "value set: 29 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:rpsfu"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vbrvfu"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vprvfu"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"

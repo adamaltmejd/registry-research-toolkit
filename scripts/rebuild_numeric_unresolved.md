@@ -1,0 +1,2392 @@
+# Unresolved integer/decimal switchers
+
+One-shot evidence report; deleted at milestone F (REBUILD.md).
+
+Generated from `rebuild_curate_numeric.py --report` against the dev catalog at
+`d23fea00`, inputs `9186fcbceeb2283a50c7f684764869e4dda5765e`, before adding the numeric
+statements. All 4,071 unresolved variable slugs are listed below, grouped by register,
+evidence and literal source types. These are metadata code lists and source
+declarations, never observed values. Units and definitions do not settle precision. No
+MONA probe was run.
+
+The PR body gives register counts and examples. Nonnumeric code-list markers such as `.`
+and `blank` do not establish fractional precision. Variables with an additional
+nonnumeric type family also require review.
+
+Twenty variables have conclusive integer code evidence but no pinned ledger id. Their
+proposed type is retained here; `var:` cannot select them until the identity work pins
+their ids. No ids are minted by this script.
+
+## scb/allmanna-val-valdeltagande
+
+**also has a nonnumeric type family; requires review.** Source types: `int`, `numeric`,
+`varchar`.
+
+`senaste-invandringsdatum`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`disponibel-inkomst-familj`, `medborgarskapsdatum`,
+`sammanraknad-forvarvs-och-kapitalinkomst`, `sammanraknad-forvarvsinkomst`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`alderslut`.
+
+## scb/allmanna-val-valresultat
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antal-avgivna-roster`, `antal-giltiga-roster-folkpartiet`,
+`antal-giltiga-roster-vansterpartiet`, `antal-ogiltiga-roster`, `c-antrost`,
+`giltig-antrost`, `kds-antrost`, `m-antrost`, `mp-antrost`, `ovr-antrost`, `s-antrost`.
+
+## scb/arbetskraftsbarometern
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`lopnr`.
+
+## scb/arbetsmiljoundersokningen
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `smallint`.
+
+`ariyrket`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`smallint`.
+
+`annatyrk`.
+
+## scb/arbetsorsakade-besvar
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `(blank)`,
+`float`, `int`.
+
+`forandrade-arbetsuppg`, `infoarbg`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`int`.
+
+`anma`, `anmalan-forsakringskassan`, `anmalan-senaste-12-manader`, `annantyp`,
+`aproblem`, `kontaktl`, `rehabiliteringsutredning`, `sammayrk`, `senast12`, `sjukmatv`,
+`sjukskri`.
+
+## scb/arlig-energistatistik
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `int`,
+`numeric`.
+
+`foretagets-id-nummer`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`knr`, `knr-2`, `kontrollnr`.
+
+## scb/avgifter-hyror
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `decimal`, `numeric`.
+
+`ins`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `numeric`.
+
+`arhyfranvarde`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `numeric`.
+
+`ant`, `yta`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `numeric`, `smallint`.
+
+`outhyrda-lagenheter`.
+
+## scb/barn-ulf
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`bavikt`.
+
+## scb/bast
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`lopnr`.
+
+## scb/branslestatistik
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numerisk`.
+
+`bransleforbrukning`, `bransleforbrukning-elprod`, `brhet`, `brravara`,
+`cfar-nummer-arbetsstalle`, `el5254`, `elel`, `elk`, `elprodel`, `elprodk`,
+`elproduktion`, `fjarrk`, `fjarrv`, `fjv`, `hetvatten`, `identitet`, `import-19494`,
+`ingaende-lager`, `inkopt-kvantitet`, `kond5051`, `kvant`, `leveranser-hemmamarknad`,
+`mangd`, `mnr`, `polj`, `pspill`, `spilldir`, `spillvid`, `utgaende-lager`, `varde`.
+
+## scb/breg
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antalgembarnunder22-2`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`antal-barn-0-ar`, `antal-barn-1-ar`, `antal-barn-10-ar`, `antal-barn-11-ar`,
+`antal-barn-12-ar`, `antal-barn-13-ar`, `antal-barn-14-ar`, `antal-barn-15-ar`,
+`antal-barn-16-ar`, `antal-barn-17-ar`, `antal-barn-18-ar`, `antal-barn-19-ar`,
+`antal-barn-2-ar`, `antal-barn-20-ar`, `antal-barn-21-ar`, `antal-barn-3-ar`,
+`antal-barn-4-ar`, `antal-barn-5-ar`, `antal-barn-6-ar`, `antal-barn-7-ar`,
+`antal-barn-8-ar`, `antal-barn-9-ar`, `antalgembarnunder22`, `avstand-barn-mor`,
+`avstandbarnfar`, `nordlig-mittpunktskoordinat`, `ostlig-mittpunktskoordinat`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-barn`, `antal-barn-under-18-ar`, `antal-barn-under-22-ar`,
+`antal-barn-under-6-ar`.
+
+## scb/but
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`bandboz`, `boarea`, `bostadsbidrag-och-bostadstillagg`, `bsmedv`, `cdisp3kz`,
+`cdisp3z`, `cdispbokez`, `disponibel-inkomst`, `hushallsvikt-kalibrerad`,
+`ranteutgifter`, `seffboz`, `skattereduktion-underhall-reparation`, `srotomz`,
+`uandrautgz`, `uboz`, `usotz`, `uvagundz`, `uvaz`.
+
+**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bald`.
+
+**value set: 2 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bkon`.
+
+## scb/bylbbs
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`bostadsarea`.
+
+## scb/energi-flerbostad
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`elvvarme-inkl-varmvatten`, `total-elanvandning`.
+
+## scb/energianvandning-fiske
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`tinyint`, `varchar`.
+
+`saltvatten-sotvatten`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`scbid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `tinyint`.
+
+`fiskefartyg-antal`.
+
+## scb/ep-val-deltagande
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`medborgarskapsdatum`, `sammanraknad-forvarvsinkomst`, `senaste-invandringsdatum`,
+`vistelsetid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`alder-31-12`.
+
+## scb/ep-val-resultat
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antal-giltiga-roster-folkpartiet`, `antal-giltiga-roster-kristdemokraterna`,
+`antal-giltiga-roster-vansterpartiet`, `antal-ogiltiga-roster`, `c-antrost`,
+`m-antrost`, `mp-antrost`, `ovr-antrost`, `s-antrost`.
+
+## scb/esk
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`lillan`, `storan`.
+
+## scb/fasit
+
+**also has a nonnumeric type family; requires review.** Source types: `(blank)`, `char`,
+`float`, `int`, `varchar`.
+
+`taxeringsar`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`int`, `varchar`.
+
+`baavru`, `barn-med-umgangesratt`, `bcivdat`, `bcredi`, `bfareg`, `bhreg`, `bhregh`,
+`bkaptax`, `blan`, `blk`, `bmber`, `bnuts2`, `bnuts2h`, `bomrak`,
+`funktionella-analysregioner`, `klimatzon`, `objekttyp-langdtillhorighet`,
+`pensionsdebiteringskod`, `senast-kanda-civilstand`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `bigint`, `float`.
+
+`kontant-ersattning-arbetstagare`, `kontant-ersattning-dotterforetag`,
+`loneunderlag-v0436`, `sammanlagd-kontant-ersattning-foretag`, `scbid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `bigint`, `float`, `int`.
+
+`delagarens-kontanta-ersattning-foretag`, `ersattning-arbetstagare-agd-andel`,
+`ku-ersattning-ab-dotterbolag-foregaende`, `lonekravet-eget-loneuttag`,
+`loneunderlag-andel-agd-2014`, `sparat-utd-delavyttring-efter-utdel`,
+`sparat-utd-delavyttring-efter-utdelning`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `bigint`, `int`, `numeric`.
+
+`kagandes`, `kagandest`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `float`, `int`.
+
+`allmant-avdrag-konst-eller-nystart`, `antal-k10`, `antal-lagenheter-hyreshus`,
+`arets-beraknade-avdrag-egenavgifter`, `artal-for-utbetalning`,
+`aterforing-fran-periodiseringsfond`, `aterforing-fran-periodiseringsfond-875`,
+`avdrag-egenavgifter-beraknat`, `avdrag-egenavgifter-fg-ar`, `avdrag-egenavgifter-fgar`,
+`avsattning-periodiseringsfond-30`, `avsattning-periodiseringsfond-30pct`, `baldbyg`,
+`bandbyt`, `bandupp`, `bareal`, `bfplop`, `bfpndgr`, `bfpndgrt`,
+`egen-pensionsforsakringspremie-820`, `ersattning-minus-avyttring-p3-1`,
+`ersattning-minus-avyttringskostn`, `fordelningsbelopp-positivt-861`, `ftax`, `ftax9`,
+`ftaxb`, `ftaxlok`, `ftaxm`, `gransbelopp-utdelning-efter-avyttring`,
+`inkomst-fore-periodiseringsfond`, `inkomst-fore-rantefordelning`, `kapitalunderlag`,
+`kapitalunderlag-expansionsfond-868`, `kaprelupp`, `kapreluppt`, `kaslutupp`,
+`kaslutuppt`, `kforlust`, `kforlustt`, `kontant-ersattning-agd-andel`, `kvatervinst`,
+`kvatervinstt`, `minskning-av-expansionsfond-878`, `minskning-av-expansionsfond-sru`,
+`negativt-kapitalunderlag-rantefordelning`, `okning-av-expansionsfond-hogst-overskott`,
+`okning-av-expansionsfond-skattejustering`, `omkostnadsbelopp-punkt-3-6`,
+`outnyttat-underskott-ej-paverkar`, `outnyttat-underskott-paverkar`,
+`over-underskott-fore-expansionsfond`, `over-underskott-fore-periodiseringsfond`,
+`paford-egenavgift-fg-ar`, `paforda-egenavgifter-sarskild-loneskatt`,
+`pensionskostnader`, `positiv-rantefordelning-n6`,
+`positivt-kapitalunderlag-expansionsfond`, `ranta-mm-tjanst-punkt-1-6`,
+`sjukpenning-hanforlig-naringsv`, `sjukpenning-naringsverksamhet`,
+`sparat-fordelningsbelopp-fg-ar`, `sparat-fordelningsbelopp-fg-ar-885`,
+`sparat-utd-avyttring-fore-utdelning`, `sparat-utdelningsutrymme-vid-utdelning`,
+`taxeringsvarde-byggnad-t2`, `taxeringsvarde-hyreshus-lokaler-t1`,
+`taxeringsvarde-mark-byggnad-t2`, `taxeringsvarde-mark-t2`, `total-bostadsyta`,
+`underskott-utnyttjat-i-kapital`, `utdelning-famansforetag`,
+`utnyttjat-positivt-fordelningsbelopp`, `utnyttjat-underskott-konstnarlig`,
+`utnyttjat-underskott-nystartad`, `vardear`, `verkligt-omkostnadsbelopp`, `zexpfond`,
+`zomkosta`, `zposford-urspr`, `zsum1-urspr`, `zsum4-urspr`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `float`, `int`, `numeric`.
+
+`bagand`, `bagandt`, `gransbelopp-p-1-4-ranta-efter-avyttring`, `inkomst-av-tjanst`,
+`utdelningsutrymme-overlatna-andel-p-1-9`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `float`, `int`, `smallint`.
+
+`barnam`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `int`, `numeric`.
+
+`barnets-invandringsdatum`, `gransbelopp-overlatna-andelar-avyttring`, `kagandebr`,
+`kagandebrt`, `kapitalunderlag-expansionsfond`, `katerfor`, `katerfort`, `kfsgpris`,
+`kfsgprist`, `kfsgutg`, `kfsgutgt`, `kvf`, `kvft`, `zlonnar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`.
+
+`ersattning-avyttring-terminskontrakt`, `fspu`, `kkufors`,
+`kontant-ersattning-i-foretaget`, `z0434`, `z0435`, `z0703`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`.
+
+`aktieutdelning`, `avyttring-andel-vardepappersfond`, `beskattningsbar-kapitalinkomst`,
+`bruttoinkomst-enl-def-2004`, `cfakt04h`, `faktorinkomst-individ-2004`,
+`familjehushallsidentitet`, `forvarvs-och-kapitalinkomst`,
+`gransbelopp-avyttring-fore-utdelning`, `inkomst-kapital-delbelopp-2-ar-gamla`,
+`inkomstranta-utdelning-2-ar`, `inkomstranta-utdelning-kapital`,
+`kapitalinkomst-delbelopp`, `kkuakt`, `kontant-ersattning-foretag-2008`,
+`lattnadsutrymme-v0426`, `lattnadsutrymme-v0645`, `rantor-utdelningar-exkl-rantebidrag`,
+`sparat-utdelningsutrymme`, `statlig-taxerad-kapitalinkomst`,
+`utbetalt-belopp-obligationer`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`aallmtj`, `aamavg`, `aavkku`, `aavkpu`, `abegr`, `ackumulerad-studieskuld`, `ael`,
+`aexpan`, `afahhalv`, `agano`, `agap`, `aind05`, `ainvavd`, `akassa-arbetsloshet`,
+`aklsk`, `aktieutdelning-skattefri-k10`, `aktivitetsersattning-garantiersattning`,
+`aktivitetsersattning-vilande`, `akyrk`, `alder-for-barn-1`, `alder-for-barn-2`,
+`alder-for-barn-3`, `alder-for-barn-4`, `alder-for-barn-5`, `alder-for-barn-6`,
+`alder-for-barn-7`, `alder-for-barn-8`, `alderspensionsavgift-fore-nedsattning`,
+`aldreforsorjningsstod`, `allman-pension-folkpension-atp`,
+`allman-pension-tillaggspension-tjanst`, `allman-pension-tjanstepension-summa`,
+`allman-pensionsavgift`, `allman-pensionsavgift-anstallning`,
+`allman-pensionsavgift-forvarvsarbete`, `allmant-avdrag-pension-periodiskt`,
+`allmant-avdrag-underskott-aktiv`, `alone`, `ankepension`, `ankepension-skapad`, `anm`,
+`anstalld-antal-manader`, `antal-anstallda-enligt-fdb`, `antal-ar-pensionspoang`,
+`antal-barn`, `antal-barn-0-19-ar`, `antal-barn-under-16-ar`, `antal-barn-under-7-ar`,
+`antal-barntillagg`, `antal-dagar-aktivitetsstod`, `antal-dagar-arbetsloshet`,
+`antal-hemmavarande-barn`, `antal-km-milersattning`, `antal-man-underhallsstod-givet`,
+`antal-man-underhallsstod-mottaget`, `antal-manader-grundavdrag`,
+`antal-manader-i-sverige`, `antal-manader-med-socialbidrag`, `antal-vardnadshavare`,
+`antrum`, `ar-for-dodsfall-for-ankepension`, `arbetsinkomst`,
+`arbetsmarknadsavgift-fore-nedsattning`, `arbetsskadeavgift-fore-nedsattning`,
+`arbetsskadeersattning`, `arbetsskadelivranta-samordnad`, `aredarb`, `aredfa`,
+`aredhua`, `arottot`, `aruttot`, `asfavg`, `asjukm`, `askad`, `aslspan`,
+`aterbetalt-studielan`, `aterforing-periodiseringsfond`,
+`aterforing-periodiseringsfond-2-ar`, `aterforing-uppskov-nytillkomna-2016`,
+`aterforing-uppskovsavdrag-fore-ar`, `aterforing-uppskovsavdrag-tom-2016`,
+`avdrag-dubbel-bosattning-tjanst`, `avdrag-forvaltningskostnad-kapital`,
+`avdrag-realisationsforlust-kapital`, `avdrag-resor-till-fran-arbetet`,
+`avdrag-skuldranta-kapital`, `avdrag-tjansteresor`, `avdrag-yrkesskadelivranta`,
+`avdragen-preliminar-a-skatt-arbetsgivare`, `avkastningsskatt`,
+`avkastningsskatt-innevarande-ar`, `avkastningsskatt-kapitalforsakring`,
+`avkastningsskatt-pensionsforsakring`, `avsattning-expansionsmedel`,
+`avsattning-expansionsmedel-2-ar`, `avsattning-periodiseringsfond`,
+`avsattning-periodiseringsfond-2-ar`, `avsattning-privat-pensionssparande`,
+`avtalsenlig-sjuklon-sjuklone`, `avtalsenlig-sjuklon-sjukpenning`, `baedagd`, `baedagt`,
+`baen`, `baengp`, `baeomf`, `baep15d`, `baep40d`, `baet`, `baetgp`, `baetppr`,
+`baldbob10`, `baldbob11`, `baldbob12`, `baldbob13`, `baldbob14`, `baldbob15`,
+`baldbob16`, `baldbob9`, `baldhb`, `baldis1`, `baldis2`, `baldis3`, `baldis4`,
+`baldis5`, `baldis6`, `baldis7`, `baldis8`, `baldus1`, `baldus2`, `baldus3`, `baldus4`,
+`baldus5`, `baldus6`, `baldus7`, `baldus8`, `bampdag`, `bampdagj`, `bandel`, `bandels`,
+`banduppt`, `bankrantor`, `banstd`, `banste`, `bantbohb`, `bantboz`, `bantbrnhb`,
+`bantbs`, `bantfvb`, `bantman`, `barn-familjehushall-0-19-ar`, `barnbidrag`,
+`barnbidrag-forlangt-flerbarnstillagg`, `barnpension-skattefri-del`,
+`barnpension-skattepliktig`, `barntillagg`, `bateral`, `batersl`, `batersm`, `bavkapk`,
+`bbabetmot`, `bbabiofor`, `bbafodman`, `bbarnp`, `bbaslumpf`, `bbautvman`, `bbetej`,
+`bbiob`, `bbiobeh`, `bbiobehv`, `bbiobej`, `bbiobs`, `bbiobsh`, `bbiobshv`, `bbiobsv`,
+`bbiobv`, `bbostm`, `bbostyb`, `bbostyt`, `bbptppr1`, `bbptppr2`, `bbptyp`, `bbrn11`,
+`bbrn13hb`, `bbrn13z`, `bbrn15z`, `bbrn167z`, `bbrn180z`, `bbrn23z`, `bbrn611`,
+`bbrn6z`, `bbrn712z`, `bbrnett1`, `bbrnett2`, `bbrnsh`, `bbtpandh`, `bbtpandhb`,
+`bbtpman`, `bbtpyta`, `bbyggar`, `bdagfvb`, `bdebsed`, `bdelar`, `bepngp`, `beptgp`,
+`beraknad-avtalsersattning-som-lon`, `beraknad-pensionsbehallning`,
+`beraknad-premiepensionsbehallning`, `beraknad-sjuklon-sjukloneperioden`,
+`betald-begravningsavgift`, `betald-kyrkoavgift`, `betalning-avyttrade-terminskontrakt`,
+`betedag`, `bettman`, `bfvbbrn`, `bhemman`, `bhemtim`, `bhemtr`, `bhepa`, `bhf`, `bhh`,
+`bhkapdg`, `bibid`, `bibidf100`, `bibidf50`, `bibidf75`, `bibidg100`, `bibidg50`,
+`bibidg75`, `bibidt100`, `bibidt50`, `bibidt750`, `bibidu`, `bidnrh`, `bidnrk`,
+`bilforman-utom-drivmedel`, `bimer`, `bintman`, `bishbi`, `bishbii`, `bishbu`,
+`bishbuex`, `bishbui`, `bishbur`, `bism`, `bismf100`, `bismf50`, `bismf75`, `bismg100`,
+`bismg50`, `bismg75`, `bismt`, `bismt100`, `bismt50`, `bismt75`, `bisstbarn`,
+`bisstbarn100`, `bisstbarn50`, `bisstbarn75`, `bisstod`, `bisstod100`, `bisstod50`,
+`bisstod75`, `bistud`, `bjusttp`, `bkarens`, `bke04h`, `bkfri1`, `bkfri2`, `bkfri3`,
+`bkfri4`, `bkfri5`, `blandad-inkomst`, `blopnr`, `bmakgar`, `bmakinkr`, `bmanaep`,
+`bmanapgp`, `bmanapip`, `bmanappp`, `bmanaptp`, `bmanbp`, `bmanfop`, `bmani`, `bmanop`,
+`bmanu`, `bmanvb`, `bmsegar`, `bmseinkr`, `boendetillagg`, `boptppr`,
+`bostadsbidrag-barnfamiljer-mfl`, `bostadsbidrag-varnpliktiga`, `bostadsersattning`,
+`bostadstillagg-sjuk-aktivitet`, `bostadstillagg-till-pensionarer`, `bpdel40`, `bredgp`,
+`brfor`, `bruttoinkomst-av-norsk-pension`, `bruttoinkomst-definition-2015`, `bsadel40`,
+`bsatdat`, `bsjdag`, `bsjdagdel`, `bsjdgu`, `bsjdgu2`, `bsjfromdat`, `bsjlop`, `bsjman`,
+`bsjofjr`, `bsjonar`, `bsjpdgr`, `bsjpdgr2`, `bsjtill`, `bsjtomdat`, `bskddag`,
+`bskfvb`, `bsluk5k6`, `bslump`, `bslumpbs`, `bslumpbs1`, `bslumpbt`, `bslumpia`,
+`bslumps`, `bsockvh`, `btpen`, `btpet`, `btrygg`, `bttsprak`, `btvatbant`, `bumgbrnh`,
+`buppgp`, `bvbbrn`, `bvux`, `carb`, `cbefvi`, `cbidink`, `cdisp04h`, `cdisp04hb`,
+`cdisp504hb`, `civilstandsdatum`, `cpgbba`, `cpgisa`, `cpgisp`, `csgisa`, `ctxfvi`,
+`dagersattning-repetitionsutbildning`, `dagsersattning-varnpliktiga`,
+`debiterad-utlandsk-skatt`, `delkomponent-disponibel-inkomst-2004`,
+`disponibel-inkomst-per-ke-familj-2004`, `drivmedel-vid-bilforman`,
+`efterlevandepension-till-barn`, `efterlevandepensionsavgift-nedsattning`,
+`ekonomiskt-bistand`, `ekonomiskt-bistand-uppdelat`, `ersattning-amprogram-skattefri`,
+`ersattning-amprogram-skattepliktig`, `ersattning-forsakringskassa-anstallning`,
+`ersattning-forsakringskassa-ku`, `ersattning-inkomst-anstallning`,
+`ersattning-slutford-terminsaffar`, `ersattning-varnpliktiga-totalt`,
+`ersattningsgrundande-daglon`, `ersattningskod-420-skattefri-del`,
+`ersattningskod-420-skattepliktig-del`, `ersattningskod-421-skattefri-del`,
+`ersattningskod-421-skattepliktig-del`, `ersattningskod-423-skattefri-del`,
+`ersattningskod-423-skattepliktig-del`, `ersattningskod-426-skattefri-del`,
+`ersattningskod-426-skattepliktig-del`, `ersattningskod-429-skattefri-del`,
+`ersattningskod-429-skattepliktig-del`, `etableringsersattning`,
+`expansionsfondskatt-positiv`, `extra-tillagg-studiemedel-bidrag`,
+`familjebidrag-varnpliktiga`, `fastighetsavgift`, `fastighetsskatt`,
+`fastighetsskatt-hyreshus-lokal`, `fastighetsskatt-industri`, `fforst`, `ffstbo9`,
+`ffstsm9`, `ffstut`, `fjbek`, `fjbimp`, `fjbjord`, `fjbskog`,
+`fk-ersattning-annat-forvarvsarbete`, `fkubant`, `fkubrt`, `fkuopt`, `fkuovrt`,
+`fkupret`, `fkurfot`, `fkuvprt`, `fkvasm`, `fodelsemanad`, `folkbokforing-andringsar`,
+`folkbokforingsdatum`, `foraldraforsakringsavgift-brutto`,
+`foraldrapenning-barns-fodelse`, `foraldrapenning-skattepliktig`, `foraldrapenning-vab`,
+`forlangd-omstallningspension`, `forlangd-omstallningspension-summerad`,
+`forseningsavgift`, `forvarv-reparationsfond`, `forvarvspris-bostadsratt`,
+`fran-och-med-datum`, `frivillig-pension-skattefri`, `frivillig-pension-skattepliktig`,
+`from-tidpunkt-folkpens-op`, `from-tidpunkt-for-barn-fp`, `fsabal`, `fsabsl`, `fskuhlt`,
+`fskuolt`, `fskusmt`, `ftax5`, `ftaxb5`, `ftaxm5`, `ftaxv`, `fundif`, `fundisk`,
+`fundiski`, `garantipension`, `givet-underhallsbidrag`,
+`givet-underhallsbidrag-aterbetalt`, `givet-underhallsstod`, `graviditetsersattning`,
+`handikappersattning`, `hemmavarande-barn-studiehjalp`, `hemvarn-ersattning`,
+`hushallsforestandarens-alder`, `hushallsid`, `iabb`, `ialdf`, `ibarnbu`, `ibdff`,
+`ibdfvm`, `ibids`, `ibidu`, `ibostbh`, `ibostbu`, `ibostslh`, `ibostvpu`, `ibtp-2`,
+`ibtpap`, `ibtps`, `ibtpsah-2`, `ibtpsap`, `ibtpssa`, `ietabtu`, `ifamvpu`, `ifbb`,
+`ifbt`, `ifvard`, `ihkapdg`, `iintro`, `imer`, `inackorderingsbidrag`,
+`ingaende-mervardesskatt`, `inkomst-aktiv-enskild-naringsverksamhet`,
+`inkomst-aktiv-naringsverksamhet`, `inkomst-av-kapital`, `inkomst-av-naringsverksamhet`,
+`inkomst-fran-famansforetag`, `inkomst-naringsverksamhet-2-ar-gamla`,
+`inkomst-naringsverksamhet-utanfor-eu`, `inkomst-passiv-enskild-naringsverksam`,
+`inkomst-tjanst-2-ar-gamla`, `inkomstpension`, `introduktionsersattning-flyktingar`,
+`isa`, `ishbii`, `ishbu`, `ishbuex`, `ishbui`, `ishbur`, `isjuk`, `ismt`, `ismu`,
+`isocb`, `isocbidh`, `isstbarn`, `isstodx`, `istbiex`, `istude`, `iundbid`, `iutryck`,
+`ivard`, `kakurta`, `kakutot`, `kapitalforlust-annan-fond-rantefond`,
+`kapitalforlust-fonder`, `kapitalforlust-rantefond`, `kapitalinkomster-bank-aktier`,
+`kapitalvinst-2-ar-gamla`, `kapitalvinst-annan-fond-rantefond`, `kapitalvinst-fonder`,
+`kapitalvinst-rantefond`, `karfor`, `kaskubo`, `katomt`, `kfbot`, `kfnat`, `kfnfot`,
+`kfnfotsf`, `kfofot`, `kinvavd`, `kirrest`, `kkueho`, `kkuinv`, `kkuinvt`, `kkuorta`,
+`kkutomt`, `kommunal-inkomstskatt-forvarvsinkomst`, `kommunalskattesats`,
+`konsumtionsenhet-2004`, `kontant-bruttolon`, `kontant-bruttolon-mm`,
+`kostnadsersattning-tjanst`, `krtasp`, `krtautd`, `kschab`, `kuppsk`, `kutdsp`,
+`kuthyr`, `kvarboende`, `kvbot`, `kvnat`, `kvnfot`, `kvnfotsf`, `kvofot`,
+`kyrkoavgift-inklusive-begravningsavgift`, `landstingsskattesats`, `larlingsersattning`,
+`larlingsersattning-antal-manader`, `lattnadsutrymme-overlatna-andelar`, `livranta`,
+`loneinkomst`, `manader-forskola-barn-1`, `manader-forskola-barn-2`,
+`manader-forskola-barn-3`, `manader-forskola-barn-4`, `manader-forskola-barn-5`,
+`manader-omsorg-barn-1`, `manader-omsorg-barn-2`, `manader-omsorg-barn-3`,
+`manader-omsorg-barn-4`, `manader-omsorg-barn-5`, `manadslon`, `medelpoang-ankepension`,
+`medelpoang-tp-egen`, `medgiven-skattereduktion-sjoinkomst`, `medgivet-grundavdrag`,
+`mervardesskatt-netto`, `militar-utbildning-ersattning`, `minskning-av-expansionsmedel`,
+`minskning-expansionsmedel`, `minskning-expansionsmedel-2-ar-gamla`,
+`mottaget-bidragsforskott`, `mottaget-underhallsbidrag`, `naktees`, `nakthb`, `naliks`,
+`naringsinkomst`, `narstaendepenning`, `nedsattning-avkastningsskatt-avtal`,
+`nedsattning-egenavgifter-narings`, `nkiskog`, `nkunar`, `nkuroy`, `nkusam`, `nkuskog`,
+`nliks`, `nnarvp`, `noutnyt`, `npas`, `npashb`, `npasu`, `nrveu`, `nsibilb`, `nsisjuk`,
+`nskeout`, `nskresa`, `nuakte`, `nundera`, `nunderp`, `nunders`, `nupase`,
+`omkostnadsbelopp-punkt-2-2`, `omsattning`, `omstallningspension`,
+`omstallningspension-skapad`, `outnyttjat-underskott-fran-tidigare-ar`,
+`overlatelse-reparationsfond`, `overlatelsepris-bostadsratt`, `overlatelsetidpunkt`,
+`ovriga-inkomster-egenavgifter`, `ovriga-kostnadsavdrag-over-1000-kr`,
+`ovriga-skattefria-transfereringar`, `ovriga-skattepliktiga-ers-tjanst`,
+`ovriga-tillaggspensioner`, `pagsft`, `pallm`, `parblep`, `patptill`, `pavitp`,
+`pavpen`, `pbarnh`, `pbarnsk`, `peflevp`, `pension-livranta-skattepliktig-skattefri`,
+`pension-och-livranta-skattefri`, `pension-och-livranta-skattepliktig`,
+`pension-skattefri`, `pensionsavgift-allman-anstallning`, `pensionsforsakring-inbetalt`,
+`pensionsforsakringspremie`, `pensionsforsakringspremie-2-ar-gamla`, `pffbid`, `pgarae`,
+`pgarfop`, `pgarop`, `pgarp37`, `pgarp38`, `pgarsep`, `pgartill`,
+`pgi-annat-forvarvsarbete`, `pgi-anstallning`, `pkuli421`, `pkuli422`, `pkuli423`,
+`pkuli424`, `pkuli428`, `pkuli429`, `pkuli473`, `pkuli481`, `pkuli483`, `pkuli486`,
+`pkuli999`, `positiv-rantefordelning-2-ar`, `positiv-rantefordelning-kapital`, `ppensh`,
+`pprepel`, `ppreptl`, `pprivds`, `preliminar-a-skatt-pension-forsakring`,
+`premiepension`, `presta`, `prestpr`, `prestsp`, `primarinkomst`,
+`privat-pensionsforsakring-livranta`, `privat-pensionsforsakring-sparkonto`,
+`privat-pensionsforsakring-tjanst`, `psep`, `ptilp37`, `ptilp38`, `pylagp`, `pylaip`,
+`pylatp`, `ranta-fran-pensionsmyndigheten`, `realisationsvinst-kapital`,
+`regional-ersattning-egenavgifter`, `rehabiliteringsersattning`,
+`rehabpenning-och-aktivitetsstod`, `rekryteringsbidrag-antal-veckor`, `saegeng`,
+`samfallighet-kapitalavkastning`, `sammanlagt-taxeringsvarde-ar-t-1`,
+`sammanraknad-forvarvsinkomst`, `sarskild-efterlevandepension`,
+`sarskild-loneskatt-egna-pension`, `sarskild-loneskatt-forvarvsinkomst`,
+`sarskild-loneskatt-forvarvsinkomster`, `sarskild-loneskatt-pensionskostnad`,
+`sarskild-loneskatt-pensionskostnader`, `sarskilt-bostadstillagg-pensionarer`,
+`sarskilt-bostadstillagg-sjuk-akt`, `sarskilt-pensionstillagg`, `savpe`, `sbegri`,
+`sbegru`, `schablonintakt-andelar-fond`, `schablonintakt-investeringsfond`,
+`schablonintakt-isk-innehav`, `schablonintakt-isk-ku`, `segen`, `sexpmed`, `sfastv`,
+`sgi-fran-fk`, `sjoinkomstavdrag`, `sjuk-och-aktivitetsersattning`,
+`sjukersattning-vilande`, `sjukforsakringsavg-hog-inkomst`, `sjukpenning`,
+`sjukpenningdagar-sjukfallet`, `skatt-hek`, `skatt-pa-inkomstranta-konto`,
+`skatt-utdelning-delagarratter-ku31`, `skattefri-del-livranta-pension`,
+`skattefri-ranta-konvertibler-mm-bl-k10a`, `skattefri-restpension`,
+`skattepliktiga-ersattningar-ej-sociala`, `skattepliktiga-formaner-ej-lon`,
+`skattepliktiga-formaner-inkl-drivmedel`, `skattereduktion-allman-pensionsavgift`,
+`skattereduktion-for-arbetsinkomst`, `skattereduktion-gava`,
+`skattereduktion-husarbete`, `skattereduktion-husarbete-hushallsarbete`,
+`skattereduktion-underskott-kapital`, `skattetillagg`, `skfvi`, `skulder-boendet`,
+`skutj`, `skuutli`, `skuvp`, `slonavg`, `slutlig-skatt`,
+`slutlig-skatt-exkl-egenavgifter`, `smahus-taxeringsvarde`, `smittbararpenning`,
+`sociala-formaner-tjanst`, `socialbidrag-inkl-introduktion`,
+`sparat-utdelningsutrymme-forar-uppraknat`, `sparat-utdelningsutrymme-overlatna-2`,
+`sredel`, `sredfa`, `sredhusa`, `sredhusf`, `sredrot`, `ssjuavf`, `sslpena`, `sslpene`,
+`statlig-inkomstskatt-forvarv`, `statlig-inkomstskatt-kapitalinkomster`,
+`statlig-tjanstepension`, `statlig-tjanstepension-inkl-kapan`,
+`storlek-givet-underhallsstod`, `storlek-mottaget-underhallsstod`,
+`storlek-pa-lopande-vb`, `studiehjalp-bidrag`, `studiehjalp-extra-tillagg`,
+`studiehjalp-manader-extra-tillagg`, `studiehjalp-studiebidrag`, `studiemedel-bidrag`,
+`studiemedel-lan`, `studiemedel-lan-m-m`, `studiemedel-studiebidrag`,
+`studiemedel-studiebidrag-2-ar`, `studiemedel-studiehjalp-lan-och-bidrag`,
+`studiemedel-utland-veckor-lan`, `studiestartsstod`, `studiestod`,
+`summa-bostadstillagg`, `summa-lon-formaner-ku`, `summa-sarskilt-bostadstillagg`,
+`summa-skattefritt-skattepliktigt`, `tavafa`, `tavags`, `tavlonfp`,
+`taxeringsvarde-2017-boendet-smahus`, `taxeringsvarde-2017-smahus`,
+`taxeringsvarde-2018-boendet-smahus`, `taxeringsvarde-2018-smahus`,
+`taxeringsvarde-for-smahusbyggnader`, `tffbid`, `tforarb`, `tfsjakt`, `tfvard`,
+`tgaran`, `tgarse`, `tglon`, `tgsjakt`, `tillaggsbidrag-rekryteringsbidrag-veckor`,
+`tillaggsbidrag-studiemedel`, `tillaggsbidrag-studiemedel-veckor`, `tillaggspension`,
+`tillgodoraknad-expansionsfondskatt`, `tinkrak`, `tinkrse`, `tjanstepension`,
+`tjanstepension-itp`, `tjanstepension-kpa`, `tjanstepension-statliga-bolag`,
+`tjanstepension-stp`, `tjanstepension-tjanst`, `tkfo`, `tkubilb`, `tkuvard`, `tlivsp`,
+`tlon`, `totalt-arbetsmarknadsstod`, `tovrp`, `tovrpa`, `tovrpp`,
+`traffvariabel-iot2015hb`, `trest`, `trta`, `tsjresf`, `tsjuk`, `ttfa`, `ttsprak`,
+`tutd`, `tvard`, `uabdf`, `udrift`, `umbostk`, `umel`, `umhyr`, `umvatt`,
+`underhallsbidrag-belopp`, `underhallsbidrag-givet-belopp`,
+`underlag-alderspensionsavgift`, `underlag-allman-pensionsavgift`,
+`underlag-allman-pensionsavgift-annat`, `underlag-efterlevande-pensionsavgift`,
+`underlag-fastighetsavgift`, `underlag-fastighetsavgift-0375-smahus`,
+`underlag-fastighetsavgift-075-smahus`, `underlag-fastighetsskatt-lokaler-10`,
+`underlag-fastighetsskatt-tomt-hyreshus`, `underlag-fastighetsskatt-tomt-smahus`,
+`underlag-fastighetsskatt-vattenkraft`, `underlag-fastighetsskatt-vindkraft`,
+`underlag-fastighetsskatt-vindkraft-02`, `underlag-skattereduktion-fackavgift`,
+`underlag-skattereduktion-hushallsarbete`, `underlag-skattereduktion-rot`,
+`underlag-skattereduktion-rot-forman`, `underlag-skattereduktion-rut-forman`,
+`underskott-aktiv-naringsverksamhet`, `underskott-aktiv-naringsverksamhet-hb`,
+`underskott-naringsverksamhet`, `underskott-passiv-naringsverksamhet`,
+`underskott-passiv-naringsverksamhet-hb`, `uppskovsavdrag-fore-inkomstaret`,
+`uppskovsavdrag-nytillkomna`, `uppskovsavdrag-nytillkomna-2016`,
+`uppskovsavdrag-nytillkomna-prel`, `uppskovsavdrag-prel-nytillkomna-2016`, `usamf`,
+`utbildningsbidrag-doktorander`, `utbildningsbidrag-kompl-ped`,
+`utdelning-delagare-samfallighet`, `utdelning-underskott-tidigare-ar`,
+`utgaende-mervardesskatt`, `utgaende-skuld-31-dec-foregaende-ar-al`,
+`utgaende-skuld-31-dec-foregaende-ar-sl`, `uthyrning-privatbostad`,
+`utlandsk-forsakring-foregaende-ar`, `utlandsk-skatt-delagarratter-ku31`,
+`utokat-rekryteringsbidrag-veckor`, `utvatgpr`, `uuarsm`, `uukaral`, `uukarsl`,
+`uukarsm`, `uvarm`, `vardepapperrantor`, `vuxenstudiestod`, `warb`, `waredhua`,
+`waredhuai`, `waredroti`, `wdagakd`, `wdagakh`, `wdagakt`, `wdageak`, `wdagfk`,
+`wdagutb`, `wefkdgp`, `z0473`, `zaesuap`, `zandel`, `zepubp1`, `zepubp2`, `zepufop`,
+`zepuop`, `zgarsayl`, `zhint`, `zjustse`, `zkvotk10`, `zkvotk10a`, `zsaink`, `zsparav`,
+`zsparina`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`anstalld-fran-manad`, `anstalld-till-manad`, `antal-rum`, `avdrag`, `bantpgb`,
+`bantpgi`, `bavboast`, `boyta-i-kvadratmeter`, `bsjers`,
+`ersattning-grund-egenavgifter-tjanst`, `ftaxb9`, `ftaxm9`, `hyra-avgift-per-manad`,
+`hyresersattning`, `lon-famansbolag-ku`, `mottaget-gavobelopp`,
+`ovriga-kostnadsersattningar`, `senaste-invandringsdatum`,
+`vissa-ej-skattepliktiga-ersattningar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`antal-manader-med-bilforman`, `bsjftyp`, `tjanstgoringsomfattning`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`barnets-alder`, `cdisp04hb-trif`, `cdisp504hb-trif`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`int`.
+
+`bfaregz`, `bla03reg`, `bubdfu`.
+
+**value set: 11 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bkreg`, `bkregh`, `bkregz`.
+
+**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`baldz`.
+
+**value set: 3 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bkonz`.
+
+**value set: 7 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`byrkst`.
+
+**value set: 88 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bla03regh`, `bla03regz`.
+
+**value set: 9 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bnuts2z`.
+
+## scb/fastighetspriser
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`areal-akermark`, `areal-betesmark`, `areal-ovrig-mark`, `areal-skogsimpediment`,
+`areal-skogsmark`, `arealakerlant`, `arealbetelant`, `arealomarklant`, `arealskoglant`,
+`arealskogsimp`, `bostadsyta-hyreshusenhet`, `byggnadsvarde`, `hyrabost`, `hyralok`,
+`markvarde`, `taxeringsvarde-byggnader`, `taxeringsvarde-for-akermark`,
+`taxeringsvarde-for-skogsimpediment`, `taxeringsvarde-for-skogsmark`,
+`taxeringsvarde-mark`, `total-bostadsyta`, `vardeakerlant`, `vardebete`,
+`vardebetelant`, `vardebygg`, `vardeekbygg`, `vardeekbygglant`, `vardemark`,
+`vardeskoglant`, `vardeskogsimp`, `ytabost`, `ytalok`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`biutrymmesyta-i-smahus`, `stdsumsma`, `summa-standardpoang`,
+`vardegrundande-yta-i-smahus`, `ytabisma`, `ytavardesma`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `tinyint`.
+
+`antvebygg`, `antvemark`.
+
+## scb/fek
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`cfar-nummer`, `lvenr`.
+
+## scb/folkhogskolan
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`int`.
+
+`distansutbildning`, `samverkan`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`distdagar`, `gastovr`, `hk1`, `hk10`, `hk11`, `hk12`, `hk2`, `hk3`, `hk4`, `hk5`,
+`hk6`, `hk7`, `hk8`, `hk9`, `kvinnor`.
+
+## scb/fordonsreg
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`tjvikt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`arsmod`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `smallint`, `tinyint`.
+
+`antag`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `tinyint`.
+
+`alder`.
+
+**value set: 2 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`, `smallint`, `tinyint`.
+
+`arsmod-imp`.
+
+## scb/forsaljning-mineralgodsel
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`nvarchar`, `tinyint`, `varchar`.
+
+`ekol`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`nvarchar`, `varchar`.
+
+`leverantorsnummer`.
+
+## scb/fortroendevalda
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`numeric`, `varchar`.
+
+`position`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`varchar`.
+
+`typnamnd`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`disponibel-inkomst-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`sammanraknad-forvarvs-och-kapitalinkomst`, `sammanraknad-forvarvsinkomst-2`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`datinv`.
+
+## scb/fou
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`varchar`.
+
+`lopnummer-anstallningar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`ar`, `referensar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`, `tinyint`.
+
+`tjanstgoringsomfattning`.
+
+## scb/frida
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`smallint`, `varchar`.
+
+`uppdragstagare-bitratt-arsredovisning`, `uppdragstagare-ej-bitratt-arsredovisning`,
+`v8044`, `v8045`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `smallint`.
+
+`antal-manader-med-bilforman`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-arbetsstallen`.
+
+## scb/ftr
+
+**also has a nonnumeric type family; requires review.** Source types: `decimal`,
+`numeric`, `tinyint`, `varchar`.
+
+`kodadress`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antal-varderingsenheter-skogsimpediment`, `antal-varderingsenheter-skogsmark`,
+`antveaker`, `antvebete`, `antveekbygg`, `antvesmabyggl`, `antvesmamarkl`,
+`taxeringsvarde-akermark`, `taxeringsvarde-for-akermark`,
+`taxeringsvarde-for-skogsimpediment`, `taxeringsvarde-for-skogsmark`, `vardeakerbas`,
+`vardebete`, `vardebetebas`, `vardeekbygg`, `vardeekbyggbas`, `vardeskogbas`,
+`vardeskogsimpbas`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`taxeringsvarde-byggnader`, `taxeringsvarde-for-bostader`,
+`taxeringsvarde-for-smahusbyggnader`, `taxeringsvarde-for-smahusmark`,
+`taxeringsvarde-mark`, `taxeringsvarde-totalt`, `totalt-taxeringsvarde`, `vardelok`.
+
+## scb/godselmedelsanvandning
+
+**also has a nonnumeric type family; requires review.** Source types: `int`, `numeric`,
+`varchar`.
+
+`scbid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`, `smallint`.
+
+`antal-svarande-enheter`.
+
+## scb/grundskola-ak9
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `smallint`.
+
+`antal-betyg`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`, `smallint`.
+
+`meritvarde`.
+
+## scb/gymnasieskola-betyg
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `numeric`,
+`smallint`.
+
+`elevtim`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`meritvarde-ak9`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`a-poang`, `b-poang`, `c-poang`, `d-poang`, `e-poang`, `f-poang`, `meritv`.
+
+## scb/gymnasieskola-sokande
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `numeric`.
+
+`lopnr-elev`.
+
+## scb/gyst
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`lilla-n-per-stratum`, `stora-n-per-stratum`.
+
+## scb/hek
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`.
+
+`cfakt04z`, `cfaktz`, `faktorinkomst`, `faktorinkomst-individ-2004`,
+`summa-forvarvs-och-kapitalinkomster`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`abegr`, `agap`, `aklsk`, `akyrk`, `arshyra-arsavgift`, `bandboz`,
+`barnomsorg-tim-fritis-10-12`, `barnpension-livranta-skattefri-familj`,
+`boende-amortering-bostadsratt`, `boende-amortering-eget-hem`,
+`boende-disponibel-inkomst`, `boende-ranta-bostadsratt`, `boende-ranta-eget-hem`,
+`boende-ranta-totalt`, `boende-skuld-bostadsratt`, `boende-skuld-eget-hem`,
+`boende-underhall-lagenhet`, `boende-villaforsakring`, `bostadsyta`, `bruenpz`, `bsysp`,
+`cdisp3kz`, `cdisp3pz`, `cdisp3z`, `cdisp504z`, `cdisp5z`, `cdispkenz`, `cdispkez`,
+`cdispz`, `covrn04z`, `covrneg`, `covrnegz`, `csfviz`, `ctran04z`, `ctranz`, `ctrapz`,
+`disponibel-inkomst-hushall-2004`, `ekonomiskt-bistand-socialbidrag`,
+`ekonomiskt-bistand-uppdelat`, `ersattningskod-420-skattefri-del`,
+`ersattningskod-420-skattepliktig-del`, `ersattningskod-421-skattefri-del`,
+`ersattningskod-421-skattepliktig-del`, `ersattningskod-423-skattefri-del`,
+`ersattningskod-423-skattepliktig-del`, `ersattningskod-426-skattefri-del`,
+`ersattningskod-426-skattepliktig-del`, `ersattningskod-429-skattefri-del`,
+`ersattningskod-429-skattepliktig-del`, `familjestod-totalt`, `fovrmv`, `fovrtmv`,
+`fovrtsp`, `fskuboz`, `hushallets-vikt`, `hushallsvikt-kalibrerad`,
+`hushallsvikt-okalibrerad`, `hyra-avgift-per-manad`, `ibarnbu`, `ifamz`, `iintroh`,
+`introduktionsersattning-flyktingar`, `isocbh`, `iundbidz`, `kalibrerad-hushallsvikt`,
+`kalibreringsvikt`, `kapitalforlust-brutto`, `kapitalvinst-brutto`,
+`kommunalskattesats`, `korrigeringsfaktor`, `korrigeringsfaktor-gk`,
+`landstingsskattesats`, `marginalskatt-procent-total`,
+`mottaget-underhallsbidrag-forskott`, `negativa-transfereringar`,
+`negativa-transfereringar-2004`, `ovriga-negativa-transfereringar-2004`,
+`ovriga-vardepapper-deklvarde`, `pension-ku-familj`, `pension-och-livranta-skattefri`,
+`pension-och-livranta-skattepliktig`, `pensionsbeloppskontroll-familj`,
+`pensionsbeloppskontroll-per-person`, `ppenssfz`, `ppensspz`, `prestpr`,
+`privat-pensionsforsakring-livranta`, `privat-pensionsforsakring-tjanst`,
+`sammanraknad-forvarvsinkomst`, `seffboz`, `seffz`, `sfastboz`, `skatt`, `skatt-hek`,
+`skattefri-del-livranta-pension`, `skattefria-transfereringar-hushall`,
+`skattepliktiga-transfereringar-hushall`, `skattereduktion-underhall-reparation`,
+`skveffz`, `sredunlgz`, `summa-pension-ku`, `uamorelz`, `uboz`, `uhuselz`,
+`upprakningsfaktor-enkat-kalibrerad`, `upprakningsfaktor-ordinarie`, `urepundz`,
+`uundbid`, `uundbidz`, `uunlgrz`, `uvaeljz`, `uvaoljz`, `uvarmlgz`, `uvarmntz`.
+
+**value set: 6 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`.
+
+`bsyssz`.
+
+## scb/hib
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `int`, `numeric`.
+
+`hyra-avgift-per-manad`, `hyraja1`, `rabattbelopp`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`hyra-avgift-hyraalt0`, `hyra-avgift-hyraalt1`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`boende-bostadsyta-i-kvadratmeter-lghyta`.
+
+## scb/hku
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`lopnummer-urvalsenheter`.
+
+## scb/hut
+
+**also has a nonnumeric type family; requires review.** Source types: `Numeric`, `int`,
+`varchar`.
+
+`forfogande-over-bostaden`, `typ-av-boende`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `float`, `int`.
+
+`antal-barn-0-19-ar`, `antal-rum-exkl-kok`, `boyta-kvm`,
+`hushallets-disponibla-inkomst`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `int`.
+
+`antal-individer-kosthushallet`, `bantvuxz`, `hushallets-vikt`, `konsumtionsenhet`,
+`lopnummer-kosthushall`, `ordningsnummer-inom-kosthushallet`, `vikt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`konsumtionsenhet-2004`, `totala-utgifter`, `utgift-fackavg-a-kassa`,
+`utgift-for-bat-batmotor`, `utgift-for-blommor`, `utgift-for-bord`, `utgift-for-bostad`,
+`utgift-for-cykel`, `utgift-for-diskmaskin`, `utgift-for-fototjanster`,
+`utgift-for-glas-porslin`, `utgift-for-inkop-av-bil`, `utgift-for-klader`,
+`utgift-for-kyl-frys`, `utgift-for-livsmedel`, `utgift-for-sallskapsdjur`,
+`utgift-for-sangar`, `utgift-for-skor`, `utgift-for-spis`, `utgift-for-tandvard`,
+`utgift-for-taxi`, `utgift-for-transport`, `utgift-for-utemobler`, `utgift-for-vaskor`,
+`utgift-for-verktyg`, `utgift-for-veterinar`, `utgift-forbrukningsvaror`,
+`utgift-fritid-kultur`, `utgift-hushallstjanster`, `utgift-husvagn-slapvagn`,
+`utgift-idrottsevenemang`, `utgift-internetabonnemang`, `utgift-klader-skor`,
+`utgift-musikinstrument`, `utgift-sjuk-olycksfallsfors`,
+`utgift-skattepliktiga-formaner`, `utgift-tvattmaskin-tork`.
+
+## scb/infi
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `numeric`.
+
+`lopnr`.
+
+## scb/inkvarteringsstatistik
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`belagda-baddar`, `nyin`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`anlid`.
+
+## scb/innovation-foretag
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`varchar`.
+
+`clim-gov`, `clim-pric`, `clim-weath`, `coop-eg-eu-efta`, `coop-eg-nat`,
+`coop-eg-neu-nefta`, `coop-gov-ri-eu-efta`, `coop-gov-ri-nat`, `coop-gov-ri-neu-nefta`,
+`coop-inn-xrnd`, `coop-npo-eu-efta`, `coop-npo-nat`, `coop-npo-neu-nefta`, `coop-oth`,
+`coop-prv-clcu-eu-efta`, `coop-prv-clcu-nat`, `coop-prv-clcu-neu-nefta`,
+`coop-prv-cn-neu-nefta`, `coop-prv-comp-eu-efta`, `coop-prv-comp-nat`,
+`coop-prv-comp-neu-nefta`, `coop-prv-oth-eu-efta`, `coop-prv-oth-nat`,
+`coop-prv-oth-neu-nefta`, `coop-prv-suppl-eu-efta`, `coop-prv-suppl-nat`,
+`coop-prv-suppl-neu-nefta`, `coop-pub-clcu-eu-efta`, `coop-pub-clcu-nat`, `coop-rnd`,
+`coop-univ-eu-efta`, `coop-univ-nat`, `coop-univ-neu-nefta`, `deve-pcs-ent`,
+`deve-pcs-ent-adp`, `deve-pcs-ent-oth`, `deve-pcs-oth`, `deve-prd-adp-ent-oth`,
+`deve-prd-ent`, `deve-prd-ent-oth`, `deve-prd-oth`, `env-enagr`, `env-encost`,
+`env-enereg`, `env-enetx`, `env-enregf`, `env-enrep`, `env-enrequ`,
+`exp-inno-inn-xrnd-own-per`, `exp-inno-rnd-contr-out`, `exp-inno-rnd-ih`,
+`fund-aut-loc-reg`, `fund-debt-succ-rndinn`, `fund-equit-succ-rndinn`, `fund-eu-oth`,
+`fund-gov-ctl`, `inna-abdn`, `inna-ongo`, `inno-pcs-log`, `inno-pcs-prd`, `inno-prd-gd`,
+`inno-prd-new-ent`, `inno-prd-new-mkt`, `inno-prd-serv`,
+`innovationsutgifter-kapitalvaror`, `ipr-monsterskydd`, `ipr-out-cpr`, `ipr-out-exch`,
+`ipr-out-lic`, `ipr-patent`, `ipr-varumarke`, `stra-fbrgs`, `stra-fcsol`,
+`stra-festcus`, `stra-fhqual`, `stra-fimpgs`, `stra-flowp`, `stra-fnwcus`, `stra-fnwgs`,
+`stra-fsmgs`, `stra-fstdgs`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`exp-inno-inn-xrnd`, `exp-inno-inn-xrnd-oth`, `innovationsutgifter-tjanster-material`.
+
+## scb/intradet-pa-arbetsmarknaden
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`nvarchar`.
+
+`lilla-n-per-stratum`, `stora-n-per-stratum`.
+
+## scb/investeringsenkaten
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`investeringar-leasing-datorstryda`, `investeringar-leasing-ovrig-data`,
+`investeringar-leasing-ovriga-maskiner`, `investeringar-leasing-transport`,
+`investeringar-underhall-maskiner`, `investeringar-verkstallda-anlaggningar`,
+`investeringar-verkstallda-bostader`, `investeringar-verkstallda-maskiner`,
+`investeringar-verkstallda-ny-ombyggnad`, `investeringar-verkstallda-programvaror`,
+`varde-investeringar`, `venr`, `verkstallda-transport-bilar`,
+`verkstallda-transport-bussar`, `verkstallda-transport-flygplan`,
+`verkstallda-transport-ovrigt`, `verkstallda-transport-rullande`.
+
+## scb/iot
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`numeric`, `smallint`, `tinyint`.
+
+`bbind`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`smallint`, `tinyint`, `varchar`.
+
+`taxeringskod`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `int`,
+`numeric`.
+
+`belkod`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `numeric`,
+`smallint`, `tinyint`.
+
+`bkupos`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`smallint`, `tinyint`, `varchar`.
+
+`objekttyp-langdtillhorighet`, `senaste-invandringsar`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`smallint`, `varchar`.
+
+`civilstandsdatum`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`tinyint`, `varchar`.
+
+`antal-barn-16-17-ar`, `antal-barn-under-16-ar`, `huvudpost-taxering`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`.
+
+`bostadsbidrag-och-bostadstillagg-individ`,
+`bostadstillagg-sarskilt-pensionarer-individ`, `bostbidrfam`, `familjestod-skattefritt`,
+`foraldrapenning-skattepliktig-individ`, `givet-underhallsbidrag-individ`,
+`inkomst-av-kapital-familj`, `militar-utbildning-ersattning`,
+`mottaget-underhallsbidrag-individ`, `negativa-transfereringar-individ`,
+`ovriga-negativa-transfereringar-individ`, `pblivsf`,
+`skattefri-pension-pensionstillagg-individ`, `sredrot`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `numeric`.
+
+`arbetsinkomst-familj`, `beskattningsbar-formogenhet`, `carb-2`, `csfvi`,
+`delkomponent-disponibel-inkomst`, `disponibel-inkomst-familj`,
+`disponibel-inkomst-per-ke-familj`, `inkomst-av-kapital`, `loneinkomst-familj`,
+`pension-ku-familj`, `pkontr`, `pkontrh`, `skattepliktig-formogenhet`,
+`skattepliktig-formogenhet-familj`, `slutlig-skatt-exkl-egenavgifter-familj`, `sslut`,
+`tlont`, `transfereringar-positiva-skattepliktiga`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `numeric`, `tinyint`.
+
+`tarbforh`, `tpenbidh`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `smallint`.
+
+`barnpension-livranta-skattefri-familj`, `bbidrf`, `bostadstillagg-sarskilt-familj`,
+`foraldrapenning-barns-fodelse`, `givet-underhallsbidrag-familj`,
+`handikappsersattning-familj`, `istudh`, `mottaget-bidragsforskott-familj`,
+`mottaget-bidragsforskott-individ`, `skattefri-sjukpenning-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `smallint`, `tinyint`.
+
+`aterbetalt-studielan-familj`, `medgivet-grundavdrag`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `tinyint`.
+
+`cfakth`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`.
+
+`aktieutdelning`, `alderspension-individ`,
+`allman-pension-inklusive-delpension-individ`, `avdrag-realisationsforlust-kapital`,
+`avkastningsskatt-innevarande-ar`, `avyttring-andel-vardepappersfond`, `bankrantor`,
+`beskattningsbar-formogenhet-familj`, `beskattningsbar-kapitalinkomst-individ`,
+`betalning-avyttrade-terminskontrakt`, `bruttoinkomst-familj`, `deklarerad-formogenhet`,
+`delkomponent-disponibel-inkomst-2004`, `disponibel-inkomst-familj-2004`,
+`disponibel-inkomst-per-ke-familj-2004`, `ersattning-slutford-terminsaffar`,
+`familjens-sammanlagda-formogenhet`, `fastighetsskatt-hyreshus-lokal`,
+`fastighetsskatt-industri`, `fordran-pa-bankmedel`, `kakutot`,
+`kapitalforlust-annan-fond-rantefond`, `kapitalforlust-brutto-individ`,
+`kapitalforlust-fonder`, `kapitalvinst-brutto-individ`, `kapitalvinst-fonder`, `kkueho`,
+`kkufors`, `kkuinv`, `kkuinvt`, `kkuorta`, `mottaget-gavobelopp`,
+`negativa-transfereringar-2004-individ`, `nettoformogenhet`, `nkiskog`, `nkunar`,
+`nkuroy`, `nkusam`, `nkuskog`, `nuakte`, `nupase`, `omsattning`,
+`outnyttjat-underskott-fran-tidigare-ar`,
+`pension-livranta-skattepliktig-skattefri-individ`,
+`pension-och-livranta-skattepliktig-individ`,
+`pensioner-bidrag-exkl-arbetsmarkn-individ`, `pensionsforsakring-inbetalt`, `ptillp`,
+`ptilp37`, `rantebidrag-smahus-hyresfastigheter`, `realisationsvinst-kapital`,
+`sammanlagd-formogenhet-familj`, `sammanraknad-forvarvsinkomst-familj`,
+`schablonintakt-investeringsfond`, `schablonintakt-isk-innehav`, `skatt-hek-individ`,
+`skatt-utdelning-delagarratter-ku31`, `skattepliktig-formogenhet-egen`, `skutj`,
+`skuutli`, `skuvp`, `statlig-inkomstskatt-forvarv-individ`,
+`statlig-inkomstskatt-kapitalinkomster-individ`,
+`statlig-kommunal-inkomstskatt-individ`, `summa-positiva-transfereringar-individ`,
+`tomtrattsavgald`, `underlag-skattereduktion-akassa-avgift`,
+`underskott-aktiv-naringsverksamhet-individ`, `underskott-naringsverksamhet`,
+`utlandsk-forsakring-foregaende-ar`, `vardepapperrantor`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`, `smallint`.
+
+`ackumulerad-studieskuld`, `avdrag-resor-till-fran-arbetet`, `egenavgifter-individ`,
+`foraldrapenning-vab`, `kostnadsersattning-tjanst`, `sociala-formaner-tjanst-individ`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`, `smallint`, `tinyint`.
+
+`avkastningsskatt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`, `tinyint`.
+
+`faktorinkomst-individ`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `numeric`.
+
+`utbetalt-belopp-obligationer-mm`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`ainjo`, `ainro`, `aintj`, `alav`, `bar`, `binjo`, `binro`, `bintj`, `cdispp`,
+`cfvikish`, `dagpenning-vid-arbetsloshet`, `disponibel-inkomst-3`,
+`disponibel-inkomst-exkl-kapitalvinst`, `disponibel-inkomst-exkl-kapitalvinst-hushall`,
+`disponibel-inkomst-exkl-kapvinst-2004`, `forvarvsinkomst-inkl-sjoinkomst-familj`,
+`givet-underhallsbidrag-hushall`, `hemvarn-ersattning`, `iutblanh`, `kbin`, `kfoav`,
+`mottaget-underhallsbidrag-hushall`, `naturaformaner`, `obe`,
+`ovriga-negativa-transfereringar-2004-hushall`,
+`ovriga-negativa-transfereringar-hushall`, `rekryteringsbidrag-antal-veckor`, `sbbin`,
+`sfoav`, `sjuk-smittbararpenning-a-intrade`, `sjukpenning-annan-forvarvsinkomst`,
+`sjukpenning-anstallning`, `spkbin`, `statlig-beskattningsbar-exkl-formaner`,
+`statlig-beskattningsbar-inkomst-4`, `stotex`, `stotexh`,
+`studiemedel-studiehjalp-summering`, `utokat-rekryteringsbidrag-veckor`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`ackumulerad-summa-a-skatt`, `ackumulerad-summa-b-skatt`, `carbh`, `formogenhetsskatt`,
+`inkomst-av-annan-fastighet`, `inkomst-tillfallig-forvarvsverksamhet`, `insjor`,
+`insror`, `intj`, `kommunal-inkomstskatt`, `kommunalskattesats`,
+`kommunalt-taxerad-inkomst`, `pension-skattepliktig`,
+`sammanraknad-forvarvs-och-kapitalinkomst`, `sjomansskatt-beskattningsbar-inkomst`,
+`statlig-inkomstskatt`, `statligt-taxerad-inkomst`, `underskott-i-forvarvskalla`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`, `smallint`.
+
+`pfp`, `transfereringar-netto-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`arbetsskadeersattning-familj`, `isocbidh`, `kommunalt-extra-avdrag`,
+`ovriga-utbildningsbidrag-familj`, `pkuslsf`, `sjomansskatt`, `sjukpenning-familj`,
+`statligt-extra-avdrag`, `studiepenning-skattepliktig-familj`, `tarbsth`,
+`vuxenstudiestod-bidrag-ovriga-familj`, `vuxenstudiestod-lan-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`, `tinyint`.
+
+`ensamforalderbidrag-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `tinyint`.
+
+`ivpltoth`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `numeric`, `smallint`.
+
+`konsumtionsenheter-familj`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`allmanna-avdrag`, `arbink`, `avkforl`, `avlomk`, `avsforl`, `avuskv`, `bkuand`,
+`bkuandel`, `bostadsratt-forvarv-reparationsfond`,
+`bostadsratt-overlatelse-reparationsfond`, `bostadsrattens-formogenhetsvarde`,
+`bostadstillagg-familj`, `bruttoinkomst`, `dagsersattning-varnpliktiga`,
+`delkomponent-arbetsinkomst`, `din8`, `din88k`, `dinpp`, `dinpp88k`,
+`disponibel-inkomst-familj-2`, `disponibel-inkomst-familj-3`,
+`disponibel-inkomst-per-vuxen-familj-1986`,
+`disponibel-inkomst-per-vuxen-familj-ranta-utdelning`, `fackforeningsavgift`, `fbkap`,
+`fkuutf`, `fordran-pa-vardepapper`, `formansvarde-fribil`, `garantibelopp-fastighet`,
+`gemensam-skattepliktig-formogenhet`, `inasjor`, `inasror`, `inatj`, `inbsror`,
+`inkomst-av-tjanst-punkt-1`, `inkomst-av-tjanst-punkt-2`, `inlivr`, `kkopski`,
+`kkuanin`, `kontant-bruttolon-ku-punkt2`, `kontant-bruttolon-mm`, `kostnadsavdrag`,
+`kulon`, `kvinnans-sammanraknad-inkomst`, `penshel`, `pension-enligt-ku`, `penst`,
+`pkupens`, `rantet`, `rbel`, `sammanraknad-inkomst-familj-2`, `sink`, `sktill`, `sktot`,
+`sktotf`, `slutlig-skatt`, `ufasth`, `ufastj`, `ufasts`, `ukuakas`,
+`underlag-fastighetsskatt-hyreshus-0`, `underlag-fastighetsskatt-hyreshus-025`,
+`utbetalt-belopp-vardepapper`, `utdelningar-och-ranteinkomster`, `utillag`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`, `smallint`.
+
+`bostkf`, `periodiskt-understod-tjanst`, `sjuk-havandeskaps-smittbararpenning`,
+`sjukpenning-a-intrade`, `skattepliktiga-transfereringar-netto`, `skogsvardsavgift`,
+`studiepenning-skattepliktig`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`, `smallint`, `tinyint`.
+
+`underlag-skattereduktion-fackavgift`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`ovriga-utbildningsbidrag`.
+
+## scb/ireg
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`storan`.
+
+## scb/isen
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-anstallda-pa-arbetsstallet-anst`, `cfar-nummer-arbetsstalle`,
+`inkopsvarde-av-elenergi`, `inkopsvardet-av-den-inkopta-kvantiteten-varde`.
+
+## scb/it-anvandning
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`numeric`, `tinyint`.
+
+`anslutning-dsl-fiber`, `antal-16-ar-eller-mer-hushallet`,
+`antal-personer-under-16-ar-i-hushallet`, `data4c5`, `datb1`,
+`har-flyttat-eller-kopierat-filer`, `hushallets-nettoinkomst`,
+`kopt-andra-varor-eller-tjanster`, `kopt-bestallt-semesterinkvartering`,
+`kopt-biljetter-till-evenemang`, `kopt-bocker-tidningar-ink-e-bocker`,
+`kopt-datorer-eller-datautrustning`, `kopt-el-bestallt-datorbaserade-laromedel`,
+`kopt-filmer-musik-internet`, `kopt-hemelektronik-eller-kameror`, `kopt-hushallsvaror`,
+`kopt-klader-eller-sportartiklar`, `kopt-lakemedel`, `kopt-mat-eller-specerivaror`,
+`kopt-researrangemang-fardbiljetter`, `kopt-tjanster-tv-bredband-telefoni`,
+`kopt-varor-tjanster-fran-eu`, `kopt-varor-tjanster-fran-sverige`,
+`kopt-varor-tjanster-okant-land`, `kopt-varor-tjanster-utanfor-eu`,
+`kopt-video-dataspel-internet`, `myndighetskontakt-lamnat-uppgifter`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`numeric`, `tinyint`, `varchar`.
+
+`anvant-internet-halsoinformation`, `anvant-internet-nyheter`,
+`anvant-internet-salja-varor`, `anvant-internet-sokvaror-tjanster`,
+`myndighetskontakt-hamtat-info`, `myndighetskontakt-laddat-blanketter`,
+`nar-handlade-du-senast-via-internet`, `tillgang-internet-hemma`,
+`utfort-bankarenden-pa-natet`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`tinyint`.
+
+`anslutning-gsm`, `anslutning-modem-isdn`, `anslutning-satellit-wifi`,
+`anvant-fildelning-filmer-musik`, `anvant-formler-i-ett-kalkylark`,
+`anvant-internet-annans-hem`, `anvant-internet-for-soka-jobb`,
+`anvant-internet-fritidscenter`, `anvant-internet-hemma`,
+`anvant-internet-hos-myndighet`, `anvant-internet-i-skolan`, `anvant-internet-kurser`,
+`anvant-internet-pa-annan-plats`, `anvant-internet-pa-arbetsplats`,
+`anvant-internet-pa-bibliotek`, `anvant-internet-pa-hotspot`,
+`anvant-internet-pa-internetcafe`, `anvant-internet-resor`, `datc2`, `dator-hemma`,
+`ej-internet-andra-skal`, `ej-internet-dyr-uppkoppling`, `ej-internet-dyr-utrustning`,
+`ej-internet-funktionshinder`, `ej-internet-tillgang-annanstans`,
+`har-skapat-en-hemsida`, `installerat-en-ny-utrustning`,
+`inte-internet-pga-behover-inte-internet`, `inte-internet-pga-sakerhetsskal`,
+`inte-internet-saknar-kunskaper`, `internet-barbar-tradlost`,
+`internet-telefon-videosamtal`, `internetansl-mobiltelefon`,
+`komprimerat-eller-zippat-filer`, `kopierat-klistrat-i-dokument`,
+`kopt-aktier-eller-forsakringar`, `kopt-andra-programvaror-internet`,
+`kopt-nedladdad-film-musik`, `nedladdad-programvara-istallet-post`,
+`prenumererat-nyheter-internet`, `programmerat`, `skickat-meddelanden-chattrum`.
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`tinyint`, `varchar`.
+
+`fixbb-3`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`numeric`, `tinyint`, `varchar`.
+
+`datc1`, `internet-snabbmeddelanden`, `utbildningsinriktning-1-position`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`tinyint`, `varchar`.
+
+`sysselsattningstyp-skapad`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `tinyint`.
+
+`antal-vuxna-16-85-ar`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`numeric`, `tinyint`.
+
+`bor-ensam-eller-med-andra`, `ej-bankarenden-sakerhetsbekymmer`,
+`ej-internet-hemma-andra-skal`, `ej-internet-hemma-annanstans`,
+`ej-internet-hemma-behover-ej`, `ej-internet-hemma-dyr-uppkoppling`,
+`ej-internet-hemma-dyr-utrustning`, `ej-internet-hemma-sakerhetsskal`,
+`ej-internet-hemma-saknar-kunskaper`, `ej-laddat-mjukvara-sakerhetsbekymmer`,
+`ej-personlig-info-sakerhetsbekymmer`, `problem-info-garantier-kop`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`tinyint`.
+
+`anvander-internet-handdator`, `anvant-annan-mobil-uppkoppling`,
+`anvant-dator-berakningar`, `anvant-epost-bifogade-filer`, `anvant-internet-for-e-post`,
+`anvant-internet-skapat-webbsida`, `anvant-internet-sokmotor`,
+`anvant-internet-sokvaror`, `anvant-webbradio-webbtv`, `betalning-betaltjanst-internet`,
+`betalning-internetbank`, `betalning-kreditkort-internet`, `datakunskaper-bytajobb`,
+`datd9a`, `datd9c`, `datd9d`, `datd9e`, `datd9f`, `datd9g`, `datoranv-komprimera-filer`,
+`datoranv-kopiera-flytta-fil`, `datoranv-kopiera-klistra-dokument`,
+`drabbats-barn-olampliga-sidor`, `drabbats-forlora-pengar-kortbedragerier`,
+`drabbats-missbruk-personlig-info`, `drabbats-virus-datorinfektion`, `eget-domannamn`,
+`ej-kopt-internet-ej-kunna-returnera`, `ej-kopt-varor-sakerhetsbekymmer`,
+`ej-mobil-internet-sakerhetsbekymmer`, `fritid-internet-ladda-dataspel`,
+`fritid-internet-podradio`, `installerat-tillbehor`, `internet-stationar-dator`,
+`internet-via-barbar-dator`, `internet-via-spelkonsol`, `kopt-datorbaserade-laromedel`,
+`mobiluppkoppling-3g`, `planerar-registrera-domannamn`, `problem-annat-vid-internetkop`,
+`skrivit-datorprogram`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `numeric`,
+`tinyint`.
+
+`ej-kopt-internet-sakerhetsskal`, `ej-myndigheter-sakerhetsbekymmer`.
+
+## scb/ivp
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`prodvarde`.
+
+## scb/klk
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-arbetade-timmar-manadsavlonade`, `antal-arbetade-timmar-timavlonade`, `antarm`,
+`antart`, `justlonsum`, `retbel`, `telsumm`, `telsumt`, `utbretro`, `utlsumm`,
+`utlsumt`.
+
+## scb/klp
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`mthelt`.
+
+## scb/klr
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-arbetade-timmar-manadsavlonade`, `antal-arbetade-timmar-timavlonade`, `antarm`,
+`antart`, `rortm`, `rortt`, `sjuklm`, `sjuklt`, `telsumm`, `telsumt`, `utbretro`,
+`utlsumm`, `utlsumt`.
+
+## scb/kommunalekonomisk-utjamning
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `int`, `numeric`.
+
+`regionens-folkmangd-1-november-t-1`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`<undefined>`, `Decimaltal`, `Heltal`, `float`.
+
+`personalkostnadsindex-pk-ix`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`<undefined>`, `Heltal`, `float`.
+
+`ersattning-forsakringskassan-assistans`, `grundlaggande-standardkostnad`,
+`lss-insatser-standardkostnad-pk-ix`, `lss-utjamningsavgift-kr`,
+`lss-utjamningsbidrag-kr`, `slutlig-standardkostnad-lss-insatser-kr`,
+`slutlig-standardkostnad-lss-insatser-tkr`, `summa-beraknade-personalkostnader`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`folkm0630l`, `folkm1231l`, `folkm1231l-2`.
+
+## scb/komvux
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`, `smallint`.
+
+`poang`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`totalt-poang-slutbetyg`.
+
+## scb/komvux-sfi
+
+**also has a nonnumeric type family; requires review.** Source types: `int`, `numeric`,
+`varchar`.
+
+`utbildning`.
+
+## scb/konjunkturstatistik-industri
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`levinom`, `levtot-2`, `orde`, `ordh`, `ordtot`, `produktionsvolymer`, `venr`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `tinyint`.
+
+`antal-arbetade-timmar`.
+
+## scb/ks
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`sjukfranvaro-kv`, `sjukfranvaro-man`, `tillsvid-kv`, `tillsvid-man`, `visstid-kv`,
+`visstid-man`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`aktuellt-antal-anstallda`.
+
+## scb/ksju
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`delantdagar`, `helantdagar`.
+
+## scb/lbr
+
+**also has a nonnumeric type family; requires review.** Source types: `(blank)`, `char`,
+`float`, `smallint`, `varchar`.
+
+`djurid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`(blank)`, `float`, `int`, `numeric`.
+
+`antal-djur`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`amkor`, `antal-hons`, `antal-mjolkkor-lbr`, `baggar`, `galtar`, `hastar`,
+`honsaggprod`, `honsuppfslaktkyckl`, `kalkon`, `kvig12`, `kvig2`, `kvigkalv`, `lamm`,
+`lantbruk-foretags-id`, `slaktkyckl`, `slaktkyckling-normomgang`, `slaktsvin`,
+`slaktsvin-normomgang`, `smagrisar`, `suggor`, `sumfar`, `sumhons`, `sumsvin`,
+`tackbagg`, `tackor`, `tjur-stutkalvar`, `tjurar-stutar-1-2-ar`,
+`tjurar-stutar-2-ar-over`, `totalt-antal-notdjur`, `varpkyckl`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`areal-av-grodan`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`aker`, `aktuell-areal-havre`, `aktuell-areal-slattervall`, `areal-betesmark`,
+`areal-frovall`, `areal-ovrig-mark`, `areal-skogsmark`, `betesvall`,
+`blandsad-areal-i-ha`, `ej-utnyttjad-betesmark`, `energiskog`,
+`fabrikspotatis-ej-bevattnad`, `foderarter`, `gronfoder`, `hostkorn`, `hostrybs`,
+`hostvete`, `konsarter`, `matpotatis`, `potatis-for-starkelse`, `ragvete`,
+`sockerbetor`, `totala-areal`, `totala-frilandssareal`, `totala-vaxthusyta`, `trada`,
+`tradgard-areal-i-ha`, `utarrenderad-akermark`, `utnyttjad-betesmark`, `vallejutn`,
+`varrybs`.
+
+## scb/lcs
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antal-svarande-enheter`, `renr`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`anstallda-register`, `lillan`, `storan`.
+
+## scb/linda
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`smallint`, `varchar`.
+
+`datum-civilstandsandring`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`tinyint`, `varchar`.
+
+`antal-manader-grundavdrag`, `antal-manader-med-socialbidrag`, `bdebsed`, `bkaptax`,
+`bomrak`, `icke-territoriell-forsamling`, `nolltaxering`, `objekttyp-langdtillhorighet`,
+`posttyp`, `yrkesstallning-arbetsinkomst-0`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`, `int`,
+`varchar`.
+
+`bcivdat`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`tinyint`, `varchar`.
+
+`bpens`, `civilstand-inkomstar`, `senast-kanda-civilstand`, `skatteform-31-12`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`.
+
+`identitetsnummer-hushall`, `scbid`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `smallint`.
+
+`skattepliktiga-transfereringar-netto`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`abegr`, `aklsk`, `akyrk`, `aldreforsorjningsstod`,
+`antal-personer-urvalsramen-panelurvalet`, `antal-personer-urvalsramen-utrikesfodda`,
+`antal-urvalspersoner-panelurvalet`, `antal-urvalspersoner-utrikesfodda`,
+`arbetsinkomst-2`, `arbetsinkomst-av-tjanst`,
+`arbetsinkomst-enligt-uttrycklig-definition-2003`, `arbetsmarknadsforsakringar`,
+`bbtpink`, `beskattningsbar-formogenhet`, `beskattningsbar-formogenhet-familj`,
+`beskattningsbar-kapitalinkomst`, `bidnrh`, `blillanp`,
+`bostadsbidrag-barnfamiljer-mfl`, `bostadsbidrag-och-bostadstillagg`,
+`bostadsrattens-formogenhetsvarde`, `bostadsrattens-formogenhetsvarde-familj`,
+`bstoranp`, `carbl`, `cbefvi`, `cbrutto`, `cdispl`, `cdisplh`, `cfaktl`, `cnegl`,
+`covrn03`, `ctxfvi`, `delkomponent-disponibel-inkomst`,
+`delkomponent-till-disponibel-inkomst-kallfalt-cdisp03`,
+`ersattning-amprogram-skattepliktig`, `ersattning-varnpliktiga-totalt`,
+`faktorinkomst-individ`, `familjens-sammanlagda-formogenhet`,
+`fastighetsskatt-hyreshus-lokal`, `fastighetsskatt-industri`, `fordran-pa-bankmedel`,
+`fordran-pa-vardepapper`, `formansvarde-fribil`, `formogenhet-ovriga-tillgangar`,
+`formogenhet-ovriga-tillgangar-familj`, `formogenhetsskattepliktiga-forsakringar`,
+`formogenhetsvarde-fastighet-familj`, `formogenhetsvarde-fastighetsinnehav`,
+`formogenhetsvarde-kapital`, `formogenhetsvarde-kapital-familj`, `forsorjningsstod`,
+`forvarvs-kapitalinkomst-familj`, `forvarvs-och-kapitalinkomst`,
+`forvarvsinkomst-inkl-sjoinkomst`, `givet-underhallsbidrag`, `hemvarn-ersattning`,
+`iintro`, `inkomst-av-kapital`, `inkomster-reducerar-sga`,
+`inkomstranta-utdelning-kapital`, `introduktionsersattning-flyktingar`,
+`kommunal-inkomstskatt-exkl-fast`, `kommunalskattesats`,
+`kommunalt-beskattningsbar-forvarvsink`, `kommunalt-taxerad-forvarvsinkomst`,
+`kontant-bruttolon-mm`, `landstingsskattesats`, `loneinkomst`, `manadslon`,
+`militar-utbildning-ersattning`, `mottaget-underhallsbidrag`,
+`negativa-transfereringar`, `pensioner-bidrag-exkl-arbetsmarkn`, `presta`, `prestpr`,
+`realisationsvinst-kapital`, `sammanraknad-forvarvsinkomst`,
+`sammanraknad-forvarvsinkomst-familj`, `sjoinkomstavdrag`, `skattepliktig-formogenhet`,
+`skattepliktig-formogenhet-sambeskattad`, `slutlig-skatt`,
+`slutlig-skatt-exkl-egenavgifter`, `sslutexl`,
+`statlig-beskattningsbar-forvarvsinkomst`, `statlig-kommunal-inkomstskatt`,
+`statlig-taxerad-kapitalinkomst`, `statligt-taxerad-forvarvsinkomst`,
+`summa-forvarvs-och-kapitalinkomster`, `summa-lon-formaner-ku`,
+`summa-skattepliktiga-formaner`, `summa-skuldbelopp-formogenhet`, `tsal`,
+`underlag-fastighetsskatt-hyreshus-0`, `underlag-fastighetsskatt-hyreshus-05-2`,
+`underlag-fastighetsskatt-hyreshus-125`, `underlag-fastighetsskatt-hyreshus-25`,
+`underlag-fastighetsskatt-smahus-05-2`, `underlag-fastighetsskatt-smahus-10-2`,
+`underlag-fastighetsskatt-smahus-15`, `underlag-fastighetsskatt-smahus-utland`,
+`underskott-aktiv-naringsverksamhet`, `underskott-passiv-naringsverksamhet`,
+`utbetalt-belopp-vardepapper`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`dodsdatum`, `emigrationsdatum`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`ackumulerad-studieskuld`, `aktieutdelning`, `allman-pension-tillaggspension-tjanst`,
+`allman-pension-tjanstepension-summa`, `allmant-avdrag-pensionsforsakring`,
+`allmant-avdrag-periodiskt-understod`, `ampens`, `arbetsskadelivranta`,
+`aterbetalt-studielan`, `avdrag-dubbel-bosattning-tjanst`,
+`avdrag-forvaltningskostnad-kapital`, `avdrag-realisationsforlust-kapital`,
+`avdrag-resor-till-fran-arbetet`, `avdrag-skuldranta-kapital`, `avdrag-tjansteresor`,
+`avdrag-vid-sjomansbeskattning`, `bankrantor`, `barnbidrag-forlangt-flerbarnstillagg`,
+`barnpension-skattefri-del`, `bbtpyta`, `bostadstillagg-pensionarer`, `covrnegl`,
+`debiterad-f-och-sa-skatt`, `delpension`, `egenavgifter`,
+`ersattning-forsakringskassa-ku`, `ersattning-grund-egenavgifter-tjanst`,
+`ersattning-inkomst-anstallning`, `familjestod-skattefritt`, `fastighetsskatt`,
+`folkpension`, `foraldrapenning-barns-fodelse`, `foraldrapenning-skattepliktig`,
+`foraldrapenning-vab`, `formogenhetsskatt`, `frivillig-pension-skattepliktig`,
+`givet-underhallsbidrag-aterbetalt`, `handikappersattning`,
+`inkomst-aktiv-naringsverksamhet`, `inkomst-av-naringsverksamhet`,
+`inkomst-ej-pensionsgrundande`, `inkomst-passiv-naringsverksamhet`, `istudsfl`,
+`kapitalinkomster-bank-aktier`, `kommunal-inkomstskatt-forvarvsink`,
+`kostnadsersattning-tjanst`, `medgivet-sarskilt-grundavdrag`,
+`mottaget-bidragsforskott`, `ovriga-inkomster-egenavgifter`,
+`ovriga-kostnadsersattningar`, `ovriga-positiva-transfereringar`,
+`ovriga-skattepliktiga-ers-tjanst`, `pension-skattefri`, `pension-skattepliktig`,
+`periodiskt-understod-tjanst`, `pgi-annat-forvarvsarbete`, `pgi-anstallning`,
+`preliminar-f-sa-skatt-overbetalt`, `preliminarskatt-fortidsaterbetald`,
+`privat-pensionsforsakring-livranta`, `privat-pensionsforsakring-sparkonto`,
+`privat-pensionsforsakring-tjanst`, `rantebidrag-smahus-hyresfastigheter`,
+`rehabiliteringsersattning`, `sarskild-loneskatt-forvarvsinkomster`,
+`sarskilt-bostadstillagg-pensionarer`, `sarskilt-bostadstillagg-till-pens`,
+`sarskilt-pensionstillagg`, `sjomansskatt`, `sjuk-havandeskaps-sjuklonegaranti`,
+`skattefri-del-livranta-pension`, `skattereduktion-underskott-kapital`, `skattetillagg`,
+`sociala-formaner-tjanst`, `socialbidrag-inkl-introduktion`,
+`statlig-inkomstskatt-forvarv`, `statlig-inkomstskatt-kapitalinkomster`,
+`statlig-tjanstepension-inkl-kapan`, `studiemedel-studiehjalp-lan-och-bidrag`,
+`studiepenning-skattepliktig`, `summa-pension-ku`, `tarbstl`, `tillaggspension`,
+`tjanstepension-itp`, `totalt-arbetsmarknadsstod`,
+`transfereringar-positiva-skattefria`, `transfereringar-positiva-skattepliktiga`,
+`tsjpersl`, `tstudl`, `underlag-fastighetsskatt-smahus-0`,
+`underlag-fastighetsskatt-utland-15`, `underlag-skattereduktion-fackavgift`,
+`utbildningsbidrag-doktorander`, `vardepapperrantor`, `vuxenstudiestod`,
+`vuxenstudiestod-lan`, `vuxenstudiestod-studiebidrag-ovriga`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`, `tinyint`.
+
+`arbetsskadeersattning`, `avkastningsskatt`, `forseningsavgift`,
+`frivillig-pension-skattefri`, `isjukl`, `medgivet-grundavdrag`, `narstaendepenning`,
+`sjukpenning-skattefri`, `tjanstepension-kpa`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `tinyint`.
+
+`antal-panelurvalet-familjen`, `antal-utrikesfodda-i-urvalet-familjen`,
+`antal-utrikesfodda-urvalet-familjen`, `bant`, `bintman`, `bishbii`, `ivpltotl`,
+`tjanstepension-stp`, `underlag-fastighetsskatt-hyreshus-025-2`, `valdistriktskod`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `smallint`.
+
+`bostadsbidrag-barnfamiljer`, `inkomst-ku-nolltaxerade`, `ovriga-avdrag-kapital`,
+`sarskild-loneskatt-pensionsutfastelse`, `skattereduktion-for-fackforeningsavgift`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `smallint`, `tinyint`.
+
+`ensamforalderbidrag`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `tinyint`.
+
+`bantp`, `bostadsbidrag-ungdomar-ovriga`, `ersattning-varnplikt-grundutbildning`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`bcivdatr`, `uppr`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`int`, `tinyint`.
+
+`kon`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`tinyint`.
+
+`yrkesstallning`.
+
+**value set: 3 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `tinyint`.
+
+`burvkodp`.
+
+## scb/lisa
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`karensers-bdag`, `lone-eller-foretagarinkomst`.
+
+## scb/livsmedelsforsaljning
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`nvarchar`, `tinyint`.
+
+`blankettnummer`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`lillan`, `storan`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `float`,
+`smallint`.
+
+`agg-fran-frigaende-hons`, `eko`, `emv`.
+
+## scb/lsum
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `decimal`, `float`, `int`, `numeric`.
+
+`loneink`, `skatt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `decimal`, `float`, `numeric`.
+
+`summerade-formaner`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `decimal`, `int`, `numeric`.
+
+`antal-km-milersattning`, `beters`, `ersattning-egenavgifter`, `forman`,
+`kostnadsersattningar`, `ovriga-ersattningar`, `ovriga-skattepliktiga-ersattningar`,
+`tjanstepension`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `decimal`, `int`, `numeric`, `tinyint`.
+
+`bilforman`, `bransleforman`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`, `numeric`.
+
+`avdrag-vissa-lonetillagg`, `ersattning-resa-utomlands-bosatta`, `hyresersattning`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`.
+
+`rutunderlag`, `skattepliktiga-ersattningar-ej-sociala`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`kostnadsavdrag`, `ranta`.
+
+## scb/namnstatistik
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numerisk`.
+
+`antal-efternamn`, `antal-fornamn`, `antal-tilltalsnamn`.
+
+## scb/nystartade-foretag-kvartal
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-sysselsatta`, `fenr`.
+
+## scb/ombyggnad-och-rivning
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`rivnings-id`.
+
+## scb/pin
+
+**also has a nonnumeric type family; requires review.** Source types: `int`, `numeric`,
+`nvarchar`.
+
+`venr`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `float`, `numeric`, `tinyint`.
+
+`kapacitetsutnyttjandet`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`aktanst`, `ufakt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`, `smallint`.
+
+`lillan`, `stratum-storlek`.
+
+## scb/prisindex
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `smallint`.
+
+`kvalbel`, `observerad-kvantitet`.
+
+## scb/psu
+
+**also has a nonnumeric type family; requires review.** Source types: `decimal`,
+`float`, `int`, `numeric`, `varchar`.
+
+`fr9`.
+
+**also has a nonnumeric type family; requires review.** Source types: `decimal`,
+`numeric`, `tinyint`, `varchar`.
+
+`sei-i-huvudsysslan`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `numeric`.
+
+`tgrad`.
+
+## scb/rams
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`.
+
+`summerad-inkomst-ast`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`.
+
+`inkomst-aktiv-enskild-naringsverksamhet`, `lone-eller-foretagarinkomst`, `loneink`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`fad-f-id`, `g`.
+
+## scb/rpu
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `int`,
+`numeric`.
+
+`senaste-invandringsar`, `studiemedel-studiebidrag`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`ctxfvi`.
+
+## scb/rtb
+
+**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `float`, `int`, `tinyint`.
+
+`alderh`.
+
+## scb/slk
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`numeric`, `smallint`.
+
+`alder`.
+
+## scb/slp
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `int`, `numeric`.
+
+`lopnummer`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`antal-overtidstimmar`, `faktiskt-arbetad-tid`, `lillanarb`, `lillanovr`,
+`lonesumma-jour-beredskap`, `lonesumma-skift-ob`, `lonesumma-totalt`,
+`manadslon-totallon`, `mjourber`, `mlong`, `mskift`, `nsvararb`, `nsvarovr`,
+`storanarb`, `storanovr`, `sumhelglon`, `sumlong`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`real`.
+
+`antal-anstallda-enligt-fdb`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`tjanstgoringsomfattning`.
+
+## scb/slr
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`tinyint`, `varchar`.
+
+`tjanstledighetskod`.
+
+**also has a nonnumeric type family; requires review.** Source types: `float`,
+`numeric`, `tinyint`, `varchar`.
+
+`alder`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `numeric`, `smallint`.
+
+`antal-arbetade-timmar-manadsavlonade`, `antal-arbetade-timmar-timavlonade`.
+
+## scb/sls
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`.
+
+`fasta-lonetillagg`, `lon-exklusive-tillagg-ojusterad`, `naturaformaner`, `ovrrorlon`,
+`prestationslon`, `tim-dag-och-veckolon`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`numeric`.
+
+`beredskapstillagg`, `foraldrapenningtillagg`, `jourtillagg`, `mertidstillagg`,
+`obekvamtidstillagg`, `overtidstillaggenkel`, `overtidstillaggkval`, `semestertillagg`,
+`tidforskjutningstillagg`, `tjansteresetillagg`.
+
+## scb/smaorter
+
+**no value set; decimal source declarations lack explicit scale.** Source types: `int`,
+`real`.
+
+`area-ha`.
+
+## scb/specialskola
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`numeric`, `smallint`.
+
+`meritvarde`.
+
+## scb/sru
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`.
+
+`ackumulerade-overavskrivningar`, `aktier-svenska-koncern-intresse`,
+`aktier-utlandska-koncern-intresse`, `aktiverat-arbete-for-egen-rakning`,
+`allmanna-avdrag-979`, `andra-finansiella-anlaggningstillgangar`,
+`andra-intakter-ej-bokforda`, `andra-kostnader-ej-bokforda`,
+`anskaffningar-markanlaggningar`, `anskaffningsvarde-markanlaggningar`,
+`arets-aterforing-periodiseringsfond`, `arets-avsattning-periodiseringsfond`,
+`arets-beraknade-avdrag-egenavgifter`, `arets-resultat-forlust-v0369`,
+`arets-resultat-vinst-v0368`, `aterforing-fran-periodiseringsfond-875`,
+`aterforing-fran-periodiseringsfond-sru`, `aterfort-uppskov-kapitalvinst-n4`,
+`avdrag-egenavgifter-beraknat`, `avdrag-egenavgifter-fg-ar`,
+`avgar-annans-resultatandel`, `avsattning-periodiseringsfond-30`,
+`avsattning-periodiseringsfond-30pct`, `avsattning-periodiseringsfond-skilda-ar`,
+`avsattning-till-periodiseringsfond-953`, `avsattning-till-periodiseringsfond-sru`,
+`avsattningar-for-garantier`, `avsattningar-for-pensioner`,
+`avskrivning-markanlaggningar`, `avskrivningar-ack-markanlaggningar`,
+`avskrivningar-byggnader-fast-egendom`, `avskrivningar-immateriella-tillgangar`,
+`avskrivningar-maskiner-inventarier`, `avskrivningsunderlag-markanlaggningar`,
+`avyttring-delagarratter-aterfort-uppskov`, `avyttring-delagarratter-bokford-forlust`,
+`avyttring-delagarratter-bokford-vinst`, `avyttring-delagarratter-kapitalforlust`,
+`avyttring-delagarratter-kapitalvinst`, `avyttring-fastighet-bokford-forlust`,
+`avyttring-fastighet-bokford-vinst`, `avyttring-fastighet-kapitalforlust`,
+`avyttring-fastighet-kapitalvinst`, `avyttring-vardepapper-kapitalforlust`,
+`avyttring-vardepapper-kapitalvinst`, `begart-uppskov-andelsbyten-139`,
+`begart-uppskov-min-andel-harav-148`, `begransat-ansvar-kommanditdelagare`,
+`beraknad-sarskild-loneskatt-pension`, `bokforda-intakter-ej-tas-upp`,
+`bokforda-intakter-ej-tas-upp-ackord`, `bokforda-kostnader-ej-avdrag`,
+`bokforda-kostnader-nedskrivning`, `bokforda-kostnader-svenska-skatter`, `byggnader`,
+`delagarens-inkomst-overskott`, `delagarens-ovriga-uttag`, `delagarens-tillskott`,
+`delagarens-uttag-formaner`, `delagarens-uttag-hb`,
+`egen-pensionsforsakringspremie-820`, `eget-kapital-och-skulder`,
+`ej-utnyttjat-underskott-fg-ar`, `erhallna-koncernbidrag-uppskov-975`,
+`ersattning-avyttrade-inventarier`, `expansionsfond-vid-arets-ingang`,
+`expansionsfond-vid-arets-utgang`, `expansionsfondsskatt-att-betala`,
+`expansionsfondsskatt-tillgodoforas`, `fordelningsbelopp-negativt-862`,
+`fordelningsbelopp-positivt-861`, `fordringar-pa-koncern-och-intresseforetag-v0241`,
+`forlust-avyttring-anlaggningstillgangar`, `forlust-avyttring-vardepapper`,
+`formansvardet-fri-bil`, `forskott-fran-kunder`, `hyresvardet-fri-bostad-formaner`,
+`ianspraktagna-fonder-markanlaggningar`, `inkomstfordelning-makar-avgar`,
+`inkomstfordelning-makar-tillkommer`, `justerad-anskaffningsutgift-812`,
+`justerad-anskaffningsutgift-883`, `justerad-anskaffningsutgift-fg-ar`,
+`justerad-anskaffningsutgift-negativ`, `kapitalforlust-fastighet-bostadsratt`,
+`kapitalintakter-903`, `kapitalunderlag-expansionsfond-868`, `kapitalvinst-904`,
+`kapitalvinst-fastighet-bostadsratt`, `korrigering-avskrivning-byggnader`,
+`korrigering-avskrivning-plus`, `kostnader-handelsvaror`,
+`kostnader-ovriga-sociala-avgifter`, `kvarvarande-underskott-854`,
+`lagerforandring-minskning`, `lagerforandring-okning`,
+`lamnade-koncernbidrag-och-uppskov-974`, `lamnat-koncernbidrag`, `lan-fran-aktieagare`,
+`langfristiga-skulder`, `legoarbeten-underentreprenorer`, `leverantorsskulder`,
+`loner-och-andra-ersattningar-sru`, `loneskatt-pensionsforsakringspremie`, `mark`,
+`maskiner-och-inventarier`, `min-andel-av-bolagets-overskott-826`,
+`min-andel-av-bolagets-underskott-827`, `min-andel-av-resultatet`,
+`minskning-av-expansionsfond-796`, `minskning-av-expansionsfond-864`,
+`minskning-av-expansionsfond-878`, `momsfri-omsattning`, `momsskuld-v0307`,
+`mottaget-koncernbidrag`, `negativ-rantefordelning-berakning`,
+`negativ-rantefordelning-punkt-44`, `negativt-justerad-anskaffningsutgift`,
+`negativt-kapitalunderlag-860`, `nettoomsattning`, `oavskrivet-varde-markanlaggningar`,
+`okning-av-expansionsfond-794`, `okning-av-expansionsfond-879`, `okning-expansionsfond`,
+`outnyttat-underskott-ej-paverkar`, `outnyttat-underskott-paverkar`,
+`outnyttjat-underskott-910`, `overlatelsevinst-handelsbolag`,
+`overskott-av-naringsverksamhet-966`, `overskott-paverkar-anskaffningsutgiften`,
+`ovriga-avsattningar`, `ovriga-kortfristiga-skulder-v0319`, `ovriga-kostnader`,
+`ovriga-lokal-och-fastighetsutgifter-v0528`, `ovriga-obeskattade-reserver`,
+`ovriga-personalkostnader`, `ovriga-rorelseintakter-v0401`, `ovriga-skatteskulder`,
+`ovrigt-fritt-eget-kapital`, `paford-egenavgift-fg-ar`,
+`paforda-egenavgifter-sarskild-loneskatt`, `pensionskostnader`,
+`periodiseringsfond-2003-taxering`, `periodiseringsfond-2004-taxering`,
+`periodiseringsfond-2005-taxering`, `periodiseringsfond-2006-taxering`,
+`periodiseringsfond-vid-2007-ars-taxering`, `positiv-rantefordelning-hb`,
+`positiv-rantefordelning-n6`, `positivt-justerad-anskaffningsutgift`,
+`positivt-kapitalunderlag-843`, `ranteformanligt-lan-handelsbolaget`,
+`ranteintakter-fran-ovriga`, `rantekostnader-till-ovriga`,
+`redovisad-forlust-enligt-bokforingen`, `redovisad-vinst-enligt-bokforingen`,
+`resekostnader-bostad-arbetsplats-bolag`, `resultat-n1-n2-n3b-overskott-908`,
+`resultat-n1-n2-n3b-underskott-909`, `resultat-overskott-829`,
+`resultat-underskott-850`, `sjukpenning-hanforlig-naringsv`,
+`sjukpenning-naringsverksamhet`, `skuldranta-m-m`, `sparat-fordelningsbelopp-fg-ar-863`,
+`sparat-fordelningsbelopp-fg-ar-885`, `sparat-rantefordelningsbelopp`,
+`standig-overgangspost-1995`, `summa-immateriella-anlaggningstillgangar-v0234`,
+`summa-kortfristiga-placeringar`, `summa-tillgangar`,
+`underskott-av-naringsverksamhet-968`, `underskott-paverkar-anskaffningsutgiften`,
+`underskott-sparas-efterfoljande-ar`, `upplupna-kostnader-forutbetalda-intakter`,
+`uppskov-att-ta-upp-som-intakt-837`, `uppskov-att-ta-upp-som-intakt-838`,
+`uppskov-kapitalvinst-n4`, `utdelning-aktier-andelar-koncern`,
+`utdelning-aktier-andelar-ovriga-foretag`, `utnyttjat-positivt-fordelningsbelopp`,
+`utnyttjat-underskott-786`, `utnyttjat-underskott-konstnarlig`,
+`utnyttjat-underskott-nystartad`, `v0360`, `v0362`, `v0363`, `v0370`, `v0511`, `v0514`,
+`v0526`, `v0529`, `v0531`, `v0536`, `v0538`, `v0541`, `v0552`, `v0553`, `v0554`,
+`v0570`, `v0571`, `v0578`, `v0590`, `v0593`, `v0594`, `v0600`, `v0601`, `v0605`,
+`v0606`, `v0629`, `v0634`, `v0635`, `v0636`, `v0637`, `v0639`, `v0640`, `v0652`,
+`v0653`, `v0706`, `v0707`, `v0708`, `v0710`, `v0711`, `v0712`, `v0713`, `v0720`,
+`v0721`, `v0722`, `v0724`, `v0725`, `v0726`, `v0738`, `v0739`, `v0748`, `v0749`,
+`v0750`, `v0751`, `v0752`, `v0756`, `v0757`, `v0758`, `v0760`, `v0762`, `v0790`,
+`v0807`, `v0808`, `v0810`, `v0811`, `v0886`, `valutakursforluster`, `valutakursvinster`,
+`vinst-avyttring-anlaggningstillgangar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`bigint`, `float`, `int`.
+
+`kassa-och-bank`, `summa-kortfristiga-fordringar`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`aktier-och-andelar`, `forutbetalda-kostnader-upplupna-intakter`, `kundfordringar`,
+`momsfordran-v0207`, `v0206`, `varulager`.
+
+## scb/stativ
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antal-barn-0-3-ar`, `antal-barn-16-17-ar`, `antal-barn-20-ar-eller-aldre`,
+`antal-barn-4-6-ar`, `barn11-15`, `barn18-19`, `barn7-10`,
+`sammanraknad-forvarvsinkomst`.
+
+## scb/tatorter
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`.
+
+`folkmangd`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`decimal`, `int`, `real`.
+
+`area-ha`.
+
+## scb/taxeringsutfallet
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`antbeskinkromkat-2`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `numeric`, `numerisk`.
+
+`antbeskforvink`, `antbeskinkevfriky`, `antbeskinkfrarmen`, `antbeskinkmetodist`,
+`antbeskinkmiky`, `antbeskinkpingst`, `antbeskinksvallians`, `antbeskinksvbaptist`,
+`antbeskinksvky`, `antbeskinksyrortpat`, `antfyspersskstat`, `antfyspersskstatovre`,
+`antnolltax`, `antoskkap`, `anttaxforvink`, `antuskkap`.
+
+## scb/tradbransle-torv
+
+**also has a nonnumeric type family; requires review.** Source types: `char`, `float`,
+`int`, `varchar`.
+
+`identitet`.
+
+## scb/ulf
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `int`.
+
+`antal-invanare-1-jan`, `antal-invanare-31-dec`, `arv-gavobelopp`, `ba0045-2`, `ba3511`,
+`ek0232`, `ek0501`, `ek0502`, `ek0506`, `ek0507`, `ek0508`, `ek0510`, `ki1423-2`,
+`km1423-2`, `sy0174`, `tr0213`, `tr0223`, `tr0233`, `tr0243`, `tr0253`, `tr0263`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `int`, `smallint`.
+
+`bostadshushallsvikt`, `ek0241`, `familjehushallsvikt`, `hushallsvikt`, `individvikt`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `int`, `tinyint`.
+
+`at0047`, `sy0160`, `sy0370`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `smallint`.
+
+`artal-pof`, `at0012`, `at0013`, `at0014`, `at0015`, `at0016`, `at0032`, `at0111`,
+`at0112`, `at0113`, `at0114`, `at0115`, `at0116`, `at0117`, `at0121`, `at0122`,
+`at0123`, `at0124`, `at0125`, `at0126`, `at0127`, `at0131`, `at0132`, `at0133`,
+`at0134`, `at0135`, `at0136`, `at0137`, `at0141`, `at0142`, `at0143`, `at0144`,
+`at0145`, `at0146`, `at0147`, `at0151`, `at0152`, `at0153`, `at0154`, `at0155`,
+`at0156`, `at0157`, `at0161`, `at0162`, `at0163`, `at0164`, `at0165`, `at0166`,
+`at0167`, `at0171`, `at0172`, `at0173`, `at0174`, `at0175`, `at0176`, `at0177`,
+`at0311`, `at0312`, `at0316`, `at0331`, `at0333`, `ba0256`, `ba0257`, `ba0266`,
+`ba0267`, `barntillsynskostnad-manad`, `bo0103`, `bo8001`, `bostadshushallsvikt-nya`,
+`ek0200`, `ek0205`, `ek0215`, `ek0221`, `ek0243`, `ek0503`, `ek0504`, `ek0505`,
+`familjehushallsvikt-nya`, `fu0057`, `fu0418`, `fu0428`, `fu0438`, `fu0448`, `fu0458`,
+`fu0468`, `go0122`, `go0222`, `go0322`, `go0422`, `ha0380`, `ha0452`, `ha0453`,
+`ha0454`, `ha0554`, `ha0701`, `ha0702`, `ha0703`, `handelse-1-sjukskriven-dagar`,
+`handelse-3-sjukskriven-dagar`, `handelse-4-sjukskriven-dagar`,
+`handelse-5-sjukskriven-dagar`, `handelse-6-sjukskriven-dagar`, `intervju-sluttid`,
+`intervju-starttid`, `kommunal-utdebitering`, `ma0512`, `ny-vikt`, `restid-till-arbete`,
+`sm0319`, `sm0340`, `sm0341`, `sm0380`, `sm0397`, `sm0398`, `sy0230`, `sy0314`,
+`sy0319`, `sy0324`, `sy0334`, `sy0340`, `sy0341`, `sy0352`, `sy0377`, `sy0396`,
+`sy0397`, `sy0398`, `tk0141`, `tk0143`, `ut0543`, `ut0545`, `ut1320`, `ut1890`,
+`ut1910`, `ut1930`, `ut1950`, `ut1960`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `smallint`, `tinyint`.
+
+`ba0180`, `ba0350-2`, `bo0290`, `bo0943`, `fu0051`, `fu0052`, `fu0053`, `fu0054`,
+`fu0055`, `fu0056`, `go0101`, `go0201`, `go0301`, `go0401`, `go0501`, `go0522`,
+`handelse-2-sjukskriven-dagar`, `langd-i-cm`, `sm0352`, `sm0396`, `sy0210`, `sy0380`,
+`tr0021`, `tr0092`, `vikt-i-kg`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`Numeric`, `tinyint`.
+
+`antal-ar-i-sverige`, `antal-barn-0-15ar`, `antal-barn-0-17-ar-ulf`,
+`antal-barn-0-3-ar`, `antal-barn-0-6-ar`, `antal-barn-19-w-ar`, `antal-barn-7-18-ar`,
+`antal-i-karnfamiljen`, `antal-i-lagenheten`, `antal-langvariga-sjukdomar`,
+`antal-med-kod-01-i-tablan`, `antal-med-kod-02-i-tablan`, `antal-med-kod-03-i-tablan`,
+`antal-med-kod-04-i-tablan`, `antal-med-kod-05-i-tablan`, `antal-med-kod-06-i-tablan`,
+`antal-med-kod-07-i-tablan`, `antal-med-kod-08-i-tablan`, `antal-med-kod-09-i-tablan`,
+`antal-med-kod-10-i-tablan`, `antal-med-kod-11-i-tablan`, `antal-med-kod-12-i-tablan`,
+`antal-med-kod-13-i-tablan`, `antal-rum-exkl-kok`, `arskurser-gymnasium`,
+`artal-person-1`, `artal-person-2`, `artal-person-3`, `artal-person-4`,
+`artal-person-5`, `artal-person-6`, `artal-person-7`, `artal-person-8`, `at0001`,
+`at0002`, `at0003`, `at0004`, `at0039`, `at0040`, `at0042`, `at0102`, `at0302`,
+`at0303`, `at0317`, `at0321`, `at0322`, `at0323`, `at0324`, `at0332`, `at0341`,
+`at0342`, `at0343`, `at0347`, `ba0084`, `ba0085`, `ba0112`, `bo0300`, `bo0700`,
+`bo0720`, `bo0740`, `bo0760`, `bo0770`, `bo0790`, `bo0820`, `bo0840`, `bo0850`,
+`bo0860`, `bo0870`, `bo1030`, `foraldrar-till-up-sambo`, `ft0082`, `ft0120`, `fu0311`,
+`fu0321`, `fu0331`, `fu0341`, `fu0352`, `fu0411`, `fu0413`, `fu0414`, `fu0421`,
+`fu0423`, `fu0424`, `fu0431`, `fu0433`, `fu0434`, `fu0441`, `fu0443`, `fu0444`,
+`fu0451`, `fu0453`, `fu0454`, `fu0461`, `fu0463`, `fu0464`, `fu0471`, `fu0474`,
+`go0610`, `go0710`, `go0810`, `go1104`, `go1204`, `go1304`, `go1404`, `go1504`,
+`go1604`, `gymnasium-artal`, `ha0222`, `ha0451`, `ha0459`, `ha0467`, `ha0468`, `ha0500`,
+`ha0501`, `ha0502`, `ha0503`, `ha0504`, `ha0505`, `ha0506`, `ha0507`, `ha0508`,
+`ha0509`, `ha0510`, `ha0511`, `ha0512`, `ha0513`, `ha0514`, `ha0515`, `ha0516`,
+`ha0517`, `ha0518`, `ha0519`, `ha0520`, `ha0521`, `ha0522`, `ha0523`, `ha0524`,
+`ha0525`, `ha0541`, `ha0542`, `ha0543`, `ha0544`, `ha0546`, `ha0547`, `ha0551`,
+`ha0552`, `ha0553`, `ha0563`, `ha0564`, `ha0712`, `ha0714`, `ma0002`, `ma0012`,
+`ma0032`, `ma0042`, `ma0052`, `ma0062`, `ma0072`, `ma0082`, `ma0102`, `ma0132`,
+`ma0520`, `ma0541`, `partners-fodelsear`, `person-1-fodelsear`, `person-2-fodelsear`,
+`person-3-fodelsear`, `person-4-fodelsear`, `person-5-fodelsear`, `person-6-fodelsear`,
+`person-7-fodelsear`, `person-8-fodelsear`, `sm0400`, `sm1012`, `sm1013`, `sm1014`,
+`sm1015`, `sm1016`, `sm1040`, `sm1309`, `sy0280`, `sy0311`, `sy0313`, `sy0321`,
+`sy0323`, `sy0333`, `sy0371`, `sy0378`, `sy0400`, `sy1309`, `sy1310`, `tr0011`,
+`tr0013`, `tr0014`, `ut0040`, `ut0080`, `ut0120`, `ut0170`, `ut0220`, `ut0240`,
+`ut0300`, `ut0320`, `ut0550`, `ut0570`, `ut0620`, `ut0630`, `ut0640`, `ut0650`,
+`ut0660`, `ut0670`, `ut0710`, `ut0720`, `ut0730`, `ut0800`, `ut0810`, `ut0820`,
+`ut1060`, `ut1070`, `ut1080`, `ut1090`, `ut1100`, `ut1110`, `ut1180`, `ut1190`,
+`ut1200`, `ut1840`, `ut1850`, `ut1860`, `ut1870`, `ut1880`, `ut1900`, `ut1920`,
+`ut1940`, `vald-synliga-marken`, `yh0013`, `yh0014`, `yh0015`, `yh0023`, `yh0024`,
+`yh0025`, `yh0033`, `yh0034`, `yh0035`, `yh0043`, `yh0044`, `yh0045`, `yh0053`,
+`yh0054`, `yh0055`.
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `tinyint`.
+
+`konsumtionsenhetsvikt`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `Numeric`,
+`int`, `tinyint`.
+
+`ba0121`, `tillsyn-1-skolbarn-5`, `tillsyn-2-skolbarn-4`, `tillsyn-2-skolbarn-5`,
+`tillsyn-3-barn-4`, `tillsyn-3-barn-5`, `tillsyn-3-skolbarn-4`, `tillsyn-3-skolbarn-5`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `Numeric`,
+`smallint`.
+
+`am0540`, `sy0356`, `yrkeskod-fob80-nyk-arbetslosa-pof`.
+
+**value set includes nonnumeric codes; precision unresolved.** Source types: `Numeric`,
+`tinyint`.
+
+`aktiv-annan-forening`, `aktiv-fackforening`, `aktiv-politiskt-parti`,
+`allergiska-besvar-1`, `allergiska-besvar-2`, `am0100`, `am0120`, `am0140`, `am0160`,
+`am0180`, `am0182`, `am0185`, `am0290`, `am0304`, `am0310`, `am0330`, `am0340`,
+`am0380`, `am0520`, `am0530`, `anmalt-annan-arbetsskada`, `anmalt-olycksfall`,
+`annan-stold`, `anstalld-heltid`, `anvant-dator-pa-fritiden`, `arbetar-helger`,
+`arbete-bostaden-annat`, `arbete-bostaden-forberedelse`, `arbete-bostaden-inlasning`,
+`arbete-bostaden-jour`, `arbete-bostaden-kundkontakt`, `arbete-bostaden-skrivarbete`,
+`arv-gavor`, `at0031`, `at0051`, `at0052`, `at0053`, `at0054`, `at0055`, `at0056`,
+`at0057`, `at0058`, `at0059`, `at0103`, `ba0232`, `ba0235`, `ba0242`, `ba3101`,
+`ba3102`, `ba3103`, `ba3104`, `ba3105`, `ba3106`, `ba3107`, `ba3108`,
+`badutflykt-friluftsbad`, `barn-utanfor-hushallet`, `behov-av-fardtjanst`,
+`besvar-med-somnen`, `besvar-svarighetsgrad-2`, `besvar-svarighetsgrad-3`,
+`besvar-svarighetsgrad-5`, `besvar-svarighetsgrad-6`, `bildskarmsarbete`,
+`bilutflykter`, `bio`, `blodtryckssankande-medicin`, `bo0020`, `bo0130`, `bo0142`,
+`bo0144`, `bo0145`, `bo0146`, `bo0150`, `bo0160`, `bo0172`, `bo0181`, `bo0190`,
+`bo0210`, `bo0221`, `bo0222`, `bo0240`, `bo0250`, `bo0260`, `bo0270`, `bo0310`,
+`bo0330`, `bo0370`, `bo0380`, `bo0512`, `bo1091`, `brandfarliga-amnen`,
+`diabetes-fraga`, `diskmaskin`, `ej-sova-ostort`, `ek0001`, `ek0060`, `ek0070`,
+`ek0080`, `ek0090`, `ek0100`, `ek0210`, `ek0212`, `ek0214`, `ek0240`, `ek0242`,
+`enformigt`, `examen-universitet`, `fackskola`, `fardtjanst`, `fast-lakare`,
+`flickskola`, `folkhogskola`, `foralder-utlandsk-medborgare`,
+`fordel-arbete-i-bostaden-1`, `fordel-arbete-i-bostaden-2`,
+`fordel-arbete-i-bostaden-3`, `fordel-arbete-i-bostaden-4`,
+`fordel-arbete-i-bostaden-5`, `fordel-arbete-i-bostaden-6`,
+`fordel-arbete-i-bostaden-7`, `forradsutrymme`, `fritidsbatsutflykter`, `fritidsbostad`,
+`fritidsfiskat`, `frys`, `ft0031`, `ft0032`, `ft0033`, `ft0034`, `ft0035`, `ft0036`,
+`ft0060`, `ft0090`, `ft0101`, `ft0110`, `ft0161`, `ft0208`, `ft0210`, `ft0272`,
+`ft0278`, `ft0280`, `ft0282`, `ft0292`, `fu0030`, `fu0417`, `fu0427`, `fu0437`,
+`fu0447`, `fu0457`, `fu0467`, `fu0477`, `ga-i-trappor`, `go0621`, `go0622`, `go0623`,
+`go0624`, `go0625`, `go0626`, `go0627`, `go0628`, `go0629`, `go0721`, `go0722`,
+`go0723`, `go0724`, `go0725`, `go0726`, `go0727`, `go0728`, `go0729`, `go0821`,
+`go0822`, `go0823`, `go0824`, `go0825`, `go0826`, `go0827`, `go0828`, `go0829`,
+`go1105`, `go1106`, `go1107`, `go1108`, `go1109`, `go1110`, `go1111`, `go1113`,
+`go1114`, `go1205`, `go1206`, `go1207`, `go1208`, `go1209`, `go1210`, `go1211`,
+`go1213`, `go1214`, `go1305`, `go1306`, `go1307`, `go1308`, `go1309`, `go1310`,
+`go1311`, `go1313`, `go1314`, `go1405`, `go1406`, `go1407`, `go1408`, `go1409`,
+`go1410`, `go1411`, `go1413`, `go1414`, `go1505`, `go1506`, `go1507`, `go1508`,
+`go1509`, `go1510`, `go1511`, `go1513`, `go1514`, `go1605`, `go1606`, `go1607`,
+`go1608`, `go1609`, `go1610`, `go1611`, `go1613`, `go1614`, `go2911`, `go2912`,
+`go2913`, `gripsvarigheter`, `gymnasium`, `ha0161`, `ha0184`, `ha0192`, `ha0202`,
+`ha0203`, `ha0204`, `ha0205`, `ha0221`, `ha0315`, `ha0321`, `ha0341`, `ha0342`,
+`ha0343`, `ha0373`, `ha0398`, `ha0421`, `ha0437`, `ha0445`, `ha0460`, `ha0461`,
+`ha0462`, `ha0463`, `ha0464`, `ha0465`, `ha0466`, `ha0469`, `ha0472`, `ha0473`,
+`ha0474`, `ha0475`, `ha0476`, `ha0477`, `ha0479`, `ha0485`, `ha0540`, `ha0545`,
+`ha0548`, `ha0561`, `ha0562`, `ha06`, `ha0600`, `ha0605`, `ha064`, `ha0643`, `ha0644`,
+`ha0645`, `ha0646`, `ha0647`, `ha0648`, `ha0651`, `ha0652`, `ha0653`, `ha0654`,
+`ha0655`, `ha0656`, `ha0667`, `ha0668`, `ha0669`, `ha0670`, `ha0671`, `ha0672`,
+`ha0684`, `ha0707`, `ha0708`, `ha0709`, `ha0710`, `ha0713`, `ha0732`, `ha0733`,
+`ha0734`, `ha0748`, `ha0749`, `ha0752`, `ha0753`, `ha0756`, `ha0759`, `ha0766`,
+`ha0768`, `ha0801`, `ha1262`, `ha1263`, `ha1381`, `ha1382`, `hade-ej-far-fosterfar`,
+`hade-ej-mor-fostermor`, `handelse-2-sjukskriven`, `handelse-3-sjukskriven`,
+`handelse-4-sjukskriven`, `handelse-5-sjukskriven`, `handelse-6-sjukskriven`,
+`hemarbete-nackdel-1`, `hemarbete-nackdel-3`, `hemarbete-nackdel-4`,
+`hemarbete-nackdel-5`, `hemarbete-nackdel-6`, `hemarbete-nackdel-7`,
+`hemforsakring-for-bostaden`, `hjalp-av-annan`, `hjalp-av-hemvardare`,
+`hjalp-av-nagon-inom-bostaden`, `hjalp-av-nagon-utom-bostaden`, `hjalp-av-personal`,
+`hjalp-av-slakting`, `hjalp-overklaga-1`, `hjalpmedel`, `hjalpmedel-inom-bostaden`,
+`hjalpmedel-utom-bostaden`, `hjartmedicin`, `hostmedicin-nasdroppar`,
+`hur-ofta-traffa-andra`, `hur-ofta-traffa-barn`, `hur-ofta-traffa-foraldrar`,
+`hur-ofta-traffa-syskon`, `husvagn`, `jagat`, `jaktigt`, `jarnmedicin`,
+`kiropraktor-mm`, `korkort-bil`, `kundkontakter`, `kursarrangor-kurs-1`,
+`kursarrangor-kurs-2`, `kursarrangor-kurs-3`, `kursarrangor-kurs-4`, `kursdeltagande`,
+`kvallsarbete`, `kvallsarbete-varje-dag`, `lakarbesok-barn-1`, `lakarbesok-barn-2`,
+`lakarbesok-barn-3`, `lakarbesok-barn-4`, `lakarbesok-barn-5`, `lakarbesok-barn-6`,
+`lara-nya-saker-i-arbetet`, `last-bocker`, `last-veckotidningar`, `laxermedel`,
+`legat-pa-sjukhus`, `legat-pa-sjukhus-sjukhem`, `lordagsarbete`, `ma0000`, `ma0001`,
+`ma0004`, `ma0006`, `ma0007`, `ma0014`, `ma0017`, `ma0030`, `ma0034`, `ma0037`,
+`ma0040`, `ma0041`, `ma0044`, `ma0046`, `ma0047`, `ma0054`, `ma0057`, `ma0060`,
+`ma0064`, `ma0067`, `ma0070`, `ma0074`, `ma0077`, `ma0080`, `ma0084`, `ma0100`,
+`ma0104`, `ma0107`, `ma0121`, `ma0122`, `ma0123`, `ma0124`, `ma0130`, `ma0134`,
+`ma0137`, `ma0160`, `ma0171`, `ma0172`, `ma0173`, `ma0175`, `ma0180`, `ma0191`,
+`ma0200`, `medicinsk-behandling-1`, `medicinsk-behandling-2`, `medicinsk-behandling-3`,
+`medicinsk-behandling-4`, `medicinsk-behandling-5`, `medicinsk-behandling-6`,
+`medlem-hyresgastforening`, `medlem-idrottsforening`, `modersmal-annat-sprak`,
+`modersmal-finska`, `mojligt-arbeta-hemmet`, `morgonarbete`, `morgonarbete-varje-dag`,
+`nattarbete`, `nattarbete-varje-dag`, `naturlakemedel`, `nojes-motionspromenader`,
+`obetald-hyra`, `olampliga-arbetsstallningar`, `overklaga-myndighetsbeslut`,
+`pensionarer`, `poliskontakt-handelse-1`, `poliskontakt-handelse-2`,
+`poliskontakt-handelse-3`, `poliskontakt-handelse-4`, `poliskontakt-handelse-5`,
+`poliskontakt-handelse-6`, `preventivtabletter`, `promenad-i-rask-takt`,
+`psykisk-anstrangning`, `realskola`, `resa-sig-fran-koksstol`, `restaurangbesok`,
+`salvor-liniment`, `semesterresa-1-vecka`, `sista-arskurs-gymnasium`, `sjukskriven`,
+`skakningar-vibrationer`, `skal-ej-poliskontakt-1`, `skal-ej-poliskontakt-2`,
+`skal-ej-poliskontakt-3`, `skal-ej-poliskontakt-4`, `skal-ej-poliskontakt-5`,
+`skal-ej-poliskontakt-6`, `sm0034`, `sm0035`, `sm0036`, `sm0039`, `sm0040`, `sm0041`,
+`sm0052`, `sm0053`, `sm0055`, `sm0056`, `sm0060`, `sm0062`, `sm0063`, `sm0064`,
+`sm0065`, `sm0069`, `sm0070`, `sm0083`, `sm0302`, `sm1391`, `sm1392`, `sm1393`,
+`sm1394`, `sm1398`, `sm1399`, `sm1400`, `sm1401`, `sm1402`, `smartstillande-med-recept`,
+`smartstillande-utan-recept`, `so0010`, `so0011`, `so0020`, `so0021`, `so0071`,
+`sondagsarbete`, `springa-kortare-stracka`, `ss0021`, `ss0022`, `ss0023`, `ss0024`,
+`ss0025`, `ss0026`, `ss0031`, `ss0032`, `ss0033`, `ss0034`, `ss0035`, `ss0036`,
+`ss0041`, `ss0042`, `ss0043`, `ss0044`, `ss0045`, `ss0046`, `ss0051`, `ss0052`,
+`ss0061`, `ss0062`, `ss0071`, `ss0072`, `ss0073`, `ss0074`, `ss0075`, `ss0076`,
+`ss0081`, `ss0082`, `ss0083`, `ss0084`, `ss0085`, `ss0086`, `ss0091`, `ss0092`,
+`ss0093`, `ss0094`, `ss0095`, `ss0096`, `ss0101`, `ss0102`, `ss0103`, `ss0104`,
+`ss0105`, `ss0106`, `ss0121`, `ss0122`, `ss0123`, `ss0124`, `ss0125`, `ss0126`,
+`ss0131`, `ss0132`, `ss0133`, `ss0134`, `ss0135`, `ss0136`, `stold-av-bil`,
+`stold-av-cykel`, `stold-fran-bil`, `stold-i-bostad`, `stold-i-fritidsbostad`,
+`stold-pa-vind`, `strovat-i-skog-och-mark`, `studiecirklar-och-kurser`,
+`studiestod-kurs-1`, `studiestod-kurs-2`, `studiestod-kurs-3`, `studiestod-kurs-4`,
+`sulfa-penicillin-mm`, `svettigt`, `sy0034`, `sy0035`, `sy0036`, `sy0039`, `sy0040`,
+`sy0041`, `sy0053`, `sy0055`, `sy0056`, `sy0060`, `sy0062`, `sy0063`, `sy0064`,
+`sy0065`, `sy0071`, `sy0081`, `sy0082`, `sy0083`, `sy0140`, `sy0172`, `sy0217`,
+`sy0222`, `sy0261`, `sy0263`, `sy0264`, `sy0265`, `sy0266`, `sy0267`, `sy0269`,
+`sy0270`, `sy0271`, `sy0272`, `sy0273`, `sy0274`, `sy0276`, `sy0302`, `sy0310`,
+`sy0320`, `sy0330`, `sy0373`, `sy0376`, `sy0420`, `sy0421`, `sy0423`, `sy0431`,
+`sy0432`, `sy0433`, `sy0434`, `sy0435`, `sy0436`, `sy0441`, `sy0442`, `sy0443`,
+`sy0444`, `sy0445`, `sy0446`, `sy0447`, `sy0448`, `sy0451`, `sy0452`, `sy0453`,
+`sy0454`, `sy0455`, `sy0457`, `sy0458`, `sy1`, `sy1306`, `sy1307`, `sy1391`, `sy1392`,
+`sy1393`, `sy1394`, `sy1398`, `sy1399`, `sy1400`, `sy1401`, `sy1402`,
+`syror-fratande-amnen`, `teater-eller-konserter`, `tekniskt-gymnasium`,
+`tillgang-dusch-bad`, `tillgang-lantbrevbarare`, `tillgang-tv`, `tillsyn-1-barn-1`,
+`tillsyn-1-barn-2`, `tillsyn-1-barn-3`, `tillsyn-1-barn-4`, `tillsyn-1-barn-5`,
+`tillsyn-1-skolbarn-1`, `tillsyn-1-skolbarn-2`, `tillsyn-1-skolbarn-3`,
+`tillsyn-1-skolbarn-4`, `tillsyn-2-barn-1`, `tillsyn-2-barn-2`, `tillsyn-2-barn-3`,
+`tillsyn-2-barn-4`, `tillsyn-2-barn-5`, `tillsyn-2-skolbarn-1`, `tillsyn-2-skolbarn-2`,
+`tillsyn-2-skolbarn-3`, `tillsyn-3-barn-1`, `tillsyn-3-barn-2`, `tillsyn-3-barn-3`,
+`tillsyn-3-skolbarn-1`, `tillsyn-3-skolbarn-2`, `tillsyn-3-skolbarn-3`, `tk0095`,
+`tk0096`, `tk0115`, `tk0116`, `tk0142`, `tk0194`, `tk0196`, `tr0051`, `tr0052`,
+`tr0053`, `tr0054`, `tr0055`, `tr0056`, `tr0058`, `tr0059`, `tr0060`, `tr0061`,
+`tr0062`, `tr0063`, `tr0064`, `tr0065`, `tr0066`, `tr0067`, `tr0068`, `tr0071`,
+`tr0113`, `tr0214`, `tr0224`, `tr0234`, `tr0244`, `tr0254`, `tr0264`, `tradgardsarbete`,
+`trott`, `trott-dagar`, `trott-kvallar`, `trott-morgnar`, `tvattmaskin`, `universitet`,
+`upprepade-rorelser`, `ut0010`, `ut0020`, `ut0030`, `ut0130`, `ut0180`, `ut0230`,
+`ut0310`, `ut0540`, `ut0560`, `ut0580`, `ut0740`, `ut0750`, `ut0760`, `ut1020`,
+`ut1210`, `ut1220`, `ut1230`, `ut1640`, `ut1650`, `ut1660`, `ut1670`, `ut1680`,
+`ut1690`, `ut1700`, `ut1710`, `ut1720`, `ut1730`, `ut1740`, `ut1750`, `ut1970`,
+`ut1980`, `ut1990`, `ut2000`, `ut2210`, `utbildning-1-titel`, `utbildning-2-titel`,
+`utbildning-3-titel`, `vark-extremiteter`, `vark-i-skuldror`, `veckor-fritidsbostad`,
+`vitaminer-starkande-medicin`, `ytterligare-utbildning`.
+
+**value set: 4 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `Numeric`, `tinyint`.
+
+`ut2350`.
+
+**value set: 6 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `Numeric`, `tinyint`.
+
+`so0041-2`.
+
+**value set: 8 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `Numeric`, `tinyint`.
+
+`ba0070-2`, `tk0183`.
+
+**value set: 9 integer codes; proposed integer, no pinned ledger id for variable-wide
+selector.** Source types: `Numeric`, `tinyint`.
+
+`ba0021`.
+
+## scb/utbildningsanalyser
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`.
+
+`populationsstorlek-per-stratum`, `svarande-per-stratum`, `urvalsstorlek-per-stratum`.
+
+## scb/vattenbruk
+
+**no value set; decimal source declarations lack explicit scale.** Source types:
+`float`, `int`, `smallint`.
+
+`odlid`.

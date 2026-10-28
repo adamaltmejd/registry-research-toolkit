@@ -40,3 +40,27 @@ subject = "var:medborgarland-varldsdel-namn"
 relation = "label_of"
 object = "scb/allmanna-val-valdeltagande/medborgarland-varldsdel-2"
 evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.toml:14\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-allmanna-val"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:forstagangsvaljare-europaparlamentsval"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsinkomst-kvintilgrupp"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"

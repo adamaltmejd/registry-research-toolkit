@@ -1204,3 +1204,51 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: civr where key = 'v15'"
 fields = { "variable" = "civ" }
 evidence = "reg_meta_build/curation/registers/scb/linda.toml:5658\n\nShared-column succession fold 2026-10-21: SCB VarId 15 'Civilstånd' sequential rename {CIVR 1978-1986, CIV 1987-1992} owned by 29.15.civ; identical operational definition, the same 23 codes (CIV additionally lists the sentinel 00 'Okänt värde'), never co-delivered in any LINDA variant (reg_meta v0.57.0). The later BCIV, BCIVAKT, BCIVR and BCIVRTB keep their own owners. Y-211/Y-276 sequential-rename policy."
+
+[[statement]]
+kind = "set"
+subject = "var:bfoab"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bkyrka"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bprelsn"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad"
+fields = { type = "integer" }
+evidence = "value set: 13 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:regkod"
+fields = { type = "integer" }
+evidence = "value set: 14 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-panelurvalet"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalskod-utrikesfodda"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"

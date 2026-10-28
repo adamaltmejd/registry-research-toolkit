@@ -117,3 +117,39 @@ subject = "var:skl-gruppnamn-2011"
 relation = "label_of"
 object = "scb/fortroendevalda/skl-grupp-2011"
 evidence = "reg_meta_build/curation/registers/scb/fortroendevalda.toml:16\n\nLegacy code_label_pair declaration"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { type = "integer" }
+evidence = "value set: 126 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:facknamnd"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kod"
+fields = { type = "integer" }
+evidence = "value set: 553 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:poskod"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:styr-fullm"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:vakant"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"

@@ -1,0 +1,30 @@
+
+[[statement]]
+kind = "set"
+subject = "var:brelkbo"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:bvxbarn"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsforestandaren"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:kvarboende-18-29-ar"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "var:relation-till-urvalsperson"
+fields = { type = "integer" }
+evidence = "value set: 17 integer codes"
