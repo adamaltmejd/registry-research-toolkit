@@ -6,8 +6,9 @@ Run with uv run python. Build a dev catalog first, then pass --catalog FILE
 schema targets: keep it local; only publish catalog ids, evidence and counts.
 The catalog supplies resolved, post-identity-curation occurrence membership and
 frame value sets, never holdings values. Exact source locators supply raw types.
-Default: report only. --write appends variable-wide set statements; run reg-build
-lock afterwards. Existing locks/statements are never replaced by this script.
+Default: report only. --write replaces this script's reviewed numeric statements
+with occurrence-scoped corrections; run reg-build lock afterwards. The matching
+catalog and its existing locks supply pre-scalar premises, including assertions.
 Unpinned variables remain report-only until the identity work supplies ledger ids.
 """
 
@@ -21,20 +22,102 @@ import re
 import sqlite3
 import tomllib
 import zipfile
-from dataclasses import asdict
 from datetime import date
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
 from rebuild_compare import implicit_table_alias
+from rebuild_convert_selectors import OPEN, render
 from reg_meta_build._curation import fold_column
 from reg_meta_build.extend_db import read_private_holdings_input
 from reg_meta_build.inventory import edition_bounds, load_inventory
-from reg_meta_build.steward_storage import read_storage_columns
+from reg_meta_build.steward_storage import read_storage_types
 
 ROOT = Path(__file__).resolve().parents[1]
 NUMERIC = {"int", "integer", "decimal"}
 SCALE = re.compile(r"(?:decimal|numeric)\s*\(\s*\d+\s*,\s*(\d+)\s*\)", re.IGNORECASE)
+
+
+def reviewed_sources(db, curation):
+    """Join the compiler's numeric overrides to their reviewed source premises."""
+    sources = collections.defaultdict(list)
+    blocks = collections.defaultdict(list)
+    entries = collections.defaultdict(dict)
+    for pid, identity, file, line, evidence in db.execute("""
+        select distinct v.pid, s.hash, s.file, s.line, t.body
+        from override x join occurrence o on o.id=x.subject_id
+        join variable v on v.id=o.variable_id join statement s on s.id=x.statement_id
+        join text t on t.id=s.evidence_text
+        where x.subject_kind='occurrence' and x.field='type'
+    """):
+        if evidence.startswith(("value set: ", "MONA storage: ")):
+            entries[curation / file][identity] = (pid, line, evidence)
+    for path, wanted in entries.items():
+        provider, register = path.parts[-3:-1]
+        locks = json.loads(path.with_suffix(".lock").read_text())["statements"]
+        found = set()
+        for local, premise in locks.items():
+            # reg-frame::Statement::scoped_identity joins a register-local lock id
+            # to the published statement id. Statement content is not rehashed here.
+            identity = hashlib.sha256(
+                json.dumps([provider, register, local], separators=(",", ":")).encode()
+            ).hexdigest()
+            if identity in wanted:
+                pid, _, _ = wanted[identity]
+                sources[pid].extend(p["fields"] for p in premise["subjects"])
+                found.add(identity)
+        if found != wanted.keys():
+            raise ValueError(f"numeric statement premise missing from {path}")
+        text = path.read_text()
+        starts = [m.start() for m in re.finditer(r"(?m)^\[\[statement\]\]", text)]
+        by_line = {line: (pid, evidence) for pid, line, evidence in wanted.values()}
+        for start, end in zip(starts, [*starts[1:], len(text)], strict=True):
+            line = text.count("\n", 0, start) + 1
+            if line in by_line:
+                statement = tomllib.loads(text[start:end])["statement"][0]
+                if statement["kind"] != "set" or set(statement["fields"]) != {"type"}:
+                    raise ValueError(
+                        f"numeric statement has unrelated fields: {path}:{line}"
+                    )
+                pid, evidence = by_line.pop(line)
+                blocks[path].append(
+                    (start, end, pid, statement["fields"]["type"], evidence)
+                )
+        if by_line:
+            raise ValueError(f"numeric statement source location stale: {path}")
+    return sources, blocks
+
+
+def affected_selectors(sources, dtype):
+    """Keep exact source identity guards; never broaden across releases or types."""
+    subjects = set()
+    correct = set()
+    for source in sources:
+        declared = source.get("type")
+        family = "integer" if declared in {"int", "integer"} else declared
+        conflict = bool({"type", "dtype"} & set(source.get("conflicts", [])))
+        if family not in {"integer", "decimal"}:
+            continue
+        guards = {"key": source["key"], "type": declared}
+        if source.get("release"):
+            guards["release"] = source["release"]
+        if any("'" in v or "\n" in v or "\r" in v for v in guards.values()):
+            raise ValueError("source identity cannot be expressed by address guards")
+        # Release guards select whole occurrences. Non-release sources retain
+        # their full source period; the real lock refuses any partial selection.
+        scope = (
+            [OPEN]
+            if source.get("release") or not source.get("period")
+            else [source["period"]]
+        )
+        subject = render(
+            source["table_slug"], source["spelling"] or "<none>", scope, guards
+        )
+        if family != dtype or conflict:
+            subjects.add(subject)
+        else:
+            correct.add(subject)
+    return sorted(subjects), len(correct)
 
 
 def digest_tree(root):
@@ -103,7 +186,29 @@ def held_columns(db, inputs, manifest, candidates):
         root, input_commit=manifest["commit"], input_manifest_sha256=manifest_sha
     )
     inventory = load_inventory(root / accepted["roles"]["inventory"])
-    storage = read_storage_columns(root / accepted["roles"]["storage_export"])
+    storage_path = root / accepted["roles"]["storage_export"]
+    read_storage_types(
+        storage_path
+    )  # Frozen parser owns export validation/missing-file errors.
+    with storage_path.open(newline="") as stream:
+        storage = {
+            (row["table_name"], fold_column(row["column_name"])): {
+                **{
+                    key: row[key]
+                    for key in (
+                        "table_schema",
+                        "table_name",
+                        "column_name",
+                        "data_type",
+                    )
+                },
+                **{
+                    key: int(row[key]) if row[key] else None
+                    for key in ("numeric_precision", "numeric_scale")
+                },
+            }
+            for row in csv.DictReader(stream)
+        }
     coordinates = collections.defaultdict(list)
     candidate_coordinates = collections.defaultdict(set)
     catalog_variables = {row[0] for row in db.execute("select pid from variable")}
@@ -180,7 +285,7 @@ def held_columns(db, inputs, manifest, candidates):
                             "representation": mapping.representation,
                             "served": served,
                             "catalog_match": overlaps and pid == mapping.variable,
-                            "storage": asdict(schema) if schema else None,
+                            "storage": schema,
                         }
                     )
     return held, {
@@ -379,27 +484,21 @@ def main():
         "select v.valueset_id, t.body from vs_item v join text t on t.id=v.code_text"
     ):
         sets[vs].add(code)
-    paths = {}
     pinned = set()
-    existing = {}
     for path in sorted((args.curation / "registers").glob("*/*/ids.toml")):
         ledger = tomllib.loads(path.read_text())
         provider, handle = path.parts[-3:-1]
         register = f"{provider}/{ledger.get('public', handle)}"
         pinned.update(f"{register}/{slug}" for slug in ledger.get("variables", {}))
-        paths[register] = path.with_name("curation.toml")
-        if paths[register].exists():
-            for statement in tomllib.loads(paths[register].read_text()).get(
-                "statement", []
-            ):
-                if (
-                    statement.get("kind") == "set"
-                    and statement["subject"].startswith("var:")
-                    and (dtype := statement.get("fields", {}).get("type"))
-                ):
-                    existing[f"{register}/{statement['subject'][4:]}"] = dtype
+    premises, blocks = reviewed_sources(db, args.curation)
+    existing = {}
+    for entries in blocks.values():
+        for _, _, pid, dtype, evidence in entries:
+            existing[pid] = dtype, evidence
     report = []
-    writes = collections.defaultdict(str)
+    writes = {}
+    excluded = 0
+    statement_count = 0
     for pid, rows in sorted(candidates.items()):
         source = []
         complete = True
@@ -433,9 +532,7 @@ def main():
         if dtype is None and not decimal_types and not codes:
             dtype, evidence = None, "no value set; decimal source precision unavailable"
         if dtype and pid not in pinned:
-            evidence += (
-                f"; proposed {dtype}, no pinned ledger id for variable-wide selector"
-            )
+            evidence += f"; proposed {dtype}, variable identity remains unpinned"
             dtype = None
         report.append(
             {
@@ -451,18 +548,24 @@ def main():
             }
         )
         if dtype:
-            if pid in existing:
-                if existing[pid] != dtype:
-                    raise ValueError(f"existing type statement disagrees for {pid}")
-                continue
-            register, slug = pid.rsplit("/", 1)
-            if not re.fullmatch(r"[a-z0-9_-]+", slug):
-                raise ValueError(f"unsupported variable slug: {pid}")
-            writes[paths[register]] += (
-                '\n[[statement]]\nkind = "set"\n'
-                f'subject = "var:{slug}"\nfields = {{ type = "{dtype}" }}\n'
-                f"evidence = {json.dumps(evidence, ensure_ascii=False)}\n"
+            if existing.get(pid) != (dtype, evidence):
+                raise ValueError(
+                    f"matching reviewed numeric statement required for {pid}"
+                )
+            subjects, correct = affected_selectors(premises[pid], dtype)
+            excluded += correct
+            statement_count += len(subjects)
+            writes[pid] = "".join(
+                '[[statement]]\nkind = "set"\n'
+                f'subject = {json.dumps(subject, ensure_ascii=False)}\nfields = {{ type = "{dtype}" }}\n'
+                f"evidence = {json.dumps(evidence, ensure_ascii=False)}\n\n"
+                for subject in subjects
             )
+            report[-1]["selectors"] = subjects
+    if existing.keys() != writes.keys():
+        raise ValueError(
+            "reviewed numeric decisions changed; do not silently remove curation"
+        )
     counts = collections.Counter(r["type"] or "unresolved" for r in report)
     args.report.write_text(
         json.dumps(
@@ -479,15 +582,22 @@ def main():
     )
     write_reports(report, args.public_report, args.mona_checks)
     if args.write:
-        for path, statements in sorted(writes.items()):
-            with path.open("a") as stream:
-                stream.write(statements)
+        for path, entries in sorted(blocks.items()):
+            text = path.read_text()
+            replaced = set()
+            for start, end, pid, _, _ in sorted(entries, reverse=True):
+                replacement = writes[pid] if pid not in replaced else ""
+                text = text[:start] + replacement + text[end:]
+                replaced.add(pid)
+            path.write_text(text.rstrip() + "\n")
     print(
         json.dumps(
             {
                 "total": len(report),
                 **counts,
-                "registers_written": len(writes) if args.write else 0,
+                "registers_written": len(blocks) if args.write else 0,
+                "statements": statement_count,
+                "already_correct_selectors_excluded": excluded,
             }
         )
     )

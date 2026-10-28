@@ -233,13 +233,13 @@ accepted SWECOV inventory. Source types: `float`, `int`.
 `ranteutgifter`, `seffboz`, `skattereduktion-underhall-reparation`, `srotomz`,
 `uandrautgz`, `uboz`, `usotz`, `uvagundz`, `uvaz`.
 
-**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 126 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bald`.
 
-**value set: 2 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 2 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bkon`.
 
@@ -662,33 +662,33 @@ SWECOV inventory. Source types: `float`, `int`.
 
 `bfaregz`, `bla03reg`, `bubdfu`.
 
-**value set: 11 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 11 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bkreg`, `bkregh`, `bkregz`.
 
-**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 126 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `baldz`.
 
-**value set: 3 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 3 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bkonz`.
 
-**value set: 7 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 7 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `byrkst`.
 
-**value set: 88 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 88 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bla03regh`, `bla03regz`.
 
-**value set: 9 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 9 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bnuts2z`.
 
@@ -759,9 +759,9 @@ accepted SWECOV inventory. Source types: `float`, `tinyint`.
 
 `alder`.
 
-**value set: 2 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`,
-`smallint`, `tinyint`.
+**value set: 2 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`, `smallint`,
+`tinyint`.
 
 `arsmod-imp`.
 
@@ -951,8 +951,8 @@ accepted SWECOV inventory. Source types: `float`, `int`.
 `upprakningsfaktor-enkat-kalibrerad`, `upprakningsfaktor-ordinarie`, `urepundz`,
 `uundbid`, `uundbidz`, `uunlgrz`, `uvaeljz`, `uvaoljz`, `uvarmlgz`, `uvarmntz`.
 
-**value set: 6 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`.
+**value set: 6 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`.
 
 `bsyssz`.
 
@@ -1731,8 +1731,8 @@ SWECOV inventory. Source types: `float`, `tinyint`.
 
 `yrkesstallning`.
 
-**value set: 3 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `tinyint`.
+**value set: 3 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `tinyint`.
 
 `burvkodp`.
 
@@ -1898,9 +1898,8 @@ accepted SWECOV inventory. Source types: `int`, `numeric`.
 
 ### scb/rtb
 
-**value set: 126 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `float`, `int`,
-`tinyint`.
+**value set: 126 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `float`, `int`, `tinyint`.
 
 `alderh`.
 
@@ -2380,27 +2379,23 @@ SWECOV inventory. Source types: `Numeric`, `tinyint`.
 `utbildning-3-titel`, `vark-extremiteter`, `vark-i-skuldror`, `veckor-fritidsbostad`,
 `vitaminer-starkande-medicin`, `ytterligare-utbildning`.
 
-**value set: 4 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `Numeric`,
-`tinyint`.
+**value set: 4 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `Numeric`, `tinyint`.
 
 `ut2350`.
 
-**value set: 6 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `Numeric`,
-`tinyint`.
+**value set: 6 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `Numeric`, `tinyint`.
 
 `so0041-2`.
 
-**value set: 8 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `Numeric`,
-`tinyint`.
+**value set: 8 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `Numeric`, `tinyint`.
 
 `ba0070-2`, `tk0183`.
 
-**value set: 9 integer codes; proposed integer, no pinned ledger id for variable-wide
-selector.** not held in the accepted SWECOV inventory. Source types: `Numeric`,
-`tinyint`.
+**value set: 9 integer codes; proposed integer, variable identity remains unpinned.**
+not held in the accepted SWECOV inventory. Source types: `Numeric`, `tinyint`.
 
 `ba0021`.
 

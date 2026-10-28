@@ -337,96 +337,1584 @@ evidence = "reg_meta_build/curation/registers/scb/iot.toml:45\n\ncuration/concep
 
 [[statement]]
 kind = "set"
-subject = "var:bbftyp"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r17773'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bboakta"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r17858'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBFTYP where key = 'v44706' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18100'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bgemlon"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBOAKTA where key = 'v44842' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r17773'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuabd"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r17858'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BGEMLON where key = 'v44690' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18092'"
 fields = { type = "integer" }
 evidence = "value set: 7 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuabda"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABD where key = 'v44837' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18092'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuabir"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18097'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuabur"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18099'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuffl"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18100'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkuskav"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18101'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bkutyko"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABDA where key = 'v44837' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABIR where key = 'v44837' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUABUR where key = 'v44837' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUFFL where key = 'v44841' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUSKAV where key = 'v44839' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18092'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bmnot"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BKUTYKO where key = 'v44840' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r17773'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bostadsratt-typ-av-overlatelse"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r17858'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:btypall"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BMNOT where key = 'v44698' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r17773'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r17858'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BBSTYP where key = 'v3212' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r17773'"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:delkomponent-disponibel-inkomst-2004"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r17858'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18092'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18097'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18099'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18100'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18101'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18102'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18108'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18109'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18110'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18111'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18112'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18113'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18118'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18122'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18138'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18140'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18141'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r18144'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r19536'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: BTYPALL where key = 'v44699' and type = 'decimal' and release = 'r19566'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r2771'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-familj-2004"
+subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r3442'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-per-ke-familj-2004"
+subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r5796'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04 where key = 'v21515' and type = 'decimal' and release = 'r5811'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r2771'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r3442'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r5796'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISP04H where key = 'v21517' and type = 'decimal' and release = 'r5811'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r2771'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r3442'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: CDISPKE04H where key = 'v21516' and type = 'decimal' and release = 'r5796'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 6 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"

@@ -7,6 +7,12 @@ evidence = "reg_meta_build/curation/registers/scb/livsmedelsforsaljning.toml:102
 
 [[statement]]
 kind = "set"
-subject = "var:ean-kval"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: EAN_KVAL where key = 'v17607' and type = 'decimal' and release = 'r12227'"
+fields = { type = "integer" }
+evidence = "value set: 18 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: EAN_KVAL where key = 'v17607' and type = 'decimal' and release = 'r213'"
 fields = { type = "integer" }
 evidence = "value set: 18 integer codes"

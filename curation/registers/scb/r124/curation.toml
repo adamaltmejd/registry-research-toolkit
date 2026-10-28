@@ -1,384 +1,1998 @@
 
 [[statement]]
 kind = "set"
-subject = "var:allergib"
+subject = "arbetsorsakade-besvar: AllergiB where key = 'v8021' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:anmaro"
+subject = "arbetsorsakade-besvar: AllergiB where key = 'v8021' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AllergiB where key = 'v8021' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Allergib where key = 'v8021' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Allergib where key = 'v8021' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Allergib where key = 'v8021' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: anmaro where key = 'v8031' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 8 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:annators"
+subject = "arbetsorsakade-besvar: anmaro where key = 'v8031' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 8 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AnnatOrs where key = 'v8035' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:aof"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:aou"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-enbart-dagtid"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-enbart-vardagar"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsst"
+subject = "arbetsorsakade-besvar: AnnatOrs where key = 'v8035' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:asjukdag"
+subject = "arbetsorsakade-besvar: AnnatOrs where key = 'v8035' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Annators where key = 'v8035' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Annators where key = 'v8035' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Annators where key = 'v8035' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOF where key = 'v8039' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AOU where key = 'v8041' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: HsArbDagtid where key = 'v18002' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: HsArbVard where key = 'v7179' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ArbetsSt where key = 'v7948' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ArbetsSt where key = 'v7948' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ArbetsSt where key = 'v7948' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Arbetsst where key = 'v7948' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Arbetsst where key = 'v7948' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Arbetsst where key = 'v7948' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASjukdag where key = 'v7951' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 12 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:asjukskr"
+subject = "arbetsorsakade-besvar: ASjukdag where key = 'v7951' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 12 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASjukdag where key = 'v7951' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 12 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukdag where key = 'v7951' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 12 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukdag where key = 'v7951' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 12 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukdag where key = 'v7951' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 12 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASjukskr where key = 'v7953' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 7 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:atgarder"
+subject = "arbetsorsakade-besvar: ASjukskr where key = 'v7953' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASjukskr where key = 'v7953' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukskr where key = 'v7953' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukskr where key = 'v7953' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Asjukskr where key = 'v7953' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:axelarmb"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Atgarder where key = 'v7955' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AxelArmB where key = 'v7956' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:benbesva"
+subject = "arbetsorsakade-besvar: AxelArmB where key = 'v7956' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:besvar-andra-forhallanden"
+subject = "arbetsorsakade-besvar: AxelArmB where key = 'v7956' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AxelArmb where key = 'v7956' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AxelArmb where key = 'v7956' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AxelArmb where key = 'v7956' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BenBesva where key = 'v7957' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASF where key = 'v7949' and type = 'decimal' and release = 'r14121'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:besvar-andra-forhallanden-aret"
+subject = "arbetsorsakade-besvar: ASF where key = 'v7949' and type = 'decimal' and release = 'r15492'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:besvar-i-buk-backen"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:besvar-minskat-andrade-uppg"
+subject = "arbetsorsakade-besvar: ASF where key = 'v7949' and type = 'decimal' and release = 'r15503'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bildskar"
+subject = "arbetsorsakade-besvar: ASF where key = 'v7949' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: asjukdom where key = 'v7949' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: asjukdom where key = 'v7949' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASU where key = 'v7954' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASU where key = 'v7954' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASU where key = 'v7954' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: ASU where key = 'v7954' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BukBesva where key = 'v7963' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:biologis"
+subject = "arbetsorsakade-besvar: Bukbesva where key = 'v7963' and type = 'decimal' and release = 'r14121'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:blodbesv"
+subject = "arbetsorsakade-besvar: Bukbesva where key = 'v7963' and type = 'decimal' and release = 'r15492'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:brostbes"
+subject = "arbetsorsakade-besvar: Bukbesva where key = 'v7963' and type = 'decimal' and release = 'r15503'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bulleror"
+subject = "arbetsorsakade-besvar: Besvarmi where key = 'v7958' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BildSkar where key = 'v7959' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fardvagsolycka"
+subject = "arbetsorsakade-besvar: BildSkar where key = 'v7959' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BildSkar where key = 'v7959' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bildskar where key = 'v7959' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bildskar where key = 'v7959' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bildskar where key = 'v7959' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Biologis where key = 'v7960' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BlodBesv where key = 'v7961' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BlodBesv where key = 'v7961' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BlodBesv where key = 'v7961' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Blodbesv where key = 'v7961' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Blodbesv where key = 'v7961' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Blodbesv where key = 'v7961' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BrostBes where key = 'v7962' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BrostBes where key = 'v7962' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: BrostBes where key = 'v7962' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Brostbes where key = 'v7962' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Brostbes where key = 'v7962' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Brostbes where key = 'v7962' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Bulleror where key = 'v7964' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFF where key = 'v8044' and type = 'decimal' and release = 'r14121'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fotbesva"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:fysiskaa"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:handbesv"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:helakrop"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:hjartbes"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:horselbe"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:hotorsak"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:hudbesva"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:hudoverk"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudetb"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:ingaprob"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:kemiskao"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:klimator"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:kvallsarbete-frekvens"
-fields = { type = "integer" }
-evidence = "value set: 4 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:lungbesv"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:magebesv"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:metodisk"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:minskbesv"
-fields = { type = "integer" }
-evidence = "value set: 6 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:mobbingo"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:nackebes"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:nagotann"
+subject = "arbetsorsakade-besvar: TFF where key = 'v8044' and type = 'decimal' and release = 'r15492'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:nattarbete-frekvens"
+subject = "arbetsorsakade-besvar: TFF where key = 'v8044' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFF where key = 'v8044' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FotBesva where key = 'v7966' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FotBesva where key = 'v7966' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FotBesva where key = 'v7966' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fotbesva where key = 'v7966' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fotbesva where key = 'v7966' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fotbesva where key = 'v7966' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FysiskaA where key = 'v7967' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FysiskaA where key = 'v7967' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: FysiskaA where key = 'v7967' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fysiskaa where key = 'v7967' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fysiskaa where key = 'v7967' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Fysiskaa where key = 'v7967' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HandBesv where key = 'v7968' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HelaKrop where key = 'v7970' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HelaKrop where key = 'v7970' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HelaKrop where key = 'v7970' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Helakrop where key = 'v7970' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Helakrop where key = 'v7970' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Helakrop where key = 'v7970' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HjartBes where key = 'v7971' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HjartBes where key = 'v7971' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HjartBes where key = 'v7971' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hjartbes where key = 'v7971' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hjartbes where key = 'v7971' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hjartbes where key = 'v7971' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HorselBe where key = 'v7972' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HorselBe where key = 'v7972' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HorselBe where key = 'v7972' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Horselbe where key = 'v7972' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Horselbe where key = 'v7972' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Horselbe where key = 'v7972' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HotOrsak where key = 'v7973' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HotOrsak where key = 'v7973' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HotOrsak where key = 'v7973' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hotorsak where key = 'v7973' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hotorsak where key = 'v7973' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hotorsak where key = 'v7973' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudBesva where key = 'v7974' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudBesva where key = 'v7974' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudBesva where key = 'v7974' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudbesva where key = 'v7974' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudbesva where key = 'v7974' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudbesva where key = 'v7974' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudOverk where key = 'v7975' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudOverk where key = 'v7975' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HudOverk where key = 'v7975' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudoverk where key = 'v7975' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudoverk where key = 'v7975' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hudoverk where key = 'v7975' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HuvudetB where key = 'v7977' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HuvudetB where key = 'v7977' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HuvudetB where key = 'v7977' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Huvudetb where key = 'v7977' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Huvudetb where key = 'v7977' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Huvudetb where key = 'v7977' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: IngaProb where key = 'v7978' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:ogonenbe"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:organisa"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:overtid-med-ersattning"
+subject = "arbetsorsakade-besvar: IngaProb where key = 'v7978' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-utan-ersattning-anstallda"
+subject = "arbetsorsakade-besvar: IngaProb where key = 'v7978' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:personut"
-fields = { type = "integer" }
-evidence = "value set: 2 integer codes"
-
-[[statement]]
-kind = "set"
-subject = "var:probanna"
+subject = "arbetsorsakade-besvar: Ingaprob where key = 'v7978' and type = 'decimal' and release = 'r14121'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:psykbesv"
+subject = "arbetsorsakade-besvar: Ingaprob where key = 'v7978' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Ingaprob where key = 'v7978' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: KemiskaO where key = 'v7979' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:psykiska"
+subject = "arbetsorsakade-besvar: KemiskaO where key = 'v7979' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:ryggbesv"
+subject = "arbetsorsakade-besvar: KemiskaO where key = 'v7979' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukfranvaro-matveckan-besvar"
+subject = "arbetsorsakade-besvar: Kemiskao where key = 'v7979' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Kemiskao where key = 'v7979' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Kemiskao where key = 'v7979' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Klimator where key = 'v7982' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: HsArbKvallAnt where key = 'v6514' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: LungBesv where key = 'v7984' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: LungBesv where key = 'v7984' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: LungBesv where key = 'v7984' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Lungbesv where key = 'v7984' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Lungbesv where key = 'v7984' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Lungbesv where key = 'v7984' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: MageBesv where key = 'v7985' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: MageBesv where key = 'v7985' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: MageBesv where key = 'v7985' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Magebesv where key = 'v7985' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Magebesv where key = 'v7985' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Magebesv where key = 'v7985' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Metodisk where key = 'v7987' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: MinskBesv where key = 'v7988' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 6 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:sjukskriven-tid-fore-rehab"
+subject = "arbetsorsakade-besvar: MinskBesv where key = 'v7988' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Minskbesv where key = 'v7988' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Mobbingo where key = 'v7990' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NackeBes where key = 'v7991' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NagotAnn where key = 'v7992' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NagotAnn where key = 'v7992' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: NagotAnn where key = 'v7992' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Nagotann where key = 'v7992' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Nagotann where key = 'v7992' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Nagotann where key = 'v7992' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: HsArbNattAnt where key = 'v6522' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: OgonenBe where key = 'v7993' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: OgonenBe where key = 'v7993' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: OgonenBe where key = 'v7993' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Ogonenbe where key = 'v7993' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Ogonenbe where key = 'v7993' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Ogonenbe where key = 'v7993' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Organisa where key = 'v7995' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: hsoters where key = 'v6771' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: hsotejers where key = 'v31256' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PersonUt where key = 'v7996' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PersonUt where key = 'v7996' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PersonUt where key = 'v7996' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Personut where key = 'v7996' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Personut where key = 'v7996' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Personut where key = 'v7996' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: probanna where key = 'v8010' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PsykBesv where key = 'v8011' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PsykBesv where key = 'v8011' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: PsykBesv where key = 'v8011' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykbesv where key = 'v8011' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykbesv where key = 'v8011' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykbesv where key = 'v8011' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Psykiska where key = 'v8012' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: RyggBesv where key = 'v8014' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AlteMatv where key = 'v8022' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: AlteMatv where key = 'v8022' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Altematv where key = 'v8022' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: TIDREHAB where key = 'v7976' and type = 'decimal' and release = 'r17546'"
 fields = { type = "integer" }
 evidence = "value set: 9 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:skyddsut"
+subject = "arbetsorsakade-besvar-2018: TIDREHAB where key = 'v7976' and type = 'decimal' and release = 'r17595'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar-2018: TIDREHAB where key = 'v7976' and type = 'decimal' and release = 'r18441'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HurLange where key = 'v7976' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HurLange where key = 'v7976' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: HurLange where key = 'v7976' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hurlange where key = 'v7976' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hurlange where key = 'v7976' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Hurlange where key = 'v7976' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 9 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SkyddsUt where key = 'v8019' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:smittors"
+subject = "arbetsorsakade-besvar: SkyddsUt where key = 'v8019' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:somnbesv"
+subject = "arbetsorsakade-besvar: SkyddsUt where key = 'v8019' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:tfu"
+subject = "arbetsorsakade-besvar: Skyddsut where key = 'v8019' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Skyddsut where key = 'v8019' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Skyddsut where key = 'v8019' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SmittOrs where key = 'v8020' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SmittOrs where key = 'v8020' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SmittOrs where key = 'v8020' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Smittors where key = 'v8020' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Smittors where key = 'v8020' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Smittors where key = 'v8020' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SomnBesv where key = 'v8043' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: SomnBesv where key = 'v8043' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Somnbesv where key = 'v8043' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:tungmanu"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TFU where key = 'v8044' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: TungManu where key = 'v8047' and type = 'decimal' and release = 'r11262'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:upprepar"
+subject = "arbetsorsakade-besvar: TungManu where key = 'v8047' and type = 'decimal' and release = 'r15509'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:vetejors"
+subject = "arbetsorsakade-besvar: TungManu where key = 'v8047' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:vibratio"
+subject = "arbetsorsakade-besvar: Tungmanu where key = 'v8047' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Tungmanu where key = 'v8047' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Tungmanu where key = 'v8047' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Upprepar where key = 'v8048' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: VetEjOrs where key = 'v8049' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: VetEjOrs where key = 'v8049' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: VetEjOrs where key = 'v8049' and type = 'decimal' and release = 'r5532'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vetejors where key = 'v8049' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vetejors where key = 'v8049' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vetejors where key = 'v8049' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r11262'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r14121'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r15492'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r15503'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r15509'"
+fields = { type = "integer" }
+evidence = "value set: 2 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: Vibratio where key = 'v8050' and type = 'decimal' and release = 'r5532'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"

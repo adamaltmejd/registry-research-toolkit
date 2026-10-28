@@ -515,6 +515,10 @@ The remaining C checklist:
 
 **Outside:** G0 runs ~160 s against its 60 s budget; fixed in a separate task.
 
+- **2026-10-28 ruling:** curate evidenced integer/decimal source mislabels only on
+  affected occurrences, leave unresolved cases uncurated for quieter notices; N1 general
+  logical-type inference stays at E.
+
 ### E: the holdings layer
 
 - **Design first, for the maintainer's review.** The design covers:

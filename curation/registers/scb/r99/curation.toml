@@ -1,18 +1,258 @@
 
 [[statement]]
 kind = "set"
-subject = "var:avreg"
+subject = "arbetskraftsbarometern: Avreg where key = 'v6408' and type = 'decimal' and release = 'r14631'"
 fields = { type = "integer" }
 evidence = "value set: 10 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:kod"
+subject = "arbetskraftsbarometern: Avreg where key = 'v6408' and type = 'decimal' and release = 'r14632'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: avreg where key = 'v6408' and type = 'decimal' and release = 'r14629'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: avreg where key = 'v6408' and type = 'decimal' and release = 'r14630'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r14627'"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:sektorkod"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r14628'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r14629'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r14630'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r14631'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r1670'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r2594'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r2595'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r2596'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r2597'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r3164'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r3533'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r4422'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r5760'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Kod where key = 'v6410' and type = 'decimal' and release = 'r5761'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r11618'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r12768'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14536'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14627'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14628'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14629'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14630'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r14631'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r15575'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r1670'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r18057'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r18491'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r18970'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r2594'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r2595'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r2596'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r2597'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r3164'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r3533'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r4422'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r5760'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r5761'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r7279'"
+fields = { type = "integer" }
+evidence = "value set: 10 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: Sektor where key = 'v1819' and type = 'decimal' and release = 'r9887'"
 fields = { type = "integer" }
 evidence = "value set: 10 integer codes"

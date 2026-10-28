@@ -80,6 +80,6 @@ evidence = "reg_meta_build/curation/registers/scb/rams.toml:515\n\nSWECOV holds 
 
 [[statement]]
 kind = "set"
-subject = "var:lone-eller-foretagarinkomst"
+subject = "jobbregistret: LonFInk where key = 'v16899' and type = 'decimal' and release = 'r1876'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 22 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"

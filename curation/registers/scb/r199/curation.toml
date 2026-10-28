@@ -14,12 +14,48 @@ evidence = "reg_meta_build/curation/registers/scb/hib.toml:404\n\nComplete accep
 
 [[statement]]
 kind = "set"
-subject = "var:forhandling-om-manadshyra-forhandl0"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r3808'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:forhandling-om-manadshyra-forhandl1"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r4339'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r4994'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl0 where key = 'v21548' and type = 'decimal' and release = 'r5518'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r3808'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r4339'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r4994'"
+fields = { type = "integer" }
+evidence = "value set: 4 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: Forhandl1 where key = 'v21548' and type = 'decimal' and release = 'r5518'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"

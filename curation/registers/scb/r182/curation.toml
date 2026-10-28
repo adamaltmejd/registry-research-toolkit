@@ -8848,6 +8848,6 @@ evidence = "reg_meta_build/curation/registers/scb/fou.toml:17290\n\nSame native1
 
 [[statement]]
 kind = "set"
-subject = "var:fou-verksamhet-nasta-ar"
+subject = "landsting: FoUUtgKomAr where key = 'v7743' and type = 'decimal' and release = 'r1007'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"

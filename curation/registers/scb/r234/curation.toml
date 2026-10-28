@@ -1,6 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "var:urvalskod"
+subject = "labour-cost-survey: Urvkod where key = 'v14720' and type = 'decimal' and release = 'r3486'"
+fields = { type = "integer" }
+evidence = "value set: 5 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "labour-cost-survey: Urvkod where key = 'v14720' and type = 'decimal' and release = 'r550'"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"

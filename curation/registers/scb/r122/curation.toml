@@ -577,66 +577,366 @@ evidence = "reg_meta_build/curation/registers/scb/aku.toml:117\n\nUtkast_P1105_V
 
 [[statement]]
 kind = "set"
-subject = "var:bifakttim"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 171 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bimanskifttim"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiFaktTim where key = 'v4021' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 251 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bioktim"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiManSkiftTim where key = 'v6476' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: BiOkTim where key = 'v6477' and type = 'decimal' and release = 'r19485'"
 fields = { type = "integer" }
 evidence = "value set: 171 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:faktisk-tid-huvud-harledd"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 172 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:humanskifttim"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 172 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 172 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 172 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 172 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsFaktTim where key = 'v7107' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 172 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 253 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:huoktim"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 253 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 253 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 253 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 253 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsManSkiftTim where key = 'v6762' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 253 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 171 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:huoterstim"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOkTim where key = 'v6763' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 171 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 252 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:overtidstimmar-totalt-huvudsyssla"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 252 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 252 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 252 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 252 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtErsTim where key = 'v6772' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 252 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 251 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:totfakttim"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: HsOtTimTot where key = 'v6775' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 180 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:totmanskifttim"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 180 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 180 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 180 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 180 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotFaktTim where key = 'v6856' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 180 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r19243'"
 fields = { type = "integer" }
 evidence = "value set: 251 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:totvanltim"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotManSkiftTim where key = 'v6857' and type = 'decimal' and release = 'r20279'"
+fields = { type = "integer" }
+evidence = "value set: 251 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r19243'"
+fields = { type = "integer" }
+evidence = "value set: 264 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r19479'"
+fields = { type = "integer" }
+evidence = "value set: 264 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r19484'"
+fields = { type = "integer" }
+evidence = "value set: 264 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r19485'"
+fields = { type = "integer" }
+evidence = "value set: 264 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r19684'"
+fields = { type = "integer" }
+evidence = "value set: 264 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: TotVanlTim where key = 'v6858' and type = 'decimal' and release = 'r20279'"
 fields = { type = "integer" }
 evidence = "value set: 264 integer codes"

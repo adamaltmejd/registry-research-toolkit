@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:hjalp-fodelseland"
+subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: Aux_Fodland where key = 'v6442' and type = 'decimal' and release = 'r19751'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"

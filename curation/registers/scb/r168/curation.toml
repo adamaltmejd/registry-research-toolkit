@@ -639,48 +639,78 @@ evidence = "reg_meta_build/curation/registers/scb/fek.toml:87\n\nUtkast_P1105_Va
 
 [[statement]]
 kind = "set"
-subject = "var:fasttaxkl"
+subject = "fek-slutdata: fasttaxkl where key = 'v916' and type = 'decimal' and release = 'r19229'"
 fields = { type = "integer" }
 evidence = "value set: 10 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fetyp"
+subject = "fek-slutdata: FETyp where key = 'v973' and type = 'decimal' and release = 'r19229'"
 fields = { type = "integer" }
 evidence = "value set: 7 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:foretagsenhetens-status"
+subject = "fek-slutdata: FETyp where key = 'v973' and type = 'decimal' and release = 'r19898'"
+fields = { type = "integer" }
+evidence = "value set: 7 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: FEStat where key = 'v919' and type = 'decimal' and release = 'r19229'"
 fields = { type = "integer" }
 evidence = "value set: 6 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:gemkalla"
+subject = "fek-slutdata: FEStat where key = 'v919' and type = 'decimal' and release = 'r19898'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: GemKalla where key = 'v4334' and type = 'decimal' and release = 'r11379'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:hjenhet"
+subject = "fek-slutdata-verksamhetsenhet: GemKalla where key = 'v4334' and type = 'decimal' and release = 'r11360'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:infi"
+subject = "fek-slutdata-verksamhetsenhet: HjEnhet where key = 'v924' and type = 'decimal' and release = 'r11360'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: INFI where key = 'v4331' and type = 'decimal' and release = 'r11360'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:invenkat"
+subject = "fek-slutdata-investeringar-per-kommun: InvEnkat where key = 'v4333' and type = 'decimal' and release = 'r11379'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:outlier"
+subject = "fek-slutdata-verksamhetsenhet: InvEnkat where key = 'v4333' and type = 'decimal' and release = 'r11360'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: Outlier where key = 'v2468' and type = 'decimal' and release = 'r19229'"
+fields = { type = "integer" }
+evidence = "value set: 3 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: Outlier where key = 'v2468' and type = 'decimal' and release = 'r19898'"
 fields = { type = "integer" }
 evidence = "value set: 3 integer codes"

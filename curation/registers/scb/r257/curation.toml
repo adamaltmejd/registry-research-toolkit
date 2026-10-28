@@ -4610,210 +4610,210 @@ evidence = "reg_meta_build/curation/registers/scb/innovation-foretag.toml:11187\
 
 [[statement]]
 kind = "set"
-subject = "var:clim-cust-efterfragan"
+subject = "innovation-i-foretagssektorn: CLIM_CUST where key = 'v46493' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-nprv-eu-efta"
+subject = "innovation-i-foretagssektorn: COOP_NPRV_EU_EFTA where key = 'v46504' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-nprv-nat"
+subject = "innovation-i-foretagssektorn: COOP_NPRV_NAT where key = 'v46505' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-nprv-neu-nefta"
+subject = "innovation-i-foretagssektorn: COOP_NPRV_NEU_NEFTA where key = 'v46503' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-prv-eu-efta"
+subject = "innovation-i-foretagssektorn: COOP_PRV_EU_EFTA where key = 'v46519' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-prv-nat"
+subject = "innovation-i-foretagssektorn: COOP_PRV_NAT where key = 'v46522' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-prv-neu-nefta"
+subject = "innovation-i-foretagssektorn: COOP_PRV_NEU_NEFTA where key = 'v46518' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:coop-pub-clcu-neu-nefta"
+subject = "innovation-i-foretagssektorn: COOP_PUB_CLCU_NEU_NEFTA where key = 'v39126' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:env-endem"
+subject = "innovation-i-foretagssektorn: ENV_ENDEM where key = 'v46476' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:env-engra"
+subject = "innovation-i-foretagssektorn: ENV_ENGRA where key = 'v46478' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-aut-loc-reg-rndinn"
+subject = "innovation-i-foretagssektorn: FUND_AUT_LOC_REG_RNDINN where key = 'v46496' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-nsucc"
+subject = "innovation-i-foretagssektorn: FUND_DEBT_NSUCC where key = 'v46498' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-debt-succ"
+subject = "innovation-i-foretagssektorn: FUND_DEBT_SUCC where key = 'v46499' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-nsucc"
+subject = "innovation-i-foretagssektorn: FUND_EQUIT_NSUCC where key = 'v46501' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-equit-succ"
+subject = "innovation-i-foretagssektorn: FUND_EQUIT_SUCC where key = 'v46502' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-eu-oth-rndinn"
+subject = "innovation-i-foretagssektorn: FUND_EU_OTH_RNDINN where key = 'v46494' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-gov-ctl-rndinn"
+subject = "innovation-i-foretagssektorn: FUND_GOV_CTL_RNDINN where key = 'v46495' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-ndebt"
+subject = "innovation-i-foretagssektorn: FUND_NDEBT where key = 'v46497' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:fund-nequit"
+subject = "innovation-i-foretagssektorn: FUND_NEQUIT where key = 'v46500' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inn"
+subject = "innovation-i-foretagssektorn: INN where key = 'v46597' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inn-oslo"
+subject = "innovation-i-foretagssektorn: INN_OSLO where key = 'v46596' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-compl"
+subject = "innovation-i-foretagssektorn: INNA_COMPL where key = 'v46601' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd"
+subject = "innovation-i-foretagssektorn: INNA_IH_RND where key = 'v46605' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-cont"
+subject = "innovation-i-foretagssektorn: INNA_IH_RND_CONT where key = 'v46603' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-ih-rnd-occ"
+subject = "innovation-i-foretagssektorn: INNA_IH_RND_OCC where key = 'v46602' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inna-rnd-contr-out"
+subject = "innovation-i-foretagssektorn: INNA_RND_CONTR_OUT where key = 'v46604' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-bpcs"
+subject = "innovation-i-foretagssektorn: INNO_BPCS where key = 'v46598' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-gd-serv"
+subject = "innovation-i-foretagssektorn: INNO_GD_SERV where key = 'v46599' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-acct"
+subject = "innovation-i-foretagssektorn: INNO_PCS_ACCT where key = 'v46609' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-comm"
+subject = "innovation-i-foretagssektorn: INNO_PCS_COMM where key = 'v46610' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-oproc-extrel"
+subject = "innovation-i-foretagssektorn: INNO_PCS_OPROC_EXTREL where key = 'v46608' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-sls-serv"
+subject = "innovation-i-foretagssektorn: INNO_PCS_SLS_SERV where key = 'v46606' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-pcs-wr-dec-hrm"
+subject = "innovation-i-foretagssektorn: INNO_PCS_WR_DEC_HRM where key = 'v46607' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:inno-prd"
+subject = "innovation-i-foretagssektorn: INNO_PRD where key = 'v46600' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:ipr-out-sell"
+subject = "innovation-i-foretagssektorn: IPR_OUT_SELL where key = 'v46615' and type = 'decimal' and release = 'r18898'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"

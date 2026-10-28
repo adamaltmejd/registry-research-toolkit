@@ -47,28 +47,11 @@ class StorageSchemaError(ValueError):
     """The storage-schema export violates its contract."""
 
 
-@dataclass(frozen=True)
-class StorageColumn:
-    """One exact physical column's declared storage metadata, never row values."""
-
-    table_schema: str
-    table_name: str
-    column_name: str
-    data_type: str
-    numeric_precision: int | None
-    numeric_scale: int | None
-
-
 def read_storage_types(path: Path) -> dict[tuple[str, str], str]:
     """Read (table, folded column) → SQL type; only schema metadata is read.
 
     A missing or unreadable export is a `StorageSchemaError`: the check never
     skips (#1594)."""
-    return {key: column.data_type for key, column in read_storage_columns(path).items()}
-
-
-def read_storage_columns(path: Path) -> dict[tuple[str, str], StorageColumn]:
-    """Read (table, folded column) → exact storage-schema metadata."""
     try:
         text = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
@@ -77,20 +60,12 @@ def read_storage_columns(path: Path) -> dict[tuple[str, str], StorageColumn]:
             f"storage-schema export {path} is unreadable ({reason}); pass the "
             "steward's information_schema column export as --storage-csv"
         ) from exc
-    return parse_storage_columns(text, str(path))
+    return parse_storage_types(text, str(path))
 
 
 def parse_storage_types(text: str, path: str) -> dict[tuple[str, str], str]:
     """`read_storage_types` over already-read export text; `path` names it in errors."""
-    return {
-        key: column.data_type
-        for key, column in parse_storage_columns(text, path).items()
-    }
-
-
-def parse_storage_columns(text: str, path: str) -> dict[tuple[str, str], StorageColumn]:
-    """`read_storage_columns` over export text, with the same validation boundary."""
-    result: dict[tuple[str, str], StorageColumn] = {}
+    result: dict[tuple[str, str], str] = {}
     try:
         with io.StringIO(text, newline="") as handle:
             rows = csv.reader(handle, strict=True)
@@ -122,18 +97,7 @@ def parse_storage_columns(text: str, path: str) -> dict[tuple[str, str], Storage
                     raise StorageSchemaError(
                         f"{path} row {row_number} repeats table and folded column {key!r}"
                     )
-                result[key] = StorageColumn(
-                    table_schema=values["table_schema"],
-                    table_name=values["table_name"],
-                    column_name=values["column_name"],
-                    data_type=values["data_type"],
-                    numeric_precision=int(values["numeric_precision"])
-                    if values["numeric_precision"]
-                    else None,
-                    numeric_scale=int(values["numeric_scale"])
-                    if values["numeric_scale"]
-                    else None,
-                )
+                result[key] = values["data_type"]
     except (UnicodeDecodeError, csv.Error, StopIteration) as exc:
         raise StorageSchemaError(
             f"invalid storage-schema export {path}: {exc}"

@@ -43,24 +43,30 @@ evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valdeltagande.tom
 
 [[statement]]
 kind = "set"
-subject = "var:arbetskraftsstatus"
+subject = "valdeltagande: arbstatus where key = 'v15298' and type = 'decimal' and release = 'r3440'"
 fields = { type = "integer" }
 evidence = "value set: 5 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:forstagangsvaljare-allmanna-val"
+subject = "valdeltagande: fgang where key = 'v7911' and type = 'decimal' and release = 'r13414'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:forstagangsvaljare-europaparlamentsval"
+subject = "valdeltagande: fgangeu where key = 'v21876' and type = 'decimal' and release = 'r13414'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:forvarvsinkomst-kvintilgrupp"
+subject = "valdeltagande: CSFVI_kvintil where key = 'v7916' and type = 'decimal' and release = 'r13414'"
+fields = { type = "integer" }
+evidence = "value set: 6 integer codes"
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: CSFVI_kvintil where key = 'v7916' and type = 'decimal' and release = 'r18912'"
 fields = { type = "integer" }
 evidence = "value set: 6 integer codes"

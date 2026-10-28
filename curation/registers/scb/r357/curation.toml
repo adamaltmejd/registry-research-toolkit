@@ -1,30 +1,30 @@
 
 [[statement]]
 kind = "set"
-subject = "var:brelkbo"
+subject = "individer: BRELKBO where key = 'v35584' and type = 'decimal' and release = 'r9947'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:bvxbarn"
+subject = "individer: BVXBARN where key = 'v35580' and type = 'decimal' and release = 'r9947'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:hushallsforestandaren"
+subject = "individer: BKHF where key = 'v35579' and type = 'decimal' and release = 'r9947'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:kvarboende-18-29-ar"
+subject = "individer: BKVARBO where key = 'v4543' and type = 'decimal' and release = 'r9947'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:relation-till-urvalsperson"
+subject = "individer: BRELUP where key = 'v35581' and type = 'decimal' and release = 'r9947'"
 fields = { type = "integer" }
 evidence = "value set: 17 integer codes"

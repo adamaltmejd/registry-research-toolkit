@@ -73,24 +73,24 @@ evidence = "reg_meta_build/curation/registers/scb/fordonsreg.toml:271\n\nMaintai
 
 [[statement]]
 kind = "set"
-subject = "var:agarkategori"
+subject = "ovriga-fordonsslag: AgKat where key = 'v2187' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 10 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:dirimp"
+subject = "ovriga-fordonsslag: DirImp where key = 'v2998' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:leas"
+subject = "ovriga-fordonsslag: Leas where key = 'v3006' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "var:status"
+subject = "ovriga-fordonsslag: Status where key = 'v461' and type = 'decimal' and release = 'r13635'"
 fields = { type = "integer" }
 evidence = "value set: 4 integer codes"

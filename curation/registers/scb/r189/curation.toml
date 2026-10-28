@@ -141,6 +141,60 @@ evidence = "reg_meta_build/curation/registers/scb/grundskola-ak9.toml:12\n\nUtka
 
 [[statement]]
 kind = "set"
-subject = "var:antal-betyg"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r5624'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r5627'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6237'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6238'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6239'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6240'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r6241'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7544'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7545'"
+fields = { type = "integer" }
+evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: AntalBet where key = 'v30494' and type = 'decimal' and release = 'r7546'"
 fields = { type = "integer" }
 evidence = "MONA storage: integer/scale 0 on all 4 held deliveries; SWECOV manifest f92132c13b79a2a8e97c43923c901ab8c64d4be277cbcb269c72c3c3caca862a"
