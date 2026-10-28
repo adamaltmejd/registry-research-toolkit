@@ -288,6 +288,11 @@ fn check(end: &Endpoint) -> Result<(), String> {
     if needs_key && end.key.is_none() {
         return Err(format!("a {} endpoint needs a key", end.kind));
     }
+    if end.kind == "variable"
+        && let Some(key) = end.key.as_deref().filter(|key| key.starts_with("var:"))
+    {
+        key.parse::<reg_frame::address::Address>()?;
+    }
     Ok(())
 }
 
@@ -336,6 +341,7 @@ struct Index<'a> {
     tables: BTreeMap<(usize, &'a str), usize>,
     releases: BTreeMap<(usize, &'a str, &'a str), usize>,
     variables: BTreeMap<(usize, &'a str), BTreeSet<usize>>,
+    variable_slugs: BTreeMap<(usize, &'a str), usize>,
 }
 
 impl<'a> Index<'a> {
@@ -346,6 +352,7 @@ impl<'a> Index<'a> {
             tables: BTreeMap::new(),
             releases: BTreeMap::new(),
             variables: BTreeMap::new(),
+            variable_slugs: BTreeMap::new(),
         };
         for (ri, r) in registers.iter().enumerate() {
             let reg = &r.register;
@@ -377,12 +384,15 @@ impl<'a> Index<'a> {
                         .insert(variable);
                 }
             }
+            for (v, variable) in r.variables.iter().enumerate() {
+                index.variable_slugs.insert((ri, variable.slug.as_str()), v);
+            }
         }
         index
     }
 
     /// The entities an endpoint (already checked) names: one, or several pieces of a
-    /// split key.
+    /// split source key. An explicit `var:` key names exactly one final variable.
     fn entities(&self, end: &Endpoint) -> Result<Vec<Entity>, String> {
         let ri = match (&end.register, &end.register_name) {
             (Some(handle), _) => *self
@@ -421,6 +431,11 @@ impl<'a> Index<'a> {
                 .get(&(ri, table, key))
                 .map(|&x| vec![Entity::Release(ri, x)])
                 .ok_or_else(|| missing(&format!("release {key:?} of table {table:?}"))),
+            "variable" if key.starts_with("var:") => self
+                .variable_slugs
+                .get(&(ri, &key[4..]))
+                .map(|&v| vec![Entity::Variable(ri, v)])
+                .ok_or_else(|| missing(&format!("variable {key:?}"))),
             _ => self
                 .variables
                 .get(&(ri, key))

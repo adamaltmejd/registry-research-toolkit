@@ -488,8 +488,8 @@ The remaining C checklist:
 - **Release builds refuse unplaced and split ledger ids** once D's curation exists;
   until then they are only counted in the build report.
 
-- **LISA section headings** become `set` group hints from the reader's output (a heading
-  → rows map, added to the LISA reader when D lands), not typed by hand.
+- **LISA section headings** yield reviewable set candidates from the reader's heading →
+  rows map, and adopted sets are ordinary curation.
 
 - **Classification curation, sets and tags** are converted. Classification references
   are always curated.
