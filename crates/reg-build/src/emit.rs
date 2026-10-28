@@ -171,6 +171,7 @@ fn write_provenance(
         ProvenanceSubject::Table(..) => "table",
         ProvenanceSubject::Release(..) => "release",
         ProvenanceSubject::Occurrence(..) => "occurrence",
+        ProvenanceSubject::Variable(..) => "variable",
         ProvenanceSubject::ValueSet(_) => "valueset",
         ProvenanceSubject::ClassVersion(..) => "class_version",
     };
@@ -490,7 +491,16 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(rid),
                     Cell::Int(table_id[&(ri, release.table)]),
                     Cell::Str(
-                        if asserted {
+                        if asserted
+                            || provenance_by_subject
+                                .get(&ProvenanceSubject::Release(ri, x))
+                                .is_some_and(|values| {
+                                    values.iter().any(|v| {
+                                        v.field == "period"
+                                            && matches!(v.origin, Origin::Curated(_))
+                                    })
+                                })
+                        {
                             "curated"
                         } else if period.is_some() {
                             "parsed"
@@ -559,6 +569,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(reg_core::fold_identity(&variable.slug)),
                 ],
             );
+            write_provenance(
+                &mut rows,
+                &ProvenanceSubject::Variable(ri, v),
+                vid,
+                &provenance_by_subject,
+                &statement_id,
+            )?;
             for run in &variable.texts {
                 rows.push(
                     "variable_text",
@@ -597,7 +614,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         Cell::Spelling(segment.spelling.clone()),
                         opt_str(segment.dtype.as_ref()),
                         opt_int(segment.length),
-                        Cell::Null,
+                        opt_str(segment.format.as_ref()),
                         opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
                         Cell::Null,
                         Cell::Str(segment.coded.into()),
@@ -648,7 +665,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_text(x.unit.as_ref()),
                     opt_str(x.dtype.as_ref()),
                     opt_int(x.length),
-                    Cell::Null,
+                    opt_str(x.format.as_ref()),
                     opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),
                     Cell::Null,
                     Cell::Str(reg_resolve::coded(x).into()),
@@ -747,6 +764,42 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
         Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
     };
+    let mut memberships = BTreeMap::<(usize, String), BTreeSet<usize>>::new();
+    for (ri, register) in catalog.registers.iter().enumerate() {
+        for (variable, resolved) in register.variables.iter().enumerate() {
+            for set in &resolved.sets {
+                memberships
+                    .entry((ri, set.clone()))
+                    .or_default()
+                    .insert(variable);
+            }
+        }
+    }
+    for (i, ((ri, set), members)) in memberships.into_iter().enumerate() {
+        let reg_pid = pid_of_register(&catalog.registers[ri]);
+        let set_id = id(i);
+        rows.push(
+            "var_set",
+            vec![
+                Cell::Int(set_id),
+                Cell::Str("set".into()),
+                Cell::Str(format!("{reg_pid}/{set}")),
+                Cell::Int(register_id[&reg_pid]),
+                Cell::Text(set),
+                Cell::Null,
+            ],
+        );
+        for (ord, v) in members.into_iter().enumerate() {
+            rows.push(
+                "var_set_member",
+                vec![
+                    Cell::Int(set_id),
+                    Cell::Int(variable_id[&(ri, v)]),
+                    Cell::Int(i64::try_from(ord).expect("set member ordinal fits i64")),
+                ],
+            );
+        }
+    }
     for notice in &catalog.notices {
         let r = &catalog.registers[notice.subject.register()];
         let reg_pid = pid_of_register(r);

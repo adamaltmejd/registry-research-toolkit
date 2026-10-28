@@ -134,6 +134,8 @@ pub struct Occurrence {
     /// `datetime`; the literal when the table has no entry.
     pub dtype: Option<String>,
     pub length: Option<i64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub format: Option<String>,
     /// The content hash of a value set stated in the same frame.
     pub valueset: Option<String>,
     /// Value sets that differ by population, in place of `valueset`.

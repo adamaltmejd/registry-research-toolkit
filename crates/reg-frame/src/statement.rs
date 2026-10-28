@@ -18,9 +18,7 @@ pub enum Statement {
     Set {
         subject: Address,
         #[serde(default)]
-        fields: SetFields,
-        #[serde(default)]
-        reject: bool,
+        fields: Box<SetFields>,
         evidence: String,
         caveat: Option<String>,
     },
@@ -46,14 +44,14 @@ pub enum Statement {
 #[serde(tag = "entity", rename_all = "kebab-case", deny_unknown_fields)]
 pub enum AssertFact {
     Occurrence {
-        fields: SetFields,
+        fields: Box<AssertFields>,
     },
     Release {
         name: String,
         period: PeriodSet,
     },
     Table {
-        fields: SetFields,
+        fields: Box<AssertFields>,
     },
     ValueSet {
         items: Vec<crate::Item>,
@@ -81,7 +79,7 @@ pub enum Severity {
     Review,
 }
 
-/// The one closed schema of fields curation can override. Names describe catalog
+/// The closed schema of fields curation can override. Names describe catalog
 /// facts; source handles and keys deliberately have no slot here.
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -91,6 +89,7 @@ pub struct SetFields {
     pub name: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
+    pub operational_definition: Option<String>,
     pub unit: Option<String>,
     pub description: Option<String>,
     pub synonyms: Option<Vec<String>>,
@@ -109,10 +108,31 @@ pub struct SetFields {
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub role: Option<String>,
-    pub temporality: Option<String>,
     pub unit_type: Option<String>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
+}
+
+/// Source-shaped facts for assertions, separate from field overrides.
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AssertFields {
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub coverage: Option<PeriodSet>,
+    pub label: Option<String>,
+    pub definition: Option<String>,
+    pub operational_definition: Option<String>,
+    pub unit: Option<String>,
+    #[serde(rename = "type")]
+    pub dtype: Option<String>,
+    pub length: Option<u64>,
+    pub spelling: Option<String>,
+    pub period: Option<PeriodSet>,
+    pub value_set: Option<String>,
+    pub coded: Option<bool>,
+    pub sensitive: Option<bool>,
+    pub identifier: Option<bool>,
 }
 
 impl Statement {
@@ -138,16 +158,14 @@ impl Statement {
             return Err("evidence must not be blank".into());
         }
         match self {
-            Self::Set { fields, reject, .. } => {
-                if !reject {
-                    fields.validate()?;
-                }
+            Self::Set { fields, .. } => {
+                validate_fields(fields)?;
                 fields.validate_references()?;
             }
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
-                    fields.validate()?;
-                    fields.validate_references()?;
+                    validate_fields(fields)?;
+                    value_set_reference(fields.value_set.as_deref())?;
                 }
                 AssertFact::Release { name, .. } if name.trim().is_empty() => {
                     return Err("asserted release name must not be blank".into());
@@ -205,14 +223,13 @@ impl Statement {
         match &mut normalized {
             Self::Set { fields, .. } => fields.normalize(),
             Self::Assert { fact, .. } => match fact {
-                AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
-                    fields.normalize();
-                }
                 AssertFact::ValueSet { items }
                 | AssertFact::ClassificationVersion { items, .. } => {
                     items.sort();
                 }
-                AssertFact::Release { .. } => {}
+                AssertFact::Occurrence { .. }
+                | AssertFact::Table { .. }
+                | AssertFact::Release { .. } => {}
             },
             Self::Link { object, .. } => {
                 if let Ok(address) = object.parse::<Address>() {
@@ -246,28 +263,7 @@ impl SetFields {
                 }
             }
         }
-        if let Some(hash) = &self.value_set
-            && (hash.len() != 64
-                || !hash
-                    .bytes()
-                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)))
-        {
-            return Err("value_set must be a lowercase SHA-256 content hash".into());
-        }
-        Ok(())
-    }
-
-    fn validate(&self) -> Result<(), String> {
-        let value = serde_json::to_value(self).expect("field values serialize without floats");
-        if value
-            .as_object()
-            .expect("fields are an object")
-            .values()
-            .all(serde_json::Value::is_null)
-        {
-            return Err("fields must state at least one field".into());
-        }
-        Ok(())
+        value_set_reference(self.value_set.as_deref())
     }
 
     fn normalize(&mut self) {
@@ -284,6 +280,31 @@ impl SetFields {
             values.dedup();
         }
     }
+}
+
+fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
+    let value = serde_json::to_value(fields).expect("field values serialize without floats");
+    if value
+        .as_object()
+        .expect("fields are an object")
+        .values()
+        .all(serde_json::Value::is_null)
+    {
+        return Err("fields must state at least one field".into());
+    }
+    Ok(())
+}
+
+fn value_set_reference(hash: Option<&str>) -> Result<(), String> {
+    if let Some(hash) = hash
+        && (hash.len() != 64
+            || !hash
+                .bytes()
+                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)))
+    {
+        return Err("value_set must be a lowercase SHA-256 content hash".into());
+    }
+    Ok(())
 }
 
 fn slug(value: &str) -> Result<(), String> {

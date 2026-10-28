@@ -326,8 +326,9 @@ fn build(args: &Args) -> Result<(), String> {
         } else {
             reg_resolve::Ledger::default()
         };
-        let r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
+        let mut r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
+        reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
                 "{provider}/{register}: {} variables have no ledger id (--release)",

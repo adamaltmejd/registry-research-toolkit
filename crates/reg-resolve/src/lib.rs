@@ -3,7 +3,7 @@
 //! register's records and ledger, never another register's, and reads nothing else.
 //!
 //! Table moves and assertions prepare its input frame. Explicit variable assignments
-//! enter the identity step; other field overrides are not applied yet.
+//! enter the identity step; field overrides enter as the curated frame.
 //!
 //! - **Periods.** An occurrence of a release takes the release's period; an unplaced
 //!   release leaves its occurrences unplaced. Otherwise an occurrence's unstated bound is
@@ -242,6 +242,7 @@ pub struct ResolvedRelease {
 #[derive(Debug)]
 pub struct Variable {
     pub slug: String,
+    pub sets: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -263,6 +264,7 @@ pub struct Segment {
     pub dtype: Option<String>,
     /// The one length the covering occurrences state, when they state exactly one.
     pub length: Option<i64>,
+    pub format: Option<String>,
     pub valueset: Option<String>,
     pub coded: &'static str,
     pub sensitive: Option<bool>,
@@ -975,6 +977,7 @@ pub fn resolve(
                     spelling: o.column.clone(),
                     dtype: agreed(|f| &f.dtype),
                     length,
+                    format: o.format.clone(),
                     valueset: agreed(|f| &f.valueset),
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
@@ -1071,6 +1074,7 @@ pub fn resolve(
                 .expect("a variable is used"),
         );
         variables.push(Variable {
+            sets: BTreeSet::new(),
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1384,6 +1388,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             a.state,
             &a.dtype,
             a.length,
+            &a.format,
             &a.valueset,
             a.coded,
             a.sensitive,
@@ -1393,6 +1398,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             b.state,
             &b.dtype,
             b.length,
+            &b.format,
             &b.valueset,
             b.coded,
             b.sensitive,

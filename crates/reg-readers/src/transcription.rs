@@ -146,6 +146,7 @@ pub fn read(
                     dtype: field(&row, "data_type")
                         .map(|t| config.types.get(&t).cloned().unwrap_or(t)),
                     length: None,
+                    format: None,
                     valueset: valueset.clone(),
                     population_valuesets: Vec::new(),
                     coded: None,
