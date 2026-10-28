@@ -321,21 +321,84 @@ def main():
                 },
             )
 
-    # A reviewed heading allowlist is deliberately narrower than a topic list.
-    allowed = {
-        "Disponibel inkomst",
-        "Kapitalinkomst",
-        "Delpension",
-        "Tjänstepension",
-        "Summa inkomst av pensioner",
-        "Yrkes- och arbetsskadelivränta",
-        "Studier",
-        "Värnplikt/Grundläggande militär utbildning",
-        "Föräldraledighet",
-        "Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag)",
-        "Pension",
-        "Efterlevandeförmån",
+    # Explicit source-reviewed members, never every variable under a heading.
+    # The amount and receipt code of a named aggregate are one concept; its
+    # distinct constituent benefits are not promoted by their shared section.
+    reviewed = {
+        "lisa-delpension": {
+            "delpension",
+            "delpenstyp",
+        },
+        "lisa-disponibel-inkomst": {
+            "delkomponent-disponibel-inkomst",
+            "delkomponent-disponibel-inkomst-2004",
+            "dispinkkehb04",
+            "disponibel-inkomst",
+            "disponibel-inkomst-familj",
+            "disponibel-inkomst-familj-2004",
+            "disponibel-inkomst-per-ke-familj",
+            "disponibel-inkomst-per-ke-familj-2004",
+        },
+        "lisa-efterlevandeforman": {
+            "folkatpfam",
+            "sumeftpens",
+        },
+        "lisa-foraldraledighet": {
+            "foraldrapenning-antal-bruttodagar",
+            "foraldrapenning-antal-bruttodagar-midas",
+            "foraldrapenning-antal-nettodagar",
+            "foraldrapenning-antal-nettodagar-midas",
+            "foraldrapenning-barns-fodelse",
+            "foraldrapenning-ersattningsbelopp",
+            "foraldrapenning-ersattningsbelopp-midas",
+        },
+        "lisa-kapitalinkomst": {
+            "inkomst-av-kapital",
+            "kapinkvinst",
+        },
+        "lisa-pension": {
+            "alderspension-folkpension-atp",
+            "alderspension-inkomst-premie-garanti",
+            "allman-pension-folkpension-atp",
+            "andel-inkomstpension",
+            "andel-premiepension",
+            "folkald",
+            "garantipension",
+            "garpensand",
+            "inkomstpension",
+            "premiepension",
+            "sarskilt-pensionstillagg",
+            "tillaggspension",
+            "tillpensand",
+        },
+        "lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag": {
+            "fortidtyp",
+            "inkomst-foranledd-fortidspension",
+        },
+        "lisa-studier": {
+            "inkomst-foranledd-studier-2",
+            "studtyp",
+        },
+        "lisa-tjanstepension": {
+            "ovriga-tillaggspensioner",
+            "statlig-tjanstepension-inkl-kapan",
+            "sumtjp",
+            "tjanstepension",
+            "tjanstepension-itp",
+            "tjanstepension-kpa",
+            "tjanstepension-statliga-bolag",
+            "tjanstepension-stp",
+            "tjanstepension-tjanst",
+            "tjanstepension-tjanst-agi",
+        },
+        "lisa-yrkes-och-arbetsskadelivranta": {
+            "arbetsskadelivranta",
+            "livrta",
+            "livyrke",
+            "yrkarbtyp",
+        },
     }
+    unseen = set(reviewed)
     for section in sections:
         targets = (
             set().union(*(targets_by_row[r["at"]] for r in section["rows"]))
@@ -343,6 +406,16 @@ def main():
             else set()
         )
         text = (section["text"] or "").rstrip(":")
+        slug = "lisa-" + table_slug(text)
+        members = reviewed.get(slug, set())
+        if members:
+            if len(members) < 2:
+                raise ValueError(f"{slug}: a set needs at least two members")
+            if not members <= targets:
+                raise ValueError(
+                    f"{slug}: reviewed members no longer match section: {sorted(members - targets)}"
+                )
+            unseen.discard(slug)
         reason = (
             "note"
             if section["kind"] == "note"
@@ -350,35 +423,46 @@ def main():
             if section["kind"] == "unheaded"
             else "empty parent/repeated timeless block"
             if not section["rows"]
-            else "broad topic or heterogeneous concepts/inputs"
-            if text not in allowed
-            else "fewer than two proved final variables"
-            if len(targets) < 2
             else "set"
+            if members
+            else "no reviewed single-concept membership"
         )
-        slug = "lisa-" + table_slug(text)
         report["headings"].append(
             {
                 "at": section["locator"]["at"],
                 "heading": section["text"],
                 "decision": reason,
                 "variables": len(targets),
-                "set": slug if reason == "set" else None,
+                "set": slug if members else None,
+                "members": sorted(members),
             }
         )
-        if reason == "set":
-            for target in sorted(targets):
-                converter.add(
-                    f"{section['locator']['input']}:{section['locator']['at']}",
-                    *OWNER,
-                    {
-                        "kind": "set",
-                        "subject": f"var:{target}",
-                        "fields": {"sets": [slug]},
-                        "evidence": f"Reviewed LISA section: {text}; membership through whole-occurrence attachment.",
-                    },
-                )
+        for target in sorted(members):
+            converter.add(
+                f"{section['locator']['input']}:{section['locator']['at']}",
+                *OWNER,
+                {
+                    "kind": "set",
+                    "subject": f"var:{target}",
+                    "fields": {"sets": [slug]},
+                    "evidence": f"Reviewed LISA section: {text}; membership through whole-occurrence attachment.",
+                },
+            )
+    if unseen:
+        raise ValueError(f"reviewed sections no longer present: {sorted(unseen)}")
     normalize_sets(converter)
+    normalized = collections.defaultdict(set)
+    for record in converter.statements[OWNER].values():
+        statement = record["statement"]
+        for slug in statement.get("fields", {}).get("sets", []):
+            if slug in reviewed:
+                subject = statement["subject"]
+                if not subject.startswith("var:"):
+                    raise ValueError(f"{slug}: membership was not normalized")
+                normalized[slug].add(subject.removeprefix("var:"))
+    for slug, members in reviewed.items():
+        if normalized[slug] != members:
+            raise ValueError(f"{slug}: normalized membership differs from review")
     collapse(converter)
     generated = [
         r["statement"]

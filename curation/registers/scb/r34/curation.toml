@@ -9602,12 +9602,6 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "set"
-subject = "var:livarbf"
-fields = { "sets" = ["lisa-efterlevandeforman"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A712\n\nReviewed LISA section: Efterlevandeförmån; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
 subject = "var:sumeftpens"
 fields = { "sets" = ["lisa-efterlevandeforman"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A712\n\nReviewed LISA section: Efterlevandeförmån; membership through whole-occurrence attachment."
@@ -9651,90 +9645,6 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 [[statement]]
 kind = "set"
 subject = "var:foraldrapenning-ersattningsbelopp-midas"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:foraldrapenning-vab"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:forled"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:forledtyp"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:forpeng-tdag-midas"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:havpeng-bdag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:havpeng-belopp"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:havpeng-ndag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:merkostnadsersattning-barn"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:omvardnads-och-ferieomvardnadsbidrag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:tfforpeng-bdag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:tfforpeng-belopp"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:tfforpeng-ndag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vardbidrag"
-fields = { "sets" = ["lisa-foraldraledighet"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vardnadsbidrag-utbetalt-belopp"
 fields = { "sets" = ["lisa-foraldraledighet"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A477\n\nReviewed LISA section: Föräldraledighet; membership through whole-occurrence attachment."
 
@@ -9806,18 +9716,6 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "set"
-subject = "var:inkomstpensionstillagg"
-fields = { "sets" = ["lisa-pension"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A664\n\nReviewed LISA section: Pension; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:inkpenstilland"
-fields = { "sets" = ["lisa-pension"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A664\n\nReviewed LISA section: Pension; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
 subject = "var:premiepension"
 fields = { "sets" = ["lisa-pension"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A664\n\nReviewed LISA section: Pension; membership through whole-occurrence attachment."
@@ -9842,126 +9740,6 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "set"
-subject = "var:akters-tidsbegr"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning-bruttodagar"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning-ersattningsbelopp"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning-garanti"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning-inkomst"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aktivitetsersattning-nettodagar"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:andel-grad-aktivitetsersattning-vilande"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:andel-grad-sjukersattning-garanti"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:andel-grad-sjukersattning-vilande"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:andel-sjukersattning-inkomstrelaterad"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:atpegen"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:atpfort"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:atpfortsjuk"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:atpsjuk"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:folkfort"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:folkfortsjuk"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:folkpension-egen-forman"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:folksjuk"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:fortidags"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
 subject = "var:fortidtyp"
 fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
@@ -9974,85 +9752,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "set"
-subject = "var:sjukers-tidsbegr"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukersattning"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukersattning-bruttodagar"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukersattning-ersattningsbelopp"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sjukersattning-nettodagar"
-fields = { "sets" = ["lisa-sjukersattning-fortidspension-aktivitetsersattning-sjukbidrag"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A613\n\nReviewed LISA section: Sjukersättning (förtidspension)/Aktivitetsersättning (sjukbidrag); membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
 subject = "var:inkomst-foranledd-studier-2"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:korttidsstudiestod"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:larlingsersattning"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:larlingsersattning-antal-manader"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:rekryteringsbidrag"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sarskilt-utbildningsbidrag"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sarvux"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:sfi-skattpliktigt"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiehjalp-lan-och-bidrag"
 fields = { "sets" = ["lisa-studier"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
 
@@ -10061,60 +9761,6 @@ kind = "set"
 subject = "var:studtyp"
 fields = { "sets" = ["lisa-studier"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:svuxsvuxa"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbidrag-doktorander"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsbidrag-kompl-ped"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vuxenstudiestod-bidrag-arbetslosa"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vuxenstudiestod-lan"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vuxenstudiestod-lan-arbetslosa"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vuxenstudiestod-lan-ovriga"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vuxenstudiestod-studiebidrag-ovriga"
-fields = { "sets" = ["lisa-studier"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A447\n\nReviewed LISA section: Studier; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:aldtjptyp"
-fields = { "sets" = ["lisa-tjanstepension"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A681\n\nReviewed LISA section: Tjänstepension; membership through whole-occurrence attachment."
 
 [[statement]]
 kind = "set"
@@ -10175,42 +9821,6 @@ kind = "set"
 subject = "var:tjanstepension-tjanst-agi"
 fields = { "sets" = ["lisa-tjanstepension"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A681\n\nReviewed LISA section: Tjänstepension; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:bostbidrvplu"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:ersattning-varnpliktiga-totalt"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:gmutyp"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:hemvarn-ersattning"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:militar-utbildning-ersattning"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:vpltyp"
-fields = { "sets" = ["lisa-varnplikt-grundlaggande-militar-utbildning"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A468\n\nReviewed LISA section: Värnplikt/Grundläggande militär utbildning; membership through whole-occurrence attachment."
 
 [[statement]]
 kind = "set"
