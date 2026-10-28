@@ -717,1758 +717,516 @@ evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12808'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12809'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12810'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12811'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12813'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12815'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12816'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r12915'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r13718'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14703'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14704'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14705'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r14706'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r15627'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r17891'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: agkat where key = 'v74' and release = 'r18473'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11291'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11292'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11293'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11296'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11298'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11299'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11305'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11310'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11720'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11721'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11722'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11726'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r11898'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r13149'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r14409'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r16311'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r18177'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r18736'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: agkat where key = 'v74' and release = 'r9938'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12808'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12809'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12810'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12811'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12813'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12815'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12816'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r12915'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r13718'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14703'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14704'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14705'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r14706'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r15627'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r17891'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: jurform where key = 'v34' and release = 'r18473'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11291'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11292'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11293'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11296'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11298'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11299'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11305'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11310'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11720'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11721'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11722'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11726'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r11898'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r13149'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r14409'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r16311'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r18177'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r18736'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: jurform where key = 'v34' and release = 'r9938'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r5456'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5451'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r5446'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r5455'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5450'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r5445'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r5454'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5449'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r5444'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r5453'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5448'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r5443'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11379'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5447'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11371'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11378'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5411'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11370'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11377'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5410'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11369'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11376'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5409'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11368'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11375'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5408'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11367'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11374'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r5329'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11366'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r5741'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r6041'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r6036'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r8726'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r8727'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r7538'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11233'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r11234'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11232'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r11901'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r11902'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r11900'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r13152'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r13153'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r13151'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r14417'"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r14418'"
+subject = "fek-slutdata-kommun: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r14416'"
+subject = "fek-slutdata-lokal: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r16314'"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r16316'"
+subject = "fek-slutdata-kommun: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r16313'"
+subject = "fek-slutdata-lokal: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r18180'"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r18181'"
+subject = "fek-slutdata-kommun: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r18179'"
+subject = "fek-slutdata-lokal: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: kommun where key = 'v36' and release = 'r18740'"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kommun where key = 'v36' and release = 'r18741'"
+subject = "fek-slutdata-kommun: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r18739'"
+subject = "fek-slutdata-lokal: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r19235'"
+subject = "fek-slutdata-lokal: kommun @2022..2023"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-lokal: kommun where key = 'v1054' and release = 'r19906'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: sektor where key = 'v1141' and release = 'r14706'"
+subject = "fek-slutdata-kommun: kommun @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: ng @2008..2021"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: ng_ej_aktuell @2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: ngs_ej_aktuell where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: {ng,nglve} @2008..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: {ng_ej_aktuell,ngs_ej_aktuell} @2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: ngs_ej_aktuell @2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: {ng,ngs}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: ng @2008..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: ng @2008..2021"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: ng_ej_aktuell @2007"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: ngs @2008..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: agkat"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: agkat"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: sektor @2006"
 fields = { "classification" = "class/sektor/sektor2000" }
 evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: sektor where key = 'v1141' and release = 'r5436'"
+subject = "fek-slutdata-verksamhetsenhet: sektor @2003..2006"
 fields = { "classification" = "class/sektor/sektor2000" }
 evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: sektor where key = 'v1141' and release = 'r5437'"
+subject = "fek-slutdata: sektor @2003..2006"
 fields = { "classification" = "class/sektor/sektor2000" }
 evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: sektor where key = 'v1141' and release = 'r5439'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: sektor where key = 'v1141' and release = 'r5440'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: sektor where key = 'v1141' and release = 'r11720'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: sektor where key = 'v1141' and release = 'r11721'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: sektor where key = 'v1141' and release = 'r11722'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: sektor where key = 'v1141' and release = 'r11726'"
-fields = { "classification" = "class/sektor/sektor2000" }
-evidence = "reg_meta_build/curation/classifications/SEKTOR2000.toml:21\n\nLegacy exact value-set label: Standard för institutionell sektorindelning 2000"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng_ej_aktuell where key = 'v4027' and release = 'r14704'"
+subject = "fek-preliminara-data-fe: {ng_ej_aktuell,ngs_ej_aktuell}"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: ng_ej_aktuell where key = 'v4027' and release = 'r14705'"
+subject = "fek-slutdata-investeringar-per-kommun: ng_ej_aktuell @2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: ng_ej_aktuell where key = 'v4027' and release = 'r14706'"
+subject = "fek-slutdata-investeringar-per-kommun: ngs_ej_aktuell where key = 'v19052'"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: ngs_ej_aktuell where key = 'v19052' and release = 'r14704'"
+subject = "fek-slutdata-investeringar-per-kommun: {ng_styr,ngs_styr}"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: ngs_ej_aktuell where key = 'v19052' and release = 'r14705'"
+subject = "fek-slutdata-lokal: nglve where key = 'v15169'"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-preliminara-data-fe: ngs_ej_aktuell where key = 'v19052' and release = 'r14706'"
+subject = "fek-slutdata-lokal: {ng_ej_aktuell,ngs_ej_aktuell}"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng_ej_aktuell where key = 'v4027' and release = 'r11378'"
+subject = "fek-slutdata-verksamhetsenhet: {ng_ej_aktuell,ngs_ej_aktuell} @2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng_styr where key = 'v4027' and release = 'r11379'"
+subject = "fek-slutdata: ng @2003..2007"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ngs_ej_aktuell where key = 'v19052' and release = 'r11378'"
+subject = "fek-slutdata: ngs @2007"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ngs_styr where key = 'v4027' and release = 'r11379'"
+subject = "fek-slutdata: {ng_ej_aktuell,ngs_ej_aktuell} @2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng_ej_aktuell where key = 'v4027' and release = 'r11370'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v15169' and release = 'r5443'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v15169' and release = 'r5444'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v15169' and release = 'r5445'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v15169' and release = 'r5446'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ngs_ej_aktuell where key = 'v19052' and release = 'r11370'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng_ej_aktuell where key = 'v4027' and release = 'r11356'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ngs_ej_aktuell where key = 'v19052' and release = 'r11356'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11310'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11720'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11721'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11722'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11726'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng_ej_aktuell where key = 'v4027' and release = 'r11305'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11310'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs_ej_aktuell where key = 'v19052' and release = 'r11305'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12808'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12809'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12810'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12811'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12813'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12815'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12816'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r12915'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r13718'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r14703'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r14704'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r14705'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r15627'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r17891'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ng where key = 'v4027' and release = 'r18473'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12808'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12809'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12810'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12811'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12813'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12815'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12816'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r12915'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r13718'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r14703'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r14704'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r14705'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r14706'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r15627'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r17891'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-preliminara-data-fe: ngs where key = 'v19052' and release = 'r18473'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11233'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11374'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11375'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11376'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11377'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11378'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r11901'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r13152'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r14417'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r16314'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r18180'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r18740'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r5741'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng where key = 'v4027' and release = 'r8726'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ng_ej_aktuell where key = 'v4027' and release = 'r11379'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-investeringar-per-kommun: ngs_ej_aktuell where key = 'v4027' and release = 'r11379'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11232'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11366'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11367'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11368'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11369'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11370'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r11900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r13151'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r14416'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r16313'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r18179'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r18739'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r19235'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r19906'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r6036'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: ng where key = 'v4027' and release = 'r7538'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11232'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11366'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11367'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11368'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11369'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11370'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r11900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r13151'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r14416'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r16313'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r18179'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r18739'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r19235'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r19906'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r6036'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: nglve where key = 'v4027' and release = 'r7538'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11231'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11348'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11351'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11352'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11353'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11354'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11355'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11356'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r11903'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r13150'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r14411'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r16312'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r18178'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r18738'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r19231'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng where key = 'v4027' and release = 'r19904'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ng_ej_aktuell where key = 'v4027' and release = 'r11360'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-verksamhetsenhet: ngs_ej_aktuell where key = 'v19052' and release = 'r11360'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11291'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11292'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11293'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11296'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11298'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11299'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11305'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r11898'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r13149'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r14409'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r16311'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r18177'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r18736'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng where key = 'v4027' and release = 'r9938'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ng_ej_aktuell where key = 'v4027' and release = 'r11310'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11291'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11292'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11293'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11296'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11298'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11299'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11305'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r11898'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r13149'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r14409'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r16311'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r18177'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r18736'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r19229'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r19898'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs where key = 'v19052' and release = 'r9938'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata: ngs_ej_aktuell where key = 'v19052' and release = 'r11310'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"

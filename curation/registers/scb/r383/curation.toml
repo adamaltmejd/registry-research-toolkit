@@ -1,390 +1,96 @@
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13159'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13287'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13288'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13289'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13290'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13291'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r13293'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r14981'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r18356'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r18363'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r18856'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r19376'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: agkat where key = 'v74' and release = 'r20125'"
-fields = { "classification" = "class/agarkat/agarkat2000" }
-evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13159'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13287'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13288'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13289'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13290'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13291'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r13293'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r14981'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r18356'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r18363'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r18856'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r19376'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: jurform where key = 'v34' and release = 'r20125'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13293'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13293'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13291'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13291'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13290'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13290'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13289'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13289'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13288'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13288'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13287'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13287'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r13159'"
+subject = "utforarregistret: {kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r13159'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r14981'"
+subject = "utforarregistret: {kommun,lan} @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r14981'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r18356'"
+subject = "utforarregistret: {kommun,lan} @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r18356'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r18363'"
+subject = "utforarregistret: {kommun,lan} @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r18363'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r18856'"
+subject = "utforarregistret: {kommun,lan} @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r18856'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r19376'"
+subject = "utforarregistret: {kommun,lan} @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r19376'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: kommun where key = 'v667' and release = 'r20125'"
+subject = "utforarregistret: {kommun,lan} @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: lan where key = 'v473' and release = 'r20125'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+subject = "utforarregistret: {kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13159'"
+subject = "utforarregistret: {kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: {kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: {kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: {kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: {kommun,lan} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: ng1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13287'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+subject = "utforarregistret: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
 [[statement]]
 kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13288'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13289'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13290'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13291'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r13293'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r14981'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r18356'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r18363'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r18856'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r19376'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "utforarregistret: ng1 where key = 'v19053' and release = 'r20125'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+subject = "utforarregistret: agkat"
+fields = { "classification" = "class/agarkat/agarkat2000" }
+evidence = "reg_meta_build/curation/classifications/AGARKAT2000.toml:5\n\nLegacy exact value-set label: Standard för indelning efter ägarkategori 2000"

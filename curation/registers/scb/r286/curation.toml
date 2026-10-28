@@ -8,126 +8,36 @@ evidence = "reg_meta_build/curation/registers/scb/ep-val-nominerade.toml:6\n\nLe
 
 [[statement]]
 kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r13624'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r3448'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r3451'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r5020'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r5021'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva_grov where key = 'v775' and release = 'r5980'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2020niva_grov where key = 'v775' and release = 'r19386'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r13624'"
+subject = "europaparlamentsval: sun2000inr"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r3448'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "europaparlamentsval: sun2000niva"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r3451'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "europaparlamentsval: sun2000niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r5020'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r5021'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000inr where key = 'v784' and release = 'r5980'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2020inr where key = 'v65' and release = 'r19386'"
+subject = "europaparlamentsval: sun2020inr"
 fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r13624'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r3448'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r3451'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r5020'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r5021'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2000niva where key = 'v778' and release = 'r5980'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "europaparlamentsval: sun2020niva where key = 'v66' and release = 'r19386'"
+subject = "europaparlamentsval: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "europaparlamentsval: sun2020niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"

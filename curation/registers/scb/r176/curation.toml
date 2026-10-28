@@ -19,330 +19,48 @@ evidence = "value set: 18 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r15480'"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2008..2010"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2012..2016,2018,2020"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je @2015..2018,2020..2023"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: {ng1moms,ng1sammanslag,ng1samu}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform @2005..2010"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
 [[statement]]
 kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r15481'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r15482'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r15484'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r15485'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: jurform where key = 'v34' and release = 'r2233'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1 where key = 'v4027' and release = 'r12227'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r11385'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r11565'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r12575'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r13572'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r14966'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r17604'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r18401'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r18900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1moms where key = 'v4027' and release = 'r19636'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r11385'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r11565'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r12575'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r13572'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r14966'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r17604'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r18401'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r18900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1sammanslag where key = 'v36758' and release = 'r19636'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r11385'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r11565'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r12575'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r13572'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r14966'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r17604'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r18401'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r18900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1samu where key = 'v4027' and release = 'r19636'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r11385'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r11565'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r12575'"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs @2017,2019"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r13572'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r14966'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r15435'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r15455'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r15482'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r15484'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r15485'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r17604'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs where key = 'v19052' and release = 'r5043'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r11385'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r11565'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r12575'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r13572'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r14966'"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je @2019"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
 
 [[statement]]
 kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r17604'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r18401'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r18900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ngs1je where key = 'v19052' and release = 'r19636'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: ng1"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"

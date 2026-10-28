@@ -1,60 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "tjansteforetagens-forbrukning: jurform where key = 'v34' and release = 'r7542'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: jurform where key = 'v34' and release = 'r8576'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: jurform where key = 'v34' and release = 'r8578'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: jurform where key = 'v34' and release = 'r8583'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: jurform where key = 'v34' and release = 'r8585'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: ngs where key = 'v19052' and release = 'r7542'"
+subject = "tjansteforetagens-forbrukning: ngs"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tjansteforetagens-forbrukning: ngs where key = 'v19052' and release = 'r8576'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: ngs where key = 'v19052' and release = 'r8578'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: ngs where key = 'v19052' and release = 'r8583'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tjansteforetagens-forbrukning: ngs where key = 'v19052' and release = 'r8585'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
+subject = "tjansteforetagens-forbrukning: jurform"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"

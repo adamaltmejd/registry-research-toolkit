@@ -1,150 +1,66 @@
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: forsamling where key = 'v31' and release = 'r289'"
+subject = "energi-i-smahus: lan"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r289'"
+subject = "energi-i-smahus: {forsamling,kommun} @2000"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: lan where key = 'v49' and release = 'r289'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: församling where key = 'v31' and release = 'r573'"
+subject = "energi-i-smahus: {församling,kommun,län} @2001"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r573'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r573'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: församling where key = 'v31' and release = 'r590'"
+subject = "energi-i-smahus: {församling,kommun,län} @2002"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r590'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r590'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r593'"
+subject = "energi-i-smahus: {kommun,län} @2003"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r593'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: församling where key = 'v31' and release = 'r595'"
+subject = "energi-i-smahus: kommun1"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r595'"
+subject = "energi-i-smahus: {församling,kommun,län} @2004"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: kommun1 where key = 'v36' and release = 'r595'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r595'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: _f_rsamling where key = 'v31' and release = 'r2335'"
+subject = "energi-i-smahus: _f_rsamling"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: forsamling where key = 'v31' and release = 'r1707'"
+subject = "energi-i-smahus: forsamling @2007"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: församling where key = 'v31' and release = 'r1149'"
+subject = "energi-i-smahus: kommun @2005..2008"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "energi-i-smahus: församling where key = 'v31' and release = 'r607'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r1149'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r1707'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r2335'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: kommun where key = 'v36' and release = 'r607'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r1149'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energi-i-smahus: län where key = 'v49' and release = 'r607'"
+subject = "energi-i-smahus: {församling,län} @2005..2006"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"

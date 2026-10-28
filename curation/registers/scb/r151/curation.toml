@@ -1,528 +1,318 @@
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4254'"
+subject = "camping: {kommun,lan} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "camping: {kommun,lan} @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: lan @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: {kommun,lan} @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4254'"
+subject = "privata-stugor-lagenheter: lan @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4251'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4256'"
+subject = "camping: {kommun,lan} @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4256'"
+subject = "hotell-stugbyar: {kommun,lan} @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4253'"
+subject = "privata-stugor-lagenheter: lan @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4253'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4250'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4255'"
+subject = "camping: {kommun,lan} @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4255'"
+subject = "hotell-stugbyar: {kommun,lan} @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4257'"
+subject = "privata-stugor-lagenheter: lan @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4257'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4249'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4246'"
+subject = "camping: {kommun,lan} @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4246'"
+subject = "hotell-stugbyar: {kommun,lan} @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4244'"
+subject = "privata-stugor-lagenheter: lan @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4244'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4242'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4245'"
+subject = "camping: {kommun,lan} @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4245'"
+subject = "hotell-stugbyar: {kommun,lan} @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4243'"
+subject = "privata-stugor-lagenheter: lan @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4243'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4241'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4106'"
+subject = "camping: {kommun,lan} @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4106'"
+subject = "hotell-stugbyar: {kommun,lan} @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4002'"
+subject = "privata-stugor-lagenheter: lan @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4002'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4107'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r4544'"
+subject = "camping: {kommun,lan} @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r4544'"
+subject = "hotell-stugbyar: {kommun,lan} @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r4545'"
+subject = "privata-stugor-lagenheter: lan @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r4545'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r4546'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r5241'"
+subject = "camping: {kommun,lan} @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r5241'"
+subject = "hotell-stugbyar: {kommun,lan} @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r5242'"
+subject = "privata-stugor-lagenheter: lan @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r5242'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r5243'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r5829'"
+subject = "camping: {kommun,lan} @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r5829'"
+subject = "hotell-stugbyar: {kommun,lan} @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r5894'"
+subject = "privata-stugor-lagenheter: lan @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r5894'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r5896'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r7410'"
+subject = "camping: {kommun,lan} @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r7410'"
+subject = "hotell-stugbyar: {kommun,lan} @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r7411'"
+subject = "privata-stugor-lagenheter: lan @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r7411'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r7412'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r10085'"
+subject = "camping: {kommun,lan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r10085'"
+subject = "hotell-stugbyar: {kommun,lan} @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r10086'"
+subject = "privata-stugor-lagenheter: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r10086'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r10087'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r11679'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r11679'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r11680'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r11680'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r11681'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r13058'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r13058'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r13059'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r13059'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r13060'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r13887'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r13887'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r13888'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r13888'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r13889'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r16023'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r16023'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r16025'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r16025'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r16026'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r18072'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r18072'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r18076'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r18076'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r18077'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r18645'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r18645'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r18651'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r18651'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r18652'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: kommun where key = 'v36' and release = 'r19089'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "camping: lan where key = 'v49' and release = 'r19089'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: kommun where key = 'v36' and release = 'r19090'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hotell-stugbyar: lan where key = 'v49' and release = 'r19090'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "privata-stugor-lagenheter: lan where key = 'v49' and release = 'r19091'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"

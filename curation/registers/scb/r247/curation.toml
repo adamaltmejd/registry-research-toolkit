@@ -1,36 +1,18 @@
 
 [[statement]]
 kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: kommun where key = 'v36' and release = 'r984'"
+subject = "hogskolestuderandes-levnadsvillkor: {kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: lan where key = 'v49' and release = 'r984'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: utbfar where key = 'v8074' and release = 'r984'"
+subject = "hogskolestuderandes-levnadsvillkor: {utbfar,utbmor}"
 fields = { "classification" = "class/niva-old/niva-oldv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: utbmor where key = 'v8073' and release = 'r984'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: yrkefar where key = 'v510' and release = 'r984'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "hogskolestuderandes-levnadsvillkor: yrkemor where key = 'v510' and release = 'r984'"
+subject = "hogskolestuderandes-levnadsvillkor: {yrkefar,yrkemor}"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"

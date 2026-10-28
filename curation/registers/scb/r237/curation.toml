@@ -27747,1338 +27747,366 @@ evidence = "value set: 17 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "individer-16-74-ar-ulf: ba0042 where key = 'v11957' and release = 'r748'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0042 where key = 'v11957' and release = 'r749'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0042 where key = 'v11957' and release = 'r750'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-74-ar-ulf: ba0042 where key = 'v11957' and release = 'r751'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r746'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0042 where key = 'v11957' and release = 'r746'"
-fields = { "classification" = "class/lkf/lkf1980" }
-evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r15419'"
-fields = { "classification" = "class/lkf/lkf1981" }
-evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0042 where key = 'v11957' and release = 'r15419'"
-fields = { "classification" = "class/lkf/lkf1981" }
-evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r15494'"
-fields = { "classification" = "class/lkf/lkf1982" }
-evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0042 where key = 'v11957' and release = 'r15494'"
-fields = { "classification" = "class/lkf/lkf1982" }
-evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r16007'"
-fields = { "classification" = "class/lkf/lkf1983" }
-evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0042 where key = 'v11957' and release = 'r16007'"
-fields = { "classification" = "class/lkf/lkf1983" }
-evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r16298'"
-fields = { "classification" = "class/lkf/lkf1984" }
-evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r16497'"
-fields = { "classification" = "class/lkf/lkf1985" }
-evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r17596'"
-fields = { "classification" = "class/lkf/lkf1985" }
-evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r18408'"
-fields = { "classification" = "class/lkf/lkf1987" }
-evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v16312' and release = 'r20238'"
-fields = { "classification" = "class/lkf/lkf1989" }
-evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v16312' and release = 'r737'"
-fields = { "classification" = "class/lkf/lkf1989" }
-evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r736'"
-fields = { "classification" = "class/lkf/lkf1990" }
-evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r735'"
-fields = { "classification" = "class/lkf/lkf1991" }
-evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r734'"
-fields = { "classification" = "class/lkf/lkf1992" }
-evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r733'"
-fields = { "classification" = "class/lkf/lkf1993" }
-evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r732'"
-fields = { "classification" = "class/lkf/lkf1994" }
-evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r731'"
-fields = { "classification" = "class/lkf/lkf1995" }
-evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r730'"
-fields = { "classification" = "class/lkf/lkf1996" }
-evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r729'"
-fields = { "classification" = "class/lkf/lkf1997" }
-evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r728'"
-fields = { "classification" = "class/lkf/lkf1998" }
-evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r727'"
-fields = { "classification" = "class/lkf/lkf1999" }
-evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r723'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: ba0040 where key = 'v16312' and release = 'r722'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v16312' and release = 'r721'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v16312' and release = 'r720'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v16312' and release = 'r717'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r20186'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:33\n\nLegacy exact value-set label: LKF 2006 med tillägg"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r20086'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19865'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19891'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19811'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19602'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19387'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ba0040 where key = 'v22327' and release = 'r19392'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19289'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19387'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19264'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19219'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19184'"
+subject = "individer-16plus-ulf: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r19128'"
+subject = "individer-16plus-ulf: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: kommun where key = 'v36' and release = 'r18768'"
+subject = "individer-16plus-ulf: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "ulf-2021: kommun where key = 'v36' and release = 'r18081'"
+subject = "ulf-2021: kommun @2021..2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "ulf-2021: kommun where key = 'v36' and release = 'r18661'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: kommun where key = 'v36' and release = 'r19025'"
+subject = "ulf-2021: kommun @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "ulf-2021: kommun where key = 'v36' and release = 'r19642'"
+subject = "ulf-2021: kommun @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "ulf-2021: kommun where key = 'v36' and release = 'r20177'"
+subject = "individer-16-74-ar-ulf: ba0042"
+fields = { "classification" = "class/lkf/lkf1980" }
+evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: {ba0040,ba0042} @1980"
+fields = { "classification" = "class/lkf/lkf1980" }
+evidence = "reg_meta_build/curation/classifications/LKF1980.toml:18\n\nLegacy exact value-set label: LKF 1980-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: {ba0040,ba0042} @1981"
+fields = { "classification" = "class/lkf/lkf1981" }
+evidence = "reg_meta_build/curation/classifications/LKF1981.toml:18\n\nLegacy exact value-set label: LKF 1981-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: {ba0040,ba0042} @1982"
+fields = { "classification" = "class/lkf/lkf1982" }
+evidence = "reg_meta_build/curation/classifications/LKF1982.toml:14\n\nLegacy exact value-set label: LKF 1982-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: {ba0040,ba0042} @1983"
+fields = { "classification" = "class/lkf/lkf1983" }
+evidence = "reg_meta_build/curation/classifications/LKF1983.toml:14\n\nLegacy exact value-set label: LKF 1983-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1984"
+fields = { "classification" = "class/lkf/lkf1984" }
+evidence = "reg_meta_build/curation/classifications/LKF1984.toml:14\n\nLegacy exact value-set label: LKF 1984-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1985..1986"
+fields = { "classification" = "class/lkf/lkf1985" }
+evidence = "reg_meta_build/curation/classifications/LKF1985.toml:14\n\nLegacy exact value-set label: LKF 1985-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1987"
+fields = { "classification" = "class/lkf/lkf1987" }
+evidence = "reg_meta_build/curation/classifications/LKF1987.toml:21\n\nLegacy exact value-set label: LKF 1987-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @1989"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 where release = 'r737'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "reg_meta_build/curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 where release = 'r736'"
+fields = { "classification" = "class/lkf/lkf1990" }
+evidence = "reg_meta_build/curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1991"
+fields = { "classification" = "class/lkf/lkf1991" }
+evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 where release = 'r734'"
+fields = { "classification" = "class/lkf/lkf1992" }
+evidence = "reg_meta_build/curation/classifications/LKF1992.toml:22\n\nLegacy exact value-set label: LKF 1992-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1993"
+fields = { "classification" = "class/lkf/lkf1993" }
+evidence = "reg_meta_build/curation/classifications/LKF1993.toml:22\n\nLegacy exact value-set label: LKF 1993-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1994"
+fields = { "classification" = "class/lkf/lkf1994" }
+evidence = "reg_meta_build/curation/classifications/LKF1994.toml:22\n\nLegacy exact value-set label: LKF 1994-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1995"
+fields = { "classification" = "class/lkf/lkf1995" }
+evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1996"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1997"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1998"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @1999"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @2000"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: ba0040 @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2002"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:33\n\nLegacy exact value-set label: LKF 2006 med tillägg"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2009..2010"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba0040 @2013..2014"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: kommun @2014..2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: kommun @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19128'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19184'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19219'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19264'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19289'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19387'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19392'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19602'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19811'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19865'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2000niva_grov where key = 'v45011' and release = 'r19891'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sun2020niva_grov where key = 'v45011' and release = 'r18768'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: sun2020niva_grov where key = 'v45011' and release = 'r18081'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: sun2020niva_grov where key = 'v45011' and release = 'r18661'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: sun2020niva_grov where key = 'v45011' and release = 'r19025'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: sun2020niva_grov where key = 'v45011' and release = 'r19642'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: sun2020niva_grov where key = 'v45011' and release = 'r20177'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r18768'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19128'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19184'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19219'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19264'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19289'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19387'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19392'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19602'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19811'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19865'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r19891'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy0111 where key = 'v4027' and release = 'r20086'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111a where key = 'v45225' and release = 'r18081'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111a where key = 'v45225' and release = 'r18661'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111a where key = 'v45225' and release = 'r19025'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111a where key = 'v45225' and release = 'r19642'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111a where key = 'v45225' and release = 'r20177'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111b where key = 'v45226' and release = 'r18081'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111b where key = 'v45226' and release = 'r18661'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111b where key = 'v45226' and release = 'r19025'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111b where key = 'v45226' and release = 'r19642'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: pl111b where key = 'v45226' and release = 'r20177'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: sm3251 where key = 'v13250' and release = 'r722'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: sy3251 where key = 'v13251' and release = 'r722'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: sy3356 where key = 'v13253' and release = 'r722'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16-84-ar-ulf: sy3361 where key = 'v13252' and release = 'r722'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm3251 where key = 'v13250' and release = 'r20186'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm3251 where key = 'v13250' and release = 'r717'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm3251 where key = 'v13250' and release = 'r720'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm3356 where key = 'v13254' and release = 'r20186'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sm3356 where key = 'v13254' and release = 'r717'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19392'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19602'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19811'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19865'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r19891'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke96 where key = 'v47676' and release = 'r20086'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19392'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19602'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19811'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19865'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r19891'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykslp where key = 'v31155' and release = 'r20086'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19392'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19602'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19811'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19865'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r19891'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_1 where key = 'v31143' and release = 'r20086'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19392'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19602'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19811'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19865'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r19891'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssykup_2 where key = 'v47240' and release = 'r20086'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3251 where key = 'v13251' and release = 'r20186'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3251 where key = 'v13251' and release = 'r717'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3251 where key = 'v13251' and release = 'r720'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3251 where key = 'v13251' and release = 'r721'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3356 where key = 'v13253' and release = 'r20186'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3356 where key = 'v13253' and release = 'r717'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3356 where key = 'v13253' and release = 'r720'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3356 where key = 'v13253' and release = 'r721'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3361 where key = 'v13252' and release = 'r20186'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3361 where key = 'v13252' and release = 'r717'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3361 where key = 'v13252' and release = 'r720'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: sy3361 where key = 'v13252' and release = 'r721'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19392'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19602'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19811'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19865'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r19891'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke96 where key = 'v47674' and release = 'r20086'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r18768'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19128'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19184'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19219'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19264'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: smyrke12 where key = 'v46367' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r18768'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19128'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19184'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19219'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19264'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12slp where key = 'v31155' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up where key = 'v31143' and release = 'r18768'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19128'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19184'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19219'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19264'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_1 where key = 'v31143' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19128'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19184'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19219'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19264'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ssyk12up_2 where key = 'v47240' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r18768'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19128'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19184'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19219'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19264'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19289'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: syyrke12 where key = 'v46366' and release = 'r19387'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12 where key = 'v45245' and release = 'r18081'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12 where key = 'v45245' and release = 'r18661'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12 where key = 'v45245' and release = 'r19025'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12 where key = 'v45245' and release = 'r19642'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12 where key = 'v45245' and release = 'r20177'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12kod where key = 'v45244' and release = 'r18081'"
+subject = "ulf-2021: plssyk12kod"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:40\n\nLegacy exact value-set label: SSYK 2012 (4-siffrig)"
 
 [[statement]]
 kind = "set"
-subject = "ulf-2021: plssyk12kod where key = 'v45244' and release = 'r18661'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:40\n\nLegacy exact value-set label: SSYK 2012 (4-siffrig)"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12kod where key = 'v45244' and release = 'r19025'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:40\n\nLegacy exact value-set label: SSYK 2012 (4-siffrig)"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12kod where key = 'v45244' and release = 'r19642'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:40\n\nLegacy exact value-set label: SSYK 2012 (4-siffrig)"
-
-[[statement]]
-kind = "set"
-subject = "ulf-2021: plssyk12kod where key = 'v45244' and release = 'r20177'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:40\n\nLegacy exact value-set label: SSYK 2012 (4-siffrig)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut0016 where key = 'v11202' and release = 'r721'"
+subject = "individer-16plus-ulf: ut0016"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r19602'"
+subject = "individer-16plus-ulf: ut3021 where key = 'v13984'"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r19811'"
+subject = "individer-16plus-ulf: ut3021 where key = 'v15061'"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r19865'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r19891'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r20086'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v13984' and release = 'r20186'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v15061' and release = 'r717'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v15061' and release = 'r720'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3021 where key = 'v15061' and release = 'r721'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r19602'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r19811'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r19865'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r19891'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r20086'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r20186'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r717'"
+subject = "individer-16plus-ulf: ut3013 @2002..2004"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r720'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+subject = "individer-16plus-ulf: sun2000niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3013 where key = 'v15053' and release = 'r721'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+subject = "individer-16plus-ulf: sun2020niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r19392'"
+subject = "ulf-2021: sun2020niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy0111"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: {pl111a,pl111b}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: {sm3251,sy3251,sy3356,sy3361}"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: sy3361 @2002..2004"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: {sm3251,sm3356,smyrke96,sy3251,sy3356,syyrke96}"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: {smyrke12,syyrke12}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: plssyk12"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ut3013 @2006,2008..2012"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r19602'"
+subject = "individer-16plus-ulf: ut3014"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r19811'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
+subject = "individer-16plus-ulf: sy3361 @2006"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r19865'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
+subject = "individer-16plus-ulf: {ssykslp,ssykup_1,ssykup_2}"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:57\n\nLegacy exact value-set label: Yrke (SSYK 1996) 4-siffrig"
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r19891'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "individer-16plus-ulf: ut3014 where key = 'v15053' and release = 'r20086'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
+subject = "individer-16plus-ulf: {ssyk12slp,ssyk12up,ssyk12up_1,ssyk12up_2}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"

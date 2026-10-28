@@ -1,84 +1,48 @@
 
 [[statement]]
 kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r2991'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r3180'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r3665'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r4284'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r5002'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r7327'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: kommun where key = 'v36' and release = 'r1481'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: kommun where key = 'v36' and release = 'r5148'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r7475'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r7476'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r11269'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r11947'"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2018 where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r13361'"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2019 where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> where key = 'v36' and release = 'r14502'"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2020 where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2009..2014 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: kommun"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2015 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2016 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommunernas-och-regionernas-finansiella-tillgangar-och-skulder: <none> @2017 where key = 'v36'"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"

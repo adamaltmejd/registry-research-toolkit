@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "forskarexaminerades-arbetsmarknad: lan where key = 'v49' and release = 'r14749'"
+subject = "forskarexaminerades-arbetsmarknad: lan"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"

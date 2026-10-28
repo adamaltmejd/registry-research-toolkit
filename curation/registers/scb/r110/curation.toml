@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "hogutbildade-utrikes-fodda: f18_kod where key = 'v30822' and release = 'r13444'"
+subject = "hogutbildade-utrikes-fodda: f18_kod"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:38\n\nLegacy exact value-set label: SSYK 2012, 3- och 4-siffernivå"

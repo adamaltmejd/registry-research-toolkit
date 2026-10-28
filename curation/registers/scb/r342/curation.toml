@@ -56,798 +56,96 @@ evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-prov.toml:6\n\nU
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r10080'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r11517'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r11832'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r12580'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r13224'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r13640'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r14449'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r7471'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r9854'"
-fields = { "classification" = "class/jurform/jurform2000" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r18495'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19482'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19483'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19487'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19489'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19492'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r19502'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r20008'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: jurform where key = 'v34' and release = 'r20169'"
-fields = { "classification" = "class/jurform/jurform2020" }
-evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skom where key = 'v36' and release = 'r7471'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r10080'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skom where key = 'v36' and release = 'r9854'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r11517'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r11832'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r12580'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r13224'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r13640'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r14449'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19483'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2020-07-01..2020-12-31"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19487'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2021-07-01..2021-12-31"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r18495'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19492'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19482'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19502'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r19489'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r20008'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+subject = "gymnasieskola-nationella-prov: skom @2015-07-01..2015-12-31"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: skolkommun where key = 'v36' and release = 'r20169'"
+subject = "gymnasieskola-nationella-prov: skolkommun @2016-07-01..2016-12-31"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: skom @2016-01-01..2016-06-30"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: skolkommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: skolkommun @2025-01-01..2025-06-30"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "reg_meta_build/curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_far where key = 'v8074' and release = 'r5572'"
+subject = "gymnasieskola-nationella-prov: {sun2000niva_1_far,sun2000niva_1_mor,sun2000niva_far,sun2000niva_far_grupperad,sun2000niva_for,sun2000niva_for_grupperad,sun2000niva_mor,sun2000niva_mor_grupperad}"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_far where key = 'v8074' and release = 'r5606'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_far where key = 'v8074' and release = 'r5607'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_far where key = 'v8074' and release = 'r5610'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_far where key = 'v8074' and release = 'r7330'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_mor where key = 'v8073' and release = 'r5572'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_mor where key = 'v8073' and release = 'r5606'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_mor where key = 'v8073' and release = 'r5607'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_mor where key = 'v8073' and release = 'r5610'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_1_mor where key = 'v8073' and release = 'r7330'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far where key = 'v8074' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_far_grupperad where key = 'v8074' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for where key = 'v32454' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_for_grupperad where key = 'v32454' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor where key = 'v8073' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r10080'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r11517'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r11832'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r12580'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r13224'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r13640'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r14449'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r7331'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r7471'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2000niva_mor_grupperad where key = 'v8073' and release = 'r9854'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r18495'"
+subject = "gymnasieskola-nationella-prov: {sun2020niva_far,sun2020niva_for,sun2020niva_mor}"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19482'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+subject = "gymnasieskola-nationella-prov: jurform @2015-07-01..2019-12-31"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
 [[statement]]
 kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19483'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19487'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19489'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19492'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r19502'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r20008'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_far where key = 'v8074' and release = 'r20169'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r18495'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19482'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19483'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19487'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19489'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19492'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r19502'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r20008'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_for where key = 'v32454' and release = 'r20169'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r18495'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19482'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19483'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19487'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19489'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19492'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r19502'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r20008'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "gymnasieskola-nationella-prov: sun2020niva_mor where key = 'v8073' and release = 'r20169'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+subject = "gymnasieskola-nationella-prov: jurform @2020-07-01..2020-12-31,2021-07-01..2025-06-30"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"

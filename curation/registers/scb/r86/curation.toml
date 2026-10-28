@@ -325,126 +325,36 @@ evidence = "value set: 9 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: komkod where key = 'v32957' and release = 'r13897'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: komkod where key = 'v32957' and release = 'r15192'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: laen where key = 'v49' and release = 'r13897'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: komkod where key = 'v32957' and release = 'r15193'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "individ-2021: kommun where key = 'v36' and release = 'r18497'"
+subject = "individ-2021: kommun"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: utbp1 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+subject = "hushall-1999-2001: komkod @1999..2000"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: utbp2 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+subject = "hushall-1999-2001: laen"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: utbp3 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+subject = "hushall-1999-2001: komkod @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "hushall-1999-2001: utbp4 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: utbp5 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: utbp6 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: utbp7 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "hushall-1999-2001: utbp8 where key = 'v66' and release = 'r13897'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r1525'"
+subject = "individ-2003-2012: bsunniv"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r1526'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r1527'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r1528'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r2253'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r2942'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r469'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "individ-2003-2012: bsunniv where key = 'v779' and release = 'r5175'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+subject = "hushall-1999-2001: {utbp1,utbp2,utbp3,utbp4,utbp5,utbp6,utbp7,utbp8}"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"

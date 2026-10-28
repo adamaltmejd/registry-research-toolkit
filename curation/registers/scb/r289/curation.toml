@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "jordbrukets-vattenanvandning: <none> where key = 'v49' and release = 'r2926'"
+subject = "jordbrukets-vattenanvandning: <none> where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"

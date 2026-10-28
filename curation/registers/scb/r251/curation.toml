@@ -1,480 +1,168 @@
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14215'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14215'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14215'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: hemkommun where key = 'v6809' and release = 'r14192'"
+subject = "elever: {hemkommun,skolkommun,skollan} @2002-07-01..2003-06-30"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skolkommun where key = 'v14815' and release = 'r14192'"
+subject = "kursdeltagare: hemkommun @2002-07-01..2003-06-30"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skollan where key = 'v32738' and release = 'r14192'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14210'"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14210'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14217'"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14215'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14221'"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14221'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14210'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14217'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14221'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14210'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14217'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14221'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: hemkommun where key = 'v6809' and release = 'r14194'"
+subject = "elever: {hemkommun,skolkommun,skollan} @2003-07-01..2004-06-30"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skolkommun where key = 'v14815' and release = 'r14194'"
+subject = "kursdeltagare: hemkommun @2003-07-01..2004-06-30"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skollan where key = 'v32738' and release = 'r14194'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14211'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14211'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14218'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14217'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14222'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14222'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14211'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14218'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14222'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14211'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14218'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14222'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: hemkommun where key = 'v6809' and release = 'r14195'"
+subject = "elever: skolkommun @2004-07-01..2006-06-30"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skolkommun where key = 'v14815' and release = 'r14195'"
+subject = "elever: {hemkommun,skollan} @2004-07-01..2005-06-30"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skolkommun where key = 'v14815' and release = 'r14196'"
+subject = "kursdeltagare: hemkommun @2004-07-01..2005-06-30"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skollan where key = 'v32738' and release = 'r14195'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14212'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14212'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14219'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14218'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14224'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14224'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14212'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14219'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14224'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14212'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14219'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14224'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: hemkommun where key = 'v6809' and release = 'r14196'"
+subject = "elever: {hemkommun,skollan} @2005-07-01..2006-06-30"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skollan where key = 'v32738' and release = 'r14196'"
+subject = "kursdeltagare: hemkommun @2005-07-01..2006-06-30"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14213'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14213'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14219'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14220'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14225'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14225'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14213'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14220'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14225'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14213'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14220'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14225'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: hemkommun where key = 'v6809' and release = 'r14197'"
+subject = "elever: {hemkommun,skolkommun,skollan} @2006-07-01..2007-06-30"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skolkommun where key = 'v14815' and release = 'r14197'"
+subject = "kursdeltagare: hemkommun @2006-07-01..2007-06-30"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "elever: skollan where key = 'v32738' and release = 'r14197'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14214'"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14214'"
+subject = "kursdeltagare: {skolkommun,skollan} where release = 'r14226'"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14220'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: hemkommun where key = 'v6809' and release = 'r14226'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14214'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skolkommun where key = 'v14815' and release = 'r14226'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14214'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: skollan where key = 'v32738' and release = 'r14226'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "elever: sunniva where key = 'v66' and release = 'r14192'"
+subject = "elever: sunniva"
 fields = { "classification" = "class/niva-old/niva-oldv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "elever: sunniva where key = 'v66' and release = 'r14194'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "elever: sunniva where key = 'v66' and release = 'r14195'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "elever: sunniva where key = 'v66' and release = 'r14196'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "elever: sunniva where key = 'v66' and release = 'r14197'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14210'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14211'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14212'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14213'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14214'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14215'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14217'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14218'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14219'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14220'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14221'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14222'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14224'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14225'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "kursdeltagare: sunniva where key = 'v66' and release = 'r14226'"
+subject = "kursdeltagare: sunniva"
 fields = { "classification" = "class/niva-old/niva-oldv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"

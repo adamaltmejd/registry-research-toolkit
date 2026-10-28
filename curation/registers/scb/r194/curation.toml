@@ -7,18 +7,12 @@ evidence = "reg_meta_build/curation/registers/scb/skolvasendet-kostnader.toml:99
 
 [[statement]]
 kind = "set"
-subject = "kostnader-for-skolvasendet: lan where key = 'v49' and release = 'r5516'"
+subject = "kostnader-for-skolvasendet: lan @2013..2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kostnader-for-skolvasendet: lan where key = 'v49' and release = 'r6190'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "kostnader-for-skolvasendet: lan where key = 'v49' and release = 'r8744'"
+subject = "kostnader-for-skolvasendet: lan @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"

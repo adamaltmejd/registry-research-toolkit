@@ -1,48 +1,48 @@
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: ordlan where key = 'v49' and release = 'r16359'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: ordlan where key = 'v49' and release = 'r16356'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: ordlan where key = 'v49' and release = 'r16354'"
+subject = "skord-av-slattervall-fr-o-m-2016: ordlan @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: lan where key = 'v49' and release = 'r15816'"
+subject = "skord-av-slattervall-fr-o-m-2016: lan @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: lan where key = 'v49' and release = 'r17952'"
+subject = "skord-av-slattervall-fr-o-m-2016: lan @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: lan where key = 'v49' and release = 'r18494'"
+subject = "skord-av-slattervall-fr-o-m-2016: lan @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: lan where key = 'v49' and release = 'r18819'"
+subject = "skord-av-slattervall-fr-o-m-2016: lan @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "skord-av-slattervall-fr-o-m-2016: lan where key = 'v49' and release = 'r19813'"
+subject = "skord-av-slattervall-fr-o-m-2016: lan @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-slattervall-fr-o-m-2016: ordlan @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-slattervall-fr-o-m-2016: ordlan @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"

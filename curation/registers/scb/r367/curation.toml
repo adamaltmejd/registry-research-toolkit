@@ -507,48 +507,36 @@ evidence = "reg_meta_build/curation/registers/scb/tidsanvandning.toml:380\n\nSha
 
 [[statement]]
 kind = "set"
-subject = "tidsstudien: kommun where key = 'v36' and release = 'r18374'"
+subject = "tidsstudien: {kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tidsstudien: lan where key = 'v49' and release = 'r18374'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+subject = "tidsanvandningsundersokningen: {sun,sunms}"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "tidsstudien: sun2020niva_grov where key = 'v66' and release = 'r18374'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v7018' and release = 'r11265'"
+subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v7018'"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v801' and release = 'r12440'"
+subject = "tidsanvandningsundersokningen: sun2000niva where key = 'v801'"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "tidsanvandningsundersokningen: sun2000nivams where key = 'v801' and release = 'r12440'"
+subject = "tidsanvandningsundersokningen: sun2000nivams"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "tidsanvandningsundersokningen: sun where key = 'v66' and release = 'r12440'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "tidsanvandningsundersokningen: sunms where key = 'v66' and release = 'r12440'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+subject = "tidsstudien: sun2020niva_grov"
+fields = { "classification" = "class/niva-grov/niva-grovv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"

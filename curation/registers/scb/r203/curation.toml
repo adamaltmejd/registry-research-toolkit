@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "energianvandning-inom-byggsektorn: ngs1 where key = 'v4027' and release = 'r12660'"
+subject = "energianvandning-inom-byggsektorn: ngs1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"

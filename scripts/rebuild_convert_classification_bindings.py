@@ -10,6 +10,7 @@ import unicodedata
 import zipfile
 
 from rebuild_convert_classifications import fqid, inventory, load_books
+from rebuild_convert_selectors import bundle_classifications, collapse
 
 
 def label_rows(converter, books, assets):
@@ -408,6 +409,25 @@ def convert(converter, write_curation, assets):
             }
         )
 
+    context = collections.defaultdict(dict)
+    for path in sorted((ROOT / "curation/registers").glob("*/*/curation.toml")):
+        owner = tuple(path.parts[-3:-1])
+        for number, statement in enumerate(
+            tomllib.loads(path.read_text()).get("statement", [])
+        ):
+            context[owner][number] = {"statement": statement}
+    collapse(converter, context=context)
+    bundle_classifications(converter)
+    emitted = collections.Counter(
+        origin
+        for records in converter.statements.values()
+        for record in records.values()
+        if not record["statement"]["subject"].startswith("var:")
+        for origin in set(record["origins"])
+    )
+    for result in converter.results:
+        if result["category"] == "classification-label-rule":
+            result["emitted_statements"] = emitted[result["source"]]
     converter.write(write_curation, preserve=True)
     inventory_text = (
         "# Converted classification inventory; book periods describe existence only.\n"

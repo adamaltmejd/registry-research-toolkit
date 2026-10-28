@@ -13,102 +13,36 @@ evidence = "value set: 5 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: frsni92f where key = 'v4027' and release = 'r1087'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "labour-cost-survey: {sni3,sni4,sni5} @2008"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: sni2 where key = 'v4027' and release = 'r1087'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni2 where key = 'v4027' and release = 'r550'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni3 where key = 'v4027' and release = 'r1087'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni3 where key = 'v4027' and release = 'r550'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni4 where key = 'v4027' and release = 'r1087'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni4 where key = 'v4027' and release = 'r550'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni5 where key = 'v4027' and release = 'r1087'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni5 where key = 'v4027' and release = 'r550'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: snibokst where key = 'v4027' and release = 'r550'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni2 where key = 'v4027' and release = 'r1084'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: snibokst where key = 'v4027' and release = 'r1084'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "labour-cost-survey: sni2 where key = 'v4027' and release = 'r3486'"
+subject = "labour-cost-survey: {sni2,snibokst} @2008"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: sni3 where key = 'v4027' and release = 'r3486'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+subject = "labour-cost-survey: {sni2,snibokst} @2004"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: sni4 where key = 'v4027' and release = 'r3486'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+subject = "labour-cost-survey: frsni92f"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: sni5 where key = 'v4027' and release = 'r3486'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+subject = "labour-cost-survey: snibokst @2000"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "labour-cost-survey: snibokst where key = 'v4027' and release = 'r3486'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+subject = "labour-cost-survey: {sni2,sni3,sni4,sni5} @1997,2000"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"

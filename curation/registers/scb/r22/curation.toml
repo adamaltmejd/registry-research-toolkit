@@ -139,66 +139,18 @@ evidence = "reg_meta_build/curation/registers/scb/ekonomiskt-bistand.toml:719\n\
 
 [[statement]]
 kind = "set"
-subject = "bistandshushall: kommun where key = 'v36' and release = 'r678'"
+subject = "bistandshushall: {kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "bistandshushall: lan where key = 'v49' and release = 'r678'"
+subject = "bistandsmottagare: {fbfkommun,fbflan,fodlan,forsamling,kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "bistandsmottagare: fbfkommun where key = 'v8556' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "bistandsmottagare: fbflan where key = 'v7062' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "bistandsmottagare: fodlan where key = 'v256' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "bistandsmottagare: forsamling where key = 'v31' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "bistandsmottagare: kommun where key = 'v36' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "bistandsmottagare: lan where key = 'v49' and release = 'r679'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "ekonomiskt-bistand: kommun where key = 'v36' and release = 'r1025'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "ekonomiskt-bistand: kommunnamn where key = 'v446' and release = 'r1025'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "ekonomiskt-bistand: lan where key = 'v49' and release = 'r1025'"
+subject = "ekonomiskt-bistand: {kommun,kommunnamn,lan}"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"

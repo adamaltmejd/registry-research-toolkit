@@ -1,12 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "individer-i-privat-sektor: b23 where key = 'v120' and release = 'r1542'"
+subject = "individer-i-privat-sektor: b23"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
 
 [[statement]]
 kind = "set"
-subject = "individer: b23 where key = 'v120' and release = 'r1574'"
+subject = "individer: b23"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"

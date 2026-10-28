@@ -1,42 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "fasta-bruttoinvesteringar: ngs1 where key = 'v4027' and release = 'r19304'"
+subject = "lagerinvesteringar: ngs1"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "fasta-bruttoinvesteringar: ngs1"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "fasta-bruttoinvesteringar: ngs1 where key = 'v4027' and release = 'r19912'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lagerinvesteringar: ngs1 where key = 'v4027' and release = 'r19278'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lagerinvesteringar: ngs1 where key = 'v4027' and release = 'r19380'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lagerinvesteringar: ngs1 where key = 'v4027' and release = 'r19381'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lagerinvesteringar: ngs1 where key = 'v4027' and release = 'r19382'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lagerinvesteringar: ngs1 where key = 'v4027' and release = 'r19860'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"

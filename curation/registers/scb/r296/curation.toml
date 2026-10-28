@@ -201,30 +201,6 @@ evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:597\n\nThe exac
 
 [[statement]]
 kind = "set"
-subject = "tjansteprisindex-tpi: sni where key = 'v6784' and release = 'r4268'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tjansteprisindex-tpi: sni where key = 'v6784' and release = 'r4294'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tjansteprisindex-tpi: sni where key = 'v6784' and release = 'r4295'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tjansteprisindex-tpi: sni where key = 'v6784' and release = 'r4296'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tjansteprisindex-tpi: sni where key = 'v6784' and release = 'r4674'"
+subject = "tjansteprisindex-tpi: sni"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"

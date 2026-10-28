@@ -1377,11 +1377,11 @@ class Converter:
                 "",
                 "## Exact label-rule expansion",
                 "",
-                "| Source | Label | Matched occurrences | Statements | Covered by book binding | Refused occurrences | Outcome |",
-                "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+                "| Source | Label | Matched occurrences | Expanded bindings | Emitted statements | Covered by book binding | Refused occurrences | Outcome |",
+                "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
             ]
             text += [
-                f"| {r['source']} | {r['label']} | {r.get('matched_occurrences', 0)} | {r.get('statements', 0)} | {r.get('covered_by_book_binding', 0)} | {len(r.get('refused_occurrences', []))} | {r['outcome']} |"
+                f"| {r['source']} | {r['label']} | {r.get('matched_occurrences', 0)} | {r.get('statements', 0)} | {r.get('emitted_statements', r.get('statements', 0))} | {r.get('covered_by_book_binding', 0)} | {len(r.get('refused_occurrences', []))} | {r['outcome']} |"
                 for r in self.results
                 if r["category"] == "classification-label-rule"
             ]
@@ -1408,6 +1408,31 @@ class Converter:
                 f"| {r['source']} | {r['predecessor']} | {r['successor']} | {r['reason']} |"
                 for r in self.results
                 if r["category"] == "classification-succession"
+            ]
+            text += [
+                "",
+                "## Refused source occurrences",
+                "",
+                "| Rule | Source occurrence |",
+                "| --- | --- |",
+            ]
+            text += [
+                f"| {r['source']} | {at['input']}:{at['at']} |"
+                for r in self.results
+                for item in r.get("refused_occurrences", [])
+                for at in [item.get("locator", item)]
+            ]
+            text += [
+                "",
+                "## Timeline editions",
+                "",
+                "| Source | Exact version | From | To |",
+                "| --- | --- | --- | --- |",
+            ]
+            text += [
+                f"| {r['source']} | {version} | {lower} | {upper} |"
+                for r in self.results
+                for version, lower, upper in r.get("editions", [])
             ]
             (self.out / "report.md").write_text("\n".join(text) + "\n")
             return

@@ -1897,2016 +1897,630 @@ evidence = "value set: 3 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: makebost where key = 'v39851' and release = 'r16370'"
+subject = "panelurval-befolkningen: blk @2017"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2017"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: blk @2017"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: blk @2018"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2018"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: blk @2018"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: makebost"
 fields = { "classification" = "class/lkf/lkf1991" }
 evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-taxeringshushall: makebost where key = 'v39851' and release = 'r16368'"
+subject = "panelurval-taxeringshushall: makebost"
 fields = { "classification" = "class/lkf/lkf1991" }
 evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: makebost where key = 'v39851' and release = 'r16396'"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: makebost"
 fields = { "classification" = "class/lkf/lkf1991" }
 evidence = "reg_meta_build/curation/classifications/LKF1991.toml:20\n\nLegacy exact value-set label: LKF 1991-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r16206'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @1995"
 fields = { "classification" = "class/lkf/lkf1995" }
 evidence = "reg_meta_build/curation/classifications/LKF1995.toml:22\n\nLegacy exact value-set label: LKF 1995-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blkfnov where key = 'v5668' and release = 'r16247'"
+subject = "panelurval-befolkningen: blkfnov @1996"
 fields = { "classification" = "class/lkf/lkf1996" }
 evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r16205'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @1996"
 fields = { "classification" = "class/lkf/lkf1996" }
 evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r16200'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @1997"
 fields = { "classification" = "class/lkf/lkf1997" }
 evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r16194'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @1998"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13478'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @1999"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13435'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2000"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13432'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2001"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13400'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2002"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blkfnov where key = 'v5668' and release = 'r11584'"
+subject = "tillaggsurval-utrikesfodda: blkfnov @2004"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13102'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2003"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r11550'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2004"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blkf where key = 'v31' and release = 'r6102'"
+subject = "panelurval-befolkningen: blkf @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r8611'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2005"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blkf where key = 'v31' and release = 'r6103'"
+subject = "tillaggsurval-utrikesfodda: blkf @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blkf where key = 'v31' and release = 'r3802'"
+subject = "panelurval-befolkningen: blkf @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r6105'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2006"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blkf where key = 'v31' and release = 'r3803'"
+subject = "tillaggsurval-utrikesfodda: blkf @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blkf where key = 'v31' and release = 'r3100'"
+subject = "panelurval-befolkningen: blkf @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r3800'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2007"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blkf where key = 'v31' and release = 'r3041'"
+subject = "tillaggsurval-utrikesfodda: blkf @2008..2009"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blkf where key = 'v31' and release = 'r3674'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: blkf where key = 'v31' and release = 'r3673'"
+subject = "panelurval-befolkningen: blkf @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r3154'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2008"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r3658'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2009"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r4057'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2010"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r4515'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2011"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r5273'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2012"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r5898'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2013"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r7363'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2014"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blk where key = 'v8556' and release = 'r9989'"
+subject = "panelurval-befolkningen: blk @2015"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r9991'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2015"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blk where key = 'v8556' and release = 'r9990'"
+subject = "tillaggsurval-utrikesfodda: blk @2015"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blk where key = 'v8556' and release = 'r11771'"
+subject = "panelurval-befolkningen: blk @2016"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r11769'"
+subject = "panelurval-familjemedlemmar-yrke-lon: lan @2016"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: blk where key = 'v8556' and release = 'r11784'"
+subject = "tillaggsurval-utrikesfodda: blk @2016"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: blk where key = 'v8556' and release = 'r13035'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13034'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: blk where key = 'v8556' and release = 'r13061'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: blk where key = 'v8556' and release = 'r13892'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: lan where key = 'v473' and release = 'r13891'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: blk where key = 'v8556' and release = 'r13900'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: kusni where key = 'v21073' and release = 'r16370'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: kusni where key = 'v21073' and release = 'r16372'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16329'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16338'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16341'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16342'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16368'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: kusni where key = 'v21073' and release = 'r16369'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16344'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16345'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16346'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16347'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16396'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni where key = 'v21073' and release = 'r16399'"
-fields = { "classification" = "class/sni/sni1969" }
-evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r15395'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r15753'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r16006'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r16197'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r16268'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r16300'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r16334'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r15395'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r15753'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r16006'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r16197'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r16300'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r15395'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r15753'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r16006'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r16197'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bkungr where key = 'v4027' and release = 'r16407'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bkungr where key = 'v4027' and release = 'r16410'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bkungr where key = 'v4027' and release = 'r16419'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bkungr where key = 'v4027' and release = 'r16422'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bngr where key = 'v2702' and release = 'r16422'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bngre where key = 'v2698' and release = 'r16422'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bkungr where key = 'v4027' and release = 'r16339'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bkungr where key = 'v4027' and release = 'r16357'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bkungr where key = 'v4027' and release = 'r16363'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bkungr where key = 'v4027' and release = 'r16383'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bngr where key = 'v2702' and release = 'r16339'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bngre where key = 'v2698' and release = 'r16339'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r16335'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r16336'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r16337'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r16335'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r16336'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r16337'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r16335'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r16336'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r16337'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r13103'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r472'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r13103'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r472'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r6102'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r8609'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r13103'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r14845'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r472'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r6102'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r8609'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r11584'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r13231'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r11584'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r13231'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r6103'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r8589'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r11584'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r13231'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r16035'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r6103'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r8589'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v2702' and release = 'r11771'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v2702' and release = 'r13035'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v2702' and release = 'r13892'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v2702' and release = 'r9989'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r3100'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r3673'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r4059'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r4512'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r5274'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr where key = 'v4027' and release = 'r5901'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bkungr07 where key = 'v4027' and release = 'r3802'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r11771'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r13035'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r13892'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r3100'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r3673'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r3802'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r4059'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r4512'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r5274'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r5901'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngr where key = 'v2702' and release = 'r9989'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r11771'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r13035'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r13892'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r3100'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r3673'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r3802'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r4059'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r4512'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r5274'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r5901'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bngre where key = 'v2698' and release = 'r9989'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v2702' and release = 'r11784'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v2702' and release = 'r13061'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v2702' and release = 'r13900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v2702' and release = 'r9990'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r3041'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r3674'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r4060'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r4513'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r5275'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v4027' and release = 'r5907'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bkungr07 where key = 'v4027' and release = 'r3803'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r11784'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r13061'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r13900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r3041'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r3674'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r3803'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r4060'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r4513'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r5275'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r5907'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngr where key = 'v2702' and release = 'r9990'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r11784'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r13061'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r13900'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r3041'"
+subject = "panelurval-befolkningen: bkungr @2008..2013"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r3674'"
+subject = "panelurval-befolkningen: bkungr where key = 'v2702'"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r3803'"
+subject = "panelurval-befolkningen: bkungr07"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r4060'"
+subject = "panelurval-befolkningen: {bngr,bngre} @2007..2013,2015..2018"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r4513'"
+subject = "tillaggsurval-utrikesfodda: bkungr @2008..2013"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r5275'"
+subject = "tillaggsurval-utrikesfodda: bkungr where key = 'v2702'"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r5907'"
+subject = "tillaggsurval-utrikesfodda: bkungr07"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "tillaggsurval-utrikesfodda: bngre where key = 'v2698' and release = 'r9990'"
+subject = "tillaggsurval-utrikesfodda: {bngr,bngre} @2007..2013,2015..2018"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: ssyk where key = 'v1842' and release = 'r16006'"
+subject = "panelurval-befolkningen: ssyk"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r11550'"
+subject = "panelurval-familjemedlemmar-yrke-lon: ssyk @1999..2004"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13102'"
+subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v1842'"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13400'"
+subject = "panelurval-yrke-och-lon: ssyk @1999..2004"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13432'"
+subject = "panelurval-yrke-och-lon: yrke"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13435'"
+subject = "tillaggsurval-utrikesfodda: ssyk"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13478'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r3154'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r3658'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r3800'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r4057'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r4515'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r5273'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r5898'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r6105'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r8611'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v1842' and release = 'r16194'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk4 where key = 'v29921' and release = 'r16200'"
+subject = "panelurval-familjemedlemmar-yrke-lon: ssyk4"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:58\n\nLegacy exact value-set label: SSYK-koder i LINDA"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk4 where key = 'v29921' and release = 'r16205'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:58\n\nLegacy exact value-set label: SSYK-koder i LINDA"
+subject = "panelurval-befolkningen: bsun @1996"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r11549'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "panelurval-befolkningen: bsun where key = 'v2714'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13101'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "panelurval-taxeringshushall: bsun @1996"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13393'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "panelurval-taxeringshushall: bsun where key = 'v2714'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13394'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun @1996"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13395'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v2714'"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13396'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
+subject = "tillaggsurval-utrikesfodda: bsun"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r3011'"
+subject = "panelurval-befolkningen: bsun @1993..1995"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: utbildn"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: bsun @1993..1995"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: utbildn @1991..1992"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun @1993..1995"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: utbildn @1991..1992"
+fields = { "classification" = "class/sun/sun1996" }
+evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: {bsuninr,bsuninrr}"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: {bsuninr,bsuninrr}"
+fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bsunniv where key = 'v2714'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bsunniv where key = 'v66'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bsunnivr"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66'"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bsunnivr"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bkungr @2003..2004"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngr @2003..2006"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngre @2002..2006"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bkungr @2003..2004"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngr @2003..2006"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngre @2002..2006"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-familjemedlemmar-yrke-lon: ssyk @2005..2013"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r3657'"
+subject = "panelurval-yrke-och-lon: ssyk @2005..2013"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r3801'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r4049'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r4514'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r5272'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r5897'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r6104'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r8610'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-yrke-och-lon: yrke where key = 'v1842' and release = 'r13398'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: ssyk where key = 'v1842' and release = 'r16337'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r11769'"
+subject = "panelurval-familjemedlemmar-yrke-lon: ssyk @2014..2018"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13034'"
+subject = "panelurval-yrke-och-lon: ssyk @2014..2018"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r13891'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "panelurval-befolkningen: kusni"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r7363'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "panelurval-taxeringshushall: kusni"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-familjemedlemmar-yrke-lon: ssyk where key = 'v16224' and release = 'r9991'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: kusni"
+fields = { "classification" = "class/sni/sni1969" }
+evidence = "reg_meta_build/curation/classifications/SNI69.toml:20\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 69"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r11770'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "panelurval-befolkningen: bngr @1998..2001"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13033'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "panelurval-taxeringshushall: bngr @1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r13890'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bngr @1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r7501'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "tillaggsurval-utrikesfodda: bngr @1999..2001"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-yrke-och-lon: ssyk where key = 'v16224' and release = 'r9992'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+subject = "panelurval-befolkningen: bkungr @1993..1995,1998..2001"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r11771'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "panelurval-befolkningen: bngr @1994"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r13035'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "panelurval-befolkningen: bngre @1998..2001"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r13103'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "panelurval-taxeringshushall: bkungr @1993..1995,1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r13892'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "panelurval-taxeringshushall: bngre @1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r14845'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bkungr @1993..1995,1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r15395'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bngre @1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
 
 [[statement]]
 kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r15753'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r3100'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r3673'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r3802'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r4059'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r4512'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r472'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r5274'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r5901'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r6102'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r7502'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r8609'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninr where key = 'v65' and release = 'r9989'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsuninrr where key = 'v65' and release = 'r6102'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r11584'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r11784'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r13061'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r13231'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r13900'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r16035'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r16335'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r16336'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r3041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r3674'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r3803'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r4060'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r4513'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r5275'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r5907'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r6103'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r7508'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r8589'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninr where key = 'v65' and release = 'r9990'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsuninrr where key = 'v65' and release = 'r6103'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v2714' and release = 'r13103'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v2714' and release = 'r14845'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v2714' and release = 'r15395'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v2714' and release = 'r15753'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v2714' and release = 'r472'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r11771'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r13035'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r13892'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r3100'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r3673'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r3802'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r4059'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r4512'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r5274'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r5901'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r6102'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r7502'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r8609'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunniv where key = 'v66' and release = 'r9989'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsunnivr where key = 'v66' and release = 'r6102'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714' and release = 'r11584'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714' and release = 'r13231'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714' and release = 'r16035'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714' and release = 'r16335'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v2714' and release = 'r16336'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r11784'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r13061'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r13900'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r3041'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r3674'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r3803'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r4060'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r4513'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r5275'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r5907'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r6103'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r7508'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r8589'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunniv where key = 'v66' and release = 'r9990'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsunnivr where key = 'v66' and release = 'r6103'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v2714' and release = 'r16006'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v2714' and release = 'r16197'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v2714' and release = 'r16235'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v8189' and release = 'r16247'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v8189' and release = 'r16268'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v8189' and release = 'r16300'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: bsun where key = 'v8189' and release = 'r16334'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: utbildn where key = 'v8189' and release = 'r16370'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-befolkningen: utbildn where key = 'v8189' and release = 'r16372'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v2714' and release = 'r16421'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v2714' and release = 'r16422'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v8189' and release = 'r16407'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v8189' and release = 'r16410'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v8189' and release = 'r16419'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: bsun where key = 'v8189' and release = 'r16420'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: utbildn where key = 'v8189' and release = 'r16368'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "panelurval-taxeringshushall: utbildn where key = 'v8189' and release = 'r16369'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v2714' and release = 'r16339'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v2714' and release = 'r16350'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v8189' and release = 'r16355'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v8189' and release = 'r16357'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v8189' and release = 'r16363'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: bsun where key = 'v8189' and release = 'r16383'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: utbildn where key = 'v8189' and release = 'r16396'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda-taxeringshushall: utbildn where key = 'v8189' and release = 'r16399'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:20\n\nLegacy exact value-set label: SUN 1996, 5 positioner, brutto"
-
-[[statement]]
-kind = "set"
-subject = "tillaggsurval-utrikesfodda: bsun where key = 'v2714' and release = 'r16337'"
-fields = { "classification" = "class/sun/sun1996" }
-evidence = "reg_meta_build/curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
+subject = "tillaggsurval-utrikesfodda: {bkungr,bngre} @1999..2001"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"

@@ -73,216 +73,54 @@ evidence = "reg_meta_build/curation/registers/scb/personalutbildningsstatistik.t
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun where key = 'v6809' and release = 'r480'"
+subject = "source-annual-1999-2003: kommun @2006-01-01..2006-06-30"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun where key = 'v6809' and release = 'r1740'"
+subject = "source-annual-1999-2003: kommun @2008-01-01..2008-06-30"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun where key = 'v6809' and release = 'r3283'"
+subject = "source-annual-1999-2003: kommun @2010-01-01..2010-06-30"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v66' and release = 'r1740'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v66' and release = 'r480'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14864'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14891'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14892'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14907'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14909'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14911'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14914'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14917'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14918'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14967'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14969'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14971'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14972'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14973'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14979'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14982'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r14983'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r15072'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r15200'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r15202'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r15203'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: utbniv where key = 'v774' and release = 'r15211'"
-fields = { "classification" = "class/niva-old/niva-oldv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: husni2007_1 where key = 'v18007' and release = 'r3283'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: husni2007_2 where key = 'v18008' and release = 'r3283'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: fikod1 where key = 'v1545' and release = 'r3283'"
+subject = "source-annual-1999-2003: {fikod1,fikod2,fikod3,fikod4,fikod5,sun2000inr}"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: fikod2 where key = 'v1545' and release = 'r3283'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: fikod3 where key = 'v1545' and release = 'r3283'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: fikod4 where key = 'v1545' and release = 'r3283'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: fikod5 where key = 'v1545' and release = 'r3283'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: sun2000inr where key = 'v784' and release = 'r3283'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "source-annual-1999-2003: sun2000niva where key = 'v778' and release = 'r3283'"
+subject = "source-annual-1999-2003: sun2000niva"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: utbniv @1995-07-01..1995-12-31"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: utbniv @2006-01-01..2006-06-30,2008-01-01..2008-06-30"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: utbniv @1996..2003"
+fields = { "classification" = "class/niva-old/niva-oldv1" }
+evidence = "reg_meta_build/curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "source-annual-1999-2003: {husni2007_1,husni2007_2}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"

@@ -67,24 +67,24 @@ evidence = "value set: 2 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: lan where key = 'v49' and release = 'r19735'"
+subject = "vaxtskyddsmedelsundersokningen: lan @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: lan @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: lan where key = 'v49' and release = 'r3522'"
+subject = "vaxtskyddsmedelsundersokningen: lan @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: lan where key = 'v49' and release = 'r15970'"
+subject = "vaxtskyddsmedelsundersokningen: lan @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "vaxtskyddsmedelsundersokningen: lan where key = 'v49' and release = 'r18479'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"

@@ -7,24 +7,12 @@ evidence = "value set: 4 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsarblan where key = 'v6515' and release = 'r19144'"
+subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsarblan"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsarblan where key = 'v6515' and release = 'r19751'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsssyk2012 where key = 'v30845' and release = 'r19144'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
-
-[[statement]]
-kind = "set"
-subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsssyk2012 where key = 'v30845' and release = 'r19751'"
+subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: hsssyk2012"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"

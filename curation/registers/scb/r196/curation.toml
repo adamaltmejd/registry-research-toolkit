@@ -31,18 +31,6 @@ evidence = "reg_meta_build/curation/registers/scb/energianvandning-fiske.toml:78
 
 [[statement]]
 kind = "set"
-subject = "energianvandningen-inom-fiskesektorn: forsamling where key = 'v31' and release = 'r194'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energianvandningen-inom-fiskesektorn: kommun where key = 'v36' and release = 'r194'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "energianvandningen-inom-fiskesektorn: lan where key = 'v49' and release = 'r194'"
+subject = "energianvandningen-inom-fiskesektorn: {forsamling,kommun,lan}"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"

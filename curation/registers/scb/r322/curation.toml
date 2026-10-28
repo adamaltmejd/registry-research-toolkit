@@ -8,6 +8,6 @@ evidence = "reg_meta_build/curation/registers/scb/distansutbildning.toml:6\n\nLe
 
 [[statement]]
 kind = "set"
-subject = "distansutbildning-i-hogskolan: kommun where key = 'v36' and release = 'r4404'"
+subject = "distansutbildning-i-hogskolan: kommun"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"

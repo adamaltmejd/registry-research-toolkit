@@ -187,336 +187,84 @@ evidence = "reg_meta_build/curation/registers/scb/konjunkturstatistik-industri.t
 
 [[statement]]
 kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4801'"
+subject = "industrins-lager-2015: cu_branschtext"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager: aktsni07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: aktsni07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: al2undeju where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: aktsni07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: al2undeju where key = 'v4027'"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager: aktsni92 @1999..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
 
 [[statement]]
 kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4802'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4803'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4804'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:23\n\nLegacy exact value-set label: SNI, 92, detaljgrupp"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4805'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4777'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4778'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4779'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4780'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4781'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4835'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4853'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4854'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4795'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4796'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4797'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4798'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4799'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni92 where key = 'v4027' and release = 'r4800'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4771'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4772'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4773'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4774'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4775'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 where key = 'v4027' and release = 'r4776'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4782'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4830'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4831'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4832'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4833'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4834'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager-2015: cu_branschtext where key = 'v4027' and release = 'r14551'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager-2015: cu_branschtext where key = 'v4027' and release = 'r14859'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager-2015: cu_branschtext where key = 'v4027' and release = 'r14998'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager-2015: cu_branschtext where key = 'v4027' and release = 'r17644'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager-2015: cu_branschtext where key = 'v4027' and release = 'r17648'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r14985'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r14986'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r3591'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r4148'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r4676'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-lager: aktsni07 where key = 'v4027' and release = 'r5261'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni07 where key = 'v4027' and release = 'r3592'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni07 where key = 'v4027' and release = 'r4076'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: aktsni07 where key = 'v4027' and release = 'r4593'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v4027' and release = 'r3255'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v4027' and release = 'r390'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-orderingang: aktsni07 where key = 'v4027' and release = 'r5268'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: al2undeju where key = 'v4027' and release = 'r2847'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: al2undeju where key = 'v4027' and release = 'r2848'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: al2undeju where key = 'v4027' and release = 'r391'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: al2undeju where key = 'v4027' and release = 'r4855'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r3588'"
+subject = "industriproduktionsindex: ipisni @2011..2014"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
 
 [[statement]]
 kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4077'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+subject = "industrins-lager: aktsni92 @2003..2008"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r4081'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+subject = "industriproduktionsindex: ipisni @2003..2008"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
 
 [[statement]]
 kind = "set"
-subject = "industriproduktionsindex: ipisni where key = 'v15169' and release = 'r5259'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
+subject = "industrins-leverans-orderlage: aktsni92 @2003..2008"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: aktsni92 @1998..2002"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager: aktsni92 @1998"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: ipisni @2000..2002"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"

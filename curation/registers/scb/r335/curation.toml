@@ -1,12 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "transportinfrastrukturens-markanvandning: <none> where key = 'v36' and release = 'r5186'"
+subject = "transportinfrastrukturens-markanvandning: <none> where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "transportinfrastrukturens-markanvandning: <none> where key = 'v49' and release = 'r5186'"
+subject = "transportinfrastrukturens-markanvandning: <none> where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"

@@ -1,12 +1,12 @@
 
 [[statement]]
 kind = "set"
-subject = "innovation-arbetsstalleenheter: indu_main_act where key = 'v4027' and release = 'r18886'"
+subject = "innovation-arbetsstalleenheter: indu_main_act"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "innovation-juridiska: indu_main_act where key = 'v4027' and release = 'r18911'"
+subject = "innovation-juridiska: indu_main_act"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:30\n\nLegacy exact value-set label: SNI 2007, Branscher, alternativ"

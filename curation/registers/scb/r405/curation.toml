@@ -1,234 +1,96 @@
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r2247'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r2933'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r3270'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r4104'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r4922'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r5368'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: kommun where key = 'v37774' and release = 'r6014'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: kommun where key = 'v37774' and release = 'r8597'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: kommun where key = 'v37774' and release = 'r11169'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: kommun where key = 'v37774' and release = 'r11960'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: kommun where key = 'v37774' and release = 'r13296'"
+subject = "barn-ulf-12-18-ar: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar: kommun where key = 'v37774' and release = 'r14444'"
+subject = "barn-ulf-12-18-ar: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar-2023: kommun where key = 'v47166' and release = 'r19065'"
+subject = "barn-ulf-12-18-ar-2023: kommun"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar-2023: sun2020niva_grov_bofar where key = 'v47177' and release = 'r19065'"
+subject = "barn-ulf-10-18-ar: kommun @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-10-18-ar: kommun @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-12-18-ar: kommun @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-12-18-ar: kommun @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-12-18-ar: kommun @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-12-18-ar-2023: {sun2020niva_grov_bofar,sun2020niva_grov_bomor}"
 fields = { "classification" = "class/niva-grov/niva-grovv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar-2023: sun2020niva_grov_bomor where key = 'v47178' and release = 'r19065'"
+subject = "barn-ulf-12-18-ar: {sun2000niva_grov,sun2000niva_grov_p}"
 fields = { "classification" = "class/niva-grov/niva-grovv1" }
 evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov where key = 'v49420' and release = 'r11169'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov where key = 'v49420' and release = 'r11960'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov where key = 'v49420' and release = 'r13296'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov where key = 'v49420' and release = 'r14444'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov where key = 'v49420' and release = 'r8597'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov_p where key = 'v49421' and release = 'r11169'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov_p where key = 'v49421' and release = 'r11960'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov_p where key = 'v49421' and release = 'r13296'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov_p where key = 'v49421' and release = 'r14444'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: sun2000niva_grov_p where key = 'v49421' and release = 'r8597'"
-fields = { "classification" = "class/niva-grov/niva-grovv1" }
-evidence = "reg_meta_build/curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_ip where key = 'v49420' and release = 'r2247'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_ip where key = 'v49420' and release = 'r2933'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_ip where key = 'v49420' and release = 'r3270'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_ip where key = 'v49420' and release = 'r4104'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_ip where key = 'v49420' and release = 'r4922'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_maka where key = 'v49421' and release = 'r2247'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_maka where key = 'v49421' and release = 'r2933'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_maka where key = 'v49421' and release = 'r3270'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_maka where key = 'v49421' and release = 'r4104'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_maka where key = 'v49421' and release = 'r4922'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_niva_ip where key = 'v49420' and release = 'r5368'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_niva_ip where key = 'v49420' and release = 'r6014'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_niva_maka where key = 'v49421' and release = 'r5368'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-10-18-ar: sun2000_niva_maka where key = 'v49421' and release = 'r6014'"
+subject = "barn-ulf-10-18-ar: {sun2000_ip,sun2000_maka,sun2000_niva_ip,sun2000_niva_maka}"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46\n\nLegacy exact value-set label: Utbildningsnivå (SUN 2000)"

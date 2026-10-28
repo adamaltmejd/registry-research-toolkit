@@ -1,36 +1,36 @@
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: <none> where key = 'v49' and release = 'r1654'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: <none> where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan where key = 'v49' and release = 'r707'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan where key = 'v49' and release = 'r2598'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan where key = 'v49' and release = 'r3957'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan where key = 'v49' and release = 'r4189'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan where key = 'v49' and release = 'r4694'"
+subject = "forsaljning-av-kalk-for-jord-och-tradgardsbruk-sjoar-och-vatten-samt-skog: lan @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"

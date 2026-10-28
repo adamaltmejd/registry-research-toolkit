@@ -31,6 +31,6 @@ evidence = "value set: 17 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "individer: kommun where key = 'v36' and release = 'r19434'"
+subject = "individer: kommun"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"

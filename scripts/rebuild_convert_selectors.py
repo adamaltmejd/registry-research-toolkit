@@ -49,6 +49,7 @@ class Snapshot:
         self.rows = []
         self.index = collections.defaultdict(list)
         self.problem = None
+        self.period_coordinates = set()
         register_bounds = converter.context_registers.get(owner, {})
         defaults = {}
         for (pid, rid, handle), source in converter.context_tables.items():
@@ -129,6 +130,19 @@ class Snapshot:
                 )
             for period in periods:
                 self.add(table, row, period)
+        for record in statements.values():
+            statement = record["statement"]
+            fields = statement.get("fields", {})
+            if "coverage" in fields:
+                self.problem = (
+                    "coverage changes require their own source phase snapshot"
+                )
+            if "period" in fields:
+                address = parse_selector(statement["subject"])
+                if address is None or any(c in address[1] for c in "{},"):
+                    self.problem = "nonliteral period correction address"
+                else:
+                    self.period_coordinates.add(address[:2])
         if any(
             "table" in r["statement"].get("fields", {}) for r in statements.values()
         ):
@@ -208,7 +222,7 @@ class Snapshot:
         return None, reason
 
 
-def collapse(converter):
+def collapse(converter, *, context=None):
     counts = collections.Counter()
     remaining = collections.Counter()
     for owner, statements in converter.statements.items():
@@ -216,19 +230,40 @@ def collapse(converter):
         counts["release_guards_before"] += sum(
             "release = '" in r["statement"]["subject"] for r in statements.values()
         )
-        snapshot = Snapshot(converter, owner, statements)
+        # Existing constructors affect shorter selectors. On converter replay an
+        # emitted assertion also appears among the new proposals; its evidence
+        # prefix differs, so identify that duplicate by the asserted fact shape.
+        snapshot_records = {}
+        for record in [*(context or {}).get(owner, {}).values(), *statements.values()]:
+            shape = {
+                k: v
+                for k, v in record["statement"].items()
+                if k not in {"evidence", "caveat"}
+            }
+            snapshot_records[value_key(shape)] = record
+        snapshot = Snapshot(converter, owner, snapshot_records)
         groups = collections.defaultdict(list)
         retained = []
         for record in statements.values():
             statement = record["statement"]
             address = parse_selector(statement["subject"])
-            if statement["kind"] != "set" or address is None or snapshot.problem:
+            if (
+                statement["kind"] != "set"
+                or address is None
+                or snapshot.problem
+                or address[:2] in snapshot.period_coordinates
+            ):
                 retained.append(record)
                 if "release = '" in statement["subject"]:
                     record["selector_reason"] = (
                         "assertion constructor"
                         if statement["kind"] == "assert"
-                        else snapshot.problem or "unfamiliar selector syntax"
+                        else snapshot.problem
+                        or (
+                            "period correction coordinate"
+                            if address and address[:2] in snapshot.period_coordinates
+                            else "unfamiliar selector syntax"
+                        )
                     )
                 continue
             table, spelling, _scope, guards = address
@@ -326,3 +361,58 @@ def collapse(converter):
         "remaining_release_reasons": dict(sorted(remaining.items()))
     }
     return converter.selector_collapse
+
+
+def bundle_classifications(converter):
+    """Use literal spelling unions only when every other selector/payload fact agrees.
+
+    Run last: Snapshot models one spelling at a time. A literal union with one
+    shared period and guards is exactly the union of the individually proved rows.
+    """
+    before = after = lists = 0
+    for owner, statements in converter.statements.items():
+        groups = collections.defaultdict(list)
+        retained = []
+        before += len(statements)
+        for record in statements.values():
+            statement = record["statement"]
+            address = parse_selector(statement["subject"])
+            if (
+                statement["kind"] != "set"
+                or set(statement.get("fields", {})) != {"classification"}
+                or address is None
+                or not re.fullmatch(r"[\w.-]+", address[1])
+            ):
+                retained.append(record)
+                continue
+            table, spelling, scope, guards = address
+            payload = {k: v for k, v in statement.items() if k != "subject"}
+            key = (
+                table,
+                tuple(scope),
+                tuple(sorted(guards.items())),
+                tuple(sorted(set(record["origins"]))),
+                value_key(payload),
+            )
+            groups[key].append((record, spelling, address))
+        for group in groups.values():
+            record, _, address = group[0]
+            spellings = sorted({spelling for _, spelling, _ in group})
+            if len(spellings) > 1:
+                table, _, scope, guards = address
+                statement = record["statement"] | {
+                    "subject": render(
+                        table, "{" + ",".join(spellings) + "}", scope, guards
+                    )
+                }
+                record = record | {"statement": statement}
+                lists += 1
+            retained.append(record)
+        converter.statements[owner] = {
+            json.dumps(record["statement"], sort_keys=True, ensure_ascii=False): record
+            for record in retained
+        }
+        after += len(converter.statements[owner])
+    converter.selector_collapse.update(
+        bundle_before=before, bundle_after=after, literal_spelling_lists=lists
+    )

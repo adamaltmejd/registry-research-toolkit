@@ -4,7 +4,7 @@ Temporary conversion evidence; deleted with this converter at milestone F. ICD h
 structured family publisher: its four edition publishers are preserved verbatim in
 inventory evidence.
 
-Lock: not run. Converted entries are certified only after a successful lock.
+Lock: accepted. Converted entries are certified only after a successful lock.
 
   | Source                                                             | Category                        | Outcome   | Expanded statements / reason                                                                      |
   | ------------------------------------------------------------------ | ------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
@@ -523,119 +523,119 @@ Lock: not run. Converted entries are certified only after a successful lock.
 
 ## Exact label-rule expansion
 
-  | Source                                                             | Label                                                          | Matched occurrences | Statements | Covered by book binding | Refused occurrences | Outcome   |
-  | ------------------------------------------------------------------ | -------------------------------------------------------------- | ------------------: | ---------: | ----------------------: | ------------------: | --------- |
-  | reg_meta_build/curation/classifications/AGARKAT2000.toml:5         | Standard för indelning efter ägarkategori 2000                 |                 357 |        357 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/AGARKAT2020.toml:5         | Standard för indelning efter ägarkategori 2020                 |                  51 |         51 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/ISCED-F2013.toml:13        | ISCED-F 2013 - Inriktning                                      |                  30 |         15 |                      15 |                   0 | converted |
-  | reg_meta_build/curation/classifications/ISCED-F2013.toml:18        | ISCED F 2013                                                   |                   8 |          8 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/ISCED2011.toml:17          | ISCED 2011 - Nivå                                              |                  30 |         15 |                      15 |                   0 | converted |
-  | reg_meta_build/curation/classifications/ISCED2011.toml:18          | ISCED 2011 AES                                                 |                   3 |          3 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/JURFORM2000.toml:4         | Standard för indelning efter juridisk form 2000                |                 737 |        737 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/JURFORM2020.toml:4         | Standard för indelning efter juridisk form 2020                |                 250 |        250 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1980.toml:18            | LKF 1980-01-01/ Län, kommuner och församlingar                 |                  18 |         18 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1981.toml:18            | LKF 1981-01-01/ Län, kommuner och församlingar                 |                  32 |         32 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1982.toml:14            | LKF 1982-01-01/ Län, kommuner och församlingar                 |                  18 |         18 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1983.toml:14            | LKF 1983-01-01/ Län, kommuner och församlingar                 |                  18 |         18 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1984.toml:14            | LKF 1984-01-01/ Län, kommuner och församlingar                 |                  17 |         17 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1985.toml:14            | LKF 1985-01-01/ Län, kommuner och församlingar                 |                  20 |         20 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1986.toml:20            | LKF 1986-01-01/ Län, kommuner och församlingar                 |                  48 |         48 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1987.toml:21            | LKF 1987-01-01/ Län, kommuner och församlingar                 |                  38 |         38 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1988.toml:20            | LKF 1988-01-01/ Län, kommuner och församlingar                 |                  39 |         39 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1989.toml:20            | LKF 1989-01-01/ Län, kommuner och församlingar                 |                  40 |         40 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1990.toml:19            | LKF 1990-01-01/ Län, kommuner och församlingar                 |                  39 |         39 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1991.toml:20            | LKF 1991-01-01/ Län, kommuner och församlingar                 |                  86 |         86 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1992.toml:22            | LKF 1992-01-01/ Län, kommuner och församlingar                 |                  58 |         58 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1993.toml:22            | LKF 1993-01-01/ Län, kommuner och församlingar                 |                  55 |         55 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1994.toml:22            | LKF 1994-01-01/ Län, kommuner och församlingar                 |                  55 |         55 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1995.toml:22            | LKF 1995-01-01/ Län, kommuner och församlingar                 |                  66 |         66 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1996.toml:23            | LKF 1996-01-01/ Län, kommuner och församlingar                 |                  87 |         87 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1997.toml:23            | LKF 1997-01-01/ Län, kommuner och församlingar                 |                  86 |         86 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1998.toml:23            | LKF 1998-01-01/ Län, kommuner och församlingar                 |                 167 |        167 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF1999.toml:25            | LKF 1999-01-01/ Län, kommuner och församlingar                 |                 215 |        215 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2000.toml:26            | LKF 2000-01-01/ Län, kommuner och församlingar                 |                 250 |        250 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2001.toml:27            | LKF 2001-01-01/ Län, kommuner och församlingar                 |                 255 |        255 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2002.toml:25            | LKF 2002-01-01/ Län, kommuner och församlingar                 |                 263 |        263 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2003.toml:24            | LKF 2003-01-01/ Län, kommuner och församlingar                 |                 281 |        281 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2004.toml:26            | LKF 2004-01-01/ Län, kommuner och församlingar                 |                 297 |        296 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2005.toml:27            | LKF 2005-01-01/ Län, kommuner och församlingar                 |                 327 |        327 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2006.toml:32            | LKF 2006-01-01/ Län, kommuner och församlingar                 |                 365 |        365 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2006.toml:33            | LKF 2006 med tillägg                                           |                   1 |          1 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2007.toml:26            | LKF 2007-01-01/ Län, kommuner och församlingar                 |                 373 |        373 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2008.toml:29            | LKF 2008-01-01/ Län, kommuner och församlingar                 |                 383 |        381 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2009.toml:29            | LKF 2009-01-01/ Län, kommuner och församlingar                 |                 363 |        362 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2010.toml:28            | LKF 2010-01-01/ Län, kommuner och församlingar                 |                 389 |        387 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2011.toml:26            | LKF 2011-01-01/ Län, kommuner och församlingar                 |                 388 |        387 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2012.toml:26            | LKF 2012-01-01/ Län, kommuner och församlingar                 |                 389 |        388 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2013.toml:27            | LKF 2013-01-01/ Län, kommuner och församlingar                 |                 413 |        412 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2014.toml:26            | LKF 2014-01-01/ Län, kommuner och församlingar                 |                 421 |        419 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2015.toml:25            | LKF 2015-01-01/ Län, kommuner och församlingar                 |                 449 |        448 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2016.toml:31            | LKF 2016-01-01/ Län, kommuner och församlingar                 |                 382 |        380 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2017.toml:26            | LKF 2017-01-01/ Län, kommuner och församlingar                 |                 384 |        384 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2018.toml:27            | 2018-01-01/ Län, kommuner och församlingar                     |                 415 |        413 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2019.toml:25            | 2019-01-01/ Län, kommuner och församlingar                     |                 440 |        440 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2020.toml:23            | 2020-01-01/ Län, kommuner och församlingar                     |                 419 |        418 |                       0 |                   1 | refused   |
-  | reg_meta_build/curation/classifications/LKF2021.toml:28            | 2021-01-01/ Län, kommuner och församlingar                     |                 440 |        439 |                       0 |                   1 | refused   |
-  | reg_meta_build/curation/classifications/LKF2022.toml:28            | 2022-01-01/ Län, kommuner och församlingar                     |                 433 |        433 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2023.toml:27            | 2023-01-01 /Län, kommuner och församlingar                     |                 418 |        418 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2024.toml:27            | 2024-01-01 /Län, kommuner och församlingar                     |                 397 |        397 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2025.toml:21            | LKF 2025-01-01 /Län, kommuner och församlingar                 |                 173 |        173 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/LKF2026.toml:14            | LKF 2026-01-01 /Län, kommuner och församlingar                 |                  15 |         15 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/NIVA-GROV.toml:27          | SUN 2000 NivåGrov                                              |                 306 |        306 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/NIVA-GROV.toml:28          | SUN 2020 NivåGrov                                              |                  24 |         24 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/NIVA-OLD.toml:34           | SUN 2000 NivaOld                                               |                 718 |        718 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/NIVA-OLD.toml:35           | SUN 2020 NivaOld                                               |                 208 |        208 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SEKTOR2000.toml:21         | Standard för institutionell sektorindelning 2000               |                 255 |        255 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SEKTORKOD.toml:32          | Sektor 2000                                                    |                 370 |        291 |                      79 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SEKTORKOD.toml:2           | RAMS SektorKod fr.o.m. 1993                                    |                  81 |         61 |                      20 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2002.toml:27            | Standard för svensk näringsgrensindelning, 2002 Branscher      |                 336 |        334 |                       0 |                   2 | refused   |
-  | reg_meta_build/curation/classifications/SNI2002.toml:28            | Standard för svensk näringsgrensindelning, 2002, Aktiviteter   |                  38 |         38 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2002.toml:29            | SNI 2002, Aktiviteter, alternativ                              |                  60 |         60 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:29            | SNI 2007, Aktiviteter, alternativ                              |                1511 |       1510 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:30            | SNI 2007, Branscher, alternativ                                |                1044 |       1043 |                       0 |                   1 | refused   |
-  | reg_meta_build/curation/classifications/SNI2007.toml:31            | SNI 2007, Branscher Huvudgrupp, alternativ                     |                  15 |         15 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:32            | Standard för svensk näringsgrensindelning 2007, Aktiviteter    |                 226 |        226 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:33            | Standard för svensk näringsgrensindelning 2007, Branscher      |                  73 |         73 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:34            | SNI 2007, grov redovisningsnivå                                |                  17 |         17 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:35            | SNI 2007, konjunkturstatistik, variant                         |                  17 |         17 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:36            | SNI 2007 MIR                                                   |                   3 |          3 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:37            | Näringsgrupp SNI2007                                           |                  18 |         18 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:38            | Två-siffrig kod på grov avdelningsnivå, SNI2007                |                   9 |          9 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:39            | Branschgruppering enligt SNI2007, som används för redovsning   |                  14 |         14 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:40            | BlTyp SNI2007                                                  |                   4 |          4 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:41            | NR:s näringsgrensindelning SNI 2007                            |                  12 |         12 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:42            | NR:s näringsgrensindelning SNI2007                             |                  20 |         20 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI2007.toml:43            | NR:s näringsgrensindelning SNI 2007, IVP2008                   |                   2 |          2 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI69.toml:20              | Svensk standard för näringsgrensindelning, SNI 69              |                 155 |        155 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI69.toml:21              | SNI 69, AKU                                                    |                  24 |         24 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI69.toml:22              | SNI69_6                                                        |                   1 |          1 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI92.toml:21              | Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter |                 509 |        509 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SNI92.toml:22              | Svensk standard för näringsgrensindelning, brancher SNI 92     |                 260 |        259 |                       0 |                   1 | refused   |
-  | reg_meta_build/curation/classifications/SNI92.toml:23              | SNI, 92, detaljgrupp                                           |                  10 |         10 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:5            | Standard för svensk yrkesklassificering 2012                   |                 456 |        456 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:38           | SSYK 2012, 3- och 4-siffernivå                                 |                  22 |         22 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:39           | SSYK 2012, alla nivåer                                         |                  13 |         13 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:40           | SSYK 2012 (4-siffrig)                                          |                   5 |          5 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:41           | SSYK2012_4                                                     |                  20 |         20 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK2012.toml:42           | Yrke (SSYK 2012) 4-siffrig                                     |                  20 |         20 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:9              | Standard för svensk yrkesklassificering 1996                   |                 749 |        745 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:54             | SSYK 96, alternativ                                            |                  41 |         41 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:55             | SSYK 96, AKU Yrkesgrupp                                        |                  13 |         13 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:56             | SSYK 96, AKU Undergrupp                                        |                  13 |         13 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:57             | Yrke (SSYK 1996) 4-siffrig                                     |                  25 |         25 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SSYK96.toml:58             | SSYK-koder i LINDA                                             |                   2 |          2 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN1996.toml:19            | SUN 1996                                                       |                  83 |         83 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN1996.toml:20            | SUN 1996, 5 positioner, brutto                                 |                  21 |         21 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:18      | SUN 2000 - Gruppering                                          |                 196 |        196 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25 | SUN 2000 - Utbildningsinriktning                               |                 789 |        789 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:26 | SUN2000Inriktning                                              |                   1 |          1 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45       | SUN 2000 - Utbildningsnivå                                     |                1802 |       1802 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46       | Utbildningsnivå (SUN 2000)                                     |                  26 |         26 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:47       | SUN2000Niva                                                    |                   1 |          1 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17      | SUN 2020 - Gruppering                                          |                  37 |         37 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:18      | SUN 2020 - Gruppering - Detaljerad                             |                   9 |          9 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18 | SUN 2020 - Utbildningsinriktning                               |                 280 |        280 |                       0 |                   0 | converted |
-  | reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21       | SUN 2020 - Utbildningsnivå                                     |                 757 |        757 |                       0 |                   0 | converted |
+  | Source                                                             | Label                                                          | Matched occurrences | Expanded bindings | Emitted statements | Covered by book binding | Refused occurrences | Outcome   |
+  | ------------------------------------------------------------------ | -------------------------------------------------------------- | ------------------: | ----------------: | -----------------: | ----------------------: | ------------------: | --------- |
+  | reg_meta_build/curation/classifications/AGARKAT2000.toml:5         | Standard för indelning efter ägarkategori 2000                 |                 357 |               357 |                 31 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/AGARKAT2020.toml:5         | Standard för indelning efter ägarkategori 2020                 |                  51 |                51 |                 13 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/ISCED-F2013.toml:13        | ISCED-F 2013 - Inriktning                                      |                  30 |                15 |                  1 |                      15 |                   0 | converted |
+  | reg_meta_build/curation/classifications/ISCED-F2013.toml:18        | ISCED F 2013                                                   |                   8 |                 8 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/ISCED2011.toml:17          | ISCED 2011 - Nivå                                              |                  30 |                15 |                  1 |                      15 |                   0 | converted |
+  | reg_meta_build/curation/classifications/ISCED2011.toml:18          | ISCED 2011 AES                                                 |                   3 |                 3 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/JURFORM2000.toml:4         | Standard för indelning efter juridisk form 2000                |                 737 |               737 |                111 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/JURFORM2020.toml:4         | Standard för indelning efter juridisk form 2020                |                 250 |               250 |                 69 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1980.toml:18            | LKF 1980-01-01/ Län, kommuner och församlingar                 |                  18 |                18 |                  5 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1981.toml:18            | LKF 1981-01-01/ Län, kommuner och församlingar                 |                  32 |                32 |                 12 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1982.toml:14            | LKF 1982-01-01/ Län, kommuner och församlingar                 |                  18 |                18 |                  8 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1983.toml:14            | LKF 1983-01-01/ Län, kommuner och församlingar                 |                  18 |                18 |                  8 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1984.toml:14            | LKF 1984-01-01/ Län, kommuner och församlingar                 |                  17 |                17 |                  8 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1985.toml:14            | LKF 1985-01-01/ Län, kommuner och församlingar                 |                  20 |                20 |                  9 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1986.toml:20            | LKF 1986-01-01/ Län, kommuner och församlingar                 |                  48 |                48 |                 16 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1987.toml:21            | LKF 1987-01-01/ Län, kommuner och församlingar                 |                  38 |                38 |                 15 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1988.toml:20            | LKF 1988-01-01/ Län, kommuner och församlingar                 |                  39 |                39 |                 16 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1989.toml:20            | LKF 1989-01-01/ Län, kommuner och församlingar                 |                  40 |                40 |                 17 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1990.toml:19            | LKF 1990-01-01/ Län, kommuner och församlingar                 |                  39 |                39 |                 16 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1991.toml:20            | LKF 1991-01-01/ Län, kommuner och församlingar                 |                  86 |                86 |                 33 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1992.toml:22            | LKF 1992-01-01/ Län, kommuner och församlingar                 |                  58 |                58 |                 22 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1993.toml:22            | LKF 1993-01-01/ Län, kommuner och församlingar                 |                  55 |                55 |                 21 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1994.toml:22            | LKF 1994-01-01/ Län, kommuner och församlingar                 |                  55 |                55 |                 21 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1995.toml:22            | LKF 1995-01-01/ Län, kommuner och församlingar                 |                  66 |                66 |                 26 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1996.toml:23            | LKF 1996-01-01/ Län, kommuner och församlingar                 |                  87 |                87 |                 35 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1997.toml:23            | LKF 1997-01-01/ Län, kommuner och församlingar                 |                  86 |                86 |                 37 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1998.toml:23            | LKF 1998-01-01/ Län, kommuner och församlingar                 |                 167 |               167 |                 65 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF1999.toml:25            | LKF 1999-01-01/ Län, kommuner och församlingar                 |                 215 |               215 |                 90 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2000.toml:26            | LKF 2000-01-01/ Län, kommuner och församlingar                 |                 250 |               250 |                102 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2001.toml:27            | LKF 2001-01-01/ Län, kommuner och församlingar                 |                 255 |               255 |                106 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2002.toml:25            | LKF 2002-01-01/ Län, kommuner och församlingar                 |                 263 |               263 |                103 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2003.toml:24            | LKF 2003-01-01/ Län, kommuner och församlingar                 |                 281 |               281 |                121 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2004.toml:26            | LKF 2004-01-01/ Län, kommuner och församlingar                 |                 297 |               296 |                123 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2005.toml:27            | LKF 2005-01-01/ Län, kommuner och församlingar                 |                 327 |               327 |                139 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2006.toml:32            | LKF 2006-01-01/ Län, kommuner och församlingar                 |                 365 |               365 |                154 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2006.toml:33            | LKF 2006 med tillägg                                           |                   1 |                 1 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2007.toml:26            | LKF 2007-01-01/ Län, kommuner och församlingar                 |                 373 |               373 |                164 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2008.toml:29            | LKF 2008-01-01/ Län, kommuner och församlingar                 |                 383 |               381 |                164 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2009.toml:29            | LKF 2009-01-01/ Län, kommuner och församlingar                 |                 363 |               362 |                164 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2010.toml:28            | LKF 2010-01-01/ Län, kommuner och församlingar                 |                 389 |               387 |                167 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2011.toml:26            | LKF 2011-01-01/ Län, kommuner och församlingar                 |                 388 |               387 |                180 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2012.toml:26            | LKF 2012-01-01/ Län, kommuner och församlingar                 |                 389 |               388 |                171 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2013.toml:27            | LKF 2013-01-01/ Län, kommuner och församlingar                 |                 413 |               412 |                187 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2014.toml:26            | LKF 2014-01-01/ Län, kommuner och församlingar                 |                 421 |               419 |                188 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2015.toml:25            | LKF 2015-01-01/ Län, kommuner och församlingar                 |                 449 |               448 |                206 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2016.toml:31            | LKF 2016-01-01/ Län, kommuner och församlingar                 |                 382 |               380 |                199 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2017.toml:26            | LKF 2017-01-01/ Län, kommuner och församlingar                 |                 384 |               384 |                196 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2018.toml:27            | 2018-01-01/ Län, kommuner och församlingar                     |                 415 |               413 |                198 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2019.toml:25            | 2019-01-01/ Län, kommuner och församlingar                     |                 440 |               440 |                216 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2020.toml:23            | 2020-01-01/ Län, kommuner och församlingar                     |                 419 |               418 |                203 |                       0 |                   1 | refused   |
+  | reg_meta_build/curation/classifications/LKF2021.toml:28            | 2021-01-01/ Län, kommuner och församlingar                     |                 440 |               439 |                214 |                       0 |                   1 | refused   |
+  | reg_meta_build/curation/classifications/LKF2022.toml:28            | 2022-01-01/ Län, kommuner och församlingar                     |                 433 |               433 |                197 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2023.toml:27            | 2023-01-01 /Län, kommuner och församlingar                     |                 418 |               418 |                192 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2024.toml:27            | 2024-01-01 /Län, kommuner och församlingar                     |                 397 |               397 |                186 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2025.toml:21            | LKF 2025-01-01 /Län, kommuner och församlingar                 |                 173 |               173 |                 89 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/LKF2026.toml:14            | LKF 2026-01-01 /Län, kommuner och församlingar                 |                  15 |                15 |                  9 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/NIVA-GROV.toml:27          | SUN 2000 NivåGrov                                              |                 306 |               306 |                 25 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/NIVA-GROV.toml:28          | SUN 2020 NivåGrov                                              |                  24 |                24 |                 10 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/NIVA-OLD.toml:34           | SUN 2000 NivaOld                                               |                 718 |               718 |                195 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/NIVA-OLD.toml:35           | SUN 2020 NivaOld                                               |                 208 |               208 |                 44 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SEKTOR2000.toml:21         | Standard för institutionell sektorindelning 2000               |                 255 |               255 |                 37 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SEKTORKOD.toml:32          | Sektor 2000                                                    |                 370 |               291 |                 13 |                      79 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SEKTORKOD.toml:2           | RAMS SektorKod fr.o.m. 1993                                    |                  81 |                61 |                  9 |                      20 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2002.toml:27            | Standard för svensk näringsgrensindelning, 2002 Branscher      |                 336 |               334 |                 62 |                       0 |                   2 | refused   |
+  | reg_meta_build/curation/classifications/SNI2002.toml:28            | Standard för svensk näringsgrensindelning, 2002, Aktiviteter   |                  38 |                38 |                 10 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2002.toml:29            | SNI 2002, Aktiviteter, alternativ                              |                  60 |                60 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:29            | SNI 2007, Aktiviteter, alternativ                              |                1511 |              1510 |                105 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:30            | SNI 2007, Branscher, alternativ                                |                1044 |              1043 |                 83 |                       0 |                   1 | refused   |
+  | reg_meta_build/curation/classifications/SNI2007.toml:31            | SNI 2007, Branscher Huvudgrupp, alternativ                     |                  15 |                15 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:32            | Standard för svensk näringsgrensindelning 2007, Aktiviteter    |                 226 |               226 |                 19 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:33            | Standard för svensk näringsgrensindelning 2007, Branscher      |                  73 |                73 |                 18 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:34            | SNI 2007, grov redovisningsnivå                                |                  17 |                17 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:35            | SNI 2007, konjunkturstatistik, variant                         |                  17 |                17 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:36            | SNI 2007 MIR                                                   |                   3 |                 3 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:37            | Näringsgrupp SNI2007                                           |                  18 |                18 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:38            | Två-siffrig kod på grov avdelningsnivå, SNI2007                |                   9 |                 9 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:39            | Branschgruppering enligt SNI2007, som används för redovsning   |                  14 |                14 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:40            | BlTyp SNI2007                                                  |                   4 |                 4 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:41            | NR:s näringsgrensindelning SNI 2007                            |                  12 |                12 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:42            | NR:s näringsgrensindelning SNI2007                             |                  20 |                20 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI2007.toml:43            | NR:s näringsgrensindelning SNI 2007, IVP2008                   |                   2 |                 2 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI69.toml:20              | Svensk standard för näringsgrensindelning, SNI 69              |                 155 |               155 |                 17 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI69.toml:21              | SNI 69, AKU                                                    |                  24 |                24 |                  3 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI69.toml:22              | SNI69_6                                                        |                   1 |                 1 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI92.toml:21              | Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter |                 509 |               509 |                 53 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SNI92.toml:22              | Svensk standard för näringsgrensindelning, brancher SNI 92     |                 260 |               259 |                 41 |                       0 |                   1 | refused   |
+  | reg_meta_build/curation/classifications/SNI92.toml:23              | SNI, 92, detaljgrupp                                           |                  10 |                10 |                  3 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:5            | Standard för svensk yrkesklassificering 2012                   |                 456 |               456 |                 48 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:38           | SSYK 2012, 3- och 4-siffernivå                                 |                  22 |                22 |                  3 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:39           | SSYK 2012, alla nivåer                                         |                  13 |                13 |                  5 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:40           | SSYK 2012 (4-siffrig)                                          |                   5 |                 5 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:41           | SSYK2012_4                                                     |                  20 |                20 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK2012.toml:42           | Yrke (SSYK 2012) 4-siffrig                                     |                  20 |                20 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:9              | Standard för svensk yrkesklassificering 1996                   |                 749 |               745 |                 45 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:54             | SSYK 96, alternativ                                            |                  41 |                41 |                 11 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:55             | SSYK 96, AKU Yrkesgrupp                                        |                  13 |                13 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:56             | SSYK 96, AKU Undergrupp                                        |                  13 |                13 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:57             | Yrke (SSYK 1996) 4-siffrig                                     |                  25 |                25 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SSYK96.toml:58             | SSYK-koder i LINDA                                             |                   2 |                 2 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN1996.toml:19            | SUN 1996                                                       |                  83 |                83 |                 20 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN1996.toml:20            | SUN 1996, 5 positioner, brutto                                 |                  21 |                21 |                  8 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-GRUPP.toml:18      | SUN 2000 - Gruppering                                          |                 196 |               196 |                 20 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25 | SUN 2000 - Utbildningsinriktning                               |                 789 |               789 |                 73 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:26 | SUN2000Inriktning                                              |                   1 |                 1 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45       | SUN 2000 - Utbildningsnivå                                     |                1802 |              1802 |                119 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:46       | Utbildningsnivå (SUN 2000)                                     |                  26 |                26 |                  3 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2000-NIVA.toml:47       | SUN2000Niva                                                    |                   1 |                 1 |                  1 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:17      | SUN 2020 - Gruppering                                          |                  37 |                37 |                  9 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2020-GRUPP.toml:18      | SUN 2020 - Gruppering - Detaljerad                             |                   9 |                 9 |                  2 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18 | SUN 2020 - Utbildningsinriktning                               |                 280 |               280 |                 46 |                       0 |                   0 | converted |
+  | reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21       | SUN 2020 - Utbildningsnivå                                     |                 757 |               757 |                 73 |                       0 |                   0 | converted |
 
 ## Reviewed book identities
 
@@ -791,3 +791,167 @@ Lock: not run. Converted entries are certified only after a successful lock.
   | reg_meta_build/curation/relations.toml:612                        | class/icd/icd-8-ks68                    | class/icd/icd-9-ks87                    | explicit legacy succession edge              |
   | reg_meta_build/curation/relations.toml:618                        | class/icd/icd-9-ks87                    | class/icd/icd-10-se                     | explicit legacy succession edge              |
   | reg_meta_build/curation/relations.toml:624                        | class/icd/icd-10-se                     | class/icd/icd-11-se                     | explicit legacy succession edge              |
+
+## Refused source occurrences
+
+  | Rule                                                    | Source occurrence                                                                                        |
+  | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+  | reg_meta_build/curation/classifications/LKF2020.toml:23 | current-scb-inputs.zip/Registerinformation.csv:row=352544                                                |
+  | reg_meta_build/curation/classifications/LKF2021.toml:28 | current-scb-inputs.zip/Registerinformation.csv:row=352544                                                |
+  | reg_meta_build/curation/classifications/SNI2002.toml:27 | current-scb-inputs.zip/Registerinformation.csv:row=234482                                                |
+  | reg_meta_build/curation/classifications/SNI2002.toml:27 | current-scb-inputs.zip/Registerinformation.csv:row=234476                                                |
+  | reg_meta_build/curation/classifications/SNI2007.toml:30 | current-scb-inputs.zip/Registerinformation.csv:row=234482                                                |
+  | reg_meta_build/curation/classifications/SNI92.toml:22   | current-scb-inputs.zip/Registerinformation.csv:row=234476                                                |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!17  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!62  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!71  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!72  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!73  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!74  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!75  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!76  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!77  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!78  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!79  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!80  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!63  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!81  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!82  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!83  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!84  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!85  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!86  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!87  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!88  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!89  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!90  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!64  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!91  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!92  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!93  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!94  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!95  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!96  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!97  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!98  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!99  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!100 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!65  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!101 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!102 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!103 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!104 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!105 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!106 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!107 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!108 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!109 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!66  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!67  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!68  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!69  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!70  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!16  |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!232 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288     | catalog/source/Socialstyrelsen/Metadata_Dödsorsaksregistret (DORS)_webb.xlsx:Metadata - Variabelnivå!230 |
+
+## Timeline editions
+
+  | Source                                              | Exact version        | From       | To         |
+  | --------------------------------------------------- | -------------------- | ---------- | ---------- |
+  | reg_meta_build/curation/registers/sos/dors.toml:288 | class/icd/icd-8-ks68 | 1969-01-01 | 1986-12-31 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288 | class/icd/icd-9-ks87 | 1987-01-01 | 1996-12-31 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288 | class/icd/icd-10-se  | 1997-01-01 | 2026-12-31 |
+  | reg_meta_build/curation/registers/sos/dors.toml:288 | class/icd/icd-11-se  | 2027-01-01 | 9999-12-31 |
+
+## Validation on the merged branch
+
+Base branch: `1b6c3d20` (#2017), merged without rebasing. Runtime source: `3d061864`
+plus the regenerated locks. Inputs worktree was clean at
+`9186fcbceeb2283a50c7f684764869e4dda5765e`. Both catalogs used the same merged release
+binary and inputs. The baseline used the base branch's curation.
+
+  | Observed boundary                                                 | Baseline | Converted |
+  | ----------------------------------------------------------------- | -------: | --------: |
+  | Class families                                                    |        0 |        24 |
+  | Class versions                                                    |        0 |        83 |
+  | Occurrences with a class version                                  |        0 |    23,953 |
+  | Segments with a class version                                     |        0 |    13,911 |
+  | Classification succession edges                                   |        0 |        62 |
+  | F1 findings                                                       |   50,907 |    50,908 |
+  | Classification-version ambiguity warnings in the same audit order |        0 |       926 |
+
+The ambiguity audit requests the complete declared year windows of all 926
+variable/table groups with multiple curated versions. It is an unpinned validation
+request, not a claim that all those orders succeed; existing form/availability and
+ambiguity findings remain. The versions now make the need to select an edition visible.
+The one added F1 is `scb/hib/kommun` at the 2011 boundary: 290 codes to 21 codes. Its
+preceding window was ambiguous before curation and is now clear. This is a domain
+change, not a suppression of F1 for an edition change. V1/F1 work remains in D-6.
+
+The real order `fohm/sminet/diagnos`, `fohm/sminet`, year 2005, categorical,
+`classification = "class/icd/icd-10-se"` changes from HTTP 422 `order_blocked`
+(`fqid_unresolved`) to HTTP 200 with one entry carrying that exact class version. The
+informational `coverage_end_unstated` and sensitivity warning remain; the order check
+does not confirm delivery availability. KS87-P has zero parent links.
+
+All 33 direct declarations converted. The 111 label rules select 23,891 source
+occurrences: 23,756 emitted setters, 129 matches covered by explicit book bindings, and
+six refused rule/occurrence pairs representing three distinct occurrences. Five rules
+have partial refusals. Across all surfaces the final form has 6,353 classification
+setters and six occurrence assertions. The DORS timeline's 52 source occurrences remain
+refused under the whole-occurrence contract. Every mapping, edge, label-rule count and
+located disposition is listed above.
+
+  | Check                                                     | Result                                    | Wall seconds |
+  | --------------------------------------------------------- | ----------------------------------------- | -----------: |
+  | `cargo build --release --locked -p reg-build -p reg-meta` | passed                                    |        11.19 |
+  | Real `reg-build lock` on merged curation                  | passed                                    |       256.97 |
+  | Baseline curated dev build                                | passed                                    |       427.79 |
+  | Baseline `reg-build verify`                               | passed                                    |        34.71 |
+  | Converted curated dev build                               | passed                                    |       348.47 |
+  | Converted `reg-build verify`                              | passed                                    |        25.02 |
+  | `gate.py g0 rust` on merged branch                        | passed; 199 conformance passed, 2 skipped |           22 |
+  | Real pinned order and ambiguity audit                     | observed results above                    |            — |
+  | Independent code/content review and `git diff --check`    | passed                                    |            — |
+
+These are elapsed verification times. The baseline and lock overlapped, and the
+candidate build overlapped the gate; they are not isolated benchmarks. The converter
+also audited all 27,506 matching CVIDs and found no mixed-label CVID. Matching uses
+original source coordinates, not pooled value-set hashes. Membership of the nine
+explicit book targets was checked against the baseline, including the gap marker.
+
+Earlier checks exposed and corrected type errors, conflicting ICD family publishers, and
+redundant book/label setters. They are not counted as successful checks. The pre-merge
+lock invocation was interrupted before execution to integrate #2017; the merged real
+lock above is the completed result.
+
+No new tests. Not run: real-seed builds, `gate.py all`, the legacy Python release tier,
+`gate.py release`, `gate.py regen`, or restricted/MONA execution. No PR was merged.
+Task-owned scratch files are removed after recording these results.
+
+## Selector compaction and publication
+
+GitHub rejected the first push because two generated locks exceeded its 100 MiB limit.
+The remote branch did not move. The unpublished lock commit was recreated; there was no
+rebase or force-push.
+
+The converter uses its existing exact whole-occurrence collapse plus the address
+grammar's literal spelling lists. A list combines selectors only when table, period,
+guards, class version, evidence and origins agree. Existing constructors are included in
+the proof snapshot. Period-corrected coordinates and unsupported coverage/table changes
+prevent unsafe shortening. No lock encoding or premise guard was changed.
+
+The emitted form has 6,353 setters plus six assertions, reduced from 23,798 setters. The
+per-rule table distinguishes expanded bindings from emitted statements. There are 3,182
+literal spelling lists; 942 release guards remain where shortening would select other
+editions or where dates are unstated. The largest final lock is 46,049,815 bytes; the
+other previously oversized lock is 42,467,484 bytes.
+
+The final dev catalog was rebuilt after compaction and verified. All 31,568 located
+references backing the 23,953 classified occurrences match the previously verified
+catalog by source coordinates, period, spelling, type, variable, domain hash and exact
+version. Authored occurrences use stable scoped statement IDs rather than relocated
+curation line numbers. Counts, F1 findings, the 926-group ambiguity audit and the real
+ICD-10-SE pinned order are unchanged. This checks selection equivalence through the real
+catalog boundary, beyond comparing totals.

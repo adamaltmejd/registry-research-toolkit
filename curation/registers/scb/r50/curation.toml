@@ -1,954 +1,228 @@
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4384'"
-fields = { "classification" = "class/lkf/lkf1996" }
-evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4384'"
-fields = { "classification" = "class/lkf/lkf1996" }
-evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4388'"
-fields = { "classification" = "class/lkf/lkf1997" }
-evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4388'"
-fields = { "classification" = "class/lkf/lkf1997" }
-evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4387'"
-fields = { "classification" = "class/lkf/lkf1998" }
-evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4387'"
-fields = { "classification" = "class/lkf/lkf1998" }
-evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4386'"
-fields = { "classification" = "class/lkf/lkf1999" }
-evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4386'"
-fields = { "classification" = "class/lkf/lkf1999" }
-evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4385'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4385'"
-fields = { "classification" = "class/lkf/lkf2000" }
-evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4383'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4383'"
-fields = { "classification" = "class/lkf/lkf2001" }
-evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4382'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4382'"
-fields = { "classification" = "class/lkf/lkf2002" }
-evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4381'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4381'"
-fields = { "classification" = "class/lkf/lkf2003" }
-evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r1048'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r1048'"
-fields = { "classification" = "class/lkf/lkf2004" }
-evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r424'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r424'"
-fields = { "classification" = "class/lkf/lkf2005" }
-evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r1046'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r1046'"
-fields = { "classification" = "class/lkf/lkf2006" }
-evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r1223'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r1223'"
-fields = { "classification" = "class/lkf/lkf2007" }
-evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r2265'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r2265'"
-fields = { "classification" = "class/lkf/lkf2008" }
-evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r2924'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r2924'"
-fields = { "classification" = "class/lkf/lkf2009" }
-evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r3598'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r3598'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4109'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4109'"
-fields = { "classification" = "class/lkf/lkf2011" }
-evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r4624'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r4624'"
-fields = { "classification" = "class/lkf/lkf2012" }
-evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r5348'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r5348'"
-fields = { "classification" = "class/lkf/lkf2013" }
-evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r6039'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r6039'"
-fields = { "classification" = "class/lkf/lkf2014" }
-evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r7468'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r7468'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r11162'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r11162'"
-fields = { "classification" = "class/lkf/lkf2016" }
-evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r11895'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r11895'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r13258'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r13258'"
-fields = { "classification" = "class/lkf/lkf2018" }
-evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r14459'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r14459'"
-fields = { "classification" = "class/lkf/lkf2019" }
-evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r16364'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r16364'"
-fields = { "classification" = "class/lkf/lkf2020" }
-evidence = "reg_meta_build/curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r18194'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r18194'"
-fields = { "classification" = "class/lkf/lkf2021" }
-evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r18743'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r18743'"
-fields = { "classification" = "class/lkf/lkf2022" }
-evidence = "reg_meta_build/curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r19232'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r19232'"
-fields = { "classification" = "class/lkf/lkf2023" }
-evidence = "reg_meta_build/curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: kommun where key = 'v36' and release = 'r19887'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: lan where key = 'v49' and release = 'r19887'"
-fields = { "classification" = "class/lkf/lkf2024" }
-evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @1996"
+fields = { "classification" = "class/lkf/lkf1996" }
+evidence = "reg_meta_build/curation/classifications/LKF1996.toml:23\n\nLegacy exact value-set label: LKF 1996-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4382'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @1997"
+fields = { "classification" = "class/lkf/lkf1997" }
+evidence = "reg_meta_build/curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4383'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @1998"
+fields = { "classification" = "class/lkf/lkf1998" }
+evidence = "reg_meta_build/curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4384'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @1999"
+fields = { "classification" = "class/lkf/lkf1999" }
+evidence = "reg_meta_build/curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4385'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2000"
+fields = { "classification" = "class/lkf/lkf2000" }
+evidence = "reg_meta_build/curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4386'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2001"
+fields = { "classification" = "class/lkf/lkf2001" }
+evidence = "reg_meta_build/curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4387'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2002"
+fields = { "classification" = "class/lkf/lkf2002" }
+evidence = "reg_meta_build/curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a where key = 'v1641' and release = 'r4388'"
-fields = { "classification" = "class/sni/sni1992" }
-evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2003"
+fields = { "classification" = "class/lkf/lkf2003" }
+evidence = "reg_meta_build/curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r11162'"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2004"
+fields = { "classification" = "class/lkf/lkf2004" }
+evidence = "reg_meta_build/curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2005"
+fields = { "classification" = "class/lkf/lkf2005" }
+evidence = "reg_meta_build/curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2006"
+fields = { "classification" = "class/lkf/lkf2006" }
+evidence = "reg_meta_build/curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2007"
+fields = { "classification" = "class/lkf/lkf2007" }
+evidence = "reg_meta_build/curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2008"
+fields = { "classification" = "class/lkf/lkf2008" }
+evidence = "reg_meta_build/curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2009"
+fields = { "classification" = "class/lkf/lkf2009" }
+evidence = "reg_meta_build/curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "reg_meta_build/curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "reg_meta_build/curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "reg_meta_build/curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "reg_meta_build/curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: {kommun,lan} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r11895'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r13258'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r14459'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r16364'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r18194'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r18743'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r19232'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r19887'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r2265'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r2924'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r3598'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r4109'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r4624'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r5348'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r6039'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: frsni07a where key = 'v4027' and release = 'r7468'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r1046'"
+subject = "lonestrukturstatistik-privat-sektor-slp: yrke @1996..2006"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r1048'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r1223'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r2265'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r2924'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r3598'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4109'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r424'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4381'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4382'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4383'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4384'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4385'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4386'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4387'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4388'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:54\n\nLegacy exact value-set label: SSYK 96, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r4624'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke where key = 'v120' and release = 'r5348'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r11162'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r11895'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r13258'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r14459'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r16364'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r18194'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r18743'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r19232'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r19887'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r6039'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: yrke12 where key = 'v120' and release = 'r7468'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r1046'"
+subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r1048'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva"
+fields = { "classification" = "class/sun-niva/sun2000-niva" }
+evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r11162'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r11895'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r1223'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r13258'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r14459'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r2265'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r2924'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r3598'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r4109'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r424'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r4381'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r4382'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r4383'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r4624'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r5348'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r6039'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000inr where key = 'v65' and release = 'r7468'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr where key = 'v65' and release = 'r16364'"
+subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr"
 fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr where key = 'v65' and release = 'r18194'"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr where key = 'v65' and release = 'r18743'"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr where key = 'v65' and release = 'r19232'"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020inr where key = 'v65' and release = 'r19887'"
-fields = { "classification" = "class/sun-inriktning/sun2020-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r1046'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r1048'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r11162'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r11895'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r1223'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r13258'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r14459'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r2265'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r2924'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r3598'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r4109'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r424'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r4381'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r4382'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r4383'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r4624'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r5348'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r6039'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2000niva where key = 'v66' and release = 'r7468'"
-fields = { "classification" = "class/sun-niva/sun2000-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva where key = 'v66' and release = 'r16364'"
+subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva where key = 'v66' and release = 'r18194'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+subject = "lonestrukturstatistik-privat-sektor-slp: yrke @2007..2013"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva where key = 'v66' and release = 'r18743'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+subject = "lonestrukturstatistik-privat-sektor-slp: yrke12"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
 
 [[statement]]
 kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva where key = 'v66' and release = 'r19232'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
-subject = "lonestrukturstatistik-privat-sektor-slp: sun2020niva where key = 'v66' and release = 'r19887'"
-fields = { "classification" = "class/sun-niva/sun2020-niva" }
-evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+subject = "lonestrukturstatistik-privat-sektor-slp: frsni92a @1996..2002"
+fields = { "classification" = "class/sni/sni1992" }
+evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"

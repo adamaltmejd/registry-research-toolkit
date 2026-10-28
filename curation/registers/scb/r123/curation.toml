@@ -7381,552 +7381,132 @@ evidence = "value set: 7 integer codes"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen: lan where key = 'v49' and release = 'r11213'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: lan where key = 'v49' and release = 'r4183'"
-fields = { "classification" = "class/lkf/lkf2010" }
-evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49' and release = 'r11228'"
-fields = { "classification" = "class/lkf/lkf2015" }
-evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49' and release = 'r12574'"
-fields = { "classification" = "class/lkf/lkf2017" }
-evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49' and release = 'r15136'"
+subject = "arbetsmiljoundersokningen-2015: lan @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "reg_meta_build/curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49' and release = 'r18460'"
+subject = "arbetsmiljoundersokningen-2015: lan @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "reg_meta_build/curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49017' and release = 'r19509'"
+subject = "arbetsmiljoundersokningen-2015: lan where key = 'v49017'"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "reg_meta_build/curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen: husni2002_2 where key = 'v6781' and release = 'r3646'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+subject = "arbetsmiljoundersokningen: lan"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "reg_meta_build/curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen: husni2002_2 where key = 'v6781' and release = 'r648'"
-fields = { "classification" = "class/sni/sni2002" }
-evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+subject = "arbetsmiljoundersokningen-2015: lan @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hssni2007_1 where key = 'v18007' and release = 'r18460'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+subject = "arbetsmiljoundersokningen-2015: lan @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hssni2007_2 where key = 'v18008' and release = 'r18460'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hssni2007_3 where key = 'v18009' and release = 'r18460'"
+subject = "arbetsmiljoundersokningen-2015: {hssni2007_3,hssni2007_4,hssni2007_5,sni3}"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hssni2007_4 where key = 'v18010' and release = 'r18460'"
+subject = "arbetsmiljoundersokningen-2015: {husni2007_3,husni2007_4,husni2007_5} @2019"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hssni2007_5 where key = 'v18011' and release = 'r18460'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_1 where key = 'v18007' and release = 'r11228'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_1 where key = 'v18007' and release = 'r12574'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_1 where key = 'v18007' and release = 'r15136'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_2 where key = 'v18008' and release = 'r11228'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_2 where key = 'v18008' and release = 'r12574'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_2 where key = 'v18008' and release = 'r15136'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_3 where key = 'v18009' and release = 'r11228'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_3 where key = 'v18009' and release = 'r12574'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_3 where key = 'v18009' and release = 'r15136'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_4 where key = 'v18010' and release = 'r11228'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_4 where key = 'v18010' and release = 'r12574'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_4 where key = 'v18010' and release = 'r15136'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_5 where key = 'v18011' and release = 'r11228'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_5 where key = 'v18011' and release = 'r12574'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: husni2007_5 where key = 'v18011' and release = 'r15136'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: sni1 where key = 'v4027' and release = 'r19509'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: sni2 where key = 'v4027' and release = 'r19509'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: sni3 where key = 'v4027' and release = 'r19509'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_1 where key = 'v18007' and release = 'r11213'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_1 where key = 'v18007' and release = 'r4183'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_2 where key = 'v18008' and release = 'r11213'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_2 where key = 'v18008' and release = 'r3790'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_2 where key = 'v18008' and release = 'r4183'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_3 where key = 'v18009' and release = 'r11213'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_3 where key = 'v18009' and release = 'r3790'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_3 where key = 'v18009' and release = 'r4183'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_4 where key = 'v18010' and release = 'r11213'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_4 where key = 'v18010' and release = 'r3790'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_4 where key = 'v18010' and release = 'r4183'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_5 where key = 'v18011' and release = 'r11213'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_5 where key = 'v18011' and release = 'r3790'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: husni2007_5 where key = 'v18011' and release = 'r4183'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk1 where key = 'v6588' and release = 'r11228'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk1 where key = 'v6588' and release = 'r12574'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk2 where key = 'v509' and release = 'r11228'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk2 where key = 'v509' and release = 'r12574'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk3 where key = 'v6590' and release = 'r11228'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk3 where key = 'v6590' and release = 'r12574'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk4 where key = 'v511' and release = 'r11228'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk4 where key = 'v511' and release = 'r12574'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk1 where key = 'v6588' and release = 'r11213'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk1 where key = 'v6588' and release = 'r3646'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk1 where key = 'v6588' and release = 'r3790'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk1 where key = 'v6588' and release = 'r4183'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v24295' and release = 'r567'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v24295' and release = 'r606'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509' and release = 'r11213'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509' and release = 'r3646'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509' and release = 'r3790'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509' and release = 'r4183'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509' and release = 'r648'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v24296' and release = 'r567'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v24296' and release = 'r606'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590' and release = 'r11213'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590' and release = 'r3646'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590' and release = 'r3790'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590' and release = 'r4183'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590' and release = 'r648'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r11213'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r3646'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r3790'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r4183'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r567'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r606'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen: hussyk4 where key = 'v511' and release = 'r648'"
-fields = { "classification" = "class/ssyk/ssyk1996" }
-evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hsssyk1 where key = 'v6588' and release = 'r18460'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hsssyk2 where key = 'v509' and release = 'r18460'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hsssyk3 where key = 'v6590' and release = 'r18460'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hsssyk4 where key = 'v511' and release = 'r18460'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk1 where key = 'v6588' and release = 'r15136'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk2 where key = 'v509' and release = 'r15136'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk3 where key = 'v6590' and release = 'r15136'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: hussyk4 where key = 'v511' and release = 'r15136'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: ssyk1 where key = 'v49006' and release = 'r19509'"
+subject = "arbetsmiljoundersokningen-2015: {ssyk1,ssyk2,ssyk3,ssyk4}"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
 
 [[statement]]
 kind = "set"
-subject = "arbetsmiljoundersokningen-2015: ssyk2 where key = 'v49008' and release = 'r19509'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: ssyk3 where key = 'v49007' and release = 'r19509'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: ssyk4 where key = 'v49009' and release = 'r19509'"
-fields = { "classification" = "class/ssyk/ssyk2012" }
-evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:39\n\nLegacy exact value-set label: SSYK 2012, alla nivåer"
-
-[[statement]]
-kind = "set"
-subject = "arbetsmiljoundersokningen-2015: sun2020niva where key = 'v66' and release = 'r19509'"
+subject = "arbetsmiljoundersokningen-2015: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: {hssni2007_1,hssni2007_2,husni2007_1,husni2007_2,sni1,sni2}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: {husni2007_3,husni2007_4,husni2007_5} @2015,2017"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: {husni2007_1,husni2007_2,husni2007_3,husni2007_4,husni2007_5}"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "reg_meta_build/curation/classifications/SNI2007.toml:32\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: husni2002_2"
+fields = { "classification" = "class/sni/sni2002" }
+evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: {hussyk1,hussyk2,hussyk3,hussyk4} @2015,2017"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v24295'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: hussyk2 where key = 'v509'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v24296'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: hussyk3 where key = 'v6590'"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: {hussyk1,hussyk4}"
+fields = { "classification" = "class/ssyk/ssyk1996" }
+evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: {hsssyk1,hsssyk2,hsssyk3,hsssyk4}"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: {hussyk1,hussyk2,hussyk3,hussyk4} @2019"
+fields = { "classification" = "class/ssyk/ssyk2012" }
+evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"

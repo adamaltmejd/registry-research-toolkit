@@ -1,24 +1,24 @@
 
 [[statement]]
 kind = "set"
-subject = "delfall-1-1: diagnos1_kod @1994-01-01.. where key = 'n:diagnos1_kod'"
+subject = "delfall-1-1: diagnos1_kod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:1657\n\nExplicit provider declaration: ICD-10-SE"
 
 [[statement]]
 kind = "set"
-subject = "delfall-1-1: diagnos2_kod @1994-01-01.. where key = 'n:diagnos2_kod'"
+subject = "delfall-1-1: diagnos2_kod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:1674\n\nExplicit provider declaration: ICD-10-SE"
 
 [[statement]]
 kind = "set"
-subject = "delfall-2-1: diagnos1_kod @1994-01-01.. where key = 'n:diagnos1_kod'"
+subject = "delfall-2-1: diagnos1_kod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:1657\n\nExplicit provider declaration: ICD-10-SE"
 
 [[statement]]
 kind = "set"
-subject = "delfall-2-1: diagnos2_kod @1994-01-01.. where key = 'n:diagnos2_kod'"
+subject = "delfall-2-1: diagnos2_kod"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fk.toml:1674\n\nExplicit provider declaration: ICD-10-SE"

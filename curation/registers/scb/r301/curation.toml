@@ -1525,132 +1525,24 @@ evidence = "reg_meta_build/curation/registers/scb/aes.toml:5758\n\nComplete acce
 
 [[statement]]
 kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield where key = 'v24811' and release = 'r11748'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield where key = 'v24811' and release = 'r18969'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatfield where key = 'v24974' and release = 'r11748'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatfield where key = 'v24974' and release = 'r18969'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfefield1 where key = 'v24829' and release = 'r11748'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfefield1 where key = 'v24829' and release = 'r18969'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfefield2 where key = 'v24829' and release = 'r11748'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfefield2 where key = 'v24829' and release = 'r18969'"
-fields = { "classification" = "class/isced-f/isced-f2013" }
-evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: dropeduclevel where key = 'v24801' and release = 'r11748'"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {dropeduclevel,fedlevel,hatlevel} @2016"
 fields = { "classification" = "class/isced/isced2011" }
 evidence = "reg_meta_build/curation/classifications/ISCED2011.toml:18\n\nLegacy exact value-set label: ISCED 2011 AES"
 
 [[statement]]
 kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedlevel where key = 'v24809' and release = 'r11748'"
-fields = { "classification" = "class/isced/isced2011" }
-evidence = "reg_meta_build/curation/classifications/ISCED2011.toml:18\n\nLegacy exact value-set label: ISCED 2011 AES"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {fedfield,hatfield,nfefield1,nfefield2} @2016,2022"
+fields = { "classification" = "class/isced-f/isced-f2013" }
+evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:18\n\nLegacy exact value-set label: ISCED F 2013"
 
 [[statement]]
 kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: hatlevel where key = 'v24801' and release = 'r11748'"
-fields = { "classification" = "class/isced/isced2011" }
-evidence = "reg_meta_build/curation/classifications/ISCED2011.toml:18\n\nLegacy exact value-set label: ISCED 2011 AES"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield where key = 'v24811' and release = 'r5659'"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fedfield @2011-07-01..2012-06-30"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: finr1 where key = 'v24811' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: finr2 where key = 'v24811' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr1 where key = 'v24829' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr2 where key = 'v24829' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr3 where key = 'v24829' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: inffield1 where key = 'v24960' and release = 'r5659'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: inffield2 where key = 'v24960' and release = 'r5659'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infinr1 where key = 'v24960' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infinr2 where key = 'v24960' and release = 'r5041'"
-fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
-evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infinr3 where key = 'v24960' and release = 'r5041'"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {finr1,finr2,ifinr1,ifinr2,ifinr3,inffield1,inffield2,infinr1,infinr2,infinr3}"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"

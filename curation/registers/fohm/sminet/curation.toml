@@ -1,6 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "sminet: diagnos @2004-01-01.. where key = 'n:diagnos'"
+subject = "sminet: diagnos"
 fields = { "classification" = "class/icd/icd-10-se" }
 evidence = "reg_meta_build/curation/providers/fohm.toml:76\n\nExplicit provider declaration: ICD-10-SE"
