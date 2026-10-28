@@ -1556,6 +1556,14 @@ pub fn resolve(
             let mut redundant = false;
             match statement {
                 Statement::Set { fields: values, .. } => {
+                    if (values.coverage.is_some() || values.period.is_some())
+                        && stated_fields(values).len() != 1
+                    {
+                        return Err(
+                            "set coverage/period with other fields requires separate statements"
+                                .into(),
+                        );
+                    }
                     if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
                         return Err("set coverage requires a table selector".into());
                     }

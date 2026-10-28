@@ -905,6 +905,9 @@ fn apply_fields(
 ) -> Result<(), String> {
     let metadata_fields = fields;
     let fields = stated_fields(fields);
+    if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
+        return Err("set coverage/period with other fields requires separate statements".into());
+    }
     for field in fields.keys() {
         let package = match field.as_str() {
             "classification" | "tags" => Some("D-9"),

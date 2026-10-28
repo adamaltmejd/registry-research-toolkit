@@ -230,6 +230,14 @@ spelling and type. A D `set` states those.
   `reg-readers`. Matching, conflicts, premise validation, application and provenance
   belong to `reg-resolve`; `reg-build` owns lock IO and located diagnostics. The emitter
   writes resolved decisions.
+- Application is one ordered pass: parent table/release assertions, table coverage
+  overrides, occurrence/release period overrides, table moves, remaining assertions,
+  variable assignments, ordinary fields, then links and acknowledgements. Each stage
+  reads an immutable snapshot; later stages see the accepted corrections. Coverage
+  precedes period checks, and corrected periods precede moves and occurrence assertions.
+  A coverage or period override must be a separate statement without other fields.
+  Coordinate changes carry existing provenance forward without changing its reviewed
+  source values. There is no fixpoint or second application pass.
 - `set table = "<slug>"` moves selected whole occurrences to an existing table before
   default resolution. It does not merge source rows or rank sources. Disagreements at
   the destination follow the existing F6 and ambiguity rules; a curator corrects the
