@@ -110,7 +110,6 @@ public = "prisindex"
 "ordinarie-pris" = ["Konsumentprisindex (KPI): OrdPris"]
 "origid" = ["Konsumentprisindex (KPI): OrigId"]
 "period" = ["Prisindex i producent- och importled (PPI): Period @ 2013-01-01"]
-"period-tpi" = ["Prisindex i producent- och importled (PPI): Period # v35935"]
 "period2" = ["Konsumentprisindex (KPI): Man"]
 "person-orgnr" = ["Konsumentprisindex (KPI): PeOrgNr"]
 "postnr" = ["Konsumentprisindex (KPI): PostNr"]

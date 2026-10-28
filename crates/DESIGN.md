@@ -518,13 +518,17 @@ overlapping curated overrides are refused at both locations.
   it then reaches only the variables placed at that spelling on that day. A variable no
   anchor reaches gets a proposed id from its fold, clear of the register's table ids.
   When two ids reach one variable, the first in id order wins and the other is reported.
-  New variable ids use the existing label-slug rule (`reg_meta_build.fqid_slugs`'s
-  `_name_slug`): NFKD ASCII folding, lowercase hyphenation, pure unit parentheticals
-  removed, and truncation at 60 characters, preferring a hyphen boundary (keeping the
-  full slug if truncation is invalid). There is no general stop-word removal. An
-  unusable label falls back to the fold proposal; clashes take the first free numeric
-  suffix from `-2`, reserving table and existing variable ids. Existing ids, including
-  manually shortened label slugs, are never renamed by minting.
+  Before minting, reconcile stale anchors against old pins and current placed variables.
+  An existing id wins over a duplicate new mint. Pre-v1 pins with no current variable
+  for their historical scope, and obsolete merged aliases, are removed without
+  redirects. New variable ids use the existing label-slug rule
+  (`reg_meta_build.fqid_slugs`'s `_name_slug`): NFKD ASCII folding, lowercase
+  hyphenation, pure unit parentheticals removed, and truncation at 60 characters,
+  preferring a hyphen boundary (keeping the full slug if truncation is invalid). There
+  is no general stop-word removal. An unusable label falls back to the fold proposal;
+  clashes take the first free numeric suffix from `-2`, reserving table and existing
+  variable ids. Existing ids, including manually shortened label slugs, are never
+  renamed by minting.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.

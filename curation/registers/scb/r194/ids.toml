@@ -3,7 +3,6 @@ public = "skolvasendet-kostnader"
 [tables]
 
 [variables]
-"antal-elever-skolkommun" = ["Kostnader för skolväsendet: SkElev # v14871"]
 "ar" = ["Kostnader för skolväsendet: Ar"]
 "elevavgiftmat" = ["Kostnader för skolväsendet: ElevAvgiftMat"]
 "elevbidrag" = ["Kostnader för skolväsendet: ElevBidrag"]
