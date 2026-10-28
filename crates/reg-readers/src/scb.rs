@@ -332,14 +332,17 @@ pub fn read(
             o.dtype
                 .as_deref()
                 .map(|t| {
-                    reg_frame::type_family(t).ok_or_else(|| {
-                        error(
-                            &o.locator.input,
-                            format!("{}: unmapped dtype {t:?}", o.locator.at),
-                        )
-                    })
+                    reg_frame::dtype_info(t)
+                        .map(|info| info.family)
+                        .ok_or_else(|| {
+                            error(
+                                &o.locator.input,
+                                format!("{}: unmapped dtype {t:?}", o.locator.at),
+                            )
+                        })
                 })
                 .transpose()
+                .map(Option::flatten)
         };
         let occurrence_family = family(&occurrence)?;
         if let Some(c) = get(cvid) {
@@ -353,9 +356,10 @@ pub fn read(
         }
         match occurrences.entry((version, key, spelling)) {
             std::collections::btree_map::Entry::Occupied(mut o) => {
-                // Another population's row: one occurrence. The first row's text and
-                // type stand as provisional, and fields a row disagrees on are recorded.
+                // Another population's row: one occurrence. Text stays provisional;
+                // compatible types widen and genuine disagreements are recorded.
                 let first = o.get_mut();
+                let first_family = family(first)?;
                 let differs = [
                     ("label", first.label != occurrence.label),
                     ("definition", first.definition != occurrence.definition),
@@ -364,12 +368,29 @@ pub fn read(
                         first.operational_definition != occurrence.operational_definition,
                     ),
                     ("unit", first.unit != occurrence.unit),
-                    ("dtype", family(first)? != occurrence_family),
+                    (
+                        "dtype",
+                        matches!((first_family, occurrence_family), (Some(a), Some(b)) if a != b),
+                    ),
                 ];
                 for (field, differs) in differs {
                     if differs && !first.conflicts.iter().any(|f| f == field) {
                         first.conflicts.push(field.to_owned());
                     }
+                }
+                if first_family.is_none() && occurrence_family.is_some() {
+                    first.dtype.clone_from(&occurrence.dtype);
+                    first.length = occurrence.length;
+                } else if first_family == occurrence_family {
+                    first.dtype = reg_frame::widest_dtype(
+                        first
+                            .dtype
+                            .as_deref()
+                            .into_iter()
+                            .chain(occurrence.dtype.as_deref()),
+                    )
+                    .map(str::to_owned);
+                    first.length = first.length.max(occurrence.length);
                 }
                 first.conflicts.sort();
                 first.also.push(occurrence.locator);

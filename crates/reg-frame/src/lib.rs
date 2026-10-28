@@ -32,24 +32,44 @@ pub struct Locator {
     pub at: String,
 }
 
-/// The closed vocabulary of dtype families carried by the source frame and curation.
-/// Width is stated separately as length; aliases retain their original spelling.
+/// A recognized neutral dtype, including unknown evidence with no family.
+#[derive(Debug, Clone, Copy)]
+pub struct Dtype {
+    pub family: Option<&'static str>,
+    pub widening: u8,
+}
+
+/// The closed vocabulary and widening order of frame and curation dtypes.
 #[must_use]
-pub fn type_family(dtype: &str) -> Option<&'static str> {
-    match dtype {
-        "int" | "integer" => Some("integer"),
-        "decimal" => Some("decimal"),
-        "char" | "text" => Some("text"),
-        "date" => Some("date"),
-        "datetime" => Some("datetime"),
-        "boolean" => Some("boolean"),
-        "geometry" => Some("geometry"),
-        "uuid" => Some("uuid"),
-        "binary" => Some("binary"),
-        "unspecified" => Some("unspecified"),
-        "identifier" => Some("identifier"),
-        _ => None,
-    }
+pub fn dtype_info(dtype: &str) -> Option<Dtype> {
+    let (family, widening) = match dtype {
+        "int" | "integer" => (Some("integer"), 0),
+        "decimal" => (Some("decimal"), 0),
+        "char" | "text" => (Some("text"), 0),
+        "date" => (Some("temporal"), 0),
+        "datetime" => (Some("temporal"), 1),
+        "boolean" => (Some("boolean"), 0),
+        "geometry" => (Some("geometry"), 0),
+        "uuid" => (Some("uuid"), 0),
+        "binary" => (Some("binary"), 0),
+        "unspecified" => (None, 0),
+        "identifier" => (Some("identifier"), 0),
+        _ => return None,
+    };
+    Some(Dtype { family, widening })
+}
+
+/// The widest compatible source dtype: known before unknown, then widening order,
+/// then lexical alias order. Length is a separate maximum within the known family.
+///
+/// # Panics
+/// An input dtype has not passed the closed-map validation at its read boundary.
+#[must_use]
+pub fn widest_dtype<'a>(dtypes: impl IntoIterator<Item = &'a str>) -> Option<&'a str> {
+    dtypes.into_iter().max_by_key(|dtype| {
+        let info = dtype_info(dtype).expect("validated dtype");
+        (info.family.is_some(), info.widening, *dtype)
+    })
 }
 
 /// A register as its source states it. `register` is the source handle; with no

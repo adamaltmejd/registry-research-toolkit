@@ -46,7 +46,7 @@ use reg_core::{
 };
 use reg_frame::{
     Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
-    type_family,
+    dtype_info, widest_dtype,
 };
 use serde::Serialize;
 
@@ -399,7 +399,7 @@ pub fn resolve(
         .collect();
     for o in &occurrences {
         if let Some(dtype) = &o.dtype
-            && type_family(dtype).is_none()
+            && dtype_info(dtype).is_none()
         {
             return Err(format!(
                 "{}:{}: unmapped dtype {dtype:?}",
@@ -715,7 +715,7 @@ pub fn resolve(
                 forms
                     .get(&primary)
                     .and_then(|f| f.get(*key))
-                    .is_some_and(|other| other != *set)
+                    .is_some_and(|other| edition_forms_differ(set, other))
             })
             .map(|(key, _)| *key)
             .collect();
@@ -937,7 +937,7 @@ pub fn resolve(
             let mut last_same_family = true;
             for (period, covering) in components {
                 let top = latest(&resolved, &covering).expect("a component has a member");
-                let forms: BTreeSet<Form> = covering.iter().map(|&i| form(&resolved[i])).collect();
+                let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
                 let o = &resolved[top].occurrence;
                 let agree = forms.len() == 1;
                 // A form field is stated only where every occurrence agrees on it.
@@ -980,13 +980,19 @@ pub fn resolve(
                         conflicts.insert(name.to_owned());
                     }
                 }
-                let widest = covering
+                let widest = widest_dtype(
+                    covering
+                        .iter()
+                        .filter_map(|&i| resolved[i].occurrence.dtype.as_deref()),
+                );
+                let has_known = covering
                     .iter()
-                    .map(|&i| &resolved[i].occurrence)
-                    .filter(|o| o.dtype.is_some())
-                    .max_by_key(|o| &o.dtype);
+                    .any(|&i| family(resolved[i].occurrence.dtype.as_deref()).is_some());
                 let lengths: BTreeSet<i64> = covering
                     .iter()
+                    .filter(|&&i| {
+                        !has_known || family(resolved[i].occurrence.dtype.as_deref()).is_some()
+                    })
                     .filter_map(|&i| resolved[i].occurrence.length)
                     .collect();
                 let same_family = forms
@@ -1004,7 +1010,11 @@ pub fn resolve(
                     table: t,
                     period,
                     spelling: o.column.clone(),
-                    dtype: agreed(|f| &f.dtype).and_then(|_| widest.and_then(|o| o.dtype.clone())),
+                    dtype: if same_family {
+                        widest.map(str::to_owned)
+                    } else {
+                        None
+                    },
                     length,
                     format: o.format.clone(),
                     valueset: agreed(|f| &f.valueset),
@@ -1023,7 +1033,13 @@ pub fn resolve(
                     {
                         prev.period.1 = segment.period.1;
                         prev.spelling = segment.spelling;
-                        prev.dtype = prev.dtype.take().max(segment.dtype);
+                        prev.dtype = widest_dtype(
+                            prev.dtype
+                                .as_deref()
+                                .into_iter()
+                                .chain(segment.dtype.as_deref()),
+                        )
+                        .map(str::to_owned);
                         prev.length = prev.length.max(segment.length);
                         last_same_family &= same_family;
                         runs.len() - 1
@@ -1146,9 +1162,14 @@ pub fn resolve(
         if segment.state != "ambiguous" {
             continue;
         }
-        let forms: BTreeSet<Form> = own.iter().map(|r| form(r)).collect();
+        let forms = agreement_forms(own.iter().copied());
         let first = forms.first().expect("a segment has a used occurrence");
-        if forms.len() > 1
+        if forms
+            .iter()
+            .filter_map(|f| f.dtype.as_ref())
+            .collect::<BTreeSet<_>>()
+            .len()
+            > 1
             && forms
                 .iter()
                 .all(|f| f.label == first.label && f.valueset == first.valueset)
@@ -1423,7 +1444,54 @@ fn form(r: &ResolvedOccurrence) -> Form {
 
 /// Called only after the source/curated occurrences have passed dtype validation.
 fn family(dtype: Option<&str>) -> Option<&'static str> {
-    dtype.map(|t| type_family(t).expect("validated dtype"))
+    dtype.and_then(|t| dtype_info(t).expect("validated dtype").family)
+}
+
+/// Unknown type evidence does not disagree with the one known family, but cannot
+/// conceal two known families. Labels and value sets retain their ordinary agreement.
+fn agreement_forms<'a>(own: impl Iterator<Item = &'a ResolvedOccurrence>) -> BTreeSet<Form> {
+    let forms: BTreeSet<Form> = own.map(form).collect();
+    let known: BTreeSet<String> = forms.iter().filter_map(|f| f.dtype.clone()).collect();
+    if known.len() == 1 {
+        forms
+            .into_iter()
+            .map(|mut f| {
+                if f.dtype.is_none() {
+                    f.dtype = known.first().cloned();
+                }
+                f
+            })
+            .collect()
+    } else {
+        forms
+    }
+}
+
+fn edition_forms_differ(
+    a: &BTreeSet<(String, Option<&str>)>,
+    b: &BTreeSet<(String, Option<&str>)>,
+) -> bool {
+    let folds = |forms: &BTreeSet<(String, Option<&str>)>| {
+        forms
+            .iter()
+            .map(|(fold, _)| fold.clone())
+            .collect::<BTreeSet<_>>()
+    };
+    let own = folds(a);
+    if own != folds(b) {
+        return true;
+    }
+    own.iter().any(|fold| {
+        let known = |forms: &BTreeSet<(String, Option<&str>)>| {
+            forms
+                .iter()
+                .filter(|(f, _)| f == fold)
+                .filter_map(|(_, family)| family.map(str::to_owned))
+                .collect::<BTreeSet<_>>()
+        };
+        let (a, b) = (known(a), known(b));
+        !a.is_empty() && !b.is_empty() && a != b
+    })
 }
 
 fn same_form(a: &Segment, b: &Segment) -> bool {
