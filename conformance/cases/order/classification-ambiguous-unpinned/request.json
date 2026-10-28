@@ -1,0 +1,25 @@
+{
+  "note": "Final 2015 and preliminary H1 2015 releases overlap. Only the final occurrence has curated v1; the preliminary occurrence has no classification. Their whole-occurrence component is ambiguous across 2015. Fails if a classification pin filters the unresolved-version ambiguous segment away and silently clips it or reports outside_availability. The pinned/unpinned pair must both refuse ambiguous_window. Oracle: classification-pins source releases and scoped occurrence statement, and the whole-occurrence ambiguity contract. The unequal release periods keep both occurrences used instead of shadowing an edition.",
+  "fixture": "classification-pins",
+  "project": {
+    "schema_version": "5.1.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/pins",
+        "period": {
+          "from": 2015,
+          "to": 2015
+        },
+        "bindings": [
+          {
+            "variable": "demo/pins/kod",
+            "type": "categorical"
+          }
+        ]
+      }
+    ]
+  }
+}

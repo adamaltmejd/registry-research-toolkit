@@ -42,7 +42,7 @@ pub(super) struct Outcome {
 pub(super) struct Variable {
     id: i64,
     pid: String,
-    pinned: bool,
+    classification: Option<i64>,
 }
 
 /// One served piece of the request: part of a primary segment inside the requested days.
@@ -115,9 +115,10 @@ pub(super) fn refs(
         }
     };
     let pid = variable.as_ref().map(|(_, pid)| pid.as_str());
+    let mut classification = None;
     if let Some(pin) = &binding.classification {
         match refs::resolve(conn, pin) {
-            Ok(hit) if hit.kind == "class_version" => {}
+            Ok(hit) if hit.kind == "class_version" => classification = Some(hit.id),
             Ok(_) => issue(
                 "classification",
                 pid,
@@ -133,7 +134,7 @@ pub(super) fn refs(
     let variable = variable.map(|(id, pid)| Variable {
         id,
         pid,
-        pinned: binding.classification.is_some(),
+        classification,
     });
     Ok((variable, findings))
 }
@@ -176,6 +177,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
     materialize(scope, b, binding, &variable, outcome)
 }
 
+#[allow(clippy::too_many_lines)]
 fn materialize(
     scope: &Scope,
     b: usize,
@@ -187,6 +189,39 @@ fn materialize(
     let mut pieces = Vec::new();
     for k in 0..scope.serving.len() {
         pieces.extend(served(scope, k, variable.id)?);
+    }
+    if let Some(version) = variable.classification {
+        // Ambiguous windows must still block: their unresolved version is not a clip.
+        pieces.retain(|p| p.state == "ambiguous" || p.class_version == Some(version));
+        let mut compatible = !pieces.is_empty();
+        for &table in scope.chain {
+            if compatible {
+                break;
+            }
+            compatible = scope.conn.query_row(
+                "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 \
+                 AND table_id = ?2 AND class_version_id = ?3)",
+                rusqlite::params![variable.id, table, version],
+                |row| row.get(0),
+            )?;
+        }
+        if !compatible {
+            let mut finding = at.issue(
+                IssueLevel::Error,
+                "classification_incompatible",
+                scope.table,
+                Some(&hull(scope.requested)),
+                format!(
+                    "{} has no curated window for {} over the requested period.",
+                    variable.pid,
+                    binding.classification.as_deref().expect("resolved pin")
+                ),
+            );
+            finding.path.push_str("/classification");
+            outcome.findings.push(finding);
+            outcome.findings.extend(replaced(&at)?);
+            return Ok(outcome);
+        }
     }
     pieces.sort_by(|a, b| a.days.cmp(&b.days));
     let ordered = merge(pieces.iter().map(|p| p.days.clone()).collect());
@@ -233,7 +268,7 @@ fn materialize(
     outcome.findings.extend(replaced(&at)?);
     let versions: std::collections::BTreeSet<i64> =
         pieces.iter().filter_map(|p| p.class_version).collect();
-    if versions.len() > 1 && !variable.pinned {
+    if versions.len() > 1 && variable.classification.is_none() {
         let days = hull(&ordered);
         outcome.findings.push(at.issue(
             IssueLevel::Warning,
@@ -516,8 +551,8 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
 }
 
 /// The entries: adjacent pieces of one table merge when spelling, type and value set
-/// agree (v4 §4.6), so a flag-only boundary never splits one; the latest piece's length
-/// and class version stand. More than one merged form is a `form_change`.
+/// and classification agree, so a flag-only boundary never splits one; the latest
+/// piece's length stands. More than one spelling/type/value-set form is a `form_change`.
 fn entries(
     at: &Located,
     binding: &Binding,
@@ -532,6 +567,7 @@ fn entries(
                 && next_iso_day(&spans[spans.len() - 1].1) == p.days.0
                 && (&last.spelling, &last.dtype, last.valueset)
                     == (&p.spelling, &p.dtype, p.valueset)
+                && last.class_version == p.class_version
         });
         if joins {
             let n = merged.len() - 1;

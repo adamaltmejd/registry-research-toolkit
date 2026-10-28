@@ -1,0 +1,14 @@
+# Shared classification inventory. Applicability is set on occurrences in register
+# curation; period here describes only documented book existence and may be omitted.
+# No old classification tree is converted in this PR.
+#
+# [[classification]]
+# family = "example"
+# version = "v1"
+# value_set = "classifications/example.csv" # exact reader input locator
+# evidence = "Reviewed publisher documentation"
+# name = "Example edition"
+# family_name = "Example classification"
+# publisher = "Publisher"
+# period = "2010.."
+# succeeds = ["class/example/v0"] # explicitly reviewed predecessor, also inventoried

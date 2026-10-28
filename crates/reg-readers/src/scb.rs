@@ -319,6 +319,7 @@ pub fn read(
                 .filter(|&l: &i64| l > 0),
             format: None,
             valueset: None,
+            classification: None,
             population_valuesets: Vec::new(),
             coded: None,
             code_system: None,

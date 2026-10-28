@@ -125,11 +125,7 @@ fn field_values<'a>(
         let final_value = if field == "period" {
             period.map(|p| serde_json::to_string(p).expect("period serializes"))
         } else if let Some(value) = current.get(field) {
-            match value {
-                Value::Null => None,
-                Value::String(s) => Some(s.clone()),
-                value => Some(value.to_string()),
-            }
+            crate::curation::apply::rendered(value)
         } else {
             claim.value.clone()
         };
@@ -365,7 +361,16 @@ pub fn finalize(
     }
     for class in classes {
         let candidates = by_locator.get(&("class_version", &class.locator));
-        result.values.extend(field_values(candidates.into_iter().flatten().copied().filter(|c| matches(c, None, None, None, Some(&class.period))), &Subject::ClassVersion(class.family.clone(), class.version.clone()), &serde_json::json!({"family":class.family,"version":class.version,"valueset":class.valueset}), Some(&class.period)));
+        result.values.extend(field_values(
+            candidates
+                .into_iter()
+                .flatten()
+                .copied()
+                .filter(|c| matches(c, None, None, None, Some(&class.period))),
+            &Subject::ClassVersion(class.family.clone(), class.version.clone()),
+            &serde_json::json!(class.facts(classes)),
+            Some(&class.period),
+        ));
     }
     result
 }

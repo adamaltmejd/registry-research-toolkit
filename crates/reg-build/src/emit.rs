@@ -45,6 +45,14 @@ pub struct StatementRow {
     pub caveat: Option<String>,
 }
 
+impl StatementRow {
+    #[must_use]
+    pub fn for_locator<'a>(rows: &'a [Self], at: &reg_frame::Locator) -> Option<&'a Self> {
+        rows.iter()
+            .find(|s| s.file == at.input && format!("line={}", s.line) == at.at)
+    }
+}
+
 /// Everything the file holds, linked.
 pub struct Catalog {
     pub meta: BTreeMap<&'static str, String>,
@@ -345,6 +353,21 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let table_id = index(table_keys, "table ids")?;
     let variable_id = index(variable_keys, "variable ids")?;
     let segment_id = index(segment_keys, "segment keys")?;
+    let class_id = sorted_ids(
+        catalog
+            .classifications
+            .iter()
+            .map(|c| (c.family.as_str(), c.version.as_str())),
+    );
+
+    let classification_id = |fqid: &str| {
+        let reg_core::Fqid::ClassVersion { family, version } =
+            fqid.parse().expect("validated classification")
+        else {
+            unreachable!("exact version")
+        };
+        class_id[&(family.as_str(), version.as_str())]
+    };
     let occurrence_id = index(occurrence_keys, "occurrence keys")?;
     let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
@@ -616,7 +639,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                         opt_int(segment.length),
                         opt_str(segment.format.as_ref()),
                         opt_int(segment.valueset.as_deref().map(|h| valueset_id[h])),
-                        Cell::Null,
+                        opt_int(segment.classification.as_deref().map(classification_id)),
                         Cell::Str(segment.coded.into()),
                         flag(segment.sensitive),
                         flag(segment.identifier),
@@ -667,7 +690,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_int(x.length),
                     opt_str(x.format.as_ref()),
                     opt_int(x.valueset.as_deref().map(|h| valueset_id[h])),
-                    Cell::Null,
+                    opt_int(x.classification.as_deref().map(classification_id)),
                     Cell::Str(reg_resolve::coded(x).into()),
                     flag(x.sensitive),
                     flag(x.identifier),
@@ -966,13 +989,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     }
 
     let family_id = sorted_ids(catalog.classifications.iter().map(|c| c.family.as_str()));
-    let class_id = sorted_ids(
-        catalog
-            .classifications
-            .iter()
-            .map(|c| (c.family.as_str(), c.version.as_str())),
-    );
     for (family, family_row) in &family_id {
+        let (family_name, publisher) = reg_resolve::curation::apply::Classification::family_facts(
+            &catalog.classifications,
+            family,
+        );
         rows.push(
             "ident",
             vec![
@@ -989,8 +1010,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(*family_row),
                 Cell::Str(format!("class/{family}")),
                 Cell::Str("classification".into()),
-                Cell::Text((*family).into()),
-                Cell::Null,
+                Cell::Text(family_name.into()),
+                publisher.map_or(Cell::Null, |s| Cell::Text(s.into())),
                 Cell::Null,
             ],
         );
@@ -1019,7 +1040,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Int(cid),
                 Cell::Int(family_id[class.family.as_str()]),
                 Cell::Str(format!("class/{}/{}", class.family, class.version)),
-                Cell::Text(class.version.clone()),
+                Cell::Text(class.name.as_deref().unwrap_or(&class.version).into()),
                 Cell::Int(start(&class.period.0)),
                 Cell::Int(end(&class.period.1)),
                 Cell::Int(*vid),
@@ -1032,6 +1053,42 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             &provenance_by_subject,
             &statement_id,
         )?;
+    }
+
+    let mut successions = Vec::new();
+    for class in &catalog.classifications {
+        for target in &class.succeeds {
+            let reg_core::Fqid::ClassVersion { family, version } = target
+                .parse()
+                .map_err(|e: reg_core::GrammarError| e.to_string())?
+            else {
+                return Err(format!("invalid classification predecessor {target}"));
+            };
+            let subject = class_id[&(class.family.as_str(), class.version.as_str())];
+            let object = class_id[&(family.as_str(), version.as_str())];
+            let statement = StatementRow::for_locator(&catalog.statements, &class.locator)
+                .ok_or("classification inventory statement missing")?;
+            successions.push((subject, object, statement_id[statement.hash.as_str()]));
+        }
+    }
+    successions.sort_unstable();
+    for (index, (subject, object, statement)) in successions.into_iter().enumerate() {
+        rows.push(
+            "relation",
+            vec![
+                Cell::Int(id(catalog.relations.len() + index)),
+                Cell::Str("continues".into()),
+                Cell::Str("class_version".into()),
+                Cell::Int(subject),
+                Cell::Str("class_version".into()),
+                Cell::Int(object),
+                Cell::Null,
+                Cell::Null,
+                Cell::Str("curated".into()),
+                Cell::Int(statement),
+                Cell::Null,
+            ],
+        );
     }
 
     // Documents. A section's id is its position in (document, ord) order.

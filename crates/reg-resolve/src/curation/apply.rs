@@ -34,6 +34,82 @@ pub struct Classification {
     pub valueset: String,
     pub locator: Locator,
     pub period: Interval,
+    pub name: Option<String>,
+    pub family_name: Option<String>,
+    pub publisher: Option<String>,
+    pub succeeds: Vec<String>,
+}
+
+impl Classification {
+    /// Effective served family facts, shared by versions and inline assertions.
+    #[must_use]
+    pub fn family_facts<'a>(classes: &'a [Self], family: &'a str) -> (&'a str, Option<&'a str>) {
+        let versions = || classes.iter().filter(|c| c.family == family);
+        (
+            versions()
+                .find_map(|c| c.family_name.as_deref())
+                .unwrap_or(family),
+            versions().find_map(|c| c.publisher.as_deref()),
+        )
+    }
+
+    /// Facts emitted in classification tables and curated succession relations.
+    #[must_use]
+    pub fn facts(&self, classes: &[Self]) -> BTreeMap<String, Value> {
+        let (family_name, publisher) = Self::family_facts(classes, &self.family);
+        BTreeMap::from([
+            ("family".into(), json!(self.family)),
+            ("version".into(), json!(self.version)),
+            ("valueset".into(), json!(self.valueset)),
+            (
+                "name".into(),
+                json!(self.name.as_deref().unwrap_or(&self.version)),
+            ),
+            ("family_name".into(), json!(family_name)),
+            ("publisher".into(), json!(publisher)),
+            ("period".into(), json!(self.period)),
+            ("succeeds".into(), json!(self.succeeds)),
+        ])
+    }
+}
+
+/// Shared construction for hand-authored assertions and inventory reader references.
+///
+/// # Errors
+/// The statement is not a classification assertion or has disjoint existence periods.
+pub fn classification(statement: &Statement, at: &Locator) -> Result<Classification, String> {
+    let Statement::Assert {
+        subject,
+        fact: AssertFact::ClassificationVersion {
+            family, version, ..
+        },
+        ..
+    } = statement
+    else {
+        return Err("classification construction requires assert classification-version".into());
+    };
+    let p = match subject {
+        Address::Occurrence {
+            periods: Some(p), ..
+        } => periods(p),
+        _ => vec![(OPEN_START.into(), OPEN_END.into())],
+    };
+    if p.len() != 1 {
+        return Err("assert classification version requires one contiguous period".into());
+    }
+    let set = asserted_value_set(statement, at)
+        .ok_or("classification construction requires asserted items")?;
+    Ok(Classification {
+        family: family.clone(),
+        version: version.clone(),
+        valueset: set.hash,
+        locator: at.clone(),
+        period: p[0].clone(),
+        name: None,
+        family_name: None,
+        publisher: None,
+        succeeds: Vec::new(),
+    })
 }
 
 /// Typed curation facts that need the occurrence's resolved variable or subject.
@@ -163,7 +239,9 @@ fn locator(value: &Value) -> Locator {
     serde_json::from_value(value["locator"].clone()).expect("frame locator")
 }
 
-fn rendered(value: &Value) -> Option<String> {
+/// Render a field for stored curation provenance.
+#[must_use]
+pub fn rendered(value: &Value) -> Option<String> {
     match value {
         Value::Null => None,
         Value::String(s) => Some(s.clone()),
@@ -638,22 +716,9 @@ pub fn apply(
                         family, version, ..
                     } = fact
                     {
-                        let p = scope
-                            .clone()
-                            .unwrap_or_else(|| vec![(OPEN_START.into(), OPEN_END.into())]);
-                        if p.len() != 1 {
-                            return Err(
-                                "assert classification version requires one contiguous period"
-                                    .into(),
-                            );
-                        }
-                        out.classifications.push(Classification {
-                            family: family.clone(),
-                            version: version.clone(),
-                            valueset: set.hash.clone(),
-                            locator: at.clone(),
-                            period: p[0].clone(),
-                        });
+                        let class = classification(statement, at)?;
+                        let p = [class.period.clone()];
+                        out.classifications.push(class);
                         for (field, winning) in [
                             ("family", json!(family)),
                             ("version", json!(version)),
@@ -910,7 +975,7 @@ fn apply_fields(
     }
     for field in fields.keys() {
         let package = match field.as_str() {
-            "classification" | "tags" => Some("D-9"),
+            "tags" => Some("D-9"),
             "sentinels" => Some("D (sentinels)"),
             "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
             "synonyms" => Some("D (search curation)"),
@@ -948,6 +1013,7 @@ fn apply_fields(
                         | "length"
                         | "period"
                         | "sets"
+                        | "classification"
                         | "notice"
                 ),
                 "table" => matches!(field.as_str(), "description" | "coverage"),

@@ -47,6 +47,8 @@ def test_logical_order_or_located_finding(case: Path, http_servers) -> None:
     # (entries, clips, row keys, findings, their order or messages), when it does
     # not name the served generation, when a blocked order stops refusing with
     # these located findings, or when `validate` disagrees with `order`.
+    # The classification ambiguity pair fails if a pin filters unresolved-version
+    # windows away before the blocking ambiguity check.
     request = json.loads((case / "request.json").read_text())
     path = cached_case_artifact({"fixture": request["fixture"]})
     client = http_servers.client(artifact_env(path))

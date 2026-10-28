@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use reg_frame::statement::Statement;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::{ReadError, error};
 
@@ -24,6 +24,96 @@ pub struct LocatedStatement {
 struct File {
     #[serde(default)]
     statement: Vec<toml::Spanned<toml::Table>>,
+}
+
+/// Classification identity and metadata, independent of register applicability.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct Classification {
+    pub family: String,
+    pub version: String,
+    /// Exact reader locator input path, never a copied list of codes.
+    pub value_set: String,
+    pub evidence: String,
+    pub name: Option<String>,
+    pub family_name: Option<String>,
+    pub publisher: Option<String>,
+    pub period: Option<reg_frame::address::PeriodSet>,
+    #[serde(default)]
+    pub succeeds: Vec<String>,
+}
+
+pub struct LocatedClassification {
+    pub classification: Classification,
+    pub line: usize,
+}
+
+/// Load the shared inventory; references resolve against reader facts in reg-build.
+///
+/// # Errors
+/// Malformed or duplicate versions, invalid references and unsupported fields, located
+/// at the inventory entry's line.
+pub fn load_classifications(root: &Path) -> Result<Vec<LocatedClassification>, ReadError> {
+    #[derive(Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Inventory {
+        #[serde(default)]
+        classification: Vec<toml::Spanned<toml::Table>>,
+    }
+    let path = root.join("classifications.toml");
+    let name = path.display().to_string();
+    if !path.try_exists().map_err(|e| error(&name, e.to_string()))? {
+        return Ok(Vec::new());
+    }
+    let text = std::fs::read_to_string(&path).map_err(|e| error(&name, e.to_string()))?;
+    let inventory: Inventory = toml::from_str(&text).map_err(|e: toml::de::Error| {
+        error(
+            &format!("{name}:{}", line_at(&text, e.span().map_or(0, |s| s.start))),
+            e.message(),
+        )
+    })?;
+    let mut out = Vec::new();
+    let mut seen = BTreeMap::new();
+    for raw in inventory.classification {
+        let line = line_at(&text, raw.span().start);
+        let at = format!("{name}:{line}");
+        let mut c: Classification = toml::Value::Table(raw.into_inner())
+            .try_into()
+            .map_err(|e: toml::de::Error| error(&at, e.message()))?;
+        let fqid = format!("class/{}/{}", c.family, c.version);
+        fqid.parse::<reg_core::Fqid>()
+            .map_err(|e| error(&at, e.to_string()))?;
+        if let Some(previous) = seen.insert(fqid, line) {
+            return Err(error(
+                &at,
+                format!("duplicate classification version; first at {name}:{previous}"),
+            ));
+        }
+        if c.evidence.trim().is_empty() || c.value_set.trim().is_empty() {
+            return Err(error(
+                &at,
+                "classification evidence and value_set must not be blank",
+            ));
+        }
+        c.succeeds.sort();
+        c.succeeds.dedup();
+        for predecessor in &c.succeeds {
+            if !matches!(
+                predecessor.parse::<reg_core::Fqid>(),
+                Ok(reg_core::Fqid::ClassVersion { .. })
+            ) {
+                return Err(error(
+                    &at,
+                    "classification succeeds requires exact class/<family>/<version>",
+                ));
+            }
+        }
+        out.push(LocatedClassification {
+            classification: c,
+            line,
+        });
+    }
+    Ok(out)
 }
 
 /// Load every `registers/<provider>/<register>/curation.toml`, in path order.
