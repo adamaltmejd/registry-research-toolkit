@@ -178,9 +178,13 @@ compared: an `ambiguous` segment is skipped and a gap is not a change.
   leaves no type-change notice; switchers without strict evidence remain uncurated.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
   uncoded. Skip an edition-only transition only when both sides bind versions of one
-  classification family and each side's value set equals its bound version's set. A
-  local recode or changed response domain still fires. The message counts codes added,
-  removed and relabelled.
+  classification family, the versions differ, each observed code set is a subset of its
+  bound version's code set, and every observed code addition or removal is an edition
+  addition or removal: `(old_set Δ new_set) ⊆ (V_old Δ V_new)`. These checks compare
+  codes, not labels or hierarchy. An unstated observed set cannot establish the subset
+  premise. Same-version transitions, local recodes, and code changes the edition does
+  not explain still fire. The message counts codes added, removed and relabelled. This
+  subset-and-edition rule amends D-9's former exact-set predicate.
 - `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs
   differ. The definition message names the field, never the text.
 - `F1:population-change`: the primary releases carrying the variable, in period order,
