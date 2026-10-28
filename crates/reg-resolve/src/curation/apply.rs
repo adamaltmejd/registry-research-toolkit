@@ -36,12 +36,26 @@ pub struct Classification {
     pub period: Interval,
 }
 
+/// Typed curation facts that need the occurrence's resolved variable or subject.
+#[derive(Debug, Clone)]
+pub enum MetadataValue {
+    Sets(BTreeSet<String>),
+    Notice(String),
+}
+
+#[derive(Debug, Clone)]
+pub struct Metadata {
+    pub key: crate::OccurrenceKey,
+    pub value: MetadataValue,
+}
+
 #[derive(Debug, Default)]
 pub struct Applied {
     pub records: Vec<Record>,
     pub changes: Vec<Change>,
     pub classifications: Vec<Classification>,
     pub assignments: BTreeMap<crate::OccurrenceKey, String>,
+    pub metadata: Vec<Metadata>,
 }
 
 /// Assign variables against one immutable phase snapshot without copying its facts.
@@ -332,7 +346,7 @@ fn frame_guard_field(field: GuardField) -> &'static str {
 }
 
 fn assert_fields(
-    fields: &reg_frame::statement::SetFields,
+    fields: &reg_frame::statement::AssertFields,
     supported: &[&str],
 ) -> Result<BTreeMap<String, Value>, String> {
     let fields = stated_fields(fields);
@@ -368,9 +382,18 @@ pub fn apply(
         changes: Vec::new(),
         classifications: Vec::new(),
         assignments: BTreeMap::new(),
+        metadata: Vec::new(),
     };
     match statement {
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
+            if stated_fields(fields)
+                .keys()
+                .any(|field| !matches!(field.as_str(), "table" | "variable"))
+            {
+                return Err(
+                    "set table/variable with other fields requires separate statements".into(),
+                );
+            }
             let target_handle = fields
                 .table
                 .as_ref()
@@ -481,6 +504,9 @@ pub fn apply(
                 }
             }
         }
+        Statement::Set { fields, .. } => {
+            apply_fields(records, fields, premise, &context, &mut out)?;
+        }
         Statement::Assert { subject, fact, .. } => {
             let register = records
                 .iter()
@@ -531,6 +557,7 @@ pub fn apply(
                         &[
                             "label",
                             "definition",
+                            "operational_definition",
                             "unit",
                             "type",
                             "length",
@@ -822,6 +849,367 @@ pub fn apply(
         _ => {}
     }
     Ok(out)
+}
+
+fn selected_record(
+    record: &Record,
+    value: &Value,
+    premise: &Premise,
+    context: &crate::OccurrenceContext<'_>,
+) -> bool {
+    premise.subjects.iter().any(|source| {
+        if let Record::Occurrence(row) = record {
+            return matches_occurrence(
+                &source.fields,
+                std::slice::from_ref(&source.locator),
+                row,
+                value,
+                context,
+            );
+        }
+        source.locator == locator(value)
+            && ["kind", "provider", "register", "table", "release"]
+                .iter()
+                .all(|field| source.fields.get(*field).unwrap_or(&Value::Null) == &value[*field])
+    })
+}
+
+fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Option<Interval> {
+    match record {
+        Record::Occurrence(row) => context.period(row),
+        Record::Release(row) => crate::placed(row),
+        _ => None,
+    }
+}
+
+fn target_field(field: &str) -> &str {
+    match field {
+        "type" => "dtype",
+        "spelling" => "column",
+        "value_set" => "valueset",
+        field => field,
+    }
+}
+
+#[allow(clippy::too_many_lines)]
+fn apply_fields(
+    records: &[Record],
+    fields: &reg_frame::statement::SetFields,
+    premise: &Premise,
+    context: &crate::OccurrenceContext<'_>,
+    out: &mut Applied,
+) -> Result<(), String> {
+    let metadata_fields = fields;
+    let fields = stated_fields(fields);
+    for field in fields.keys() {
+        let package = match field.as_str() {
+            "coverage" => Some("D-5 (EKB)"),
+            "classification" | "tags" => Some("D-9"),
+            "sentinels" => Some("D (sentinels)"),
+            "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
+            "synonyms" => Some("D (search curation)"),
+            "name" => Some("D (entity names)"),
+            _ => None,
+        };
+        if let Some(package) = package {
+            return Err(format!("set {field} is applied in {package}"));
+        }
+    }
+    let mut selected = false;
+    for (index, record) in records.iter().enumerate() {
+        let before = tree(record);
+        if !selected_record(record, &before, premise, context) {
+            continue;
+        }
+        selected = true;
+        let kind = text(&before, "kind").expect("record kind");
+        for field in fields.keys() {
+            let supported = match kind {
+                "occurrence" => matches!(
+                    field.as_str(),
+                    "label"
+                        | "definition"
+                        | "description"
+                        | "operational_definition"
+                        | "unit"
+                        | "value_set"
+                        | "coded"
+                        | "spelling"
+                        | "identifier"
+                        | "sensitive"
+                        | "format"
+                        | "type"
+                        | "length"
+                        | "period"
+                        | "sets"
+                        | "notice"
+                ),
+                "table" => field == "description",
+                "release" => matches!(field.as_str(), "description" | "period"),
+                _ => false,
+            };
+            if !supported {
+                return Err(format!("set {field} is not supported on {kind}"));
+            }
+        }
+        let mut after = before.clone();
+        for (field, winning) in &fields {
+            match field.as_str() {
+                "sets" => {
+                    if winning
+                        .as_array()
+                        .expect("typed sets")
+                        .iter()
+                        .any(|value| !reg_core::is_slug(value.as_str().expect("typed set slug")))
+                    {
+                        return Err("set sets requires catalog slugs".into());
+                    }
+                }
+                "notice" => {}
+                "description" if kind == "occurrence" => {}
+                "period" => {
+                    let period = winning
+                        .as_str()
+                        .expect("typed period")
+                        .parse::<reg_frame::address::PeriodSet>()?;
+                    let spans = periods(&period);
+                    let [span] = &spans[..] else {
+                        return Err("set period requires one contiguous period".into());
+                    };
+                    if source_period(record, context).as_ref() == Some(span) {
+                        continue;
+                    }
+                    check_table_coverage(&before, span, records)?;
+                    if kind == "occurrence" && !before["release"].is_null() {
+                        if before["population_valuesets"]
+                            .as_array()
+                            .is_some_and(|v| !v.is_empty())
+                        {
+                            return Err("set period cannot detach population-specific value sets from their release".into());
+                        }
+                        after["release"] = Value::Null;
+                    }
+                    after["from"] = json!(span.0);
+                    after["to"] = json!(span.1);
+                    if kind == "release" {
+                        after["grain"] = json!("span");
+                    }
+                }
+                "spelling"
+                    if winning
+                        .as_str()
+                        .is_none_or(|value| value.trim().is_empty() || value == "<none>") =>
+                {
+                    return Err("set spelling requires a nonblank delivered column spelling".into());
+                }
+                "value_set" => {
+                    let hash = winning.as_str().expect("typed content hash");
+                    if !records
+                        .iter()
+                        .any(|r| matches!(r, Record::ValueSet(v) if v.hash == hash))
+                    {
+                        return Err(
+                            "set value_set names an unknown value set; assert the code list first"
+                                .into(),
+                        );
+                    }
+                    after["valueset"] = winning.clone();
+                }
+                _ => after[target_field(field)] = winning.clone(),
+            }
+        }
+        if fields.get("coded") == Some(&Value::Bool(true))
+            && after["valueset"].is_null()
+            && after["code_system"].is_null()
+            && after["population_valuesets"]
+                .as_array()
+                .is_none_or(Vec::is_empty)
+        {
+            return Err("set coded=true requires a known value set or source code system".into());
+        }
+        if let Some(conflicts) = after.get_mut("conflicts").and_then(Value::as_array_mut) {
+            conflicts.retain(|field| {
+                !matches!(field.as_str(), Some("type" | "dtype")) || !fields.contains_key("type")
+            });
+            conflicts
+                .retain(|field| field.as_str() != Some("length") || !fields.contains_key("length"));
+        }
+        let after_record = decode(after.clone())?;
+        let period = if matches!(record, Record::Occurrence(_) | Record::Release(_)) {
+            source_period(&after_record, context)
+        } else {
+            Some(span(&after, records, context)?)
+        };
+        let first_change = out.changes.len();
+        for (field, winning) in &fields {
+            let (winning, losing) = if field == "period" {
+                (
+                    json!(period),
+                    source_period(record, context).map_or(Value::Null, |p| json!(p)),
+                )
+            } else {
+                (winning.clone(), before[target_field(field)].clone())
+            };
+            let resolves_conflict = matches!(field.as_str(), "type" | "length")
+                && before["conflicts"].as_array().is_some_and(|conflicts| {
+                    conflicts.iter().any(|conflict| {
+                        conflict.as_str().is_some_and(|conflict| {
+                            conflict == field || conflict == target_field(field)
+                        })
+                    })
+                });
+            if winning != losing || resolves_conflict {
+                out.changes.push(change(
+                    context,
+                    &after,
+                    field,
+                    &winning,
+                    &losing,
+                    period.clone(),
+                )?);
+            }
+        }
+        if before["release"] != after["release"] {
+            out.changes.push(change(
+                context,
+                &after,
+                "release",
+                &after["release"],
+                &before["release"],
+                period.clone(),
+            )?);
+        }
+        if let Record::Occurrence(row) = record {
+            let identity = context.identity(row);
+            let key = crate::OccurrenceKey::new(identity.clone(), &row.locator);
+            if let Some(sets) = &metadata_fields.sets {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Sets(sets.iter().cloned().collect()),
+                });
+            }
+            if let Some(notice) = &metadata_fields.notice {
+                out.metadata.push(Metadata {
+                    key,
+                    value: MetadataValue::Notice(notice.clone()),
+                });
+            }
+            for claim in &mut out.changes[first_change..] {
+                claim.identity = Some(identity.clone());
+            }
+        }
+        out.records[index] = after_record;
+    }
+    if !selected {
+        return Err("set has no selected source-shaped entity".into());
+    }
+    Ok(())
+}
+
+/// Carry identity assignments and field provenance through a phase's coordinate
+/// changes. Source values remain the evidence reviewed before application.
+///
+/// # Errors
+/// A field change collapses distinct source occurrences onto one occurrence key.
+///
+/// # Panics
+/// The caller must preserve frame length and order when merging field changes.
+pub fn rekey(
+    before: &[Record],
+    after: &[Record],
+    assignments: &mut BTreeMap<crate::OccurrenceKey, String>,
+    claims: &mut [crate::provenance::Claim],
+    metadata: &mut [Metadata],
+) -> Result<(), Locator> {
+    assert_eq!(
+        before.len(),
+        after.len(),
+        "field phase preserves record order"
+    );
+    let old_context = crate::OccurrenceContext::new(before);
+    let new_context = crate::OccurrenceContext::new(after);
+    let releases: BTreeMap<_, _> = after
+        .iter()
+        .filter_map(|record| match record {
+            Record::Release(release) => Some((
+                (
+                    Some(release.provider.as_str()),
+                    Some(release.register.as_str()),
+                    Some(release.table.as_str()),
+                    Some(release.release.as_str()),
+                    &release.locator,
+                ),
+                crate::placed(release),
+            )),
+            _ => None,
+        })
+        .collect();
+    let mut changed = BTreeMap::new();
+    let mut owners = BTreeMap::new();
+    let mut destinations = BTreeMap::new();
+    for (before, after) in before.iter().zip(after) {
+        let (Record::Occurrence(before), Record::Occurrence(after)) = (before, after) else {
+            continue;
+        };
+        let old = old_context.identity(before);
+        let new = new_context.identity(after);
+        for at in std::iter::once(&before.locator).chain(&before.also) {
+            let old_key = crate::OccurrenceKey::new(old.clone(), at);
+            let new_key = crate::OccurrenceKey::new(new.clone(), at);
+            if destinations
+                .insert(old_key.clone(), new_key.clone())
+                .is_some_and(|previous| previous != new_key)
+            {
+                return Err(at.clone());
+            }
+            if let Some(previous) = owners.insert(new_key, old_key.clone())
+                && previous != old_key
+            {
+                return Err(at.clone());
+            }
+            if old != new {
+                changed.insert(old_key, new.clone());
+            }
+        }
+    }
+    *assignments = std::mem::take(assignments)
+        .into_iter()
+        .map(|(mut key, value)| {
+            if let Some(identity) = changed.get(&key) {
+                key.identity = identity.clone();
+            }
+            (key, value)
+        })
+        .collect();
+    for value in metadata {
+        if let Some(identity) = changed.get(&value.key) {
+            value.key.identity = identity.clone();
+        }
+    }
+    for claim in claims {
+        if claim.kind == "release"
+            && let Some(period) = releases.get(&(
+                claim.provider.as_deref(),
+                claim.register.as_deref(),
+                claim.table.as_deref(),
+                claim.release.as_deref(),
+                &claim.locator,
+            ))
+        {
+            claim.period.clone_from(period);
+        }
+        let Some(identity) = &claim.identity else {
+            continue;
+        };
+        let key = crate::OccurrenceKey::new(identity.clone(), &claim.locator);
+        if let Some(identity) = changed.get(&key) {
+            claim.identity = Some(identity.clone());
+            claim.table = Some(identity.table.clone());
+            claim.release.clone_from(&identity.release);
+            claim.period.clone_from(&identity.period);
+        }
+    }
+    Ok(())
 }
 
 fn check_table_coverage(value: &Value, p: &Interval, records: &[Record]) -> Result<(), String> {
