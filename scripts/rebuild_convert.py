@@ -829,6 +829,16 @@ class Converter:
                 category = re.sub(
                     r"overlapping overrides with .*", "overlapping overrides", error
                 )
+                category = re.sub(
+                    r'^variable "[^"]+" is not a ledger slug$',
+                    "variable is not a ledger slug",
+                    category,
+                )
+                category = re.sub(
+                    r'^set variable would orphan gap marker for "[^"]+";',
+                    "set variable would orphan gap marker;",
+                    category,
+                )
                 errors[category] += 1
                 located.append(
                     {
