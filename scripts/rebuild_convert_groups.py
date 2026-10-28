@@ -3,6 +3,7 @@
 import collections
 import json
 import re
+from typing import Any
 
 
 def normalize_sets(converter):
@@ -13,7 +14,7 @@ def normalize_sets(converter):
     Unminted identities stay deferred; this projection is not permission to mint ids.
     """
     counts = collections.Counter()
-    dropped = []
+    dropped: list[dict[str, Any]] = []
     for owner, statements in converter.statements.items():
         grouping = {
             key: record

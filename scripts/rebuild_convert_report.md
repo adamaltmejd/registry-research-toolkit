@@ -1,10 +1,11 @@
 ## Round 03 verified application
 
 Validated locally with d-set-fields #2005 at `b6105257d4505df60e9c810dfca7ecbd02706ca7`;
-#2005 was OPEN at validation. The dependency merge is local-only and will not be pushed.
-Both comparison catalogs use the same release binary and inputs worktree/manifest commit
-`9186fcbceeb2283a50c7f684764869e4dda5765e`. This is a curated **dev** build, not a
-release or activation.
+#2005 was OPEN at validation. The temporary dependency merge was removed before the
+final gate and is not pushed; only converter changes are replayed onto the published
+history. Both comparison catalogs use the same release binary and inputs
+worktree/manifest commit `9186fcbceeb2283a50c7f684764869e4dda5765e`. This is a curated
+**dev** build, not a release or activation.
 
 All heavy runs were sequential. Process listing remains unavailable (`pgrep` cannot
 access sysmond); this operator-scheduled run did not overlap another heavy job from this
@@ -463,3 +464,18 @@ report records the exact runtime revision used for validation.
 Converted means emitted without an observed located refusal. If the whole-root lock
 fails before evaluation completes, other proposals remain uncertified; unreported errors
 are not assumed absent.
+
+## Final gate and reproducibility
+
+`g0 rust` passed on the publishable converter tree after removing the temporary
+dependency merge: lint/type/schema checks, Rust tests and checks, 116 script tests,
+byte-identical synthetic builds, and 194 conformance tests (2 skipped). The first gate
+attempt found a mixed-dictionary type-inference error in the grouping audit; an
+annotation fixed it and the full gate reran successfully. No permanent tests were added.
+
+The measured generator sources match converter commit `dc48c2c0f`; the final follow-up
+changes only the audit-record type annotation and this validation text. Runtime
+validation used #2005 commit `b6105257d4505df60e9c810dfca7ecbd02706ca7` in the local
+integration. The JSON report records source and locked-curation digests, exact commands
+and raw child results. The curated and uncurated databases, final locks and metrics
+remain available locally for verification.
