@@ -32,6 +32,11 @@ date = "date"
 smalldatetime = "datetime"
 datetime = "datetime"
 datetime2 = "datetime"
+bit = "boolean"
+uniqueidentifier = "uuid"
+varbinary = "binary"
+"<undefined>" = "unspecified"
+Identifierare = "identifier"
 
 # The delivery-name grammar (crates/reg-readers/src/names.rs): Registerversionnamn into
 # a period, an edition and a qualifier. Words are matched case-insensitively. A form's

@@ -42,14 +42,12 @@ pub fn type_family(dtype: &str) -> Option<&'static str> {
         "char" | "text" => Some("text"),
         "date" => Some("date"),
         "datetime" => Some("datetime"),
-        "bit" => Some("boolean"),
+        "boolean" => Some("boolean"),
         "geometry" => Some("geometry"),
-        "uniqueidentifier" => Some("uuid"),
-        "varbinary" => Some("binary"),
-        // These source literals state no storage type. Keep their distinction without
-        // guessing text/integer or treating any other unknown dtype as a family.
-        "<undefined>" => Some("unspecified"),
-        "Identifierare" => Some("identifier"),
+        "uuid" => Some("uuid"),
+        "binary" => Some("binary"),
+        "unspecified" => Some("unspecified"),
+        "identifier" => Some("identifier"),
         _ => None,
     }
 }

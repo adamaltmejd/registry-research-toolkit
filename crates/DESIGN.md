@@ -163,12 +163,12 @@ is not a change.
 - `F1:type-change`: the stated type family differs between consecutive segments of one
   table. Width and length differences never create findings or reviews. One closed map
   in `reg-frame` assigns the exact frame dtype names to families; an unmapped dtype is
-  refused at its source locator. Occurrences retain their dtype and length. The real
-  frame vocabulary is `int`/`integer` (integer), `decimal` (decimal), `char`/`text`
-  (text), `date`, `datetime`, `bit` (boolean), `geometry`, `uniqueidentifier` (UUID),
-  `varbinary` (binary), `<undefined>` (unspecified) and `Identifierare` (identifier).
-  The last two retain distinct explicit families without inferring a storage type;
-  neither is a fallback for unknown dtype names.
+  refused at its source locator. Occurrences retain their normalized dtype and length.
+  The neutral frame vocabulary is `int`/`integer` (integer), `decimal` (decimal),
+  `char`/`text` (text), `date`, `datetime`, `boolean`, `geometry`, `uuid`, `binary`,
+  `unspecified` and `identifier`. Reader config normalizes source and format literals
+  before they enter the frame. The last two dtypes retain distinct explicit families
+  without inferring a storage type; neither is a fallback for unknown dtype names.
 - `F1:domain-change`: the value set differs (NULL included), unless either side is
   uncoded. The message counts codes added, removed and relabelled.
 - `F1:label-drift`, `F1:definition-change`, `F1:unit-change`: consecutive text runs
