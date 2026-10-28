@@ -200,6 +200,8 @@ fn tables(
     requested: &[Interval],
     findings: &mut Vec<Issue>,
 ) -> Result<Vec<Serving>, Error> {
+    // Explicit-chain membership must not change when the requested period changes.
+    let in_source = window::in_chain(scope, variable)?;
     let rows: Vec<(String, i64, i64)> = scope
         .conn
         .prepare(
@@ -226,7 +228,6 @@ fn tables(
             });
         }
     }
-    let in_source = serving.iter().any(|s| scope.chain.contains(&s.table.id));
     if in_source {
         serving.retain(|s| scope.chain.contains(&s.table.id));
         for s in &mut serving {

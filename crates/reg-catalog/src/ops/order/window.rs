@@ -291,7 +291,7 @@ impl Located<'_> {
 
 /// Whether the variable has a segment anywhere in the succession chain; one there but not
 /// on the requested days is `outside_availability`, not `variable_not_in_table`.
-fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
+pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
     for &table in scope.chain {
         let hit: bool = scope.conn.query_row(
             "SELECT EXISTS (SELECT 1 FROM segment WHERE variable_id = ?1 AND table_id = ?2)",
