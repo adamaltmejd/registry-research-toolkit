@@ -187,16 +187,26 @@ def main():
     path = ROOT / "curation/registers/scb/r34/curation.toml"
     original = base(path)
     generated_section = path.read_text().partition(MARKER)[2]
-    authored_sets = []
+    authored_statements = []
+    authored_facts = []
     for block in re.split(
         r"(?=^\[\[statement\]\]$)", generated_section, flags=re.MULTILINE
     ):
         if not block.strip():
             continue
         statement = tomllib.loads(block)["statement"][0]
-        if statement["kind"] == "set" and "sets" in statement.get("fields", {}):
-            authored_sets.append(block)
-    for number, statement in enumerate(tomllib.loads(original)["statement"]):
+        if statement["kind"] == "assert":
+            # Later D curation can append constructors after the attachment block.
+            # They must participate in matching as well as survive the replay.
+            authored_facts.append(statement)
+        if statement["kind"] == "assert" or (
+            statement["kind"] == "set"
+            and statement.get("fields", {}).keys() & {"sets", "classification"}
+        ):
+            authored_statements.append(block)
+    for number, statement in enumerate(
+        [*tomllib.loads(original)["statement"], *authored_facts]
+    ):
         converter.add(f"existing:{number}", *OWNER, statement)
     statements = converter.statements[OWNER]
     snapshot = Snapshot(converter, OWNER, statements)
@@ -511,7 +521,7 @@ def main():
             + "\n".join(f"{k} = {literal(v)}" for k, v in statement.items())
             + "\n"
         )
-    text += "".join(authored_sets)
+    text += "".join(authored_statements)
     (args.out / "curation.toml").write_text(text)
     markdown_path = ROOT / "curation/readers/markdown.toml"
     markdown = base(markdown_path) + "\n" + MARKER + "\n[subjects]\n"
