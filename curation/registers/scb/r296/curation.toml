@@ -204,3 +204,27 @@ kind = "set"
 subject = "tjansteprisindex-tpi: sni"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:kn4kod"
+fields = { "sets" = ["kn4"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:26"
+
+[[statement]]
+kind = "set"
+subject = "var:kn4namn"
+fields = { "sets" = ["kn4"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:26"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8beskrivning"
+fields = { "sets" = ["kn8"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:kn8kod-2"
+fields = { "sets" = ["kn8"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:33"

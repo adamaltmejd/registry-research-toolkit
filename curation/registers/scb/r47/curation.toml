@@ -930,3 +930,15 @@ kind = "set"
 subject = "sokande-sommarkurser: sunniva3"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "var:hemortskommun"
+fields = { "tags" = ["geography"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:207"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:131"

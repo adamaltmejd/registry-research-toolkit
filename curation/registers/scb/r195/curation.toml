@@ -481,3 +481,27 @@ kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: bransch @2006..2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-2siffer"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-grupperad-2009"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-rams"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"

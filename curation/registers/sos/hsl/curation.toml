@@ -22,3 +22,33 @@ kind = "set"
 subject = "hsl2: pnr"
 fields = { "description" = "Ska registreras enligt Statistiska centralbyråns förteckning över läns och kommunkoder." }
 evidence = "reg_meta_build/curation/registers/sos/hsl.toml:123\n\nComplete source-native family on independently named supplied tables. Keep each own name/description on its exact delivery. HSL2 descriptions for AR and PNR refer to district/municipality reporting rather than the named year/person field; retain these contradictory source instructions without treating them as semantic equivalence or replacing them. Other table-specific wording remains equally literal. Every original field, scope, parent and coding association is pinned; Batch53-SOS-delivery-text-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-1"
+fields = { "sets" = ["yrkesbeteckning"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/hsl.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-2"
+fields = { "sets" = ["yrkesbeteckning"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/hsl.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-3"
+fields = { "sets" = ["yrkesbeteckning"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/hsl.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-4"
+fields = { "sets" = ["yrkesbeteckning"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/hsl.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesbeteckning-5"
+fields = { "sets" = ["yrkesbeteckning"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/hsl.toml:14"

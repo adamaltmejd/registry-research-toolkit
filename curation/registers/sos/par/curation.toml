@@ -232,3 +232,237 @@ kind = "set"
 subject = "par-ov: diagnos"
 fields = { "description" = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget max vid insamling men endast 30 diagnoskoder läggs i strängen." }
 evidence = "reg_meta_build/curation/registers/sos/par.toml:426\n\nWord order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-1"
+fields = { "sets" = ["anestesikod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:anestesikod-2"
+fields = { "sets" = ["anestesikod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:30"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-1"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-10"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-11"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-12"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-13"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-14"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-15"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-16"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-17"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-18"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-19"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-2"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-20"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-21"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-22"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-23"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-24"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-25"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-26"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-27"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-28"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-29"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-3"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-30"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-4"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-5"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-6"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-7"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-8"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardsdatum-9"
+fields = { "sets" = ["atgardsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:16"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-1"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-2"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-3"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-4"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-5"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-6"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"
+
+[[statement]]
+kind = "set"
+subject = "var:yttre-orsakskod-7"
+fields = { "sets" = ["yttre-orsakskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/par.toml:23"

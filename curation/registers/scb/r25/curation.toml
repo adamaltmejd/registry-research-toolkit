@@ -2110,3 +2110,291 @@ kind = "set"
 subject = "individer-och-dodsbon: bngre @1998..2001"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp04kehb"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp04kevx"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp504kevx"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdisp5kevx"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdispkehb"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdispkevx"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:cdispp"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004-exkl-kapitalvinst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-exkl-kapitalvinst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:din8"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:din88k"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:din91"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dind"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinkd"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinkpp"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp88k"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinpp91"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinu82"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:dinupp"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "tags" = ["income"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-2"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-3"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-4"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-hushall"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004-hushall"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-3"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-4"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-5"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-6"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-hushall-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1981"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1984"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-1986"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-vuxen-familj-ranta-utdelning"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/iot.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp"
+fields = { "tags" = ["family-household"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:159"

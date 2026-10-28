@@ -160,3 +160,27 @@ kind = "set"
 subject = "registerdata-for-integration: {kommun,lan} @2016"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "reg_meta_build/curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:regso"
+fields = { "sets" = ["regso"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:22"
+
+[[statement]]
+kind = "set"
+subject = "var:regso-namn"
+fields = { "sets" = ["regso"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:22"
+
+[[statement]]
+kind = "set"
+subject = "var:regso-varde"
+fields = { "sets" = ["regsokod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:regsokod"
+fields = { "sets" = ["regsokod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/registerdata-integration.toml:13"

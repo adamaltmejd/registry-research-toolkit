@@ -222,3 +222,39 @@ kind = "set"
 subject = "rostberattigade: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-namn"
+fields = { "sets" = ["kommunvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:24"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunvalkrets-valkretsnamn"
+fields = { "sets" = ["kommunvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:24"
+
+[[statement]]
+kind = "set"
+subject = "var:landstingsvalkrets-namn"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:31"
+
+[[statement]]
+kind = "set"
+subject = "var:lt-valkretsnamn"
+fields = { "sets" = ["landstingsvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:31"
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-namn"
+fields = { "sets" = ["regionvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:38"
+
+[[statement]]
+kind = "set"
+subject = "var:regionvalkrets-valkretsnamn"
+fields = { "sets" = ["regionvalkretsnamn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:38"

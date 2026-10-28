@@ -9548,54 +9548,6 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 
 [[statement]]
 kind = "set"
-subject = "var:delkomponent-disponibel-inkomst"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:delkomponent-disponibel-inkomst-2004"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:dispinkkehb04"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-familj"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-familj-2004"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-per-ke-familj"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
-subject = "var:disponibel-inkomst-per-ke-familj-2004"
-fields = { "sets" = ["lisa-disponibel-inkomst"] }
-evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment."
-
-[[statement]]
-kind = "set"
 subject = "var:folkatpfam"
 fields = { "sets" = ["lisa-efterlevandeforman"] }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A712\n\nReviewed LISA section: Efterlevandeförmån; membership through whole-occurrence attachment."
@@ -10709,3 +10661,717 @@ kind = "set"
 subject = "individer-15plus: ssyk4_j16"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:139\n\nSCB's LISA doc library (lisa-bakgrundsfakta-1990-2017) documents Ssyk4_J16 for 2010–2013 — see inputs:catalog/docs/markdown/lisa/Ssyk4_J16.md — but SCB's Registerinformation export carries no row for the column on any version of this variant. Sibling ssyk4 (Ssyk4, is_sensitive=false, is_identifier=false)."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1jobbyrk"
+fields = { "sets" = ["agijobbyrk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1126"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1longarant"
+fields = { "sets" = ["agilongarant"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1133"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1sektorgrp"
+fields = { "sets" = ["agisektorgrp"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1140"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2jobbyrk"
+fields = { "sets" = ["agijobbyrk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1126"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2longarant"
+fields = { "sets" = ["agilongarant"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1133"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2sektorgrp"
+fields = { "sets" = ["agisektorgrp"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1140"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3jobbyrk"
+fields = { "sets" = ["agijobbyrk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1126"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3longarant"
+fields = { "sets" = ["agilongarant"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1133"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3sektorgrp"
+fields = { "sets" = ["agisektorgrp"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1140"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-0-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-1-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-10-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-11-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-12-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-13-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-14-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-15-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-16-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-17-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-18-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-19-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-2-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-20-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-21-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-3-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-4-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-5-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-6-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-7-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-8-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-barn-9-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { "tags" = ["employment"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:89"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer"
+fields = { "tags" = ["employment"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:95"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-16-17-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn-18-19-ar"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn0-3"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn0-3"
+fields = { "tags" = ["family-household"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:171"
+
+[[statement]]
+kind = "set"
+subject = "var:barn11-15"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn18plus"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn20plus"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn4-6"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:barn7-10"
+fields = { "sets" = ["antal-barn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1164"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkkehb04"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkpersf"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004"
+fields = { "tags" = ["income"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:31"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-individ-familj-2004"
+fields = { "sets" = ["disponibel-inkomst"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004"
+fields = { "sets" = ["disponibel-inkomst", "lisa-disponibel-inkomst"] }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A749\n\nReviewed LISA section: Disponibel inkomst; membership through whole-occurrence attachment.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1196"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:165"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { "tags" = ["geography"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:195"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-bostaden"
+fields = { "tags" = ["geography"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:189"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:ku3faman"
+fields = { "sets" = ["faman"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1152"
+
+[[statement]]
+kind = "set"
+subject = "var:loneink"
+fields = { "tags" = ["income"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-arbetsstalle-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-foretag-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-huvud-individ-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-agi-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni69"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-nast-storsta-ku-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-agi-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni69"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-storsta-ku-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-agi-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2002g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni2007u"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni69"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92b"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-tredje-storsta-ku-sni92g"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst"
+fields = { "tags" = ["income"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:37"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:125"

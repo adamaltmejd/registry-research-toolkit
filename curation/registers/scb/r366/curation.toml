@@ -1216,3 +1216,15 @@ kind = "set"
 subject = "lararforsorjningen-icke-aktiva: sun2000niva"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:47\n\nLegacy exact value-set label: SUN2000Niva"
+
+[[statement]]
+kind = "set"
+subject = "var:kommungrupp"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:reggrp"
+fields = { "sets" = ["kommungrupp"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/utbildningsanalyser.toml:39"

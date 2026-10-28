@@ -813,3 +813,321 @@ kind = "set"
 subject = "a-lova-person: invarn8 where label = 'Invandringsdatum 9 numerisk'"
 fields = { table = "lova-person" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx#Metadata - Variabelnivå!61; Deldatamängder och datavyer!16. The source repeats spelling INVARN8 for two different numbered immigration-date fields. This exact source label selects only the documented field, matching its existing pre-move period correction. Move the whole occurrence onto LOVA PERSON after that period correction; preserve the source spelling and label as evidence."
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-1"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-1-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-2"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-2-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-3"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-3-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-4"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-4-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-5"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-5-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-6"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-6-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-7"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-7-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-8"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-8-numerisk"
+fields = { "sets" = ["invarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsdatum-9"
+fields = { "sets" = ["invandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-1"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-2"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-3"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-4"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-5"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-6"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-7"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-8"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:invandringsland-9"
+fields = { "sets" = ["invandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:32"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-1"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-1-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-2"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-2-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-3"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-3-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-4"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-4-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-5"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-5-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-6"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-6-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-7"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-7-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-8"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-8-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-9"
+fields = { "sets" = ["utvandringsdatum"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsdatum-9-numerisk"
+fields = { "sets" = ["utvarn"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-1"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-2"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-3"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-4"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-5"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-6"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-7"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-8"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "var:utvandringsland-9"
+fields = { "sets" = ["utvandringsland"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"

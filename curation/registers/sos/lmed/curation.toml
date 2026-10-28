@@ -62,3 +62,21 @@ kind = "assert"
 subject = "lmed: transtyp"
 fact = { entity = "value-set", items = [{ code = "ERAD", label = "Förskrivning till dospatienter (=otyp 0,1,2,3,4)" }, { code = "OORR", label = "Vanlig förskrivning (=otyp A,H,L,R)" }] }
 evidence = "catalog/source/Socialstyrelsen/Metadata Läkemedelsregistret (LMED)_webb.xlsx#Metadata_variabler!40. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-1"
+fields = { "sets" = ["specialistutbildningskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-2"
+fields = { "sets" = ["specialistutbildningskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"
+
+[[statement]]
+kind = "set"
+subject = "var:specialistutbildningskod-3"
+fields = { "sets" = ["specialistutbildningskod"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lmed.toml:15"

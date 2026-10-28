@@ -49,12 +49,6 @@ evidence = "reg_meta_build/curation/registers/scb/iku.toml:138\n\nComplete sourc
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "sets" = ["legacy-kommun"] }
-evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "var:kommun-kommunnamn"
 fields = { "sets" = ["legacy-kommun"] }
 evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
@@ -232,3 +226,9 @@ kind = "set"
 subject = "privatagda-flerbostadshus: kommkod @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "reg_meta_build/curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "sets" = ["kommun", "legacy-kommun"] }
+evidence = "reg_meta_build/curation/registers/scb/iku.toml:114\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json.\n\nD-9 membership only: reg_meta_build/curation/registers/scb/iku.toml:14"
