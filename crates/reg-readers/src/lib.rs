@@ -179,11 +179,33 @@ pub fn read(
 #[derive(Debug, Default)]
 pub struct ReadOutput {
     pub frame: Frame,
+    /// Source sections and their direct retained physical rows, for inspection and
+    /// later reviewed attachment. These do not add facts to the frame.
+    pub sections: Vec<Section>,
     /// Every file the reader read, relative to the inputs root, for the input table.
     pub files: Vec<String>,
     /// Source facts the reader could not interpret and left unstated, one line each,
     /// for the build report.
     pub warnings: Vec<String>,
+}
+
+/// A source heading or note and its direct retained row locators. Repeated headings
+/// stay distinct by locator; a row emitting multiple occurrences appears once.
+#[derive(Debug, serde::Serialize)]
+pub struct Section {
+    pub text: Option<String>,
+    pub kind: SectionKind,
+    pub locator: reg_frame::Locator,
+    pub rows: Vec<reg_frame::Locator>,
+}
+
+#[derive(Debug, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SectionKind {
+    Heading,
+    Parent,
+    Note,
+    Unheaded,
 }
 
 /// A reader refusal: the input it concerns and what to fix.

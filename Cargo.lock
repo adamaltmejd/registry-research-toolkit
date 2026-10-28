@@ -946,6 +946,7 @@ dependencies = [
  "calamine",
  "csv",
  "encoding_rs",
+ "quick-xml",
  "reg-core",
  "reg-frame",
  "serde",

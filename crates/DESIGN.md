@@ -592,16 +592,31 @@ overlapping curated overrides are refused at both locations.
   Through C its rows stay a register of their own, `scb/lisa-workbook` from the
   manifest's `register`. Attachment to the export's LISA tables lands with D-8 (LISA
   headings); it will add a cross-register destination only if the D-4 converter shows
-  one is needed. Section headings (group hints) wait for D's sets. Each `Grundregister`
-  cell is a `derived_from` link from the row's variable to each register it names (split
-  at `,`, `;` and line breaks), matched by name, so LISA's abbreviations (`RTB`) stay
-  unresolved until D curation resolves them. `Individ` repeats the year-independent
-  columns with blank year cells; the year-less sheet's row stands, so `Individ` keeps
-  its 1990– span. `Individ årsoberoende` holds three tables (birth country, deaths,
-  migration) under headings, each keyed by `PersonNr`; the reader keeps the sheet as one
-  table and any later partition requires whole-occurrence `set table`. Labels keep their
-  footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a
-  name's own (`SNI92`), and the footnotes are not read.
+  one is needed. The reader also returns a source-ordered section → retained rows map,
+  separate from the frame, exposed by `reg-build read` as `.sections.json`. Each
+  heading, parent, note and unheaded block carries its source locator; membership lists
+  physical retained row locators once, even when a year cell emits several occurrences.
+  This is inspection evidence, not curation or automatic sets. Text-only cells in the
+  column-name column are candidates. Source font size, emphasis and bottom borders
+  distinguish headings from notes: body-sized italic text is a note unless it introduces
+  undated rows; a smaller continuation closing an adjacent larger heading's border band
+  is a note. Calamine exposes no font metadata, so the reader reads styles from the same
+  pinned file's XML, using its relationships rather than assuming worksheet filenames.
+  No heading spelling, row number or style-id table is encoded. A heading followed by
+  another heading before any data is a parent; retained counts do not turn a repeated
+  timeless heading into a parent. On the first dated row after undated rows, membership
+  returns to an unheaded block instead of inheriting the timeless heading. Notes never
+  change membership. These rules describe this source's layout; headings remain
+  reviewable candidates and broad parents never become sets automatically. Each
+  `Grundregister` cell is a `derived_from` link from the row's variable to each register
+  it names (split at `,`, `;` and line breaks), matched by name, so LISA's abbreviations
+  (`RTB`) stay unresolved until D curation resolves them. `Individ` repeats the
+  year-independent columns with blank year cells; the year-less sheet's row stands, so
+  `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables (birth
+  country, deaths, migration) under headings, each keyed by `PersonNr`; the reader keeps
+  the sheet as one table and any later partition requires whole-occurrence `set table`.
+  Labels keep their footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit
+  cannot be told from a name's own (`SNI92`), and the footnotes are not read.
 - **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
   in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
   `Gasföretag` names some 90). A spelling alone then reaches several variables, and the
