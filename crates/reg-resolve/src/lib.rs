@@ -214,6 +214,9 @@ pub struct Resolved {
     pub occurrences: Vec<ResolvedOccurrence>,
     pub gaps: Vec<Gap>,
     pub findings: Vec<Finding>,
+    pub acknowledgements: BTreeMap<usize, curation::ack::Acknowledgement>,
+    /// Source keys for register-level F5 findings, without changing their published subject.
+    pub finding_keys: BTreeMap<usize, String>,
     pub report: Report,
 }
 
@@ -1245,7 +1248,9 @@ pub fn resolve(
     for (i, v) in marker_variable {
         resolved[i].variable = Some(v);
     }
+    let mut finding_keys = BTreeMap::new();
     for (key, label) in markers {
+        finding_keys.insert(findings.len(), key.clone());
         findings.push(Finding {
             code: "F5:documented-without-column",
             severity: "notice",
@@ -1316,6 +1321,8 @@ pub fn resolve(
         occurrences: resolved,
         gaps,
         findings,
+        acknowledgements: BTreeMap::new(),
+        finding_keys,
         report,
     })
 }

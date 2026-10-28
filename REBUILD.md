@@ -479,10 +479,12 @@ The remaining C checklist:
   found) and V1 classification-version proposals (they rank, never bind). F4 `same-text`
   proposals are built when a curator asks.
 
-- **D's `link`/`reject` resolves the successions the link stage drops**: same-day
-  successors of one table and cycle-closing `continues` edges. Today each is dropped
-  with a warning (all same-day successors; the later-by-locator edge of a cycle); the
-  build report counts them as `succession_dropped`.
+- **D's curated links resolve dropped successions**: `link continues` chooses the
+  successor for a predecessor/day over competing source candidates; the rest remain
+  dropped evidence. Curated cycles and competing curated successors refuse. Source-only
+  same-day successors and cycle-closing edges still drop with a warning, counted as
+  `succession_dropped`. No real dropped succession requiring a `reject` form has been
+  found; add one only for a demonstrated case.
 
 - **Release builds refuse unplaced and split ledger ids** once D's curation exists;
   until then they are only counted in the build report.

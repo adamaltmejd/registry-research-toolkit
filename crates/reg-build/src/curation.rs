@@ -205,6 +205,10 @@ pub(super) struct Applied {
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
     pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
     pub metadata: Vec<reg_resolve::curation::apply::Metadata>,
+    pub links: Vec<(LocatedStatement, Premise)>,
+    pub linked: Option<crate::link::Curated>,
+    pub acks:
+        BTreeMap<(String, String), BTreeMap<usize, reg_resolve::curation::ack::Acknowledgement>>,
 }
 
 fn phase(statement: &reg_frame::statement::Statement) -> u8 {
@@ -217,7 +221,8 @@ fn phase(statement: &reg_frame::statement::Statement) -> u8 {
         Statement::Set { fields, .. } if fields.table.is_some() => 1,
         Statement::Assert { .. } => 2,
         Statement::Set { fields, .. } if fields.variable.is_some() => 3,
-        _ => 4,
+        Statement::Link { .. } | Statement::Ack { .. } => 5,
+        Statement::Set { .. } => 4,
     }
 }
 
@@ -367,7 +372,7 @@ fn run_selected(
         });
     }
     let mut result = Applied::default();
-    let mut evaluated = Vec::new();
+    let mut evaluated: Vec<(&LocatedStatement, Premise)> = Vec::new();
     let mut groups = BTreeMap::<_, Vec<_>>::new();
     for statement in statements {
         groups
@@ -398,7 +403,50 @@ fn run_selected(
         locks.insert((provider, register), (path, ledger, old));
     }
     let mut field_snapshot = Vec::new();
-    for stage in 0..5 {
+    let mut conflict_overrides = None;
+    for stage in 0..6 {
+        if stage == 5 && !field_snapshot.is_empty() {
+            // Conflict checks retain the field phase view; links and acks see final identities.
+            conflict_overrides = Some(result.overrides.clone());
+            let final_coordinates = records
+                .iter()
+                .filter(|r| {
+                    matches!(
+                        r,
+                        Record::Register(_)
+                            | Record::Table(_)
+                            | Record::Release(_)
+                            | Record::Occurrence(_)
+                    )
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            if let Err(at) = reg_resolve::curation::apply::rekey(
+                &field_snapshot,
+                &final_coordinates,
+                &mut result.variables,
+                &mut result.overrides,
+                &mut result.metadata,
+            ) {
+                for (statement, premise) in &evaluated {
+                    if matches!(&statement.statement, reg_frame::statement::Statement::Set {fields,..} if fields.spelling.is_some() || fields.period.is_some())
+                        && premise.subjects.iter().any(|p| p.locator == at)
+                    {
+                        conflicts.insert(publication_identity(statement));
+                        refusals.push(format!(
+                            "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
+                            location(statement),
+                            at.input,
+                            at.at
+                        ));
+                    }
+                }
+            }
+        }
+        if !conflicts.is_empty() {
+            break;
+        }
+
         let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
             reg_resolve::curation::SharedSources::new(&records)
         } else {
@@ -406,8 +454,18 @@ fn run_selected(
         };
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
+        let link_view = if stage == 5
+            && statements
+                .iter()
+                .any(|s| matches!(s.statement, reg_frame::statement::Statement::Link { .. }))
+        {
+            resolve_catalog(root, &records, &result.variables, &result.metadata)?
+        } else {
+            Vec::new()
+        };
         let mut accepted = Vec::new();
         let mut field_applications = BTreeMap::new();
+        let mut ack_indices = BTreeMap::new();
         if stage == 4
             && statements.iter().any(|s| {
                 matches!(s.statement, reg_frame::statement::Statement::Set { .. })
@@ -482,6 +540,24 @@ fn run_selected(
                     }
                 }
             }
+            let finding_view = if stage == 5
+                && group
+                    .iter()
+                    .any(|s| matches!(s.statement, reg_frame::statement::Statement::Ack { .. }))
+            {
+                let sets = records
+                    .iter()
+                    .filter_map(|r| match r {
+                        Record::ValueSet(v) => Some((v.hash.as_str(), v)),
+                        _ => None,
+                    })
+                    .collect();
+                let mut resolved = reg_resolve::resolve(&source, ledger, &sets, &result.variables)?;
+                reg_resolve::curation::apply_metadata(&mut resolved, &result.metadata);
+                Some(resolved)
+            } else {
+                None
+            };
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
             let references = references(
                 root,
@@ -501,7 +577,7 @@ fn run_selected(
             );
             for (statement, evaluation) in group.iter().zip(evaluations) {
                 let at = location(statement);
-                let resolved = match evaluation {
+                let mut resolved = match evaluation {
                     Ok(r) => r,
                     Err(e) => {
                         refusals.push(format!("{at}: {e}"));
@@ -539,6 +615,35 @@ fn run_selected(
                             continue;
                         }
                     }
+                }
+                if let Some(view) = &finding_view
+                    && matches!(
+                        statement.statement,
+                        reg_frame::statement::Statement::Ack { .. }
+                    )
+                {
+                    match reg_resolve::curation::ack::review(
+                        view,
+                        &statement.statement,
+                        &mut resolved.premise,
+                    ) {
+                        Ok(indices) => {
+                            ack_indices.insert(publication_identity(statement), indices);
+                        }
+                        Err(error) => {
+                            refusals.push(format!("{at}: {error}"));
+                            continue;
+                        }
+                    }
+                }
+                if matches!(
+                    statement.statement,
+                    reg_frame::statement::Statement::Link { .. }
+                ) && let Err(error) =
+                    crate::link::review(&link_view, &records, statement, &mut resolved.premise)
+                {
+                    refusals.push(format!("{at}: {error}"));
+                    continue;
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
@@ -633,10 +738,38 @@ fn run_selected(
             } else {
                 Vec::new()
             };
+            if stage == 5 {
+                match &statement.statement {
+                    reg_frame::statement::Statement::Link { .. } => {
+                        result.links.push(((*statement).clone(), premise.clone()));
+                    }
+                    reg_frame::statement::Statement::Ack { caveat, .. } => {
+                        let indices = ack_indices
+                            .remove(&publication_identity(statement))
+                            .expect("evaluated ack");
+                        for index in indices {
+                            result
+                                .acks
+                                .entry(((*provider).clone(), (*register).clone()))
+                                .or_default()
+                                .insert(
+                                    index,
+                                    reg_resolve::curation::ack::Acknowledgement {
+                                        statement: publication_identity(statement),
+                                        caveat: caveat.clone(),
+                                    },
+                                );
+                        }
+                        result.statements.push(statement_row(root, statement)?);
+                    }
+                    _ => unreachable!("post-resolve phase"),
+                }
+            }
             let application = match stage {
                 3 => assignments
                     .remove(&publication_identity(statement))
                     .expect("evaluated assignment"),
+                5 => Ok(reg_resolve::curation::apply::Applied::default()),
                 4 => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
@@ -696,10 +829,7 @@ fn run_selected(
                     kind: value["kind"].as_str().expect("statement kind").into(),
                     file,
                     line: statement.line,
-                    evidence: value["evidence"]
-                        .as_str()
-                        .expect("required evidence")
-                        .into(),
+                    evidence: value["evidence"].as_str().map(str::to_owned),
                     caveat: value["caveat"].as_str().map(str::to_owned),
                 });
                 result.overrides.extend(applied.changes.iter().map(|c| {
@@ -759,13 +889,46 @@ fn run_selected(
             }
         }
     }
+    if !result.links.is_empty() {
+        let resolved = resolve_catalog(root, &records, &result.variables, &result.metadata)?;
+        let linked = crate::link::curate(root, &resolved, &records, &result.links)?;
+        if !linked.refusals.is_empty() {
+            let messages = linked
+                .refusals
+                .iter()
+                .map(|(_, message)| message.clone())
+                .collect::<Vec<_>>();
+            if record || release {
+                return Err(messages.join("\n"));
+            }
+            let refused = linked
+                .refusals
+                .iter()
+                .map(|(hash, _)| hash)
+                .collect::<BTreeSet<_>>();
+            let retained = statements
+                .iter()
+                .copied()
+                .filter(|s| !refused.contains(&publication_identity(s)))
+                .collect::<Vec<_>>();
+            let mut rerun = run_selected(root, &retained, outputs, record, registers, release)?;
+            rerun.findings.extend(
+                messages
+                    .into_iter()
+                    .map(|message| format!("{message} (statement skipped)")),
+            );
+            return Ok(rerun);
+        }
+        result.linked = Some(linked);
+    }
     let indices = evaluated
         .iter()
         .enumerate()
         .map(|(i, (s, _))| (publication_identity(s), i))
         .collect::<BTreeMap<_, _>>();
-    let claims = result
-        .overrides
+    let claims = conflict_overrides
+        .as_ref()
+        .unwrap_or(&result.overrides)
         .iter()
         .map(|value| reg_resolve::curation::AppliedClaim {
             statement: indices[value.statement.as_str()],
@@ -807,42 +970,6 @@ fn run_selected(
             "{}:{}: curation-overlap: classification version overlaps {}:{}",
             left.locator.input, left.locator.at, right.locator.input, right.locator.at
         ));
-    }
-    if !field_snapshot.is_empty() {
-        let final_coordinates = records
-            .iter()
-            .filter(|r| {
-                matches!(
-                    r,
-                    Record::Register(_)
-                        | Record::Table(_)
-                        | Record::Release(_)
-                        | Record::Occurrence(_)
-                )
-            })
-            .cloned()
-            .collect::<Vec<_>>();
-        if let Err(at) = reg_resolve::curation::apply::rekey(
-            &field_snapshot,
-            &final_coordinates,
-            &mut result.variables,
-            &mut result.overrides,
-            &mut result.metadata,
-        ) {
-            for (statement, premise) in &evaluated {
-                if matches!(&statement.statement, reg_frame::statement::Statement::Set {fields,..} if fields.spelling.is_some() || fields.period.is_some())
-                    && premise.subjects.iter().any(|p| p.locator == at)
-                {
-                    conflicts.insert(publication_identity(statement));
-                    refusals.push(format!(
-                        "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
-                        location(statement),
-                        at.input,
-                        at.at
-                    ));
-                }
-            }
-        }
     }
     if !conflicts.is_empty() {
         if record || release {
@@ -949,4 +1076,60 @@ fn run_selected(
     result.findings = findings;
     result.records = records;
     Ok(result)
+}
+
+/// Resolve the curated source snapshot for post-resolve curation validation.
+pub(super) fn resolve_catalog(
+    root: &Path,
+    records: &[Record],
+    variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
+    metadata: &[reg_resolve::curation::apply::Metadata],
+) -> Result<Vec<reg_resolve::Resolved>, String> {
+    let sets = records
+        .iter()
+        .filter_map(|r| match r {
+            Record::ValueSet(v) => Some((v.hash.as_str(), v)),
+            _ => None,
+        })
+        .collect();
+    let mut groups = BTreeMap::<_, Vec<_>>::new();
+    for record in records {
+        let key = match record {
+            Record::Register(r) => (&r.provider, &r.register),
+            Record::Table(r) => (&r.provider, &r.register),
+            Record::Release(r) => (&r.provider, &r.register),
+            Record::Occurrence(r) => (&r.provider, &r.register),
+            _ => continue,
+        };
+        groups.entry(key).or_default().push(record.clone());
+    }
+    groups
+        .into_iter()
+        .map(|((provider, register), source)| {
+            let path = super::ledger_path(root, provider, register);
+            let ledger = if path.is_file() {
+                super::toml_file(&path)?
+            } else {
+                reg_resolve::Ledger::default()
+            };
+            let mut resolved = reg_resolve::resolve(&source, &ledger, &sets, variables)?;
+            reg_resolve::curation::apply_metadata(&mut resolved, metadata);
+            Ok(resolved)
+        })
+        .collect()
+}
+
+pub(super) fn statement_row(
+    root: &Path,
+    statement: &LocatedStatement,
+) -> Result<crate::emit::StatementRow, String> {
+    let value = serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
+    Ok(crate::emit::StatementRow {
+        hash: publication_identity(statement),
+        kind: value["kind"].as_str().expect("statement kind").into(),
+        file: statement_locator(root, statement)?.input,
+        line: statement.line,
+        evidence: value["evidence"].as_str().map(str::to_owned),
+        caveat: value["caveat"].as_str().map(str::to_owned),
+    })
 }

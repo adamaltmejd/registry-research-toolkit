@@ -212,7 +212,7 @@ fn build(args: &Args) -> Result<(), String> {
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
-    let applied = curation::run(
+    let mut applied = curation::run(
         &args.curation,
         &statements,
         &outputs,
@@ -329,6 +329,9 @@ fn build(args: &Args) -> Result<(), String> {
         let mut r = reg_resolve::resolve(records, &ledger, &set_by_hash, &applied.variables)
             .map_err(|e| format!("{provider}/{register}: {e}"))?;
         reg_resolve::curation::apply_metadata(&mut r, &applied.metadata);
+        if let Some(acks) = applied.acks.get(&(provider.clone(), register.clone())) {
+            reg_resolve::curation::ack::apply(&mut r, acks);
+        }
         if args.release && !r.report.unminted.is_empty() {
             return Err(format!(
                 "{provider}/{register}: {} variables have no ledger id (--release)",
@@ -362,7 +365,14 @@ fn build(args: &Args) -> Result<(), String> {
     }
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
-    let linked = link::resolve(&resolved, &links, &docs)?;
+    let mut linked = link::resolve(&resolved, &links, &docs)?;
+    let mut link_evidence = Vec::new();
+    if let Some(curated) = applied.linked {
+        linked.relations = curated.relations;
+        linked.succession_warnings = curated.succession_warnings;
+        applied.statements.extend(curated.statements);
+        link_evidence = curated.evidence;
+    }
     let link_unresolved = linked.warnings.len();
     let succession_dropped = linked.succession_warnings.len();
     let doc_subject_unresolved = linked.doc_warnings.len();
@@ -425,12 +435,13 @@ fn build(args: &Args) -> Result<(), String> {
     for &i in &order {
         sorted_inputs.push(by_index[i].take().expect("each input once"));
     }
-    let provenance = reg_resolve::provenance::finalize(
+    let mut provenance = reg_resolve::provenance::finalize(
         &resolved,
         &valuesets.values().map(|(set, _)| set).collect::<Vec<_>>(),
         &applied.classifications,
         &applied.overrides,
     );
+    provenance.values.extend(link_evidence);
     let catalog = emit::Catalog {
         meta,
         inputs: sorted_inputs,

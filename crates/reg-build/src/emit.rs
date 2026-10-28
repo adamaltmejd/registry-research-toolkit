@@ -41,7 +41,7 @@ pub struct StatementRow {
     pub kind: String,
     pub file: String,
     pub line: usize,
-    pub evidence: String,
+    pub evidence: Option<String>,
     pub caveat: Option<String>,
 }
 
@@ -259,7 +259,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str(statement.kind.clone()),
                 Cell::Str(statement.file.clone()),
                 Cell::Int(count(statement.line)),
-                Cell::Text(statement.evidence.clone()),
+                opt_text(statement.evidence.as_ref()),
                 opt_text(statement.caveat.as_ref()),
             ],
         );
@@ -727,7 +727,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             );
         }
 
-        for f in &r.findings {
+        for (finding_index, f) in r.findings.iter().enumerate() {
             let (kind, subject) = match f.subject {
                 Subject::Register => ("register", register_row),
                 Subject::Release(x) => ("release", release_id[&(ri, x)]),
@@ -738,7 +738,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             let period = f.period.as_ref().map(|p| (start(&p.0), end(&p.1)));
             findings.push((
                 (reg_pid.clone(), f.code, kind, subject, period),
-                (register_row, f.severity, f.message.clone()),
+                (
+                    register_row,
+                    f.severity,
+                    f.message.clone(),
+                    r.acknowledgements.get(&finding_index).cloned(),
+                ),
             ));
         }
     }
@@ -812,7 +817,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 row_of(notice.subject),
                 period,
             ),
-            (register_id[&reg_pid], "notice", notice.text.clone()),
+            (register_id[&reg_pid], "notice", notice.text.clone(), None),
         ));
     }
     // Relation ids follow (kind, subject id, object id, at); the entity kinds break the
@@ -848,16 +853,25 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str(object_kind.into()),
                 Cell::Int(row_of(rel.object)),
                 opt_int(at),
-                Cell::Null,
-                Cell::Str("source".into()),
-                Cell::Null,
+                opt_int(rel.end.as_deref().map(end)),
+                Cell::Str(
+                    if rel.statement.is_some() {
+                        "curated"
+                    } else {
+                        "source"
+                    }
+                    .into(),
+                ),
+                opt_int(rel.statement.as_deref().map(|hash| statement_id[hash])),
                 opt_text(rel.note.as_ref()),
             ],
         );
     }
     findings.sort();
-    for (i, ((_, code, kind, subject, period), (register_row, severity, message))) in
-        findings.into_iter().enumerate()
+    for (
+        i,
+        ((_, code, kind, subject, period), (register_row, severity, message, acknowledgement)),
+    ) in findings.into_iter().enumerate()
     {
         rows.push(
             "finding",
@@ -871,8 +885,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 opt_int(period.map(|p| p.0)),
                 opt_int(period.map(|p| p.1)),
                 Cell::Text(message),
-                Cell::Null,
-                Cell::Null,
+                opt_text(acknowledgement.as_ref().and_then(|a| a.caveat.as_ref())),
+                opt_int(
+                    acknowledgement
+                        .as_ref()
+                        .map(|a| statement_id[a.statement.as_str()]),
+                ),
             ],
         );
     }
