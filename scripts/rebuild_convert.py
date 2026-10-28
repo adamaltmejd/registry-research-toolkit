@@ -10,6 +10,7 @@ Run reg-build read first, then:
   uv run --no-project scripts/rebuild_convert.py --frames DIR --out SCRATCH
   ... --lock --inputs DIR --assets DIR
 The output root must not exist. No generated curation is committed.
+Exit 1 when the requested lock fails, after writing the report.
 """
 
 import argparse
@@ -1521,6 +1522,8 @@ def main():
             sort_keys=True,
         )
     )
+    if lock["status"] == "refused":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
