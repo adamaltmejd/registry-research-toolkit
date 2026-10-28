@@ -4,3 +4,15 @@ kind = "set"
 subject = "ekb-manad: hhstatus"
 fields = { "period" = "2015..2023" }
 evidence = "reg_meta_build/curation/registers/sos/ekb.toml:897\n\nThe EKB_MANAD HHSTATUS row leaves Data från and Data till blank. Socialstyrelsen's delivery list for SWECOV includes HHSTATUS in the monthly person file SWECOV_SOS_EKB_PERS for 2015-2023, so the field is available in that window. The window claims no years outside the delivery and does not extend EKB_AR. All original prose, type, coding and bounds remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "table:ekb-ar"
+fields = { coverage = "1990.." }
+evidence = "catalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Deldatamängder' row 2 bounds EKB_AR to 1990-1997, but 'Metadata - Variabelnivå' rows 2-479 document EKB_AR variables beyond that end: ANNATBELOPP01 at row 3 starts in 2010 and AVSLUT01 at row 55 starts in 2017, both with Data till blank. 'Metadata-Datamängd (DCAT-AP) ' row 4 states 1990- for the register. Replace the table bound with 1990- without inventing an end; individual variable bounds remain authoritative."
+
+[[statement]]
+kind = "set"
+subject = "table:ekb-manad"
+fields = { coverage = "1990.." }
+evidence = "catalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Deldatamängder' row 3 starts EKB_MANAD in 2014 with no end, but 'Metadata - Variabelnivå' rows 480-603 document earlier EKB_MANAD variables: ALDER at row 480 starts in 1990 with Data till blank, ANNATBELOPP at row 481 starts in 2012 with Data till blank, and ANTBARN0 at row 483 is explicitly 2012-2013. 'Metadata-Datamängd (DCAT-AP) ' row 4 states 1990- for the register. Use the documented variable history as the table bound; this does not claim monthly delivery throughout the interval or extend individual variable bounds."

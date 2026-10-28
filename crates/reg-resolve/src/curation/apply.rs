@@ -878,6 +878,10 @@ fn source_period(record: &Record, context: &crate::OccurrenceContext<'_>) -> Opt
     match record {
         Record::Occurrence(row) => context.period(row),
         Record::Release(row) => crate::placed(row),
+        Record::Table(row) => Some((
+            row.from.clone().unwrap_or_else(|| OPEN_START.into()),
+            row.to.clone().unwrap_or_else(|| OPEN_END.into()),
+        )),
         _ => None,
     }
 }
@@ -901,9 +905,11 @@ fn apply_fields(
 ) -> Result<(), String> {
     let metadata_fields = fields;
     let fields = stated_fields(fields);
+    if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
+        return Err("set coverage/period with other fields requires separate statements".into());
+    }
     for field in fields.keys() {
         let package = match field.as_str() {
-            "coverage" => Some("D-5 (EKB)"),
             "classification" | "tags" => Some("D-9"),
             "sentinels" => Some("D (sentinels)"),
             "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
@@ -944,7 +950,7 @@ fn apply_fields(
                         | "sets"
                         | "notice"
                 ),
-                "table" => field == "description",
+                "table" => matches!(field.as_str(), "description" | "coverage"),
                 "release" => matches!(field.as_str(), "description" | "period"),
                 _ => false,
             };
@@ -967,19 +973,21 @@ fn apply_fields(
                 }
                 "notice" => {}
                 "description" if kind == "occurrence" => {}
-                "period" => {
+                "period" | "coverage" => {
                     let period = winning
                         .as_str()
                         .expect("typed period")
                         .parse::<reg_frame::address::PeriodSet>()?;
                     let spans = periods(&period);
                     let [span] = &spans[..] else {
-                        return Err("set period requires one contiguous period".into());
+                        return Err(format!("set {field} requires one contiguous period"));
                     };
                     if source_period(record, context).as_ref() == Some(span) {
                         continue;
                     }
-                    check_table_coverage(&before, span, records)?;
+                    if field == "period" {
+                        check_table_coverage(&before, span, records)?;
+                    }
                     if kind == "occurrence" && !before["release"].is_null() {
                         if before["population_valuesets"]
                             .as_array()
@@ -1042,7 +1050,12 @@ fn apply_fields(
         };
         let first_change = out.changes.len();
         for (field, winning) in &fields {
-            let (winning, losing) = if field == "period" {
+            let (winning, losing) = if field == "coverage" {
+                (
+                    json!([after["from"], after["to"]]),
+                    json!([before["from"], before["to"]]),
+                )
+            } else if field == "period" {
                 (
                     json!(period),
                     source_period(record, context).map_or(Value::Null, |p| json!(p)),
