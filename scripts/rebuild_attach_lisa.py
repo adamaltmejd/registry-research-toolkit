@@ -38,13 +38,13 @@ FAMILIES = {
 
 # D curation: exact workbook tokens, not register-name similarity. None records
 # an unresolved source, rather than substituting a provider or an upstream input.
-# RAMS subregisters: SCB AM0207, Beskrivning av statistiken 2003, section A.10:
+# RAMS subregisters: SCB AM0207, Beskrivning av statistiken 2003, section A.12:
 # https://www.scb.se/contentassets/a5f118521a3145c0bcb008ff39805e15/am0207_bs_2003.pdf
 REGISTER_ALIASES = {
     "AF": (None, "Arbetsförmedlingen is a provider; no unique catalog register."),
     "Arbetsstallen": (
-        "scb/rams",
-        "SCB RAMS: Registret över arbetsställen (CFAR), AM0207 2003 A.10.",
+        None,
+        "Workplace registers occur in both RAMS and other sources; the label is not unique.",
     ),
     "BAS": ("scb/bas", "SCB r404: Befolkningens arbetsmarknadsstatus (BAS)."),
     "BAS-Jobb": ("scb/bas", "SCB r404 includes Årsuppgifter - Jobb (r404/ids.toml)."),
@@ -78,7 +78,7 @@ REGISTER_ALIASES = {
     ),
     "Orgra": (
         "scb/rams",
-        "SCB RAMS: Registret över företag (ORGRA), AM0207 2003 A.10.",
+        "SCB RAMS: Registret över företag (ORGRA), AM0207 2003 A.12.",
     ),
     "Personer i utb.": (
         "scb/rpu",
@@ -93,7 +93,7 @@ REGISTER_ALIASES = {
     ),
     "SyssReg": (
         "scb/rams",
-        "SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.10.",
+        "SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12.",
     ),
     "UReg": (
         "scb/ureg",
