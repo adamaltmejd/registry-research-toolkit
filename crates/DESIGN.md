@@ -208,7 +208,9 @@ spelling and type. A D `set` states those.
 - **Public id** (`provider/register/variable`): stable through a per-register ledger
   (`ids.toml`) that maps each id to an anchor occurrence, so ids survive renames and
   splits. The first ledger is generated from today's slug pins. A release build refuses
-  a variable without an id.
+  a variable without an id, or a ledger id reported unplaced (no placed target) or split
+  (anchors reach several variables). The latter refusals name the ledger file, line and
+  id; dev builds keep reporting them without refusing.
 - **Row id:** renumbered every build and never exposed.
 
 **Curation.**
