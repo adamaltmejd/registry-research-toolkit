@@ -26,6 +26,7 @@ from pathlib import Path
 from rebuild_convert_cases import CaseSafety, audit_cached
 from rebuild_convert_classifications import convert as classifications
 from rebuild_convert_deferred import convert as deferred
+from rebuild_convert_groups import normalize_sets
 from rebuild_convert_identity import IdentityProjection
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -127,7 +128,7 @@ def round_summary(data):
     resolved = {
         "classification clearing (52)": "new reader binds no source classification; dropped",
         "parallel metadata (592)": "211 case aliases need no statement; 236 co-delivered and 145 ordinary declarations use set sets, preserving each column's own source metadata; disagreements use F6/ambiguity",
-        "operational_definition (191 previously deferred declarations)": "emit set operational_definition; d-set-fields adds the field; missing endpoints or conflicting donors remain separately listed",
+        "operational_definition (191 previously deferred declarations)": "emit set operational_definition; d-set-fields supplies field application in the validation integration; missing endpoints or conflicting donors remain separately listed",
         "noncalendar placement (33)": "dropped with reason D-7",
     }
     targets = {
@@ -152,7 +153,7 @@ def round_summary(data):
         "",
         f"Changed targets awaiting D-12: {len(targets)}. Register/variable names and original source lines are retained in report.json.",
         "",
-        "The d-set-fields addition of operational_definition is an implementation prerequisite, not an unresolved model decision.",
+        "The field application is supplied by d-set-fields; the model decision is resolved. The report records the exact runtime revision used for validation.",
         "",
         "| Category | Source declarations | Converted | Refused by observed lock | Dropped/no statement | Mapping |",
         "| --- | ---: | ---: | ---: | ---: | --- |",
@@ -298,6 +299,9 @@ class Converter:
         self.case_only = []
         self.field_demand = collections.Counter()
         self.selector_members = {}
+        self.coordinate_spans = {}
+        self.coordinate_labels = {}
+        self.unscoped_year_coordinates = set()
         self.identity = IdentityProjection(self.records, self.ledgers)
         self.identity_audit = collections.Counter()
         self.identity_deferred = []
@@ -415,6 +419,56 @@ class Converter:
                         covering["statement"][field] = "\n\n".join(values)
                 del statements[key]
                 self.identity_audit["coalesced_duplicate_effects"] += 1
+            while True:
+                assignments = {
+                    id(row): statements[key]["statement"]["fields"]["variable"]
+                    for key, rows in selected.items()
+                    if key in statements
+                    for row in rows
+                }
+                orphaned = self.identity.orphaned_markers(*owner, assignments)
+                concurrent = self.identity.concurrent_fold_assignments(
+                    *owner, assignments
+                )
+                removed = False
+                for key, rows in selected.items():
+                    if key not in statements:
+                        continue
+                    details = [
+                        detail for row in rows for detail in concurrent.get(id(row), [])
+                    ]
+                    if not details and not any(
+                        self.identity.group(row) in orphaned for row in rows
+                    ):
+                        continue
+                    record = statements.pop(key)
+                    self.identity_deferred.append(
+                        {
+                            "register": "/".join(owner),
+                            "variable": record["statement"]["fields"]["variable"],
+                            "sources": record["origins"],
+                            "reason": (
+                                "D-11: identity assignment merges concurrent different "
+                                "folded spellings in one table; retain separate variables"
+                                if details
+                                else "identity assignment would orphan a default gap marker; "
+                                "retain its finding"
+                            ),
+                            "conflicts": list(
+                                {
+                                    json.dumps(detail, sort_keys=True): detail
+                                    for detail in details
+                                }.values()
+                            ),
+                            "statements": 1,
+                        }
+                    )
+                    self.identity_audit[
+                        "deferred_concurrent_folds" if details else "orphan_gap_marker"
+                    ] += 1
+                    removed = True
+                if not removed:
+                    break
         self.identity_audit["before"] = before
         self.identity_audit["after"] = sum(
             "variable" in r["statement"].get("fields", {})
@@ -483,8 +537,46 @@ class Converter:
             start, end = self.span(row)
             start = "" if start == "0001-01-01" else start
             end = "" if end == "9999-12-31" else end
-            if start or end:
+            unsupported = any(
+                value and not 1900 <= int(value[:4]) <= 2099 for value in (start, end)
+            )
+            if unsupported:
+                owner = row["provider"], row["register"]
+                if owner not in self.coordinate_spans:
+                    peers = collections.defaultdict(set)
+                    for other in self.rows[owner]:
+                        peers[
+                            other["table"], fold(other["column"]), other["source_key"]
+                        ].add(self.span(other))
+                    self.coordinate_spans[owner] = peers
+                coordinate = row["table"], fold(row["column"]), row["source_key"]
+                if len(self.coordinate_spans[owner][coordinate]) != 1:
+                    raise ValueError(
+                        "unsupported selector year outside 1900-2099; removing scope would widen source occurrences"
+                    )
+                # The key/table/fold guards select exactly the same whole sources.
+                self.unscoped_year_coordinates.add((*owner, *coordinate))
+            elif start or end:
                 scope = f" @{start}..{end}"
+        owner = row["provider"], row["register"]
+        if owner not in self.coordinate_labels:
+            labels = collections.defaultdict(set)
+            for other in self.rows[owner]:
+                base = other["table"], fold(other["column"]), other["source_key"]
+                labels[(*base, None)].add(other.get("label"))
+                if other.get("release"):
+                    labels[(*base, other["release"])].add(other.get("label"))
+            self.coordinate_labels[owner] = labels
+        labels = self.coordinate_labels[owner][
+            row["table"], fold(row["column"]), row["source_key"], row.get("release")
+        ]
+        if len(labels) > 1:
+            label = row.get("label")
+            if not label or any(c in label for c in ("'", "\n", "\r")):
+                raise ValueError(
+                    "ambiguous source label cannot be expressed by an exact guard"
+                )
+            guards.append(f"label = '{label}'")
         return f"{table}: {spelling}{scope} where " + " and ".join(guards)
 
     def add(self, at, provider, register, statement):
@@ -508,6 +600,14 @@ class Converter:
                     record["statement"][field] = "\n\n".join(values)
 
     def compact(self, proposals, provider, register):
+        if all(
+            p["kind"] == "set"
+            and not (p.get("fields", {}).keys() & {"variable", "sets"})
+            for p in proposals
+        ):
+            # Assertions add source rows before scalar application. A release guard
+            # proved redundant against raw frames can select newly asserted rows.
+            return remove_covered(proposals)
         # Remove release guards only when every source occurrence of the remaining
         # selector is selected. This keeps finite-edition corrections finite.
         owner = (provider, register)
@@ -663,6 +763,13 @@ class Converter:
                 if start and end and any(a <= start and end <= b for a, b in periods):
                     selected.append(row)
             rows = selected
+        expected_labels = {
+            claim["value"]
+            for claim in entry.get("expected_fields", [])
+            if claim["name"] == "name" and claim["status"] == "value"
+        }
+        if expected_labels:
+            rows = [row for row in rows if row.get("label") in expected_labels]
         if not rows:
             raise ValueError("no exact new-frame occurrence endpoint")
         if check_case:
@@ -1101,6 +1208,8 @@ class Converter:
         refused = set()
         errors = collections.Counter()
         located = []
+        notices = []
+        refusal_lines = []
         for diagnostic in lock["refusals"]:
             match = re.match(
                 r"(?:reg-build: )?(.*curation\.toml):(\d+): (.*)", diagnostic
@@ -1108,6 +1217,15 @@ class Converter:
             if match:
                 path, line, error = match.groups()
                 record = self.locations.get((str(Path(path).resolve()), int(line)), {})
+                if error.startswith("redundant-set:"):
+                    notices.append(
+                        {
+                            "location": record.get("location", f"{path}:{line}"),
+                            "message": error,
+                            "sources": record.get("origins", []),
+                        }
+                    )
+                    continue
                 refused.update(record.get("origins", []))
                 category = re.sub(
                     r"overlapping overrides with .*", "overlapping overrides", error
@@ -1135,6 +1253,7 @@ class Converter:
                         "sources": record.get("origins", []),
                     }
                 )
+            refusal_lines.append(diagnostic)
         for entry in self.results:
             if entry["source"] in refused:
                 entry["outcome"] = "refused"
@@ -1146,6 +1265,9 @@ class Converter:
                 )
         lock["grouped_errors"] = dict(errors)
         lock["located_refusals"] = located
+        lock["stderr_lines"] = lock["refusals"]
+        lock["refusals"] = refusal_lines
+        lock["located_notices"] = notices
         dropped = collections.Counter(
             r["reason"] for r in self.results if r["outcome"] == "dropped"
         )
@@ -1155,6 +1277,11 @@ class Converter:
             "outcomes": dict(outcomes),
             "statement_counts": dict(sorted(self.counts.items())),
             "identity_audit": dict(self.identity_audit),
+            "grouping_audit": getattr(self, "grouping_audit", {}),
+            "grouping_deferred": getattr(self, "grouping_deferred", []),
+            "unsupported_year_coordinates_safely_unscoped": len(
+                self.unscoped_year_coordinates
+            ),
             "identity_deferred": self.identity_deferred,
             "case_audit": dict(self.case_safety.counts),
             "case_conflicts": self.case_safety.conflicts,
@@ -1234,7 +1361,7 @@ class Converter:
                 if key.startswith("set.fields.")
             ],
             "",
-            "The counts include translated parallel grouping (`sets`) and delivered donor wording (`operational_definition`). The latter is emitted for the upcoming d-set-fields implementation. Calendar corrections use `period`; the 33 noncalendar declarations stay dropped as D-7. Classification clearing and parallel metadata semantics are resolved below.",
+            "The counts include translated parallel grouping (`sets`) and delivered donor wording (`operational_definition`). Field application is tested with the d-set-fields integration. Calendar corrections use `period`; the 33 noncalendar declarations stay dropped as D-7. Classification clearing and parallel metadata semantics are resolved below.",
             "",
             "## Identity and case audit",
             "",
@@ -1348,6 +1475,7 @@ def main():
             result["reason"] = reason
         converter.results.append(result)
     converter.normalize_identity()
+    normalize_sets(converter)
     converter.write()
     lock = {"status": "not run", "refusals": []}
     converter.report(lock)

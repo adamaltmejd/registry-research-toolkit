@@ -33,6 +33,7 @@ class IdentityProjection:
         self.periods = {}
         self.groups = {}
         self.members = {}
+        self.marker_groups = collections.defaultdict(dict)
         self.provider_slugs = collections.defaultdict(set)
         for (provider, register), ledger in ledgers.items():
             for slug in ledger.get("variables", {}):
@@ -67,6 +68,69 @@ class IdentityProjection:
         if self.provider_slugs.get((provider, slug)):
             return "only-other-register"
         return "absent-everywhere"
+
+    def orphaned_markers(self, provider, register, assignments):
+        """Default gap-marker identities the complete assignment phase removes."""
+        surviving_slugs = {
+            assignments.get(id(row), self.default_slug(row))
+            for (p, r, _), rows in self.members.items()
+            if (p, r) == (provider, register)
+            for row in rows
+            if self.status(row) == "used"
+        } - {None, "none"}
+        orphaned = {}
+        for group, slug in self.marker_groups[provider, register].items():
+            if slug is not None:
+                survives = slug in surviving_slugs
+            else:
+                # An unminted default slug cannot be named by a valid assignment.
+                survives = any(
+                    self.status(row) == "used" and id(row) not in assignments
+                    for row in self.members[provider, register, group]
+                )
+            if not survives:
+                orphaned[group] = slug
+        return orphaned
+
+    def concurrent_fold_assignments(self, provider, register, assignments):
+        """Assignments joining concurrent different folds in one table (D-11)."""
+        by_target = collections.defaultdict(list)
+        for (p, r, _), rows in self.members.items():
+            if (p, r) != (provider, register):
+                continue
+            for row in rows:
+                if self.status(row) != "used":
+                    continue
+                target = assignments.get(id(row), self.default_slug(row))
+                if target is None or target == "none":
+                    continue
+                lo, hi = self.period(row)
+                by_target[row["table"], target].append(
+                    (lo, hi, id(row), row["column"].lower())
+                )
+        conflicts = collections.defaultdict(list)
+        for (table, target), events in by_target.items():
+            if not any(rid in assignments for _, _, rid, _ in events):
+                continue
+            active = {}
+            for lo, hi, rid, fold in sorted(events):
+                active = {i: v for i, v in active.items() if v[0] >= lo}
+                for other, (_, other_fold) in active.items():
+                    if fold == other_fold:
+                        continue
+                    detail = {
+                        "variable": target,
+                        "table": table,
+                        "folds": sorted({fold, other_fold}),
+                    }
+                    for contributor in (rid, other):
+                        if (
+                            contributor in assignments
+                            and detail not in conflicts[contributor]
+                        ):
+                            conflicts[contributor].append(detail)
+                active[rid] = hi, fold
+        return dict(conflicts)
 
     def _project(self, records, ledger):
         register = next((r for r in records if r["kind"] == "register"), {})
@@ -190,3 +254,13 @@ class IdentityProjection:
                 self.slugs[id(row)] = pinned.get(group)
             elif self.status(row) in {"used", "shadowed", "rejected"}:
                 self.statuses[id(row)] = "withheld"
+        key_groups = collections.defaultdict(set)
+        for group in members:
+            key_groups[group[0]].add(group)
+        for row in rows:
+            groups = key_groups[row["source_key"]]
+            if self.status(row) == "gap_marker" and len(groups) == 1:
+                group = next(iter(groups))
+                self.marker_groups[row["provider"], row["register"]][group] = (
+                    pinned.get(group)
+                )

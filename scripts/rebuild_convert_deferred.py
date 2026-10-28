@@ -1,6 +1,7 @@
 """One-shot deferred conversions; deleted at milestone F (REBUILD.md)."""
 
 import re
+from datetime import date
 
 D3B_SCOPE = {
     "errata.occurrence_period": ["period"],
@@ -19,10 +20,33 @@ def period(scope):
     tokens = []
     for interval in scope["intervals"]:
         start, end = interval.get("start", ""), interval.get("end", "")
-        if not all(
-            not x or re.fullmatch(r"\d{4}(?:-\d{2}-\d{2})?", x) for x in (start, end)
-        ):
-            raise ValueError("occurrence coverage has an unsupported calendar bound")
+        # The frame sentinels mean open time, not literal period-grammar years.
+        start = "" if start == "0001-01-01" else start
+        end = "" if end == "9999-12-31" else end
+        for value in (start, end):
+            if not value:
+                continue
+            if not re.fullmatch(r"[0-9]{4}(?:-[0-9]{2}-[0-9]{2})?", value):
+                raise ValueError(
+                    "occurrence coverage has an unsupported calendar bound"
+                )
+            if not 1900 <= int(value[:4]) <= 2099:
+                raise ValueError(
+                    "period year outside 1900..2099 has no faithful grammar expression"
+                )
+            if len(value) > 4:
+                try:
+                    date.fromisoformat(value)
+                except ValueError as error:
+                    raise ValueError(
+                        "occurrence coverage has an invalid calendar day"
+                    ) from error
+        if not start and not end:
+            raise ValueError("fully open coverage has no period-grammar expression")
+        lower = start + "-01-01" if len(start) == 4 else start
+        upper = end + "-12-31" if len(end) == 4 else end
+        if lower and upper and lower > upper:
+            raise ValueError("occurrence coverage bounds are reversed")
         tokens.append(start if start == end else f"{start}..{end}")
     return ",".join(tokens)
 
@@ -50,15 +74,45 @@ def convert(converter, provider, register, kind, entry, pins, variants):
         if replacement["kind"] == "not_applicable":
             replacement = entry["edition_scope"]
         value = period(replacement)
+        if "," in value:
+            raise ValueError(
+                "noncontiguous occurrence coverage cannot be expressed by set period"
+            )
         rows = converter.match(provider, register, entry, pins, variants)
-        return [
-            {
-                "kind": "set",
-                "subject": converter.selector(row),
-                "fields": {"period": value},
+        interval = replacement["intervals"][0]
+        start, end = interval.get("start", ""), interval.get("end", "")
+        start = (start + "-01-01" if len(start) == 4 else start) or "0001-01-01"
+        end = (end + "-12-31" if len(end) == 4 else end) or "9999-12-31"
+        for row in rows:
+            parent = converter.context_tables.get(
+                (provider, register, row["table"]), {}
+            )
+            register_bounds = converter.context_registers.get((provider, register), {})
+            lower = parent.get("from") or register_bounds.get("from")
+            upper = parent.get("to") or register_bounds.get("to")
+            if (lower and start < lower) or (upper and end > upper):
+                raise ValueError(
+                    "occurrence period requires an explicit parent coverage correction; no scope is shrunk"
+                )
+        subjects = [converter.selector(row) for row in rows]
+        proposals = []
+        for row, subject in zip(rows, subjects, strict=True):
+            labels = {
+                peer.get("label")
+                for peer, other in zip(rows, subjects, strict=True)
+                if other == subject
             }
-            for row in rows
-        ]
+            if len(labels) > 1:
+                label = row.get("label")
+                if not label or any(char in label for char in "'\n\r"):
+                    raise ValueError(
+                        "period correction needs a distinguishable literal label guard"
+                    )
+                subject += f" and label = '{label}'"
+            proposals.append(
+                {"kind": "set", "subject": subject, "fields": {"period": value}}
+            )
+        return proposals
     if kind == "errata.classification_reference":
         raise ValueError("new reader binds no source classification")
     if kind == "representation.parallel":
@@ -163,9 +217,14 @@ def convert(converter, provider, register, kind, entry, pins, variants):
         _, slug = table(converter, provider, register, entry["variant"], variants)
         name = entry["name"]
         if re.fullmatch(r"\d{4}", name):
-            value = name
+            value = period(
+                {"kind": "intervals", "intervals": [{"start": name, "end": name}]}
+            )
         elif re.fullmatch(r"\d{4} - \d{4}", name):
-            value = name.replace(" - ", "..")
+            start, end = name.split(" - ")
+            value = period(
+                {"kind": "intervals", "intervals": [{"start": start, "end": end}]}
+            )
         else:
             raise ValueError(
                 "release name needs reviewed coverage interpretation; do not infer coverage from its token shape"
@@ -302,7 +361,12 @@ def delivered(converter, provider, register, entry, variants):
             raise ValueError(
                 "D-12: delivered occurrence has no unique existing unqualified ledger anchor"
             )
-        scope = f"{release['from']}..{release['to']}"
+        scope = period(
+            {
+                "kind": "intervals",
+                "intervals": [{"start": release["from"], "end": release["to"]}],
+            }
+        )
         if "'" in release["release"]:
             raise ValueError("delivered release cannot be expressed by address guard")
         proposals.append(
