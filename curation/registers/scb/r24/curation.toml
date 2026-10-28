@@ -982,3 +982,15 @@ kind = "set"
 subject = "var:isced-f-2013"
 fields = { "classification" = "class/isced-f/isced-f2013" }
 evidence = "reg_meta_build/curation/classifications/ISCED-F2013.toml:13\nreg_meta_build/curation/classifications/ISCED-F2013.toml:24\n\ncurated:#494 ISCED-F 2013 field-of-education labels\n\nLegacy exact value-set label: ISCED-F 2013 - Inriktning"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "tags" = ["geography"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:201"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva"
+fields = { "tags" = ["education"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:119"

@@ -172,3 +172,411 @@ kind = "set"
 subject = "mfr: bvikt"
 fields = { "description" = "Barnets födelsevikt i gram." }
 evidence = "reg_meta_build/curation/registers/sos/mfr.toml:483\n\nTerminal punctuation only; retain differing original data types. Original rows row:56 and row:250 provide the positive peer wording; preserve originals, periods, coding and all other fields."
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-1"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-10"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-11"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-12"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-2"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-3"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-4"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-5"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-6"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-7"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-8"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-barnet-9"
+fields = { "sets" = ["atgardskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:39"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-1"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-10"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-11"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-12"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-2"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-3"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-4"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-5"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-6"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-7"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-8"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:atgardskod-forlosta-9"
+fields = { "sets" = ["atgardskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:53"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-1"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-2"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-3"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-4"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-5"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-6"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-7"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-diagnoskod-bk-8"
+fields = { "sets" = ["barnets-diagnoskod-bk"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:14"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-1"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-10"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-11"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-12"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-13"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-14"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-15"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-16"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-17"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-18"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-19"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-2"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-20"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-3"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-4"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-5"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-6"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-7"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-8"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-barnet-9"
+fields = { "sets" = ["diagnoskod-barnet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:25"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-1"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-10"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-11"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-12"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-2"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-3"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-4"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-5"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-6"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-7"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-8"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-forlosta-9"
+fields = { "sets" = ["diagnoskod-forlosta"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:60"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-1"
+fields = { "sets" = ["diagnoskod-graviditet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-2"
+fields = { "sets" = ["diagnoskod-graviditet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-3"
+fields = { "sets" = ["diagnoskod-graviditet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"
+
+[[statement]]
+kind = "set"
+subject = "var:diagnoskod-graviditet-4"
+fields = { "sets" = ["diagnoskod-graviditet"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/mfr.toml:67"

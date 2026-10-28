@@ -792,32 +792,44 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         }
         Entity::Variable(ri, v) => pid_of_variable(&catalog.registers[ri], v),
     };
-    let mut memberships = BTreeMap::<(usize, String), BTreeSet<usize>>::new();
+    let mut memberships = BTreeMap::<(Option<usize>, String), BTreeSet<(usize, usize)>>::new();
     for (ri, register) in catalog.registers.iter().enumerate() {
         for (variable, resolved) in register.variables.iter().enumerate() {
-            for set in &resolved.sets {
-                memberships
-                    .entry((ri, set.clone()))
-                    .or_default()
-                    .insert(variable);
+            for (scope, names) in [(Some(ri), &resolved.sets), (None, &resolved.tags)] {
+                for name in names {
+                    memberships
+                        .entry((scope, name.clone()))
+                        .or_default()
+                        .insert((ri, variable));
+                }
             }
         }
     }
-    for (i, ((ri, set), members)) in memberships.into_iter().enumerate() {
-        let reg_pid = pid_of_register(&catalog.registers[ri]);
+    for (i, ((scope, name), members)) in memberships.into_iter().enumerate() {
+        let (kind, pid, register) = scope.map_or_else(
+            || ("tag", format!("tag/{name}"), Cell::Null),
+            |ri| {
+                let reg_pid = pid_of_register(&catalog.registers[ri]);
+                (
+                    "set",
+                    format!("{reg_pid}/{name}"),
+                    Cell::Int(register_id[&reg_pid]),
+                )
+            },
+        );
         let set_id = id(i);
         rows.push(
             "var_set",
             vec![
                 Cell::Int(set_id),
-                Cell::Str("set".into()),
-                Cell::Str(format!("{reg_pid}/{set}")),
-                Cell::Int(register_id[&reg_pid]),
-                Cell::Text(set),
+                Cell::Str(kind.into()),
+                Cell::Str(pid),
+                register,
+                Cell::Text(name),
                 Cell::Null,
             ],
         );
-        for (ord, v) in members.into_iter().enumerate() {
+        for (ord, (ri, v)) in members.into_iter().enumerate() {
             rows.push(
                 "var_set_member",
                 vec![

@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "var:personnrf1"
+fields = { "sets" = ["personnrf"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/flergenreg.toml:13"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrf2"
+fields = { "sets" = ["personnrf"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/flergenreg.toml:13"

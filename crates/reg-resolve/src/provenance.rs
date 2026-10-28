@@ -314,7 +314,7 @@ pub fn finalize(
                 result.occurrence_masks.insert((ri, oi), mask);
             }
             for mut value in values {
-                if value.field == "sets" {
+                if matches!(value.field.as_str(), "sets" | "tags") {
                     if let Some(variable) = occurrence.variable {
                         value.subject = Subject::Variable(ri, variable);
                         result.values.push(value);
@@ -325,7 +325,7 @@ pub fn finalize(
             }
         }
     }
-    // One variable-level set value can be reached through several selected occurrences.
+    // One variable-level membership value can be reached through several selected occurrences.
     result
         .values
         .sort_by(|a, b| (&a.subject, &a.field).cmp(&(&b.subject, &b.field)));

@@ -2735,3 +2735,27 @@ kind = "set"
 subject = "hushall: {kommun,lan} @2025-12-31"
 fields = { "classification" = "class/lkf/lkf2026" }
 evidence = "reg_meta_build/curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap1"
+fields = { "sets" = ["personnrap"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:131"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrap2"
+fields = { "sets" = ["personnrap"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:131"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard1"
+fields = { "sets" = ["personnrvard"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:123"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrvard2"
+fields = { "sets" = ["personnrvard"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:123"

@@ -16,3 +16,15 @@ kind = "set"
 subject = "table:ekb-manad"
 fields = { coverage = "1990.." }
 evidence = "catalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Deldatamängder' row 3 starts EKB_MANAD in 2014 with no end, but 'Metadata - Variabelnivå' rows 480-603 document earlier EKB_MANAD variables: ALDER at row 480 starts in 1990 with Data till blank, ANNATBELOPP at row 481 starts in 2012 with Data till blank, and ANTBARN0 at row 483 is explicitly 2012-2013. 'Metadata-Datamängd (DCAT-AP) ' row 4 states 1990- for the register. Use the documented variable history as the table bound; this does not claim monthly delivery throughout the interval or extend individual variable bounds."
+
+[[statement]]
+kind = "set"
+subject = "var:ekbantmanad"
+fields = { "tags" = ["transfers"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:79"
+
+[[statement]]
+kind = "set"
+subject = "var:ekbbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:67"

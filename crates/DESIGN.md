@@ -305,17 +305,19 @@ Accepting one requires reviewed curation and a premise lock.
   releases stays on those entities. `coverage` replaces a table's source bound and
   requires a table selector and one contiguous period; it lives in the table's existing
   bounds. The overridden source bound remains evidence and the review premise, so a
-  source-bound change reopens review. `sets` belongs to variables; typed curation
-  decisions resolve to variable memberships. `notice` resolves to a finding on its
-  selected subject. The emitter serializes these resolved facts and never derives them
-  from provenance. Occurrence descriptions live in the existing `override` table and are
-  returned with segment evidence; they do not replace definitions or operational
-  definitions. No field gets a second home. A value-set override chooses the
-  occurrence's own set while retaining its source population alternatives as evidence.
-  Unsupported entity/field combinations are located refusals. Type corrections that
-  change the family participate in F6 and ambiguity resolution; length corrections do
-  not. Corrected conflict markers clear while the original premises remain evidence.
-  Format is carried and published without changing agreement or F1 findings.
+  source-bound change reopens review. `sets` and `tags` belong to variables; typed
+  curation decisions resolve to variable memberships. Tags use the existing variable tag
+  storage; register tags have no home and remain deferred rather than propagating to
+  variables. `notice` resolves to a finding on its selected subject. The emitter
+  serializes these resolved facts and never derives them from provenance. Occurrence
+  descriptions live in the existing `override` table and are returned with segment
+  evidence; they do not replace definitions or operational definitions. No field gets a
+  second home. A value-set override chooses the occurrence's own set while retaining its
+  source population alternatives as evidence. Unsupported entity/field combinations are
+  located refusals. Type corrections that change the family participate in F6 and
+  ambiguity resolution; length corrections do not. Corrected conflict markers clear
+  while the original premises remain evidence. Format is carried and published without
+  changing agreement or F1 findings.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -357,7 +359,8 @@ Accepting one requires reviewed curation and a premise lock.
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
-  version follows occurrences into segments and orders. `tags` remains refused with D-9.
+  version follows occurrences into segments and orders. Variable `tags` applies as
+  normalized membership, independently of identity, binding, ordering and peers.
   Sentinels, roles and unit types remain deferred to D's planned sentinel and
   nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
   entity-name and search curation.
@@ -648,14 +651,19 @@ overlapping curated overrides are refused at both locations.
   change membership. These rules describe this source's layout; headings remain
   reviewable candidates and broad parents never become sets automatically. Each
   `Grundregister` cell is a `derived_from` link from the row's variable to each register
-  it names (split at `,`, `;` and line breaks), matched by name, so LISA's abbreviations
-  (`RTB`) stay unresolved until D curation resolves them. `Individ` repeats the
-  year-independent columns with blank year cells; the year-less sheet's row stands, so
-  `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables (birth
-  country, deaths, migration) under headings, each keyed by `PersonNr`; the reader keeps
-  the sheet as one table and any later partition requires whole-occurrence `set table`.
-  Labels keep their footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit
-  cannot be told from a name's own (`SNI92`), and the footnotes are not read.
+  it names (the reader splits at `,`, `;` and line breaks). D curation in the attach
+  script splits `/` and `&` lists and strips each source's `Härledd-` prefix, then uses
+  an exact curated register-alias table with evidence notes. Several sources can resolve
+  to one register endpoint. Unknown, ambiguous or unpublished sources remain reported
+  with reasons; a proved source in the same list still links. The attachment report
+  lists endpoints and unresolved sources per original text, distinct emitted links and
+  newly added links. `Individ` repeats the year-independent columns with blank year
+  cells; the year-less sheet's row stands, so `Individ` keeps its 1990– span.
+  `Individ årsoberoende` holds three tables (birth country, deaths, migration) under
+  headings, each keyed by `PersonNr`; the reader keeps the sheet as one table and any
+  later partition requires whole-occurrence `set table`. Labels keep their footnote
+  markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a name's
+  own (`SNI92`), and the footnotes are not read.
 - **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
   in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
   `Gasföretag` names some 90). A spelling alone then reaches several variables, and the
@@ -1233,8 +1241,14 @@ substitutes a version or reinterprets codes.
 
 ## Sets and tags
 
-Neither is built in the v4 catalog yet (milestone D builds them); the maintainer rulings
-stand.
+Variable membership is curated with `set sets` and `set tags` and emitted through the
+existing membership storage. The D-9 converter combines explicit legacy groups with
+existing memberships into one setter per final variable. It converts membership only:
+axes, filters, value labels, coordinates, delivery-column hints and tag rank/star/notes
+are dropped with a named reason in its source-located report. Useful presentation
+metadata is deferred to the webapp rebuild (source recorded in REBUILD.md). Register tag
+memberships are deferred because the catalog has no register tag home; they are never
+expanded onto variables. Tag search is not implemented in D-9.
 
 **A set** (formerly a concept group) lies within one register and is the single-register
 picking unit: one concept in one register, gathering what a researcher looking for it

@@ -247,6 +247,7 @@ pub struct ResolvedRelease {
 pub struct Variable {
     pub slug: String,
     pub sets: BTreeSet<String>,
+    pub tags: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -1143,6 +1144,7 @@ pub fn resolve(
         );
         variables.push(Variable {
             sets: BTreeSet::new(),
+            tags: BTreeSet::new(),
             slug: if *assigned {
                 key.clone()
             } else {
