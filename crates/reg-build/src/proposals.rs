@@ -112,6 +112,9 @@ fn continuations(registers: &mut [Resolved], linked: &Linked) -> Result<(), Stri
             if v.hull.0 == reg_frame::OPEN_START {
                 continue;
             }
+            let Some(subjects) = addresses[ri][vi].as_ref().filter(|s| !s.is_empty()) else {
+                continue;
+            };
             let previous = reg_core::prev_iso_day(&v.hull.0);
             let mut candidates = BTreeSet::new();
             for key in evidence_keys(v) {
@@ -164,14 +167,18 @@ fn continuations(registers: &mut [Resolved], linked: &Linked) -> Result<(), Stri
                 }
             }
             ranked.sort();
-            for (rank, (std::cmp::Reverse(score), pi, pv, label, values, spelling, dtype)) in
-                ranked.into_iter().take(3).enumerate()
+            for (rank, (std::cmp::Reverse(score), pi, pv, label, values, spelling, dtype)) in ranked
+                .into_iter()
+                .filter(|(_, pi, pv, ..)| {
+                    registers[*pi].variables[*pv].pinned
+                        || (ri == *pi
+                            && addresses[*pi][*pv].as_ref().is_some_and(|s| !s.is_empty()))
+                })
+                .take(3)
+                .enumerate()
             {
                 let prior = &registers[pi];
                 let predecessor = &prior.variables[pv];
-                let Some(subjects) = addresses[ri][vi].as_ref().filter(|s| !s.is_empty()) else {
-                    continue;
-                };
                 let evidence = format!(
                     "F3 candidate: adjacent documentation; label={label}, value_set={values}, spelling={spelling}, type_family={dtype}; score={score}"
                 );
