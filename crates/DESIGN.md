@@ -599,38 +599,38 @@ overlapping curated overrides are refused at both locations.
   Workbook wording supplies occurrence descriptions only where no curated description
   exists; SCB labels and definitions stand. Evidenced sensitivity differences use
   occurrence setters, lineage uses `derived_from`, and individually reviewed quantities
-  and codings of one concept use one consolidated `sets` setter per final variable. A
-  section heading supplies context, not membership. Distinct benefits do not form a set
-  merely because they share a heading; notes, empty or broad parents and singletons
-  supply no set. Unmatched rows and period mismatches remain reported gaps, never
-  invented deliveries or spelling equivalences. Document subjects and lineage endpoints
-  use the same attachment map. The workbook reader remains available for inspection; its
-  standalone register is retired from publication. The reader also returns a
-  source-ordered section → retained rows map, separate from the frame, exposed by
-  `reg-build read` as `.sections.json`. Each heading, parent, note and unheaded block
-  carries its source locator; membership lists physical retained row locators once, even
-  when a year cell emits several occurrences. This is inspection evidence, not curation
-  or automatic sets. Text-only cells in the column-name column are candidates. Source
-  font size, emphasis and bottom borders distinguish headings from notes: body-sized
-  italic text is a note unless it introduces undated rows; a smaller continuation
-  closing an adjacent larger heading's border band is a note. Calamine exposes no font
-  metadata, so the reader reads styles from the same pinned file's XML, using its
-  relationships rather than assuming worksheet filenames. No heading spelling, row
-  number or style-id table is encoded. A heading followed by another heading before any
-  data is a parent; retained counts do not turn a repeated timeless heading into a
-  parent. On the first dated row after undated rows, membership returns to an unheaded
-  block instead of inheriting the timeless heading. Notes never change membership. These
-  rules describe this source's layout; headings remain reviewable candidates and broad
-  parents never become sets automatically. Each `Grundregister` cell is a `derived_from`
-  link from the row's variable to each register it names (split at `,`, `;` and line
-  breaks), matched by name, so LISA's abbreviations (`RTB`) stay unresolved until D
-  curation resolves them. `Individ` repeats the year-independent columns with blank year
-  cells; the year-less sheet's row stands, so `Individ` keeps its 1990– span.
-  `Individ årsoberoende` holds three tables (birth country, deaths, migration) under
-  headings, each keyed by `PersonNr`; the reader keeps the sheet as one table and any
-  later partition requires whole-occurrence `set table`. Labels keep their footnote
-  markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a name's
-  own (`SNI92`), and the footnotes are not read.
+  and codings of one concept use one consolidated `sets` setter per final variable.
+  Headings yield reviewable candidates from the reader's section map, and adopted sets
+  are ordinary curation. Distinct benefits do not form a set merely because they share a
+  heading; notes, empty or broad parents and singletons supply no set. Unmatched rows
+  and period mismatches remain reported gaps, never invented deliveries or spelling
+  equivalences. Document subjects and lineage endpoints use the same attachment map. The
+  workbook reader remains available for inspection; its standalone register is retired
+  from publication. The reader also returns a source-ordered section → retained rows
+  map, separate from the frame, exposed by `reg-build read` as `.sections.json`. Each
+  heading, parent, note and unheaded block carries its source locator; membership lists
+  physical retained row locators once, even when a year cell emits several occurrences.
+  This is inspection evidence, not curation or automatic sets. Text-only cells in the
+  column-name column are candidates. Source font size, emphasis and bottom borders
+  distinguish headings from notes: body-sized italic text is a note unless it introduces
+  undated rows; a smaller continuation closing an adjacent larger heading's border band
+  is a note. Calamine exposes no font metadata, so the reader reads styles from the same
+  pinned file's XML, using its relationships rather than assuming worksheet filenames.
+  No heading spelling, row number or style-id table is encoded. A heading followed by
+  another heading before any data is a parent; retained counts do not turn a repeated
+  timeless heading into a parent. On the first dated row after undated rows, membership
+  returns to an unheaded block instead of inheriting the timeless heading. Notes never
+  change membership. These rules describe this source's layout; headings remain
+  reviewable candidates and broad parents never become sets automatically. Each
+  `Grundregister` cell is a `derived_from` link from the row's variable to each register
+  it names (split at `,`, `;` and line breaks), matched by name, so LISA's abbreviations
+  (`RTB`) stay unresolved until D curation resolves them. `Individ` repeats the
+  year-independent columns with blank year cells; the year-less sheet's row stands, so
+  `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables (birth
+  country, deaths, migration) under headings, each keyed by `PersonNr`; the reader keeps
+  the sheet as one table and any later partition requires whole-occurrence `set table`.
+  Labels keep their footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit
+  cannot be told from a name's own (`SNI92`), and the footnotes are not read.
 - **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
   in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
   `Gasföretag` names some 90). A spelling alone then reaches several variables, and the

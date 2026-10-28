@@ -19,7 +19,7 @@ import re
 import tomllib
 from pathlib import Path
 
-from rebuild_convert import ROOT, Converter, literal
+from rebuild_convert import ROOT, Converter, literal, table_slug
 from rebuild_convert_cases import parse_selector, period_intervals
 from rebuild_convert_groups import final_variables, normalize_sets
 from rebuild_convert_identity import IdentityProjection
@@ -45,6 +45,49 @@ def records(path):
 
 def base(path):
     return path.read_text().split(MARKER)[0].rstrip() + "\n"
+
+
+def heading_candidates(sections, targets_by_row, statements):
+    memberships = collections.defaultdict(set)
+    for statement in statements:
+        if statement["kind"] != "set":
+            continue
+        for slug in statement.get("fields", {}).get("sets", []):
+            if not slug.startswith("lisa-"):
+                continue
+            subject = statement["subject"]
+            if not subject.startswith("var:"):
+                raise ValueError(
+                    f"{slug}: expected a final variable subject: {subject}"
+                )
+            memberships[slug].add(subject.removeprefix("var:"))
+    result = []
+    for section in sections:
+        targets = set().union(*(targets_by_row[r["at"]] for r in section["rows"]))
+        item = {
+            "at": section["locator"]["at"],
+            "heading": section["text"],
+            "kind": section["kind"],
+            "candidates": sorted(targets),
+        }
+        if section["kind"] == "heading":
+            slug = "lisa-" + table_slug(section["text"].rstrip(":"))
+            curated = memberships[slug]
+            retained = targets & curated
+            item.update(
+                set=slug,
+                decision=(
+                    "rejected"
+                    if not retained
+                    else "adopted"
+                    if curated == targets
+                    else "narrowed"
+                ),
+                retained=sorted(retained),
+                curated_outside_candidate=sorted(curated - targets),
+            )
+        result.append(item)
+    return result
 
 
 def main():
@@ -293,6 +336,10 @@ def main():
             target = effective.get(id(snapshot.rows[n][0]))
             if target in used:
                 endpoints[source_rows[at][0]["source_key"]].add(f"var:{target}")
+
+    report["headings"] = heading_candidates(
+        sections, targets_by_row, tomllib.loads(path.read_text())["statement"]
+    )
 
     # Exact register names, public ledger names and source-stated parenthesized
     # abbreviations are evidence; similar strings and compound source texts are not.
