@@ -45,11 +45,12 @@ pub(crate) fn changes(
             }
             let day = b.period.0.as_str();
             let table = table_name(a.table);
-            // A type or length counts only when both sides state one: an unstated or
-            // conflicting value (F6 records the conflict) is not a change of type.
-            let dtypes_differ = matches!((&a.dtype, &b.dtype), (Some(x), Some(y)) if x != y);
-            let lengths_differ = matches!((a.length, b.length), (Some(x), Some(y)) if x != y);
-            if dtypes_differ || lengths_differ {
+            // Unstated or conflicting types do not state a family change.
+            let families_differ = matches!(
+                (super::family(a.dtype.as_deref()), super::family(b.dtype.as_deref())),
+                (Some(x), Some(y)) if x != y
+            );
+            if families_differ {
                 push(
                     v,
                     "F1:type-change",

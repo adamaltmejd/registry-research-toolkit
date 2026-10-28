@@ -16,15 +16,15 @@
 //!   non-primary release whose key the primary also documents is shadowed, whatever its
 //!   spelling; a key only a non-primary release documents is used, in a `preliminary`
 //!   segment. Editions that disagree on a
-//!   key's spellings or types are F7.
+//!   key's spellings or type families are F7.
 //! - **Identity.** Occurrences with one source key are one variable, unless the key
 //!   covers two folded spellings in overlapping periods anywhere in the register, among
 //!   used occurrences (after shadowing): then it splits by spelling. A key documented only without a
 //!   column is no variable (F5).
 //! - **Segments.** Per variable and table, maximal runs of one form. A run where the
-//!   variable's own occurrences disagree on label, type or value set, or where another
+//!   variable's own occurrences disagree on label, type family or value set, or where another
 //!   variable claims the same folded spelling, is ambiguous (F2).
-//!   A type-only disagreement under one source key and folded spelling instead keeps
+//!   A family-only disagreement under one source key and folded spelling instead keeps
 //!   the type unset and raises a segment source-conflict review (F6).
 //! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
 //!   release), and the days inside a variable's hull a release covers without the
@@ -46,6 +46,7 @@ use reg_core::{
 };
 use reg_frame::{
     Locator, OPEN_END, OPEN_START, Occurrence, Record, Register, Release, Table, ValueSet,
+    type_family,
 };
 use serde::Serialize;
 
@@ -396,6 +397,16 @@ pub fn resolve(
             _ => None,
         })
         .collect();
+    for o in &occurrences {
+        if let Some(dtype) = &o.dtype
+            && type_family(dtype).is_none()
+        {
+            return Err(format!(
+                "{}:{}: unmapped dtype {dtype:?}",
+                o.locator.input, o.locator.at
+            ));
+        }
+    }
     let release_records: Vec<&Release> = records
         .iter()
         .filter_map(|r| match r {
@@ -691,7 +702,7 @@ pub fn resolve(
                 .or_default()
                 .insert((
                     fold_identity(&r.occurrence.column),
-                    r.occurrence.dtype.as_deref(),
+                    family(r.occurrence.dtype.as_deref()),
                 ));
         }
     }
@@ -968,17 +979,20 @@ pub fn resolve(
                         conflicts.insert(name.to_owned());
                     }
                 }
-                let (length, length_conflict) = reg_core::agreed_length(
-                    covering.iter().map(|&i| resolved[i].occurrence.length),
-                );
-                if length_conflict {
-                    conflicts.insert("length".to_owned());
-                }
+                let widest = covering
+                    .iter()
+                    .map(|&i| &resolved[i].occurrence)
+                    .filter(|o| o.dtype.is_some())
+                    .max_by_key(|o| &o.dtype);
+                let length = covering
+                    .iter()
+                    .filter_map(|&i| resolved[i].occurrence.length)
+                    .max();
                 let segment = Segment {
                     table: t,
                     period,
                     spelling: o.column.clone(),
-                    dtype: agreed(|f| &f.dtype),
+                    dtype: agreed(|f| &f.dtype).and_then(|_| widest.and_then(|o| o.dtype.clone())),
                     length,
                     format: o.format.clone(),
                     valueset: agreed(|f| &f.valueset),
@@ -995,6 +1009,8 @@ pub fn resolve(
                     {
                         prev.period.1 = segment.period.1;
                         prev.spelling = segment.spelling;
+                        prev.dtype = prev.dtype.take().max(segment.dtype);
+                        prev.length = prev.length.max(segment.length);
                         runs.len() - 1
                     }
                     _ => {
@@ -1174,7 +1190,7 @@ pub fn resolve(
                     subject: Subject::Segment(v, s),
                     period: Some(segment.period.clone()),
                     message: format!(
-                        "{}: its occurrences disagree only on type; type left unset",
+                        "{}: its occurrences disagree only on type family; type left unset",
                         segment.spelling
                     ),
                 });
@@ -1384,17 +1400,21 @@ fn form(r: &ResolvedOccurrence) -> Form {
     let o = &r.occurrence;
     Form::new(
         o.label.as_deref(),
-        o.dtype.as_deref(),
+        family(o.dtype.as_deref()),
         o.valueset.as_deref(),
     )
+}
+
+/// Called only after the source/curated occurrences have passed dtype validation.
+fn family(dtype: Option<&str>) -> Option<&'static str> {
+    dtype.map(|t| type_family(t).expect("validated dtype"))
 }
 
 fn same_form(a: &Segment, b: &Segment) -> bool {
     fold_identity(&a.spelling) == fold_identity(&b.spelling)
         && (
             a.state,
-            &a.dtype,
-            a.length,
+            family(a.dtype.as_deref()),
             &a.format,
             &a.valueset,
             a.coded,
@@ -1403,8 +1423,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             a.role,
         ) == (
             b.state,
-            &b.dtype,
-            b.length,
+            family(b.dtype.as_deref()),
             &b.format,
             &b.valueset,
             b.coded,

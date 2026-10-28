@@ -328,6 +328,20 @@ pub fn read(
             also: Vec::new(),
             conflicts: Vec::new(),
         };
+        let family = |o: &Occurrence| {
+            o.dtype
+                .as_deref()
+                .map(|t| {
+                    reg_frame::type_family(t).ok_or_else(|| {
+                        error(
+                            &o.locator.input,
+                            format!("{}: unmapped dtype {t:?}", o.locator.at),
+                        )
+                    })
+                })
+                .transpose()
+        };
+        let occurrence_family = family(&occurrence)?;
         if let Some(c) = get(cvid) {
             let c = c
                 .parse()
@@ -350,8 +364,7 @@ pub fn read(
                         first.operational_definition != occurrence.operational_definition,
                     ),
                     ("unit", first.unit != occurrence.unit),
-                    ("dtype", first.dtype != occurrence.dtype),
-                    ("length", first.length != occurrence.length),
+                    ("dtype", family(first)? != occurrence_family),
                 ];
                 for (field, differs) in differs {
                     if differs && !first.conflicts.iter().any(|f| f == field) {

@@ -1,5 +1,5 @@
 {
-  "note": "`len` has a final year release (`Kod` length 2) and a final second-half release (`Kod` length 3) for 2019, so the two releases overlap over 2019-H2 with different lengths. That piece's length is null, and the entry, whose latest piece it is, carries null, neither 2 nor 3. Fails if the entry carries 2 or 3 (a length picked from one of two disagreeing releases). Oracle: the fixture's JSONL and the builder's length rule (equal lengths keep, unequal drop).",
+  "note": "`len` has a final year release (`Kod` length 2) and a final second-half release (`Kod` length 3) for 2019. Both state the text family, so the segment and order carry the greatest stated length, 3. Fails if width disagreement drops the length or picks the shorter 2. Oracle: the fixture's JSONL and crates/DESIGN.md's widest-form rule.",
   "fixture": "orders",
   "project": {
     "schema_version": "5.1.0",

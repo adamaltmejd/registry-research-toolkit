@@ -32,6 +32,28 @@ pub struct Locator {
     pub at: String,
 }
 
+/// The closed vocabulary of dtype families carried by the source frame and curation.
+/// Width is stated separately as length; aliases retain their original spelling.
+#[must_use]
+pub fn type_family(dtype: &str) -> Option<&'static str> {
+    match dtype {
+        "int" | "integer" => Some("integer"),
+        "decimal" => Some("decimal"),
+        "char" | "text" => Some("text"),
+        "date" => Some("date"),
+        "datetime" => Some("datetime"),
+        "bit" => Some("boolean"),
+        "geometry" => Some("geometry"),
+        "uniqueidentifier" => Some("uuid"),
+        "varbinary" => Some("binary"),
+        // These source literals state no storage type. Keep their distinction without
+        // guessing text/integer or treating any other unknown dtype as a family.
+        "<undefined>" => Some("unspecified"),
+        "Identifierare" => Some("identifier"),
+        _ => None,
+    }
+}
+
 /// A register as its source states it. `register` is the source handle; with no
 /// `bind` statement it is also the catalog slug.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]

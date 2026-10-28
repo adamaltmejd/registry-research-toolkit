@@ -39,10 +39,54 @@ pub fn catalog(path: &Path, previous: Option<&Path>) -> Result<(), String> {
         }
     }
     schema_version(&db)?;
+    types(&db)?;
     valuesets(&db)?;
     pdfs(&db)?;
     if let Some(previous) = previous {
         compare(&db, previous)?;
+    }
+    Ok(())
+}
+
+/// Use the same closed family map as resolution, including the F6 exemption.
+fn types(db: &Connection) -> Result<(), String> {
+    let sql = |e: rusqlite::Error| e.to_string();
+    let mut stated = db
+        .prepare("SELECT dtype FROM occurrence UNION SELECT dtype FROM segment")
+        .map_err(sql)?;
+    for dtype in stated
+        .query_map([], |r| r.get::<_, Option<String>>(0))
+        .map_err(sql)?
+    {
+        if let Some(dtype) = dtype.map_err(sql)?
+            && reg_frame::type_family(&dtype).is_none()
+        {
+            return Err(format!("unmapped catalog dtype {dtype:?}"));
+        }
+    }
+    let mut pairs = db
+        .prepare(
+            "SELECT o.id, o.dtype, s.dtype FROM occurrence o JOIN segment s ON s.id = o.segment_id
+         WHERE s.state <> 'ambiguous' AND o.dtype IS NOT s.dtype
+           AND NOT (s.dtype IS NULL AND EXISTS (
+             SELECT 1 FROM finding f
+             WHERE f.subject_kind = 'segment' AND f.subject_id = s.id
+               AND f.code = 'F6:source-conflict' AND f.severity = 'review'
+               AND f.start = s.start AND f.end = s.end))",
+        )
+        .map_err(sql)?;
+    let mut rows = pairs.query([]).map_err(sql)?;
+    while let Some(row) = rows.next().map_err(sql)? {
+        let occurrence: Option<String> = row.get(1).map_err(sql)?;
+        let segment: Option<String> = row.get(2).map_err(sql)?;
+        if occurrence.as_deref().and_then(reg_frame::type_family)
+            != segment.as_deref().and_then(reg_frame::type_family)
+        {
+            return Err(format!(
+                "occurrence {}: type family disagrees with its segment",
+                row.get::<_, i64>(0).map_err(sql)?
+            ));
+        }
     }
     Ok(())
 }
