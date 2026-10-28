@@ -5,6 +5,7 @@
 pub mod apply;
 
 use std::collections::{BTreeMap, BTreeSet};
+use std::sync::Arc;
 
 use reg_core::{Interval, fold_identity, intersect};
 use reg_frame::address::{Address, Comparison, GuardField, PeriodSet};
@@ -39,8 +40,9 @@ pub struct ResolvedStatement {
     pub conflicts: Vec<usize>,
 }
 
+#[derive(Clone)]
 struct Source {
-    fields: BTreeMap<String, Value>,
+    fields: Arc<BTreeMap<String, Value>>,
     locators: Vec<Locator>,
     period: Option<Interval>,
 }
@@ -48,6 +50,26 @@ struct Source {
 impl Source {
     fn text(&self, name: &str) -> Option<&str> {
         self.fields.get(name).and_then(Value::as_str)
+    }
+}
+
+/// Shared value-set facts serialized once for an immutable application phase.
+#[derive(Default)]
+pub struct SharedSources {
+    records: Vec<Record>,
+    sources: Vec<Source>,
+}
+
+impl SharedSources {
+    #[must_use]
+    pub fn new(records: &[Record]) -> Self {
+        let records = records
+            .iter()
+            .filter(|record| matches!(record, Record::ValueSet(_)))
+            .cloned()
+            .collect::<Vec<_>>();
+        let sources = sources(&records, &Ledger::default());
+        Self { records, sources }
     }
 }
 
@@ -179,7 +201,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
             );
             fields.insert("coverage".into(), serde_json::json!(bounds(&fields)));
             Some(Source {
-                fields,
+                fields: Arc::new(fields),
                 locators,
                 period,
             })
@@ -192,7 +214,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 && s.text("provider") == Some(register.provider.as_str())
                 && s.text("register") == Some(register.register.as_str())
         }) {
-            let mut fields = source.fields.clone();
+            let mut fields = source.fields.as_ref().clone();
             fields.insert("kind".into(), Value::String("table".into()));
             fields.insert("table".into(), Value::String(String::new()));
             fields.insert(
@@ -205,7 +227,7 @@ fn sources(records: &[Record], ledger: &Ledger) -> Vec<Source> {
                 ),
             );
             sources.push(Source {
-                fields,
+                fields: Arc::new(fields),
                 locators: source.locators.clone(),
                 period: source.period.clone(),
             });
@@ -587,7 +609,12 @@ fn field_dependencies(fields: &mut BTreeSet<String>) {
     }
 }
 
-fn states_value_set(source: &Source, items: &[reg_frame::Item], records: &[Record]) -> bool {
+fn states_value_set(
+    source: &Source,
+    items: &[reg_frame::Item],
+    records: &[Record],
+    shared: &SharedSources,
+) -> bool {
     let populations = source
         .fields
         .get("population_valuesets")
@@ -601,7 +628,7 @@ fn states_value_set(source: &Source, items: &[reg_frame::Item], records: &[Recor
     let mut expected = items.to_vec();
     expected.sort();
     hashes.into_iter().any(|hash| {
-        records.iter().any(|record| {
+        records.iter().chain(&shared.records).any(|record| {
             let Record::ValueSet(set) = record else {
                 return false;
             };
@@ -678,7 +705,7 @@ fn premise_source(premise: &SourcePremise) -> Source {
                 .map(|(a, b)| (a.to_owned(), b.to_owned()))
         });
     Source {
-        fields: premise.fields.clone(),
+        fields: Arc::new(premise.fields.clone()),
         locators: vec![premise.locator.clone()],
         period,
     }
@@ -735,11 +762,10 @@ fn premise_overlap(
         let address = subject(other);
         premise.subjects.iter().any(|row| {
             let mut source = premise_source(row);
-            source
-                .fields
+            Arc::make_mut(&mut source.fields)
                 .insert("table_slug".into(), Value::String(table.clone()));
             // Table moves detach dated release rows; a release guard no longer matches.
-            source.fields.insert("release".into(), Value::Null);
+            Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
             !select(address, &[source], &BTreeMap::new()).is_empty()
         })
     };
@@ -802,7 +828,7 @@ pub fn applied_conflicts(
             fields.insert("period".into(), serde_json::json!(identity.period));
         }
         let source = Source {
-            fields,
+            fields: Arc::new(fields),
             locators: vec![claim.locator.clone()],
             period: claim.period.cloned(),
         };
@@ -959,8 +985,10 @@ pub fn reference(
     ledger: &Ledger,
     variable: Option<&str>,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
+    shared: &SharedSources,
 ) -> Result<Vec<SourcePremise>, String> {
-    let view = sources(records, ledger);
+    let mut view = sources(records, ledger);
+    view.extend(shared.sources.iter().cloned());
     let variables = if variable.is_some() {
         variable_members(records, ledger, assignments)?
     } else {
@@ -1350,11 +1378,13 @@ pub fn resolve(
     statements: &[&Statement],
     references: &BTreeMap<String, Vec<SourcePremise>>,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
+    shared: &SharedSources,
 ) -> Vec<Result<ResolvedStatement, String>> {
     if statements.is_empty() {
         return Vec::new();
     }
-    let view = sources(records, ledger);
+    let mut view = sources(records, ledger);
+    view.extend(shared.sources.iter().cloned());
     let needs_variables = statements.iter().any(|statement| {
         matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
@@ -1519,7 +1549,7 @@ pub fn resolve(
                     if let AssertFact::ValueSet { items } = fact
                         && matches
                             .iter()
-                            .any(|m| states_value_set(&view[m.source], items, records))
+                            .any(|m| states_value_set(&view[m.source], items, records, shared))
                     {
                         return Err("redundant assert: the source now states this value set".into());
                     }

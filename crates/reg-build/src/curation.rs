@@ -75,6 +75,7 @@ fn references(
     statements: &[&LocatedStatement],
     classifications: &[reg_resolve::curation::apply::Classification],
     variables: &BTreeMap<reg_resolve::OccurrenceKey, String>,
+    shared: &reg_resolve::curation::SharedSources,
 ) -> Result<BTreeMap<String, Vec<reg_resolve::curation::SourcePremise>>, String> {
     let mut references = BTreeMap::new();
     let objects = statements
@@ -145,7 +146,7 @@ fn references(
             }
             let records = records
                 .iter()
-                .filter(|r| belongs(r, &provider, &source.register))
+                .filter(|r| application_record(r, &provider, &source.register, None))
                 .cloned()
                 .collect::<Vec<_>>();
             matches.push(reg_resolve::curation::reference(
@@ -153,6 +154,7 @@ fn references(
                 &ledger,
                 variable.as_deref(),
                 variables,
+                shared,
             ));
         }
         if let [Ok(premise)] = &matches[..] {
@@ -332,6 +334,11 @@ fn run_selected(
         locks.insert((provider, register), (path, ledger, old));
     }
     for stage in 0..5 {
+        let shared = if statements.iter().any(|s| phase(&s.statement) == stage) {
+            reg_resolve::curation::SharedSources::new(&records)
+        } else {
+            reg_resolve::curation::SharedSources::default()
+        };
         // Evaluate every register, even when recording only selected locks: linked
         // premises must see the same curated facts as an ordinary build.
         let mut accepted = Vec::new();
@@ -349,7 +356,7 @@ fn run_selected(
             }
             let source = records
                 .iter()
-                .filter(|r| belongs(r, provider, register))
+                .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
             let content = group.iter().map(|s| &s.statement).collect::<Vec<_>>();
@@ -359,6 +366,7 @@ fn run_selected(
                 &group,
                 &result.classifications,
                 &result.variables,
+                &shared,
             )?;
             let evaluations = reg_resolve::curation::resolve(
                 &source,
@@ -366,6 +374,7 @@ fn run_selected(
                 &content,
                 &references,
                 &result.variables,
+                &shared,
             );
             for (statement, evaluation) in group.iter().zip(evaluations) {
                 let at = location(statement);
