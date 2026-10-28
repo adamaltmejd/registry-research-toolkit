@@ -627,14 +627,19 @@ overlapping curated overrides are refused at both locations.
   change membership. These rules describe this source's layout; headings remain
   reviewable candidates and broad parents never become sets automatically. Each
   `Grundregister` cell is a `derived_from` link from the row's variable to each register
-  it names (split at `,`, `;` and line breaks), matched by name, so LISA's abbreviations
-  (`RTB`) stay unresolved until D curation resolves them. `Individ` repeats the
-  year-independent columns with blank year cells; the year-less sheet's row stands, so
-  `Individ` keeps its 1990– span. `Individ årsoberoende` holds three tables (birth
-  country, deaths, migration) under headings, each keyed by `PersonNr`; the reader keeps
-  the sheet as one table and any later partition requires whole-occurrence `set table`.
-  Labels keep their footnote markers (`…yrkesverksamma7`) verbatim: a trailing digit
-  cannot be told from a name's own (`SNI92`), and the footnotes are not read.
+  it names (the reader splits at `,`, `;` and line breaks). D curation in the attach
+  script splits `/` and `&` lists and strips each source's `Härledd-` prefix, then uses
+  an exact curated register-alias table with evidence notes. Several sources can resolve
+  to one register endpoint. Unknown, ambiguous or unpublished sources remain reported
+  with reasons; a proved source in the same list still links. The attachment report
+  lists endpoints and unresolved sources per original text, distinct emitted links and
+  newly added links. `Individ` repeats the year-independent columns with blank year
+  cells; the year-less sheet's row stands, so `Individ` keeps its 1990– span.
+  `Individ årsoberoende` holds three tables (birth country, deaths, migration) under
+  headings, each keyed by `PersonNr`; the reader keeps the sheet as one table and any
+  later partition requires whole-occurrence `set table`. Labels keep their footnote
+  markers (`…yrkesverksamma7`) verbatim: a trailing digit cannot be told from a name's
+  own (`SNI92`), and the footnotes are not read.
 - **Dated ledger anchors.** SCB reuses a column name in one table for different VarIds,
   in turn (`V714_65`: one VarId 2007–2009, another 2014–2016) or at once (`Kolumn2` in
   `Gasföretag` names some 90). A spelling alone then reaches several variables, and the
