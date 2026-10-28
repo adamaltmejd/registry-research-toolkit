@@ -315,6 +315,8 @@ class Converter:
         self.identity = IdentityProjection(self.records, self.ledgers)
         self.identity_audit = collections.Counter()
         self.identity_deferred = []
+        self.grouping_audit = {}
+        self.grouping_deferred = []
         self.case_safety = CaseSafety(self)
         self.current_kind = ""
         self.cached_audit = {}

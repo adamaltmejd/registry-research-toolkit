@@ -8,7 +8,8 @@ The output directory must be new. --write-curation installs the reviewed output.
 After retirement, run `read` with a scratch copy of curation/ whose inputs.toml
 adds the original lisa input (scb-lisa, provider scb, register lisa-workbook,
 catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx). That inspection
-manifest does not change the published catalog's manifest.
+copy must also remove the generated block from readers/markdown.toml, so document
+subjects retain their original n: keys. Neither edit changes published curation.
 """
 
 import argparse
