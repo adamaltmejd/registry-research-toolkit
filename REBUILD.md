@@ -502,8 +502,8 @@ The remaining C checklist:
 
 - **Unminted ids** are minted, and the new ids are reviewed in the PR.
 
-- **From D on, curation is edited only in `curation/`.** The old tree is frozen for the
-  SWECOV build until E.
+- [x] **D-13: From D on, curation is edited only in `curation/`.** The old tree is
+  frozen for the SWECOV build until E.
 
 **Exit:**
 
