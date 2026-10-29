@@ -39,7 +39,7 @@ pub struct Classification {
     pub family_name: Option<String>,
     pub publisher: Option<String>,
     pub period: Option<reg_frame::address::PeriodSet>,
-    /// Set-wide sentinel codes; omission makes no claim about the shared value set.
+    /// Known non-canonical codes in occurrence value sets bound to this version.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub sentinel_codes: Option<Vec<String>>,
     #[serde(default)]

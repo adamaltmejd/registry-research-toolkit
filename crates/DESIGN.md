@@ -376,7 +376,12 @@ Accepting one requires reviewed curation and a premise lock.
   hashes, including population alternatives. Sentinel codes are set-wide:
   `vs_item.sentinel` changes for every reference to that shared set. Missing codes and
   disagreeing declarations for the same hash refuse at their authoring locations.
-  Classification inventory `sentinel_codes` uses the same shared-set semantics. The hash
+  Classification inventory `sentinel_codes` names known non-canonical codes in columns
+  bound to that exact version, not codes in its canonical book. It marks the listed
+  codes present in each bound occurrence's value sets, including population
+  alternatives; declarations absent from all bound sets are counted, not refused. Two
+  versions sharing a bound set must agree about sentinel status for every code present
+  there. Disagreements refuse at both bindings. The bits remain set-wide, and the hash
   remains based on code, label and parent, without sentinel status. Occurrence-scoped
   sentinel claims on shared sets are deferred to sentinel-aware value-set identity;
   revisit when a dropped scoped entry needs it. Register name corrections that differ

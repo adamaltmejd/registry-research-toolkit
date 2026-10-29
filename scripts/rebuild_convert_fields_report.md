@@ -14,12 +14,12 @@ Only source metadata is listed, never holdings or individual records.
 - Local sentinels: nine of 15 entries have exclusively scoped value-set hashes and are
   converted to set-wide `set sentinels`. Six remain dropped because the same hash is
   referenced outside the entry's scope; exact references are below.
-- Classification sentinels: all 63 declarations are transcribed unchanged as code lists
-  into the new inventory contract. Read-only validation found missing canonical codes in
-  every declaration and two shared-hash disagreement groups. These are unresolved
-  authoring refusals, not successful strict-build conversion; no code was silently
-  filtered or added to a value set. They are retained exactly as requested in fix-01,
-  pending a maintainer decision on their source-backed representation.
+- Classification sentinels: all 63 legacy lists apply to bound occurrence value sets,
+  never to their canonical books. Their 490 original code/version pairs include one
+  allowed unobserved pair. Reviewed noncanonical-code propagation resolves actual
+  shared-bound-set conflicts with 22 additions in 14 LKF versions (512 pairs total).
+  Differing legacy meanings are listed separately as dropped: the schema has no distinct
+  sentinel-meaning field.
 - Roles and unit types: no legacy key named `role` or `unit_type` exists. No values are
   inferred. Unit types are table-only; variable inheritance and its override were
   removed.
@@ -160,89 +160,163 @@ Outside-scope references, by dropped entry:
 
 ## Classification books
 
-All 83 classification names are already preserved exactly. The new `sentinel_codes`
-inventory list is set-wide metadata; it does not change code/label/parent hashing or
-create codes. Legacy declarations include observed out-of-book values. All 63 therefore
-have at least one code absent from the canonical book value set in 0.66.0. They are
-listed in full below so a strict-build refusal cannot be mistaken for successful
-carry-over. No absent code was filtered. Other omitted presentation fields retain the
-#2016 inventory-contract reason in the earlier classification report.
+Fix-02 corrects the fix-01 interpretation. The legacy `sentinel_codes` lists name known
+noncanonical codes observed in columns bound to a classification; they do not add codes
+to the canonical book. `resolved_catalog.py` checks the observed noncanonical members
+against the book sentinel list and scoped certificates, and
+`source_classification_bindings.py::_sentinel_map` retains their meanings.
 
-  | Classification                            | Missing codes in its canonical value set                                                                                                                                                                                                           |
-  | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `class/agarkat/agarkat2000`               | `00`, `9`, `NULL`                                                                                                                                                                                                                                  |
-  | `class/agarkat/agarkat2020`               | `00`                                                                                                                                                                                                                                               |
-  | `class/isced/isced2011`                   | `-1`, `-2`                                                                                                                                                                                                                                         |
-  | `class/jurform/jurform2000`               | `0`, `00`                                                                                                                                                                                                                                          |
-  | `class/jurform/jurform2020`               | `00`                                                                                                                                                                                                                                               |
-  | `class/lkf/lkf1980`                       | `058313`, `999999`                                                                                                                                                                                                                                 |
-  | `class/lkf/lkf1981`                       | `99`, `9999`                                                                                                                                                                                                                                       |
-  | `class/lkf/lkf1986`                       | `******`, `99`, `9999`, `999999`                                                                                                                                                                                                                   |
-  | `class/lkf/lkf1987`                       | `******`, `00`, `1111`, `99`, `999999`                                                                                                                                                                                                             |
-  | `class/lkf/lkf1988`                       | `******`, `00`, `99`, `999999`                                                                                                                                                                                                                     |
-  | `class/lkf/lkf1989`                       | `*****`, `******`, `99`, `999999`                                                                                                                                                                                                                  |
-  | `class/lkf/lkf1990`                       | `******`, `99`, `999999`                                                                                                                                                                                                                           |
-  | `class/lkf/lkf1991`                       | `******`, `0000`, `9999`, `999999`                                                                                                                                                                                                                 |
-  | `class/lkf/lkf1992`                       | `******`, `00`, `0000`, `99`, `9999`, `999999`                                                                                                                                                                                                     |
-  | `class/lkf/lkf1993`                       | `******`, `00`, `0000`, `99`, `9999`, `999999`                                                                                                                                                                                                     |
-  | `class/lkf/lkf1994`                       | `******`, `00`, `0000`, `99`, `9999`, `999999`                                                                                                                                                                                                     |
-  | `class/lkf/lkf1995`                       | `******`, `00`, `0000`, `99`, `9999`, `999999`                                                                                                                                                                                                     |
-  | `class/lkf/lkf1996`                       | `******`, `00`, `0000`, `2088`, `99`, `9999`, `999999`                                                                                                                                                                                             |
-  | `class/lkf/lkf1997`                       | `******`, `00`, `0000`, `99`, `9999`, `99999`, `999999`                                                                                                                                                                                            |
-  | `class/lkf/lkf1998`                       | `******`, `00`, `0000`, `000000`, `99`, `9999`, `999999`                                                                                                                                                                                           |
-  | `class/lkf/lkf1999`                       | `******`, `00`, `0000`, `000000`, `0199`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                             |
-  | `class/lkf/lkf2000`                       | `00`, `0000`, `000000`, `0199`, `80`, `8000`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                         |
-  | `class/lkf/lkf2001`                       | `0`, `00`, `0000`, `000000`, `0199`, `80`, `8000`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                    |
-  | `class/lkf/lkf2002`                       | `0`, `00`, `0000`, `000000`, `0199`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                                  |
-  | `class/lkf/lkf2003`                       | `00`, `0000`, `000000`, `0199`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                                       |
-  | `class/lkf/lkf2004`                       | `00`, `0000`, `000000`, `0199`, `9108`, `9800`, `99`, `9900`, `9999`, `NULL`                                                                                                                                                                       |
-  | `class/lkf/lkf2005`                       | `0`, `00`, `0000`, `000000`, `0199`, `2762`, `80`, `9800`, `99`, `9900`, `9999`                                                                                                                                                                    |
-  | `class/lkf/lkf2006`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `1111`, `2762`, `9800`, `99`, `9900`, `9993`, `9994`, `9999`, `NULL`                                                                                                                          |
-  | `class/lkf/lkf2007`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                          |
-  | `class/lkf/lkf2008`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`, `NULL`                                                                                                                                                                  |
-  | `class/lkf/lkf2009`                       | `0`, `00`, `0000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`, `NULL`, `[NULL]`                                                                                                                                                                  |
-  | `class/lkf/lkf2010`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`, `NULL`, `[NULL]`                                                                                                                                                        |
-  | `class/lkf/lkf2011`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                          |
-  | `class/lkf/lkf2012`                       | `0`, `00`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                          |
-  | `class/lkf/lkf2013`                       | `00`, `000`, `000.`, `0000`, `000000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                |
-  | `class/lkf/lkf2014`                       | `0`, `00`, `0000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`, `NULL`                                                                                                                                                                            |
-  | `class/lkf/lkf2015`                       | `0`, `00`, `0000`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                                    |
-  | `class/lkf/lkf2016`                       | `0`, `00`, `000`, `000.`, `0000`, `0097`, `0098`, `0099`, `0141`, `0147`, `0199`, `99`, `9900`, `9999`, `[BLANK]`                                                                                                                                  |
-  | `class/lkf/lkf2017`                       | `0`, `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                            |
-  | `class/lkf/lkf2018`                       | `0`, `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `99`, `9900`, `9999`, `NULL`                                                                                                                                                                    |
-  | `class/lkf/lkf2019`                       | `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                                 |
-  | `class/lkf/lkf2020`                       | `0`, `00`, `0000`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                                                    |
-  | `class/lkf/lkf2021`                       | `0`, `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `99`, `9900`, `9999`                                                                                                                                                                            |
-  | `class/lkf/lkf2022`                       | `0`, `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `88`, `98`, `99`, `9900`, `9999`                                                                                                                                                                |
-  | `class/lkf/lkf2023`                       | `0`, `00`, `0000`, `0097`, `0098`, `0099`, `0199`, `99`, `9900`, `9990`, `9999`                                                                                                                                                                    |
-  | `class/lkf/lkf2024`                       | `0`, `00`, `0000`, `00000`, `98`, `99`, `9900`, `9999`, `NULL`                                                                                                                                                                                     |
-  | `class/lkf/lkf2025`                       | `00`, `0000`, `99`, `9900`, `9999`                                                                                                                                                                                                                 |
-  | `class/niva-old/niva-oldv1`               | `*`, `-`, `0`, `9`, `NULL`                                                                                                                                                                                                                         |
-  | `class/sektor/sektor2000`                 | `000`                                                                                                                                                                                                                                              |
-  | `class/sektorkod/sektorkod`               | `0`, `99`                                                                                                                                                                                                                                          |
-  | `class/sni/sni2002`                       | `.`, `0`, `00`, `000`, `0000`, `00000`, `X`, `XX`, `XXXX`, `XXXXX`, `xxx`                                                                                                                                                                          |
-  | `class/sni/sni2007`                       | `0`, `00`, `000`, `0000`, `00000`, `000000`, `G99`, `NULL`, `U99`, `XX`, `XXXX`, `XXXXX`, `xxx`                                                                                                                                                    |
-  | `class/sni/sni1969`                       | `0`, `00000`, `000000`, `NULL`                                                                                                                                                                                                                     |
-  | `class/sni/sni1992`                       | `00`, `000`, `0000`, `00000`, `NULL`                                                                                                                                                                                                               |
-  | `class/ssyk/ssyk2012`                     | `***`, `****`, `*****`, `0000`, `88`, `8888`, `99`, `9991`, `9992`, `9993`, `9994`, `9995`, `9996`, `9997`, `9999`, `NULL`, `X`, `XX`, `XXX`, `XXXX`, `bortfall`                                                                                   |
-  | `class/ssyk/ssyk1996`                     | `***`, `****`, `.`, `000`, `0000`, `041`, `0413`, `2140`, `2410`, `2420`, `2490`, `3110`, `4210`, `5220`, `7210`, `7230`, `7340`, `8120`, `8140`, `8250`, `8260`, `8280`, `88`, `888`, `8888`, `99`, `999`, `9999`, `XX`, `XXXX`, `[BLANK]`, `xxx` |
-  | `class/sun/sun1996`                       | `***`, `*****`, `00000`                                                                                                                                                                                                                            |
-  | `class/sun-grupp/sun2000-grupp`           | `***`                                                                                                                                                                                                                                              |
-  | `class/sun-inriktning/sun2000-inriktning` | `*`, `****`, `9`, `977`, `977z`, `988`, `988z`, `998z`, `[BLANK]`                                                                                                                                                                                  |
-  | `class/sun-niva/sun2000-niva`             | `*`, `***`, `400`, `405`, `88`, `888`, `9`, `97`, `977`, `988`, `99`, `M`, `NULL`, `[BLANK]`                                                                                                                                                       |
-  | `class/sun-grupp/sun2020-grupp`           | `99Z`                                                                                                                                                                                                                                              |
-  | `class/sun-inriktning/sun2020-inriktning` | `*`, `000`, `NULL`                                                                                                                                                                                                                                 |
-  | `class/sun-niva/sun2020-niva`             | `400`, `405`, `88`, `97`, `99`, `999`                                                                                                                                                                                                              |
+Read-only audit of the published 0.66.0 catalog examined all direct and
+population-alternative value sets of occurrences bound to each exact classification
+version. All 83 versions were included: 70 have bindings and together reference 1,495
+distinct value-set hashes. The 63 original lists contain 490 code/version pairs; 489
+occur in at least one bound set. The remaining pair, `class/sektorkod/sektorkod` code
+`99`, occurs in no bound set and is an allowed unobserved declaration. Absence from the
+canonical book is expected.
 
-Shared-hash declaration disagreements:
+The original lists disagree on present codes for 59 version pairs across 13 shared bound
+hashes. Every conflicting code was checked against both versions' canonical books and is
+noncanonical. A minimal per-code propagation across shared hashes resolves those
+disagreements: 22 code/version additions in 14 LKF versions, giving 512 declared pairs,
+511 observed pairs and the same one unobserved pair. No code was added to a value set or
+canonical book; identities and supplied labels are unchanged. These are reviewed
+curation amendments, not a rerun of the one-shot legacy converter. The
+classification-only projection marks 1,585 hash/code pairs across 961 observed value
+sets; no canonical-book value set receives a flag. Local setters contribute separately.
 
-- `ebec68b8c08f489bfcea3b7c50546f2deea00e214cd79bb0ebdc65659c72531b`:
-  `class/lkf/lkf1987` = `['******', '00', '1111', '99', '999999']`; `class/lkf/lkf1988` =
-  `['******', '00', '99', '999999']`.
-- `20995149d8b590a71b10889315e6dc91cc13e01fd6717c9b87442a6eae86fd50`:
-  `class/lkf/lkf1989` = `['*****', '******', '99', '999999']`; `class/lkf/lkf1990` =
-  `['******', '99', '999999']`; `class/lkf/lkf1991` =
-  `['******', '0000', '9999', '999999']`.
+The earlier `lkf1987/lkf1988` pair has no present-code conflict on their shared bound
+sets. The `lkf1989/lkf1990/lkf1991` group does: code `99` on
+`444d84e28637fa1a0c093ef4996281f3ff9e98fd58cad21ccabf7d2dc2bc6141`, `0000`/`9999` on
+`c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde`, and `0000` on
+`fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a`. The amendments below
+resolve them and the other shared-bound-set disagreements.
+
+### Reviewed list amendments
+
+Each added code occurs in the listed shared bound set and is absent from the target
+version's canonical book. Repeating this step to a fixed point gives zero remaining
+present-code disagreements. Hashes are evidence for the addition; original conflicts can
+involve more hashes.
+
+  | Version             | Added code | Shared bound hash proving the addition                             |
+  | ------------------- | ---------- | ------------------------------------------------------------------ |
+  | `class/lkf/lkf1986` | `"00"`     | `26411f2393dd92e3a760913ab6418581f35054862232aa63cddfb5be6ae3c015` |
+  | `class/lkf/lkf1986` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
+  | `class/lkf/lkf1987` | `"0000"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
+  | `class/lkf/lkf1987` | `"9999"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
+  | `class/lkf/lkf1988` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
+  | `class/lkf/lkf1989` | `"00"`     | `2be1e760559fe462059b25f08c9169ea20710d6a1487228c45ad5caf8676f4ff` |
+  | `class/lkf/lkf1989` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
+  | `class/lkf/lkf1990` | `"00"`     | `26411f2393dd92e3a760913ab6418581f35054862232aa63cddfb5be6ae3c015` |
+  | `class/lkf/lkf1990` | `"0000"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
+  | `class/lkf/lkf1990` | `"9999"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
+  | `class/lkf/lkf1991` | `"00"`     | `2be1e760559fe462059b25f08c9169ea20710d6a1487228c45ad5caf8676f4ff` |
+  | `class/lkf/lkf1991` | `"99"`     | `444d84e28637fa1a0c093ef4996281f3ff9e98fd58cad21ccabf7d2dc2bc6141` |
+  | `class/lkf/lkf1998` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf1999` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf1999` | `"8000"`   | `024f36bf2fc08e91b3842ac8798771ae9af3cf1692f8b3e47fd6fb028bc4c356` |
+  | `class/lkf/lkf2002` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf2002` | `"8000"`   | `d273a7ec6b6621bb8355bf453b8b6b3a3433b49f91b3ff2531d2c6e5ed8ae9ef` |
+  | `class/lkf/lkf2003` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf2004` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf2006` | `"[NULL]"` | `8d39e670f1c9a2cfbebd7176b57a77d44dcfb123aaa5b30c9ab8d0845ff8b40f` |
+  | `class/lkf/lkf2008` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
+  | `class/lkf/lkf2025` | `"0199"`   | `7fb631740c6891ccb67899e633d86a187485d4ab778d39df664ad18cee8189a8` |
+
+### Bound-set accounting
+
+  | Classification                            | Original / normalized declared pairs | Bound sets | Unobserved codes |
+  | ----------------------------------------- | ------------------------------------ | ---------- | ---------------- |
+  | `class/agarkat/agarkat2000`               | 3 / 3                                | 8          | none             |
+  | `class/agarkat/agarkat2020`               | 1 / 1                                | 5          | none             |
+  | `class/isced/isced2011`                   | 2 / 2                                | 4          | none             |
+  | `class/jurform/jurform2000`               | 2 / 2                                | 13         | none             |
+  | `class/jurform/jurform2020`               | 1 / 1                                | 4          | none             |
+  | `class/lkf/lkf1980`                       | 2 / 2                                | 5          | none             |
+  | `class/lkf/lkf1981`                       | 2 / 2                                | 9          | none             |
+  | `class/lkf/lkf1986`                       | 4 / 6                                | 17         | none             |
+  | `class/lkf/lkf1987`                       | 5 / 7                                | 17         | none             |
+  | `class/lkf/lkf1988`                       | 4 / 5                                | 20         | none             |
+  | `class/lkf/lkf1989`                       | 4 / 6                                | 16         | none             |
+  | `class/lkf/lkf1990`                       | 3 / 6                                | 15         | none             |
+  | `class/lkf/lkf1991`                       | 4 / 6                                | 25         | none             |
+  | `class/lkf/lkf1992`                       | 6 / 6                                | 20         | none             |
+  | `class/lkf/lkf1993`                       | 6 / 6                                | 17         | none             |
+  | `class/lkf/lkf1994`                       | 6 / 6                                | 20         | none             |
+  | `class/lkf/lkf1995`                       | 6 / 6                                | 22         | none             |
+  | `class/lkf/lkf1996`                       | 7 / 7                                | 30         | none             |
+  | `class/lkf/lkf1997`                       | 7 / 7                                | 25         | none             |
+  | `class/lkf/lkf1998`                       | 7 / 8                                | 31         | none             |
+  | `class/lkf/lkf1999`                       | 9 / 11                               | 36         | none             |
+  | `class/lkf/lkf2000`                       | 10 / 10                              | 39         | none             |
+  | `class/lkf/lkf2001`                       | 11 / 11                              | 35         | none             |
+  | `class/lkf/lkf2002`                       | 9 / 11                               | 34         | none             |
+  | `class/lkf/lkf2003`                       | 8 / 9                                | 38         | none             |
+  | `class/lkf/lkf2004`                       | 10 / 11                              | 44         | none             |
+  | `class/lkf/lkf2005`                       | 11 / 11                              | 55         | none             |
+  | `class/lkf/lkf2006`                       | 16 / 17                              | 62         | none             |
+  | `class/lkf/lkf2007`                       | 10 / 10                              | 56         | none             |
+  | `class/lkf/lkf2008`                       | 11 / 12                              | 54         | none             |
+  | `class/lkf/lkf2009`                       | 11 / 11                              | 54         | none             |
+  | `class/lkf/lkf2010`                       | 12 / 12                              | 61         | none             |
+  | `class/lkf/lkf2011`                       | 10 / 10                              | 58         | none             |
+  | `class/lkf/lkf2012`                       | 10 / 10                              | 62         | none             |
+  | `class/lkf/lkf2013`                       | 11 / 11                              | 61         | none             |
+  | `class/lkf/lkf2014`                       | 10 / 10                              | 56         | none             |
+  | `class/lkf/lkf2015`                       | 9 / 9                                | 49         | none             |
+  | `class/lkf/lkf2016`                       | 15 / 15                              | 55         | none             |
+  | `class/lkf/lkf2017`                       | 10 / 10                              | 57         | none             |
+  | `class/lkf/lkf2018`                       | 11 / 11                              | 58         | none             |
+  | `class/lkf/lkf2019`                       | 9 / 9                                | 58         | none             |
+  | `class/lkf/lkf2020`                       | 7 / 7                                | 64         | none             |
+  | `class/lkf/lkf2021`                       | 10 / 10                              | 60         | none             |
+  | `class/lkf/lkf2022`                       | 12 / 12                              | 61         | none             |
+  | `class/lkf/lkf2023`                       | 11 / 11                              | 50         | none             |
+  | `class/lkf/lkf2024`                       | 9 / 9                                | 52         | none             |
+  | `class/lkf/lkf2025`                       | 5 / 6                                | 23         | none             |
+  | `class/niva-old/niva-oldv1`               | 5 / 5                                | 29         | none             |
+  | `class/sektor/sektor2000`                 | 1 / 1                                | 7          | none             |
+  | `class/sektorkod/sektorkod`               | 2 / 2                                | 22         | `"99"`           |
+  | `class/sni/sni2002`                       | 11 / 11                              | 46         | none             |
+  | `class/sni/sni2007`                       | 13 / 13                              | 122        | none             |
+  | `class/sni/sni1969`                       | 4 / 4                                | 48         | none             |
+  | `class/sni/sni1992`                       | 5 / 5                                | 89         | none             |
+  | `class/ssyk/ssyk2012`                     | 21 / 21                              | 61         | none             |
+  | `class/ssyk/ssyk1996`                     | 32 / 32                              | 124        | none             |
+  | `class/sun/sun1996`                       | 3 / 3                                | 19         | none             |
+  | `class/sun-grupp/sun2000-grupp`           | 1 / 1                                | 2          | none             |
+  | `class/sun-inriktning/sun2000-inriktning` | 9 / 9                                | 37         | none             |
+  | `class/sun-niva/sun2000-niva`             | 14 / 14                              | 63         | none             |
+  | `class/sun-grupp/sun2020-grupp`           | 1 / 1                                | 3          | none             |
+  | `class/sun-inriktning/sun2020-inriktning` | 3 / 3                                | 21         | none             |
+  | `class/sun-niva/sun2020-niva`             | 6 / 6                                | 31         | none             |
+
+### Legacy meanings
+
+The schema has no separate home for a sentinel meaning that differs from the bound
+item's supplied label. The 845 differing version/code/label combinations (357 exact
+grouped rows) are listed as dropped in [the sentinel-meanings
+report](rebuild_convert_sentinel_meanings_report.md). Existing code labels are retained.
+Equal meanings require no separate storage.
+
+### Interaction with local setters
+
+All nine local setter hashes also have classification bindings. Seven local code lists
+differ from the book-list intersection on that hash; two agree. The old builder combines
+book sentinels with scoped certificates, so book allowances must not negate local
+source-reviewed sentinel claims. The local-source scope proof above remains valid.
+
+  | Local setter                                                                  | Local codes            | Bound classification intersection   |
+  | ----------------------------------------------------------------------------- | ---------------------- | ----------------------------------- |
+  | `r2: folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'` | `"111183"`             | `class/lkf/lkf1987`: empty          |
+  | `r2: folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'` | `"048080"`, `"202084"` | `class/lkf/lkf1988`: empty          |
+  | `r2: folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'`     | `"2020"`               | `class/lkf/lkf1988`: empty          |
+  | `r25: individer-och-dodsbon: KUSNI @1987 where key = 'v21073'`                | `"09350"`, `"83100"`   | `class/sni/sni1969`: `"00000"`      |
+  | `r25: individer-och-dodsbon: BNGR @2003 where key = 'v2702'`                  | `"72201"`              | `class/sni/sni2002`: `"00000"`      |
+  | `r25: individer-och-dodsbon: BSUN @1996 where key = 'v8189'`                  | `"90000"`, `"[NULL]"`  | `class/sun/sun1996`: empty          |
+  | `r25: individer-och-dodsbon: MAKEBOST @1991 where key = 'v39851'`             | `"00"`, `"99"`         | `class/lkf/lkf1991`: `"00"`, `"99"` |
+  | `r25: individer-och-dodsbon: TNLAN @1990 where key = 'v39966'`                | `"00"`                 | `class/lkf/lkf1991`: `"00"`         |
+  | `r34: foretag: Org_Sni92 @1990,1991,1992,1993,1994,1995 where key = 'v19054'` | `"01250"`, `"02010"`   | `class/sni/sni1992`: `"00000"`      |
 
 ## Other unmapped fields
 
@@ -277,51 +351,48 @@ Shared-hash declaration disagreements:
 
 ## Implementation and validation
 
-Set-wide sentinel bits use the existing `vs_item.sentinel`; hashes still cover only
-code, label and parent. Missing codes and incompatible declarations for a shared hash
-are located refusals. Local occurrence-scoped sentinel meanings on a reused hash remain
-a named deferral to sentinel-aware value-set identity, revisited when a dropped entry
-needs it. `set synonyms` still publishes genuine search synonyms to the FTS label. Roles
-use one shared vocabulary and unknown values refuse. Table unit types are published
-without variable inheritance; catalog diff compares role and unit-type slugs. The
-existing unit dictionary requires a non-null label and has no separate label-authoring
-surface, so the slug label remains necessary for the retained table field.
+Fix-02 corrects fix-01's interpretation: inventory sentinel lists describe known
+non-canonical codes in bound columns, not membership of the canonical book. The engine
+projects each list onto the direct and population-alternative sets of occurrences
+curated to that exact version. The book's own set is unchanged. Unobserved declarations
+are counted without refusal. Classification versions sharing a hash must agree about
+codes present there; codes absent from that set do not cause a conflict.
 
-Read-only carry-over checks ran against source metadata at inputs commit
-`9186fcbceeb2283a50c7f684764869e4dda5765e` and the retained 0.66.0 artifact, with no
-real-seed build:
+Explicit local certificates and classification exemptions are additive, as in the old
+builder. Local/local complete-list conflicts and classification/classification projected
+conflicts are checked separately before emitting their union. Missing codes in an
+explicit local setter still refuse. Code/label/parent identity is unchanged. Binding
+premises lock inventory sentinel lists and observed value-set hashes. Those content
+hashes already cover all item facts; no duplicate item snapshots are required for
+classification bindings. Explicit local setters retain their item validation.
 
-- Every one of the 44 legacy delivery-alias statement/lock additions was removed.
-- Nine local entries have exact source code-label matches and exclusively scoped hashes;
-  six have the outside references listed above.
-- All 63 classification declarations were checked without filtering: all have absent
-  canonical codes, and two hash groups disagree.
-- All six Socialstyrelsen workbook Svenska title cells equal corrected register names
-  after existing reader trimming. All 83 classification names remain preserved.
+The 44 delivery-header mappings remain deferred to E; genuine `set synonyms` is still
+supported. Roles share one vocabulary. Unit types remain table-only, with the existing
+non-null dictionary label represented by the slug. All six register-name corrections are
+already satisfied by source titles after reader trimming.
 
-The Operator runs the full pinned-input build, verify and 0.66.0 diff after push. No
-real-seed build, full-artifact verify/diff, `gate.py regen`, publication or PR merge ran
-in this fix session. A version-only move of `origin/main` was merged without rebasing.
-No new tests were added.
+Read-only audit used input commit `9186fcbceeb2283a50c7f684764869e4dda5765e` and the
+published 0.66.0 catalog. The pinned SCB archive SHA-256 is
+`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`. The binding audit
+and every noncanonical-code amendment are recorded above. Distinct legacy meanings have
+no published home and remain named drops in the linked report; source labels were not
+overwritten.
 
-Main-session validation:
+Final implementation checks:
 
 - `cargo build --release -p reg-build --locked` passed.
 - `gate.py g0 rust` passed: static checks, Clippy, workspace Rust tests, dependency
-  audit, 116 script tests, byte-identical synthetic builds and 201 conformance checks
-  (two skipped). Gate times: G0 40 s, Rust 14 s.
-- One-off synthetic lock/build/verify passed. Publication queries confirmed local and
-  inventory sentinel bits, table unit type, no variable inheritance, role, table and
-  release names, and a genuine search synonym.
-- Synthetic lock refusals passed for missing codes, a population-alternative mismatch,
-  unknown role, disagreeing setters and disagreeing classification versions. Both
-  locations are reported for shared-hash conflicts.
-- Separate synthetic unit-only and same-hash sentinel-only edits each made
-  `reg-build diff --json` exit 1 with the intended semantic delta visible.
-- Independent Rust review passed. Omitted inventory sentinel lists skip serialization,
-  preserving unspecified inventory assertion identities.
-
-The nine local statements are not locked: the 63 retained invalid inventory lists
-prevent a successful whole-inventory lock. No declarations were hidden or filtered to
-produce locks. Resolve these authoring refusals, then lock `scb/r2 scb/r25 scb/r34`
-before the Operator's strict build. This draft does not claim a passing real catalog.
+  audit, 116 script tests, byte-identical synthetic builds, and 201 conformance checks
+  (two skipped). Final gate times: G0 25 s, Rust 7 s. Existing fixture inputs and
+  expected outputs were unchanged.
+- The final release binary's synthetic lock/build/verify passed. Direct publication
+  checks confirmed unchanged content hash, untouched canonical-book sets, observed
+  direct and population-alternative flags, and additive local certificates.
+- Different lists agreeing on all present codes passed. Unobserved declarations were
+  counted without refusal. Present-code disagreement refused at both binding statements;
+  a missing code in an explicit local setter still refused.
+- Independent review passed, including premise coverage by verified content hashes and
+  the separate classification/local conflict checks. No new tests were added. No
+  real-seed build, full-artifact verify/diff, `gate.py regen`, release publication or PR
+  merge ran. The Operator runs the full pinned build, verify and comparison against
+  0.66.0 after push.

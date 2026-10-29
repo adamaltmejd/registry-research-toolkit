@@ -38,6 +38,7 @@ pub struct Classification {
     pub family_name: Option<String>,
     pub publisher: Option<String>,
     pub succeeds: Vec<String>,
+    pub sentinel_codes: Option<BTreeSet<String>>,
 }
 
 impl Classification {
@@ -57,7 +58,7 @@ impl Classification {
     #[must_use]
     pub fn facts(&self, classes: &[Self]) -> BTreeMap<String, Value> {
         let (family_name, publisher) = Self::family_facts(classes, &self.family);
-        BTreeMap::from([
+        let mut facts = BTreeMap::from([
             ("family".into(), json!(self.family)),
             ("version".into(), json!(self.version)),
             ("valueset".into(), json!(self.valueset)),
@@ -69,7 +70,11 @@ impl Classification {
             ("publisher".into(), json!(publisher)),
             ("period".into(), json!(self.period)),
             ("succeeds".into(), json!(self.succeeds)),
-        ])
+        ]);
+        if let Some(codes) = &self.sentinel_codes {
+            facts.insert("sentinel_codes".into(), json!(codes));
+        }
+        facts
     }
 }
 
@@ -109,6 +114,7 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
         family_name: None,
         publisher: None,
         succeeds: Vec::new(),
+        sentinel_codes: None,
     })
 }
 
