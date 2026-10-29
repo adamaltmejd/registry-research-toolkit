@@ -223,8 +223,8 @@ fn pdfs(db: &Connection) -> Result<(), String> {
     Ok(())
 }
 
-/// Against the previous release, every id survives or is retired, and retirement is
-/// permanent (schema v4 §4.3).
+/// Every id survives on an overlapping natural target or is retired, and retirement
+/// is permanent (schema v4 §4.3).
 fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     let fail = |what: String| format!("previous release: {what}");
     // `#`, `?` and `%` are URI syntax: encode every byte but unreserved ones and `/`.
@@ -279,6 +279,15 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
         if let Some(pid) = first {
             return Err(fail(format!("{statement}; e.g. {pid}")));
         }
+    }
+    if let Some(moved) = crate::id_targets::moved(db, "prev", db, "main")
+        .map_err(fail)?
+        .first()
+    {
+        return Err(fail(format!(
+            "moved id {}; retire the published id and mint a new one",
+            moved.text()
+        )));
     }
     Ok(())
 }
