@@ -50,8 +50,10 @@ def test_assignments_refuse_concurrent_folds_at_lock(tmp_path):
 
 @pytest.mark.parametrize("change", ["singleton", "unknown-tag", "retired-set"])
 def test_membership_refusals(tmp_path, membership_case, change):
-    # Regression: one final member (even repeated), an unknown tag, or a retired
-    # var_set pid is accepted. Existing assignment cases never create memberships.
+    # Regression: source occurrences are counted as set members instead of final
+    # variables, an unknown tag is accepted, or a retired var_set pid is accepted.
+    # Existing assignment cases never create memberships. The singleton uses three
+    # nonconcurrent source occurrences resolving to the same final variable.
     # The allowed twin has two distinct variables in different same-register tables;
     # fixture TOML and expected.json supply the located refusal and public name.
     fixture, overlay, curation, expected = membership_case
@@ -62,7 +64,7 @@ def test_membership_refusals(tmp_path, membership_case, change):
                 REG_BUILD,
                 command,
                 "--inputs",
-                fixture / "inputs",
+                fixture / ("grown" if change == "singleton" else "inputs"),
                 "--curation",
                 curation,
                 *(["--out", tmp_path / "catalog.db"] if command == "build" else []),

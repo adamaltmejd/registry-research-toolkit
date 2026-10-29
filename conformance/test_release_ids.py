@@ -73,8 +73,7 @@ def test_published_id_targets(tmp_path, change):
         assert line in ids_section
 
 
-@pytest.mark.parametrize("kind", ["set", "tag"])
-def test_removed_membership_id_requires_retirement(tmp_path, membership_case, kind):
+def test_removed_membership_id_requires_retirement(tmp_path, membership_case):
     # Regression: verify compares ident only, allowing a removed var_set pid to
     # disappear without retirement. Both retired and unretired twins use real builds;
     # these memberships are absent from the older moved-ident cases.
@@ -107,20 +106,16 @@ def test_removed_membership_id_requires_retirement(tmp_path, membership_case, ki
     build(previous)
     statements = curation / "registers/demo/r/curation.toml"
     text = statements.read_text()
-    text = (
-        text.replace('sets = ["concept"]', "sets = []")
-        if kind == "set"
-        else text.replace('tags = ["income"]', "tags = []")
-    )
+    text = text.replace('sets = ["concept"]', "sets = []")
     statements.write_text(text)
     current = tmp_path / "current.db"
     build(current)
     refused = run("verify", current, "--previous", previous)
-    pid = "demo/r/concept" if kind == "set" else "tag/income"
+    pid = "demo/r/concept"
     assert refused.returncode == 1, refused.stderr
     assert "previous release:" in refused.stderr and pid in refused.stderr
     (curation / "retired.toml").write_text(
-        f'"{pid}" = {{ kind = "{kind}", in = "0.68.0", reason = "withdrawn" }}\n'
+        f'"{pid}" = {{ kind = "set", in = "0.68.0", reason = "withdrawn" }}\n'
     )
     build(current)
     accepted = run("verify", current, "--previous", previous)

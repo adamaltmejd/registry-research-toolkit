@@ -783,18 +783,18 @@ overlapping curated overrides are refused at both locations.
   and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. Removed set and tag ids from `var_set` must appear
-  with the same kind in `ident_retired`; removed ids from `ident` also require
-  retirement, and existing retirements must remain. A published variable id's targets
-  are its column-bearing occurrences' (table slug, folded spelling, `[start, end)`
-  period) triples. Targets overlap when table and spelling match and their periods
-  overlap; matching names in disjoint periods do not preserve identity. An explicit
-  table id targets its table name. Implicit tables share their register's id and are
-  excluded from the table rule. If an id of the same kind survives, both target sets are
-  non-empty, and no old/new targets overlap, `verify --previous` refuses it as moved,
-  naming the pid and both target sets; retire that id and mint a new one. Overlapping
-  targets, including growth, are allowed. `diff` lists and counts moved ids in its `ids`
-  section. Registers and providers are excluded from this rule.
+  other version is not comparable. Removed ids from `ident` or `var_set` must appear
+  with the same kind in `ident_retired`, and existing retirements must remain. A
+  published variable id's targets are its column-bearing occurrences' (table slug,
+  folded spelling, `[start, end)` period) triples. Targets overlap when table and
+  spelling match and their periods overlap; matching names in disjoint periods do not
+  preserve identity. An explicit table id targets its table name. Implicit tables share
+  their register's id and are excluded from the table rule. If an id of the same kind
+  survives, both target sets are non-empty, and no old/new targets overlap,
+  `verify --previous` refuses it as moved, naming the pid and both target sets; retire
+  that id and mint a new one. Overlapping targets, including growth, are allowed. `diff`
+  lists and counts moved ids in its `ids` section. Registers and providers are excluded
+  from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a

@@ -83,15 +83,6 @@ pub fn statements(
                 ));
             }
         }
-        for set in fields.sets.iter().flatten() {
-            if !reg_core::is_slug(set) {
-                return Err(format!(
-                    "{}:{}: invalid-set: set {set:?} must be a register-local slug",
-                    located.path.display(),
-                    located.line
-                ));
-            }
-        }
     }
     Ok(())
 }

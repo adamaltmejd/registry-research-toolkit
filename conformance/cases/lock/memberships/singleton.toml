@@ -1,5 +1,5 @@
 [[statement]]
 kind = "set"
 subject = "var:published"
-fields = { sets = ["concept", "concept"] }
-evidence = "Repeated membership still names only one distinct final variable."
+fields = { sets = ["concept"] }
+evidence = "The source occurrences in 2018, 2019 and 2020 resolve to one final variable, not three set members."

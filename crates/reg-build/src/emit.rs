@@ -847,7 +847,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
             let tag = catalog
                 .tags
                 .get(&name)
-                .ok_or_else(|| format!("unknown-tag: {name:?}"))?;
+                .expect("tag vocabulary checked at load");
             (tag.label.clone(), Cell::Text(tag.definition.clone()))
         } else {
             (name, Cell::Null)
