@@ -65,10 +65,10 @@ jobs:
       image: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.image }}
       edge_global: ${{ steps.base.outputs.all == 'true' && 'true' || steps.filter.outputs.edge_global }}
     steps:
-      # Full history on a push, for the ancestry check below.
+      # Full history for the PR base diff and the push ancestry check below.
       - uses: actions/checkout@v7.0.1
         with:
-          fetch-depth: ${{ github.event_name != 'push' && 1 || 0 }}
+          fetch-depth: 0
       # A push diffs against the last DEPLOYED commit, not the push's `before` (#1481).
       # Every deploy job skips unless its commit is still main's HEAD, so when push A
       # touches a served path and push B lands before A's deploy runs, A skips; diffed
@@ -124,8 +124,9 @@ jobs:
         id: filter
         if: steps.base.outputs.all != 'true'
         with:
-          # Empty on a pull request, where the filter diffs against the PR base.
-          base: ${{ steps.base.outputs.sha }}
+          # Use git on PRs: GitHub's diff API can time out on large changes.
+          token: ""
+          base: ${{ steps.base.outputs.sha || github.event.pull_request.base.sha }}
           # `image` lists exactly what enters the Docker image (Dockerfile
           # COPY surfaces + bake inputs) plus Fly origin config that should
           # force a redeploy. NOT all of reg_webapp/**: edge/, .claude/, and
