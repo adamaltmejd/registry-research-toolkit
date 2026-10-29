@@ -1,4 +1,17 @@
-# D recovery fix-02 counts
+# D recovery fix-03 accounting
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+Current statement accounting is 827 additions: 571 assertions and 256 setters. Four FoU
+identity setters are withdrawn to retain the published STRAT family. All 23 recovered
+identity setters are deferred. This fix restores 33 published r257 IDs to their 0.66.0
+native targets and replaces two hash anchors with dates. It names the 38 recovered
+CIS2002 columns separately: eight free legacy names and 30 D-12 label-plus-column names.
+The branch still mints 42 IDs total. The fix-02 claim of retained populations used the
+wrong reference and is superseded. The full published-ID comparison and new names are in
+[the recovery report](rebuild_recover_report.md).
+
+# Historical D recovery fix-02 counts (superseded)
 
 Temporary conversion evidence; deleted at milestone F (cutover).
 

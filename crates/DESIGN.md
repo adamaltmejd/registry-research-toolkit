@@ -238,8 +238,11 @@ Accepting one requires reviewed curation and a premise lock.
 
 **Identity.**
 
-- Each occurrence carries an opaque *source key*: the provider's variable id where one
-  exists, otherwise the folded column name, scoped to the register.
+- Reader occurrences carry an opaque *source key*: the provider's variable id where one
+  exists, otherwise the folded column name, scoped to the register. An asserted
+  occurrence without a `key` guard currently gets a per-statement source key
+  (`stmt:<scoped identity>`). Aligning that default with the folded column is deferred
+  to the id sprint in [REBUILD.md §D](../REBUILD.md#d-deferrals).
 - Occurrences with one key in one register are one variable. The exception is a key that
   covers two folded spellings in overlapping periods anywhere in the register. The
   comparison uses the preferred edition of each period, so a preliminary and a final

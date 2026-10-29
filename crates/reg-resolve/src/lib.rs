@@ -987,22 +987,20 @@ pub(crate) fn resolve_located(
                                 .map(|period| (left, right, period))
                         })
                     });
-                    if let Some((left, right, overlap)) = overlap {
-                        for &i in &covering {
-                            if intersect(span(&resolved[i]), &overlap).is_some() {
-                                let row = &resolved[i].occurrence;
-                                affected.extend(
-                                    std::iter::once(&row.locator).chain(&row.also).map(|at| {
-                                        OccurrenceKey::new(occurrence_context.identity(row), at)
-                                    }),
-                                );
-                            }
+                    let (left, right, overlap) = overlap
+                        .expect("a connected overlap component with different folds has an overlapping different-fold pair");
+                    for &i in &covering {
+                        if intersect(span(&resolved[i]), &overlap).is_some() {
+                            let row = &resolved[i].occurrence;
+                            affected.extend(std::iter::once(&row.locator).chain(&row.also).map(
+                                |at| OccurrenceKey::new(occurrence_context.identity(row), at),
+                            ));
                         }
-                        return Err(format!(
-                            "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in table {:?} over {}..{} into variable {key:?}; retain separate variables",
-                            tables[t].table.table, overlap.0, overlap.1
-                        ));
                     }
+                    return Err(format!(
+                        "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in table {:?} over {}..{} into variable {key:?}; retain separate variables",
+                        tables[t].table.table, overlap.0, overlap.1
+                    ));
                 }
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));

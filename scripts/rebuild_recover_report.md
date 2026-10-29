@@ -1,4 +1,167 @@
-# D recovery fix-02
+# D recovery fix-03
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The Operator reports that the real build of `8f158e5e` and verification against 0.66.0
+passed, but comparison of the actual targets found 33 published r257 IDs on different
+variables. The fix-02 preservation claim used the wrong reference: already changed
+resolver targets, rather than the published 0.66.0 catalog. That claim is superseded. No
+real-seed catalog build or real-artifact verification was run by this worker.
+
+## Published r257 targets and recovered names
+
+All 1,310 published r257 names remain. Thirty-three anchors now use the 0.66.0 native
+keys: the 30 `cis2002-*` names stay on `v15662`, `ho` on `v37075`, `weight` on `v49567`,
+and `lilla-n-per-stratum` on `v5697`. The two remaining qualified anchors use dates:
+`STRAT @ 2002-01-01` and `COOP_NO @ 2020-01-01`, each uniquely selecting its published
+family. No statement hash remains in those anchors.
+
+The 38 recovered CIS2002 columns receive separate unpublished names. Eight free legacy
+pins are reused: `ho-enligt-leverans`, `weight-enligt-leverans`,
+`lillan-enligt-leverans` and the five customer columns. The uppercase legacy pin
+`257.CO31` exists and supplies `cis2002-samarbete-kunder-sverige`; the earlier drift
+note missed that case variant. Thirty legacy names collide with published native IDs, so
+those recovered columns use D-12 label-plus-column names. All names are unique, avoid
+reserved/table namespaces and have at most 59 characters. The id sprint explicitly
+carries "CIS2002 2000-2002 vs native ids: naming"; published ID populations take
+precedence over legacy name intent.
+
+The total of new branch IDs remains 42: r2 one, r193 three and r257 38. The 38 r257
+names below replace the incorrect fix-02 native-family mints. No curation assertion or
+membership statement changes in this fix.
+
+  | New ID                                                                               | Label                                                                                                                          | Anchor                                          | Rule           |
+  | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- | -------------- |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-andra-foretag-inom-co11`         | Samarbete om innovation med andra företag inom koncernen, Sverige (CIS 2000–2002)                                              | `Innovation i företagssektorn: co11 # co11`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-andra-foretag-inom-co12`         | Samarbete om innovation med andra företag inom koncernen, platskolumn 2 (CIS 2000–2002)                                        | `Innovation i företagssektorn: co12 # co12`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-andra-foretag-inom-co13`         | Samarbete om innovation med andra företag inom koncernen, platskolumn 3 (CIS 2000–2002)                                        | `Innovation i företagssektorn: co13 # co13`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-andra-foretag-inom-co14`         | Samarbete om innovation med andra företag inom koncernen, platskolumn 4 (CIS 2000–2002)                                        | `Innovation i företagssektorn: co14 # co14`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-andra-foretag-inom-co15`         | Samarbete om innovation med andra företag inom koncernen, platskolumn 5 (CIS 2000–2002)                                        | `Innovation i företagssektorn: co15 # co15`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-leverantorer-av-utrustning-co21` | Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, Sverige (CIS 2000–2002)       | `Innovation i företagssektorn: CO21 # co21`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-leverantorer-av-utrustning-co22` | Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 2 (CIS 2000–2002) | `Innovation i företagssektorn: co22 # co22`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-leverantorer-av-utrustning-co23` | Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 3 (CIS 2000–2002) | `Innovation i företagssektorn: co23 # co23`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-leverantorer-av-utrustning-co24` | Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 4 (CIS 2000–2002) | `Innovation i företagssektorn: co24 # co24`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-leverantorer-av-utrustning-co25` | Samarbete om innovation med leverantörer av utrustning, material, komponenter eller programvara, platskolumn 5 (CIS 2000–2002) | `Innovation i företagssektorn: co25 # co25`     | label + column |
+  | `scb/innovation-foretag/cis2002-samarbete-kunder-sverige`                            | Samarbete om innovation med kunder, Sverige (CIS 2000–2002)                                                                    | `Innovation i företagssektorn: CO31`            | legacy pin     |
+  | `scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-2`                      | Samarbete om innovation med kunder, platskolumn 2 (CIS 2000–2002)                                                              | `Innovation i företagssektorn: co32`            | legacy pin     |
+  | `scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-3`                      | Samarbete om innovation med kunder, platskolumn 3 (CIS 2000–2002)                                                              | `Innovation i företagssektorn: co33`            | legacy pin     |
+  | `scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-4`                      | Samarbete om innovation med kunder, platskolumn 4 (CIS 2000–2002)                                                              | `Innovation i företagssektorn: co34`            | legacy pin     |
+  | `scb/innovation-foretag/cis2002-samarbete-kunder-platskolumn-5`                      | Samarbete om innovation med kunder, platskolumn 5 (CIS 2000–2002)                                                              | `Innovation i företagssektorn: co35`            | legacy pin     |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konkurrenter-eller-andra-co41`   | Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, Sverige (CIS 2000–2002)                       | `Innovation i företagssektorn: CO41 # co41`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konkurrenter-eller-andra-co42`   | Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 2 (CIS 2000–2002)                 | `Innovation i företagssektorn: co42 # co42`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konkurrenter-eller-andra-co43`   | Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 3 (CIS 2000–2002)                 | `Innovation i företagssektorn: co43 # co43`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konkurrenter-eller-andra-co44`   | Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 4 (CIS 2000–2002)                 | `Innovation i företagssektorn: co44 # co44`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konkurrenter-eller-andra-co45`   | Samarbete om innovation med konkurrenter eller andra företag inom samma bransch, platskolumn 5 (CIS 2000–2002)                 | `Innovation i företagssektorn: co45 # co45`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konsulter-privata-co51`          | Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, Sverige (CIS 2000–2002)                | `Innovation i företagssektorn: CO51 # co51`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konsulter-privata-co52`          | Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 2 (CIS 2000–2002)          | `Innovation i företagssektorn: co52 # co52`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konsulter-privata-co53`          | Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 3 (CIS 2000–2002)          | `Innovation i företagssektorn: co53 # co53`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konsulter-privata-co54`          | Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 4 (CIS 2000–2002)          | `Innovation i företagssektorn: co54 # co54`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-konsulter-privata-co55`          | Samarbete om innovation med konsulter, privata laboratorier eller privata FoU-institut, platskolumn 5 (CIS 2000–2002)          | `Innovation i företagssektorn: Co55 # co55`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-universitet-eller-co61`          | Samarbete om innovation med universitet eller högskolor, Sverige (CIS 2000–2002)                                               | `Innovation i företagssektorn: CO61 # co61`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-universitet-eller-co62`          | Samarbete om innovation med universitet eller högskolor, platskolumn 2 (CIS 2000–2002)                                         | `Innovation i företagssektorn: co62 # co62`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-universitet-eller-co63`          | Samarbete om innovation med universitet eller högskolor, platskolumn 3 (CIS 2000–2002)                                         | `Innovation i företagssektorn: co63 # co63`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-universitet-eller-co64`          | Samarbete om innovation med universitet eller högskolor, platskolumn 4 (CIS 2000–2002)                                         | `Innovation i företagssektorn: co64 # co64`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-universitet-eller-co65`          | Samarbete om innovation med universitet eller högskolor, platskolumn 5 (CIS 2000–2002)                                         | `Innovation i företagssektorn: co65 # co65`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-offentliga-co71`                 | Samarbete om innovation med offentliga forskningsinstitut, Sverige (CIS 2000–2002)                                             | `Innovation i företagssektorn: CO71 # co71`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-offentliga-co72`                 | Samarbete om innovation med offentliga forskningsinstitut, platskolumn 2 (CIS 2000–2002)                                       | `Innovation i företagssektorn: co72 # co72`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-offentliga-co73`                 | Samarbete om innovation med offentliga forskningsinstitut, platskolumn 3 (CIS 2000–2002)                                       | `Innovation i företagssektorn: co73 # co73`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-offentliga-co74`                 | Samarbete om innovation med offentliga forskningsinstitut, platskolumn 4 (CIS 2000–2002)                                       | `Innovation i företagssektorn: co74 # co74`     | label + column |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-offentliga-co75`                 | Samarbete om innovation med offentliga forskningsinstitut, platskolumn 5 (CIS 2000–2002)                                       | `Innovation i företagssektorn: co75 # co75`     | label + column |
+  | `scb/innovation-foretag/ho-enligt-leverans`                                          | HO (enligt leverans)                                                                                                           | `Innovation i företagssektorn: HO # ho`         | legacy pin     |
+  | `scb/innovation-foretag/lillan-enligt-leverans`                                      | LILLAN (enligt leverans)                                                                                                       | `Innovation i företagssektorn: LILLAN # lillan` | legacy pin     |
+  | `scb/innovation-foretag/weight-enligt-leverans`                                      | WEIGHT (enligt leverans)                                                                                                       | `Innovation i företagssektorn: WEIGHT # weight` | legacy pin     |
+
+## Published anchors
+
+  | Published ID                                                                 | Preserved 0.66.0 key                                                    | New anchor                                           | Occurrences in 0.66.0 |
+  | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------- | --------------------: |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-2`      | `v15662`                                                                | `Innovation i företagssektorn: CO12 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-3`      | `v15662`                                                                | `Innovation i företagssektorn: CO13 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-4`      | `v15662`                                                                | `Innovation i företagssektorn: CO14 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-5`      | `v15662`                                                                | `Innovation i företagssektorn: CO15 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-sverige`            | `v15662`                                                                | `Innovation i företagssektorn: CO11 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-2`        | `v15662`                                                                | `Innovation i företagssektorn: CO42 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-3`        | `v15662`                                                                | `Innovation i företagssektorn: CO43 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-4`        | `v15662`                                                                | `Innovation i företagssektorn: CO44 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-5`        | `v15662`                                                                | `Innovation i företagssektorn: CO45 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-sverige`              | `v15662`                                                                | `Innovation i företagssektorn: CO41 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-2`           | `v15662`                                                                | `Innovation i företagssektorn: CO52 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-3`           | `v15662`                                                                | `Innovation i företagssektorn: CO53 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-4`           | `v15662`                                                                | `Innovation i företagssektorn: CO54 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-5`           | `v15662`                                                                | `Innovation i företagssektorn: CO55 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-sverige`                 | `v15662`                                                                | `Innovation i företagssektorn: CO51 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-2`        | `v15662`                                                                | `Innovation i företagssektorn: CO22 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-3`        | `v15662`                                                                | `Innovation i företagssektorn: CO23 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-4`        | `v15662`                                                                | `Innovation i företagssektorn: CO24 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-5`        | `v15662`                                                                | `Innovation i företagssektorn: CO25 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-sverige`              | `v15662`                                                                | `Innovation i företagssektorn: CO21 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-2` | `v15662`                                                                | `Innovation i företagssektorn: CO72 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-3` | `v15662`                                                                | `Innovation i företagssektorn: CO73 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4` | `v15662`                                                                | `Innovation i företagssektorn: CO74 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-5` | `v15662`                                                                | `Innovation i företagssektorn: CO75 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-sverige`       | `v15662`                                                                | `Innovation i företagssektorn: CO71 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-2`         | `v15662`                                                                | `Innovation i företagssektorn: CO62 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-3`         | `v15662`                                                                | `Innovation i företagssektorn: CO63 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-4`         | `v15662`                                                                | `Innovation i företagssektorn: CO64 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-5`         | `v15662`                                                                | `Innovation i företagssektorn: CO65 # v15662`        |                     1 |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-sverige`               | `v15662`                                                                | `Innovation i företagssektorn: CO61 # v15662`        |                     1 |
+  | `scb/innovation-foretag/ho`                                                  | `v37075`                                                                | `Innovation i företagssektorn: HO # v37075`          |                     3 |
+  | `scb/innovation-foretag/lilla-n-per-stratum`                                 | `v5697`                                                                 | `Innovation i företagssektorn: LillaN # v5697`       |                     1 |
+  | `scb/innovation-foretag/samarbete-inom-ovriga-aktiviteter`                   | `stmt:a55dabd95a1bb46ad685c59f51cea157d519da92f0f76e068160aa4bc7862398` | `Innovation i företagssektorn: COOP_NO @ 2020-01-01` |                     1 |
+  | `scb/innovation-foretag/strat-enligt-leverans`                               | `stmt:43451ed92b65b5ab4355cb9d26bfda06e38722b5fca129bcdbef7778939e105d` | `Innovation i företagssektorn: STRAT @ 2002-01-01`   |                     1 |
+  | `scb/innovation-foretag/weight`                                              | `v49567`                                                                | `Innovation i företagssektorn: WEIGHT # v49567`      |                     1 |
+
+## Published FoU coverage and current accounting
+
+The full comparison also found a partial published-family transfer missed by the fix-02
+nonempty-ID check. Four restored FoU setters moved the 2019 and 2021
+`UoH personal / STRAT / v462` witnesses from `scb/fou/stratum-strat` to
+`scb/fou/stratum`. Those four task-owned setters are withdrawn. The fifth FoU setter was
+already deferred because applying all five empties `stratum-strat`; the whole family
+needs published-ID review in the id sprint. No baseline statement is removed.
+
+Current recovery accounting is 827 added statements: 571 assertions and 256 setters (229
+`sets`, 24 `operational_definition`, two `description`, one `tags`). Retained source
+entries are 299 delivered, 239 parallel, 176 partition, 44 column and two description
+entries, plus one tag membership. All 23 recovered identity setters remain deferred: 16
+D-11 violations, two SNI ID-emptying cases and five FoU identity claims.
+
+## Resolver and design
+
+DESIGN.md now states the implemented behaviour: asserted occurrences without a `key`
+guard have per-statement keys. Folded-column default alignment remains a deferral; §D
+counts the 47 baseline IDs, excluding the 31 removed r193 branch IDs. D-11 now expects
+its differing-fold overlap pair with an explicit connectivity reason, so an internal
+invariant failure cannot silently accept the component.
+
+## Full published-ID comparison
+
+The temporary evidence harness reads `base.db` in place with SQLite read-only flags. It
+calls the existing source readers, curation runner and resolver, then compares every
+published variable PID with its actual resolved membership. It uses the emitter's PID
+and date helpers; no catalog is emitted or copied. Coordinates are exact table PID,
+spelling and source key, with duplicate/adjacent period ranges normalized by union. It
+includes all bound occurrence statuses and retains missing/empty published IDs in the
+comparison. Results and changed-PID explanations follow in the final validation.
+
+## Full comparison result
+
+The final comparison checked all 57,462 published 0.66.0 variable PIDs and 498,480 bound
+occurrence memberships. There are no missing PIDs or lost baseline witnesses. 57,165
+normalized targets are identical. The other 297 have justified additions: 212
+period-only extensions, 84 added case-alias coordinates and one mixed case. Each retains
+its existing table, folded spelling and native key, and exact authored assertions cover
+every added interval. All 297 before/after changes and source citations are listed in
+[the published-ID movement report](rebuild_recover_id_movement.md). All current resolver
+unminted/merged/split/unplaced lists are empty; 42 new IDs remain. No published ID moves
+to a different variable.
+
+The full comparison was rerun after withdrawing the four FoU setters. `stratum` and
+`stratum-strat` now match 0.66.0 exactly. Of the 35 corrected r257 published IDs, 33
+match exactly; native LILLAN and WEIGHT retain every baseline witness and add only
+source-backed older case-alias periods, detailed in the movement report.
+
+# Historical D recovery fix-02 (superseded)
 
 Temporary conversion evidence; deleted at milestone F (cutover).
 

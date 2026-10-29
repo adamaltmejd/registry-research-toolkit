@@ -640,7 +640,8 @@ catalog remains for a later release decision.
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and
    evidenced deferred endpoints; refresh locks and have the Operator verify the real
-   catalog against its predecessor.
+   catalog against its predecessor. Naming review includes "CIS2002 2000-2002 vs native
+   ids: naming": 30 legacy names collide with published native IDs.
 3. **SWECOV curation in E:** use that reviewed catalog for holdings and the real MONA
    exit order.
 
@@ -652,10 +653,10 @@ conversion reports.
   | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                         |
   | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
   | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | Post-D edition/qualifier measurement.                                        |
-  | Recovered identity assignments        |                                           19 setters | 16 proven concurrent-fold merges; three would empty minted IDs.                                                                    | Id sprint: SNI-edition variables and other identity reviews.                 |
+  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU published-family claims.                                                    | Id sprint: SNI-edition variables and other identity reviews.                 |
   | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | Id sprint, after the source/edition review.                                  |
   | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | Id sprint: concept groups and tags.                                          |
-  | Keyless assertion defaults            |                                 78 IDs at `79dc97c9` | Global folded defaults merge 53 IDs and unplace 25 anchors; recovered assertions use explicit keys.                                | Id sprint: align defaults after full identity measurement.                   |
+  | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | Id sprint: align defaults after full identity measurement.                   |
   | Order-time release selection          |                                         1 capability | Optional editions remain explicit.                                                                                                 | E, e-order, when the exit order requires selection.                          |
   | F4 same-text proposals                |                                         1 capability | No request yet.                                                                                                                    | On demand: when a curator asks.                                              |
   | Successor choice/reject syntax        |                                         1 capability | Existing conflicts already refuse.                                                                                                 | When a real succession needs explicit choice/rejection.                      |
