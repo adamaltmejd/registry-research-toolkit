@@ -640,45 +640,54 @@ catalog remains for a later release decision.
    identity lock refusals, coverage-adding recovery proposals, and edition/source
    placement that splits or merges variables. Work that does not change ids
    (descriptions/labels, coding, sentinels, delivered-value facts, lineage links,
-   document keys) goes after the sprint or serves as sprint evidence. A later PR updates
-   the deferral table's Home column with the triage counts. Before the sprint, also
-   measure the full-catalog effects of editions and qualifiers; review source placement
-   and identity separation before naming more families.
+   document keys) goes after the sprint or serves as sprint evidence. The Home column
+   below records that triage. Before the sprint, also measure the full-catalog effects
+   of editions and qualifiers; review source placement and identity separation before
+   naming more families.
+
+   **Identity batches.** Batch 1 (A1, 44 registers, 954 claims) adopted 35 partitions,
+   retired 73 ids (64 merged, 9 split), minted 44 and deferred 145 claims to batches
+   3/4. Batch 2 covers fordonsreg and RTB; batch 3 covers catalog-settleable defers and
+   held items; batch 4 needs A2 documents. Then finish keyless defaults/setters and
+   release 0.68.0 as the sprint baseline.
+
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and
    evidenced deferred endpoints; refresh locks and have the Operator verify the real
    catalog against its predecessor. Naming review includes "CIS2002 2000-2002 vs native
    ids: naming": 30 legacy names collide with published native IDs.
+
 3. **SWECOV curation in E:** use that reviewed catalog for holdings and the real MONA
    exit order.
 
 #### D deferrals
 
-Counts overlap across source inventories; per-entry reasons stay in the F-deleted
-conversion reports.
+A changes ids and belongs before the sprint. B belongs after the sprint or supplies
+sprint evidence. A3 stays parked for holdings/MONA evidence. Counts overlap across
+source inventories; per-entry reasons stay in the F-deleted conversion reports.
 
-  | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                         |
-  | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-  | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | Post-D edition/qualifier measurement.                                        |
-  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU setters would move published stratum-strat coverage.                        | Id sprint: SNI-edition variables and FoU retire-and-mint decision.           |
-  | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | Id sprint, after the source/edition review.                                  |
-  | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | Id sprint: concept groups and tags.                                          |
-  | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | Id sprint: align defaults after full identity measurement.                   |
-  | Order-time release selection          |                                         1 capability | Optional editions remain explicit.                                                                                                 | E, e-order, when the exit order requires selection.                          |
-  | F4 same-text proposals                |                                         1 capability | No request yet.                                                                                                                    | On demand: when a curator asks.                                              |
-  | Successor choice/reject syntax        |                                         1 capability | Existing conflicts already refuse.                                                                                                 | When a real succession needs explicit choice/rejection.                      |
-  | Presentation and register tags        |                         811 payloads, 12 memberships | Metadata views and register tag storage are absent.                                                                                | E, e-spa: implement metadata views and register tag navigation.              |
-  | Delivery mappings and donor metadata  |                                          288 entries | Headers, donor editions or whole endpoints need review.                                                                            | E, e-holdings.                                                               |
-  | Classification versions and timelines |                                           18 entries | Version ambiguity or partial occurrences.                                                                                          | When a curator supplies exact version/scope evidence.                        |
-  | Numeric corrections and N1 inference  |                        4,066 variables, 1 capability | No adopted logical-type evidence.                                                                                                  | E, e-types; 76 held targets in the E exit MONA round, others on a real case. |
-  | Occurrence-scoped sentinels           |                                            6 entries | Hash identity is wider than the stated scope.                                                                                      | Sentinel-aware value-set identity, when a real case needs it.                |
-  | Source-attribution corrections        |                                           12 entries | No four-kind provenance field.                                                                                                     | When a curator requests source-attribution curation.                         |
-  | Sentinel meanings                     |                        845 version/code/label claims | Flags have no separate meaning field.                                                                                              | When a real case needs more than the source labels.                          |
-  | Source coding evidence                |                                          261 entries | No reviewed value-set selection or translation.                                                                                    | When a curator supplies exact source/value-set evidence.                     |
-  | Documentary metadata                  |                                           37 entries | No reviewed translation.                                                                                                           | When a curator requests source-backed documentary metadata.                  |
-  | Support, periods, links and clearing  |                                           57 entries | Whole-occurrence evidence or explicit clearing is missing.                                                                         | When a real case supplies the required source evidence.                      |
-  | Located recovery-lock refusals        |                                          158 outputs | Empty, overlapping, ambiguous, partial or orphaning claims.                                                                        | Source review on demand; identity cases in the id sprint.                    |
-  | Dropped: nothing left to do           |                              9,949 accounted entries | Satisfied claims, obsolete findings, folded aliases, no-op clears, bookkeeping, panel presentation (750) and case-only splits (8). | Dropped; details stay in the conversion reports.                             |
+  | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                                             |
+  | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+  | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | A 170 (167 A2, 3 A3 parked), B 0: source/edition review before the sprint.                       |
+  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU setters would move published stratum-strat coverage.                        | A 23 (A1), B 0: pre-sprint identity batches.                                                     |
+  | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | A 1,218 (930 A1, 282 A2, 6 A3 parked): pre-sprint review; B 369: after sprint/evidence.          |
+  | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | A 1 (A1): LOVA prerequisite before sprint; B 124: groups/tags sprint evidence.                   |
+  | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | A 22 (A1): pre-sprint defaults; B 25: equivalent anchor rewrites after sprint.                   |
+  | Order-time release selection          |                                         1 capability | Optional editions remain explicit.                                                                                                 | B: E, e-order, when the exit order requires selection.                                           |
+  | F4 same-text proposals                |                                         1 capability | No request yet.                                                                                                                    | B: on demand, when a curator asks.                                                               |
+  | Successor choice/reject syntax        |                                         1 capability | Existing conflicts already refuse.                                                                                                 | B: explicit syntax on demand; identity decisions need A review.                                  |
+  | Presentation and register tags        |                         811 payloads, 12 memberships | Metadata views and register tag storage are absent.                                                                                | B: E, e-spa, metadata views and register tag navigation.                                         |
+  | Delivery mappings and donor metadata  |                                          288 entries | Headers, donor editions or whole endpoints need review.                                                                            | B: E, e-holdings; coverage-changing endpoints need A review.                                     |
+  | Classification versions and timelines |                                           18 entries | Version ambiguity or partial occurrences.                                                                                          | B: exact classification binding; any identity split needs separate A review.                     |
+  | Numeric corrections and N1 inference  |                        4,066 variables, 1 capability | No adopted logical-type evidence.                                                                                                  | B: E, e-types; 76 held targets in the E exit MONA round, others on a real case.                  |
+  | Occurrence-scoped sentinels           |                                            6 entries | Hash identity is wider than the stated scope.                                                                                      | B: sentinel-aware value-set identity when a real case needs it.                                  |
+  | Source-attribution corrections        |                                           12 entries | No four-kind provenance field.                                                                                                     | B: source-attribution curation on request.                                                       |
+  | Sentinel meanings                     |                        845 version/code/label claims | Flags have no separate meaning field.                                                                                              | B: when a real case needs more than source labels.                                               |
+  | Source coding evidence                |                                          261 entries | No reviewed value-set selection or translation.                                                                                    | B: exact source/value-set evidence from a curator.                                               |
+  | Documentary metadata                  |                                           37 entries | No reviewed translation.                                                                                                           | B: source-backed documentary metadata on request.                                                |
+  | Support, periods, links and clearing  |                                           57 entries | Whole-occurrence evidence or explicit clearing is missing.                                                                         | A: coverage-changing periods before sprint; B: other support, links and clearing after/evidence. |
+  | Located recovery-lock refusals        |                                          158 outputs | Empty, overlapping, ambiguous, partial or orphaning claims.                                                                        | A 2 (A1): pre-sprint identity review; B 156: satisfied periods and metadata after/evidence.      |
+  | Dropped: nothing left to do           |                              9,949 accounted entries | Satisfied claims, obsolete findings, folded aliases, no-op clears, bookkeeping, panel presentation (750) and case-only splits (8). | B: dropped; details stay in the conversion reports.                                              |
 
 ### E: the holdings layer
 
