@@ -1088,8 +1088,9 @@ layer after the published catalog, reading its public table and variable ids. Th
 not change provider identity, segment validity or classification applicability. This
 boundary and the absence of a catalog series entity are settled in [REBUILD.md,
 "Decisions already made"](../REBUILD.md#decisions-already-made) and "Value sets,
-populations and series" above. The choices still requiring a ruling are collected in
-"Open for the maintainer" below; their recommendations are not adopted policy.
+populations and series" above. The decisions below include the maintainer 2026-10-29
+rulings. The remaining coding representation question is collected in "Open for the
+maintainer"; its recommendation is not adopted policy.
 
 Source references in this section use `cleanroom/design.md` (v4, 2026-10-26) and
 `cleanroom/schema-v3.md`, under the maintainer-local `.local/design/first-principles/`
@@ -1122,8 +1123,8 @@ read-only. Reference browsing uses the catalog; held browsing joins accepted map
 public id and applies scope before ranking, counts and pagination. Cursors bind scope
 and both generations. Neither an alias, a successor nor equivalence grants possession.
 Base-only `order`/`validate` use the published reference catalog (§9). In steward mode,
-if Q1 places provider definitions in supplemental tables or Q2 adds slot/coding
-definitions, those same functions read a composed semantic view: the answer may include
+those same functions read a composed semantic view including the steward provider
+definitions and slot variables (maintainer 2026-10-29): the answer may include
 steward-specific slot variables and pre-2018 delivery codings absent from the base. That
 is an explicit mode divergence, not a claim of identical base-only answers. The
 implementation of the logical check is shared; physical mapping then adds possession
@@ -1144,10 +1145,48 @@ resolved against the pinned D catalog, not copied from legacy `representation` f
 
 ### Inputs and ownership
 
+**Steward repository (maintainer 2026-10-29).** Everything SWECOV-specific lives in a
+new dedicated SWECOV repository, including the steward definition, scope, branding,
+series/mappings, slot definitions, its own provider definitions and private inputs. The
+maintainer creates the GitHub repository; **e-repo** prepares its layout and exact
+commit pin before e-holdings. Its access controls must protect the private inputs;
+public metadata definitions do not authorize publishing private source files.
+
+The toolkit contains only generic compilation/serving code and a steward pin registry,
+`curation/stewards.toml`: each steward id selects `repo`, exact `commit` and relative
+`config` path. The dedicated repo's `steward.toml` declares owner id, scope,
+presentation paths, reader/input roles, semantic curation root and series root. Use
+`scope.toml`, `branding/` (`steward.json`, logo), `series/`, `curation/registers/`
+(normal ledgers and statements, including slots), `curation/readers/`, and `inputs/`
+(census, storage export, provider source TOML/converted transcription CSV, inventory and
+legacy slug evidence). Pin selected delivery-document evidence there too, retaining
+originals privately. Reuse the catalog input-pin discipline: verify the supplied
+checkout against the exact commit and declared paths/hashes; no implicit latest branch
+or neighbouring inputs. The compiled holdings file carries presentation/config data
+needed at runtime; serving never checks out that repo or parses its TOML.
+
+The 27 SWECOV-only providers are public in a legal sense but **must not enter the global
+catalog**. Their normal semantic tables live in the holdings file's supplemental part,
+built from this repo. This differs from reviewed SWECOV-generated knowledge about
+providers already in the global catalog: that remains eligible for global curation under
+the existing ruling. Delivery-only wide slots are separate steward variables, with
+reviewed per-column routes; existing interval-valid D variables still win. Supplemental
+search exposes a separately labelled steward result group with its own FTS ranking,
+counts and cursor, alongside the reference group; independent bm25 ranks are never
+merged.
+
+A second steward such as IFAU needs its own pinned repo/config, owner id, scope,
+branding, logical definitions/ledgers, mappings and metadata-only census/storage inputs,
+then a holdings asset paired with the base catalog. The same compiler and
+`reg-meta serve --catalog <steward>` select it without SWECOV branches. Serving that
+second steward's webapp and steward-specific MCP is later, not E; E establishes the
+data/config contract, not a second deployment.
+
 The compiler has explicit paths and pins; it reads no neighbouring files implicitly. The
 inspected private inputs worktree is clean at commit
 `9186fcbceeb2283a50c7f684764869e4dda5765e` (also the current `curation/inputs.toml`
-pin). It supplies:
+pin). It supplies the legacy migration sources listed below; e-repo moves the SWECOV
+subtree into the dedicated repo and records its new paths/pin:
 
 - `swecov/swecov/SWECOV_variables_full_2026-06-15.csv`: the physical census, headed
   `Category,Detail,Table,V1,…,V1396`. The inspected pin contains 1,813 tables and 44,970
@@ -1163,12 +1202,13 @@ pin). It supplies:
 
 - `swecov/providers/` (28 TOML files at the inspected pin): stewardship-only logical
   descriptions in legacy TOML. Convert them once to the current transcription CSV
-  format, pin the converted inputs in the private repository as milestone A did, then
-  use the existing reader, frames, ledgers and statements. The reader itself reads CSV
-  (`reg-readers/src/transcription.rs`), not TOML. No second identity or slug algorithm.
-  Their database home is Q1: ordinary public global provider definitions or the holdings
-  file's supplemental semantic part. Q2's slot/exception model does not decide where
-  regions, quality registers, Swedbank and Telia definitions live.
+  format, pin the converted inputs in the dedicated steward repository as milestone A
+  did, then use the existing reader, frames, ledgers and statements. The reader itself
+  reads CSV (`reg-readers/src/transcription.rs`), not TOML. No second identity or slug
+  algorithm. The 27 providers absent from D use the holdings file's supplemental
+  semantic part (maintainer 2026-10-29); the existing global provider is reconciled
+  through reviewed global curation. Regions, quality registers, Swedbank and Telia need
+  normal logical records, not a holdings-only shortcut.
 
 - `swecov/policy/inventory.toml` (1,432 table entries at that pin): today's generated
   physical placements, not a second authored authority. Its old base/spec pins and
@@ -1193,16 +1233,16 @@ uses), plus 17 mapping uses into five absent registers. These are mapping-use co
 not counts of distinct variables. Of the missing uses, 60 contain `enligt-leverans` (one
 absent variable). These counts are against the reviewed D base `8cc73d5fe`, not a claim
 about a future refreshed catalog. Classify every missing target as: an existing D
-id/table to retarget with evidence; a new steward-only definition/slot to mint under
-question 2; a genuine provider correction through reviewed global curation; or an
+id/table to retarget with evidence; a new steward-only definition/slot to mint under the
+steward repo; a genuine provider correction through reviewed global curation; or an
 explicit hold/unmap with a reason. `*-enligt-leverans` definitions are accepted as
 ordinary global curation when evidence records what a provider delivery actually
 contains: D already has 55 such ids in provider registers. SWECOV facts may inform
-global curation (Operator ruling S3). Delivery-only wide slots may use that accepted
-global class or steward slot definitions under Q2; legacy long-concept targets are
-retargeting evidence, not a requirement to mint a dangling long concept. The 17 uses
-need normal definitions and ledgers for those five registers, not a redirect to a
-similarly named provider register.
+global curation (Operator ruling S3). Delivery-only wide slots use separate steward slot
+definitions (maintainer 2026-10-29); legacy long-concept targets are retargeting
+evidence, not a requirement to mint a dangling long concept. The 17 uses need normal
+definitions and ledgers for those five registers, not a redirect to a similarly named
+provider register.
 
 The separate automatic-mapping worklist includes **1,747** inventory mapping entries
 whose provider is absent from D's `curation/inputs.toml` provider list, including
@@ -1210,37 +1250,37 @@ whose provider is absent from D's `curation/inputs.toml` provider list, includin
 28 legacy provider files include `lakemedelsverket`, which already exists in D; all
 legacy-provider targets total 1,777, including its 30 uses. These counts overlap the
 reviewed-target worklist and must not be added to it. Reconcile all of them in
-**e-holdings** under Q1; the 991 reviewed mappings are not the whole conversion scope.
+**e-holdings** from the new pinned steward repo; the 991 reviewed mappings are not the
+whole conversion scope.
 
-The supplied definitions carry no explicit non-public designation; that is not a
-verified blanket publication approval for their derived text or private source material.
-The e-holdings source audit must identify any non-public definitions before publication.
-Such definitions cannot enter the public global catalog; putting them in a supplemental
-DB would not make a public `reg_meta_swecov.db.zst` safe either. Non-public definitions
-must remain in a private steward build or be omitted from the public release. File
-listings themselves remain metadata under D9. Q1 recommends the supplemental home until
-the public-definition scope is explicitly established.
+The maintainer 2026-10-29 confirms the 27 providers' definitions are legally public, but
+rules out a global-catalog home. This does not publish the private census, storage
+export, inventory or original documents. File listings remain metadata under D9; release
+assets include only admitted metadata and safe source locators.
 
-The numbers describe inspected metadata, not microdata or an E build. The reviewed
-public decisions in `reg_webapp/stewards/swecov/scope.toml` and `series/*.toml` are
-carried to `curation/stewards/swecov/`, preserving locators, reasons and census digest.
-`steward.json` and `logo.svg` remain presentation data. The private inventory is an
-accounting/conversion input during replacement; thereafter one generic holdings compiler
-reads the authored definitions and census directly. There is no permanent
-generate-then-reparse inventory stage and no steward-specific Python implementation.
-Every legacy mapping is converted, dropped with a reason, or refused at its source.
+The numbers describe inspected metadata, not microdata or an E build. Move the reviewed
+decisions in `reg_webapp/stewards/swecov/scope.toml` and `series/*.toml`, plus branding,
+into the dedicated repo, preserving locators, reasons and census digest. Move the inputs
+repo's `swecov/` there as well. The private inventory is an accounting/conversion input
+during replacement; thereafter one generic holdings compiler reads the authored
+definitions and census directly. There is no permanent generate-then-reparse inventory
+stage and no steward-specific Python implementation. Every legacy mapping is converted,
+dropped with a reason, or refused at its source. F deletes the old toolkit steward tree
+and input-repo leftovers after the pinned move is verified.
 
 The ordinary catalog pipeline handles missing logical facts before holdings compile:
 `reg-readers` → `reg-frame` → `reg-resolve` → `reg-build` emission. Existing-provider
 corrections use ordinary `assert`/`set` statements and reviewed global curation;
-provider-delivery facts, including evidenced `*-enligt-leverans` definitions, use that
-same global curation home. Genuinely new steward-owned shapes get explicit normal ids;
-Q1 decides the ordinary provider-definition home and Q2 the slot/exception model. No
-route silently changes a variable's register. Their semantic publication boundary is
-addressed by Q1/Q2 below; physical locations and possession remain holdings facts;
-evidenced logical provider occurrences may enter global curation under S3. There is no
-physical-table record in the catalog's `reg-frame::Record`: its `Table` means a logical
-row shape and its `Release` a stated provider delivery.
+delivery facts about existing global providers, including evidenced `*-enligt-leverans`
+definitions, use that same global curation home. Facts specific to the 27 SWECOV-only
+providers stay supplemental, as do the adopted steward slots. Genuinely new
+steward-owned shapes get explicit normal ids in the dedicated repo and supplemental
+semantic tables, including delivery-only slots (maintainer 2026-10-29). Pre-2018 coding
+representation remains the open question below. No route silently changes a variable's
+register; physical locations and possession remain holdings facts; evidenced logical
+provider occurrences may enter global curation under S3. There is no physical-table
+record in the catalog's `reg-frame::Record`: its `Table` means a logical row shape and
+its `Release` a stated provider delivery.
 
 No new crate is needed for the physical layer. Pure serialized holdings/order types live
 in `reg-core`; format readers in `reg-readers`; compilation and SQLite emission in
@@ -1253,22 +1293,22 @@ format names remain confined to readers/configuration, as for the catalog builde
 
 ### Routing and auto-mapping
 
-`curation/stewards/swecov/series/*.toml` gives each named physical table a default list
-of current `table_pid`s in its named source register. The converter resolves old
+`series/*.toml` in the pinned steward repo gives each named physical table a default
+list of current `table_pid`s in its named source register. The converter resolves old
 `register` + `variants` through D's `[tables]` ledger using source table handles, never
 by copying an old slug. `bu_insats_pnrq0` already routes to `sos/bu/bu-insats-pnrq0`; an
 implicit logical table uses its register pid.
 
 A reviewed per-column `table_pid`/`variable_pid` override may route a received slot to a
-different explicitly declared register. Under Q2-A, SV's default remains `sos/par`,
-while a missing diagnosis slot may target `swecov/par-sv-slots`; that column does not
-inherit the default's register restriction. Its target register/table must exist in the
-semantic home chosen under Q1, the variable must belong there, and evidence must explain
-the cross-register route. The same mechanism covers positional `kva_typ` slots; Q2
-decides global provider slots versus steward slots, without requiring a separate long
-kva-typ concept. No new register is introduced by a route alone. Missing target routes
-are `holdings_table_route_unresolved`, not a fallback to the whole register; member
-tables may narrow the default list.
+different explicitly declared register. With the adopted steward slot model (maintainer
+2026-10-29), SV's default remains `sos/par`, while a missing diagnosis slot may target
+`swecov/par-sv-slots`; that column does not inherit the default's register restriction.
+Its target register/table must exist in the holdings file's supplemental semantic part,
+the variable must belong there, and evidence must explain the cross-register route. The
+same mechanism covers positional `kva_typ` steward slots, without requiring a separate
+long kva-typ concept. No new register is introduced by a route alone. Missing target
+routes are `holdings_table_route_unresolved`, not a fallback to the whole register;
+member tables may narrow the default list.
 
 The generic compiler does the following against the exact catalog/semantic-view pin:
 
@@ -1297,8 +1337,9 @@ The generic compiler does the following against the exact catalog/semantic-view 
    Authored column windows override the inferred reach and must validate as authored;
    they are not silently rewritten by this automatic clipping rule. Carried keys serve
    no ordered cell but must be evidenced row keys inside the file's reach. Current
-   coding before 2018 remains Q2, never a generic warning-shaped coverage extension.
-   Preserve final preference and `preliminary_data`; ambiguous windows remain blocked.
+   coding before 2018 remains the open coding question, never a generic warning-shaped
+   coverage extension. Preserve final preference and `preliminary_data`; ambiguous
+   windows remain blocked.
 4. Keep distinct rival owners ambiguous. The same `variable_pid` reached through two
    explicitly routed tables is one owner, grouped by variable identity within each table
    coordinate; it yields two valid placements, not two rival variables. Different
@@ -1335,12 +1376,12 @@ This static target census does not establish temporal coverage. No resolved D da
 is available in this checkout or the authorized inputs tree, so the conservative
 planning estimate for the rejected complete-coverage rule is **0–1,235 temporal-refusal
 candidates among currently at-least-partly-resolved columns**. This is an upper-bound
-range, not a measured point estimate; the 1,531 missing-target cases need Q1/Q2
-resolution before temporal assessment. Under the adopted intersection rule, partial
-coverage causes zero publication refusals: it yields clips/notices; empty intersections
-yield unmatched notices. Measure actual partial/empty counts in e-holdings/e-compare
-against the pinned D artifact, without claiming that this static inspection measured
-them.
+range, not a measured point estimate; the 1,531 missing-target cases need
+supplemental-definition/slot resolution before temporal assessment. Under the adopted
+intersection rule, partial coverage causes zero publication refusals: it yields
+clips/notices; empty intersections yield unmatched notices. Measure actual partial/empty
+counts in e-holdings/e-compare against the pinned D artifact, without claiming that this
+static inspection measured them.
 
 `inventory.py::_fallbacks` is replaced by variable/window lookup: a table explicitly
 serving a variable can serve its other historical delivered spellings in that table,
@@ -1359,9 +1400,11 @@ disagreement auto-corrects provider types.
 
 ### Compiled facts and publication
 
-`reg-build holdings --base <published-db> --inputs <root> --curation <root> --steward <id> --out <file>`
-is the separate stage. It verifies the catalog, reads it without modifying or copying
-it, and emits only the holdings layer. The base's entities, row ids, documents and
+`reg-build holdings --base <published-db> --steward <id> --steward-repo <checkout> --out <file>`
+is the separate stage. The id selects the toolkit's `curation/stewards.toml` pin; the
+supplied checkout must match it, and its config supplies all input/curation paths. It
+verifies the catalog, reads it without modifying or copying it, and emits only the
+holdings layer (maintainer 2026-10-29). The base's entities, row ids, documents and
 search indexes stay in the catalog file. Holdings inputs and stored cross-file mappings
 use public ids; integer ids are local to each database and never joined across files
 without their database origin. Do not import schema-v3's obsolete programme id ranges or
@@ -1369,14 +1412,15 @@ without their database origin. Do not import schema-v3's obsolete programme id r
 `reg-build verify <holdings-db> --catalog <catalog-db>` validates the pair, including
 cross-file references that SQLite cannot enforce as foreign keys.
 
-Steward-only logical descriptions, if retained outside the provider catalog, use the
-ordinary readers/resolver/emitter in a supplemental semantic part of the holdings file.
-No existing global register is overwritten. Their public ids must be distinct; the
-reader resolves a public id to one database origin before using its local row id. Shared
-code lists are addressed by content hash. The same catalog-check implementation can read
-this composed semantic view without changing base entities. The ordinary
-provider-definition home is Q1; the slot/exception model is Q2; there is no new
-addressable "form" entity and no base-copy/append pipeline.
+Steward-only logical descriptions use the ordinary readers/resolver/emitter in a
+supplemental semantic part of the holdings file. No existing global register is
+overwritten. Their public ids must be distinct; the reader resolves a public id to one
+database origin before using its local row id. Shared code lists are addressed by
+content hash. The same catalog-check implementation can read this composed semantic view
+without changing base entities. Ordinary SWECOV-only provider definitions and steward
+slots both use this home (maintainer 2026-10-29); the pre-2018 coding representation
+remains open; there is no new addressable "form" entity and no base-copy/append
+pipeline.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -1433,19 +1477,20 @@ recorded in `series/fk-vbbarn-lev4.toml` (2026-10-16).
 
 Publish `reg_meta_swecov.db.zst`, the SWECOV holdings layer, beside `reg_meta.db.zst`,
 the reference catalog, in the same `reg_meta/v*` release. They are a required pinned
-pair, not two copies of the reference catalog.
-`reg-meta serve --catalog swecov --db <dir>` opens `reg_meta.db` and
-`reg_meta_swecov.db`, checks owner `steward:swecov`, both schema versions and the exact
-catalog generation/digest named by the holdings file, then exposes their composed view.
-`--catalog global` opens only `reg_meta.db`; it does not make physical promises. Missing
-or mismatched files fail before serving, with no fallback. Provider documents remain in
-the base catalog; approved steward-derived documents live in the holdings document
-tables. Runtime TOML is not read. Each response's generation identifies the selected
-pair; the manifest also records both component generations. The default global
-installation still requires only one file. Project-file loading is deferred; hosted
-`serve` derives its steward from startup configuration and accepts no owner override in
-a request. This extends today's hardcoded `reg-catalog::Catalog::open`, rather than
-claiming these flags already exist.
+pair, not two copies of the reference catalog. In general,
+`reg-meta serve --catalog <steward> --db <dir>` opens `reg_meta.db` and
+`reg_meta_<steward>.db`, checks the configured owner, and verifies the pair. For SWECOV,
+`--catalog swecov` opens `reg_meta_swecov.db` and checks owner `steward:swecov`, both
+schema versions and the exact catalog generation/digest named by the holdings file, then
+exposes their composed view. `--catalog global` opens only `reg_meta.db`; it does not
+make physical promises. Missing or mismatched files fail before serving, with no
+fallback. Provider documents remain in the base catalog; approved steward-derived
+documents live in the holdings document tables. Runtime TOML is not read. Each
+response's generation identifies the selected pair; the manifest also records both
+component generations. The default global installation still requires only one file.
+Project-file loading is deferred; hosted `serve` derives its steward from startup
+configuration and accepts no owner override in a request. This extends today's hardcoded
+`reg-catalog::Catalog::open`, rather than claiming these flags already exist.
 
 Generation hashes cover the exact base generation and file digest, pinned inputs,
 topology/curation digests, schema and compiler semantics. Sort natural keys before row
@@ -1514,23 +1559,23 @@ order), then held row keys in stable key order, with exact duplicates emitted on
 Several logical sources sharing a file share its row filter. Union their requested row
 ranges and report that every column in that file is extracted over that union; never
 silently claim per-column row restriction. This union-filter behavior is already the v3
-rule (historical design, step 6); question 3 offers only confirm-or-reopen, not an
-undecided default. No joins, stacks, pivots, recodes or researcher display-name renames
-run in MONA.
+rule (historical design, step 6), confirmed by maintainer 2026-10-29. For annual
+physical SQL tables, emit one file per year without a row filter; apply union OR only
+inside a physical table spanning multiple requested periods. No joins, stacks, pivots,
+recodes or researcher display-name renames run in MONA.
 
 **Positional pivots need real targets.** D's `sos/par/ids.toml` anchors the provider DIA
 variable at `PAR_OV: DIA`; it does not define `DIA1`…`DIA30`. The 197 legacy
-position-member uses cannot be described as existing catalog slot variables. Question 2
-compares explicit steward-only slots with a holdings-only one-to-many expansion. The
-recommended model for slots with no existing interval-valid D variable is steward-only
-slot variables: transcribe each documented received slot, mint normal ids, group them by
-curated set and record lineage to the provider concept. Existing interval-valid D
-variables win over every legacy member/slot target by folded-name resolution; only
-unmatched slots need new ids. In particular the five legacy year-member uses are
-resolution/retargeting work, not an automatic minting queue. D32 still governs catalog
-identity: no catalog series entity and no merge of co-delivered slot variables.
+position-member uses cannot be described as existing catalog slot variables. The adopted
+model for slots with no existing interval-valid D variable is steward-only slot
+variables (maintainer 2026-10-29): transcribe each documented received slot, mint normal
+ids, group them by curated set and record lineage to the provider concept. Existing
+interval-valid D variables win over every legacy member/slot target by folded-name
+resolution; only unmatched slots need new ids. In particular the five legacy year-member
+uses are resolution/retargeting work, not an automatic minting queue. D32 still governs
+catalog identity: no catalog series entity and no merge of co-delivered slot variables.
 
-Under that recommendation, `holding_mapping` has one slot `variable_pid` per physical
+Under this decision, `holding_mapping` has one slot `variable_pid` per physical
 column/window; it has no member discriminator. Optional `slot_kind/index` on
 `holding_column` describes topology/order only, never N:1 identity. For a worked target
 shape (illustrative ids pending the normal ledger review),
@@ -1538,20 +1583,19 @@ shape (illustrative ids pending the normal ledger review),
 points to `SWECOV_SOS_SV.DIA1` and carries `slot_kind = position`, `slot_index = 1` on
 its physical column. The provider long DIA is lineage evidence, not the target of that
 placement. Before these ids exist, an order of provider DIA does **not** select
-`DIA1`…`DIA30`. Do not publish mappings against invented ids. The alternative in
-question 2 would require a different, explicit expansion contract and schema before
-implementation.
+`DIA1`…`DIA30`. Do not publish mappings against invented ids. There is no holdings-only
+one-to-many expansion contract.
 
-For example, in the recommended SV slot model, select the thirty adopted slot variables
-as a set; each maps to exactly one literal `DIA<N>` column, and the person row key is
-added once. CIS has two distinct `emp04` cases: `CIS2006.emp04` fold-matches D's
+For example, in the adopted SV slot model, select the thirty adopted slot variables as a
+set; each maps to exactly one literal `DIA<N>` column, and the person row key is added
+once. CIS has two distinct `emp04` cases: `CIS2006.emp04` fold-matches D's
 `scb/innovation-foretag/emp04-enligt-leverans`, asserted over 2006
 (`scb/r257/curation.toml:613`). `CIS2004.emp04` does not fold-match that target at 2004:
 D documents `antal-anstallda` as `EMP`. It needs the explicit reviewed mapping from
 `series/cis.toml:1907–1909` to `antal-anstallda` at 2004, or stays `mapping_missing`.
 Neither case mints a duplicate year slot or uses reference-year meaning to extend
-documented delivery coverage. The SV slot ids above remain illustrative pending the Q2
-decision and normal ledger review.
+documented delivery coverage. The slot model is settled; the SV ids above remain
+illustrative until normal ledger review mints them.
 
 Column windows narrow a mapping independently of slot metadata. In
 `swecov-sos-barn-insats.toml`, `P1105_LopNr_PersonNr` serves the current BU shape over
@@ -1561,9 +1605,9 @@ ordinary 2015–2016 window onto the already-declared D table `bu-insats-pnrq0`
 mechanism. A whole-table date cannot stand in for that window. Caveats about current
 coding before 2018 stay attached to their actual window; they must not clone or widen
 global segments. The source records the **Operator's warn-not-hold call** (2026-10-19,
-batch-g), not a maintainer ruling. Preserve that accepted behavior. Question 2 concerns
-only current-coding windows before 2018, not PLACDAT1 or the ordinary older-table
-mapping.
+batch-g), not a maintainer ruling. Preserve that accepted behavior. The remaining open
+question concerns only current-coding windows before 2018, not PLACDAT1 or the ordinary
+older-table mapping.
 
 The six `RTB_PostNr_YYYY` projections are a worked key-only case: ordering the person
 key is served by the main `RTBYYYY` placement; a selected projection retains its own
@@ -1586,33 +1630,35 @@ entry:
   partition or projection, one optional `row_filter`, and ordered `columns`;
 - each column: exact physical `name`, optional `stata_name`, expected storage metadata,
   logical source/binding/table/variable/form references, row-key/carried role and
-  optional slot topology metadata under question 2's recommended model. Several logical
+  optional steward slot topology metadata (maintainer 2026-10-29). Several logical
   references may share one physical column.
 
 For a 2019–2020 request on `SWECOV_SOS_SV`, the logical interval is
 `[2019-01-01,2021-01-01)`. The file's filter names `AR`, encoding `year`, with inclusive
 `ranges = [{from: 2019-01-01, to: 2020-12-31}]`. The compiler subtracts one day from a
 finite half-open end; it never copies `2021-01-01` into the inclusive runner bound.
-After adoption/minting of the recommended slot definitions, select their thirty bindings
-plus `P1105_LopNr_PersonNr` once. Proposed table-based naming would yield
-`swecov_sos_sv.dta`; it is conditional on the explicit naming reopening in question 4.
-The old template/disambiguation rule remains the baseline until that choice is ruled.
+After minting the adopted steward slot definitions, select their thirty bindings plus
+`P1105_LopNr_PersonNr` once. Physical-table naming yields `swecov_sos_sv.dta`
+(maintainer 2026-10-29). A provider delivering one physical SQL table per year, such as
+LISA per year, instead yields one file per annual table with no row filter. The union OR
+filter applies only when one physical table spans several requested periods; it unites
+the requested ranges for that file, with any inclusion-over-request reported. This
+confirms the existing union-filter rule (maintainer 2026-10-29).
 
-**Filenames deliberately reopen a prior ruling.** The 2026-10-23 v3 rule was
-`<provider>_<register>_<variant>[_<placement>][_<period>]`, omitting `_default` and
-adding the physical id when sibling names collide
+**Physical-table filenames (maintainer 2026-10-29).** This replaces the 2026-10-23 v3
+rule: `<provider>_<register>_<variant>[_<placement>][_<period>]`, omitting `_default`
+and adding the physical id when sibling names collide
 (`git show f5993d7d8^:crates/DESIGN.md`, "The file's name"). Neither that text nor its
 `file_stem` implementation includes `_default`; omission is part of the baseline.
 Keeping the rule has real costs: it names the held edition rather than the filtered
 request (so the period can be read incorrectly as extracted coverage), and it names a
 shared physical table after one majority variant. D also removes that old variant
-selector vocabulary. These justify asking about a change, not asserting an accidental
-bug or silently replacing a maintainer ruling. Question 4 recommends table-based names
-with periods in manifest metadata instead. Forty-four census table names contain
-characters outside `[A-Za-z0-9_]`. Reuse `reg_resolve::slugify`'s existing
-transliteration, run-coalescing and leading-letter rule, with `_` as separator instead
-of implementing another normalizer; then apply runner length, Windows-device, log-name
-and case-insensitive collision checks. The current helper hardcodes `-`, so
+selector vocabulary. The adopted names follow the physical table, with periods in
+manifest metadata instead; no accidental `_default` leak is asserted. Forty-four census
+table names contain characters outside `[A-Za-z0-9_]`. Reuse `reg_resolve::slugify`'s
+existing transliteration, run-coalescing and leading-letter rule, with `_` as separator
+instead of implementing another normalizer; then apply runner length, Windows-device,
+log-name and case-insensitive collision checks. The current helper hardcodes `-`, so
 implementation parameterizes that same helper or uses its output with `-`→`_`, rather
 than pretending it already has a separator argument. Refuse empty or colliding results
 pending an authored `file_name`; never disambiguate by iteration order. Normalize and
@@ -1646,7 +1692,7 @@ stay on MONA. Only aggregates passing the separate fixed disclosure policy and h
 review can leave ([export-gate design](../reg_export_gate/DESIGN.md), "Trust boundaries"
 and "MONA mode"). An order is neither disclosure approval nor an export receipt.
 
-### Logical types (N1) and mock data
+### Logical types (N1) and metadata for local mocks
 
 N1 belongs in `reg-resolve`, after source normalization and occurrence curation, not in
 a SWECOV reader or the runner. Keep source dtype/length evidence distinct from the
@@ -1686,26 +1732,37 @@ projection instead have separately evidenced recipient/child identifier roles. M
 reuse distinct synthetic key domains without recasting a numeric storage type as a role.
 These are worked metadata inputs, not claims of findings from an unrun N1 pass.
 
-`mock_data` takes `project`, explicit `seed` and `rows_per_file` against the configured
-steward plan. Project-inventory mocks are deferred. The new capability gate is
-`--enable-mocks`: it defaults off and startup refuses it with a non-loopback `--host` or
-any `--public-host`. Without the capability, omit the HTTP route, MCP operation and
-OpenAPI schema; a local-looking Host header cannot enable it on hosted `serve`. This is
-a new gate to implement, not a capability current `serve` already has. Its bounded
-`POST /api/project/mock` download produces synthetic files and a typed plan; no
-researcher-chosen filesystem path is written. Size limits precede allocation. Stdio
-`reg-meta mcp` exposes no mocks in E: it has neither an HTTP bind nor the enable-mocks
-capability, and omits the mock tool/schema. Loopback hosted-MCP through an explicitly
-enabled local `serve` uses the same gate; transport alone does not bypass it.
+**Local mock skill, later (maintainer 2026-10-29).** Mock generation is not a server
+capability or part of E's build. A later skill on the researcher's machine reads
+`project_data.json` and calls catalog/MCP operations for metadata. E adds no mock
+endpoint, MCP mock tool, enable-mocks gate, CSV/ZIP writer dependencies or generator.
+Both hosted and stdio MCP expose metadata operations only. The skill itself, writer
+choices, synthetic generation rules and seed/size controls are later work.
 
-For question 5's recommended CSV/ZIP output, add runtime dependencies `csv = 1.4.0` and
-`zip = 9.1.2` to `reg-catalog`, reusing versions already used by `reg-readers` (neither
-is currently a runtime dependency). This is explicitly a new runtime-dependency
-decision. Use ZIP stored entries, sorted names, fixed timestamps/permissions and no host
-metadata for byte identity. CSV uses the library's quoting/UTF-8 support, with a sidecar
-typed schema; `.dta`/Parquet physical extraction remains the runner's job. Adopting more
-mock formats requires named writer choices, not an unspecified cross-language writer
-abstraction.
+E must expose enough metadata to support that skill. Existing operations already supply:
+
+- `schema`: table/variable/spelling windows with adopted type, length, value-set
+  reference, role and state (`reg-catalog/src/ops/schema.rs`);
+- `segments`: adopted type/length/format, value-set/classification references,
+  identifier kinds and optional provenance (`ops/segments.rs`);
+- `values`: paged codes, labels, sentinels and hierarchy by value-set hash or pinned
+  classification (`ops/values.rs`);
+- `order` on the coarse `order` MCP tool: logical entries with type/length/value-set and
+  classification references, plus row keys, clips and findings (`ops/order/mod.rs`).
+
+`coverage` currently exposes documented provider spans, not possession
+(`ops/coverage.rs`). E must add holdings-aware coverage with accepted held intervals and
+unavailable/mapping-missing intervals, clearly distinct from reference coverage. The
+existing semantic operations must also read the configured supplemental steward semantic
+part. The planned `materialize_order` operation on the same `order` tool adds exact file
+names, physical headers, slot topology, filters, keys and logical
+source/binding/table/variable/form/window references. Each column must expose its
+adopted logical/output type, length and value-set/classification references, or provide
+those exact references so `schema`/`segments`/`values` can retrieve them. Current
+logical row-key entries have only variable/spelling; fetch key type/identifier kind
+through those semantic operations rather than infer it from the header. Unknown remains
+unknown; N1 proposals become effective output types only after review/adoption. These
+metadata gaps belong to e-holdings/e-order/e-types, not a mock service.
 
 Mocks read no MONA rows or empirical distributions. Use adopted types, lengths, value
 sets and classification pins; refuse unknown/unsupported types needing a guess. Generate
@@ -1720,10 +1777,9 @@ real number of children or observations. For `CIS2006.emp04`, it uses the existi
 `antal-anstallda` mapping at 2004 is adopted, otherwise its `mapping_missing` blocks the
 plan. No mock invents that association or a new long person-year table. Mocks preserve
 file topology, columns and type boundaries; they do not claim representative
-missingness, frequencies or valid causal relations. The seed, generator version and plan
-generation determine bytes. Use the same column/name limits as the extract plan. The
-mock writer scope and its runtime dependencies are question 5, not an adopted
-multi-format writer abstraction.
+missingness, frequencies or valid causal relations. The later skill must use the extract
+plan's column/name limits. These examples state the metadata contract for that later
+consumer, not an E generator implementation.
 
 ### Vocabulary checklist and proof
 
@@ -1732,49 +1788,49 @@ This checklist inventories today's implementation rather than freezing it. Sourc
 `steward_storage.py` in `reg_meta_build/src/reg_meta_build/`, their holdings/steward
 cases, and the SWECOV series.
 
-  | Today's item                                               | Disposition                   | Reason                                                                                                                                                                   |
-  | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-  | Annual tables; pooled editions; disjoint period lists      | Kept                          | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                                        |
-  | `edition_spelling` (8 nonannual series)                    | Kept                          | Authored LA/VT/HT anchors, using the existing period grammar; no school year guessed from a filename.                                                                    |
-  | Point-date status editions                                 | Kept                          | RTB postnr's `2015-12-31` is a one-day status, not a calendar year.                                                                                                      |
-  | Partitions                                                 | Kept                          | Declared disjoint shards such as Swedbank `v15`, not competing deliveries hidden by a label.                                                                             |
-  | Projections                                                | Kept                          | Own grain/keys/file; parent is not a projection.                                                                                                                         |
-  | Wide position/month/year members (197/36/5 uses)           | Changed, Q2                   | Existing interval-valid D variables win, including resolution of the five year members; mint only missing slots under Q2. Index stays topology evidence.                 |
-  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding is the separate Q2 issue.                                                           |
-  | `select_owner` (280 uses)                                  | Changed                       | Explicit evidence-backed variable choice per table/window; cannot clear catalog ambiguity.                                                                               |
-  | `hold` + `follow_up` versus `unmap`                        | Kept                          | Interim unresolved metadata with issue versus permanent non-mapping; neither is silently auto-mapped.                                                                    |
-  | `graft_onto`                                               | Changed                       | Convert provider gap-fill candidates to reviewed ordinary assertions/setters, or steward definitions; no generator silently grafts physical facts into provider history. |
-  | Historical spelling `_fallbacks`                           | Changed                       | Variable/interval lookup serves historical forms only without another physical owner; no spelling selector or alias-based possession of another variable.                |
-  | Row-period columns, `ranges[]` OR filters                  | Kept                          | Union of sorted requested ranges, optional inclusive ends and explicit encodings; Q3 is a reopening only.                                                                |
-  | Column-role row keys; carried keys; key-only files         | Kept                          | Roles, no key table; only required held row keys ride along, no arbitrary identifiers.                                                                                   |
-  | Timeless/year-independent; retained unknown                | Changed                       | Explicit dispositions; unknown stays accounted/unavailable. Legacy `_default` variant restrictions go.                                                                   |
-  | Excluded and lookup dispositions                           | Kept                          | Exact census accounting without observation availability.                                                                                                                |
-  | Companion/crosswalk tables, including `LopNrByte`          | Kept, deferred                | Account separately from observations; no automatic extraction of pseudonym crosswalks. Q6 blocks an E order needing one.                                                 |
-  | Unmapped columns and coverage denominator                  | Kept                          | Retain unmatched columns as mapping_missing notices/worklist rows; publication continues. Every-held-column orderability is a tracked target.                            |
-  | Combined tables; several logical mappings per column       | Kept                          | Each routed table/variable/window must validate; one physical extraction column may have several references.                                                             |
-  | Exact physical names; Stata aliases                        | Kept                          | Literal SQL identifiers and format-safe output; spelling is evidence.                                                                                                    |
-  | v3 logical filename template + physical-id suffix          | Changed only if Q4 adopted    | Table-based normalizer is an explicit reopening, justified by shared-table naming/held-period ambiguity; no verified `_default` leak.                                    |
-  | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                     |
-  | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                  |
-  | Warned-gap catalog-state clones                            | Dropped                       | Steward semantic representation is Q2, never copied widened global segments.                                                                                             |
-  | Alias, `same_as`, succession as possession shortcut        | Dropped                       | Documentary relations grant no possession.                                                                                                                               |
-  | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                              |
-  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                   |
-  | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                             |
-  | Legacy slug pins (`swecov/slugs/`)                         | Changed                       | Reconcile 55 pin files into normal ledgers; no silent fallback slug minting.                                                                                             |
-  | Steward delivery documents                                 | Changed                       | Pin selected source evidence/derived text; supplemental doc/FTS tables, original documents stay private.                                                                 |
-  | Generated inventory and candidate/base/spec pins           | Changed                       | Preserve provenance/accounting; remove intermediate authority.                                                                                                           |
-  | `global_fallback` physical manifest                        | Dropped                       | The global logical order already describes the unlocated selection; it cannot run on MONA.                                                                               |
-  | `project_unnamed`                                          | Kept for physical order       | Blank/whitespace names cannot identify manifest provenance; logical drafts remain valid.                                                                                 |
-  | Project-received inventories and mocks                     | Kept as deferred domain scope | `owner.kind` retained; E ships steward mode only until a real project input format exists.                                                                               |
+  | Today's item                                               | Disposition                   | Reason                                                                                                                                                                            |
+  | ---------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | Annual tables; pooled editions; disjoint period lists      | Kept                          | Explicit physical coverage; no runtime name inference or artificial yearly files.                                                                                                 |
+  | `edition_spelling` (8 nonannual series)                    | Kept                          | Authored LA/VT/HT anchors, using the existing period grammar; no school year guessed from a filename.                                                                             |
+  | Point-date status editions                                 | Kept                          | RTB postnr's `2015-12-31` is a one-day status, not a calendar year.                                                                                                               |
+  | Partitions                                                 | Kept                          | Declared disjoint shards such as Swedbank `v15`, not competing deliveries hidden by a label.                                                                                      |
+  | Projections                                                | Kept                          | Own grain/keys/file; parent is not a projection.                                                                                                                                  |
+  | Wide position/month/year members (197/36/5 uses)           | Changed                       | Existing interval-valid D variables win, including resolution of the five year members; mint only missing steward slots (maintainer 2026-10-29). Index stays topology evidence.   |
+  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding is the remaining open coding issue.                                                          |
+  | `select_owner` (280 uses)                                  | Changed                       | Explicit evidence-backed variable choice per table/window; cannot clear catalog ambiguity.                                                                                        |
+  | `hold` + `follow_up` versus `unmap`                        | Kept                          | Interim unresolved metadata with issue versus permanent non-mapping; neither is silently auto-mapped.                                                                             |
+  | `graft_onto`                                               | Changed                       | Convert provider gap-fill candidates to reviewed ordinary assertions/setters, or steward definitions; no generator silently grafts physical facts into provider history.          |
+  | Historical spelling `_fallbacks`                           | Changed                       | Variable/interval lookup serves historical forms only without another physical owner; no spelling selector or alias-based possession of another variable.                         |
+  | Row-period columns, `ranges[]` OR filters                  | Kept                          | Union of sorted requested ranges, optional inclusive ends and explicit encodings; confirmed by maintainer 2026-10-29; annual physical tables have no row filter.                  |
+  | Column-role row keys; carried keys; key-only files         | Kept                          | Roles, no key table; only required held row keys ride along, no arbitrary identifiers.                                                                                            |
+  | Timeless/year-independent; retained unknown                | Changed                       | Explicit dispositions; unknown stays accounted/unavailable. Legacy `_default` variant restrictions go.                                                                            |
+  | Excluded and lookup dispositions                           | Kept                          | Exact census accounting without observation availability.                                                                                                                         |
+  | Companion/crosswalk tables, including `LopNrByte`          | Kept, deferred                | Account separately from observations; no automatic extraction of pseudonym crosswalks. If the real exit order needs one, use explicit reviewed selection (maintainer 2026-10-29). |
+  | Unmapped columns and coverage denominator                  | Kept                          | Retain unmatched columns as mapping_missing notices/worklist rows; publication continues. Every-held-column orderability is a tracked target.                                     |
+  | Combined tables; several logical mappings per column       | Kept                          | Each routed table/variable/window must validate; one physical extraction column may have several references.                                                                      |
+  | Exact physical names; Stata aliases                        | Kept                          | Literal SQL identifiers and format-safe output; spelling is evidence.                                                                                                             |
+  | v3 logical filename template + physical-id suffix          | Changed                       | Physical-table names use shared slugify with `_`; periods stay in manifest metadata (maintainer 2026-10-29), replacing the v3 ruling.                                             |
+  | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                              |
+  | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                           |
+  | Warned-gap catalog-state clones                            | Dropped                       | Pre-2018 coding representation remains open, never copied widened global segments.                                                                                                |
+  | Alias, `same_as`, succession as possession shortcut        | Dropped                       | Documentary relations grant no possession.                                                                                                                                        |
+  | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                       |
+  | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                            |
+  | Flavor/graft/globals/errata stages                         | Changed                       | One-shot conversion to ordinary readers/ledgers/statements plus a generic holdings compiler.                                                                                      |
+  | Legacy slug pins (`swecov/slugs/`)                         | Changed                       | Reconcile 55 pin files into normal ledgers; no silent fallback slug minting.                                                                                                      |
+  | Steward delivery documents                                 | Changed                       | Pin selected source evidence/derived text; supplemental doc/FTS tables, original documents stay private.                                                                          |
+  | Generated inventory and candidate/base/spec pins           | Changed                       | Preserve provenance/accounting; remove intermediate authority.                                                                                                                    |
+  | `global_fallback` physical manifest                        | Dropped                       | The global logical order already describes the unlocated selection; it cannot run on MONA.                                                                                        |
+  | `project_unnamed`                                          | Kept for physical order       | Blank/whitespace names cannot identify manifest provenance; logical drafts remain valid.                                                                                          |
+  | Project-received inventories and mocks                     | Kept as deferred domain scope | `owner.kind` retained; E ships steward mode only until a real project input format exists.                                                                                        |
 
 Companions remain the old design's explicit deferral (`f5993d7d8^`, "Deferred: companion
 tables"): VaraText, school-code crosswalks, FEK keys and `LopNrByte` are not ordinary
 observation variables. A small closed code set can be a value set or classification;
 large lookups/crosswalks remain accounted physical companions. No `companion_of` or
 automatic attach machinery is built without a concrete E order; `LopNrByte` in
-particular has a deferred steward-level ownership/access choice (Q6). Its pseudonym
-values never enter the catalog or leave MONA.
+particular stays deferred unless the real exit order needs explicit reviewed selection
+(maintainer 2026-10-29). Its pseudonym values never enter the catalog or leave MONA.
 
 Keep `conformance/cases/order` and `conformance/test_order.py` as the logical contract:
 availability clips, row keys, ambiguity, classification and `validate` agreement. Add a
@@ -1824,67 +1880,18 @@ warned-state cloning pipeline survives as a compatibility layer.
 
 ### Open for the maintainer
 
-Q1/Q2/Q5/Q6 concern unsettled choices. Q3/Q4 explicitly confirm or reopen prior rules.
-N1's conservative pattern table is an implementation decision recorded above, not an
-open question. Each question names the first PR it blocks in REBUILD §E.
+The provider home/repository, steward slots, union filter, physical filenames, local
+mock-skill scope and conditional companion deferral are settled above (maintainer
+2026-10-29). Only the unanswered coding representation part of the former Q2 remains:
 
-1. **Where do the ordinary definitions from the 28 legacy provider files live?** Blocks
-   **e-holdings**. Options: adopt approved public definitions into the base/global
-   catalog as ordinary providers; or emit their normal semantic tables into the holdings
-   file's supplemental part. Recommend the supplemental home initially, preserving exact
-   base provenance while the source/publication classification is completed. Q2-B cannot
-   substitute for these provider definitions: regions, quality registers, Swedbank and
-   Telia still need real table/variable records. The worklist covers all 1,747 uses into
-   27 providers absent from D, not only 991 reviewed maps. No input field labels these
-   definitions non-public, but release clearance is not established; any non-public
-   definition rules out the public global catalog and also a public holdings release.
-   Keep such definitions private or omit them until approved. Supplemental search has a
-   concrete cost: expose a separately labelled steward result group with its own FTS
-   ranking, counts and cursor, alongside the reference group; never merge independent
-   bm25 ranks. A global home would use the existing base index.
-2. **Where do delivery-only wide slots live, and how is pre-2018 coding represented?**
-   Blocks **e-holdings/e-order**. For `DIA1`…`DIA30` and `kva_typ1`…`kva_typ30`, choose
-   explicitly between A: separate steward slot variables with reviewed per-column routes
-   (such as `swecov/par-sv-slots`); B: separate global `sos/par` `*-enligt-leverans`
-   slot variables using S3's accepted delivery-fact class; or C: holdings-only expansion
-   records from an evidenced logical concept. Recommend A for delivery-only pivots:
-   their physical shape need not become a global provider form; B is allowed with
-   reviewed global delivery evidence, not forbidden by provenance. No dangling global
-   long kva-typ concept is minted by default. C would need an independently justified
-   concept definition before compilation. Existing interval-valid D variables win before
-   all three choices, and D32's separate documented wide variables are not reopened. Q1
-   still decides the home of the ordinary provider definitions; it does not choose this
-   slot home. Any supplemental slot search uses the separate steward result group, never
-   merged bm25 ranks. For pre-2018 current coding, choose explicit ordinary coding-table
-   definitions or holdings-only exception records; recommend explicit coding tables with
-   preserved provenance and the Operator's warn-not-hold call, without widening global
-   validity. PLACDAT1 on existing `bu-insats-pnrq0` is outside that exception. Neither
-   an expansion nor a coding exception substitutes for Q1's ordinary provider
-   definitions.
-3. **Confirm union filters, or reopen them?** Blocks **e-order** only if reopened. V3
-   step 6 already chooses the union of entry periods as one `ranges[]` OR filter per
-   physical file. Recommend confirming it, with explicit inclusion-over-request notices.
-   The alternative is a deliberate new refusal until source periods align; it is not an
-   unruled default. Neither choice adds per-binding periods or extra physical files.
-4. **Keep v3 filenames, or adopt normalized physical-table names?** Blocks **e-order**.
-   Options: carry the compiled v3 template/physical-id disambiguation into `file_name`;
-   or use the existing `reg_resolve::slugify` with `_` separator, retaining periods in
-   manifest metadata. Recommend the second for shared-table naming and held-versus-
-   filtered-period clarity. This reopens the 2026-10-23 ruling; `_default` leakage is
-   not a verified defect. Check all 44 non-simple names and require an authored name for
-   collisions. The runner consumes final names, never derives them.
-5. **Which mock writers ship in E?** Blocks **e-mock**. Options: typed CSV/ZIP using the
-   named runtime dependencies `csv 1.4.0`/`zip 9.1.2`; or all three extraction formats
-   with explicit additional Stata/Parquet writer choices. Recommend CSV/ZIP, clearly
-   labelled even for a `.dta` plan. This is a runtime-dependency decision. The real
-   runner supports all formats; the local-only gate applies either way, and stdio
-   `reg-meta mcp` does not expose mocks in E.
-6. **Does the real E order need companions, especially `LopNrByte`?** Blocks only
-   companion-specific **e-order/e-runner** work. Options: keep companions accounted and
-   deferred; or add explicit coordinator-reviewed selection with steward-level access
-   for pseudonym crosswalks. Recommend deferral absent a real need, otherwise explicit
-   selection rather than automatic attachment. Ownership/access was left open by the old
-   design. No choice permits crosswalk contents outside MONA or bypasses disclosure.
+1. **How is pre-2018 current coding represented?** Blocks **e-holdings/e-order** for
+   affected columns. Options: explicit ordinary coding-table definitions in the
+   steward's supplemental semantic part; or holdings-only exception records. Recommend
+   explicit coding tables with preserved provenance and the Operator's warn-not-hold
+   call, without widening global validity. This changes whether the semantic reader sees
+   a normal steward coding table or the physical layer owns a special exception
+   contract. PLACDAT1 on existing `bu-insats-pnrq0` is an ordinary column window,
+   outside this question. The slot answer does not settle coding.
 
 ## Project semantic validation
 

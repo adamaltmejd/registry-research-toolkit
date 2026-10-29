@@ -636,50 +636,71 @@ catalog remains for a later release decision.
     project, what my steward holds, and what exists with the providers;
   - the mapping from a logical order to files;
   - the MONA order file;
-  - mock data;
+  - metadata needed by a later local mock-generation skill; E builds no generator;
   - today's holdings vocabulary as a checklist: partitions, projections, wide column
     series, column windows and key-only files;
   - N1 logical-type inference: review findings where it disagrees with the reader's
-    `[types]` map. Its consumers are mock data and output types, which are E's.
+    `[types]` map. E exposes adopted output types for consumers including the later
+    local mock skill.
 - **Then the build.** SWECOV's holdings run on the new catalog, together with its
   steward catalog, its release asset and physical orders. `reg_mona_runner` reads the
   new order file.
+- **Maintainer 2026-10-29:** the 27 SWECOV-only providers stay out of the global catalog
+  despite being legally public. Everything SWECOV-specific moves to a dedicated pinned
+  repo: steward definition/scope/branding, series/mappings/slots, its own provider
+  definitions and private inputs. Reviewed knowledge about existing global providers
+  still uses global curation. Adopt steward slots, union filters and physical-table
+  filenames (shared slugify, `_` separator; replaces 2026-10-23). Mock generation
+  belongs to a later local researcher skill, not the server or E. Companions remain
+  deferred unless the real exit order needs explicit reviewed selection.
 - **Ordered PRs.** The durable contract and vocabulary checklist are in
-  [crates/DESIGN.md, "Holdings"](crates/DESIGN.md#holdings). Resolve its final "Open for
-  the maintainer" questions before the dependent implementation:
+  [crates/DESIGN.md, "Holdings"](crates/DESIGN.md#holdings). Its only remaining open
+  question is pre-2018 current coding representation, blocking affected e-holdings and
+  e-order work:
   1. **e-design:** holdings design and this sequence, maintainer review only;
-  2. **e-holdings:** inputs and schema/reader/compiler together: pin census, storage,
-     slugs and selected document evidence; one-shot TOML → pinned transcription CSV;
-     reconcile reviewed and auto-mapped targets, including providers absent from D; add
-     per-column routes, interval-local matching, deterministic pooled clips and
-     unmatched notices. Q1 blocks provider-definition home; Q2 blocks missing-slot and
-     pre-2018 coding representation. Verify the catalog/holdings pair;
-  3. **e-order:** materialization over the selected semantic view; add project minor
-     5.2.0 with optional `extract_format` and explicit 5.1.0/5.2.0 admission, hosted
-     owner from configuration, manifest and existing conformance cases. Q2/Q4 block; Q3
-     confirms or reopens union filters; Q6 applies only to a needed companion;
-  4. **e-compare:** immediately compare orderable physical columns, held intervals and
+  2. **e-repo:** the maintainer creates the GitHub repository; prepare the dedicated
+     SWECOV repo layout and exact toolkit pin. Move the toolkit's steward definition,
+     branding, series/mappings/slots and the inputs repo's `swecov/` with private inputs
+     and own provider sources there; pin selected document evidence. Preserve provenance
+     and protect private inputs. The toolkit keeps only generic code and pin/config
+     selection. F deletes leftovers after the move is verified;
+  3. **e-holdings:** inputs and schema/reader/compiler together from the pinned steward
+     repo: one-shot TOML → pinned transcription CSV; reconcile slugs, reviewed and
+     auto-mapped targets, including the 27 supplemental providers; add steward slots,
+     per-column routes, interval-local matching, pooled clips and unmatched notices.
+     Resolve the remaining pre-2018 coding question for affected inputs. Verify the
+     catalog/holdings pair and expose held periods and steward semantic metadata;
+  4. **e-order:** materialization over the composed semantic view; project minor 5.2.0
+     with optional `extract_format` and explicit 5.1.0/5.2.0 admission; configured
+     owner, manifest and existing conformance cases. Physical-table filenames and
+     confirmed union OR filters; annual SQL tables yield annual files with no row
+     filter. Expose typed file/column/key layout through existing HTTP/MCP order
+     operations;
+  5. **e-compare:** immediately compare orderable physical columns, held intervals and
      representative plans with 0.64.0 SWECOV. Classify every difference under REBUILD's
      proof model; distinguish target-resolution work, clipping notices and defects;
-  5. **e-runner:** switch R and corpus together, reconnect topology cases, fix stale
-     DESIGN links, preserve format/precision/refusals and MONA boundaries. Q6 blocks
-     companion-specific support if needed;
-  6. **e-types:** implement the conservative N1 pattern table and review findings; no
-     open pattern-policy question. Rebuild/re-pin holdings after the catalog generation
-     changes and repeat comparison/conformance;
-  7. **e-mock:** local-only gate, deterministic mocks over the final plan, explicit seed
-     and size; Q5 blocks writers/dependencies. Stdio mcp exposes no mocks. Project
-     inventories/loading/mocks remain deferred;
-  8. **e-release:** paired `reg_meta_swecov.db.zst`/`reg_meta.db.zst`, with publication
-     clearance for included definitions, deployment `--catalog swecov`, scheduled checks
-     and final comparison. Stop using `build_catalog.py`/Python `extend-db`; F deletes
-     them;
-  9. **e-spa:** the flows below, then the maintainer's real MONA order and E audit.
+  6. **e-runner:** switch R and corpus together, reconnect topology cases, fix stale
+     DESIGN links, preserve format/precision/refusals and MONA boundaries. Add companion
+     support only if the real exit order needs explicit reviewed selection;
+  7. **e-types:** implement conservative N1 reviews, expose adopted output types and
+     audit existing variable/value/classification/order MCP metadata for the later local
+     mock skill. Fill metadata gaps only, no generator/server endpoint/writer deps.
+     Rebuild/re-pin holdings after catalog generation changes and repeat comparison and
+     conformance;
+  8. **e-release:** paired `reg_meta_swecov.db.zst`/`reg_meta.db.zst` from pinned
+     inputs, safe public metadata, deployment `--catalog <steward>` (SWECOV in E),
+     scheduled checks and final comparison. Stop using `build_catalog.py`/Python
+     `extend-db`;
+  9. **e-spa:** SWECOV flows below, then the maintainer's real MONA order and E audit.
      Existing suites, comparison scripts and boundary-harness adaptations are the proof
      surface; never add a second resolver oracle. Heavy runs remain scheduled.
 - **Deferred beyond E:** project-received inventories (`owner.kind = project` remains in
-  the schema), project loading/`scope=project`/project mocks until a real input contract
-  exists; companions unless the exit order establishes their need (Q6).
+  the schema), project loading/`scope=project` until a real input contract exists; local
+  mock-generation skill and project mocks; a second steward's webapp and
+  steward-specific MCP deployment. A second steward (e.g. IFAU) supplies its own pinned
+  repo/config, definitions, mappings, branding and metadata inputs, then its paired
+  holdings file; no SWECOV-specific compiler is needed. Companions remain deferred
+  unless needed by the exit order, then explicitly reviewed (maintainer 2026-10-29).
 - **The SPA** is archived from main at the switch and rewritten in E on the v5 API from
   `archive/reg-webapp-spa` and `claude/rebuild-s-shell-search`, after curation and
   holdings. The work covers shell and search, entity pages, values/graph/docs, project
@@ -701,8 +722,10 @@ catalog remains for a later release decision.
 - `crates/reg-core-py`;
 - `scripts/rebuild_compare.py`;
 - the old builder's CI, container and release workflow steps;
-- builder-only scripts such as `scripts/prototype_scb_inputs.py` and its test, and
-  `reg_webapp/stewards/swecov/build_catalog.py`, once E replaces it;
+- builder-only scripts such as `scripts/prototype_scb_inputs.py` and its test, and the
+  entire `reg_webapp/stewards/swecov/` tree once E moves its data and replaces its
+  builder; remove the inputs repo's old `swecov/` leftovers in coordination with its
+  maintainer after verifying the dedicated repo pin;
 - this tracker.
 
 **Rewritten:**
