@@ -1513,11 +1513,13 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to the next minor project schema (5.2.0),
 defaulting to `dta` in order authoring. Today's `project.rs::SCHEMA_VERSION` admits
-5.1.0 exactly; adding a serde field alone would not admit 5.2.0. E explicitly updates
-version admission and closed-field validation to accept both 5.1.0 and 5.2.0 through the
-same validator, with `extract_format` permitted only in 5.2.0. A 5.1.0 document gets the
-default format; its absent field is not inserted before project hashing. The manifest
-always carries the resolved format. This preserves the researcher-selected
+5.1.0 exactly. E changes `SCHEMA_VERSION` and closed-field validation to admit 5.2.0
+exactly, with optional `extract_format`; every other version is
+`unsupported_schema_version`. Update examples and fixtures together; older projects are
+re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
+compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
+absent, use the authoring default without inserting it before project hashing. The
+manifest always carries the resolved format. This preserves the researcher-selected
 one-format-per-project contract (`reg_mona_runner/DESIGN.md`, "Types per format") and
 the hand-off in `steward.json.order_instructions`: the researcher sends only
 `project_data.json`; the coordinator reviews it and generates/downloads `order.json`.

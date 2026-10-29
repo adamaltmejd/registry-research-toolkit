@@ -674,9 +674,10 @@ catalog remains for a later release decision.
      with provenance and warn-not-hold notices. Verify the catalog/holdings pair and
      expose held periods and steward semantic metadata;
   4. **e-order:** materialization over the composed semantic view; project minor 5.2.0
-     with optional `extract_format` and explicit 5.1.0/5.2.0 admission; configured
-     owner, manifest and existing conformance cases. Physical-table filenames and
-     confirmed union OR filters; annual SQL tables yield annual files with no row
+     with optional `extract_format` and exact 5.2.0 admission; update examples and
+     fixtures together, and re-author older projects. No compatibility admission;
+     configured owner, manifest and existing conformance cases. Physical-table filenames
+     and confirmed union OR filters; annual SQL tables yield annual files with no row
      filter. Expose typed file/column/key layout through existing HTTP/MCP order
      operations;
   5. **e-compare:** immediately compare orderable physical columns, held intervals and
