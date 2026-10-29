@@ -1468,3 +1468,15 @@ kind = "set"
 subject = "aku-januari-2021: {bissyk2012,hsssyk2012,uarbssyk2012}"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:5\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 2012"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: huarbnattant"
+fields = { "variable" = "nattarbete-i-huvudsysslan-frekvens-huarbnattant-2" }
+evidence = "The release-boundary rename preserves source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: hsarbnattant"
+fields = { "variable" = "nattarbete-i-huvudsysslan-frekvens-huarbnattant-2" }
+evidence = "The release-boundary rename preserves source key, label, definition, unit and value set."

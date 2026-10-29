@@ -222,8 +222,8 @@ public = "pin"
 "omsattning-inkl-moms-hemmamarknaden-moms-classid13mr-imputed" = ["Tjänsteproduktionsindex (TjPI)  fr.o.m. 2015: ClassId13MR_Imputed # v50079"]
 "omsattning-inkl-moms-hemmamarknaden-moms-pin-classid13mr" = ["Omsättning inom tjänstesektorn fr.o.m. 2015: ClassId13MR"]
 "organisationsnummer-12-siffror-al2undu" = ["Industrins kapacitetsutnyttjande: AL2UndU # v3578"]
-"organisationsnummer-12-siffror-orgnr" = ["Industrins kapacitetsutnyttjande: OrgNr"]
-"organisationsnummer-12-siffror-peorgnr" = ["Industrins kapacitetsutnyttjande: PeorgNr # v3578"]
+
+
 "otillracklig-efterfragan" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v2919"]
 "procent-for-tid-eller-omsattning" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v887"]
 "produktionsstorning" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v2920"]
@@ -239,3 +239,5 @@ public = "pin"
 "variabeldelmangd-benamning-pin-subsetid" = ["Industriproduktionsindex (IPI)  fr.o.m. 2015: SubsetId # v50051"]
 "verksamhetsenhetens-benamning" = ["Industrins kapacitetsutnyttjande: AL2UndU # v2643"]
 "verksamhetsenhetens-identitetsnummer" = ["Industrins kapacitetsutnyttjande: AL2UndU # v1454"]
+
+"organisationsnummer-12-siffror-orgnr-2" = ["Industrins kapacitetsutnyttjande: OrgNr @ 2019-01-01"]

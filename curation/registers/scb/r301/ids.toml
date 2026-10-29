@@ -20,7 +20,7 @@ public = "aes"
 "boendeland" = ["Undersökningen om vuxnas deltagande i utbildning (AES): COUNTRY"]
 "civilstand" = ["Undersökningen om vuxnas deltagande i utbildning (AES): MARSTALEGAL"]
 "deltogvillemer" = ["Undersökningen om vuxnas deltagande i utbildning (AES): deltogvillemer"]
-"difficulty" = ["Undersökningen om vuxnas deltagande i utbildning (AES): DIFFICULTY"]
+
 "diffmain" = ["Undersökningen om vuxnas deltagande i utbildning (AES): DIFFMAIN"]
 "difftype" = ["Undersökningen om vuxnas deltagande i utbildning (AES): DIFFTYPE @ 2011-07-01"]
 "difftype-03a" = ["Undersökningen om vuxnas deltagande i utbildning (AES): DIFFTYPE_03A"]
@@ -108,7 +108,7 @@ public = "aes"
 "guideinst-3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDEINST_3"]
 "guideinter" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDEINTER_1"]
 "guidemode" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDEMODE_1"]
-"guidesource" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDESOURCE_1"]
+
 "guidetype" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDETYPE_1"]
 "hatlevel" = ["Undersökningen om vuxnas deltagande i utbildning (AES): HATLEVEL"]
 "hatvoc" = ["Undersökningen om vuxnas deltagande i utbildning (AES): HATVOC"]
@@ -147,11 +147,11 @@ public = "aes"
 "ifeurohjalp1" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurohjalp1"]
 "ifeurohjalp2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurohjalp2"]
 "ifeurohjalp3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurohjalp3"]
-"ifeurostud" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurostud1"]
+
 "ifinr" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifinr1"]
 "ifinr2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifinr2"]
 "ifinr3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifinr3"]
-"iflangd" = ["Undersökningen om vuxnas deltagande i utbildning (AES): iflangd1"]
+
 "ifsyfte" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifsyfte1"]
 "ifsyfte2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifsyfte2"]
 "ifsyfte3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifsyfte3"]
@@ -237,7 +237,7 @@ public = "aes"
 "nfeact08-type" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACT08_TYPE"]
 "nfeact09-type" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACT09_TYPE"]
 "nfeact10-type" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACT10_TYPE"]
-"nfeactweight" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACTWEIGHT"]
+
 "nfecert1" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFECERT1"]
 "nfecert2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFECERT2"]
 "nfecert3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): nfecert3"]
@@ -252,7 +252,7 @@ public = "aes"
 "nfeinitia2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEINITIA2"]
 "nfelesson" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFELESSON"]
 "nfemethod" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEMETHOD1"]
-"nfenbhours" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFENBHOURS1"]
+
 "nfeoera" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEOERA1"]
 "nfeoera2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEOERA2"]
 "nfeoerb" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEOERB1"]
@@ -286,7 +286,7 @@ public = "aes"
 "nfepaidby3-3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDBY3_3"]
 "nfepaidby3-4" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDBY3_4"]
 "nfepaidby3-5" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDBY3_5"]
-"nfepaidval" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDVAL1"]
+
 "nfeplace" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPLACE1"]
 "nfeprovider1" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPROVIDER1"]
 "nfeprovider2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPROVIDER2"]
@@ -383,11 +383,11 @@ public = "aes"
 "utbniva" = ["Undersökningen om vuxnas deltagande i utbildning (AES): utbniva"]
 "villedelta" = ["Undersökningen om vuxnas deltagande i utbildning (AES): villedelta"]
 "vistelsetid" = ["Undersökningen om vuxnas deltagande i utbildning (AES): RESTIME"]
-"want" = ["Undersökningen om vuxnas deltagande i utbildning (AES): WANT"]
+
 "yrkesuppgift-isco" = ["Undersökningen om vuxnas deltagande i utbildning (AES): JOBISCO"]
 "distansstudier-natuniversitet-anger-om-nfedistol2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEDISTOL2"]
 "gregvikt-beraknad-vikt-for-de-maximalt-2-slumpmassigt" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACTWEIGHT_2"]
-"gregvikt-beraknad-vikt-for-varje-icke-formell-nfeactweight-5" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEACTWEIGHT_5"]
+
 "icke-formell-utbildning-aktivitetsvariabler-nferand2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFERAND2"]
 "icke-formell-utbildning-aktivitetsvariabler-nferand3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFERAND3"]
 "icke-formell-utbildning-kostnadsvariabler-andra" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDBY2 # v32787"]
@@ -401,10 +401,10 @@ public = "aes"
 "information-typ-av-gratis-information-om-dispens-fran" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDETYPE_3"]
 "informationskalla-informationskallan-ar-arbetsformedlingen" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDESOURCE_2"]
 "informationskalla-informationskallan-ar-bocker" = ["Undersökningen om vuxnas deltagande i utbildning (AES): seeksource_7"]
-"informationskalla-informationskallan-ar-en" = ["Undersökningen om vuxnas deltagande i utbildning (AES): seeksource_5"]
-"informationskalla-informationskallan-ar-en-fackforening" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDESOURCE_4"]
+
+
 "informationskalla-informationskallan-ar-en-familjemedlem" = ["Undersökningen om vuxnas deltagande i utbildning (AES): seeksource_2"]
-"informationskalla-informationskallan-ar-en-guidesource-5" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDESOURCE_5"]
+
 "informationskalla-informationskallan-ar-massmedier-t-ex-tv" = ["Undersökningen om vuxnas deltagande i utbildning (AES): seeksource_6"]
 "informationskalla-informationskallan-ar-personens-egna" = ["Undersökningen om vuxnas deltagande i utbildning (AES): seeksource_3"]
 "informationskalla-informationskallan-ar-personens-nuvarande" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDESOURCE_3"]
@@ -415,19 +415,19 @@ public = "aes"
 "insamlingsmetod-guidemode-3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): GUIDEMODE_3"]
 "kontakt-med-kurskamrater-icke-formell-utbildning-andra" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEONPAR2"]
 "kontakt-med-larare-ledare-eller-forelasare-icke-nfeontea2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEONTEA2"]
-"kostnader-icke-formell-utbildning-avser-icke-ifeurostud2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurostud2"]
-"kostnader-icke-formell-utbildning-avser-icke-ifeurostud3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): ifeurostud3"]
-"kostnader-icke-formell-utbildning-avser-icke-nfepaidval2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDVAL2"]
-"kostnader-icke-formell-utbildning-avser-icke-nfepaidval3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPAIDVAL3"]
+
+
+
+
 "kostnader-studier-formell-utbildning-avser-feurostud2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): feurostud2"]
 "kunskapsanvandning-icke-formell-utbildning-nfeuse2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEUSE2"]
 "kunskapsanvandning-icke-formell-utbildning-nfeuse3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEUSE3"]
 "kunskapsanvandning-icke-formell-utbildning-nfeusea2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEUSEA2"]
 "kunskapsanvandning-icke-formell-utbildning-nfeuseb2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEUSEB2"]
-"langd-icke-formell-utbildning-avser-icke-formell-iflangd2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): iflangd2"]
-"langd-icke-formell-utbildning-avser-icke-formell-iflangd3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): iflangd3"]
-"langd-icke-formell-utbildning-avser-icke-formell-nfenbhours2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFENBHOURS2"]
-"langd-icke-formell-utbildning-avser-icke-formell-nfenbhours3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFENBHOURS3"]
+
+
+
+
 "resultat-av-nya-kunskaper-formell-utbildning-enklare-att" = ["Undersökningen om vuxnas deltagande i utbildning (AES): FEDOUTCOME_5"]
 "resultat-av-nya-kunskaper-formell-utbildning-fick-befordran" = ["Undersökningen om vuxnas deltagande i utbildning (AES): FEDOUTCOME_2"]
 "resultat-av-nya-kunskaper-formell-utbildning-fick-hogre-lon" = ["Undersökningen om vuxnas deltagande i utbildning (AES): FEDOUTCOME_3"]
@@ -486,3 +486,15 @@ public = "aes"
 "undervisningsmetod-icke-formell-utbildning-nfemethod3" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEMETHOD3"]
 "undervisningsmetod-icke-formell-utbildning-nfeplace2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): NFEPLACE2"]
 "undervisningsmetod-informell-utbildning-informell-infmethod2" = ["Undersökningen om vuxnas deltagande i utbildning (AES): infmethod2"]
+
+"gregvikt-beraknad-vikt-for-varje-icke-formell" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEACTWEIGHT @ 2011-07-01"]
+"informationskalla-informationskallan-ar-en-annan" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: GUIDESOURCE_4 @ 2022-01-01"]
+"informationskalla-informationskallan-ar-en-guidesource-4" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: GUIDESOURCE_4 @ 2016-01-01"]
+"informationskalla-informationskallan-ar-en-skola" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: GUIDESOURCE_1 @ 2016-01-01"]
+"kostnader-icke-formell-utbildning-avser-icke-nfepaidval1" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPAIDVAL1 @ 2011-07-01"]
+"kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPAIDVAL2 @ 2011-07-01"]
+"kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPAIDVAL3 @ 2011-07-01"]
+"langd-icke-formell-utbildning-avser-icke-formell-nfenbhours1" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFENBHOURS1 @ 2011-07-01"]
+"langd-icke-formell-utbildning-avser-icke-nfenbhours2-2" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFENBHOURS2 @ 2011-07-01"]
+"langd-icke-formell-utbildning-avser-icke-nfenbhours3-2" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFENBHOURS3 @ 2011-07-01"]
+"svarighet-vid-utbildningsdeltagande-anger-om-personen-har" = ["undersokningen-om-vuxnas-deltagande-i-utbildning-aes: DIFFICULTY @ 2011-07-01"]

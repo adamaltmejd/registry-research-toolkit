@@ -2265,3 +2265,21 @@ kind = "set"
 subject = "it-anvandning-i-foretag: vikt @2016"
 fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
 evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6994\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: datc4a where key = 'v23393'"
+fields = { "variable" = "anvander-mobiltelefon-med-3g-4g-for-datc4a" }
+evidence = "The individual categorical responses and business percentage measure differ in unit and coding."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: datc4a2 where key = 'v23393'"
+fields = { "variable" = "anvander-mobiltelefon-med-3g-4g-for-datc4a" }
+evidence = "The individual categorical responses and business percentage measure differ in unit and coding."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: empmd1pct where key = 'v23393'"
+fields = { "variable" = "anvander-mobiltelefon-med-3g-4g-for-empmd1pct" }
+evidence = "The individual categorical responses and business percentage measure differ in unit and coding."

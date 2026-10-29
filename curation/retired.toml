@@ -5203,3 +5203,149 @@
 "sos/sol/trygg" = { kind = "variable", in = "0.66.0", reason = "withdrawn" }
 "sos/thr/beslutsdatumn" = { kind = "variable", in = "0.66.0", reason = "withdrawn" }
 "sos/thr/besoksdatumn" = { kind = "variable", in = "0.66.0", reason = "withdrawn" }
+
+"scb/aes/difficulty" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/gregvikt-beraknad-vikt-for-varje-icke-formell-nfeactweight-5" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/guidesource" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/ifeurostud" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/iflangd" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/informationskalla-informationskallan-ar-en" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/informationskalla-informationskallan-ar-en-fackforening" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/aes/informationskalla-informationskallan-ar-en-guidesource-5" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/kostnader-icke-formell-utbildning-avser-icke-ifeurostud2" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/kostnader-icke-formell-utbildning-avser-icke-ifeurostud3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/kostnader-icke-formell-utbildning-avser-icke-nfepaidval2" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/kostnader-icke-formell-utbildning-avser-icke-nfepaidval3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/langd-icke-formell-utbildning-avser-icke-formell-iflangd2" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/langd-icke-formell-utbildning-avser-icke-formell-iflangd3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/langd-icke-formell-utbildning-avser-icke-formell-nfenbhours2" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/langd-icke-formell-utbildning-avser-icke-formell-nfenbhours3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/nfeactweight" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/nfenbhours" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/nfepaidval" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aes/want" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aku/nattarbete-i-huvudsysslan-frekvens-hsarbnattant" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aku/nattarbete-i-huvudsysslan-frekvens-huarbnattant" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iku/totalyta-a91" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iku/totalyta-y91" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/familjetyp" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/iot/forvarvs-och-kapitalinkomst-cfviki" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/forvarvs-och-kapitalinkomst-fink" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/inkomstranta-och-utdelning-kapital-kaprta" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/inkomstranta-och-utdelning-kapital-kiranta" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/loneinkomst-lon" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/loneinkomst-tlont" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/pensionsbeloppskontroll-per-person-penst" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/pensionsbeloppskontroll-per-person-pkontr" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/sammanraknad-forvarvsinkomst-csfvi" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/sammanraknad-forvarvsinkomst-sinkf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/sjukpenning-skattefri-isjuk" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/sjukpenning-skattefri-sjukpf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/iot/skattefri-del-av-livranta-och-pension-livskf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/skattefri-del-av-livranta-och-pension-pkuslsf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/skattefri-del-av-livranta-och-pension-pslsf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/slutlig-skatt-familj-sktotf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/iot/slutlig-skatt-familj-stotexh" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/studiemedel-studiehjalp-lan-och-bidrag-istud" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/studiemedel-studiehjalp-lan-och-bidrag-stud" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-allman-pension-tjanstepension-tjanst-kuapens" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-allman-pension-tjanstepension-tjanst-pkussp" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-lon-och-formaner-enligt-kontrolluppgifter-kulons" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-lon-och-formaner-enligt-kontrolluppgifter-wkulonf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-pension-enligt-kontrolluppgift-kupenst" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-pension-enligt-kontrolluppgift-pkupens" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-privat-pensionsforsakring-skattepliktig-kuppens" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-privat-pensionsforsakring-skattepliktig-livranta-pslsp" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-privat-pensionsforsakring-skattepliktig-pkuslsp" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-privat-pensionsforsakring-skattepliktig-pkusspl" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-vissa-skattepliktiga-formaner-kulonf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/summa-vissa-skattepliktiga-formaner-tkulonf" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/it-anvandning/anvander-mobiltelefon-med-3g-4g-for-internetuppkoppling" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/lisa/operativ-verksamhetsledare" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/lisa/yrkesstallning" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/lokal-demokrati/webbplats-med-information-om-det-politiska-styret-fr30-7" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-information-om-det-politiska-styret-fr42-3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-information-om-det-politiska-styret-fr44-3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-information-om-det-politiska-styret-fr45-3" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-mojlighet-att-skicka-meddelanden-fr30-8" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-mojlighet-att-skicka-meddelanden-fr42-4" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-mojlighet-att-skicka-meddelanden-fr44-4" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/lokal-demokrati/webbplats-med-mojlighet-att-skicka-meddelanden-webbepost" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/pin/organisationsnummer-12-siffror-orgnr" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/pin/organisationsnummer-12-siffror-peorgnr" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/ureg/hogsta-utbildningens-niva-sun2020-tva-forsta-positionerna" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/ureg/sun2020niva" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }

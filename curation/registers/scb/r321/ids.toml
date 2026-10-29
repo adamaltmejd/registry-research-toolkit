@@ -580,11 +580,11 @@ public = "lokal-demokrati"
 "webbplats-med-digitalt-diarie-arendesystem-fr44-1" = ["Regioner: Fr44_1"]
 "webbplats-med-digitalt-diarie-arendesystem-fr45-2" = ["Kommuner: Fr45_2"]
 "webbplats-med-digitalt-diarie-arendesystem-webbdiarie" = ["Kommuner: WEBBDIARIE"]
-"webbplats-med-information-om-det-politiska-styret-fr30-7" = ["Regioner: Fr30_7"]
+
 "webbplats-med-information-om-det-politiska-styret-fr32-7" = ["Kommuner: Fr32_7 # v35984"]
-"webbplats-med-information-om-det-politiska-styret-fr42-3" = ["Regioner: Fr42_3"]
-"webbplats-med-information-om-det-politiska-styret-fr44-3" = ["Regioner: Fr44_3"]
-"webbplats-med-information-om-det-politiska-styret-fr45-3" = ["Kommuner: Fr45_3"]
+
+
+
 "webbplats-med-kalendarium-for-sammantraden-fr30-1" = ["Regioner: Fr30_1"]
 "webbplats-med-kalendarium-for-sammantraden-webbkal" = ["Kommuner: WEBBKAL"]
 "webbplats-med-kommunala-foreskrifter-fr30-5" = ["Regioner: Fr30_5"]
@@ -592,13 +592,16 @@ public = "lokal-demokrati"
 "webbplats-med-kommunala-foreskrifter-fr44-2" = ["Regioner: Fr44_2"]
 "webbplats-med-kommunala-foreskrifter-fr45-1" = ["Kommuner: Fr45_1"]
 "webbplats-med-kommunala-foreskrifter-webbkomforsk" = ["Kommuner: WEBBKOMFORSK"]
-"webbplats-med-mojlighet-att-skicka-meddelanden-fr30-8" = ["Regioner: Fr30_8"]
+
 "webbplats-med-mojlighet-att-skicka-meddelanden-fr32-7" = ["Kommuner: Fr32_7 # v28625"]
-"webbplats-med-mojlighet-att-skicka-meddelanden-fr42-4" = ["Regioner: Fr42_4"]
-"webbplats-med-mojlighet-att-skicka-meddelanden-fr44-4" = ["Regioner: Fr44_4"]
-"webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4" = ["Kommuner: Fr45_4 # v28625"]
-"webbplats-med-mojlighet-att-skicka-meddelanden-webbepost" = ["Kommuner: WEBBEPOST"]
+
+
+
+
 "webbplats-med-moteshandlingar-for-sammantraden-fr30-2" = ["Regioner: Fr30_2"]
 "webbplats-med-moteshandlingar-for-sammantraden-webbhandl" = ["Kommuner: WEBBHANDL"]
 "webbplats-med-protokoll-fran-sammantraden-fr30-4" = ["Regioner: Fr30_4"]
 "webbplats-med-protokoll-fran-sammantraden-webbprot" = ["Kommuner: WEBBPROT"]
+
+"webbplats-med-information-om-det-politiska-styret-fr45-3-2" = ["Kommuner: Fr45_3 @ 2020-01-01"]
+"webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" = ["Kommuner: Fr45_4 # v28625 @ 2020-01-01"]
