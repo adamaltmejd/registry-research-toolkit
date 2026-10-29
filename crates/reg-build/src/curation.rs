@@ -605,11 +605,41 @@ fn sentinel_conflicts(
     Ok((conflicts, refusals.into_iter().collect()))
 }
 
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub(super) struct Refusal {
+    pub register: Option<String>,
+    pub message: String,
+}
+
+impl Refusal {
+    fn scoped(statement: &LocatedStatement, message: String) -> Self {
+        Self {
+            register: Some(format!("{}/{}", statement.provider, statement.register)),
+            message,
+        }
+    }
+}
+
+fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, String> {
+    if record && !refusals.is_empty() {
+        return Err(refusals
+            .iter()
+            .map(|r| r.message.as_str())
+            .collect::<Vec<_>>()
+            .join("\n"));
+    }
+    Ok(refusals
+        .iter()
+        .map(|r| format!("{} (statement skipped)", r.message))
+        .collect())
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
     pub records: Vec<Record>,
     pub findings: Vec<String>,
+    pub refusals: Vec<Refusal>,
     pub statements: Vec<crate::emit::StatementRow>,
     pub overrides: Vec<reg_resolve::provenance::Claim>,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
@@ -767,17 +797,18 @@ pub(super) fn run(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
 ) -> Result<Applied, String> {
-    run_selected(
+    let mut applied = run_selected(
         root,
         retired,
         &statements.iter().collect::<Vec<_>>(),
         outputs,
         record,
         registers,
-        release,
-    )
+    )?;
+    applied.refusals.sort();
+    applied.refusals.dedup();
+    Ok(applied)
 }
 
 /// Apply parent, bound, period, move, fact, identity and field stages in order. Each phase
@@ -791,7 +822,6 @@ fn run_selected(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
 ) -> Result<Applied, String> {
     let mut records = outputs
         .iter()
@@ -965,15 +995,18 @@ fn run_selected(
                 let mut resolved = match evaluation {
                     Ok(r) => r,
                     Err(e) => {
-                        refusals.push(format!("{at}: {e}"));
+                        refusals.push(Refusal::scoped(statement, format!("{at}: {e}")));
                         continue;
                     }
                 };
                 if !resolved.conflicts.is_empty() {
                     for other in &resolved.conflicts {
-                        refusals.push(format!(
-                            "{at}: curation-overlap: overlapping overrides with {}",
-                            location(group[*other])
+                        refusals.push(Refusal::scoped(
+                            statement,
+                            format!(
+                                "{at}: curation-overlap: overlapping overrides with {}",
+                                location(group[*other])
+                            ),
                         ));
                     }
                     continue;
@@ -996,7 +1029,7 @@ fn run_selected(
                             field_applications.insert(publication_identity(statement), application);
                         }
                         Err(error) => {
-                            refusals.push(format!("{at}: {error}"));
+                            refusals.push(Refusal::scoped(statement, format!("{at}: {error}")));
                             continue;
                         }
                     }
@@ -1016,14 +1049,14 @@ fn run_selected(
                             ack_indices.insert(publication_identity(statement), indices);
                         }
                         Err(error) => {
-                            refusals.push(format!("{at}: {error}"));
+                            refusals.push(Refusal::scoped(statement, format!("{at}: {error}")));
                             continue;
                         }
                     }
                 }
                 if !record && let Err(e) = checked_premise(statement, &resolved.premise, old, path)
                 {
-                    refusals.push(format!("{at}: {e}"));
+                    refusals.push(Refusal::scoped(statement, format!("{at}: {e}")));
                     continue;
                 }
                 if resolved.redundant {
@@ -1191,23 +1224,20 @@ fn run_selected(
             let applied = match application {
                 Ok(a) => a,
                 Err(e) => {
-                    let refusal = format!("{}: {e}", location(statement));
-                    if record || release {
-                        refusals.push(refusal);
-                        return Err(refusals.join("\n"));
-                    }
+                    let refusal =
+                        Refusal::scoped(statement, format!("{}: {e}", location(statement)));
+                    refusals.push(refusal);
+                    let skipped = refusal_findings(&refusals, record)?;
                     // Refused statements contribute neither facts nor provenance.
                     let retained = statements
                         .iter()
                         .copied()
                         .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
-                    let mut rerun = run_selected(
-                        root, retired, &retained, outputs, record, registers, release,
-                    )?;
-                    rerun
-                        .findings
-                        .push(format!("{refusal} (statement skipped)"));
+                    let mut rerun =
+                        run_selected(root, retired, &retained, outputs, record, registers)?;
+                    rerun.findings.extend(skipped);
+                    rerun.refusals.extend(refusals);
                     return Ok(rerun);
                 }
             };
@@ -1325,12 +1355,12 @@ fn run_selected(
                         && affected
                     {
                         conflicts.insert(publication_identity(statement));
-                        refusals.push(format!(
+                        refusals.push(Refusal::scoped(statement, format!(
                             "{}: curation-coordinate-collision: set coordinates collide at {}:{}",
                             location(statement),
                             at.input,
                             at.at
-                        ));
+                        )));
                     }
                 }
             }
@@ -1359,7 +1389,10 @@ fn run_selected(
                     for (statement, premise) in assignments {
                         if error.affects(premise) {
                             conflicts.insert(publication_identity(statement));
-                            refusals.push(format!("{}: {}", location(statement), error.message));
+                            refusals.push(Refusal::scoped(
+                                statement,
+                                format!("{}: {}", location(statement), error.message),
+                            ));
                         }
                     }
                 }
@@ -1383,10 +1416,19 @@ fn run_selected(
             let messages = linked
                 .refusals
                 .iter()
-                .map(|(_, message)| message.clone())
+                .map(|(hash, message)| Refusal {
+                    register: result
+                        .links
+                        .iter()
+                        .find(|(statement, _)| publication_identity(statement) == *hash)
+                        .map(|(statement, _)| {
+                            format!("{}/{}", statement.provider, statement.register)
+                        }),
+                    message: message.clone(),
+                })
                 .collect::<Vec<_>>();
-            if record || release {
-                return Err(messages.join("\n"));
+            if record {
+                refusal_findings(&messages, record)?;
             }
             let refused = linked
                 .refusals
@@ -1398,14 +1440,10 @@ fn run_selected(
                 .copied()
                 .filter(|s| !refused.contains(&publication_identity(s)))
                 .collect::<Vec<_>>();
-            let mut rerun = run_selected(
-                root, retired, &retained, outputs, record, registers, release,
-            )?;
-            rerun.findings.extend(
-                messages
-                    .into_iter()
-                    .map(|message| format!("{message} (statement skipped)")),
-            );
+            let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
+            refusals.extend(messages);
+            rerun.findings.extend(refusal_findings(&refusals, record)?);
+            rerun.refusals.extend(refusals);
             return Ok(rerun);
         }
         result.linked = Some(linked);
@@ -1445,10 +1483,13 @@ fn run_selected(
         let (left, right) = (evaluated[a].0, evaluated[b].0);
         conflicts.insert(publication_identity(left));
         conflicts.insert(publication_identity(right));
-        refusals.push(format!(
-            "{}: curation-overlap: overlapping overrides with {}",
-            location(left),
-            location(right)
+        refusals.push(Refusal::scoped(
+            left,
+            format!(
+                "{}: curation-overlap: overlapping overrides with {}",
+                location(left),
+                location(right)
+            ),
         ));
     }
     for (a, b) in reg_resolve::curation::classification_conflicts(&result.classifications) {
@@ -1460,32 +1501,31 @@ fn run_selected(
                 conflicts.insert(statement.hash.clone());
             }
         }
-        refusals.push(format!(
-            "{}:{}: curation-overlap: classification version overlaps {}:{}",
-            left.locator.input, left.locator.at, right.locator.input, right.locator.at
-        ));
+        refusals.push(Refusal {
+            register: None,
+            message: format!(
+                "{}:{}: curation-overlap: classification version overlaps {}:{}",
+                left.locator.input, left.locator.at, right.locator.input, right.locator.at
+            ),
+        });
     }
     findings.extend(bound_sentinels(&records, &mut result)?);
     let (sentinel_conflicts, sentinel_refusals) = sentinel_conflicts(root, &records, &result)?;
     conflicts.extend(sentinel_conflicts);
-    refusals.extend(sentinel_refusals);
+    refusals.extend(sentinel_refusals.into_iter().map(|message| Refusal {
+        register: None,
+        message,
+    }));
     if !conflicts.is_empty() {
-        if record || release {
-            return Err(refusals.join("\n"));
-        }
+        let skipped = refusal_findings(&refusals, record)?;
         let retained = statements
             .iter()
             .copied()
             .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(
-            root, retired, &retained, outputs, record, registers, release,
-        )?;
-        rerun.findings.extend(
-            refusals
-                .into_iter()
-                .map(|r| format!("{r} (statement skipped)")),
-        );
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
+        rerun.findings.extend(skipped);
+        rerun.refusals.extend(refusals);
         return Ok(rerun);
     }
 
@@ -1533,14 +1573,8 @@ fn run_selected(
             }
         }
     }
-    if !refusals.is_empty() && (record || release) {
-        return Err(refusals.join("\n"));
-    }
-    findings.extend(
-        refusals
-            .into_iter()
-            .map(|r| format!("{r} (statement skipped)")),
-    );
+    findings.extend(refusal_findings(&refusals, record)?);
+    result.refusals = refusals;
     if record {
         // Prepare all serializations before writing; a refused register never causes
         // a partial review update in another register.
@@ -1569,9 +1603,6 @@ fn run_selected(
         for (path, bytes) in files {
             std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
         }
-    }
-    for finding in &findings {
-        eprintln!("reg-build: {finding}");
     }
     result.findings = findings;
     result.records = records;
