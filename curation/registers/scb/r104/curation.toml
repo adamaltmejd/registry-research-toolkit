@@ -118,3 +118,45 @@ kind = "set"
 subject = "elevpanel-8: {utbfar1,utbmor1}"
 fields = { "classification" = "class/sun-niva/sun2000-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak6"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak8"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak9"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak4"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:179\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak5"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:191\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-viktak7"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:203\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningstal-elevvikt"
+fields = { "sets" = ["legacy-upprakningstal"] }
+evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:167\nreg_meta_build/curation/registers/scb/elevpaneler.toml:179\nreg_meta_build/curation/registers/scb/elevpaneler.toml:191\nreg_meta_build/curation/registers/scb/elevpaneler.toml:203\nreg_meta_build/curation/registers/scb/elevpaneler.toml:91\n\nComplete source-native identity review: original exported ID and definition explicitly retain the same personal identifier, school identifier or calibrated collection weight. Grade-specific annual weight operations remain on each delivery. Simultaneous weight spellings have the same own operation; overlapping representations require separate checked finite declarations. No value equivalence, unit conversion or correction of the original PersonNr width is assumed.\n\nExact own native Uppräkningstal source members simultaneously associate Elevvikt and the year-specific grade weight with an identical explicit grade/production-weight operation and decimal storage. Keep each physical field and original source facts; no equal observed values, conversion or equivalence between different annual estimation weights is claimed."

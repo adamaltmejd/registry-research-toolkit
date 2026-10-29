@@ -505,3 +505,153 @@ kind = "set"
 subject = "var:naringsgren-rams"
 fields = { "sets" = ["naringsgren"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml:231"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-anstje"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssf98"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-antal-anstallda-syssa98u"
+fields = { "sets" = ["legacy-aktuellt-antal-anstallda"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1251\nreg_meta_build/curation/registers/scb/ksju.toml:1264\nreg_meta_build/curation/registers/scb/ksju.toml:1277\nreg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-objekt-nsvarrfv"
+fields = { "sets" = ["legacy-antal-svarande-objekt"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1160\nreg_meta_build/curation/registers/scb/ksju.toml:651\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallets-storleksklass-stkl"
+fields = { "sets" = ["legacy-arbetsstalle-storleksklass"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1069\nreg_meta_build/curation/registers/scb/ksju.toml:639\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-idnr"
+fields = { "sets" = ["legacy-cfar-nummer"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:609\nreg_meta_build/curation/registers/scb/ksju.toml:861\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-sjukfall-id"
+fields = { "sets" = ["legacy-lopnummer-sjukfall"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:676\nreg_meta_build/curation/registers/scb/ksju.toml:965\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgrupp-snigrupp"
+fields = { "sets" = ["legacy-naringsgrupp"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:663\nreg_meta_build/curation/registers/scb/ksju.toml:900\nreg_meta_build/curation/registers/scb/ksju.toml:913\nreg_meta_build/curation/registers/scb/ksju.toml:926\nreg_meta_build/curation/registers/scb/ksju.toml:939\nreg_meta_build/curation/registers/scb/ksju.toml:952\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:referensmanad-matmanad"
+fields = { "sets" = ["legacy-referensmanad"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1173\nreg_meta_build/curation/registers/scb/ksju.toml:1186\nreg_meta_build/curation/registers/scb/ksju.toml:1199\nreg_meta_build/curation/registers/scb/ksju.toml:1212\nreg_meta_build/curation/registers/scb/ksju.toml:1225\nreg_meta_build/curation/registers/scb/ksju.toml:1238\nreg_meta_build/curation/registers/scb/ksju.toml:621\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-objekt-per-stratum-enligt-foretagsdatabasen-storanks"
+fields = { "sets" = ["legacy-storan"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:657\nreg_meta_build/curation/registers/scb/ksju.toml:874\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanks"
+fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1004\nreg_meta_build/curation/registers/scb/ksju.toml:1017\nreg_meta_build/curation/registers/scb/ksju.toml:1030\nreg_meta_build/curation/registers/scb/ksju.toml:1043\nreg_meta_build/curation/registers/scb/ksju.toml:633\nreg_meta_build/curation/registers/scb/ksju.toml:978\nreg_meta_build/curation/registers/scb/ksju.toml:991\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstorlek-per-stratum-lillanrfv"
+fields = { "sets" = ["legacy-urvalsstorlek-per-stratum"] }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1004\nreg_meta_build/curation/registers/scb/ksju.toml:1017\nreg_meta_build/curation/registers/scb/ksju.toml:1030\nreg_meta_build/curation/registers/scb/ksju.toml:1043\nreg_meta_build/curation/registers/scb/ksju.toml:633\nreg_meta_build/curation/registers/scb/ksju.toml:978\nreg_meta_build/curation/registers/scb/ksju.toml:991\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2015-01-01..2015-12-31 where key = 'v49' and release = 'r12641'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2016-01-01..2016-12-31 where key = 'v49' and release = 'r12793'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2017-01-01..2017-12-31 where key = 'v49' and release = 'r12969'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2018-01-01..2018-12-31 where key = 'v49' and release = 'r12970'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2019-01-01..2019-12-31 where key = 'v49' and release = 'r13382'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2020-01-01..2020-12-31 where key = 'v49' and release = 'r14524'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2021-01-01..2021-12-31 where key = 'v49' and release = 'r16440'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2022-01-01..2022-12-31 where key = 'v49' and release = 'r18253'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "assert"
+subject = "sjukfranvaro-sjukloneperioden: Ksjulan @2023-01-01..2023-12-31 where key = 'v49' and release = 'r18751'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Län", "definition" = "Kod för regional indelning i län.", "type" = "char", "length" = 2, "sensitive" = true, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: ksjulan @2015..2023"
+fields = { "operational_definition" = "Anger individens bostadslän. Om individen har ett annat arbetslän skrivs det över bostadslän." }
+evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1498\n\nSWECOV holds Ksjulan in every quarterly KSju table 2015–2023; SCB documents it on this variant for 2011 Q2–Q4 as the county. The aggregate check found the codes within the 21 county codes, apart from a small out-of-list residual from 2020 Q2 that looks like an unknown/other code rather than a different coding. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced; the maintainer's aggregate check on MONA, reported as a conclusion only)."

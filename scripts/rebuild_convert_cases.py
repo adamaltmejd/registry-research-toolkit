@@ -17,6 +17,10 @@ ALIASES = {
 SOURCE_FIELDS = {"type": "dtype", "spelling": "column"}
 
 
+class UnexpressibleSelector(ValueError):
+    """Source evidence exists but cannot be represented by address grammar."""
+
+
 def period_intervals(scope):
     """Calendar scopes as inclusive ISO intervals; refuse unfamiliar period syntax."""
 
@@ -215,10 +219,7 @@ class CaseSafety:
         ]
         siblings = []
         for row in variants:
-            try:
-                subject = self.converter.selector(row)
-            except ValueError:
-                continue
+            subject = self.converter.selector(row)
             if subject in subjects:
                 siblings.append(row)
         if not siblings:
@@ -254,158 +255,3 @@ class CaseSafety:
             )
         self.counts["same_outcome_folded_selector"] += 1
         return rows + siblings
-
-
-def audit_cached(converter, root):
-    """Static reclassification of cached proposals, never a substitute for lock."""
-    import tomllib
-
-    counts = collections.Counter()
-    cause_counts = collections.Counter()
-    overlaps = []
-    unplaced = []
-    missing = []
-    cached_report = json.loads((root / "report.json").read_text())
-    origins = {item["location"]: item["sources"] for item in cached_report["generated"]}
-    category = {item["source"]: item["category"] for item in cached_report["entries"]}
-    for path in sorted(root.glob("curation/registers/*/*/curation.toml")):
-        provider, register = path.parts[-3:-1]
-        index = collections.defaultdict(list)
-        for row in converter.rows[provider, register]:
-            index[
-                converter.tables[provider, register, row["table"]],
-                row["column"].lower() or "<none>",
-            ].append(row)
-        parsed = tomllib.loads(path.read_text()).get("statement", [])
-        lines = [
-            number
-            for number, line in enumerate(path.read_text().splitlines(), 1)
-            if line == "[[statement]]"
-        ]
-        candidates = []
-        for statement, line in zip(parsed, lines, strict=True):
-            address = parse_selector(statement["subject"])
-            if address is None or statement["kind"] not in {"set", "assert"}:
-                continue
-            table, column, scope, guards = address
-            location = f"{path.relative_to(root)}:{line}"
-            sources = origins.get(location, [])
-            rows = [
-                row
-                for row in index[table, column]
-                if ("key" not in guards or guards["key"] == row["source_key"])
-                and ("release" not in guards or guards["release"] == row.get("release"))
-                and ("type" not in guards or guards["type"] == row.get("dtype"))
-            ]
-            fields = statement.get(
-                "fields", statement.get("fact", {}).get("fields", {})
-            )
-            target = fields.get("variable")
-            reason = None
-            if target is not None:
-                if any(not row["column"] for row in rows):
-                    reason = "gap marker"
-                elif target != "none" and any(
-                    converter.identity.status(row) == "unplaced" for row in rows
-                ):
-                    reason = "unplaced occurrence"
-                elif target != "none" and target not in converter.ledgers.get(
-                    (provider, register), {}
-                ).get("variables", {}):
-                    reason = "missing local ledger"
-            if reason:
-                counts[reason] += 1
-                item = {"location": location, "sources": sources, "target": target}
-                if reason == "missing local ledger":
-                    elsewhere = any(
-                        target in ledger.get("variables", {})
-                        for owner, ledger in converter.ledgers.items()
-                        if owner != (provider, register)
-                    )
-                    item["cause"] = (
-                        "slug exists only in another register"
-                        if elsewhere
-                        else "no ledger id anywhere"
-                    )
-                    cause_counts[item["cause"]] += 1
-                    missing.append(item)
-                elif reason == "unplaced occurrence":
-                    item["categories"] = sorted(
-                        {category[source] for source in sources}
-                    )
-                    unplaced.append(item)
-                continue
-            selected = set()
-            for row in rows:
-                period = converter.identity.period(row)
-                if not period:
-                    continue
-                for start, end in scope:
-                    start, end = max(start, period[0]), min(end, period[1])
-                    if start <= end:
-                        identity = (
-                            row["provider"],
-                            row["register"],
-                            row["table"],
-                            row.get("release"),
-                            row["column"],
-                            row["source_key"],
-                            converter.span(row),
-                        )
-                        for locator in [row["locator"], *row.get("also", [])]:
-                            selected.add(((identity, value_key(locator)), start, end))
-            candidates.append((statement, address, selected, location, sources))
-        by_row_field = collections.defaultdict(list)
-        pairs = set()
-        assertions = []
-        for i, (statement, address, selected, _location, _sources) in enumerate(
-            candidates
-        ):
-            fields = statement.get(
-                "fields", statement.get("fact", {}).get("fields", {})
-            )
-            for identity, start, end in selected:
-                for field in fields:
-                    for j, other_start, other_end in by_row_field[identity, field]:
-                        if max(start, other_start) <= min(end, other_end):
-                            pairs.add((j, i))
-                    by_row_field[identity, field].append((i, start, end))
-            if statement["kind"] == "assert":
-                table, column, scope, _guards = address
-                for j in assertions:
-                    other = candidates[j][1]
-                    if (table, column) == other[:2] and any(
-                        max(a, c) <= min(b, d) for a, b in scope for c, d in other[2]
-                    ):
-                        pairs.add((j, i))
-                assertions.append(i)
-        for a, b in sorted(pairs):
-            left, right = candidates[a], candidates[b]
-            left_fields = left[0].get(
-                "fields", left[0].get("fact", {}).get("fields", {})
-            )
-            right_fields = right[0].get(
-                "fields", right[0].get("fact", {}).get("fields", {})
-            )
-            shared = left_fields.keys() & right_fields.keys()
-            same = all(left_fields[field] == right_fields[field] for field in shared)
-            overlaps.append(
-                {
-                    "locations": [left[3], right[3]],
-                    "sources": sorted(set(left[4] + right[4])),
-                    "fields": sorted(shared),
-                    "cause": "converter duplicate effect"
-                    if same
-                    else "different legacy outcomes",
-                }
-            )
-    counts["overlap pairs"] = len(overlaps)
-    counts["overlap directed diagnostics"] = 2 * len(overlaps)
-    return {
-        "method": "static cached-proposal audit; no real-frame lock run",
-        "counts": dict(counts),
-        "missing_ledger_causes": dict(cause_counts),
-        "missing_ledger": missing,
-        "unplaced": unplaced,
-        "overlaps": overlaps,
-    }

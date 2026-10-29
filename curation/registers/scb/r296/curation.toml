@@ -228,3 +228,10 @@ kind = "set"
 subject = "var:kn8kod-2"
 fields = { "sets" = ["kn8"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/prisindex.toml:33"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgruppsnamn-namnsv"
+fields = { "sets" = ["legacy-produktgruppsnamn"] }
+evidence = "reg_meta_build/curation/registers/scb/prisindex.toml:237\nreg_meta_build/curation/registers/scb/prisindex.toml:245\n\nReviewed complete source-native family identity: stable exported native ID, definition and operation across non-simultaneous yearly column labels. Retain every raw label, source fact, coding association and declared classification version. No statistical or storage equivalence is inferred. Complete physical-coordinate collision and own-binding reviews: Batch52-simple-native21-physical-collision-review.json and Batch52-simple-native21-own-binding-review.json.\n\nSame complete reviewed source-native definition across distinct source editions with overlapping finite windows. This preserves each physical column, metadata, original period and own coding; it does not assert simultaneous co-delivery, value equality or storage conversion. The native identity follows exported IDs/definitions despite conflicting yearly literal labels under the accepted source-native policy."
+caveat = "Catalog identity follows the stable exported source-native definition. Original changing column labels and each delivery’s source coding and classification version remain in the source evidence."

@@ -1,3 +1,24 @@
+# D close-out recovery
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The recovery retains 827 additional statements: 571 assertions and 256 setters. Retained
+source entries are 299 delivered, 239 parallel, 176 partition, 44 column and two
+description entries, plus one tag membership. All 23 recovered identity setters remain
+deferred: 16 concurrent-fold merges, two SNI ID-emptying cases and five FoU setters that
+would move published `stratum-strat` coverage.
+
+The branch mints 42 IDs: r2 one, r193 three and r257 38. The r257 anchors retain their
+published 0.66.0 native families; recovered CIS2002 columns use eight free legacy names
+and 30 D-12 label-plus-column names. New-ID and published-anchor tables and current
+per-entry dispositions are in [the recovery report](rebuild_recover_report.md).
+
+The prior 806 absent-everywhere / 125 other-register ledger-target drops now read 775 /
+100, plus two mixed missing-ID/unplaced entries. Missing/undated-release drops are 49
+after reconsidering the prior 426 using exact published releases. These counts are
+separate from the earlier stage measurements below. Remaining work is homed in
+REBUILD.md §D.
+
 # D-4b fix round 01: readable selectors
 
 Output committed at `bda3ce88fdfed654e74fda9bd7e0b7a943d43b85`. Rerun only to regenerate

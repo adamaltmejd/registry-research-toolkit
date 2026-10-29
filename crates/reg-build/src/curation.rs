@@ -1386,12 +1386,14 @@ fn run_selected(
                 if let Err(error) =
                     reg_resolve::curation::validate_assignments(&source, ledger, &result.variables)
                 {
-                    for (statement, _) in assignments {
-                        conflicts.insert(publication_identity(statement));
-                        refusals.push(Refusal::scoped(
-                            statement,
-                            format!("{}: {error}", location(statement)),
-                        ));
+                    for (statement, premise) in assignments {
+                        if error.affects(premise) {
+                            conflicts.insert(publication_identity(statement));
+                            refusals.push(Refusal::scoped(
+                                statement,
+                                format!("{}: {}", location(statement), error.message),
+                            ));
+                        }
                     }
                 }
             }

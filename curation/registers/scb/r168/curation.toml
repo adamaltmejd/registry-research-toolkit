@@ -1230,3 +1230,51 @@ kind = "set"
 subject = "fek-slutdata: {ng_ej_aktuell,ngs_ej_aktuell} @2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:27\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002 Branscher"
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1990-01-01..1990-12-31 where key = 'v47390' and release = '1990'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1991-01-01..1991-12-31 where key = 'v47390' and release = '1991'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1992-01-01..1992-12-31 where key = 'v47390' and release = '1992'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1993-01-01..1993-12-31 where key = 'v47390' and release = '1993'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1994-01-01..1994-12-31 where key = 'v47390' and release = '1994'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1995-01-01..1995-12-31 where key = 'v47390' and release = '1995'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata: fsum901 @1996-01-01..1996-12-31 where key = 'v47390' and release = '1996'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "definition" = "Pågende nyanläggningar och förskott avseende materiella anläggningstillgångar", "type" = "decimal", "length" = 23, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: fsum901 @1990..1996"
+fields = { "operational_definition" = "Uppgifterna kan vara beräknade (imputerade)." }
+evidence = "reg_meta_build/curation/registers/scb/fek.toml:1149\n\nSCB Dataleverans 2023-2024 Bilaga 1 Leveransrapport uppd 2023-2024.xlsx, sheet FEK, row(s) 119, documents the physical header PagaendeNyanlaggningarSamtForskottMateriellaAnlaggningstillgangar in FE1990-FE1996; FE1990-FE2002 belong to FEK (maintainer D6, 2026-10-13). Native identity scb/fek/fsum901 (fsum901), documented from 2003, is the clone source."

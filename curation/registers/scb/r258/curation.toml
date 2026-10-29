@@ -1809,3 +1809,459 @@ kind = "set"
 subject = "befolkningens-it-anvandning: {h9c,hussyk2,hussyk4}"
 fields = { "classification" = "class/ssyk/ssyk1996" }
 evidence = "reg_meta_build/curation/classifications/SSYK96.toml:9\n\nLegacy exact value-set label: Standard för svensk yrkesklassificering 1996"
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PPMP @2016-01-01..2016-12-31 where key = 'v30722' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade fakturor som skickades som pappersfakturor", "definition" = "Andel av alla fakturor företaget skickade till andra företag eller offentlig sektor som skickades som pappersfakturor under föregående år.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7464\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PEMP @2016-01-01..2016-12-31 where key = 'v30723' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade fakturor som skickades som e-fakturor som inte kan processas automatiskt i mottagarens it-system", "definition" = "Andel av alla fakturor företaget skickade till andra företag och offentlig sektor under föregående år, som skickades som e-fakturor som inte kan processas automatiskt i mottagarens it-system, t.ex. fakturor i pdf-format som skickas via e-post.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7474\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPAYOFF @2016-01-01..2016-12-31 where key = 'v30713' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Offlinebetalning accepteras som betalningssätt för webbförsäljning", "definition" = "Andel företag som accepterar offlinebetalning som betalningssätt för webbförsäljning.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7444\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AESPAYON @2016-01-01..2016-12-31 where key = 'v30719' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Onlinebetalning accepteras som betalningssätt för webbförsäljning", "definition" = "Andel företag som accepterar onlinebetalning som betalningssätt för webbförsäljning.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7454\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2008-01-01..2008-12-31 where key = 'v17641' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6874\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2009-01-01..2009-12-31 where key = 'v17641' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6874\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2010-01-01..2010-12-31 where key = 'v17641' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6874\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2011-01-01..2011-12-31 where key = 'v17641' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6874\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEXF @2012-01-01..2012-12-31 where key = 'v17641' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel av antalet årsverken som arbetar med programvaruutveckling för extern försäljning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för extern försäljning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6874\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2008-01-01..2008-12-31 where key = 'v17648' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6914\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2009-01-01..2009-12-31 where key = 'v17648' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6914\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2010-01-01..2010-12-31 where key = 'v17648' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6914\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2011-01-01..2011-12-31 where key = 'v17648' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6914\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVEGANV @2012-01-01..2012-12-31 where key = 'v17648' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel som arbetar med programvaruutveckling för företagets egna användning", "definition" = "Anger hur stor andel - av antalet årsverken som arbetar med programvaruutveckling - som arbetar med programvaruutveckling för företagets egna användning", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6914\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SBG_PAP @2016-01-01..2016-12-31 where key = 'v30724' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Andel skickade elektroniska fakturor som kan processas automatiskt i mottgarens IT-system", "definition" = "Anger hur stor andel av alla fakturor som företaget skickade under var elektroniska fakturor som kan processas automatiskt.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7484\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2008-01-01..2008-12-31 where key = 'v17642' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6884\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2009-01-01..2009-12-31 where key = 'v17642' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6884\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2010-01-01..2010-12-31 where key = 'v17642' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6884\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2011-01-01..2011-12-31 where key = 'v17642' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6884\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP @2012-01-01..2012-12-31 where key = 'v17642' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6884\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: UTVSUP2 @2016-01-01..2016-12-31 where key = 'v17642' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ange hur stor andel av antalet årsverken som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "definition" = "Anger hur stor andel av antalet årsverken som, utförd av egen perspnal, som arbetar med programvaruutveckling - som arbetar med övriga relaterade arbetsuppgifter (t.ex. underhåll, support, reparation).", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6894\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIALUP @2008-01-01..2008-12-31 where key = 'v17651' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIALUP @2009-01-01..2009-12-31 where key = 'v17651' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIALUP @2010-01-01..2010-12-31 where key = 'v17651' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIALUP @2011-01-01..2011-12-31 where key = 'v17651' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DIALUP @2012-01-01..2012-12-31 where key = 'v17651' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder traditionellt modem eller ISDN för anslutning till Internet", "definition" = "Anger om företaget använder traditionellt modem eller ISDN för anslutning till Internet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6924\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ISPD @2011-01-01..2011-12-31 where key = 'v16815' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Maximal hastighet för internetanslutning", "definition" = "Anger vilken den teoretiskt maximala hastigheten vid anslutning till internet som företagets snabbaste internetanslutning har.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6794\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ISPD @2012-01-01..2012-12-31 where key = 'v16815' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Maximal hastighet för internetanslutning", "definition" = "Anger vilken den teoretiskt maximala hastigheten vid anslutning till internet som företagets snabbaste internetanslutning har.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6794\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DSL @2008-01-01..2008-12-31 where key = 'v26859' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder DSL för att ansluta till internet", "definition" = "Använder DSL (t.ex. ADSL, SDSL) för att ansluta till internet. Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7034\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DSL @2009-01-01..2009-12-31 where key = 'v26859' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder DSL för att ansluta till internet", "definition" = "Använder DSL (t.ex. ADSL, SDSL) för att ansluta till internet. Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7034\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DSL @2010-01-01..2010-12-31 where key = 'v26859' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder DSL för att ansluta till internet", "definition" = "Använder DSL (t.ex. ADSL, SDSL) för att ansluta till internet. Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7034\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DSL @2011-01-01..2011-12-31 where key = 'v26859' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder DSL för att ansluta till internet", "definition" = "Använder DSL (t.ex. ADSL, SDSL) för att ansluta till internet. Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7034\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: DSL @2012-01-01..2012-12-31 where key = 'v26859' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder DSL för att ansluta till internet", "definition" = "Använder DSL (t.ex. ADSL, SDSL) för att ansluta till internet. Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7034\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADS @2016-01-01..2016-12-31 where key = 'v35473' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar för annonser på internet", "definition" = "Betalar för annonser på internet. T.ex annonser på sökmotorer, sociala medier eller andra webbsidor.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7684\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADS_OTH @2016-01-01..2016-12-31 where key = 'v35477' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar för riktade annonser baserat på annan metod för riktade annonser än ovanstående", "definition" = "Betalar för riktade annonser baserat på annan metod för riktade annonser än ovanstående", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7724\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADS_LOC @2016-01-01..2016-12-31 where key = 'v35475' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar för riktade annonser baserat på användarens platsinformation", "definition" = "Betalar för riktade annonser baserat på användarens platsinformation", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7704\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADS_TRK @2016-01-01..2016-12-31 where key = 'v35476' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar för riktade annonser baserat på internetanvändarens surfhistorik", "definition" = "Betalar för riktade annonser baserat på internetanvändarens surfhistorik", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7714\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: ADS_KW @2016-01-01..2016-12-31 where key = 'v35474' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar för riktade annonser baserat på webbplatsers innehåll eller nyckelord i sökningar", "definition" = "Betalar för riktade annonser baserat på webbplatsers innehåll eller nyckelord i sökningar.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7694\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BDOWN @2016-01-01..2016-12-31 where key = 'v35486' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Big data analyserades av egen personal", "definition" = "Big data analyserades av egen personal, inkl. anställd ai moder- eller dotterbolag.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7794\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BDEXT @2016-01-01..2016-12-31 where key = 'v35484' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Big data analyserades av extern leverantör", "definition" = "Big data analyserades av extern leverantör", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7774\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2008-01-01..2008-12-31 where key = 'v30000' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2009-01-01..2009-12-31 where key = 'v30000' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2010-01-01..2010-12-31 where key = 'v30000' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2011-01-01..2011-12-31 where key = 'v30000' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2012-01-01..2012-12-31 where key = 'v30000' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AEBUY @2016-01-01..2016-12-31 where key = 'v30000' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Beställde varor eller tjänster via en webbplats eller via app", "definition" = "EDI-beställningar är beställningar via automatiserat informationsutbyte som är möjligt genom att beställningar skickas i ett överenskommet format (t.ex. XML eller EDIFACT) så de kan processas automatiskt i företagets it-system. Beställningar via manuellt skickad e-post räknas inte in.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7434\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: WEBVAC @2008-01-01..2008-12-31 where key = 'v46787' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "På företagets webbplats finns möjlighet att se och/eller söka lediga tjänster", "definition" = "Företaget annonserar lediga tjänster och/ eller har möjlighet att söka tjänster på hemsidan.", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7824\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BDODS @2016-01-01..2016-12-31 where key = 'v35482' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Analyserade big data från företagets egna datakällor", "definition" = "Företagets egna data från smarta enheter eller sensorer. T.ex från maskin-till-maskin-kommunikation eller RFID-taggar.", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7754\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2008-01-01..2008-12-31 where key = 'v28839' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2009-01-01..2009-12-31 where key = 'v28839' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2010-01-01..2010-12-31 where key = 'v28839' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2011-01-01..2011-12-31 where key = 'v28839' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2012-01-01..2012-12-31 where key = 'v28839' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: TURN @2016-01-01..2016-12-31 where key = 'v28839' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Omsättning exkl. moms 2016 tkr enkätdata", "definition" = "Företagets omsättning under 2016 exklusive moms i tkr från enkätdata", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7294\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECPDD @2010-01-01..2010-12-31 where key = 'v25341' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagets policy för IT-säkerhet innefattar förstöring eller förvanskning av data", "definition" = "Företagets policy för IT-säkerhet innefattar förstöring eller förvanskning av data p.g.a. angrepp eller oförutsedda händelser.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7014\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECPDS @2010-01-01..2010-12-31 where key = 'v15589' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagets policy för IT-säkerhet innefattar problem med tillgång till IT-system", "definition" = "Företagets policy för IT-säkerhet innefattar problem med tillgång till IT-system p.g.a. angrepp utifrån (t.ex. överbelastningsattack).", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6784\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: SECPCNF @2010-01-01..2010-12-31 where key = 'v25342' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagets policy för IT-säkerhet innefattar röjande av hemliga uppgifter", "definition" = "Företagets policy för IT-säkerhet innefattar röjande av hemliga uppgifter p.g.a. intrång, bedrägeri (i form av nätfiske/phishing eller pharming) eller genom misstag/olyckshändelser.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7024\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BBOTH @2008-01-01..2008-12-31 where key = 'v17653' and release = '2008'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BBOTH @2009-01-01..2009-12-31 where key = 'v17653' and release = '2009'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BBOTH @2010-01-01..2010-12-31 where key = 'v17653' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BBOTH @2011-01-01..2011-12-31 where key = 'v17653' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: BBOTH @2012-01-01..2012-12-31 where key = 'v17653' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder annan fast bredbandsanslutning till Internet än DSL, t.ex. via fiber, kabel eller radiolänk", "definition" = "Med anslutning menas typ av \"last mile\" anslutning, d.v.s. typ av anslutning sista biten mellan leverantörens infrastruktur och abonnenten.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6944\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: MOBOTH @2010-01-01..2010-12-31 where key = 'v17652' and release = '2010'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: MOBOTH @2011-01-01..2011-12-31 where key = 'v17652' and release = '2011'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: MOBOTH @2012-01-01..2012-12-31 where key = 'v17652' and release = '2012'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Använder mobil anslutning via GSM-nätet", "definition" = "Med mobil bredbandsanslutning menas anslutning till internet via bärbar enhet via mobiltelefonnätet", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6934\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SB @2016-01-01..2016-12-31 where key = 'v35483' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skickade fakturor till företag föregående år", "definition" = "Skickade fakturor (elektroniskt eller i pappersform) till företag", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7764\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SG @2016-01-01..2016-12-31 where key = 'v35488' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skickade fakturor till offentlig sektor föregående år", "definition" = "Skickade fakturor (elektroniskt eller i pappersform) till offentlig sektor", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7814\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: INV3SC @2016-01-01..2016-12-31 where key = 'v35481' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skickade fakturor till privatpersoner under föregående år", "definition" = "Skickade fakturor till privatpersoner under föregående år (elektroniskt eller i pappersform)", "type" = "char", "length" = 255, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7744\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OPAY @2016-01-01..2016-12-31 where key = 'v29994' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalningsproblem", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7394\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OSUIT @2016-01-01..2016-12-31 where key = 'v29992' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagets varor eller tjänster lämpade sig inte för försäljning via en webbplats", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7374\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OLF @2016-01-01..2016-12-31 where key = 'v29996' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Juridiska problem", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7414\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OCOST @2016-01-01..2016-12-31 where key = 'v29997' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kostnaden för att sälja via en webbplats var/skulle ha varit för hög i jämförelse med nyttan", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7424\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OLOG @2016-01-01..2016-12-31 where key = 'v29993' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Logistikproblem", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7384\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: AWS_OSEC @2016-01-01..2016-12-31 where key = 'v29995' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Problem med säkerhet eller skyddande av data", "definition" = "Undersöker vilka faktorer som begränsade eller förhindrade företaget från att sälja via en webbplats.", "type" = "char", "length" = 18, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:7404\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "assert"
+subject = "it-anvandning-i-foretag: Vikt @2016-01-01..2016-12-31 where key = 'v19538' and release = '2016'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Uppräkningsfaktor", "definition" = "Uppräkningsfaktor", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6994\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: vikt @2016"
+fields = { "operational_definition" = "Uppräkningstal för att möjliggöra redovisning för hela målpopulationen. \r\n\r\nHärledd genom att designvikten multipliceras med en faktor NSAMP/NRESP, där NSAMP = antal i urvalet och NRESP = antal svarande;\r\nUppräkningsfaktor = (NPOP/NSAMP)*(NSAMP/NRESP)" }
+evidence = "reg_meta_build/curation/registers/scb/it-anvandning.toml:6994\n\nExact SWECOV holdings in both accepted CSV inputs and accepted storage-schema SHA256 ac2e626990a382141860c5d54ae5675c4c17b9e667822e8ff1297466cbc78295; complete same-native same-variant literal source evidence in IT-absent-holdings-maximal-grouped-proposal.json. Source-native quantity identity policy; extend only these explicitly held annual editions. Preserve all raw originals, coding associations, dates, literal storage widths and actual support flags. No adjacent editions or coding copying."

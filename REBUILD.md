@@ -538,13 +538,13 @@ exit and peak RSS were not captured. Independent `reg-build verify` passed (exit
 - F1 counts: definition-change 20,677; domain-change 16,040; label-differs 47;
   label-drift 181; type-change 6,713; unit-change 5,977; population-change zero.
 - Source disposition evidence remains in `scripts/rebuild_convert_report.md`,
-  `scripts/rebuild_convert_classifications_report.md` and
-  `scripts/rebuild_convert_sets_tags_report.md`. These are overlapping stage reports,
-  not additive final counts: base conversion 5,603 converted / 12,538 named drops / zero
-  refused; classification conversion 288 / 218 / six; set/tag report 551 converted
-  membership rows, 115 missing-ID refusals, 11 deferred rows and 729 drops. The reports
-  retain source locations and reasons; later D work supersedes some early deferrals. The
-  converters were not rerun.
+  `scripts/rebuild_convert_classifications_report.md`,
+  `scripts/rebuild_convert_sets_tags_report.md` and `scripts/rebuild_recover_report.md`.
+  These are overlapping stage reports, not additive final counts: base conversion 5,603
+  converted / 12,538 named drops / zero refused; classification conversion 288 / 218 /
+  six; set/tag report 551 converted membership rows, 115 missing-ID refusals, 11
+  deferred rows and 729 drops. The reports retain source locations and reasons; later D
+  work supersedes some early deferrals. The converters were not rerun.
 - Rust `reg-build diff` against the downloaded 0.65.0 asset exited 1 (differences), with
   no schema change. It reports 28 changed table counts, 6,687 added and 5,149 removed
   public ids, 29 shared table changes, 5,411 shared variable changes and eight added
@@ -631,6 +631,47 @@ catalog remains for a later release decision.
 - **2026-10-28 ruling:** curate evidenced integer/decimal source mislabels only on
   affected occurrences, leave unresolved cases uncurated for quieter notices; N1 general
   logical-type inference stays at E.
+
+#### Post-D order
+
+1. **Edition/qualifier measurement and id-affecting deferrals:** measure the
+   full-catalog effects of editions and qualifiers; review source placement and identity
+   separation before naming more families.
+2. **Id sprint:** after that review, make one full-catalog pass over id names,
+   descriptions, concept groups and tags. This includes SNI-edition variables and
+   evidenced deferred endpoints; refresh locks and have the Operator verify the real
+   catalog against its predecessor. Naming review includes "CIS2002 2000-2002 vs native
+   ids: naming": 30 legacy names collide with published native IDs.
+3. **SWECOV curation in E:** use that reviewed catalog for holdings and the real MONA
+   exit order.
+
+#### D deferrals
+
+Counts overlap across source inventories; per-entry reasons stay in the F-deleted
+conversion reports.
+
+  | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                         |
+  | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+  | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | Post-D edition/qualifier measurement.                                        |
+  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU setters would move published stratum-strat coverage.                        | Id sprint: SNI-edition variables and FoU retire-and-mint decision.           |
+  | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | Id sprint, after the source/edition review.                                  |
+  | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | Id sprint: concept groups and tags.                                          |
+  | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | Id sprint: align defaults after full identity measurement.                   |
+  | Order-time release selection          |                                         1 capability | Optional editions remain explicit.                                                                                                 | E, e-order, when the exit order requires selection.                          |
+  | F4 same-text proposals                |                                         1 capability | No request yet.                                                                                                                    | On demand: when a curator asks.                                              |
+  | Successor choice/reject syntax        |                                         1 capability | Existing conflicts already refuse.                                                                                                 | When a real succession needs explicit choice/rejection.                      |
+  | Presentation and register tags        |                         811 payloads, 12 memberships | Metadata views and register tag storage are absent.                                                                                | E, e-spa: implement metadata views and register tag navigation.              |
+  | Delivery mappings and donor metadata  |                                          288 entries | Headers, donor editions or whole endpoints need review.                                                                            | E, e-holdings.                                                               |
+  | Classification versions and timelines |                                           18 entries | Version ambiguity or partial occurrences.                                                                                          | When a curator supplies exact version/scope evidence.                        |
+  | Numeric corrections and N1 inference  |                        4,066 variables, 1 capability | No adopted logical-type evidence.                                                                                                  | E, e-types; 76 held targets in the E exit MONA round, others on a real case. |
+  | Occurrence-scoped sentinels           |                                            6 entries | Hash identity is wider than the stated scope.                                                                                      | Sentinel-aware value-set identity, when a real case needs it.                |
+  | Source-attribution corrections        |                                           12 entries | No four-kind provenance field.                                                                                                     | When a curator requests source-attribution curation.                         |
+  | Sentinel meanings                     |                        845 version/code/label claims | Flags have no separate meaning field.                                                                                              | When a real case needs more than the source labels.                          |
+  | Source coding evidence                |                                          261 entries | No reviewed value-set selection or translation.                                                                                    | When a curator supplies exact source/value-set evidence.                     |
+  | Documentary metadata                  |                                           37 entries | No reviewed translation.                                                                                                           | When a curator requests source-backed documentary metadata.                  |
+  | Support, periods, links and clearing  |                                           57 entries | Whole-occurrence evidence or explicit clearing is missing.                                                                         | When a real case supplies the required source evidence.                      |
+  | Located recovery-lock refusals        |                                          158 outputs | Empty, overlapping, ambiguous, partial or orphaning claims.                                                                        | Source review on demand; identity cases in the id sprint.                    |
+  | Dropped: nothing left to do           |                              9,949 accounted entries | Satisfied claims, obsolete findings, folded aliases, no-op clears, bookkeeping, panel presentation (750) and case-only splits (8). | Dropped; details stay in the conversion reports.                             |
 
 ### E: the holdings layer
 

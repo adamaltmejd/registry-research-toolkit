@@ -5,7 +5,7 @@ import json
 import re
 from typing import Any
 
-from rebuild_convert_cases import parse_selector
+from rebuild_convert_cases import UnexpressibleSelector, parse_selector
 from rebuild_convert_selectors import Snapshot
 
 
@@ -14,7 +14,7 @@ def _selection(converter, owner):
     for row in converter.rows[owner]:
         try:
             subject = converter.selector(row)
-        except ValueError:
+        except UnexpressibleSelector:
             continue
         lookup[subject].append(row)
         base = re.sub(r" and release = '[^']*'$", "", subject)
@@ -56,54 +56,20 @@ def _selection(converter, owner):
     return selected
 
 
-def final_variables(converter, owner):
-    """Project existing assignments onto placed local ledger identities."""
-    statements = converter.statements[owner]
-    selected = _selection(converter, owner)
-    assignments = collections.defaultdict(set)
-    for record in statements.values():
-        statement = record["statement"]
-        target = statement.get("fields", {}).get("variable")
-        if target is not None:
-            for row in selected(statement["subject"]):
-                assignments[id(row)].add(target)
+def catalog_variables(converter, owner):
+    """Read placed variable membership; never predict proposed assignment outcomes."""
     ledger = converter.ledgers.get(owner, {}).get("variables", {})
-    folds = collections.defaultdict(set)
-    for row in converter.rows[owner]:
-        if row["column"]:
-            folds[row["source_key"]].add(row["column"].lower())
-    asserted_keys = set()
-    for record in statements.values():
-        statement = record["statement"]
-        if (
-            statement["kind"] != "assert"
-            or statement.get("fact", {}).get("entity") != "occurrence"
-        ):
-            continue
-        subject = statement["subject"]
-        key = re.search(r"(?:where | and )key = '([^']*)'", subject)
-        if key is None:
-            continue
-        asserted_keys.add(key[1])
-        spelling = subject.split(": ", 1)[-1].split(" @", 1)[0]
-        spelling = spelling.split(" where ", 1)[0]
-        folds[key[1]].add(spelling.lower())
     effective = {}
     used = set()
     for row in converter.rows[owner]:
         if converter.identity.status(row) not in {"used", "shadowed", "rejected"}:
             continue
-        targets = assignments.get(id(row), set())
-        if len(targets) > 1:
-            continue
-        target = (
-            next(iter(targets)) if targets else converter.identity.default_slug(row)
-        )
+        target = converter.identity.default_slug(row)
         if target in ledger:
             effective[id(row)] = target
             if converter.identity.status(row) == "used":
                 used.add(target)
-    return effective, used, assignments, folds, asserted_keys
+    return effective, used
 
 
 def normalize_sets(converter):
@@ -111,7 +77,8 @@ def normalize_sets(converter):
 
     The resolver expands occurrence selectors for `sets` to complete variables. Keep
     that expansion explicit rather than emitting overlapping per-release statements.
-    Unminted identities stay deferred; this projection is not permission to mint ids.
+    Changed identity premises wait for a newly locked catalog. Python never applies
+    proposed assignments to the catalog's membership map.
     """
     counts = collections.Counter()
     dropped: list[dict[str, Any]] = []
@@ -123,11 +90,30 @@ def normalize_sets(converter):
             and set(record["statement"].get("fields", {})) == {"sets"}
         }
         counts["before"] += len(grouping)
-        effective, used, assignments, folds, asserted_keys = final_variables(
-            converter, owner
-        )
+        effective, used = catalog_variables(converter, owner)
         selected = _selection(converter, owner)
-        ledger = converter.ledgers.get(owner, {}).get("variables", {})
+        assigned_rows = set()
+        assigned_targets = set()
+        asserted_keys = set()
+        asserted_coordinates = set()
+        for record in statements.values():
+            statement = record["statement"]
+            target = statement.get("fields", {}).get("variable")
+            if target is not None:
+                assigned_targets.add(target)
+                assigned_rows.update(id(row) for row in selected(statement["subject"]))
+            if (
+                statement["kind"] == "assert"
+                and statement.get("fact", {}).get("entity") == "occurrence"
+            ):
+                match = re.search(
+                    r"(?:where | and )key = '([^']*)'", statement["subject"]
+                )
+                if match:
+                    asserted_keys.add(match[1])
+                address = parse_selector(statement["subject"])
+                if address is not None:
+                    asserted_coordinates.add(address[:2])
         provider, register = owner
         public = converter.ledgers.get(owner, {}).get("public", register)
 
@@ -182,7 +168,6 @@ def normalize_sets(converter):
                 unknown = any(
                     converter.identity.status(row) in {"used", "shadowed", "rejected"}
                     and id(row) not in effective
-                    and assignments.get(id(row)) != {"none"}
                     for row in rows
                 )
                 targets = (
@@ -194,15 +179,15 @@ def normalize_sets(converter):
                         if id(row) in effective and effective[id(row)] in used
                     }
                 )
-            unstable = any(
-                row["source_key"] in asserted_keys
-                and len(folds[row["source_key"]]) > 1
-                and converter.identity.status(row) in {"used", "shadowed", "rejected"}
-                and not (
-                    len(assignments.get(id(row), set())) == 1
-                    and next(iter(assignments[id(row)])) in ledger
+            unstable = (
+                bool(targets & assigned_targets)
+                or any(id(row) in assigned_rows for row in rows)
+                or any(row["source_key"] in asserted_keys for row in rows)
+                or any(
+                    (converter.identity.table(row), row["column"].lower())
+                    in asserted_coordinates
+                    for row in rows
                 )
-                for row in rows
             )
             if unstable:
                 dropped.append(
@@ -211,8 +196,8 @@ def normalize_sets(converter):
                         "subject": subject,
                         "sources": sorted(set(record["origins"])),
                         "reason": (
-                            "grouping identity may change after asserted occurrences; "
-                            "reviewed final membership required"
+                            "grouping touches proposed assignments or occurrences; "
+                            "lock and refresh the catalog before converting membership"
                         ),
                         "statements": 1,
                     }

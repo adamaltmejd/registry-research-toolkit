@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "t: LATER @2001"
+fields = { variable = "alpha" }
+evidence = "A later spelling in the same table is not concurrent."
+
+[[statement]]
+kind = "set"
+subject = "u: SIDE @2000"
+fields = { variable = "alpha" }
+evidence = "A concurrent spelling in another table remains distinct there."

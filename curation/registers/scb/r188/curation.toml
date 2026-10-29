@@ -34,3 +34,15 @@ kind = "assert"
 subject = "varu-landfordelat-intrastat: KN8 @1990..2024"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)", "definition" = "Varans varukod enligt den Kombinerade Nomenklaturen (militära varukoder lämnas ej ut)" } }
 evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:10\n\nSWECOV's delivery lists hold the column on this variant (reg_webapp/stewards/swecov/build_catalog.py grafts); SCB's Registerinformation export carries no row for it. holdings_period from maintainer dataset range (Y-213)."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: InfUtf @1997-01-01..1997-12-31 where key = 'v18337' and release = '1997'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."
+
+[[statement]]
+kind = "assert"
+subject = "varu-landfordelat-intrastat: InfUtf @1998-01-01..1998-12-31 where key = 'v18337' and release = '1998'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Flöde", "definition" = "Kod I för införsel, U för utförsel. Införsel avser  införsel av varor till Sverige från ett annat EU-land. Utförsel avser utförsel av varor från Sverige till ett annat EU-land.", "type" = "char", "length" = 1, "sensitive" = false, "identifier" = false } }
+evidence = "reg_meta_build/curation/registers/scb/utrikeshandel.toml:196\n\nSWECOV holds the column in UHV_1997 and UHV_1998; HA0201 DO 2011 pp. 4 and 18 document the same variable for the series, which SCB documents on this variant from 1999 with the same definition. (#1603; maintainer ruling 2026-10-15: a SWECOV delivery is evidence SCB had the variable that edition when meaning-continuity is evidenced)."

@@ -2777,3 +2777,254 @@ kind = "set"
 subject = "folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'"
 fields = { sentinels = ["2020"] }
 evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1337; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to e703a6ccdb4ebb315f5141a846c021daea1a35384080a375691f183384bbcedd are inside this exact original entry scope."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1990-12-31 where release = 'r14565' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1991-12-31 where release = 'r14862' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1992-12-31 where release = 'r14863' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1993-12-31 where release = 'r14869' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1994-12-31 where release = 'r14870' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1995-12-31 where release = 'r14871' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1996-12-31 where release = 'r14872' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-1990-1997: PersonNr_Partner @1997-12-31 where release = 'r14873' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:11\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @1998-12-31 where release = 'r770' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @1999-12-31 where release = 'r771' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2000-12-31 where release = 'r61' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2001-12-31 where release = 'r772' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2002-12-31 where release = 'r773' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2003-12-31 where release = 'r774' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2004-12-31 where release = 'r775' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2005-12-31 where release = 'r758' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2006-12-31 where release = 'r755' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2007-12-31 where release = 'r1279' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2008-12-31 where release = 'r2112' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2009-12-31 where release = 'r2856' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "familjer-fran-1998: PersonNr_Partner @2010-12-31 where release = 'r3389' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:25\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2011-12-31 where release = 'r5878' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2012-12-31 where release = 'r5093' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2013-12-31 where release = 'r5258' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2014-12-31 where release = 'r5875' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2015-12-31 where release = 'r7391' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2016-12-31 where release = 'r10042' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2017-12-31 where release = 'r11810' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2018-12-31 where release = 'r13062' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2019-12-31 where release = 'r13919' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2020-12-31 where release = 'r16223' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2021-12-31 where release = 'r18080' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2022-12-31 where release = 'r18615' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2023-12-31 where release = 'r19111' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "assert"
+subject = "hushall: PersonNr_Partner @2024-12-31 where release = 'r19736' and key = 'personnr_partner'"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Personnummer för partnern", "definition" = "Partnerns personnummer i partnertabellerna, levererat som löpnummer. SCB dokumenterar ingen partnernyckel på denna registervariant.", "sensitive" = false, "identifier" = true } }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:39\n\nSWECOV holds P1105_Lopnr_PersonNr_Partner (a löpnummer, storage int) in its Partner_YYYY tables on this variant; SCB's Registerinformation export documents no partner key on any RTB variant. Minted as an undocumented identifier with no borrowed meaning. Flags follow SCB's personnr variables and the #1603 batch-e D8 precedent (non-sensitive identifier). Operator relaying maintainer ruling 2026-10-16 (#1603 batch-e, batch_e_decisions.md)."
+caveat = "Undocumented column: SCB documents no partner person key on this RTB variant, so which relation it encodes (spouse, registered partner, cohabitant) is not documented. The nearest documented analogues have a different name or meaning: scb/rtb/folkbokforda-personer PersonNrSambo (1998-2025), Barnregistret partner (a partnership-family indicator, not a key) and FoB SamboPersonNr (1985-1990)."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-grundforbosattning"
+fields = { "sets" = ["legacy-2-8180"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:763\n\n2026-09-30: SCB RTB VarId 8180: GFBKod and GrundForBosattning supply the same person-prioritized residence-basis classification. Preserve Nordic US/blank/null not-applicable versus non-Nordic missing meanings and all original member coding. Same literal GrundForBosattning on native2.15724 is a grouped construct outside this map. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."

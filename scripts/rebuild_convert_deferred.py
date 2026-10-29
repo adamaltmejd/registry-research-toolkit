@@ -283,7 +283,6 @@ def delivered(converter, provider, register, entry, variants):
         "identifier": "identifier",
     }
     proposals = []
-    asserted_periods = []
     for version in entry["versions"]:
         releases = [
             r
@@ -299,12 +298,8 @@ def delivered(converter, provider, register, entry, variants):
                 "delivered occurrence needs one dated existing release; convert the missing release first"
             )
         release = releases[0]
-        bounds = release["from"], release["to"]
-        if any(max(bounds[0], a) <= min(bounds[1], b) for a, b in asserted_periods):
-            raise ValueError(
-                "overlapping delivered releases need an assertion-conflict design decision"
-            )
-        asserted_periods.append(bounds)
+        # The resolver's edition/union rules decide overlap (crates/DESIGN.md,
+        # Releases); calendar overlap alone is not a refusal.
         if any(
             row["table"] == handle
             and row["column"].lower() == entry["column"].lower()

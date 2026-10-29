@@ -1,0 +1,6 @@
+{
+  "exit_code": 1,
+  "located_errors": [
+    "registers/demo/assignment/curation.toml:13: D-11: set variable would merge concurrent folded spellings \"early\" and \"rival\" in table \"t\" over 2000-12-31..2000-12-31 into variable \"alpha\"; retain separate variables"
+  ]
+}

@@ -89,3 +89,8 @@ public = "grundskola-elever"
 "moderna-sprak-inom-ramen-for-elevens-val-sprak" = ["Individregister: mspr1_sprak"]
 "moderna-sprak-inom-ramen-for-sprakval-alternativ" = ["Individregister: mspr2_alt"]
 "moderna-sprak-inom-ramen-for-sprakval-sprak" = ["Individregister: mspr2_sprak"]
+
+# Recovered source families, explicitly keyed by folded column where provider ids are absent.
+"fritidshemsavdelningens-namn" = ["Individregister: AvdFTH"]
+"skolenhetskod-fritidshem" = ["Individregister: SkolenhetsKodFTH"]
+"skolkod-fritidshem" = ["Individregister: SkolKodFTH"]
