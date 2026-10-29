@@ -1094,8 +1094,8 @@ not change provider identity, segment validity or classification applicability. 
 boundary and the absence of a catalog series entity are settled in [REBUILD.md,
 "Decisions already made"](../REBUILD.md#decisions-already-made) and "Value sets,
 populations and series" above. The decisions below include the maintainer 2026-10-29
-rulings. The remaining coding representation question is collected in "Open for the
-maintainer"; its recommendation is not adopted policy.
+rulings and the Operator decision on pre-2018 current coding derived from them. No open
+design questions remain.
 
 Source references in this section use `cleanroom/design.md` (v4, 2026-10-26) and
 `cleanroom/schema-v3.md`, under the maintainer-local `.local/design/first-principles/`
@@ -1280,12 +1280,12 @@ delivery facts about existing global providers, including evidenced `*-enligt-le
 definitions, use that same global curation home. Facts specific to the 27 SWECOV-only
 providers stay supplemental, as do the adopted steward slots. Genuinely new
 steward-owned shapes get explicit normal ids in the dedicated repo and supplemental
-semantic tables, including delivery-only slots (maintainer 2026-10-29). Pre-2018 coding
-representation remains the open question below. No route silently changes a variable's
-register; physical locations and possession remain holdings facts; evidenced logical
-provider occurrences may enter global curation under S3. There is no physical-table
-record in the catalog's `reg-frame::Record`: its `Table` means a logical row shape and
-its `Release` a stated provider delivery.
+semantic tables, including delivery-only slots (maintainer 2026-10-29). Pre-2018 current
+coding uses ordinary steward coding-table definitions as decided below. No route
+silently changes a variable's register; physical locations and possession remain
+holdings facts; evidenced logical provider occurrences may enter global curation under
+S3. There is no physical-table record in the catalog's `reg-frame::Record`: its `Table`
+means a logical row shape and its `Release` a stated provider delivery.
 
 No new crate is needed for the physical layer. Pure serialized holdings/order types live
 in `reg-core`; format readers in `reg-readers`; compilation and SQLite emission in
@@ -1423,9 +1423,9 @@ overwritten. Their public ids must be distinct; the reader resolves a public id 
 database origin before using its local row id. Shared code lists are addressed by
 content hash. The same catalog-check implementation can read this composed semantic view
 without changing base entities. Ordinary SWECOV-only provider definitions and steward
-slots both use this home (maintainer 2026-10-29); the pre-2018 coding representation
-remains open; there is no new addressable "form" entity and no base-copy/append
-pipeline.
+slots both use this home (maintainer 2026-10-29); pre-2018 current coding also uses
+ordinary supplemental coding-table definitions; there is no new addressable "form"
+entity and no base-copy/append pipeline.
 
 `reg-build/src/holdings/schema.sql` owns the holdings DDL and
 `reg_core::HOLDINGS_SCHEMA_VERSION` its exact schema gate, separate from the catalog
@@ -1610,9 +1610,13 @@ ordinary 2015–2016 window onto the already-declared D table `bu-insats-pnrq0`
 mechanism. A whole-table date cannot stand in for that window. Caveats about current
 coding before 2018 stay attached to their actual window; they must not clone or widen
 global segments. The source records the **Operator's warn-not-hold call** (2026-10-19,
-batch-g), not a maintainer ruling. Preserve that accepted behavior. The remaining open
-question concerns only current-coding windows before 2018, not PLACDAT1 or the ordinary
-older-table mapping.
+batch-g), not a maintainer ruling. Preserve that accepted behavior. **Operator decision,
+derived from maintainer 2026-10-29 Q1:** represent pre-2018 current coding with explicit
+ordinary coding-table definitions in the pinned steward repo and its supplemental
+semantic part, preserving provenance and the Operator 2026-10-19 warn-not-hold notice.
+Never widen global validity; there is no holdings-only exception contract. This follows
+Q1's ordinary semantic-record home for steward definitions. PLACDAT1 and the ordinary
+older-table mapping remain ordinary column windows, outside this coding decision.
 
 The six `RTB_PostNr_YYYY` projections are a worked key-only case: ordering the person
 key is served by the main `RTBYYYY` placement; a selected projection retains its own
@@ -1801,7 +1805,7 @@ cases, and the SWECOV series.
   | Partitions                                                 | Kept                          | Declared disjoint shards such as Swedbank `v15`, not competing deliveries hidden by a label.                                                                                      |
   | Projections                                                | Kept                          | Own grain/keys/file; parent is not a projection.                                                                                                                                  |
   | Wide position/month/year members (197/36/5 uses)           | Changed                       | Existing interval-valid D variables win, including resolution of the five year members; mint only missing steward slots (maintainer 2026-10-29). Index stays topology evidence.   |
-  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding is the remaining open coding issue.                                                          |
+  | Column windows                                             | Kept                          | PLACDAT1 uses the existing `bu-insats-pnrq0` over 2015–2016; pre-2018 current coding uses ordinary supplemental coding tables, per the Operator decision above.                   |
   | `select_owner` (280 uses)                                  | Changed                       | Explicit evidence-backed variable choice per table/window; cannot clear catalog ambiguity.                                                                                        |
   | `hold` + `follow_up` versus `unmap`                        | Kept                          | Interim unresolved metadata with issue versus permanent non-mapping; neither is silently auto-mapped.                                                                             |
   | `graft_onto`                                               | Changed                       | Convert provider gap-fill candidates to reviewed ordinary assertions/setters, or steward definitions; no generator silently grafts physical facts into provider history.          |
@@ -1817,7 +1821,7 @@ cases, and the SWECOV series.
   | v3 logical filename template + physical-id suffix          | Changed                       | Physical-table names use shared slugify with `_`; periods stay in manifest metadata (maintainer 2026-10-29), replacing the v3 ruling.                                             |
   | `register_variant` and canonical `representation` selector | Dropped                       | Route through D table ledgers; compile table/variable/interval keys.                                                                                                              |
   | Mapping caveats and windows                                | Kept                          | Preserve the Operator's evidenced warn-not-hold call without extending global validity.                                                                                           |
-  | Warned-gap catalog-state clones                            | Dropped                       | Pre-2018 coding representation remains open, never copied widened global segments.                                                                                                |
+  | Warned-gap catalog-state clones                            | Dropped                       | Ordinary supplemental coding tables preserve provenance and warn-not-hold notices; never copy widened global segments or add a holdings-only exception contract.                  |
   | Alias, `same_as`, succession as possession shortcut        | Dropped                       | Documentary relations grant no possession.                                                                                                                                        |
   | Delivery-series authoring groups                           | Kept as input data            | Explicitly named tables share reviewed decisions; no catalog series entity.                                                                                                       |
   | Storage-versus-type findings                               | Kept                          | `disagrees`, `narrower`, `uncurated`, `unmatched` run after mapping; separate from N1.                                                                                            |
@@ -1882,21 +1886,6 @@ release.
 This stage replaces `reg_webapp/stewards/swecov/build_catalog.py` and Python
 `extend-db`; they remain frozen until F deletes them. No Rust port of their overlay or
 warned-state cloning pipeline survives as a compatibility layer.
-
-### Open for the maintainer
-
-The provider home/repository, steward slots, union filter, physical filenames, local
-mock-skill scope and conditional companion deferral are settled above (maintainer
-2026-10-29). Only the unanswered coding representation part of the former Q2 remains:
-
-1. **How is pre-2018 current coding represented?** Blocks **e-holdings/e-order** for
-   affected columns. Options: explicit ordinary coding-table definitions in the
-   steward's supplemental semantic part; or holdings-only exception records. Recommend
-   explicit coding tables with preserved provenance and the Operator's warn-not-hold
-   call, without widening global validity. This changes whether the semantic reader sees
-   a normal steward coding table or the physical layer owns a special exception
-   contract. PLACDAT1 on existing `bu-insats-pnrq0` is an ordinary column window,
-   outside this question. The slot answer does not settle coding.
 
 ## Project semantic validation
 

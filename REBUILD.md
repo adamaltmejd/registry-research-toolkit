@@ -654,9 +654,11 @@ catalog remains for a later release decision.
   belongs to a later local researcher skill, not the server or E. Companions remain
   deferred unless the real exit order needs explicit reviewed selection.
 - **Ordered PRs.** The durable contract and vocabulary checklist are in
-  [crates/DESIGN.md, "Holdings"](crates/DESIGN.md#holdings). Its only remaining open
-  question is pre-2018 current coding representation, blocking affected e-holdings and
-  e-order work:
+  [crates/DESIGN.md, "Holdings"](crates/DESIGN.md#holdings). No open design questions
+  remain. The Operator decision derived from maintainer 2026-10-29 Q1 uses explicit
+  ordinary supplemental coding-table definitions for pre-2018 current coding, preserving
+  provenance and the Operator 2026-10-19 warn-not-hold notice, never widening global
+  validity or adding a holdings-only exception contract:
   1. **e-design:** holdings design and this sequence, maintainer review only;
   2. **e-repo:** the maintainer creates the GitHub repository; prepare the dedicated
      SWECOV repo layout and exact toolkit pin. Move the toolkit's steward definition,
@@ -668,8 +670,9 @@ catalog remains for a later release decision.
      repo: one-shot TOML → pinned transcription CSV; reconcile slugs, reviewed and
      auto-mapped targets, including the 27 supplemental providers; add steward slots,
      per-column routes, interval-local matching, pooled clips and unmatched notices.
-     Resolve the remaining pre-2018 coding question for affected inputs. Verify the
-     catalog/holdings pair and expose held periods and steward semantic metadata;
+     Transcribe affected pre-2018 current coding as ordinary supplemental coding tables
+     with provenance and warn-not-hold notices. Verify the catalog/holdings pair and
+     expose held periods and steward semantic metadata;
   4. **e-order:** materialization over the composed semantic view; project minor 5.2.0
      with optional `extract_format` and explicit 5.1.0/5.2.0 admission; configured
      owner, manifest and existing conformance cases. Physical-table filenames and
