@@ -747,14 +747,18 @@ overlapping curated overrides are refused at both locations.
 - **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
   catalogs by natural key (pid, table name, meta key), never by row id, in nine
   sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
-  kind changed, retired), provider and register names, table names, roles, unit-type
-  slugs and spans, per-variable segments, label and definition runs, value sets
-  (including shared-hash sentinel changes and the codes added and removed where only a
-  segment's value-set hash changed), and finding counts per code. Text shows at most `N`
-  (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
-  something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
-  and `curation_digest` never count, since they differ every release), 2 on a usage or
-  IO error or a missing or different `schema_version` major.
+  kind changed, moved, retired), provider and register names, table names, roles,
+  unit-type slugs and spans, per-variable segments, label and definition runs, value
+  sets (including shared-hash sentinel changes and the codes added and removed where
+  only a segment's value-set hash changed), and finding counts per code. Text shows at
+  most `N` (default 20) per section; `--json` is complete. Exit 0 when nothing differs,
+  1 when something does (the meta keys `generation_id`, `catalog_version`,
+  `builder_version` and `curation_digest` never count, since they differ every release),
+  2 on a usage or IO error or a missing or different `schema_version` major. A surviving
+  variable id is listed as moved when both occurrence target sets are non-empty and no
+  old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
+  periods. Explicit table ids are compared by table name; implicit tables share their
+  register's id and are excluded.
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -771,7 +775,16 @@ overlapping curated overrides are refused at both locations.
   skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable.
+  other version is not comparable. A published variable id's targets are its
+  column-bearing occurrences' (table slug, folded spelling, `[start, end)` period)
+  triples. Targets overlap when table and spelling match and their periods overlap;
+  matching names in disjoint periods do not preserve identity. An explicit table id
+  targets its table name. Implicit tables share their register's id and are excluded
+  from the table rule. If an id of the same kind survives, both target sets are
+  non-empty, and no old/new targets overlap, `verify --previous` refuses it as moved,
+  naming the pid and both target sets; retire that id and mint a new one. Overlapping
+  targets, including growth, are allowed. `diff` lists and counts moved ids in its `ids`
+  section. Registers and providers are excluded from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a

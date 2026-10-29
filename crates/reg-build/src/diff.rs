@@ -343,13 +343,24 @@ fn ids(p: &Pair) -> Res<Section> {
             .map(|(pid, kind)| item(pid, kind, String::new()))
             .collect()
     };
+    let moved = crate::id_targets::moved(&p.old, "main", &p.new, "main")?
+        .into_iter()
+        .map(|m| {
+            Item::new(
+                json!({"pid": m.pid, "kind": m.kind, "old": m.old, "new": m.new}),
+                m.text(),
+            )
+        })
+        .collect();
     Ok(Section {
         key: "ids",
         title: "ids",
+        // The breaking groups come first: they share one line budget with additions.
         groups: vec![
-            ("added", added),
             ("removed", removed),
             ("kind_changed", kind_changed),
+            ("moved", moved),
+            ("added", added),
             ("retired_added", retired(&new_retired, &old_retired)),
             ("retired_removed", retired(&old_retired, &new_retired)),
         ],
@@ -372,7 +383,7 @@ fn iso(day: i64) -> String {
     format!("{y:04}-{m:02}-{d:02}")
 }
 
-fn span(start: i64, end: i64) -> String {
+pub(super) fn span(start: i64, end: i64) -> String {
     format!("[{}, {})", iso(start), iso(end))
 }
 

@@ -1,0 +1,7 @@
+[tables]
+t = "t"
+u = "u"
+
+[variables]
+published = ["t: X @ 2018-01-01"]
+other = ["u: X @ 2018-01-01"]
