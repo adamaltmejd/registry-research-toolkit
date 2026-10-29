@@ -343,6 +343,15 @@ fn ids(p: &Pair) -> Res<Section> {
             .map(|(pid, kind)| item(pid, kind, String::new()))
             .collect()
     };
+    let moved = crate::id_targets::moved(&p.old, "main", &p.new, "main")?
+        .into_iter()
+        .map(|m| {
+            Item::new(
+                json!({"pid": m.pid, "kind": m.kind, "old": m.old, "new": m.new}),
+                format!("{} ({}): {:?} → {:?}", m.pid, m.kind, m.old, m.new),
+            )
+        })
+        .collect();
     Ok(Section {
         key: "ids",
         title: "ids",
@@ -350,6 +359,7 @@ fn ids(p: &Pair) -> Res<Section> {
             ("added", added),
             ("removed", removed),
             ("kind_changed", kind_changed),
+            ("moved", moved),
             ("retired_added", retired(&new_retired, &old_retired)),
             ("retired_removed", retired(&old_retired, &new_retired)),
         ],

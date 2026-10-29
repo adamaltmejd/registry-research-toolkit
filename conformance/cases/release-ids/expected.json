@@ -1,0 +1,99 @@
+{
+  "variable": [
+    {
+      "pid": "demo/implicit/one",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "a"
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "b"
+        }
+      ]
+    },
+    {
+      "pid": "demo/implicit/two",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/implicit",
+          "spelling": "b"
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/implicit",
+          "spelling": "a"
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/other",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/r/u",
+          "spelling": "x"
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/r/t",
+          "spelling": "x"
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/published",
+      "kind": "variable",
+      "old": [
+        {
+          "table": "demo/r/t",
+          "spelling": "x"
+        }
+      ],
+      "new": [
+        {
+          "table": "demo/r/u",
+          "spelling": "x"
+        }
+      ]
+    }
+  ],
+  "table": [
+    {
+      "pid": "demo/r/t",
+      "kind": "table",
+      "old": [
+        {
+          "table": "First"
+        }
+      ],
+      "new": [
+        {
+          "table": "Second"
+        }
+      ]
+    },
+    {
+      "pid": "demo/r/u",
+      "kind": "table",
+      "old": [
+        {
+          "table": "Second"
+        }
+      ],
+      "new": [
+        {
+          "table": "First"
+        }
+      ]
+    }
+  ],
+  "grown": []
+}

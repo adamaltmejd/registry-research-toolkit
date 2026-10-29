@@ -1,0 +1,9 @@
+{"kind":"register","provider":"demo","register":"r","name":"Register"}
+{"kind":"table","provider":"demo","register":"r","table":"t","name":"First"}
+{"kind":"table","provider":"demo","register":"r","table":"u","name":"Second"}
+{"kind":"occurrence","provider":"demo","register":"r","table":"t","column":"X","source_key":"x","label":"X","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"r","table":"u","column":"X","source_key":"y","label":"X","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"register","provider":"demo","register":"implicit","name":"Before"}
+{"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"Z","source_key":"z","label":"Z","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"A","source_key":"a","label":"A","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"B","source_key":"b","label":"B","from":"2018-01-01","to":"2018-12-31"}

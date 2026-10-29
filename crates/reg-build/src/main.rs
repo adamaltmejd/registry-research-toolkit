@@ -28,6 +28,7 @@ mod curation;
 mod diff;
 mod docs;
 mod emit;
+mod id_targets;
 mod link;
 mod proposals;
 mod retired;
