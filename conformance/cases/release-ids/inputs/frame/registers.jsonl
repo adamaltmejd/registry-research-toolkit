@@ -7,3 +7,4 @@
 {"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"Z","source_key":"z","label":"Z","from":"2018-01-01","to":"2018-12-31"}
 {"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"A","source_key":"a","label":"A","from":"2018-01-01","to":"2018-12-31"}
 {"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"B","source_key":"b","label":"B","from":"2018-01-01","to":"2018-12-31"}
+{"kind":"occurrence","provider":"demo","register":"implicit","table":"","column":"Z","source_key":"future","label":"Z","from":"2021-01-01","to":"2021-12-31"}

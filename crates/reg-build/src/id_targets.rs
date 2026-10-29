@@ -10,6 +10,8 @@ pub struct Target {
     table: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     spelling: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    period: Option<(i64, i64)>,
 }
 
 pub struct Moved {
@@ -25,14 +27,14 @@ type Targets = BTreeMap<(String, String), BTreeSet<Target>>;
 fn targets(db: &Connection, schema: &str) -> Result<Targets, String> {
     let mut stmt = db
         .prepare(&format!(
-            "SELECT v.pid, 'variable', t.pid, f.folded
+            "SELECT v.pid, 'variable', t.pid, f.folded, o.start, o.end
              FROM {schema}.variable v
              LEFT JOIN {schema}.occurrence o ON o.variable_id = v.id AND o.spelling_id IS NOT NULL
              LEFT JOIN {schema}.tbl t ON t.id = o.table_id
              LEFT JOIN {schema}.spelling s ON s.id = o.spelling_id
              LEFT JOIN {schema}.name_fold f ON f.id = s.fold_id
              UNION ALL
-             SELECT t.pid, 'table', n.body, NULL
+             SELECT t.pid, 'table', n.body, NULL, NULL, NULL
              FROM {schema}.tbl t JOIN {schema}.text n ON n.id = t.name_text
              WHERE t.implicit = 0"
         ))
@@ -47,6 +49,10 @@ fn targets(db: &Connection, schema: &str) -> Result<Targets, String> {
             set.insert(Target {
                 table,
                 spelling: row.get(3).map_err(|e| e.to_string())?,
+                period: row
+                    .get::<_, Option<i64>>(4)
+                    .map_err(|e| e.to_string())?
+                    .zip(row.get(5).map_err(|e| e.to_string())?),
             });
         }
     }
@@ -64,7 +70,20 @@ pub fn moved(
         .into_iter()
         .filter_map(|((pid, kind), old)| {
             let new = new.remove(&(pid.clone(), kind.clone()))?;
-            old.is_disjoint(&new).then_some(Moved {
+            // simplify: pairwise scan per id; index by table/spelling if one id's
+            // occurrence targets exceed a few thousand.
+            let overlaps = old.iter().any(|o| {
+                new.iter().any(|n| {
+                    o.table == n.table
+                        && o.spelling == n.spelling
+                        && match (o.period, n.period) {
+                            (Some((os, oe)), Some((ns, ne))) => os < ne && ns < oe,
+                            (None, None) => true, // Explicit tables target their name alone.
+                            _ => false,
+                        }
+                })
+            });
+            (!old.is_empty() && !new.is_empty() && !overlaps).then_some(Moved {
                 pid,
                 kind,
                 old,

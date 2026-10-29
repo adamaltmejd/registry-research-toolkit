@@ -12,9 +12,10 @@ from reader_artifacts import CASES, REG_BUILD, REPO, cached_reader_artifact
 
 @pytest.mark.parametrize("change", ["variable", "table", "grown"])
 def test_published_id_targets(tmp_path, change):
-    # Fails if surviving pids conceal disjoint targets, if either table or spelling
-    # alone defines a target, or if any target change refuses legitimate growth. No prior
-    # verify/diff case covers identity moves; the golden follows the source/ledgers.
+    # Fails if surviving pids conceal disjoint tables, spellings or periods, if exact
+    # interval equality replaces overlap, or if register/implicit-table renames count
+    # as table moves. Growth adds targets beside partial overlap. The golden follows
+    # the source/ledgers; periods are half-open Unix days derived from source dates.
     fixture = CASES / "release-ids"
     expected = json.loads((fixture / "expected.json").read_text())[change]
     previous = cached_reader_artifact(fixture)
@@ -60,7 +61,11 @@ def test_published_id_targets(tmp_path, change):
         assert f"previous release: moved id {first['pid']}" in verified.stderr
         for target in [*first["old"], *first["new"]]:
             for value in target.values():
-                assert value in verified.stderr
+                if isinstance(value, list):
+                    for day in value:
+                        assert str(day) in verified.stderr
+                else:
+                    assert value in verified.stderr
         assert "retire" in verified.stderr and "mint" in verified.stderr
 
     diff = run("diff", previous, current, "--json")
