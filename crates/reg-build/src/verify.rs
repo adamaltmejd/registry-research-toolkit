@@ -266,7 +266,10 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     for statement in [
         "SELECT p.pid FROM prev.ident p
           WHERE NOT EXISTS (SELECT 1 FROM main.ident c WHERE c.pid = p.pid AND c.kind = p.kind)
-            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid)",
+            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)",
+        "SELECT p.pid FROM prev.var_set p
+          WHERE NOT EXISTS (SELECT 1 FROM main.var_set c WHERE c.pid = p.pid AND c.kind = p.kind)
+            AND NOT EXISTS (SELECT 1 FROM main.ident_retired r WHERE r.pid = p.pid AND r.kind = p.kind)",
         "SELECT pid FROM prev.ident_retired EXCEPT SELECT pid FROM main.ident_retired",
     ] {
         let first: Option<String> = db

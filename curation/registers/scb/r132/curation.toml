@@ -373,12 +373,6 @@ evidence = "reg_meta_build/curation/registers/scb/isen.toml:1980\n\nComplete acc
 
 [[statement]]
 kind = "set"
-subject = "var:bransleslaget-i-klartext-btext"
-fields = { "sets" = ["legacy-bransleslaget-i-klartext-btext"] }
-evidence = "reg_meta_build/curation/registers/scb/isen.toml:2004\nreg_meta_build/curation/registers/scb/isen.toml:2017\n\nExact same native source member declares both BText and BTEXT with identical substantive fields in this edition. Retain both literal physical forms under their known native klartext quantity, with per-column metadata. No field dropped, code value merged or suffix meaning inferred. Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "industrins-energianvandning: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"

@@ -252,6 +252,9 @@ impl SetFields {
         {
             slug(variable)?;
         }
+        for value in self.sets.iter().chain(&self.tags).flatten() {
+            slug(value)?;
+        }
         if let Some(reference) = &self.classification {
             match reference.parse::<reg_core::Fqid>() {
                 Ok(reg_core::Fqid::ClassVersion { .. }) => {}

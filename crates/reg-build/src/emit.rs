@@ -56,6 +56,7 @@ impl StatementRow {
 /// Everything the file holds, linked.
 pub struct Catalog {
     pub retired: Vec<crate::retired::Retired>,
+    pub tags: BTreeMap<String, crate::sets::Tag>,
     pub meta: BTreeMap<&'static str, String>,
     /// Sorted by name.
     pub inputs: Vec<InputRow>,
@@ -842,6 +843,15 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 )
             },
         );
+        let (label, description) = if scope.is_none() {
+            let tag = catalog
+                .tags
+                .get(&name)
+                .expect("tag vocabulary checked at load");
+            (tag.label.clone(), Cell::Text(tag.definition.clone()))
+        } else {
+            (name, Cell::Null)
+        };
         let set_id = id(i);
         rows.push(
             "var_set",
@@ -850,8 +860,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                 Cell::Str(kind.into()),
                 Cell::Str(pid),
                 register,
-                Cell::Text(name),
-                Cell::Null,
+                Cell::Text(label),
+                description,
             ],
         );
         for (ord, (ri, v)) in members.into_iter().enumerate() {
@@ -1304,14 +1314,17 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
         db.execute_batch(statement)
             .map_err(|e| format!("{statement}: {e}"))?;
     }
-    let live: BTreeSet<&str> = rows
-        .tables
-        .get("ident")
+    let live: BTreeSet<&str> = [("ident", 0), ("var_set", 2)]
         .into_iter()
-        .flatten()
-        .filter_map(|row| match &row[0] {
-            Cell::Str(pid) => Some(pid.as_str()),
-            _ => None,
+        .flat_map(|(table, column)| {
+            rows.tables
+                .get(table)
+                .into_iter()
+                .flatten()
+                .filter_map(move |row| match &row[column] {
+                    Cell::Str(pid) => Some(pid.as_str()),
+                    _ => None,
+                })
         })
         .collect();
     for retired in &catalog.retired {

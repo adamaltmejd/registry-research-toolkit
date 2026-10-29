@@ -142,12 +142,6 @@ evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1056\nreg_meta_build
 
 [[statement]]
 kind = "set"
-subject = "var:urvalsstratum"
-fields = { "sets" = ["legacy-urvalsstratum"] }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1082\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: delantdagar @2015"
 fields = { "sensitive" = true, "identifier" = false }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1379\n\nSCB states neither flag for scb/ksju/delantdagar-2015 and no auxiliary join supplies one, so unresolved_flag withheld it. Every flagged same-register sibling of this quantity family (the KSJU näringsgren and sjukdagar variables) is a sensitive non-identifier; sensitivity takes the ratchet value and the identifier flag stays false because no sibling carries it (AGENTS.md PII rule). Replaces the unresolved_flag acknowledgement (#1603; maintainer decision 2026-10-15, KSJU S1/D1; #1621)."

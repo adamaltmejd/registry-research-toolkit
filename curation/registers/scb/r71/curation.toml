@@ -218,12 +218,6 @@ caveat = "The source links these literal forms to the same native quantity/membe
 
 [[statement]]
 kind = "set"
-subject = "var:namn"
-fields = { "sets" = ["legacy-namn"] }
-evidence = "reg_meta_build/curation/registers/scb/fastighetspriser.toml:601\nreg_meta_build/curation/registers/scb/fastighetspriser.toml:614\n\nExact own native member in the same edition identifies these physical forms of the same source-defined quantity. Keep individual storage/operations and source domains, no value equality/conversion or suffix semantics. Explicit role differences are separate guarded owners. Batch51-fastighetspriser-identity-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "fastighetspriser: {forsamling,kommun,lan} @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"

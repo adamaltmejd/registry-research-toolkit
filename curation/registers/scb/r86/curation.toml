@@ -1,12 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:hut-del"
-fields = { "sets" = ["legacy-86-46210", "legacy-hut-del"] }
-evidence = "reg_meta_build/curation/registers/scb/hut.toml:330\nreg_meta_build/curation/registers/scb/hut.toml:741\n\nBatch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period.\n\nBoth supplied fields explicitly mean collection part, with the same six own supplied codes/labels and operation. Preserve both literal columns and source associations; shared coding is justified by complete own-domain equality. Batch52-HEK-HUT-complete-source-role-review.json; Batch52-HEK-HUT-own-coding-review.json. Complete accepted originals, actual support/prerequisites and own bound coding. No suffix-derived meaning or guessed classification/period."
-
-[[statement]]
-kind = "set"
 subject = "individ-2003-2012: BALD where key = 'v6267' and type = 'decimal' and release = 'r1525'"
 fields = { type = "integer" }
 evidence = "value set: 126 integer codes"

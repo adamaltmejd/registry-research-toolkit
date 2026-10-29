@@ -1,0 +1,22 @@
+{
+  "singleton": {
+    "command": "build",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "set-too-small",
+    "pid": "demo/r/concept"
+  },
+  "unknown-tag": {
+    "command": "lock",
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "unknown-tag",
+    "pid": "unknown"
+  },
+  "retired-set": {
+    "command": "build",
+    "location": "retired.toml:1",
+    "code": "retired-id-live",
+    "pid": "demo/r/concept"
+  },
+  "tag_text": ["Inkomst", "Personers och hushålls inkomster."],
+  "reworded_definition": "Inkomster för personer och hushåll."
+}

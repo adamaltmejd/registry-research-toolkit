@@ -571,8 +571,10 @@ overlapping curated overrides are refused at both locations.
 - **Retirements.** `curation/retired.toml` permanently records each retired public id,
   its kind, retirement version and reason (`merged`, `split` or `withdrawn`). Any PR
   removing a published id adds its entry in the same PR; the id-sprint assembler appends
-  renames. The builder emits these entries to `ident_retired`, refuses live collisions
-  and reserves their names during minting. Entries are never removed or redirected.
+  renames and dissolved sets. The builder emits these entries to `ident_retired`,
+  refuses live collisions with both `ident` and `var_set` (including tags), and reserves
+  their names during minting and set membership admission. Entries are never removed or
+  redirected.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.
@@ -774,22 +776,25 @@ overlapping curated overrides are refused at both locations.
   release does not state, each at its line, since a hand-written frame skips the checks
   a source reader's input has passed.
 - **Verification.** `reg-build verify FILE [--previous FILE]` is the single artifact
-  check: integrity, the schema's post-write queries, each value set's items hashing to
-  its address, and with `--previous` the id rules against the previous release. `emit`
-  runs it on the staged file before replacing the output, so conformance and the release
-  skill call the same authority. The schema version is
+  check: integrity, the schema's post-write queries (including same-register sets with
+  at least two distinct members and live/retired collisions), each value set's items
+  hashing to its address, and with `--previous` the id rules against the previous
+  release. `emit` runs it on the staged file before replacing the output, so conformance
+  and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. A published variable id's targets are its
-  column-bearing occurrences' (table slug, folded spelling, `[start, end)` period)
-  triples. Targets overlap when table and spelling match and their periods overlap;
-  matching names in disjoint periods do not preserve identity. An explicit table id
-  targets its table name. Implicit tables share their register's id and are excluded
-  from the table rule. If an id of the same kind survives, both target sets are
-  non-empty, and no old/new targets overlap, `verify --previous` refuses it as moved,
-  naming the pid and both target sets; retire that id and mint a new one. Overlapping
-  targets, including growth, are allowed. `diff` lists and counts moved ids in its `ids`
-  section. Registers and providers are excluded from this rule.
+  other version is not comparable. Removed ids from `ident` or `var_set` must appear
+  with the same kind in `ident_retired`, and existing retirements must remain. A
+  published variable id's targets are its column-bearing occurrences' (table slug,
+  folded spelling, `[start, end)` period) triples. Targets overlap when table and
+  spelling match and their periods overlap; matching names in disjoint periods do not
+  preserve identity. An explicit table id targets its table name. Implicit tables share
+  their register's id and are excluded from the table rule. If an id of the same kind
+  survives, both target sets are non-empty, and no old/new targets overlap,
+  `verify --previous` refuses it as moved, naming the pid and both target sets; retire
+  that id and mint a new one. Overlapping targets, including growth, are allowed. `diff`
+  lists and counts moved ids in its `ids` section. Registers and providers are excluded
+  from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
@@ -2139,7 +2144,10 @@ A set is warranted when one register has two or more variables that are each an 
 source names as part of the concept counts, and so does a quantity computed from it (a
 ratio to the median, a weight, a cost-adjusted remainder). An input to the concept stays
 out: gross income goes into disposable income but is not a quantity of it. A lone
-variable gets no set.
+variable gets no set. The build refuses fewer than two distinct final member variables
+at the originating curation statement, after all memberships resolve. Repeated
+occurrences of one variable never supply a second member. Artifact verification also
+checks this minimum and that every member belongs to the set's register.
 
 **A tag** is a curated thematic vocabulary across providers and registers, so a
 researcher can find "a measure of income" without knowing the register. A tag is broad:
@@ -2147,6 +2155,15 @@ a topic typed before knowing which register holds it (`income`, `transfers`,
 `employment`), with members in several registers. A term that would only list one
 register's variables is a set. Tags are search-only: they discover and never touch
 identity, and a variable page does not list the variables sharing its tags (#1794).
+
+`curation/tag-vocabulary.toml` defines the flat vocabulary as `[[tag]]` entries with
+only `id`, `label` and `definition`. Ids are unique catalog slugs; labels and
+definitions are nonblank Swedish text. Unknown fields refuse. Build and lock refuse
+unknown membership slugs at their curation statement locations. The vocabulary is
+included in the build input hash, but never in lock premises or per-register lock
+digests: editing a definition needs no relock. Tag labels and definitions populate the
+existing `var_set.name_text` and `description_text`; schema 4 remains unchanged. No
+current runtime, search or SPA consumer reads these memberships.
 
 ## Relationship graph
 
