@@ -169,6 +169,7 @@ CREATE TABLE variable (
 ) STRICT;
 CREATE INDEX variable_register ON variable(register_id, pid);
 
+-- simplify: Unwritten since D (table-only unit types); delete with the next schema-major change.
 CREATE TABLE variable_unit_type (
   variable_id  INTEGER NOT NULL REFERENCES variable(id),
   unit_type_id INTEGER NOT NULL REFERENCES unit_type(id),

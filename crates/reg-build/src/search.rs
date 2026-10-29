@@ -82,6 +82,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 name.push_str(spelling);
             }
             let mut labels = vec![variable.label.as_str()];
+            labels.extend(variable.synonyms.iter().map(String::as_str));
             let mut definitions = Vec::new();
             for run in &variable.texts {
                 if !labels.contains(&run.label.as_str()) {

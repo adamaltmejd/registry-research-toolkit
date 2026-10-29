@@ -1,0 +1,40 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/0/value_set/hash": "7f11a187056ed0702a1d381b2b0d2539f5cff265cd384a4483ca64cba5d8ee0d"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "0",
+        "2"
+      ],
+      "/data/items/*/sentinel": [
+        true,
+        false
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/0/value_set/hash": "a9fa0ee7c76b5a3bd5dfa65756ef1191f657e0ec645192cf24e5fd503cec8995"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": [
+        "0",
+        "1"
+      ],
+      "/data/items/*/sentinel": [
+        false,
+        false
+      ]
+    }
+  }
+]

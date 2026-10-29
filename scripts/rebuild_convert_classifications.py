@@ -123,6 +123,10 @@ def inventory(root):
         start, end = definition.get("valid_from"), definition.get("valid_to")
         if start is not None or end is not None:
             entry["period"] = f"{start or ''}..{end or ''}"
+        if "sentinel_codes" in definition:
+            entry["sentinel_codes"] = sorted(
+                code["code"] for code in definition["sentinel_codes"]
+            )
         if definition.get("hierarchy") == "flat":
             entry["evidence"] += (
                 "; declared flat hierarchy; external parents dropped by value-set normalization"
@@ -167,8 +171,8 @@ def inventory(root):
                     source,
                     line,
                     "classification-sentinels",
-                    "dropped",
-                    reason="sentinels deferred; not classification membership or bindings",
+                    "converted",
+                    reason="known noncanonical codes in bound columns",
                     count=len(definition["sentinel_codes"]),
                 )
             )

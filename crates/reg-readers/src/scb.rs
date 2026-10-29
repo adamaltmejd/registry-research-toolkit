@@ -234,6 +234,8 @@ pub fn read(
         let stated = tables
             .entry((rid.clone(), vid.clone()))
             .or_insert_with(|| Table {
+                role: None,
+                unit_type: None,
                 provider: provider.to_owned(),
                 register: handle.clone(),
                 table: table.clone(),
@@ -300,6 +302,7 @@ pub fn read(
         let spelling = row[column].trim().to_owned();
         let literal = get(dtype);
         let occurrence = Occurrence {
+            role: None,
             provider: provider.to_owned(),
             register: handle,
             table,

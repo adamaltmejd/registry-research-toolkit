@@ -1,0 +1,6 @@
+{"kind":"register","provider":"demo","register":"sentinel","name":"Sentinel override"}
+{"kind":"table","provider":"demo","register":"sentinel","table":"t","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"value_set","items":[{"code":"0","label":"Old missing","parent":null},{"code":"1","label":"Old value","parent":null}],"names":["old"]}
+{"kind":"value_set","items":[{"code":"0","label":"New missing","parent":null},{"code":"2","label":"New value","parent":null}],"names":["replacement"]}
+{"kind":"occurrence","provider":"demo","register":"sentinel","table":"t","column":"Current","source_key":"current","label":"Current","valueset":"old","from":"2020-01-01","to":"2020-12-31"}
+{"kind":"occurrence","provider":"demo","register":"sentinel","table":"t","column":"Control","source_key":"control","label":"Control","valueset":"old","from":"2020-01-01","to":"2020-12-31"}

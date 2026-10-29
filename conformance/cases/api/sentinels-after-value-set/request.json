@@ -1,0 +1,40 @@
+{
+  "note": "Fails if set sentinels reads the pre-override snapshot: both lists contain code 0, so lock/build/verify can silently succeed while marking the superseded list. Sentinel curation is authored first, then the value-set override. Oracle: the two readable source lists and reviewed statements; their code/label/parent SHA-256 hashes are calculated independently. The published Current replacement must mark 0; Control still publishes the original set and must remain unmarked.",
+  "fixture": "sentinel-overrides",
+  "requests": [
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sentinel/current",
+      "query": {
+        "period": "2020"
+      }
+    },
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query_from": {
+        "value_set": [
+          0,
+          "/data/items/0/value_set/hash"
+        ]
+      }
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/sentinel/control",
+      "query": {
+        "period": "2020"
+      }
+    },
+    {
+      "operation": "values",
+      "path": "/api/values",
+      "query_from": {
+        "value_set": [
+          2,
+          "/data/items/0/value_set/hash"
+        ]
+      }
+    }
+  ]
+}

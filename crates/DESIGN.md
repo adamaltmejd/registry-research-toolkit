@@ -374,10 +374,28 @@ Accepting one requires reviewed curation and a premise lock.
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
   version follows occurrences into segments and orders. Variable `tags` applies as
-  normalized membership, independently of identity, binding, ordering and peers.
-  Sentinels, roles and unit types remain deferred to D's planned sentinel and
-  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
-  entity-name and search curation.
+  normalized membership, independently of identity, binding, ordering and peers. Table
+  and occurrence `role` values use one validated vocabulary for each entity kind.
+  `unit_type` populates the table's unit-type reference; variables do not inherit it.
+  Table setters require a source-stated or asserted table, not a synthesized implicit
+  table. Table and release `name` changes preserve their public ids; variable names use
+  `label`. Variable `synonyms` enrich search labels without adding delivery aliases.
+  `set sentinels` at an occurrence or variable address applies after value-set overrides
+  to the published hashes, including population alternatives. Sentinel codes are
+  set-wide: `vs_item.sentinel` changes for every reference to that shared set. Missing
+  codes in an explicit setter and disagreeing local declarations for the same hash
+  refuse at their authoring locations. Classification inventory `sentinel_codes` names
+  known non-canonical codes in columns bound to that exact version, not codes in its
+  canonical book. It marks the listed codes present in each bound occurrence's value
+  sets, including population alternatives; declarations absent from all bound sets are
+  counted, not refused. Classification lists sharing a bound set are additive. A listed
+  code that is canonical in any version bound to that set, including the declaring
+  version, refuses at the binding and inventory locations. The bits remain set-wide, and
+  the hash remains based on code, label and parent, without sentinel status.
+  Occurrence-scoped sentinel claims on shared sets are deferred to sentinel-aware
+  value-set identity; revisit when a dropped scoped entry needs it. Register name
+  corrections that differ from source remain deferred: they need a register address in
+  the grammar.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
@@ -721,11 +739,12 @@ overlapping curated overrides are refused at both locations.
 
 **Decisions taken in milestone C.**
 
-- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
-  natural key (pid, table name, meta key), never by row id, in nine sections: schema
-  (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
-  retired), provider and register names, table names and spans, per-variable segments,
-  label and definition runs, value sets (with the codes added and removed where only a
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
+  catalogs by natural key (pid, table name, meta key), never by row id, in nine
+  sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
+  kind changed, retired), provider and register names, table names, roles, unit-type
+  slugs and spans, per-variable segments, label and definition runs, value sets
+  (including shared-hash sentinel changes and the codes added and removed where only a
   segment's value-set hash changed), and finding counts per code. Text shows at most `N`
   (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
   something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
@@ -2057,16 +2076,16 @@ full-text fallback and no scoring. It maps known headers; it is not discovery.
 
 ## Value sets and classifications
 
-A value set is content-addressed: its hash covers the sorted `(code, label)` items, so
-segments that deliver the same codes share one set, and a segment with no value set has
-`value_set: null`. `values` reads a set by its hash, or lists the sets holding a code
-and label. The blank code `""` is an item like any other. Classifications (versions,
-codes, correspondences) use curated identities. `curation/classifications.toml` holds
-family/version metadata, served names, publisher, existence periods and explicit
-succession edges. Its code lists reference reader value sets; they are never copied into
-inventory items. Inventory versions reuse the existing `assert classification-version`
-construction and emission path. Inline `items` remain available for genuinely
-hand-authored assertions.
+A value set is content-addressed: its hash covers the sorted `(code, label, parent)`
+items, so segments that deliver the same codes share one set, and a segment with no
+value set has `value_set: null`. `values` reads a set by its hash, or lists the sets
+holding a code and label. The blank code `""` is an item like any other. Classifications
+(versions, codes, correspondences) use curated identities.
+`curation/classifications.toml` holds family/version metadata, served names, publisher,
+existence periods, sentinel codes and explicit succession edges. Its code lists
+reference reader value sets; they are never copied into inventory items. Inventory
+versions reuse the existing `assert classification-version` construction and emission
+path. Inline `items` remain available for genuinely hand-authored assertions.
 
 Book periods describe existence only. They are neither inferred nor truncated, and
 versions of one family may overlap. Applicability comes exclusively from occurrence

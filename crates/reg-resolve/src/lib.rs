@@ -248,6 +248,7 @@ pub struct Variable {
     pub slug: String,
     pub sets: BTreeSet<String>,
     pub tags: BTreeSet<String>,
+    pub synonyms: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -452,6 +453,8 @@ pub fn resolve(
     for handle in handles {
         let mut table = stated.get(handle).map_or_else(
             || Table {
+                role: None,
+                unit_type: None,
                 provider: register.provider.clone(),
                 register: register.register.clone(),
                 table: handle.to_owned(),
@@ -952,7 +955,14 @@ pub fn resolve(
                     .iter()
                     .map(|&i| resolved[i].occurrence.classification.clone())
                     .collect();
-                let agree = forms.len() == 1 && classifications.len() == 1;
+                let roles: BTreeSet<_> = covering
+                    .iter()
+                    .filter_map(|&i| resolved[i].occurrence.role.as_deref())
+                    .collect();
+                if roles.len() > 1 {
+                    conflicts.insert("role".into());
+                }
+                let agree = forms.len() == 1 && classifications.len() == 1 && roles.len() <= 1;
                 // A form field is stated only where every occurrence agrees on it.
                 let agreed = |field: fn(&Form) -> &Option<String>| {
                     let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
@@ -1039,7 +1049,13 @@ pub fn resolve(
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
-                    role: role(o, identifier),
+                    role: covering
+                        .iter()
+                        .find(|&&i| resolved[i].occurrence.role.is_some())
+                        .map_or_else(
+                            || role(o, identifier),
+                            |&i| role(&resolved[i].occurrence, identifier),
+                        ),
                     state,
                 };
                 let index = match runs.last_mut() {
@@ -1145,6 +1161,7 @@ pub fn resolve(
         variables.push(Variable {
             sets: BTreeSet::new(),
             tags: BTreeSet::new(),
+            synonyms: BTreeSet::new(),
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1415,10 +1432,40 @@ pub fn coded(o: &Occurrence) -> &'static str {
     }
 }
 
+/// The published table and occurrence role vocabularies.
+///
+/// # Errors
+/// The entity kind or role is outside the published vocabulary.
+pub fn role_value(kind: &str, value: &str) -> Result<&'static str, String> {
+    let allowed: &[&str] = match kind {
+        "table" => &["data", "codelist"],
+        "occurrence" => &[
+            "row_key",
+            "time_start",
+            "time_stop",
+            "time_point",
+            "measure",
+            "code",
+            "label",
+        ],
+        _ => return Err(format!("role is unsupported on {kind}")),
+    };
+    allowed
+        .iter()
+        .copied()
+        .find(|&role| role == value)
+        .ok_or_else(|| format!("set role requires one of {} on {kind}", allowed.join(", ")))
+}
+
 /// The default role: identifiers are row keys, coded columns codes, the rest measures.
+///
+/// # Panics
+/// A curated role bypassed validation at the application boundary.
 #[must_use]
 pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
-    if identifier == Some(true) {
+    if let Some(role) = o.role.as_deref() {
+        role_value("occurrence", role).expect("curated role was validated at application")
+    } else if identifier == Some(true) {
         "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {
         "code"

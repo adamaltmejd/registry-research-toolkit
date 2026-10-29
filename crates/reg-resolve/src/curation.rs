@@ -623,11 +623,17 @@ fn dependency_fields(address: &Address, fields: &mut BTreeSet<String>) {
 /// Capture raw evidence behind a curated field, including defaults derived from
 /// source facts. Keep derived values out of the source premise.
 fn field_dependencies(fields: &mut BTreeSet<String>) {
-    if fields.contains("coded") || fields.contains("value_set") || fields.contains("classification")
+    if fields.contains("coded")
+        || fields.contains("value_set")
+        || fields.contains("classification")
+        || fields.contains("sentinels")
     {
         fields.extend(
             ["type", "code_system", "value_set", "population_valuesets"].map(str::to_owned),
         );
+    }
+    if fields.contains("role") {
+        fields.extend(["identifier", "value_set", "population_valuesets"].map(str::to_owned));
     }
     if fields.contains("period") {
         fields.extend(["grain", "name", "from", "to"].map(str::to_owned));
@@ -733,13 +739,27 @@ fn premise_source(premise: &SourcePremise) -> Source {
     }
 }
 
+fn variable_membership_field(statement: &Statement) -> Option<&'static str> {
+    let Statement::Set { fields, .. } = statement else {
+        return None;
+    };
+    if fields.sets.is_some() {
+        Some("sets")
+    } else if fields.tags.is_some() {
+        Some("tags")
+    } else if fields.synonyms.is_some() {
+        Some("synonyms")
+    } else {
+        None
+    }
+}
+
 fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
     let span = source
         .period
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
-    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some() || fields.tags.is_some())
-    {
+    if variable_membership_field(statement).is_some() {
         return vec![span];
     }
     let mut selected = match subject(statement) {
@@ -837,6 +857,10 @@ pub fn applied_conflicts(
         }
     }
     for claim in claims {
+        // Set-wide sentinel conflicts are checked globally by value-set hash.
+        if claim.field == "sentinels" {
+            continue;
+        }
         let mut fields = BTreeMap::from([("kind".into(), Value::String(claim.kind.into()))]);
         for (field, value) in [
             ("provider", claim.provider),
@@ -1290,7 +1314,10 @@ fn application_dependencies(
     }
     let needs_codes = match statement {
         Statement::Set { fields, .. } => {
-            fields.table.is_some() || fields.value_set.is_some() || fields.coded.is_some()
+            fields.table.is_some()
+                || fields.value_set.is_some()
+                || fields.coded.is_some()
+                || fields.sentinels.is_some()
         }
         Statement::Assert { .. } => true,
         _ => false,
@@ -1431,7 +1458,7 @@ pub fn resolve(
     let mut view = sources(records, ledger);
     view.extend(shared.sources.iter().cloned());
     let needs_variables = statements.iter().any(|statement| {
-        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some()) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        variable_membership_field(statement).is_some() || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
         variable_members(records, ledger, assignments)
@@ -1462,8 +1489,7 @@ pub fn resolve(
         let address = subject(statement);
         let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
-        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some())
-        {
+        if variable_membership_field(statement).is_some() {
             let names = variables
                 .iter()
                 .filter(|(_, members)| {
@@ -1572,31 +1598,17 @@ pub fn resolve(
                     if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
                         return Err("set coverage requires a table selector".into());
                     }
-                    if (values.sets.is_some() || values.tags.is_some())
+                    if let Some(field) = variable_membership_field(statement)
                         && stated_fields(values).len() != 1
                     {
-                        let field = if values.sets.is_some() {
-                            "sets"
-                        } else {
-                            "tags"
-                        };
                         return Err(format!(
                             "set {field} with other fields requires separate statements"
                         ));
                     }
-                    for field in stated_fields(values).keys() {
-                        let package = match field.as_str() {
-                            "sentinels" => Some("D (sentinels)"),
-                            "role" | "unit_type" => {
-                                Some("D (unit types and roles beyond defaults)")
-                            }
-                            "synonyms" => Some("D (search curation)"),
-                            "name" => Some("D (entity names)"),
-                            _ => None,
-                        };
-                        if let Some(package) = package {
-                            return Err(format!("set {field} is applied in {package}"));
-                        }
+                    if values.sentinels.is_some() && stated_fields(values).len() != 1 {
+                        return Err(
+                            "set sentinels with other fields requires separate statements".into(),
+                        );
                     }
                     if (values.table.is_some() || values.variable.is_some())
                         && stated_fields(values)
@@ -1756,6 +1768,9 @@ pub fn resolve(
         .collect::<Vec<_>>();
     let candidates = conflict_candidates(statements, &premises);
     for (a, b) in candidates {
+        if [a, b].into_iter().all(|i| matches!(statements[i], Statement::Set { fields, .. } if fields.sentinels.is_some())) {
+            continue;
+        }
         if !effects_overlap(&statement_effects[a], &statement_effects[b])
             || [a, b]
                 .into_iter()
@@ -1834,6 +1849,11 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
                     apply::MetadataValue::Tags(tags) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].tags.clone_from(tags);
+                        }
+                    }
+                    apply::MetadataValue::Synonyms(synonyms) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].synonyms.clone_from(synonyms);
                         }
                     }
                     apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),

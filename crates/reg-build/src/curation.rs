@@ -256,6 +256,10 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         class.family_name.clone_from(&c.family_name);
         class.publisher.clone_from(&c.publisher);
         class.succeeds.clone_from(&c.succeeds);
+        class.sentinel_codes = c
+            .sentinel_codes
+            .as_ref()
+            .map(|codes| codes.iter().cloned().collect());
         let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
         out.statements.push(crate::emit::StatementRow {
             hash: hash.clone(),
@@ -315,7 +319,8 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
     for class in &out.classifications {
         let statement = crate::emit::StatementRow::for_locator(&out.statements, &class.locator)
             .expect("inventory classifications have statements");
-        for (field, value) in class.facts(&out.classifications) {
+        let facts = class.facts(&out.classifications);
+        for (field, value) in facts {
             out.overrides.push(reg_resolve::provenance::Claim {
                 kind: "class_version".into(),
                 locator: class.locator.clone(),
@@ -366,6 +371,240 @@ fn changes(old: &serde_json::Value, new: &serde_json::Value, path: &str, out: &m
     }
 }
 
+pub(super) struct Sentinels {
+    pub hash: String,
+    pub codes: BTreeSet<String>,
+    pub locator: reg_frame::Locator,
+    pub statement: String,
+    pub inventory: Option<reg_frame::Locator>,
+}
+
+/// Classification exemptions describe observed column sets, never the canonical book.
+fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<String>, String> {
+    let sets = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::ValueSet(set) => Some((set.hash.as_str(), set)),
+            _ => None,
+        })
+        .collect::<BTreeMap<_, _>>();
+    let mut bindings = BTreeMap::<_, BTreeSet<_>>::new();
+    for claim in applied
+        .overrides
+        .iter()
+        .filter(|claim| claim.kind == "occurrence" && claim.field == "classification")
+    {
+        if let Some(class) = claim.value.as_deref() {
+            bindings
+                .entry((&claim.locator, class))
+                .or_default()
+                .insert(claim.statement.as_str());
+        }
+    }
+    let mut bound = BTreeMap::<_, BTreeSet<_>>::new();
+    for record in records {
+        let Record::Occurrence(occurrence) = record else {
+            continue;
+        };
+        let Some(class) = occurrence.classification.as_deref() else {
+            continue;
+        };
+        let statements = std::iter::once(&occurrence.locator)
+            .chain(&occurrence.also)
+            .filter_map(|at| bindings.get(&(at, class)))
+            .flatten()
+            .copied()
+            .collect::<BTreeSet<_>>();
+        for hash in occurrence
+            .valueset
+            .iter()
+            .chain(occurrence.population_valuesets.iter().map(|p| &p.valueset))
+        {
+            if statements.is_empty() {
+                return Err(format!(
+                    "{}:{}: classification-sentinel-binding-missing: {class} has no curated binding statement",
+                    occurrence.locator.input, occurrence.locator.at
+                ));
+            }
+            bound
+                .entry((class, hash.as_str()))
+                .or_default()
+                .extend(statements.iter().copied());
+        }
+    }
+    let rows = applied
+        .statements
+        .iter()
+        .map(|statement| (statement.hash.as_str(), statement))
+        .collect::<BTreeMap<_, _>>();
+    let mut findings = Vec::new();
+    for class in &applied.classifications {
+        let fqid = format!("class/{}/{}", class.family, class.version);
+        let declared = class.sentinel_codes.clone().unwrap_or_default();
+        let mut used = BTreeSet::new();
+        let mut n_sets = 0;
+        for ((_, hash), statements) in bound.iter().filter(|((version, _), _)| *version == fqid) {
+            let set = sets
+                .get(hash)
+                .ok_or_else(|| format!("classification-sentinel-valueset-missing: {hash}"))?;
+            let codes = declared
+                .iter()
+                .filter(|code| set.items.iter().any(|item| &item.code == *code))
+                .cloned()
+                .collect::<BTreeSet<_>>();
+            used.extend(codes.iter().cloned());
+            n_sets += 1;
+            for statement in statements {
+                let row = rows.get(statement).ok_or_else(|| {
+                    format!("classification-sentinel-binding-missing: {statement}")
+                })?;
+                applied.sentinels.push(Sentinels {
+                    hash: (*hash).into(),
+                    codes: codes.clone(),
+                    locator: reg_frame::Locator {
+                        input: row.file.clone(),
+                        at: format!("line={}", row.line),
+                    },
+                    statement: (*statement).into(),
+                    inventory: Some(class.locator.clone()),
+                });
+            }
+        }
+        let unused = declared.difference(&used).count();
+        if unused > 0 {
+            findings.push(format!("{}:{}: classification-sentinels-unused: {unused} declared codes absent from all bound value sets ({fqid}; {n_sets} bound sets)", class.locator.input, class.locator.at));
+        }
+    }
+    Ok(findings)
+}
+
+/// Local setters are complete claims; classification lists are additive exemptions.
+#[allow(clippy::too_many_lines)]
+fn sentinel_conflicts(
+    root: &Path,
+    records: &[Record],
+    applied: &Applied,
+) -> Result<(BTreeSet<String>, Vec<String>), String> {
+    let sets = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::ValueSet(set) => Some((set.hash.as_str(), set)),
+            _ => None,
+        })
+        .collect::<BTreeMap<_, _>>();
+    let classes = applied
+        .classifications
+        .iter()
+        .map(|class| (&class.locator, class))
+        .collect::<BTreeMap<_, _>>();
+    let mut canonical = BTreeMap::new();
+    for (at, class) in &classes {
+        let set = sets.get(class.valueset.as_str()).ok_or_else(|| {
+            inventory_error(
+                root,
+                at,
+                format!(
+                    "classification-reference-unresolved: value set {}",
+                    class.valueset
+                ),
+            )
+        })?;
+        canonical.insert(
+            *at,
+            set.items
+                .iter()
+                .map(|item| item.code.as_str())
+                .collect::<BTreeSet<_>>(),
+        );
+    }
+    let mut groups = BTreeMap::<&str, Vec<&Sentinels>>::new();
+    for declaration in &applied.sentinels {
+        groups
+            .entry(&declaration.hash)
+            .or_default()
+            .push(declaration);
+    }
+    let mut conflicts = BTreeSet::new();
+    let mut refusals = BTreeSet::new();
+    let mut refuse = |declaration: &Sentinels, other: &Sentinels, detail: String| {
+        conflicts.insert(declaration.statement.clone());
+        refusals.insert(inventory_error(
+            root,
+            &declaration.locator,
+            format!(
+                "sentinel-conflict: shared value set {} {detail}; other binding {}:{}",
+                declaration.hash,
+                other.locator.input,
+                other
+                    .locator
+                    .at
+                    .strip_prefix("line=")
+                    .unwrap_or(&other.locator.at),
+            ),
+        ));
+    };
+    for declarations in groups.values() {
+        let local = declarations
+            .iter()
+            .copied()
+            .filter(|d| d.inventory.is_none())
+            .collect::<Vec<_>>();
+        if let Some(first) = local.first()
+            && let Some(rival) = local.iter().find(|d| d.codes != first.codes)
+        {
+            for declaration in &local {
+                let other = if declaration.codes == first.codes {
+                    *rival
+                } else {
+                    *first
+                };
+                refuse(
+                    declaration,
+                    other,
+                    "has disagreeing local sentinel lists".into(),
+                );
+            }
+        }
+        let mut versions = BTreeMap::<_, Vec<_>>::new();
+        for declaration in declarations {
+            if let Some(at) = &declaration.inventory {
+                versions.entry(at).or_default().push(*declaration);
+            }
+        }
+        for (at, claims) in &versions {
+            for (other_at, other_claims) in &versions {
+                let (class, other) = (classes[at], classes[other_at]);
+                let bad = claims[0]
+                    .codes
+                    .iter()
+                    .filter(|code| canonical[other_at].contains(code.as_str()))
+                    .collect::<Vec<_>>();
+                if bad.is_empty() {
+                    continue;
+                }
+                let detail = format!(
+                    "lists codes {bad:?} from class/{}/{} that are canonical in class/{}/{} (inventory {}:{} and {}:{})",
+                    class.family,
+                    class.version,
+                    other.family,
+                    other.version,
+                    at.input,
+                    at.at.strip_prefix("line=").unwrap_or(&at.at),
+                    other_at.input,
+                    other_at.at.strip_prefix("line=").unwrap_or(&other_at.at),
+                );
+                for declaration in claims {
+                    refuse(declaration, other_claims[0], detail.clone());
+                }
+                for declaration in other_claims {
+                    refuse(declaration, claims[0], detail.clone());
+                }
+            }
+        }
+    }
+    Ok((conflicts, refusals.into_iter().collect()))
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
@@ -376,6 +615,7 @@ pub(super) struct Applied {
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
     pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
     pub metadata: Vec<reg_resolve::curation::apply::Metadata>,
+    pub sentinels: Vec<Sentinels>,
     pub links: Vec<(LocatedStatement, Premise)>,
     pub linked: Option<crate::link::Curated>,
     pub acks:
@@ -391,6 +631,7 @@ enum Phase {
     Facts,
     Variables,
     Fields,
+    Sentinels,
     Relations,
     Acknowledgements,
 }
@@ -407,6 +648,7 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
+        Statement::Set { fields, .. } if fields.sentinels.is_some() => Phase::Sentinels,
         Statement::Link { .. } => Phase::Relations,
         Statement::Ack { .. } => Phase::Acknowledgements,
         Statement::Set { .. } => Phase::Fields,
@@ -590,10 +832,14 @@ fn run_selected(
         Phase::Facts,
         Phase::Variables,
         Phase::Fields,
+        Phase::Sentinels,
         Phase::Relations,
         Phase::Acknowledgements,
     ] {
-        let fields_stage = matches!(stage, Phase::Coverage | Phase::Periods | Phase::Fields);
+        let fields_stage = matches!(
+            stage,
+            Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels
+        );
         let structural_stage = matches!(stage, Phase::Parents | Phase::Moves | Phase::Facts);
         let mut field_snapshot = Vec::new();
         if !conflicts.is_empty() {
@@ -675,7 +921,7 @@ fn run_selected(
                 .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
-            if stage == Phase::Fields
+            if matches!(stage, Phase::Fields | Phase::Sentinels)
                 && group
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
@@ -902,7 +1148,7 @@ fn run_selected(
                 Phase::Relations | Phase::Acknowledgements => {
                     Ok(reg_resolve::curation::apply::Applied::default())
                 }
-                Phase::Coverage | Phase::Periods | Phase::Fields => {
+                Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
@@ -967,6 +1213,18 @@ fn run_selected(
             };
             result.variables.extend(applied.assignments);
             result.metadata.extend(applied.metadata);
+            result.sentinels.extend(
+                applied
+                    .sentinels
+                    .into_iter()
+                    .map(|(hash, codes)| Sentinels {
+                        hash,
+                        codes,
+                        locator: locator.clone(),
+                        statement: publication_identity(statement),
+                        inventory: None,
+                    }),
+            );
             evaluated.push((statement, premise.clone()));
             premises
                 .entry((provider, register))
@@ -1205,6 +1463,10 @@ fn run_selected(
             left.locator.input, left.locator.at, right.locator.input, right.locator.at
         ));
     }
+    findings.extend(bound_sentinels(&records, &mut result)?);
+    let (sentinel_conflicts, sentinel_refusals) = sentinel_conflicts(root, &records, &result)?;
+    conflicts.extend(sentinel_conflicts);
+    refusals.extend(sentinel_refusals);
     if !conflicts.is_empty() {
         if record || release {
             return Err(refusals.join("\n"));

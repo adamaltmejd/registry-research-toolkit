@@ -39,12 +39,6 @@ from rebuild_convert_identity import IdentityProjection
 from rebuild_convert_selectors import collapse
 
 ROOT = Path(__file__).resolve().parents[1]
-# simplify: resolver finding codes are string literals; replace this inventory if codes become computed.
-CURRENT_FINDING_CODES = {
-    code
-    for path in (ROOT / "crates/reg-resolve/src").rglob("*.rs")
-    for code in re.findall(r'"([A-Z][0-9]+:[a-z][a-z-]+)"', path.read_text())
-}
 EXPECTED = {
     "No statement": 1461,
     "set variable": 97,
@@ -1049,25 +1043,7 @@ class Converter:
                             }
                         )
                 elif kind == "acknowledge":
-                    if entry["code"] not in CURRENT_FINDING_CODES:
-                        raise ValueError("legacy finding code; no new-model finding")
-                    subject = entry.get("subject", "")
-                    slug = subject.rsplit("/", 1)[-1]
-                    if slug not in self.ledgers.get((provider, register), {}).get(
-                        "variables", {}
-                    ):
-                        raise ValueError(
-                            "legacy diagnostic subject has no public ledger endpoint"
-                        )
-                    proposals.append(
-                        {
-                            "kind": "ack",
-                            "subject": f"var:{slug}",
-                            "finding": entry["code"],
-                            "severity": "review",
-                            "evidence": evidence,
-                        }
-                    )
+                    raise ValueError("legacy finding code; no new-model finding")
                 elif kind == "code_label_pair":
                     code, label = entry["code"].split("/"), entry["label"].split("/")
                     if code[:2] != label[:2] or code[:2] != [provider, public]:
@@ -1153,6 +1129,8 @@ class Converter:
                     raise ValueError(
                         "table identity already in ledger; panel metadata has no four-kind field"
                     )
+                elif kind == "enrichment.alias":
+                    raise ValueError("delivery-header mapping; home: E holdings layer")
                 else:
                     proposals = deferred(
                         self, provider, register, kind, entry, pins, variants
@@ -1232,8 +1210,6 @@ class Converter:
                     self.counts[f"assert.entity.{statement['fact']['entity']}"] += 1
                 if kind == "link":
                     self.counts[f"link.relation.{statement['relation']}"] += 1
-                if kind == "ack":
-                    self.counts[f"ack.finding.{statement['finding']}"] += 1
             path.write_text(text)
 
     def report(self, lock):
