@@ -540,6 +540,11 @@ overlapping curated overrides are refused at both locations.
   With no usable canonical label, use the column alone. Reserve existing, retired and
   table ids before allocating new ones. Existing ids, including manually shortened label
   slugs, are never renamed by minting.
+- **Retirements.** `curation/retired.toml` permanently records each retired public id,
+  its kind, retirement version and reason (`merged`, `split` or `withdrawn`). Any PR
+  removing a published id adds its entry in the same PR; the id-sprint assembler appends
+  renames. The builder emits these entries to `ident_retired`, refuses live collisions
+  and reserves their names during minting. Entries are never removed or redirected.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.
