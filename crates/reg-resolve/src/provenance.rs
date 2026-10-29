@@ -314,10 +314,7 @@ pub fn finalize(
                 result.occurrence_masks.insert((ri, oi), mask);
             }
             for mut value in values {
-                if matches!(
-                    value.field.as_str(),
-                    "sets" | "tags" | "synonyms" | "unit_type"
-                ) {
+                if matches!(value.field.as_str(), "sets" | "tags" | "synonyms") {
                     if let Some(variable) = occurrence.variable {
                         value.subject = Subject::Variable(ri, variable);
                         result.values.push(value);

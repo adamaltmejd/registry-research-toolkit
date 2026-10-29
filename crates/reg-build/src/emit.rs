@@ -63,6 +63,7 @@ pub struct Catalog {
     pub registers: Vec<Resolved>,
     /// Value sets by hash, with the (input index, name) pairs that named them.
     pub valuesets: BTreeMap<String, (ValueSet, BTreeSet<(usize, String)>)>,
+    pub sentinels: BTreeMap<String, BTreeSet<String>>,
     /// A frame file (locator input) → its input index.
     pub file_input: BTreeMap<String, usize>,
     /// The link stage's output (`link.rs`).
@@ -373,16 +374,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     let release_id = index(release_keys, "release keys")?;
     let valueset_id: BTreeMap<&str, i64> = sorted_ids(catalog.valuesets.keys().map(String::as_str));
 
-    let unit_type_id = sorted_ids(catalog.registers.iter().flat_map(|r| {
-        r.tables
+    let unit_type_id = sorted_ids(
+        catalog
+            .registers
             .iter()
-            .filter_map(|t| t.table.unit_type.as_deref())
-            .chain(
-                r.variables
-                    .iter()
-                    .flat_map(|v| v.unit_types.iter().map(String::as_str)),
-            )
-    }));
+            .flat_map(|r| r.tables.iter().filter_map(|t| t.table.unit_type.as_deref())),
+    );
     for (slug, id) in &unit_type_id {
         rows.push(
             "unit_type",
@@ -480,7 +477,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Str(pid_of_table(r, t)),
                     opt_text(table.table.name.as_ref()),
                     opt_text(table.table.description.as_ref()),
-                    Cell::Str(table.table.role.as_deref().unwrap_or("data").into()),
+                    Cell::Str(
+                        reg_resolve::role_value(
+                            "table",
+                            table.table.role.as_deref().unwrap_or("data"),
+                        )?
+                        .into(),
+                    ),
                     Cell::Int(i64::from(table.slug.is_none())),
                     Cell::Int(i64::from(table.timeless)),
                     opt_int(table.table.unit_type.as_deref().map(|u| unit_type_id[u])),
@@ -604,12 +607,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     Cell::Int(end(&variable.hull.1)),
                 ],
             );
-            for unit_type in &variable.unit_types {
-                rows.push(
-                    "variable_unit_type",
-                    vec![Cell::Int(vid), Cell::Int(unit_type_id[unit_type.as_str()])],
-                );
-            }
             rows.push(
                 "ident",
                 vec![
@@ -1012,7 +1009,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
                     opt_text(item.label.as_ref()),
                     Cell::Int(count(level(i))),
                     opt_int(parent(i).map(count)),
-                    Cell::Int(0),
+                    Cell::Int(i64::from(
+                        catalog
+                            .sentinels
+                            .get(hash)
+                            .is_some_and(|codes| codes.contains(&item.code)),
+                    )),
                 ],
             );
         }

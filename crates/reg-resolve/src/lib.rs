@@ -249,7 +249,6 @@ pub struct Variable {
     pub sets: BTreeSet<String>,
     pub tags: BTreeSet<String>,
     pub synonyms: BTreeSet<String>,
-    pub unit_types: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -1163,10 +1162,6 @@ pub fn resolve(
             sets: BTreeSet::new(),
             tags: BTreeSet::new(),
             synonyms: BTreeSet::new(),
-            unit_types: segments
-                .iter()
-                .filter_map(|segment| tables[segment.table].table.unit_type.clone())
-                .collect(),
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1437,19 +1432,39 @@ pub fn coded(o: &Occurrence) -> &'static str {
     }
 }
 
+/// The published table and occurrence role vocabularies.
+///
+/// # Errors
+/// The entity kind or role is outside the published vocabulary.
+pub fn role_value(kind: &str, value: &str) -> Result<&'static str, String> {
+    let allowed: &[&str] = match kind {
+        "table" => &["data", "codelist"],
+        "occurrence" => &[
+            "row_key",
+            "time_start",
+            "time_stop",
+            "time_point",
+            "measure",
+            "code",
+            "label",
+        ],
+        _ => return Err(format!("role is unsupported on {kind}")),
+    };
+    allowed
+        .iter()
+        .copied()
+        .find(|&role| role == value)
+        .ok_or_else(|| format!("set role requires one of {} on {kind}", allowed.join(", ")))
+}
+
 /// The default role: identifiers are row keys, coded columns codes, the rest measures.
+///
+/// # Panics
+/// A curated role bypassed validation at the application boundary.
 #[must_use]
 pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
     if let Some(role) = o.role.as_deref() {
-        match role {
-            "row_key" => "row_key",
-            "time_start" => "time_start",
-            "time_stop" => "time_stop",
-            "time_point" => "time_point",
-            "code" => "code",
-            "label" => "label",
-            _ => "measure",
-        }
+        role_value("occurrence", role).expect("curated role was validated at application")
     } else if identifier == Some(true) {
         "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {

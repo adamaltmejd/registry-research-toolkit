@@ -492,6 +492,11 @@ fn build(args: &Args) -> Result<(), String> {
         providers,
         registers: resolved,
         valuesets,
+        sentinels: applied
+            .sentinels
+            .into_iter()
+            .map(|s| (s.hash, s.codes))
+            .collect(),
         file_input,
         relations: linked.relations,
         notices: linked.notices,

@@ -118,7 +118,6 @@ pub enum MetadataValue {
     Sets(BTreeSet<String>),
     Tags(BTreeSet<String>),
     Synonyms(BTreeSet<String>),
-    UnitType(String),
     Notice(String),
 }
 
@@ -135,6 +134,28 @@ pub struct Applied {
     pub classifications: Vec<Classification>,
     pub assignments: BTreeMap<crate::OccurrenceKey, String>,
     pub metadata: Vec<Metadata>,
+    /// Complete sentinel declarations for shared value sets, without changing hashes.
+    pub sentinels: BTreeMap<String, BTreeSet<String>>,
+}
+
+/// Validate a set-wide sentinel declaration without changing the set's identity.
+///
+/// # Errors
+/// A declared code is absent from the addressed value set.
+pub fn validate_sentinels(
+    hash: &str,
+    items: &[reg_frame::Item],
+    codes: &BTreeSet<String>,
+) -> Result<(), String> {
+    if let Some(code) = codes
+        .iter()
+        .find(|code| !items.iter().any(|item| &item.code == *code))
+    {
+        return Err(format!(
+            "sentinel-code-missing: code {code:?} is not in value set {hash}"
+        ));
+    }
+    Ok(())
 }
 
 /// Assign variables against one immutable phase snapshot without copying its facts.
@@ -464,6 +485,7 @@ pub fn apply(
         classifications: Vec::new(),
         assignments: BTreeMap::new(),
         metadata: Vec::new(),
+        sentinels: BTreeMap::new(),
     };
     match statement {
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
@@ -1005,7 +1027,7 @@ fn apply_fields(
                         | "sets"
                         | "tags"
                         | "synonyms"
-                        | "unit_type"
+                        | "sentinels"
                         | "role"
                         | "classification"
                         | "notice"
@@ -1037,25 +1059,7 @@ fn apply_fields(
                     }
                 }
                 "role" => {
-                    let allowed: &[&str] = if kind == "table" {
-                        &["data", "codelist"]
-                    } else {
-                        &[
-                            "row_key",
-                            "time_start",
-                            "time_stop",
-                            "time_point",
-                            "measure",
-                            "code",
-                            "label",
-                        ]
-                    };
-                    if !allowed.contains(&winning.as_str().expect("typed role")) {
-                        return Err(format!(
-                            "set role requires one of {} on {kind}",
-                            allowed.join(", ")
-                        ));
-                    }
+                    crate::role_value(kind, winning.as_str().expect("typed role"))?;
                     after["role"] = winning.clone();
                 }
                 "unit_type" => {
@@ -1068,6 +1072,44 @@ fn apply_fields(
                 }
                 "name" if winning.as_str().is_none_or(|v| v.trim().is_empty()) => {
                     return Err("set name requires a nonblank entity name".into());
+                }
+                "sentinels" => {
+                    let Record::Occurrence(occurrence) = record else {
+                        unreachable!("sentinels apply only to occurrences")
+                    };
+                    let hashes: BTreeSet<_> = occurrence
+                        .valueset
+                        .iter()
+                        .chain(occurrence.population_valuesets.iter().map(|p| &p.valueset))
+                        .collect();
+                    if hashes.is_empty() {
+                        return Err("set sentinels requires an occurrence with a value set".into());
+                    }
+                    let codes = metadata_fields
+                        .sentinels
+                        .as_ref()
+                        .expect("typed sentinel list")
+                        .iter()
+                        .cloned()
+                        .collect::<BTreeSet<_>>();
+                    for hash in hashes {
+                        let items = premise
+                            .objects
+                            .iter()
+                            .find_map(|p| {
+                                (p.fields.get("hash").and_then(Value::as_str) == Some(hash))
+                                    .then(|| p.fields.get("items").and_then(Value::as_array))
+                                    .flatten()
+                            })
+                            .ok_or_else(|| {
+                                format!("set sentinels has no reviewed value set {hash:?}")
+                            })?;
+                        let items: Vec<reg_frame::Item> =
+                            serde_json::from_value(Value::Array(items.clone()))
+                                .map_err(|e| e.to_string())?;
+                        validate_sentinels(hash, &items, &codes)?;
+                        out.sentinels.insert(hash.clone(), codes.clone());
+                    }
                 }
                 "synonyms" | "notice" => {}
                 "description" if kind == "occurrence" => {}
@@ -1209,12 +1251,6 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Synonyms(synonyms.iter().cloned().collect()),
-                });
-            }
-            if let Some(unit_type) = &metadata_fields.unit_type {
-                out.metadata.push(Metadata {
-                    key: key.clone(),
-                    value: MetadataValue::UnitType(unit_type.clone()),
                 });
             }
             if let Some(notice) = &metadata_fields.notice {

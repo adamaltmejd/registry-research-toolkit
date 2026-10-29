@@ -2759,3 +2759,21 @@ kind = "set"
 subject = "var:personnrvard2"
 fields = { "sets" = ["personnrvard"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/rtb.toml:123"
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'"
+fields = { sentinels = ["111183"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1317; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to d9772838ee6e4543c4b1421e357045b0f0072f6cfb6d90e64fdc9270155138c5 are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'"
+fields = { sentinels = ["048080", "202084"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1327; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to 67c8f982e7d06a3e3f88afa2a21df4b93718fee4ff7752d8f37ac3a0722003cf are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'"
+fields = { sentinels = ["2020"] }
+evidence = "reg_meta_build/curation/registers/scb/rtb.toml:1337; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to e703a6ccdb4ebb315f5141a846c021daea1a35384080a375691f183384bbcedd are inside this exact original entry scope."

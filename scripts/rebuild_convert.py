@@ -1129,6 +1129,8 @@ class Converter:
                     raise ValueError(
                         "table identity already in ledger; panel metadata has no four-kind field"
                     )
+                elif kind == "enrichment.alias":
+                    raise ValueError("delivery-header mapping; home: E holdings layer")
                 else:
                     proposals = deferred(
                         self, provider, register, kind, entry, pins, variants

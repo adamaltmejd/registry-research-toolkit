@@ -256,6 +256,17 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
         class.family_name.clone_from(&c.family_name);
         class.publisher.clone_from(&c.publisher);
         class.succeeds.clone_from(&c.succeeds);
+        if let Some(codes) = &c.sentinel_codes {
+            let codes = codes.iter().cloned().collect();
+            reg_resolve::curation::apply::validate_sentinels(&set.hash, &set.items, &codes)
+                .map_err(located)?;
+            out.sentinels.push(Sentinels {
+                hash: set.hash.clone(),
+                codes,
+                locator: at.clone(),
+                statement: None,
+            });
+        }
         let hash = reg_frame::hex(&sha2::Sha256::digest(reg_frame::canonical_line(c)));
         out.statements.push(crate::emit::StatementRow {
             hash: hash.clone(),
@@ -315,7 +326,11 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied, String> {
     for class in &out.classifications {
         let statement = crate::emit::StatementRow::for_locator(&out.statements, &class.locator)
             .expect("inventory classifications have statements");
-        for (field, value) in class.facts(&out.classifications) {
+        let mut facts = class.facts(&out.classifications);
+        if let Some(declaration) = out.sentinels.iter().find(|s| s.locator == class.locator) {
+            facts.insert("sentinels".into(), serde_json::json!(declaration.codes));
+        }
+        for (field, value) in facts {
             out.overrides.push(reg_resolve::provenance::Claim {
                 kind: "class_version".into(),
                 locator: class.locator.clone(),
@@ -366,6 +381,13 @@ fn changes(old: &serde_json::Value, new: &serde_json::Value, path: &str, out: &m
     }
 }
 
+pub(super) struct Sentinels {
+    pub hash: String,
+    pub codes: BTreeSet<String>,
+    pub locator: reg_frame::Locator,
+    pub statement: Option<String>,
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
@@ -376,6 +398,7 @@ pub(super) struct Applied {
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
     pub variables: BTreeMap<reg_resolve::OccurrenceKey, String>,
     pub metadata: Vec<reg_resolve::curation::apply::Metadata>,
+    pub sentinels: Vec<Sentinels>,
     pub links: Vec<(LocatedStatement, Premise)>,
     pub linked: Option<crate::link::Curated>,
     pub acks:
@@ -967,6 +990,17 @@ fn run_selected(
             };
             result.variables.extend(applied.assignments);
             result.metadata.extend(applied.metadata);
+            result.sentinels.extend(
+                applied
+                    .sentinels
+                    .into_iter()
+                    .map(|(hash, codes)| Sentinels {
+                        hash,
+                        codes,
+                        locator: locator.clone(),
+                        statement: Some(publication_identity(statement)),
+                    }),
+            );
             evaluated.push((statement, premise.clone()));
             premises
                 .entry((provider, register))
@@ -1204,6 +1238,55 @@ fn run_selected(
             "{}:{}: curation-overlap: classification version overlaps {}:{}",
             left.locator.input, left.locator.at, right.locator.input, right.locator.at
         ));
+    }
+    let mut sentinel_sources = BTreeMap::<&str, Vec<&Sentinels>>::new();
+    for declaration in &result.sentinels {
+        sentinel_sources
+            .entry(&declaration.hash)
+            .or_default()
+            .push(declaration);
+    }
+    for declarations in sentinel_sources.values() {
+        let first = declarations[0];
+        let Some(rival) = declarations.iter().find(|d| d.codes != first.codes) else {
+            continue;
+        };
+        let messages = declarations
+            .iter()
+            .map(|declaration| {
+                let other = if declaration.codes == first.codes {
+                    *rival
+                } else {
+                    first
+                };
+                inventory_error(
+                    root,
+                    &declaration.locator,
+                    format!(
+                        "sentinel-conflict: shared value set {} disagrees with {}:{}",
+                        declaration.hash,
+                        other.locator.input,
+                        other
+                            .locator
+                            .at
+                            .strip_prefix("line=")
+                            .unwrap_or(&other.locator.at),
+                    ),
+                )
+            })
+            .collect::<Vec<_>>();
+        let inventory = declarations
+            .iter()
+            .filter(|d| d.statement.is_none())
+            .collect::<Vec<_>>();
+        if inventory
+            .first()
+            .is_some_and(|first| inventory.iter().any(|d| d.codes != first.codes))
+        {
+            return Err(messages.join("\n"));
+        }
+        conflicts.extend(declarations.iter().filter_map(|d| d.statement.clone()));
+        refusals.extend(messages);
     }
     if !conflicts.is_empty() {
         if record || release {

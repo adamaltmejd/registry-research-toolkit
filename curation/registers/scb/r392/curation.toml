@@ -208,17 +208,3 @@ kind = "set"
 subject = "individuppgifter-agi: sp_ovriga_formaner_ulag_ea"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter" }
 evidence = "reg_meta_build/curation/registers/scb/agi.toml:682\n\nUtkast_P1105_Variabellista_uppd2025_v5.xlsx"
-
-# Converted legacy delivery-column search aliases.
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ag"
-fields = { "synonyms" = ["BOSTADSF_SMAHUS_ULAG_AG"] }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:708; legacy delivery-column search alias"
-
-[[statement]]
-kind = "set"
-subject = "var:bostadsf-smahus-ul-ag-ea"
-fields = { "synonyms" = ["BOSTADSF_SMAHUS_ULAG_EA"] }
-evidence = "reg_meta_build/curation/registers/scb/agi.toml:713; legacy delivery-column search alias"

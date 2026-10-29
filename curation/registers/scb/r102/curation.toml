@@ -848,11 +848,3 @@ kind = "set"
 subject = "slutbetyg: jurform @2020-07-01..2025-06-30"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
-
-# Converted legacy delivery-column search aliases.
-
-[[statement]]
-kind = "set"
-subject = "var:kurs"
-fields = { "synonyms" = ["Amneskod_omkodad"] }
-evidence = "reg_meta_build/curation/registers/scb/gymnasieskola-betyg.toml:47; legacy delivery-column search alias"

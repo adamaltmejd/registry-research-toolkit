@@ -8947,29 +8947,3 @@ kind = "set"
 subject = "foretagssektorn: ngs2"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "reg_meta_build/curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
-
-# Converted legacy delivery-column search aliases.
-
-[[statement]]
-kind = "set"
-subject = "var:redovisningsgrupp"
-fields = { "synonyms" = ["BGrupp"] }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:14594; legacy delivery-column search alias"
-
-[[statement]]
-kind = "set"
-subject = "var:sektor"
-fields = { "synonyms" = ["Sektor"] }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:14599; legacy delivery-column search alias"
-
-[[statement]]
-kind = "set"
-subject = "var:v700-1"
-fields = { "synonyms" = ["v7001"] }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:14604; legacy delivery-column search alias"
-
-[[statement]]
-kind = "set"
-subject = "var:v700-2"
-fields = { "synonyms" = ["v7002"] }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:14609; legacy delivery-column search alias"

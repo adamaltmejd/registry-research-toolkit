@@ -381,6 +381,7 @@ struct TableInfo {
     name: String,
     description: Option<String>,
     role: String,
+    unit_type: Option<String>,
     timeless: i64,
     cadence: Option<String>,
     spans: Vec<(i64, i64)>,
@@ -389,16 +390,17 @@ struct TableInfo {
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
-               "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
+               "role": self.role, "unit_type": self.unit_type, "timeless": self.timeless, "cadence": self.cadence,
                "spans": self.spans.iter().map(|&(s, e)| json!([iso(s), iso(e)])).collect::<Vec<_>>()})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} timeless={} cadence={} spans={}",
+            "name={:?} description={:?} role={} unit_type={} timeless={} cadence={} spans={}",
             self.name,
             self.description,
             self.role,
+            self.unit_type.as_deref().unwrap_or("-"),
             self.timeless,
             self.cadence.as_deref().unwrap_or("-"),
             self.spans
@@ -412,10 +414,11 @@ impl TableInfo {
 fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
     let mut infos: BTreeMap<String, TableInfo> = query(
         conn,
-        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence
+        "SELECT t.pid, n.body, d.body, t.role, t.timeless, t.cadence, u.slug
                      FROM tbl t
                      JOIN text n ON n.id = t.name_text
-                     LEFT JOIN text d ON d.id = t.description_text",
+                     LEFT JOIN text d ON d.id = t.description_text
+                     LEFT JOIN unit_type u ON u.id = t.unit_type_id",
         |r| {
             Ok((
                 r.get::<_, String>(0)?,
@@ -423,6 +426,7 @@ fn table_infos(conn: &Connection) -> Res<BTreeMap<String, TableInfo>> {
                     name: r.get(1)?,
                     description: r.get(2)?,
                     role: r.get(3)?,
+                    unit_type: r.get(6)?,
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
                     spans: Vec::new(),
@@ -634,6 +638,13 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
     let (old_pids, new_pids) = (pids(&p.old)?, pids(&p.new)?);
     let (old_segs, new_segs) = (segments(&p.old)?, segments(&p.new)?);
     let (old_runs, new_runs) = (runs(&p.old)?, runs(&p.new)?);
+    let unit_types = "SELECT v.pid, u.slug FROM variable_unit_type m
+                      JOIN variable v ON v.id = m.variable_id
+                      JOIN unit_type u ON u.id = m.unit_type_id";
+    let (old_units, new_units) = (
+        memberships(&p.old, unit_types)?,
+        memberships(&p.new, unit_types)?,
+    );
     let (old_labels, new_labels) = p.maps(
         "SELECT v.pid, t.body FROM variable v JOIN text t ON t.id = v.label_text",
         |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
@@ -657,6 +668,14 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
 
         let mut facets = serde_json::Map::new();
         let mut lines = vec![pid.clone()];
+        let (unit_old, unit_new) = (old_units.get(pid), new_units.get(pid));
+        if unit_old != unit_new {
+            facets.insert(
+                "unit_types".into(),
+                json!({"old": unit_old, "new": unit_new}),
+            );
+            lines.push(format!("  unit_types: {unit_old:?} → {unit_new:?}"));
+        }
         if !seg_old.is_empty() || !seg_new.is_empty() {
             facets.insert(
                 "segments".into(),
@@ -697,6 +716,17 @@ fn short(hash: &str) -> &str {
     hash.get(..12).unwrap_or(hash)
 }
 
+/// Set-valued metadata, compared by its published entity key and member string.
+fn memberships(conn: &Connection, sql: &str) -> Res<BTreeMap<String, BTreeSet<String>>> {
+    let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for (key, member) in query(conn, sql, |r| {
+        Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?))
+    })? {
+        out.entry(key).or_default().insert(member);
+    }
+    Ok(out)
+}
+
 /// The codes of the wanted value sets, in one pass over `vs_item`.
 fn codes(conn: &Connection, wanted: &BTreeSet<String>) -> Res<BTreeMap<String, BTreeSet<String>>> {
     let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
@@ -723,6 +753,22 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
     let (old, new) = p.maps("SELECT hash, n_items FROM valueset", |r| {
         Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
     })?;
+    let sentinel_codes = "SELECT v.hash, t.body FROM vs_item i
+                          JOIN valueset v ON v.id = i.valueset_id
+                          JOIN text t ON t.id = i.code_text WHERE i.sentinel = 1";
+    let (old_sentinels, new_sentinels) = (
+        memberships(&p.old, sentinel_codes)?,
+        memberships(&p.new, sentinel_codes)?,
+    );
+    let sentinels = changed(&old_sentinels, &new_sentinels)
+        .into_iter()
+        .map(|(hash, old, new)| {
+            Item::new(
+                json!({"hash": hash, "old": old, "new": new}),
+                format!("{} sentinels: {old:?} → {new:?}", short(hash)),
+            )
+        })
+        .collect();
     let only = |from: &BTreeMap<String, i64>, other: &BTreeMap<String, i64>| -> Vec<Item> {
         from.iter()
             .filter(|(h, _)| !other.contains_key(*h))
@@ -783,6 +829,7 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Res<Section> {
             ("removed", only(&old, &new)),
             ("added", only(&new, &old)),
             ("codes", code_items),
+            ("sentinels", sentinels),
         ],
     })
 }
