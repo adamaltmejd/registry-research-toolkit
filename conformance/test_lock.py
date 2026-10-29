@@ -38,4 +38,9 @@ def test_assignments_refuse_concurrent_folds_at_lock(tmp_path):
         command, cwd=REPO, capture_output=True, text=True, check=False
     )
     assert refused.returncode == expected["exit_code"]
-    assert expected["located_error"] in refused.stderr
+    # Bystander assignments at lines 1 and 7 must not receive this refusal.
+    assert [
+        "registers/" + line.split("registers/", 1)[1]
+        for line in refused.stderr.splitlines()
+        if "D-11:" in line
+    ] == expected["located_errors"]

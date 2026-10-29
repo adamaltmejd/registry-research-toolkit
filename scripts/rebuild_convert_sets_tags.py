@@ -10,68 +10,11 @@ written. Existing locks are preserved for the later scheduled lock/build review.
 
 import argparse
 import collections
-import json
 import re
 import tomllib
 from pathlib import Path
 
 from rebuild_convert import ROOT, entries, literal
-
-
-def frame_deferrals(frames, ledgers):
-    """Recheck the remaining shared-identity refusal against its reviewed source facts.
-
-    This one-shot conversion cannot invent release placement or split variable
-    identity. A changed premise needs a new reviewed address, not a stale exception.
-    """
-    rows = []
-    for path in sorted(frames.glob("*.jsonl")):
-        for line in path.open():
-            row = json.loads(line)
-            if (row.get("provider"), row.get("register")) != ("sos", "lova"):
-                continue
-            if row["kind"] == "occurrence":
-                rows.append(row)
-    if not rows:
-        raise ValueError("--frames contains no current LOVA occurrence frames")
-    deferred = {}
-    notes = []
-    selected = [
-        row
-        for row in rows
-        if (row["provider"], row["register"], row["table"], row["column"].lower())
-        == ("sos", "lova", "A_LOVA_PERSON", "invarn8")
-    ]
-    if (
-        len(selected) != 2
-        or {row["label"] for row in selected}
-        != {"Invandringsdatum 8 numerisk", "Invandringsdatum 9 numerisk"}
-        or {row["source_key"] for row in selected} != {"n:invarn8"}
-    ):
-        raise ValueError(
-            "LOVA INVARN8 source changed; review the numeric membership address"
-        )
-    lova_statements = tomllib.loads(ledgers["sos/lova"][0].read_text()).get(
-        "statement", []
-    )
-    if any(
-        "invarn8" in statement["subject"].lower()
-        and {"variable", "spelling"} & statement.get("fields", {}).keys()
-        for statement in lova_statements
-    ):
-        raise ValueError(
-            "LOVA INVARN8 identity curation changed; review membership address"
-        )
-    deferred["sos/lova/invandringsdatum-8-numerisk"] = (
-        "LOVA: shared INVARN8 variable remains ambiguous after exact-label selection; final identity review required"
-    )
-    notes.append(
-        "LOVA's current frame has eighth/ninth numeric fields at Metadata - Variabelnivå!60/61 "
-        "with shared spelling INVARN8 and key n:invarn8. A label guard identifies the eighth "
-        "occurrence, but variable-wide membership expansion selects both again and remains "
-        "ambiguous. Membership is deferred until separate final identities are curated."
-    )
-    return deferred, notes
 
 
 def source_rows():
@@ -211,7 +154,7 @@ def merge_memberships(path, additions, removals):
     return (prefix + "".join(kept)).rstrip() + "\n"
 
 
-def convert(*, frames, write_curation=False):
+def convert(*, write_curation=False):
     ledgers = {}
     for path in sorted((ROOT / "curation/registers").glob("*/*/ids.toml")):
         data = tomllib.loads(path.read_text())
@@ -220,7 +163,6 @@ def convert(*, frames, write_curation=False):
         if public in ledgers:
             raise ValueError(f"duplicate register public id: {public}")
         ledgers[public] = path.parent / "curation.toml", data.get("variables", {})
-    deferred_addresses, address_notes = frame_deferrals(frames, ledgers)
     additions = collections.defaultdict(dict)
     removals = collections.defaultdict(lambda: collections.defaultdict(set))
     outcomes = []
@@ -233,11 +175,7 @@ def convert(*, frames, write_curation=False):
     for _, field, target, member, _ in rows:
         if field == "sets":
             public, _, variable = target.rpartition("/")
-            if (
-                public in ledgers
-                and variable in ledgers[public][1]
-                and target not in deferred_addresses
-            ):
+            if public in ledgers and variable in ledgers[public][1]:
                 valid_members[public, member].add(variable)
     # Existing curated memberships also count when the legacy group uses the same slug.
     for public, (path, variables) in ledgers.items():
@@ -250,7 +188,6 @@ def convert(*, frames, write_curation=False):
                 statement["kind"] != "set"
                 or not subject.startswith("var:")
                 or variable not in variables
-                or f"{public}/{variable}" in deferred_addresses
             ):
                 continue
             for name in statement.get("fields", {}).get("sets", []):
@@ -299,14 +236,6 @@ def convert(*, frames, write_curation=False):
             )
             continue
         public, _, variable = target.rpartition("/")
-        if target in deferred_addresses:
-            path, _ = ledgers[public]
-            key = f"var:{variable}", field
-            removals[path][key].add(member)
-            outcomes.append(
-                ("deferred", source, field, target, member, deferred_addresses[target])
-            )
-            continue
         if public not in ledgers or variable not in ledgers[public][1]:
             outcomes.append(
                 (
@@ -360,10 +289,10 @@ def convert(*, frames, write_curation=False):
         "",
         "Temporary conversion evidence; deleted with this converter at milestone F.",
         "",
-        "Generated by `uv run --no-project scripts/rebuild_convert_sets_tags.py --frames FRAMES --write-curation`.",
+        "Generated by `uv run --no-project scripts/rebuild_convert_sets_tags.py --write-curation`.",
         "",
         f"Source inventory: {counts['set declaration']} explicit sets, {counts['sets']} set memberships; {counts['tag declaration']} tags, {counts['tags']} variable memberships and {counts['register tags']} register memberships.",
-        "Exact current local ledger ids are the conversion authority. Missing ids are refused for the next id sprint; delivery-column hints never supply identity. The five real-lock address refusals are rechecked against current source frames and deferred with named reasons below. Existing membership setters are consolidated per variable and field. Unrelated authored statements and all locks are preserved.",
+        "Exact current local ledger ids are the conversion authority. Missing ids are refused for the next id sprint; delivery-column hints never supply identity. Existing membership setters are consolidated per variable and field. Unrelated authored statements and all locks are preserved.",
         "",
         "This is static source accounting. Lock, curated build and verify were not run; placement and final resolver selection remain unverified. Tag search is not implemented. Presentation fields are dropped with reasons below; register memberships remain deferred.",
         "",
@@ -383,10 +312,6 @@ def convert(*, frames, write_curation=False):
         )
     lines += [
         "",
-        "## Current-frame deferrals",
-        "",
-        *[f"- {note}" for note in address_notes],
-        "",
         "## Source-located outcomes",
         "",
         "Each membership has one converted/refused/deferred row; presentation payloads have separate dropped rows.",
@@ -403,7 +328,6 @@ def convert(*, frames, write_curation=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--frames", type=Path, required=True)
     parser.add_argument("--write-curation", action="store_true")
     parser.add_argument(
         "--report",
@@ -411,7 +335,7 @@ def main():
         default=ROOT / "scripts/rebuild_convert_sets_tags_report.md",
     )
     args = parser.parse_args()
-    report, edits = convert(frames=args.frames, write_curation=args.write_curation)
+    report, edits = convert(write_curation=args.write_curation)
     args.report.write_text(report)
     print(
         f"Accounted for set/tag sources; {len(edits)} register files {'written' if args.write_curation else 'proposed'}. Report: {args.report}"

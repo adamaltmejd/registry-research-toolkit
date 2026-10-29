@@ -1,4 +1,200 @@
-# D recovery fix-01
+# D recovery fix-02
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The Operator's strict build of `79dc97c9` refused 35 unminted r2 variables. Its
+non-release catalog and ledger audit locate all 73 unminted variables: 35 in r2 and 38
+in r257. r193 was already minted. No real-seed build ran in this fix.
+
+## Assertion identity and ID review
+
+The resolver's keyless-assertion default remains unchanged. A read-only catalog audit
+found 227 unique committed IDs in 97 repeated folded-column groups (193 from
+`origin/main`, 34 branch-added r193 IDs). This is a candidate population-impact count,
+not a prediction from a second resolver. A counterfactual lock/resolver probe against
+`79dc97c9` applies shared keys through the existing assertion guard mechanism. The
+resolver removes 78 formerly canonical committed IDs: 53 merge and 25 keyed anchors
+become unplaced. This comprises 47 baseline IDs and 31 branch-added r193 IDs. By
+register: r193 31, r258 24, r47 10, r122 nine, r34 two, r182 one and r366 one. The
+global default therefore cannot change without committed identity movement. Aligning it
+with DESIGN.md is deferred to the id sprint.
+
+Instead, 107 recovered assertions receive explicit shared folded-column keys: r2 35,
+r193 34 and r257 38. Only branch-added assertions change. All public ID names from
+`origin/main` remain intact. Thirty-five r257 anchors require source-key qualification
+to distinguish their current canonical families from parallel families; names and
+canonical populations are retained. r193's 34 branch-added IDs are replaced by three
+per-column IDs; r2 receives one new ID and r257 receives 38. The r257 cohort contains 35
+distinct CO columns plus HO, LILLAN and WEIGHT; these are not 38 copies of one column.
+Its new keys replace singleton assertion families without matching any existing literal
+key in the supplied catalog.
+
+All 42 new IDs follow D-12: label first, another period's documented label if available,
+then label plus column for repeated labels; no counter is needed. Every slug is at most
+55 characters, with no table or retired-ID collision.
+
+  | New ID                                                                           | Anchor                                          |
+  | -------------------------------------------------------------------------------- | ----------------------------------------------- |
+  | `scb/rtb/personnummer-for-partnern`                                              | `Familjer 1990-1997: PersonNr_Partner`          |
+  | `scb/grundskola-elever/fritidshemsavdelningens-namn`                             | `Individregister: AvdFTH`                       |
+  | `scb/grundskola-elever/skolenhetskod-fritidshem`                                 | `Individregister: SkolenhetsKodFTH`             |
+  | `scb/grundskola-elever/skolkod-fritidshem`                                       | `Individregister: SkolKodFTH`                   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co11`       | `Innovation i företagssektorn: CO11 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co12`       | `Innovation i företagssektorn: CO12 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co13`       | `Innovation i företagssektorn: CO13 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co14`       | `Innovation i företagssektorn: CO14 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co15`       | `Innovation i företagssektorn: CO15 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co21`       | `Innovation i företagssektorn: CO21 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co22`       | `Innovation i företagssektorn: CO22 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co23`       | `Innovation i företagssektorn: CO23 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co24`       | `Innovation i företagssektorn: CO24 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co25`       | `Innovation i företagssektorn: CO25 # v15662`   |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-sverige-cis-20002002` | `Innovation i företagssektorn: co31`            |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-2-cis`    | `Innovation i företagssektorn: co32`            |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-3-cis`    | `Innovation i företagssektorn: co33`            |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-4-cis`    | `Innovation i företagssektorn: co34`            |
+  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-5-cis`    | `Innovation i företagssektorn: co35`            |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co41`       | `Innovation i företagssektorn: CO41 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co42`       | `Innovation i företagssektorn: CO42 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co43`       | `Innovation i företagssektorn: CO43 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co44`       | `Innovation i företagssektorn: CO44 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co45`       | `Innovation i företagssektorn: CO45 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co51`       | `Innovation i företagssektorn: CO51 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co52`       | `Innovation i företagssektorn: CO52 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co53`       | `Innovation i företagssektorn: CO53 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co54`       | `Innovation i företagssektorn: CO54 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co55`       | `Innovation i företagssektorn: CO55 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co61`       | `Innovation i företagssektorn: CO61 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co62`       | `Innovation i företagssektorn: CO62 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co63`       | `Innovation i företagssektorn: CO63 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co64`       | `Innovation i företagssektorn: CO64 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co65`       | `Innovation i företagssektorn: CO65 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co71`       | `Innovation i företagssektorn: CO71 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co72`       | `Innovation i företagssektorn: CO72 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co73`       | `Innovation i företagssektorn: CO73 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co74`       | `Innovation i företagssektorn: CO74 # v15662`   |
+  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co75`       | `Innovation i företagssektorn: CO75 # v15662`   |
+  | `scb/innovation-foretag/koncernmarkering-huvudkontoret-belaget`                  | `Innovation i företagssektorn: HO # v37075`     |
+  | `scb/innovation-foretag/lilla-n-per-stratum-lillan`                              | `Innovation i företagssektorn: lillan # v5697`  |
+  | `scb/innovation-foretag/bortfallskompenserad-vikt`                               | `Innovation i företagssektorn: weight # v49567` |
+
+## Catalog-backed attachment lookup
+
+Reconstructed keyless assertions match one published source key using table, spelling,
+release and exact combined catalog period. The catalog may segment an assertion;
+ALUAMK's three published segments match. Explicit keys remain mandatory. Wrong keys,
+periods, tables and ambiguous coordinates refuse at the assertion locator.
+
+All 664 LISA lineage link statements and all 408 document bindings are unchanged against
+`origin/main`; the markdown reader configuration is byte-identical. Removing
+`frame_deferrals()` also removes its LOVA literals and unused `--frames` argument. A
+ledger-only membership dry run proposes LOVA again, but no membership replay or write
+was applied: its source-placement question remains deferred.
+
+## Current conversion and D-11 dispositions
+
+The branch retains 831 additional statements relative to `73bde698`: 571 assertions and
+260 setters in 22 statement files. Setters comprise 229 `sets`, 24
+`operational_definition`, four `variable`, two `description` and one `tags`. Retained
+outputs come from 764 legacy entries: 299 `errata.delivered`, 239
+`representation.parallel`, 176 `identity.partition`, 44 `errata.column`, four
+`identity.column_owner` and two `enrichment.description`, plus one tag membership. No
+pre-existing statement is removed. Named d-fields drops remain dropped.
+
+D-11 now names the two folded spellings, exact inclusive overlap, table and target. The
+lock attributes it only to statements whose selected occurrence identity and
+source-evidence holder touch that overlap. This also distinguishes separate fragments
+sharing a locator. The existing corpus asserts the complete diagnostic list: line 13
+only, with bystanders at lines 1 and 7 absent. Its authored oracle pins an inclusive
+one-day overlap; the regression is register-wide misattribution. No duplicate test was
+added.
+
+Each of the 23 dropped setters was checked independently through the existing lock
+runner and resolver, using unchanged records from `reg-build read`. Sixteen violate
+D-11; two empty the minted SNI69/SNI92 IDs. Five FoU setters pass individually. The
+first four in the original authored order also pass together, with no canonical ID
+merge, split, unplaced or unminted result. They are restored verbatim. Adding the fifth
+(`release = 'r19506'`) empties `stratum-strat`, so it remains deferred. The verified
+remaining count is 19: 16 concurrent-fold merges and three ID-emptying setters. The
+raw-reader first-setter lock and the snapshot probe produce the same located
+FInk89/FInk90 refusal.
+
+  | Source                                                                 | Subject                                      | Disposition | Evidence / reason                                                                                                                                                                                                                               |
+  | ---------------------------------------------------------------------- | -------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | reg_meta_build/curation/registers/scb/lisa.toml:2592                   | individer-16plus: fink90                     | Dropped     | set variable would merge concurrent folded spellings "fink89" and "fink90" in table "Individer, 16 år och äldre" over 1990-01-01..1990-12-31 into variable "fink"; retain separate variables; id sprint.                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | arbetsstallen: ast_sni2007                   | Dropped     | set variable would merge concurrent folded spellings "ast_sni2002" and "ast_sni2007" in table "Arbetsställen" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-arbetsstalle"; retain separate variables; id sprint.                 |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | foretag: org_sni2007                         | Dropped     | set variable would merge concurrent folded spellings "org_sni2002" and "org_sni2007" in table "Företag" over 2008-01-01..2008-12-31 into variable "naringsgren-huvud-foretag"; retain separate variables; id sprint.                            |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-15plus: astsni2007                 | Dropped     | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni2007                 | Dropped     | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni69                   | Dropped     | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni69; id sprint.                                                                                                                                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni92                   | Dropped     | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni92; id sprint.                                                                                                                                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-15plus: ku2astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-16plus: ku2astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-15plus: ku1astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-16plus: ku1astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-15plus: ku3astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-16plus: ku3astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
+  | reg_meta_build/curation/registers/scb/hut.toml:732                     | hushall-2021: undnr                          | Dropped     | set variable would merge concurrent folded spellings "hut_del" and "undnr" in table "Hushåll 2021-" over 2021-01-01..2021-12-31 into variable "hut-del"; retain separate variables; id sprint.                                                  |
+  | reg_meta_build/curation/registers/scb/fou.toml:15338                   | uoh-personal: strat @2019                    | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
+  | reg_meta_build/curation/registers/scb/fou.toml:15365                   | uoh-personal: strat where release = 'r18421' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
+  | reg_meta_build/curation/registers/scb/fou.toml:15347                   | uoh-personal: strat where release = 'r18431' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
+  | reg_meta_build/curation/registers/scb/fou.toml:15374                   | uoh-personal: strat where release = 'r19474' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
+  | reg_meta_build/curation/registers/scb/fou.toml:15356                   | uoh-personal: strat where release = 'r19506' | Dropped     | Would empty minted stratum-strat when added to the retained four; id sprint.                                                                                                                                                                    |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: strata        | Dropped     | set variable would merge concurrent folded spellings "strataks" and "strata" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                    |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: stratum       | Dropped     | set variable would merge concurrent folded spellings "strataks" and "stratum" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                   |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109 | kommunfullmaktigeval: kommunvalkrets         | Dropped     | set variable would merge concurrent folded spellings "ko_valkretskod" and "kommunvalkrets" in table "Kommunfullmäktigeval" over 1998-01-01..1998-12-31 into variable "kommunvalkrets-kod"; retain separate variables; id sprint.                |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103 | riksdagsval: riksdagsvalkrets                | Dropped     | set variable would merge concurrent folded spellings "ri_valkretskod" and "riksdagsvalkrets" in table "Riksdagsval" over 1998-01-01..1998-12-31 into variable "riksdagsvalkrets-kod"; retain separate variables; id sprint.                     |
+
+## Qualified r257 anchors
+
+Thirty-five pre-existing r257 anchors are qualified by their current canonical source
+keys. Their public IDs and target source families are retained; the qualifier excludes
+the parallel recovered/native family. The authoritative resolver reported each original
+anchor as split across two families.
+
+  | Existing ID                                                                  | Qualified anchor                                                                                                |
+  | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-sverige`            | `Innovation i företagssektorn: CO11 # co11`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-2`      | `Innovation i företagssektorn: CO12 # co12`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-3`      | `Innovation i företagssektorn: CO13 # co13`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-4`      | `Innovation i företagssektorn: CO14 # co14`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-5`      | `Innovation i företagssektorn: CO15 # co15`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-sverige`              | `Innovation i företagssektorn: CO21 # co21`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-2`        | `Innovation i företagssektorn: CO22 # co22`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-3`        | `Innovation i företagssektorn: CO23 # co23`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-4`        | `Innovation i företagssektorn: CO24 # co24`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-5`        | `Innovation i företagssektorn: CO25 # co25`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-sverige`              | `Innovation i företagssektorn: CO41 # co41`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-2`        | `Innovation i företagssektorn: CO42 # co42`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-3`        | `Innovation i företagssektorn: CO43 # co43`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-4`        | `Innovation i företagssektorn: CO44 # co44`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-5`        | `Innovation i företagssektorn: CO45 # co45`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-sverige`                 | `Innovation i företagssektorn: CO51 # co51`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-2`           | `Innovation i företagssektorn: CO52 # co52`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-3`           | `Innovation i företagssektorn: CO53 # co53`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-4`           | `Innovation i företagssektorn: CO54 # co54`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-5`           | `Innovation i företagssektorn: CO55 # co55`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-sverige`               | `Innovation i företagssektorn: CO61 # co61`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-2`         | `Innovation i företagssektorn: CO62 # co62`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-3`         | `Innovation i företagssektorn: CO63 # co63`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-4`         | `Innovation i företagssektorn: CO64 # co64`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-5`         | `Innovation i företagssektorn: CO65 # co65`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-sverige`       | `Innovation i företagssektorn: CO71 # co71`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-2` | `Innovation i företagssektorn: CO72 # co72`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-3` | `Innovation i företagssektorn: CO73 # co73`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4` | `Innovation i företagssektorn: CO74 # co74`                                                                     |
+  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-5` | `Innovation i företagssektorn: CO75 # co75`                                                                     |
+  | `scb/innovation-foretag/ho`                                                  | `Innovation i företagssektorn: HO # ho`                                                                         |
+  | `scb/innovation-foretag/lilla-n-per-stratum`                                 | `Innovation i företagssektorn: LillaN # lillan`                                                                 |
+  | `scb/innovation-foretag/strat-enligt-leverans`                               | `Innovation i företagssektorn: STRAT # stmt:43451ed92b65b5ab4355cb9d26bfda06e38722b5fca129bcdbef7778939e105d`   |
+  | `scb/innovation-foretag/samarbete-inom-ovriga-aktiviteter`                   | `Innovation i företagssektorn: COOP_NO # stmt:a55dabd95a1bb46ad685c59f51cea157d519da92f0f76e068160aa4bc7862398` |
+  | `scb/innovation-foretag/weight`                                              | `Innovation i företagssektorn: WEIGHT # weight`                                                                 |
+
+## Historical fix-01 evidence
+
+The following fix-01 counts and statements are superseded by fix-02 where noted above.
+
+# Historical D recovery fix-01 (superseded)
 
 Temporary conversion evidence; deleted at milestone F (cutover).
 
@@ -7,7 +203,7 @@ earlier successful lock also lacked the D-11 concurrent-fold guard; it did not c
 that invariant. The original 4f49e5aa accounting below is historical and superseded by
 this fix.
 
-## Current curation
+## Fix-01 curation
 
 The branch now retains 827 additional statements relative to `73bde698`: 571 assertions
 and 256 setters across 22 statement files. Retained setters are 229 `sets`, 24

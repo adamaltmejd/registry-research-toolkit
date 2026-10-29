@@ -102,6 +102,7 @@ class Snapshot:
                 continue
             table, spelling, scope, guards = address
             row = {GUARD_FIELDS.get(k, k): v for k, v in guards.items()}
+            row["_keyless_assertion"] = "source_key" not in row
             row.setdefault("source_key", f"stmt:assertion-{number}")
             row["column"] = "" if spelling == "<none>" else spelling
             for field, value in fact["fields"].items():

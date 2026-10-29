@@ -1,4 +1,19 @@
-# D recovery fix-01 counts
+# D recovery fix-02 counts
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+Current branch additions are 831 statements: 571 assertions and 260 setters. Four FoU
+identity setters are restored; 19 remain deferred (16 D-11, three ID-emptying). Retained
+source entries by kind are 299 delivered, 239 parallel, 176 partition, 44 column, four
+column-owner and two description, plus one tag membership.
+
+The fix adds explicit shared keys to 107 recovered assertions and mints 42 IDs: r2 one,
+r193 three replacing its 34 branch-added IDs, r257 38. Baseline public ID names and LISA
+bindings/lineage remain unchanged; 35 r257 anchors gain disambiguating source keys.
+Current setter dispositions and checks are recorded in [the recovery
+report](rebuild_recover_report.md). Earlier counts below are historical.
+
+# Historical D recovery fix-01 counts (superseded)
 
 Temporary conversion evidence; deleted at milestone F (cutover).
 

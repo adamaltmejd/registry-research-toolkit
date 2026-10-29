@@ -324,3 +324,6 @@ public = "rtb"
 "personnummer-relationsperson" = ["Civilståndsändringar: PersonNrRel"]
 "tidigare-folkbokforingsadress-fortsattning-kan-ocksa" = ["Inrikes flyttningar: utdadr1g"]
 "tidigare-postnummer" = ["Inrikes flyttningar: postnrg"]
+
+# Recovered source families, explicitly keyed by folded column where provider ids are absent.
+"personnummer-for-partnern" = ["Familjer 1990-1997: PersonNr_Partner"]

@@ -268,204 +268,204 @@ evidence = "reg_meta_build/curation/classifications/JURFORM2020.toml:4\n\nLegacy
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2013-10-15 where release = 'r5652'"
+subject = "individregister: SkolenhetsKodFTH @2013-10-15 where release = 'r5652' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2014-10-15 where release = 'r6204'"
+subject = "individregister: SkolenhetsKodFTH @2014-10-15 where release = 'r6204' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2015-10-15 where release = 'r7429'"
+subject = "individregister: SkolenhetsKodFTH @2015-10-15 where release = 'r7429' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2016-10-15 where release = 'r11113'"
+subject = "individregister: SkolenhetsKodFTH @2016-10-15 where release = 'r11113' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2017-10-15 where release = 'r11817'"
+subject = "individregister: SkolenhetsKodFTH @2017-10-15 where release = 'r11817' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2018-10-15 where release = 'r13154'"
+subject = "individregister: SkolenhetsKodFTH @2018-10-15 where release = 'r13154' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2019-10-15 where release = 'r14804'"
+subject = "individregister: SkolenhetsKodFTH @2019-10-15 where release = 'r14804' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2020-10-15 where release = 'r18499'"
+subject = "individregister: SkolenhetsKodFTH @2020-10-15 where release = 'r18499' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2021-10-15 where release = 'r18500'"
+subject = "individregister: SkolenhetsKodFTH @2021-10-15 where release = 'r18500' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2022-10-15 where release = 'r18729'"
+subject = "individregister: SkolenhetsKodFTH @2022-10-15 where release = 'r18729' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2023-10-15 where release = 'r19645'"
+subject = "individregister: SkolenhetsKodFTH @2023-10-15 where release = 'r19645' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolenhetsKodFTH @2024-10-15 where release = 'r19941'"
+subject = "individregister: SkolenhetsKodFTH @2024-10-15 where release = 'r19941' and key = 'skolenhetskodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolenhetskod fritidshem", "definition" = "Definerar en skolenhet, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:272\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 19; Dataleverans 2025 sheet row 16, documents SkolenhetsKodFTH in the combined delivery 2013-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolKodFTH @2008-10-15 where release = 'r6203'"
+subject = "individregister: SkolKodFTH @2008-10-15 where release = 'r6203' and key = 'skolkodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolKodFTH @2009-10-15 where release = 'r6202'"
+subject = "individregister: SkolKodFTH @2009-10-15 where release = 'r6202' and key = 'skolkodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolKodFTH @2010-10-15 where release = 'r6201'"
+subject = "individregister: SkolKodFTH @2010-10-15 where release = 'r6201' and key = 'skolkodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolKodFTH @2011-10-15 where release = 'r6200'"
+subject = "individregister: SkolKodFTH @2011-10-15 where release = 'r6200' and key = 'skolkodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: SkolKodFTH @2012-10-15 where release = 'r5660'"
+subject = "individregister: SkolKodFTH @2012-10-15 where release = 'r5660' and key = 'skolkodfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Skolkod fritidshem", "definition" = "Löpnummer för skolorna", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:261\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 20, documents SkolKodFTH in the combined delivery 2008-2012; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2008-10-15 where release = 'r6203'"
+subject = "individregister: AvdFTH @2008-10-15 where release = 'r6203' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2009-10-15 where release = 'r6202'"
+subject = "individregister: AvdFTH @2009-10-15 where release = 'r6202' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2010-10-15 where release = 'r6201'"
+subject = "individregister: AvdFTH @2010-10-15 where release = 'r6201' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2011-10-15 where release = 'r6200'"
+subject = "individregister: AvdFTH @2011-10-15 where release = 'r6200' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2012-10-15 where release = 'r5660'"
+subject = "individregister: AvdFTH @2012-10-15 where release = 'r5660' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2013-10-15 where release = 'r5652'"
+subject = "individregister: AvdFTH @2013-10-15 where release = 'r5652' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2014-10-15 where release = 'r6204'"
+subject = "individregister: AvdFTH @2014-10-15 where release = 'r6204' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2015-10-15 where release = 'r7429'"
+subject = "individregister: AvdFTH @2015-10-15 where release = 'r7429' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2016-10-15 where release = 'r11113'"
+subject = "individregister: AvdFTH @2016-10-15 where release = 'r11113' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2017-10-15 where release = 'r11817'"
+subject = "individregister: AvdFTH @2017-10-15 where release = 'r11817' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2018-10-15 where release = 'r13154'"
+subject = "individregister: AvdFTH @2018-10-15 where release = 'r13154' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2019-10-15 where release = 'r14804'"
+subject = "individregister: AvdFTH @2019-10-15 where release = 'r14804' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2020-10-15 where release = 'r18499'"
+subject = "individregister: AvdFTH @2020-10-15 where release = 'r18499' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2021-10-15 where release = 'r18500'"
+subject = "individregister: AvdFTH @2021-10-15 where release = 'r18500' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2022-10-15 where release = 'r18729'"
+subject = "individregister: AvdFTH @2022-10-15 where release = 'r18729' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2023-10-15 where release = 'r19645'"
+subject = "individregister: AvdFTH @2023-10-15 where release = 'r19645' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."
 
 [[statement]]
 kind = "assert"
-subject = "individregister: AvdFTH @2024-10-15 where release = 'r19941'"
+subject = "individregister: AvdFTH @2024-10-15 where release = 'r19941' and key = 'avdfth'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Fritidshemsavdelningens namn", "definition" = "Fritidshemsavdelningens namn, löpnummer vid leverans", "type" = "text" } }
 evidence = "reg_meta_build/curation/registers/scb/grundskola-elever.toml:250\n\nSCB delivery report, sheet Skolverkets elevreg., row 3 (Årsvisa filer från Elever i förskoleklass, grundskola och fritidshem per 15:e oktober) and row 21; Dataleverans 2025 sheet row 17, documents AvdFTH in the combined delivery 2008-2024; SCB documents the sibling fritidshem column as text; individregister owns the delivery (#1579, maintainer-approved OP-2026-10-13-E)."

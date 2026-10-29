@@ -367,6 +367,25 @@ pub fn resolve(
     assignments: &BTreeMap<OccurrenceKey, String>,
     classifications: &[curation::apply::Classification],
 ) -> Result<Resolved, String> {
+    resolve_located(
+        records,
+        ledger,
+        valuesets,
+        assignments,
+        classifications,
+        &mut BTreeSet::new(),
+    )
+}
+
+#[allow(clippy::too_many_lines)]
+pub(crate) fn resolve_located(
+    records: &[Record],
+    ledger: &Ledger,
+    valuesets: &BTreeMap<&str, &ValueSet>,
+    assignments: &BTreeMap<OccurrenceKey, String>,
+    classifications: &[curation::apply::Classification],
+    affected: &mut BTreeSet<OccurrenceKey>,
+) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
         .filter_map(|r| match r {
@@ -956,10 +975,34 @@ pub fn resolve(
                         .len()
                         > 1
                 {
-                    return Err(format!(
-                        "D-11: set variable would merge concurrent different folded spellings in table {:?} into variable {key:?}; retain separate variables",
-                        tables[t].table.table
-                    ));
+                    // simplify: quadratic within an overlap component; use an interval
+                    // sweep if a component grows past a few thousand occurrences.
+                    let overlap = covering.iter().enumerate().find_map(|(at, &a)| {
+                        covering[at + 1..].iter().find_map(|&b| {
+                            let left = fold_identity(&resolved[a].occurrence.column);
+                            let right = fold_identity(&resolved[b].occurrence.column);
+                            (left != right)
+                                .then(|| intersect(span(&resolved[a]), span(&resolved[b])))
+                                .flatten()
+                                .map(|period| (left, right, period))
+                        })
+                    });
+                    if let Some((left, right, overlap)) = overlap {
+                        for &i in &covering {
+                            if intersect(span(&resolved[i]), &overlap).is_some() {
+                                let row = &resolved[i].occurrence;
+                                affected.extend(
+                                    std::iter::once(&row.locator).chain(&row.also).map(|at| {
+                                        OccurrenceKey::new(occurrence_context.identity(row), at)
+                                    }),
+                                );
+                            }
+                        }
+                        return Err(format!(
+                            "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in table {:?} over {}..{} into variable {key:?}; retain separate variables",
+                            tables[t].table.table, overlap.0, overlap.1
+                        ));
+                    }
                 }
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));

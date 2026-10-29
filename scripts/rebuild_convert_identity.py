@@ -9,6 +9,8 @@ import collections
 import datetime as dt
 import sqlite3
 
+from rebuild_convert_selectors import merge_periods
+
 
 def iso_day(day):
     return (dt.date(1970, 1, 1) + dt.timedelta(days=day)).isoformat()
@@ -80,6 +82,7 @@ class CatalogIdentity:
             # are deliberately absent from occurrence_locator. Match their exact
             # published coordinates; never synthesize their identity.
             authored = collections.defaultdict(list)
+            authored_coordinates = collections.defaultdict(list)
             for result in connection.execute("""
                 SELECT o.id, o.source_key, o.status, o.start, o.end,
                        v.pid AS variable, t.pid AS table_pid, s.exact AS spelling,
@@ -98,12 +101,20 @@ class CatalogIdentity:
                     result["spelling"],
                     result["release"],
                 ].append(dict(result))
+                authored_coordinates[
+                    result["table_pid"], result["spelling"], result["release"]
+                ].append(dict(result))
             for row in records:
                 if row["kind"] != "occurrence" or self.matches[id(row)]:
                     continue
                 provider, register = row["provider"], row["register"]
                 public = ledgers.get((provider, register), {}).get("public", register)
-                slug = self.tables.get((provider, register, row["table"]))
+                reconstructed = row["locator"]["at"].startswith("assert:")
+                slug = (
+                    self.table(row)
+                    if reconstructed
+                    else self.tables.get((provider, register, row["table"]))
+                )
                 if slug is None:
                     # No implicit-table fallback for an unmatched named table;
                     # selector construction will refuse with its source locator.
@@ -111,21 +122,40 @@ class CatalogIdentity:
                 pid = f"{provider}/{public}" + (
                     f"/{slug}" if slug and slug != public else ""
                 )
-                candidates = authored.get(
-                    (pid, row["source_key"], row["column"] or None, row.get("release")),
-                    [],
-                )
-                self.matches[id(row)] = tuple(
-                    r
-                    for r in candidates
-                    if (
-                        r["start"] is None
-                        or (
-                            row.get("from") == iso_day(r["start"])
-                            and row.get("to") == iso_day(r["end"] - 1)
-                        )
+                coordinates = pid, row["column"] or None, row.get("release")
+                if reconstructed and row.get("_keyless_assertion", False):
+                    # Snapshot's local ordinal is not the builder's scoped statement
+                    # key. Require one published key covering the exact source period;
+                    # the catalog may segment that assertion across multiple occurrences.
+                    candidates = authored_coordinates.get(coordinates, [])
+                else:
+                    candidates = authored.get(
+                        (pid, row["source_key"], *coordinates[1:]),
+                        [],
                     )
-                )
+                by_key = collections.defaultdict(list)
+                for candidate in candidates:
+                    by_key[candidate["source_key"]].append(candidate)
+                exact = []
+                for group in by_key.values():
+                    spans = [
+                        (iso_day(r["start"]), iso_day(r["end"] - 1))
+                        for r in group
+                        if r["start"] is not None
+                    ]
+                    if (
+                        len(spans) == len(group)
+                        and merge_periods(spans) == [(row.get("from"), row.get("to"))]
+                    ) or (not spans and not row.get("from") and not row.get("to")):
+                        exact.append(group)
+                if reconstructed and len(exact) != 1:
+                    locator = row["locator"]
+                    raise ValueError(
+                        f"{locator['input']}:{locator['at']}: reconstructed assertion "
+                        f"{row['column']!r} has {len(exact)} exact catalog identities; "
+                        "review its key, release and period"
+                    )
+                self.matches[id(row)] = tuple(exact[0]) if len(exact) == 1 else ()
             handles = collections.defaultdict(list)
             for key, slug in self.tables.items():
                 provider, register, _ = key

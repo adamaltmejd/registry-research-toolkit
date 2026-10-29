@@ -983,6 +983,27 @@ fn addresses_overlap(a: &Address, b: &Address) -> bool {
     }
 }
 
+/// A resolver refusal and the source occurrences implicated in it. An empty set
+/// means the existing register-wide assignment invariant has no narrower location.
+pub struct AssignmentFailure {
+    pub message: String,
+    affected: BTreeSet<crate::OccurrenceKey>,
+}
+
+impl AssignmentFailure {
+    /// Match the same occurrence identity and evidence holder as assignment application.
+    #[must_use]
+    pub fn affects(&self, premise: &Premise) -> bool {
+        self.affected.is_empty()
+            || premise.subjects.iter().any(|subject| {
+                crate::OccurrenceIdentity::from_fields(&subject.fields).is_some_and(|identity| {
+                    self.affected
+                        .contains(&crate::OccurrenceKey::new(identity, &subject.locator))
+                })
+            })
+    }
+}
+
 /// Validate the complete assignment phase with the same rules as catalog resolution.
 ///
 /// # Errors
@@ -991,8 +1012,18 @@ pub fn validate_assignments(
     records: &[Record],
     ledger: &Ledger,
     assignments: &BTreeMap<crate::OccurrenceKey, String>,
-) -> Result<(), String> {
-    crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[]).map(|_| ())
+) -> Result<(), AssignmentFailure> {
+    let mut affected = BTreeSet::new();
+    crate::resolve_located(
+        records,
+        ledger,
+        &BTreeMap::new(),
+        assignments,
+        &[],
+        &mut affected,
+    )
+    .map(|_| ())
+    .map_err(|message| AssignmentFailure { message, affected })
 }
 
 /// Resolve pinned variable memberships without changing the frame.
