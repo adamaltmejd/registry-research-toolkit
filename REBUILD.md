@@ -641,7 +641,9 @@ catalog remains for a later release decision.
    placement that splits or merges variables. Work that does not change ids
    (descriptions/labels, coding, sentinels, delivered-value facts, lineage links,
    document keys) goes after the sprint or serves as sprint evidence. A later PR updates
-   the deferral table's Home column with the triage counts.
+   the deferral table's Home column with the triage counts. Before the sprint, also
+   measure the full-catalog effects of editions and qualifiers; review source placement
+   and identity separation before naming more families.
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and
    evidenced deferred endpoints; refresh locks and have the Operator verify the real
