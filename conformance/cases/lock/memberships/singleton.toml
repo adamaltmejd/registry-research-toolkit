@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { sets = ["concept", "concept"] }
+evidence = "Repeated membership still names only one distinct final variable."

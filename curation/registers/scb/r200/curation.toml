@@ -88,24 +88,6 @@ evidence = "reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:728
 
 [[statement]]
 kind = "set"
-subject = "var:foretagets-id-nummer"
-fields = { "sets" = ["legacy-foretagets-id-nummer"] }
-evidence = "reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3022\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3034\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3046\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3058\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3070\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3082\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3094\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3106\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3118\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3130\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3142\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3154\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3166\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3178\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3190\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3202\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3214\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3226\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3238\n\nComplete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:ftyp"
-fields = { "sets" = ["legacy-ftyp"] }
-evidence = "reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3274\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3286\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3298\n\nComplete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "var:kontrollnr"
-fields = { "sets" = ["legacy-kontrollnr"] }
-evidence = "reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3250\nreg_meta_build/curation/registers/scb/arlig-energistatistik.toml:3262\n\nComplete same native question source family: distinct co-delivered physical forms retain all original types, lengths, columns and per-delivery metadata. Same member explicitly associates each physical form with the same positive name and definition, with no contradictory identifier role. Source-native question identity is used; source values are not folded, transformed or asserted equal. Commune forms have the same own source response-domain membership. Complete source/coding audit Batch48-energy-parallel4-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "elnatforetag-nat: bransleslag @2009..2017 where key = 'v35465'"
 fields = { "definition" = "Bränsleslag i klartext vid kraftvärmeproduktion." }
 evidence = "reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:6208\n\nComplete source-native physical family reviewed. Source operational definitions explicitly distinguish fuel quantities, row numbers, literal fuel labels and purchase-value supplier roles. All raw quantity wording, original fields, delivery windows, parents and own coding associations remain evidence. The curated role text describes the supplied physical field, without recoding or asserting observed-value/statistical equivalence. Exact audit Batch48-energy-roles4-proof.json."

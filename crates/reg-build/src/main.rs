@@ -33,6 +33,7 @@ mod link;
 mod proposals;
 mod retired;
 mod search;
+mod sets;
 mod verify;
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -257,6 +258,8 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<(), Stri
 fn build(args: &Args) -> Result<(), String> {
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let tags = sets::vocabulary(&args.curation)?;
+    sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
     let mut applied = curation::run(&args.curation, &retired, &statements, &outputs, false, &[])?;
@@ -446,6 +449,7 @@ fn build(args: &Args) -> Result<(), String> {
             });
         }
     }
+    sets::final_members(&resolved, &statements)?;
     let (docs, doc_warnings) = docs::merge(docs)?;
     warnings.extend(doc_warnings);
     let mut linked = link::resolve(&resolved, &links, &docs)?;
@@ -523,6 +527,7 @@ fn build(args: &Args) -> Result<(), String> {
     );
     let catalog = emit::Catalog {
         retired,
+        tags,
         meta,
         inputs: sorted_inputs,
         providers,
@@ -579,6 +584,8 @@ fn build(args: &Args) -> Result<(), String> {
 fn lock(args: &Args) -> Result<(), String> {
     let retired = retired::load(&args.curation)?;
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
+    let tags = sets::vocabulary(&args.curation)?;
+    sets::statements(&tags, &statements)?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
     let applied = curation::run(

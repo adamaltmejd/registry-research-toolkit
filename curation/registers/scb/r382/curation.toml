@@ -1,12 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "var:lopnummer-urvalsenheter"
-fields = { "sets" = ["legacy-lopnummer-urvalsenheter"] }
-evidence = "reg_meta_build/curation/registers/scb/pin.toml:1391\n\nThe same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."
-
-[[statement]]
-kind = "set"
 subject = "omsattning-tjanstesektorn-tom2014: bltyp @2011-04-01..2015-03-31"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "reg_meta_build/curation/classifications/SNI2007.toml:40\n\nLegacy exact value-set label: BlTyp SNI2007"
@@ -154,9 +148,3 @@ kind = "set"
 subject = "industrins-kapacitetsutnyttjande: aktsni92 @1998..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-cu-branschtext"
-fields = { "sets" = ["legacy-naringsgren"] }
-evidence = "reg_meta_build/curation/registers/scb/pin.toml:1403\n\nThe same explicit source-native construct and own operational definition has literal case variants on the same explicitly supplied native member. Keep both original storage widths, wording, source periods and spellings on their own representation; no value correction, equality of observed values is asserted."

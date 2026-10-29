@@ -8,6 +8,13 @@ SELECT pid FROM register EXCEPT SELECT pid FROM ident WHERE kind='register';
 SELECT pid FROM tbl WHERE implicit = 0 EXCEPT SELECT pid FROM ident WHERE kind='table';
 SELECT pid FROM variable EXCEPT SELECT pid FROM ident WHERE kind='variable';
 SELECT pid FROM ident INTERSECT SELECT pid FROM ident_retired;
+SELECT pid FROM var_set INTERSECT SELECT pid FROM ident_retired;
+-- Picking units contain at least two distinct final variables, all in their register.
+SELECT s.pid FROM var_set s LEFT JOIN var_set_member m ON m.set_id = s.id
+WHERE s.kind = 'set' GROUP BY s.id HAVING COUNT(DISTINCT m.variable_id) < 2;
+SELECT s.pid FROM var_set s JOIN var_set_member m ON m.set_id = s.id
+JOIN variable v ON v.id = m.variable_id
+WHERE s.kind = 'set' AND s.register_id <> v.register_id;
 -- A register's bare-name key is its public name (the pid's last segment), not its handle.
 -- Public names are lowercase slugs, so SQL lower() agrees with fold_identity.
 SELECT pid FROM ident WHERE kind = 'register'

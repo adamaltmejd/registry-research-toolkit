@@ -7,18 +7,6 @@ evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:167\nreg_meta
 
 [[statement]]
 kind = "set"
-subject = "var:personnr"
-fields = { "sets" = ["legacy-personnr"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:215\n\nExact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."
-
-[[statement]]
-kind = "set"
-subject = "var:skolans-identitetsnummer"
-fields = { "sets" = ["legacy-skolans-identitetsnummer"] }
-evidence = "reg_meta_build/curation/registers/scb/elevpaneler.toml:228\n\nExact separate source editions Vårterminen 2013 and Vårterminen 2013 - betyg identify the same native quantity with two literal column forms. Preserve each source width, operation and own coding; no inferred physical equivalence or encoding correction."
-
-[[statement]]
-kind = "set"
 subject = "elevpanel-8: {kommun,nykommun} @2018-01-01..2018-06-30"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "reg_meta_build/curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"

@@ -71,3 +71,57 @@ def test_published_id_targets(tmp_path, change):
     assert ("moved:" in ids_section) == bool(expected)
     for line in expected_text:
         assert line in ids_section
+
+
+@pytest.mark.parametrize("kind", ["set", "tag"])
+def test_removed_membership_id_requires_retirement(tmp_path, membership_case, kind):
+    # Regression: verify compares ident only, allowing a removed var_set pid to
+    # disappear without retirement. Both retired and unretired twins use real builds;
+    # these memberships are absent from the older moved-ident cases.
+    fixture, _, curation, _ = membership_case
+
+    def run(*args):
+        return subprocess.run(
+            [REG_BUILD, *args],
+            cwd=REPO,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+    def build(out):
+        built = run("lock", "--inputs", fixture / "inputs", "--curation", curation)
+        assert built.returncode == 0, built.stderr
+        built = run(
+            "build",
+            "--inputs",
+            fixture / "inputs",
+            "--curation",
+            curation,
+            "--out",
+            out,
+        )
+        assert built.returncode == 0, built.stderr
+
+    previous = tmp_path / "previous.db"
+    build(previous)
+    statements = curation / "registers/demo/r/curation.toml"
+    text = statements.read_text()
+    text = (
+        text.replace('sets = ["concept"]', "sets = []")
+        if kind == "set"
+        else text.replace('tags = ["income"]', "tags = []")
+    )
+    statements.write_text(text)
+    current = tmp_path / "current.db"
+    build(current)
+    refused = run("verify", current, "--previous", previous)
+    pid = "demo/r/concept" if kind == "set" else "tag/income"
+    assert refused.returncode == 1, refused.stderr
+    assert "previous release:" in refused.stderr and pid in refused.stderr
+    (curation / "retired.toml").write_text(
+        f'"{pid}" = {{ kind = "{kind}", in = "0.68.0", reason = "withdrawn" }}\n'
+    )
+    build(current)
+    accepted = run("verify", current, "--previous", previous)
+    assert accepted.returncode == 0, accepted.stderr

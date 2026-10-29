@@ -25,7 +25,7 @@ pub struct Retired {
 impl Retired {
     pub fn live_error(&self) -> String {
         format!(
-            "{}: retired-id-live: retired id {:?} is also live in ident",
+            "{}: retired-id-live: retired id {:?} is also live in ident or var_set",
             self.location, self.pid
         )
     }

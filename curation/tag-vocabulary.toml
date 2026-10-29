@@ -1,0 +1,195 @@
+# Draft for maintainer/pilot review. No worker may add a tag.
+# Flat discovery themes; membership never establishes identity or comparability.
+# Sources: SCB official subjects; Socialstyrelsen statistics topics (2026-10-29).
+# https://www.scb.se/om-scb/samordning-av-sveriges-officiella-statistik/officiell-statistik-efter-amne/
+# https://www.socialstyrelsen.se/statistik-och-data/statistik/statistikdatabasen
+
+[[tag]]
+id = "education"
+label = "Utbildning"
+definition = "Utbildningsdeltagande, nivå, inriktning, resultat och utbildningsresurser. Forskningsverksamhet hör till research; studiestödsbelopp hör till transfers."
+
+[[tag]]
+id = "employment"
+label = "Arbetsmarknad"
+definition = "Sysselsättning, arbetslöshet, yrke, anställning, arbetstid, arbetsmiljö och rekrytering. Lönebelopp hör till income; arbetsgivarnycklar beskrivs av strukturella identifierarfält, inte av en tematisk tagg."
+
+[[tag]]
+id = "family-household"
+label = "Familj och hushåll"
+definition = "Familjerelationer, civilstånd, hushållssammansättning och hushållsställning. En relationspersons nyckel är inte i sig ett mått på familjerelationen."
+
+[[tag]]
+id = "geography"
+label = "Geografi"
+definition = "Geografiskt läge, områdesindelning, land, kommun, koordinater och geografisk tillhörighet. Flytthändelser hör också till migration; fastigheters egenskaper till property."
+
+[[tag]]
+id = "income"
+label = "Inkomst"
+definition = "Personers eller hushålls arbets-, kapital- och disponibla inkomster samt deras komponenter och fördelning. Företagsomsättning hör till business; förmögenhetsstockar till wealth."
+
+[[tag]]
+id = "transfers"
+label = "Transfereringar och socialförsäkring"
+definition = "Bidrag, pensioner, ersättningar, studiestöd och socialförsäkring: belopp, rättigheter, mottagande och perioder. Skatter hör till taxation; omsorgsinsatser till social-care."
+
+[[tag]]
+id = "demographics"
+label = "Demografi"
+definition = "Ålder, kön, födelseuppgifter, medborgarskap, befolkningssammansättning och livslängd. Flyttning hör till migration; personnycklar har strukturella identifierarfält, inte en tematisk tagg."
+
+[[tag]]
+id = "migration"
+label = "Migration"
+definition = "Inrikes och utrikes flyttning, invandring, utvandring och grund för bosättning. Enbart födelseland eller medborgarskap hör till demographics, om flyttning inte beskrivs."
+
+[[tag]]
+id = "housing"
+label = "Boende"
+definition = "Bostäder, boendeform, utrymme, hyra, bostadskostnader och bostadsbyggande. Mark, fastighetstaxering och ägarförhållanden hör till property."
+
+[[tag]]
+id = "property"
+label = "Fastigheter och mark"
+definition = "Fastigheters och marks egenskaper, användning, ägande, värdering och överlåtelser. Geografiska nycklar hör till geography; personers förmögenhetsvärden till wealth."
+
+[[tag]]
+id = "health"
+label = "Hälsa"
+definition = "Sjukdomar, diagnoser, symtom, skador, självskattad hälsa inklusive tandhälsa, levnadsvanor och funktionsmått. Vårdkontakter hör till healthcare; läkemedelsuttag till medicines."
+
+[[tag]]
+id = "healthcare"
+label = "Hälso- och sjukvård"
+definition = "Vårdkontakter, behandlingar, ingrepp, vårdresurser, vårdpersonal och vårdkostnader, inklusive tandvård. Diagnosen i sig hör till health; sociala omsorgsinsatser till social-care."
+
+[[tag]]
+id = "mortality"
+label = "Dödlighet"
+definition = "Dödsfall, dödsorsaker, dödstidpunkt och dödlighetsmått. En sjukdom utan koppling till dödsfallet hör till health."
+
+[[tag]]
+id = "pregnancy-birth"
+label = "Graviditet och födsel"
+definition = "Graviditet, fertilitet, abort, förlossning och nyföddas förhållanden. Allmän födelsedag eller födelseår hör till demographics."
+
+[[tag]]
+id = "disability"
+label = "Funktionsnedsättning"
+definition = "Funktionsnedsättning, aktivitetsbegränsning och behov av anpassning eller stöd. Enbart ersättningsbelopp hör till transfers; utförd omsorg till social-care."
+
+[[tag]]
+id = "social-care"
+label = "Socialtjänst och omsorg"
+definition = "Sociala insatser, äldreomsorg, stöd till barn och familjer, tvångsvård och stöd enligt LSS. Ekonomiska biståndsbelopp hör till transfers."
+
+[[tag]]
+id = "medicines"
+label = "Läkemedel"
+definition = "Ordination, expediering, användning, kostnad och egenskaper för läkemedel samt vaccination och biverkningar. Sjukdomen som behandlas hör till health."
+
+[[tag]]
+id = "agriculture"
+label = "Jordbruk"
+definition = "Jordbruksföretag, odling, skörd, djurhållning, gödsel och växtskydd. Skogsbruk och fiske hör till forestry-fishing; allmän markanvändning till property."
+
+[[tag]]
+id = "forestry-fishing"
+label = "Skogsbruk och fiske"
+definition = "Skogsbruk, skogsproduktion, fiske och vattenbruk samt deras resurser och utfall. Allmän naturmiljö hör till environment; friluftsvanor till culture."
+
+[[tag]]
+id = "environment"
+label = "Miljö"
+definition = "Utsläpp, avfall, vatten, naturmiljö, miljöskydd och miljörelaterade resursflöden. Energimängder hör till energy; ortskoder till geography."
+
+[[tag]]
+id = "energy"
+label = "Energi"
+definition = "Produktion, tillförsel, användning och kostnader för el, värme och bränslen samt energieffektivitet. Utsläpp hör till environment; rena prisindex även till prices."
+
+[[tag]]
+id = "transport"
+label = "Transporter"
+definition = "Resor, trafik, fordon, transporter, transportarbete och transportinfrastruktur. Geografiska destinationskoder hör till geography om rörelsen inte själv beskrivs."
+
+[[tag]]
+id = "business"
+label = "Företag och produktion"
+definition = "Företagsstruktur, näringsgren, produktion, omsättning, investeringar, kostnader, bokslut och företagsdemografi. Finansiella instrument hör till finance; personers inkomster till income."
+
+[[tag]]
+id = "finance"
+label = "Finansmarknad"
+definition = "Krediter, räntor, finansiella instrument, innehav, transaktioner och finansinstitut. Hushålls samlade förmögenhet hör till wealth; allmän företagsredovisning till business."
+
+[[tag]]
+id = "trade"
+label = "Handel"
+definition = "Varu- och tjänstehandel, import, export och handelsflöden. Företagsomsättning utan uttalat handelsperspektiv hör till business."
+
+[[tag]]
+id = "prices"
+label = "Priser"
+definition = "Priser, prisindex, prisförändringar och prisförväntningar. Total utgift eller inkomst är inte ett pris; den får sitt sakområdes tagg."
+
+[[tag]]
+id = "taxation"
+label = "Skatter"
+definition = "Skatter, avgifter av skattekaraktär, skatteunderlag, avdrag och skattereduktioner. Transfereringar hör till transfers; nettobelopp för inkomst kan också höra till income."
+
+[[tag]]
+id = "wealth"
+label = "Förmögenhet"
+definition = "Personers och hushålls tillgångar, skulder och nettoförmögenhet. Löpande inkomster hör till income; företagsbalanser till business eller finance."
+
+[[tag]]
+id = "public-finance"
+label = "Offentlig ekonomi"
+definition = "Offentliga budgetar, intäkter, utgifter, finansiering och ekonomisk utjämning. En individs skattebelopp hör till taxation; mottagen ersättning till transfers."
+
+[[tag]]
+id = "research"
+label = "Forskning och innovation"
+definition = "Forsknings- och utvecklingsarbete, forskningsresurser, innovation och forskningsfinansiering. Utbildningsnivå hör till education; enbart digital användning till digital."
+
+[[tag]]
+id = "digital"
+label = "Digitalisering"
+definition = "Tillgång till och användning av IT, internet, digitala tjänster och digital kompetens. Undersökningens elektroniska insamlingssätt hör till methods."
+
+[[tag]]
+id = "democracy"
+label = "Demokrati"
+definition = "Val, röstande, politiskt deltagande, partier, förtroendevalda och demokratiskt inflytande. Allmänna register över kommuner hör till geography."
+
+[[tag]]
+id = "culture"
+label = "Kultur och fritid"
+definition = "Kultur, bibliotek, medier, föreningsliv, fritidsaktiviteter och tidsanvändning utanför ren arbetsmätning. Arbetstid hör till employment."
+
+[[tag]]
+id = "crime"
+label = "Brott och rättsväsende"
+definition = "Brott, utsatthet, trygghet, rättsliga förfaranden, påföljder och kriminalvård. Medicinsk tvångsvård utan brottsanknytning hör till healthcare eller social-care."
+
+[[tag]]
+id = "methods"
+label = "Statistisk metod och kvalitet"
+definition = "Urval, vikter, imputering, bortfall i undersökningen, osäkerhet, källa och statistiska kvalitetsmarkörer. Skördebortfall är ett sakområdesmått, inte undersökningsbortfall. Sakområdesmått får inte denna tagg enbart för att de är beräknade."
+
+[[tag]]
+id = "consumption"
+label = "Hushållens konsumtion och utgifter"
+definition = "Hushållens köp, konsumtion, konsumtionsmönster och utgifter för varor och tjänster. Företagens förbrukning hör till business; enhetspriser till prices. Bostadsutgifter kan också höra till housing."
+
+[[tag]]
+id = "defence"
+label = "Totalförsvar och värnplikt"
+definition = "Mönstring, inskrivning, värnplikt, militär tjänstgöring, placering och bedömning av tjänstbarhet. Allmänna hälsomått hör till health; allmän utbildningsnivå till education."
+
+[[tag]]
+id = "integration"
+label = "Integration och etablering"
+definition = "Invandrares etablering, introduktionsprogram, integrationsinsatser och hinder eller utfall uttryckligen kopplade till dessa. Flyttning och bosättning hör till migration; allmän sysselsättning till employment. Enbart utländsk bakgrund motiverar inte integration."
