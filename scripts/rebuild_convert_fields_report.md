@@ -395,8 +395,8 @@ PR merge ran. The Operator reruns full validation after push.
 
 Fix-04 restores the schema-4 table/reader and contract 5.1.0 only. The variable
 unit-type diff facet remains removed; all sentinel changes and locked curation from
-fix-03 remain unchanged. Existing API, admission and order oracles are restored to
-their pre-bump values; no new tests or weaker assertions were added.
+fix-03 remain unchanged. Existing API, admission and order oracles are restored to their
+pre-bump values; no new tests or weaker assertions were added.
 
 Checks run in fix-04:
 
@@ -404,9 +404,43 @@ Checks run in fix-04:
   byte-identical synthetic builds and 203 conformance checks (two skipped). Gate times:
   G0 34 s, Rust 9 s.
 - Explicit synthetic build and `verify` passed. `verify --previous` against an identical
-  schema-4 synthetic copy passed; `diff` against that copy exited 0 with no changes.
-  The artifact carries schema 4 and the retained `variable_unit_type` table is empty.
+  schema-4 synthetic copy passed; `diff` against that copy exited 0 with no changes. The
+  artifact carries schema 4 and the retained `variable_unit_type` table is empty.
 - Independent restoration review and `git diff --check` passed.
 
 No real-seed build, 0.66.0 artifact comparison, `gate.py regen`, publication or PR merge
 ran in fix-04. The Operator runs full release verification after push.
+
+Fix-05 validates canonical membership in every classification version bound to a shared
+set, including the declaring version. Classification lists remain additive; only codes
+present in the bound set are candidates for sentinel publication. A listed code absent
+from every bound set still counts as unused. Refusals retain the `sentinel-conflict`
+code, binding statements and inventory locations.
+
+Before changing behavior, all 63 committed lists (490 code/version declarations) were
+checked against 110,719 canonical codes in their exact inventory CSVs at input pin
+`9186fcbceeb2283a50c7f684764869e4dda5765e`. Header selection and trimmed, nonblank code
+semantics matched the classification reader; the canonical source files were clean.
+There were **zero own-book overlaps**, so no legacy-meaning exceptions, code removals or
+premise re-locks were needed.
+
+Checks run in fix-05:
+
+- `gate.py g0 rust` passed: static checks, workspace Rust tests, 116 script tests,
+  byte-identical synthetic builds and 203 conformance checks (two skipped). Gate times:
+  G0 18 s, Rust 7 s. The first attempt stopped at Markdown formatting, including two
+  wraps left from fix-04; formatting was corrected before the passing run.
+- Explicit standard synthetic build/verify passed. One-off CLI fixture variants
+  confirmed that own-book canonical code `1` and other-bound-book canonical code `3`
+  refuse with located `sentinel-conflict` errors. Differing additive lists with
+  noncanonical code `99` still passed lock/build/verify and published the sentinel bit.
+- No existing Rust sentinel-refusal corpus case covers this path. The legacy Python
+  canonical-sentinel refusal case exercises a different builder. It was left intact; no
+  duplicate permanent case or new harness was added under REBUILD.md's no-new-tests
+  rule. The regression proof here is the one-off Rust CLI check, not a corpus extension.
+- Independent code and test-policy review passed.
+
+Operator-provided evidence for `9c03adf6`: real build and `verify --previous 0.66.0`
+passed; the diff changed sentinel marks only. Those are the Operator's results. No
+real-seed build, full-artifact verify/diff, `gate.py regen`, publication or PR merge ran
+in fix-05. The Operator reruns full release verification after push.

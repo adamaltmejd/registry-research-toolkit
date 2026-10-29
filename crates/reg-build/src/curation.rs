@@ -574,9 +574,6 @@ fn sentinel_conflicts(
         for (at, claims) in &versions {
             for (other_at, other_claims) in &versions {
                 let (class, other) = (classes[at], classes[other_at]);
-                if class.family == other.family && class.version == other.version {
-                    continue;
-                }
                 let bad = claims[0]
                     .codes
                     .iter()

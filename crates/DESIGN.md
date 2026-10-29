@@ -389,12 +389,13 @@ Accepting one requires reviewed curation and a premise lock.
   canonical book. It marks the listed codes present in each bound occurrence's value
   sets, including population alternatives; declarations absent from all bound sets are
   counted, not refused. Classification lists sharing a bound set are additive. A listed
-  code that is canonical in another version bound to that set refuses at both bindings.
-  The bits remain set-wide, and the hash remains based on code, label and parent,
-  without sentinel status. Occurrence-scoped sentinel claims on shared sets are deferred
-  to sentinel-aware value-set identity; revisit when a dropped scoped entry needs it.
-  Register name corrections that differ from source remain deferred: they need a
-  register address in the grammar.
+  code that is canonical in any version bound to that set, including the declaring
+  version, refuses at the binding and inventory locations. The bits remain set-wide, and
+  the hash remains based on code, label and parent, without sentinel status.
+  Occurrence-scoped sentinel claims on shared sets are deferred to sentinel-aware
+  value-set identity; revisit when a dropped scoped entry needs it. Register name
+  corrections that differ from source remain deferred: they need a register address in
+  the grammar.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
