@@ -44,14 +44,14 @@ ambiguous SCB cells. The maintainer chose the rebuild on 2026-10-26.
 
 ## Milestones
 
-  | M   | Content                                                                                            | Proves                                                                                            | Status      |
-  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
-  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done        |
-  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done        |
-  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done        |
-  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | in progress |
-  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —           |
-  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —           |
+  | M   | Content                                                                                            | Proves                                                                                            | Status |
+  | --- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------ |
+  | A   | Frame, readers, resolve and emit for the thin providers and Socialstyrelsen; the comparison script | The pipeline runs end to end on providers without variable ids, and the frame is provider-neutral | done   |
+  | B   | The SCB export and the LISA workbook; the SCB ledger                                               | The identity and release rules hold at full scale                                                 | done   |
+  | C   | The link stage, the full published catalog, `reg-catalog` over it, the server switch               | Readers and agents work against the new catalog                                                   | done   |
+  | D   | Today's curation carried over; new ids minted                                                      | Today's curation survives in the four statement kinds                                             | done   |
+  | E   | The holdings layer: design, then SWECOV's catalog, physical orders and the MONA order file         | Stewards and projects work without `reg_meta_build`                                               | —      |
+  | F   | Cutover: the deletions                                                                             | Nothing depends on the old builder                                                                | —      |
 
 The hosted global catalog switches in C, uncurated, and curation in D happens against
 it. There are no users to protect yet, and one live pipeline is simpler than two.
@@ -634,9 +634,14 @@ catalog remains for a later release decision.
 
 #### Post-D order
 
-1. **Edition/qualifier measurement and id-affecting deferrals:** measure the
-   full-catalog effects of editions and qualifiers; review source placement and identity
-   separation before naming more families.
+1. **Mechanical triage of the §D rows** into the maintainer's two groups (2026-10-29):
+   before the id sprint, only work that changes which occurrences a variable id covers:
+   identity/endpoint claims, recovered identity setters, keyless-default alignment,
+   identity lock refusals, coverage-adding recovery proposals, and edition/source
+   placement that splits or merges variables. Work that does not change ids
+   (descriptions/labels, coding, sentinels, delivered-value facts, lineage links,
+   document keys) goes after the sprint or serves as sprint evidence. A later PR updates
+   the deferral table's Home column with the triage counts.
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and
    evidenced deferred endpoints; refresh locks and have the Operator verify the real
