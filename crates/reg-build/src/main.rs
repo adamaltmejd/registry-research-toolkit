@@ -39,7 +39,7 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use reg_frame::Record;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 /// `curation/inputs.toml`: the pinned inputs and the providers they belong to.
@@ -71,6 +71,13 @@ struct Args {
     catalog_version: String,
     release: bool,
     registers: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct BuildRefusal {
+    register: Option<String>,
+    kind: &'static str,
+    details: Vec<String>,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, String> {
@@ -356,6 +363,21 @@ fn build(args: &Args) -> Result<(), String> {
     let mut resolved =
         curation::complete_findings(&args.curation, &retired, &applied.records, &applied)?;
     let mut report = BTreeMap::new();
+    let mut refusals = Vec::new();
+    if args.release {
+        let mut groups = BTreeMap::<_, Vec<_>>::new();
+        for refusal in &applied.refusals {
+            groups
+                .entry(refusal.register.clone())
+                .or_default()
+                .push(refusal.message.clone());
+        }
+        refusals.extend(groups.into_iter().map(|(register, details)| BuildRefusal {
+            register,
+            kind: "curation",
+            details,
+        }));
+    }
     for r in &mut resolved {
         let (provider, register) = (&r.register.provider, &r.register.register);
         let path = ledger_path(&args.curation, provider, register);
@@ -363,28 +385,36 @@ fn build(args: &Args) -> Result<(), String> {
             r.acknowledgements.extend(acks.clone());
         }
         if args.release {
-            if let Some(id) = r.report.unplaced_ids.first() {
-                return Err(ledger_refusal(
-                    &path,
-                    id,
+            for (ids, kind, reason) in [
+                (
+                    &r.report.unplaced_ids,
                     "ledger-id-unplaced",
                     "has no placed variable",
-                )?);
-            }
-            if let Some(id) = r.report.split_ids.first() {
-                return Err(ledger_refusal(
-                    &path,
-                    id,
+                ),
+                (
+                    &r.report.split_ids,
                     "ledger-id-split",
                     "anchors more than one variable",
-                )?);
+                ),
+            ] {
+                if !ids.is_empty() {
+                    refusals.push(BuildRefusal {
+                        register: Some(format!("{provider}/{register}")),
+                        kind,
+                        details: ids
+                            .iter()
+                            .map(|id| ledger_refusal(&path, id, kind, reason))
+                            .collect::<Result<_, _>>()?,
+                    });
+                }
             }
-        }
-        if args.release && !r.report.unminted.is_empty() {
-            return Err(format!(
-                "{provider}/{register}: {} variables have no ledger id (--release)",
-                r.report.unminted.len()
-            ));
+            if !r.report.unminted.is_empty() {
+                refusals.push(BuildRefusal {
+                    register: Some(format!("{provider}/{register}")),
+                    kind: "unminted-variable",
+                    details: r.report.unminted.clone(),
+                });
+            }
         }
     }
     // A public name is one register's within its provider: no other register's public
@@ -393,21 +423,29 @@ fn build(args: &Args) -> Result<(), String> {
     for r in &resolved {
         let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
         if let Some(other) = named.insert((provider, r.public.as_str()), handle) {
-            return Err(format!(
-                "{}: public name {:?} of {provider}/{handle} is also {provider}/{other}'s",
-                ledger_path(&args.curation, provider, handle).display(),
-                r.public
-            ));
+            refusals.push(BuildRefusal {
+                register: Some(format!("{provider}/{handle}")),
+                kind: "public-name-collision",
+                details: vec![format!(
+                    "{}: public name {:?} of {provider}/{handle} is also {provider}/{other}'s",
+                    ledger_path(&args.curation, provider, handle).display(),
+                    r.public
+                )],
+            });
         }
     }
     for r in &resolved {
         let (provider, handle) = (r.register.provider.as_str(), r.register.register.as_str());
         if r.public != handle && registers.contains_key(&(provider.to_owned(), r.public.clone())) {
-            return Err(format!(
-                "{}: public name {:?} of {provider}/{handle} is another register's handle",
-                ledger_path(&args.curation, provider, handle).display(),
-                r.public
-            ));
+            refusals.push(BuildRefusal {
+                register: Some(format!("{provider}/{handle}")),
+                kind: "public-name-collision",
+                details: vec![format!(
+                    "{}: public name {:?} of {provider}/{handle} is another register's handle",
+                    ledger_path(&args.curation, provider, handle).display(),
+                    r.public
+                )],
+            });
         }
     }
     let (docs, doc_warnings) = docs::merge(docs)?;
@@ -518,9 +556,24 @@ fn build(args: &Args) -> Result<(), String> {
             "link_unresolved": link_unresolved,
             "succession_dropped": succession_dropped,
             "doc_subject_unresolved": doc_subject_unresolved,
+            "refusals": refusals,
         });
         let text = serde_json::to_string_pretty(&doc).map_err(|e| e.to_string())?;
         std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
+    }
+    if !refusals.is_empty() {
+        for refusal in &refusals {
+            eprintln!(
+                "reg-build: {}: {} {}",
+                refusal.register.as_deref().unwrap_or("curation"),
+                refusal.details.len(),
+                refusal.kind,
+            );
+        }
+        return Err(match &args.report {
+            Some(path) => format!("build refused; report: {}", path.display()),
+            None => "build refused; use --report FILE for details".to_owned(),
+        });
     }
     emit::write(&catalog, &args.out)
 }
