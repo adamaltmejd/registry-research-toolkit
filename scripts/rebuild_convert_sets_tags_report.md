@@ -1,3 +1,11 @@
+# D recovery fix-02 membership status
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+`frame_deferrals()` and its LOVA literals are deleted. A ledger-only dry run proposes
+LOVA again; no membership write or replay is applied. Its source-placement deferral
+remains in REBUILD.md. The following membership counts record the prior frozen replay.
+
 # Fix-01 membership accounting
 
 Temporary conversion evidence; deleted at milestone F (cutover).

@@ -190,6 +190,44 @@ anchor as split across two families.
   | `scb/innovation-foretag/samarbete-inom-ovriga-aktiviteter`                   | `Innovation i företagssektorn: COOP_NO # stmt:a55dabd95a1bb46ad685c59f51cea157d519da92f0f76e068160aa4bc7862398` |
   | `scb/innovation-foretag/weight`                                              | `Innovation i företagssektorn: WEIGHT # weight`                                                                 |
 
+## Validation and handoff
+
+The read-only catalog/ledger audit completed before the supplied `new.db` disappeared.
+Later native-key collision checks used the exact saved reader frames. No source data or
+resolver outcome was inferred in Python. The disposable harness reused the normal
+curation runner and resolver; it emitted no catalog. Its sources and executable were
+deleted before the final gate.
+
+The first reduced probe setups refused at the manifest/schema boundary (missing
+repo/commit, omitted provider inputs, or empty fields). They were corrected; interrupted
+attempts and those refusals are not passing setter checks. The successful checks use
+actual source frames and located refusal/canonical-ID results described above.
+
+`origin/main` advanced to `c5d8fd83` (#2029). It was merged, preserving both the new
+structured refusal reports and D-11's exact affected-premise filter. No rebase was run.
+Independent review found no blocker in the data, code, exact-location test, or merge.
+
+The pre-merge `g0 rust` gate passed (116 script tests, 204 conformance tests, two
+skipped), as did the authoritative whole-root lock and separate synthetic build/verify.
+Post-merge checks are recorded in the final handoff below.
+
+Post-merge `g0 rust` passed: G0 17 seconds, Rust six seconds; 116 script tests and 205
+conformance tests passed, two skipped. The gate also rebuilt the synthetic fixture twice
+with byte-identical results. The separate post-merge synthetic build and
+`reg-build verify` both exited zero. The release Rust binary compiled successfully; this
+is a binary compile, not a real-corpus catalog build.
+
+The authoritative post-merge whole-root lock exited zero against the original pinned
+inputs, complete `curation/` and original assets. It reported only existing
+redundant-set and classification-sentinel notices. All refreshed lock bytes were
+unchanged from the successful pre-merge lock; the four changed recovery locks are
+committed. No refusal was suppressed or accepted by the disposable probes.
+
+Not run: a real-seed catalog build, real-catalog `verify --previous`, the diff against
+0.66.0, the release gate, R suites, full conversion/attachment replay, or
+`gate.py regen`. The Operator runs the real strict build and real-artifact checks after
+push.
+
 ## Historical fix-01 evidence
 
 The following fix-01 counts and statements are superseded by fix-02 where noted above.
