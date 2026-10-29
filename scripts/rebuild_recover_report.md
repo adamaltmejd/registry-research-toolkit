@@ -161,6 +161,33 @@ The full comparison was rerun after withdrawing the four FoU setters. `stratum` 
 match exactly; native LILLAN and WEIGHT retain every baseline witness and add only
 source-backed older case-alias periods, detailed in the movement report.
 
+## Fix-03 validation and handoff
+
+The source/ledger changes and both refreshed locks are committed together in `6a4c2fc5`.
+`origin/main` advanced to `bffd564f` (#2030); the merge adds the published-ID
+verification/diff guard and its corpus. It changes no reader, curation, resolver or
+emitter logic, so the full comparison remains valid after the merge. No rebase ran.
+
+Post-merge `gate.py g0 rust` passed: G0 28 seconds, Rust ten seconds; 116 script tests
+and 208 conformance tests passed, two skipped. The gate rebuilt the synthetic fixture
+twice with byte-identical output. The separate synthetic build and `reg-build verify`
+both exited zero. The normal authoritative whole-root lock then exited zero against the
+original pinned inputs/assets and complete curation, with only existing redundant-set
+and classification notices. Its lock bytes match the committed refresh. Independent
+review found no blocker in the data, proof, naming, reports or merge.
+
+The initial compiler-cache wrapper failed to write sandboxed dep-info. Rust compilation
+and the gate succeeded with `RUSTC_WRAPPER=`; other gate tool pins and checks were
+unchanged. The temporary evidence harness sources and executables were deleted before
+the final gate. It emitted no catalog; `base.db` was read in place and never copied.
+Task scratch is deleted after the push.
+
+Not run by this worker: a real-seed catalog build, real-artifact `verify --previous` or
+catalog diff against 0.66.0, the release gate, R suites, full conversion replay or
+`gate.py regen`. The Operator re-checks the real artifact on the pushed head. The
+published-ID movement comparison described above did run in full using resolver/lock
+evidence against all published 0.66.0 variable IDs.
+
 # Historical D recovery fix-02 (superseded)
 
 Temporary conversion evidence; deleted at milestone F (cutover).
