@@ -366,10 +366,17 @@ Accepting one requires reviewed curation and a premise lock.
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
   facts are locked premises; missing references are located refusals. The selected
   version follows occurrences into segments and orders. Variable `tags` applies as
-  normalized membership, independently of identity, binding, ordering and peers.
-  Sentinels, roles and unit types remain deferred to D's planned sentinel and
-  nondefault-role/unit-type work. Entity names and synonyms remain deferred to D's
-  entity-name and search curation.
+  normalized membership, independently of identity, binding, ordering and peers. Table
+  and occurrence `role` values use the published schema vocabularies. `unit_type`
+  populates table and variable unit-type membership. Variables inherit their tables'
+  unit types unless explicitly curated; a variable setter replaces that membership.
+  Table setters require a source-stated or asserted table, not a synthesized implicit
+  table. Table and release `name` changes preserve their public ids; variable names use
+  `label`. Variable `synonyms` enrich search labels without adding delivery aliases.
+  Sentinel setters remain refused: `vs_item.sentinel` belongs to a globally shared
+  content-addressed value set, with no occurrence-scoped storage for a selected
+  override. Register names have storage but no register address in the statement
+  grammar. Neither limitation is resolved by changing unselected entities.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination

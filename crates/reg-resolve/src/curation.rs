@@ -629,6 +629,9 @@ fn field_dependencies(fields: &mut BTreeSet<String>) {
             ["type", "code_system", "value_set", "population_valuesets"].map(str::to_owned),
         );
     }
+    if fields.contains("role") {
+        fields.extend(["identifier", "value_set", "population_valuesets"].map(str::to_owned));
+    }
     if fields.contains("period") {
         fields.extend(["grain", "name", "from", "to"].map(str::to_owned));
     }
@@ -738,7 +741,7 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
         .period
         .clone()
         .unwrap_or_else(|| (OPEN_START.into(), OPEN_END.into()));
-    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some() || fields.tags.is_some())
+    if matches!(statement, Statement::Set { fields, .. } if fields.sets.is_some() || fields.tags.is_some() || fields.synonyms.is_some() || (fields.unit_type.is_some() && !matches!(subject(statement), Address::Table(_))))
     {
         return vec![span];
     }
@@ -1431,7 +1434,7 @@ pub fn resolve(
     let mut view = sources(records, ledger);
     view.extend(shared.sources.iter().cloned());
     let needs_variables = statements.iter().any(|statement| {
-        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some()) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some() || fields.synonyms.is_some() || (fields.unit_type.is_some() && !matches!(subject(statement), Address::Table(_)))) || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
         variable_members(records, ledger, assignments)
@@ -1462,7 +1465,7 @@ pub fn resolve(
         let address = subject(statement);
         let mut matches = index.select(address, &view, variables);
         let whole = whole_occurrences(&matches, &view);
-        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some())
+        if matches!(statement, Statement::Set {fields,..} if fields.sets.is_some() || fields.tags.is_some() || fields.synonyms.is_some() || (fields.unit_type.is_some() && !matches!(subject(statement), Address::Table(_))))
         {
             let names = variables
                 .iter()
@@ -1572,31 +1575,27 @@ pub fn resolve(
                     if values.coverage.is_some() && !matches!(address, Address::Table(_)) {
                         return Err("set coverage requires a table selector".into());
                     }
-                    if (values.sets.is_some() || values.tags.is_some())
+                    if (values.sets.is_some()
+                        || values.tags.is_some()
+                        || values.synonyms.is_some()
+                        || (values.unit_type.is_some() && !matches!(address, Address::Table(_))))
                         && stated_fields(values).len() != 1
                     {
                         let field = if values.sets.is_some() {
                             "sets"
-                        } else {
+                        } else if values.tags.is_some() {
                             "tags"
+                        } else if values.synonyms.is_some() {
+                            "synonyms"
+                        } else {
+                            "unit_type"
                         };
                         return Err(format!(
                             "set {field} with other fields requires separate statements"
                         ));
                     }
-                    for field in stated_fields(values).keys() {
-                        let package = match field.as_str() {
-                            "sentinels" => Some("D (sentinels)"),
-                            "role" | "unit_type" => {
-                                Some("D (unit types and roles beyond defaults)")
-                            }
-                            "synonyms" => Some("D (search curation)"),
-                            "name" => Some("D (entity names)"),
-                            _ => None,
-                        };
-                        if let Some(package) = package {
-                            return Err(format!("set {field} is applied in {package}"));
-                        }
+                    if values.sentinels.is_some() {
+                        return Err("set sentinels has no occurrence-scoped schema home; vs_item sentinels are shared by all uses of a content-addressed value set".into());
                     }
                     if (values.table.is_some() || values.variable.is_some())
                         && stated_fields(values)
@@ -1834,6 +1833,17 @@ pub fn apply_metadata(resolved: &mut crate::Resolved, metadata: &[apply::Metadat
                     apply::MetadataValue::Tags(tags) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].tags.clone_from(tags);
+                        }
+                    }
+                    apply::MetadataValue::Synonyms(synonyms) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].synonyms.clone_from(synonyms);
+                        }
+                    }
+                    apply::MetadataValue::UnitType(unit_type) => {
+                        if let Some(variable) = occurrence.variable {
+                            resolved.variables[variable].unit_types =
+                                BTreeSet::from([(*unit_type).clone()]);
                         }
                     }
                     apply::MetadataValue::Notice(message) => notice = Some((*message).clone()),

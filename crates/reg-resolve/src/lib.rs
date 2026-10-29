@@ -248,6 +248,8 @@ pub struct Variable {
     pub slug: String,
     pub sets: BTreeSet<String>,
     pub tags: BTreeSet<String>,
+    pub synonyms: BTreeSet<String>,
+    pub unit_types: BTreeSet<String>,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -452,6 +454,8 @@ pub fn resolve(
     for handle in handles {
         let mut table = stated.get(handle).map_or_else(
             || Table {
+                role: None,
+                unit_type: None,
                 provider: register.provider.clone(),
                 register: register.register.clone(),
                 table: handle.to_owned(),
@@ -952,7 +956,14 @@ pub fn resolve(
                     .iter()
                     .map(|&i| resolved[i].occurrence.classification.clone())
                     .collect();
-                let agree = forms.len() == 1 && classifications.len() == 1;
+                let roles: BTreeSet<_> = covering
+                    .iter()
+                    .filter_map(|&i| resolved[i].occurrence.role.as_deref())
+                    .collect();
+                if roles.len() > 1 {
+                    conflicts.insert("role".into());
+                }
+                let agree = forms.len() == 1 && classifications.len() == 1 && roles.len() <= 1;
                 // A form field is stated only where every occurrence agrees on it.
                 let agreed = |field: fn(&Form) -> &Option<String>| {
                     let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
@@ -1039,7 +1050,13 @@ pub fn resolve(
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
                     identifier,
-                    role: role(o, identifier),
+                    role: covering
+                        .iter()
+                        .find(|&&i| resolved[i].occurrence.role.is_some())
+                        .map_or_else(
+                            || role(o, identifier),
+                            |&i| role(&resolved[i].occurrence, identifier),
+                        ),
                     state,
                 };
                 let index = match runs.last_mut() {
@@ -1145,6 +1162,11 @@ pub fn resolve(
         variables.push(Variable {
             sets: BTreeSet::new(),
             tags: BTreeSet::new(),
+            synonyms: BTreeSet::new(),
+            unit_types: segments
+                .iter()
+                .filter_map(|segment| tables[segment.table].table.unit_type.clone())
+                .collect(),
             slug: if *assigned {
                 key.clone()
             } else {
@@ -1418,7 +1440,17 @@ pub fn coded(o: &Occurrence) -> &'static str {
 /// The default role: identifiers are row keys, coded columns codes, the rest measures.
 #[must_use]
 pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
-    if identifier == Some(true) {
+    if let Some(role) = o.role.as_deref() {
+        match role {
+            "row_key" => "row_key",
+            "time_start" => "time_start",
+            "time_stop" => "time_stop",
+            "time_point" => "time_point",
+            "code" => "code",
+            "label" => "label",
+            _ => "measure",
+        }
+    } else if identifier == Some(true) {
         "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {
         "code"

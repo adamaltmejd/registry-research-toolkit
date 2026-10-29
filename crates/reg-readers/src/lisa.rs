@@ -145,6 +145,8 @@ pub fn read(
             at: at.to_owned(),
         };
         records.push(Record::Table(Table {
+            role: None,
+            unit_type: None,
             provider: provider.to_owned(),
             register: register.to_owned(),
             table: sheet.name.clone(),
@@ -179,6 +181,7 @@ pub fn read(
             });
             for (from, to) in periods {
                 records.push(Record::Occurrence(Occurrence {
+                    role: None,
                     provider: provider.to_owned(),
                     register: register.to_owned(),
                     table: sheet.name.clone(),

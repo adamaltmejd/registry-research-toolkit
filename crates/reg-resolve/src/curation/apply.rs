@@ -117,6 +117,8 @@ pub fn classification(statement: &Statement, at: &Locator) -> Result<Classificat
 pub enum MetadataValue {
     Sets(BTreeSet<String>),
     Tags(BTreeSet<String>),
+    Synonyms(BTreeSet<String>),
+    UnitType(String),
     Notice(String),
 }
 
@@ -974,18 +976,6 @@ fn apply_fields(
     if (fields.contains_key("coverage") || fields.contains_key("period")) && fields.len() != 1 {
         return Err("set coverage/period with other fields requires separate statements".into());
     }
-    for field in fields.keys() {
-        let package = match field.as_str() {
-            "sentinels" => Some("D (sentinels)"),
-            "role" | "unit_type" => Some("D (unit types and roles beyond defaults)"),
-            "synonyms" => Some("D (search curation)"),
-            "name" => Some("D (entity names)"),
-            _ => None,
-        };
-        if let Some(package) = package {
-            return Err(format!("set {field} is applied in {package}"));
-        }
-    }
     let mut selected = false;
     for (index, record) in records.iter().enumerate() {
         let before = tree(record);
@@ -1014,11 +1004,17 @@ fn apply_fields(
                         | "period"
                         | "sets"
                         | "tags"
+                        | "synonyms"
+                        | "unit_type"
+                        | "role"
                         | "classification"
                         | "notice"
                 ),
-                "table" => matches!(field.as_str(), "description" | "coverage"),
-                "release" => matches!(field.as_str(), "description" | "period"),
+                "table" => matches!(
+                    field.as_str(),
+                    "description" | "coverage" | "name" | "role" | "unit_type"
+                ),
+                "release" => matches!(field.as_str(), "description" | "period" | "name"),
                 _ => false,
             };
             if !supported {
@@ -1040,7 +1036,40 @@ fn apply_fields(
                         return Err(format!("set {field} requires catalog slugs"));
                     }
                 }
-                "notice" => {}
+                "role" => {
+                    let allowed: &[&str] = if kind == "table" {
+                        &["data", "codelist"]
+                    } else {
+                        &[
+                            "row_key",
+                            "time_start",
+                            "time_stop",
+                            "time_point",
+                            "measure",
+                            "code",
+                            "label",
+                        ]
+                    };
+                    if !allowed.contains(&winning.as_str().expect("typed role")) {
+                        return Err(format!(
+                            "set role requires one of {} on {kind}",
+                            allowed.join(", ")
+                        ));
+                    }
+                    after["role"] = winning.clone();
+                }
+                "unit_type" => {
+                    if !reg_core::is_slug(winning.as_str().expect("typed unit type")) {
+                        return Err("set unit_type requires a catalog slug".into());
+                    }
+                    if kind == "table" {
+                        after["unit_type"] = winning.clone();
+                    }
+                }
+                "name" if winning.as_str().is_none_or(|v| v.trim().is_empty()) => {
+                    return Err("set name requires a nonblank entity name".into());
+                }
+                "synonyms" | "notice" => {}
                 "description" if kind == "occurrence" => {}
                 "period" | "coverage" => {
                     let period = winning
@@ -1174,6 +1203,18 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Tags(tags.iter().cloned().collect()),
+                });
+            }
+            if let Some(synonyms) = &metadata_fields.synonyms {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::Synonyms(synonyms.iter().cloned().collect()),
+                });
+            }
+            if let Some(unit_type) = &metadata_fields.unit_type {
+                out.metadata.push(Metadata {
+                    key: key.clone(),
+                    value: MetadataValue::UnitType(unit_type.clone()),
                 });
             }
             if let Some(notice) = &metadata_fields.notice {
