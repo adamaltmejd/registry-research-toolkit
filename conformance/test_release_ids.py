@@ -16,8 +16,10 @@ def test_published_id_targets(tmp_path, change):
     # interval equality replaces overlap, or if register/implicit-table renames count
     # as table moves. Growth adds targets beside partial overlap. The golden follows
     # the source/ledgers; periods are half-open Unix days derived from source dates.
+    # Text goldens catch Rust Debug output or unreadable dates at both CLI boundaries.
     fixture = CASES / "release-ids"
     expected = json.loads((fixture / "expected.json").read_text())[change]
+    expected_text = json.loads((fixture / "expected-text.json").read_text())[change]
     previous = cached_reader_artifact(fixture)
     curation = tmp_path / "curation"
     shutil.copytree(fixture / "curation", curation)
@@ -57,15 +59,7 @@ def test_published_id_targets(tmp_path, change):
     verified = run("verify", current, "--previous", previous)
     assert verified.returncode == (1 if expected else 0), verified.stderr
     if expected:
-        first = expected[0]
-        assert f"previous release: moved id {first['pid']}" in verified.stderr
-        for target in [*first["old"], *first["new"]]:
-            for value in target.values():
-                if isinstance(value, list):
-                    for day in value:
-                        assert str(day) in verified.stderr
-                else:
-                    assert value in verified.stderr
+        assert f"previous release: moved id {expected_text[0]};" in verified.stderr
         assert "retire" in verified.stderr and "mint" in verified.stderr
 
     diff = run("diff", previous, current, "--json")
@@ -75,5 +69,5 @@ def test_published_id_targets(tmp_path, change):
     assert text.returncode == 1, text.stderr
     ids_section = text.stdout.split("== ids ==\n")[1].split("==", 1)[0]
     assert ("moved:" in ids_section) == bool(expected)
-    for item in expected:
-        assert item["pid"] in ids_section
+    for line in expected_text:
+        assert line in ids_section

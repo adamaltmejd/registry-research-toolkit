@@ -285,8 +285,8 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
         .first()
     {
         return Err(fail(format!(
-            "moved id {} ({}): {:?} → {:?}; retire the published id and mint a new one",
-            moved.pid, moved.kind, moved.old, moved.new
+            "moved id {}; retire the published id and mint a new one",
+            moved.text()
         )));
     }
     Ok(())

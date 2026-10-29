@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use rusqlite::Connection;
 use serde::Serialize;
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Serialize)]
 pub struct Target {
     table: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -19,6 +19,35 @@ pub struct Moved {
     pub kind: String,
     pub old: BTreeSet<Target>,
     pub new: BTreeSet<Target>,
+}
+
+impl Moved {
+    pub fn text(&self) -> String {
+        let targets = |set: &BTreeSet<Target>| {
+            set.iter()
+                .map(|target| {
+                    let mut text = target.table.clone();
+                    if let Some(spelling) = &target.spelling {
+                        text.push(':');
+                        text.push_str(spelling);
+                    }
+                    if let Some((start, end)) = target.period {
+                        text.push(' ');
+                        text.push_str(&crate::diff::span(start, end));
+                    }
+                    text
+                })
+                .collect::<Vec<_>>()
+                .join(", ")
+        };
+        format!(
+            "{} ({}): {} → {}",
+            self.pid,
+            self.kind,
+            targets(&self.old),
+            targets(&self.new)
+        )
+    }
 }
 
 type Targets = BTreeMap<(String, String), BTreeSet<Target>>;
