@@ -8,10 +8,10 @@ Classification label conversion also joins exact descriptors from the pinned raw
 are proposals: lock reviews today's premises, not the old builder's fingerprints.
 
 Run reg-build read first, then:
-  uv run --no-project scripts/rebuild_convert.py --frames DIR --out SCRATCH
+  uv run --no-project scripts/rebuild_convert.py --frames DIR --catalog BUILT_DB --out SCRATCH
   ... --lock --inputs DIR --assets DIR
 For D-9 only (preserves unrelated authored statements and locks):
-  uv run --no-project scripts/rebuild_convert.py --classifications-only --frames DIR \
+  uv run --no-project scripts/rebuild_convert.py --classifications-only --frames DIR --catalog BUILT_DB \
     --assets ASSETS --out SCRATCH --write-curation --lock --inputs INPUTS
 The default mode remains the earlier full-tree conversion census.
 The report output root must not exist. --write-curation replaces the checkout's
@@ -33,9 +33,9 @@ from pathlib import Path
 from rebuild_convert_cases import CaseSafety, audit_cached
 from rebuild_convert_classification_bindings import convert as classification_bindings
 from rebuild_convert_classifications import convert as classifications
-from rebuild_convert_deferred import convert as deferred
+from rebuild_convert_deferred import convert as deferred, period
 from rebuild_convert_groups import normalize_sets
-from rebuild_convert_identity import IdentityProjection
+from rebuild_convert_identity import CatalogIdentity
 from rebuild_convert_selectors import collapse
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -89,7 +89,7 @@ def fold(text):
 
 
 def table_slug(text):
-    # Address the resolver's unpinned tables (reg_resolve::slugify), not old ids.
+    # Stable authored set slugs for legacy display groups and LISA headings.
     text = text.lower().translate(str.maketrans("åäáàöóéèü", "aaaaooeeu"))
     slug = re.sub("[^a-z0-9]+", "-", text).strip("-")
     return slug if slug and slug[0].isalpha() else "v" + ("-" + slug if slug else "")
@@ -229,7 +229,7 @@ def remove_covered(proposals):
 
 
 class Converter:
-    def __init__(self, frames, out):
+    def __init__(self, frames, out, catalog):
         self.out = out
         self.records = []
         for path in sorted(frames.glob("*.jsonl")):
@@ -268,24 +268,7 @@ class Converter:
         }
         self.value_sets = collections.defaultdict(set)
         for record in self.records:
-            if record["kind"] == "table":
-                self.tables.setdefault(
-                    (record["provider"], record["register"], record["table"]),
-                    table_slug(record["table"])
-                    if record["table"]
-                    else self.ledgers.get(
-                        (record["provider"], record["register"]), {}
-                    ).get("public", record["register"]),
-                )
             if record["kind"] == "occurrence":
-                self.tables.setdefault(
-                    (record["provider"], record["register"], record["table"]),
-                    table_slug(record["table"])
-                    if record["table"]
-                    else self.ledgers.get(
-                        (record["provider"], record["register"]), {}
-                    ).get("public", record["register"]),
-                )
                 self.rows[record["provider"], record["register"]].append(record)
             elif record["kind"] == "release":
                 self.releases[
@@ -312,7 +295,9 @@ class Converter:
         self.coordinate_spans = {}
         self.coordinate_labels = {}
         self.unscoped_year_coordinates = set()
-        self.identity = IdentityProjection(self.records, self.ledgers)
+        self.identity = CatalogIdentity(self.records, self.ledgers, catalog)
+        self.tables = self.identity.tables
+        self.releases.update(self.identity.releases)
         self.identity_audit = collections.Counter()
         self.identity_deferred = []
         self.grouping_audit = {}
@@ -325,7 +310,7 @@ class Converter:
         self.previous_cases = set()
 
     def normalize_identity(self):
-        """Remove default restatements before checking local mint authority."""
+        """Remove catalog-satisfied statements before checking local mint authority."""
         before = 0
         for owner, statements in self.statements.items():
             lookup = collections.defaultdict(list)
@@ -373,7 +358,7 @@ class Converter:
                 elif target != "none" and (
                     same_slug or (same_group and target_status != "local")
                 ):
-                    reason = "projected default identity already has the legacy outcome"
+                    reason = "built catalog identity already has the legacy outcome"
                     self.identity_audit["removed_default_restatements"] += 1
                 elif target != "none":
                     status = target_status
@@ -431,56 +416,6 @@ class Converter:
                         covering["statement"][field] = "\n\n".join(values)
                 del statements[key]
                 self.identity_audit["coalesced_duplicate_effects"] += 1
-            while True:
-                assignments = {
-                    id(row): statements[key]["statement"]["fields"]["variable"]
-                    for key, rows in selected.items()
-                    if key in statements
-                    for row in rows
-                }
-                orphaned = self.identity.orphaned_markers(*owner, assignments)
-                concurrent = self.identity.concurrent_fold_assignments(
-                    *owner, assignments
-                )
-                removed = False
-                for key, rows in selected.items():
-                    if key not in statements:
-                        continue
-                    details = [
-                        detail for row in rows for detail in concurrent.get(id(row), [])
-                    ]
-                    if not details and not any(
-                        self.identity.group(row) in orphaned for row in rows
-                    ):
-                        continue
-                    record = statements.pop(key)
-                    self.identity_deferred.append(
-                        {
-                            "register": "/".join(owner),
-                            "variable": record["statement"]["fields"]["variable"],
-                            "sources": record["origins"],
-                            "reason": (
-                                "D-11: identity assignment merges concurrent different "
-                                "folded spellings in one table; retain separate variables"
-                                if details
-                                else "identity assignment would orphan a default gap marker; "
-                                "retain its finding"
-                            ),
-                            "conflicts": list(
-                                {
-                                    json.dumps(detail, sort_keys=True): detail
-                                    for detail in details
-                                }.values()
-                            ),
-                            "statements": 1,
-                        }
-                    )
-                    self.identity_audit[
-                        "deferred_concurrent_folds" if details else "orphan_gap_marker"
-                    ] += 1
-                    removed = True
-                if not removed:
-                    break
         self.identity_audit["before"] = before
         self.identity_audit["after"] = sum(
             "variable" in r["statement"].get("fields", {})
@@ -968,31 +903,66 @@ class Converter:
                             "asserted column classification needs reviewed family/version mapping"
                         )
                     periods = entry.get("versions")
+                    subjects = []
                     if periods and all(re.fullmatch(r"\d{4}", p) for p in periods):
                         scope = ",".join(periods)
+                        subjects.append(f"{table}: {entry['column']} @{scope}")
+                    elif periods:
+                        for version in periods:
+                            releases = {
+                                (
+                                    release["release"],
+                                    release.get("from"),
+                                    release.get("to"),
+                                )
+                                for (p, r, handle, _), release in self.releases.items()
+                                if (p, r) == (provider, register)
+                                and self.tables.get((p, r, handle)) == table
+                                and release["name"] == version
+                            }
+                            if len(releases) != 1:
+                                raise ValueError(
+                                    "asserted column needs one exact catalog release per named edition"
+                                )
+                            handle, start, end = releases.pop()
+                            if not start or not end or not handle or "'" in handle:
+                                raise ValueError(
+                                    "asserted column needs a dated expressible catalog release"
+                                )
+                            scope = period(
+                                {
+                                    "kind": "intervals",
+                                    "intervals": [{"start": start, "end": end}],
+                                }
+                            )
+                            subjects.append(
+                                f"{table}: {entry['column']} @{scope} where release = '{handle}'"
+                            )
                     elif re.fullmatch(r"\d{4}-\d{4}", entry.get("holdings_period", "")):
                         scope = entry["holdings_period"].replace("-", "..")
+                        subjects.append(f"{table}: {entry['column']} @{scope}")
                     else:
                         raise ValueError(
                             "asserted column needs an explicit expressible period"
                         )
-                    proposals.append(
-                        {
-                            "kind": "assert",
-                            "subject": f"{table}: {entry['column']} @{scope}",
-                            "fact": {"entity": "occurrence", "fields": fields},
-                        }
-                    )
-                    if operational_definition is not None:
+                    for subject in subjects:
                         proposals.append(
                             {
-                                "kind": "set",
-                                "subject": proposals[-1]["subject"],
-                                "fields": {
-                                    "operational_definition": operational_definition
-                                },
+                                "kind": "assert",
+                                "subject": subject,
+                                "fact": {"entity": "occurrence", "fields": fields},
                             }
                         )
+                        if operational_definition is not None:
+                            proposals.append(
+                                {
+                                    "kind": "set",
+                                    "subject": subject,
+                                    "fields": {
+                                        "operational_definition": operational_definition
+                                    },
+                                }
+                            )
                 elif kind == "identity.split":
                     if entry.get("by") != "data_type":
                         raise ValueError(
@@ -1281,6 +1251,7 @@ class Converter:
         )
         outcomes = collections.Counter(r["outcome"] for r in self.results)
         data = {
+            "deletion_gate": "milestone F (cutover)",
             "classification_conversion": getattr(self, "classification_conversion", {}),
             "source_entries": len(self.results),
             "outcomes": dict(outcomes),
@@ -1415,6 +1386,8 @@ class Converter:
         text = [
             "# One-shot curation conversion report",
             "",
+            "Temporary conversion evidence; deleted at milestone F (cutover).",
+            "",
             "Proposals only. Lock records current premises; old fingerprints have not been certified.",
             "",
             f"Scoped declarations: {len(self.results)} = {sum(r['category'] not in ('variant', 'classification') for r in self.results)} register curation entries + {sum(r['category'] == 'variant' for r in self.results)} table declarations + {sum(r['category'] == 'classification' for r in self.results)} classification declarations/bindings. Slug pins and inline payload rows are not additional statements.",
@@ -1454,9 +1427,9 @@ class Converter:
             "",
             "## Identity and case audit",
             "",
-            f"Historical set variable: 12,151 statements from 6,088 owner entries. Current proposed set variable: {self.counts['set.fields.variable']}. The current pass also projects partitions previously skipped by the approximate census; its pre-filter population differs from the historical one.",
+            f"Historical set variable: 12,151 statements from 6,088 owner entries. Current proposed set variable: {self.counts['set.fields.variable']}. The current pass also expands partitions previously skipped by the approximate census; its pre-filter population differs from the historical one.",
             "",
-            f"Projection audit: `{json.dumps(dict(self.identity_audit), sort_keys=True)}`.",
+            f"Catalog identity audit: `{json.dumps(dict(self.identity_audit), sort_keys=True)}`.",
             "",
             f"Case safety: `{json.dumps(dict(self.case_safety.counts), sort_keys=True)}`. Remaining cases are listed in report.json.",
             "",
@@ -1470,7 +1443,7 @@ class Converter:
             "| --- | ---: | ---: | --- |",
         ]
         translations = {
-            "No statement": "skip: projected default identity (not resolver-certified)",
+            "No statement": "skip: identity already satisfied in the built catalog",
             "set variable": "set variable (case-only splits dropped)",
             "Merge": "set variable onto one ledger id",
             "set": "set sets (simultaneous columns stay distinct)",
@@ -1521,6 +1494,7 @@ class Converter:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--frames", type=Path, required=True)
+    parser.add_argument("--catalog", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--lock", action="store_true")
     parser.add_argument("--classifications-only", action="store_true")
@@ -1537,7 +1511,7 @@ def main():
     if not list(args.frames.glob("*.jsonl")):
         parser.error("--frames contains no reg-build read JSONL")
     args.out.mkdir(parents=True)
-    converter = Converter(args.frames, args.out)
+    converter = Converter(args.frames, args.out, args.catalog)
     if args.previous_proposals:
         converter.cached_audit = audit_cached(converter, args.previous_proposals)
         previous = json.loads((args.previous_proposals / "report.json").read_text())

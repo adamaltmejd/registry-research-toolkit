@@ -258,3 +258,10 @@ kind = "set"
 subject = "var:regionvalkrets-valkretsnamn"
 fields = { "sets" = ["regionvalkretsnamn"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:38"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-giltiga-roster-antrost"
+fields = { "sets" = ["legacy-giltig-antrost"] }
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:194\nreg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:231\n\nComplete accepted native/source-member/operational-text/own-domain review: Batch52-election-complete-source-review.json. Independently present case variants are retained separately where their source roles differ; code and names are never combined.\n\nEvery complete own source member explicitly includes both literal forms of the same reviewed quantity; underlying operation/definition agrees. Retain per-column physical facts and own domain, without claiming equal stored values or collapsing independently present vote/mandate roles. Batch52-election-complete-source-review.json."
+caveat = "Identity follows the complete own native question, explicitly distinct code versus cleartext fields, and independently co-present literal source roles. Vote, mandate and eligible-person contexts remain in each original operational definition. RI/KO prefixed voter-name fields retain their established owners; the additional literal valkretsnamn fields include independently present mandate/eligible-name members and some partly shared voter members. Their detailed source-context routing remains unverified; no equivalence is inferred from that partial relation. No election-type/geographic-level alias, source-value equivalence, new code conversion or physical routing is inferred. Every original field, source scope and own code association is retained."

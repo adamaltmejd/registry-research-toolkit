@@ -1,3 +1,23 @@
+# D close-out recovery
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The catalog-backed recovery retains locked additional outputs from 774 legacy entries:
+299 `errata.delivered`, 239 `representation.parallel`, 183 `identity.partition`, 44
+`errata.column`, seven `identity.column_owner` and two `enrichment.description`. There
+are 849 added statements (571 assertions, 278 setters), plus the independent set/tag
+replay's one IoT `familjetyp` tag membership. These are additional outputs; they do not
+replace the historical stage counts below.
+
+The prior 806 absent-everywhere / 125 other-register ledger-target drops now read 775 /
+100, plus two mixed missing-ID/unplaced entries. Missing/undated-release drops are 49
+after rechecking the prior 426 missing-release drops against exact published releases.
+The output-level inventory, located refusals and final validation status are in [the D
+recovery report](rebuild_recover_report.md); all remaining cohorts have a home in
+REBUILD.md §D deferrals.
+
+Earlier conversion measurements below are historical.
+
 # D-4b fix round 01: readable selectors
 
 Output committed at `bda3ce88fdfed654e74fda9bd7e0b7a943d43b85`. Rerun only to regenerate

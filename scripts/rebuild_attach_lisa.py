@@ -22,7 +22,7 @@ from pathlib import Path
 from rebuild_convert import ROOT, Converter, literal, table_slug
 from rebuild_convert_cases import parse_selector, period_intervals
 from rebuild_convert_groups import final_variables, normalize_sets
-from rebuild_convert_identity import IdentityProjection
+from rebuild_convert_identity import CatalogIdentity
 from rebuild_convert_selectors import OPEN, Snapshot, collapse
 
 OWNER = ("scb", "r34")
@@ -170,6 +170,7 @@ def heading_candidates(sections, targets_by_row, statements):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--frames", type=Path, required=True)
+    parser.add_argument("--catalog", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--write-curation", action="store_true")
     args = parser.parse_args()
@@ -183,7 +184,7 @@ def main():
                 registers.append(row)
             if row.get("register") == "r34":
                 output.write(json.dumps(row, ensure_ascii=False) + "\n")
-    converter = Converter(filtered, args.out)
+    converter = Converter(filtered, args.out, args.catalog)
     path = ROOT / "curation/registers/scb/r34/curation.toml"
     original = base(path)
     generated_section = path.read_text().partition(MARKER)[2]
@@ -218,7 +219,7 @@ def main():
         v: k for (p, r, k), v in converter.tables.items() if (p, r) == OWNER
     }
     # Constructors are source rows before scalar/identity setters. Reuse D's source
-    # snapshot and identity projection, including asserted occurrences in both.
+    # snapshot; identities come from the built catalog for both source and asserted rows.
     for number, (row, period) in enumerate(snapshot.rows):
         if number < source_count:
             continue
@@ -233,7 +234,9 @@ def main():
         )
         converter.rows[OWNER].append(row)
         converter.records.append(row)
-    converter.identity = IdentityProjection(converter.records, converter.ledgers)
+    converter.identity = CatalogIdentity(
+        converter.records, converter.ledgers, args.catalog
+    )
     effective, used, *_ = final_variables(converter, OWNER)
     corrected = [dict(row) for row, _ in snapshot.rows]
     periods = [period for _, period in snapshot.rows]

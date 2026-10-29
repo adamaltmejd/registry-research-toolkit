@@ -180,3 +180,15 @@ kind = "set"
 subject = "riksdagsval: sun2020niva"
 fields = { "classification" = "class/sun-niva/sun2020-niva" }
 evidence = "reg_meta_build/curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: kommunvalkrets"
+fields = { "variable" = "kommunvalkrets-kod" }
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109\n\nComplete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: riksdagsvalkrets"
+fields = { "variable" = "riksdagsvalkrets-kod" }
+evidence = "reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103\n\nComplete original native family and physical-peer closure. Roles follow explicit source definition, operation and own code-list vintage. SUN2000/SUN2020/group/detail/old levels are kept separate; constituency code and literal name stay separate; electricity components and address fields preserve distinct source roles and prior public paths. KNr collision remains separately reviewed, not accepted by this default mapping. All original types, units, periods and contradictory text remain unchanged. Batch53-native-role-proof.json."

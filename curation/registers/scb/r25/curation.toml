@@ -2404,3 +2404,9 @@ kind = "set"
 subject = "individer-och-dodsbon: TNLAN @1990 where key = 'v39966'"
 fields = { sentinels = ["00"] }
 evidence = "reg_meta_build/curation/registers/scb/iot.toml:5055; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to 1bc176d895af8e9195741580bb229eaed66ff48c7d705577b2481a45036fbc24 are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "tags" = ["family-household"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:153"

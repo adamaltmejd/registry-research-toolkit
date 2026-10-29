@@ -28110,3 +28110,626 @@ kind = "set"
 subject = "individer-16plus-ulf: {ssyk12slp,ssyk12up,ssyk12up_1,ssyk12up_2}"
 fields = { "classification" = "class/ssyk/ssyk2012" }
 evidence = "reg_meta_build/curation/classifications/SSYK2012.toml:42\n\nLegacy exact value-set label: Yrke (SSYK 2012) 4-siffrig"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-annat-sy1118"
+fields = { "sets" = ["legacy-arbete-bostaden-annat"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2373\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-forberedelse-sy1114"
+fields = { "sets" = ["legacy-arbete-bostaden-forberedelse"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2379\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-inlasning-sy1112"
+fields = { "sets" = ["legacy-arbete-bostaden-inlasning"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2385\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-jour-sy1115"
+fields = { "sets" = ["legacy-arbete-bostaden-jour"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2391\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-kundkontakt-sy1116"
+fields = { "sets" = ["legacy-arbete-bostaden-kundkontakt"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2397\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-skrivarbete-sy1113"
+fields = { "sets" = ["legacy-arbete-bostaden-skrivarbete"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2403\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-i-hemmet-sy1111"
+fields = { "sets" = ["legacy-arbete-hemmet-timmar"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2367\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-bostaden-dator-sy1117"
+fields = { "sets" = ["legacy-arbete-i-bostaden-dator"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2823\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-hemmet-sy1110"
+fields = { "sets" = ["legacy-arbete-i-hemmet"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2409\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-utanfor-arbetsplatsen-sy1153"
+fields = { "sets" = ["legacy-arbete-utanfor-arbetsplatsen"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2415\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-livsmedelsbutik-tk0080"
+fields = { "sets" = ["legacy-avstand-livsmedelsbutik"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2421\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vaningsplan-i-flerbostadshus-bo0062"
+fields = { "sets" = ["legacy-bo00"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2793\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:datorhjalpmedel-i-bostaden-sy1121"
+fields = { "sets" = ["legacy-datorhjalpmedel-i-bostaden"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2829\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes-fraga-ha0503"
+fields = { "sets" = ["legacy-diabetes-fraga"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2499\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:diabetes-fraga-ha9017"
+fields = { "sets" = ["legacy-diabetes-fraga"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2499\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resor-fardtjanst-p-manad-ha0356"
+fields = { "sets" = ["legacy-fardtjanst-resor-manad"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2361\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-1-sy1131"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-1"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2559\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-2-sy1132"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-2"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2565\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-3-sy1133"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-3"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2571\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-4-sy1134"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-4"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2577\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-5-sy1135"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-5"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2583\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-6-sy1136"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-6"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2589\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fordel-arbete-i-bostaden-7-sy1137"
+fields = { "sets" = ["legacy-fordel-arbete-i-bostaden-7"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2595\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-1-sy1141"
+fields = { "sets" = ["legacy-hemarbete-nackdel-1"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2679\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-3-sy1143"
+fields = { "sets" = ["legacy-hemarbete-nackdel-3"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2691\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-4-sy1144"
+fields = { "sets" = ["legacy-hemarbete-nackdel-4"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2697\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-5-sy1145"
+fields = { "sets" = ["legacy-hemarbete-nackdel-5"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2703\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-6-sy1146"
+fields = { "sets" = ["legacy-hemarbete-nackdel-6"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2709\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-7-sy1147"
+fields = { "sets" = ["legacy-hemarbete-nackdel-7"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2715\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-annan-ha1326"
+fields = { "sets" = ["legacy-hjalp-av-annan"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2631\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-hushallsmedlem-ha1322"
+fields = { "sets" = ["legacy-hjalp-av-hushallsmedlem"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2637\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:total-disponibel-inkomst-fore-sociala-transfereringar-hy023"
+fields = { "sets" = ["legacy-hy02"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2847\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:legat-pa-sjukhus-eller-sjukhem-ha0449"
+fields = { "sets" = ["legacy-legat-pa-sjukhus-sjukhem"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2655\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-individ-ba0025"
+fields = { "sets" = ["legacy-medborgarskap"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2787\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarskap-individ-ba0070"
+fields = { "sets" = ["legacy-medborgarskap"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2787\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:mojligt-arbeta-i-hemmet-sy1151"
+fields = { "sets" = ["legacy-mojligt-arbeta-hemmet"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2673\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:mojligt-antal-timmar-i-hemmet-sy1152"
+fields = { "sets" = ["legacy-mojligt-timmar-hemmet"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2667\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-sun2000-ut3014"
+fields = { "sets" = ["legacy-sun2000niva"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2781\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:nackdel-arbete-i-bostaden-2-sy1142"
+fields = { "sets" = ["legacy-sy1"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2685\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillfalligt-arbete-sy1222"
+fields = { "sets" = ["legacy-sy12"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2811\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timmar-tillfalligt-arbete-sy1232"
+fields = { "sets" = ["legacy-sy12"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2811\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:i-bostaden-tillfalligt-arbete-sy1223"
+fields = { "sets" = ["legacy-tillfalligt-arbete-i-bostaden"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2817\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:i-bostaden-tillfalligt-arbete-sy1233"
+fields = { "sets" = ["legacy-tillfalligt-arbete-i-bostaden"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2817\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:studerar-nu-minst-tva-manader-utb021"
+fields = { "sets" = ["legacy-utb02"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2853\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete-sy1221"
+fields = { "sets" = ["legacy-yrke-tillfalligt-arbete"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2805\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-tillfalligt-arbete-sy1231"
+fields = { "sets" = ["legacy-yrke-tillfalligt-arbete"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2805\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fullfoljd-skolutbildning-ut0030"
+fields = { "sets" = ["legacy-ut0020"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2547\nreg_meta_build/curation/registers/scb/ulf.toml:3896\nreg_meta_build/curation/registers/scb/ulf.toml:3909\nreg_meta_build/curation/registers/scb/ulf.toml:3922\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:timmar-overtid-at0662"
+fields = { "sets" = ["legacy-at0562"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2775\nreg_meta_build/curation/registers/scb/ulf.toml:3974\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:forberedelsearbete-at0671"
+fields = { "sets" = ["legacy-at0571"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2553\nreg_meta_build/curation/registers/scb/ulf.toml:4039\nreg_meta_build/curation/registers/scb/ulf.toml:4052\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:avstand-till-livsmedelsbutik-tk0089"
+fields = { "sets" = ["legacy-avstand-livsmedelsbutik"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2421\nreg_meta_build/curation/registers/scb/ulf.toml:3883\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-resor-fardtjanst-p-manad-ha1355"
+fields = { "sets" = ["legacy-fardtjanst-resor-manad"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2361\nreg_meta_build/curation/registers/scb/ulf.toml:4065\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:fast-lakare-ha0100"
+fields = { "sets" = ["legacy-fast-lakare"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2541\nreg_meta_build/curation/registers/scb/ulf.toml:3623\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:barn-8-tillsammans-ar-fu1485"
+fields = { "sets" = ["legacy-fu1484"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2427\nreg_meta_build/curation/registers/scb/ulf.toml:4208\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:bor-med-foraldrar-period-b-fu2326"
+fields = { "sets" = ["legacy-fu2226"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2469\nreg_meta_build/curation/registers/scb/ulf.toml:4078\nreg_meta_build/curation/registers/scb/ulf.toml:4091\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:bor-med-foraldrar-period-c-fu2336"
+fields = { "sets" = ["legacy-fu2236"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2475\nreg_meta_build/curation/registers/scb/ulf.toml:4104\nreg_meta_build/curation/registers/scb/ulf.toml:4117\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:bor-med-foraldrar-period-d-fu2346"
+fields = { "sets" = ["legacy-fu2246"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2481\nreg_meta_build/curation/registers/scb/ulf.toml:4130\nreg_meta_build/curation/registers/scb/ulf.toml:4143\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:bor-med-foraldrar-period-e-fu2356"
+fields = { "sets" = ["legacy-fu2256"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2487\nreg_meta_build/curation/registers/scb/ulf.toml:4156\nreg_meta_build/curation/registers/scb/ulf.toml:4169\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:bor-med-foraldrar-period-f-fu2366"
+fields = { "sets" = ["legacy-fu2266"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2493\nreg_meta_build/curation/registers/scb/ulf.toml:4182\nreg_meta_build/curation/registers/scb/ulf.toml:4195\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tandlakartid-ha0429"
+fields = { "sets" = ["legacy-ha0426"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2745\nreg_meta_build/curation/registers/scb/ulf.toml:4390\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-annan-ma0220"
+fields = { "sets" = ["legacy-hjalp-av-annan"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2631\nreg_meta_build/curation/registers/scb/ulf.toml:4247\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-av-hushallsmedlem-ma0216"
+fields = { "sets" = ["legacy-hjalp-av-hushallsmedlem"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2637\nreg_meta_build/curation/registers/scb/ulf.toml:4260\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:kontakt-svensk-eller-annan-in0123"
+fields = { "sets" = ["legacy-in0113"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2649\nreg_meta_build/curation/registers/scb/ulf.toml:3844\nreg_meta_build/curation/registers/scb/ulf.toml:3857\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:legat-pa-sjukhus-eller-sjukhem-ha0024"
+fields = { "sets" = ["legacy-legat-pa-sjukhus-sjukhem"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2655\nreg_meta_build/curation/registers/scb/ulf.toml:3935\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:posttyp-km1119"
+fields = { "sets" = ["legacy-posttyp"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2343\nreg_meta_build/curation/registers/scb/ulf.toml:4338\nreg_meta_build/curation/registers/scb/ulf.toml:4351\nreg_meta_build/curation/registers/scb/ulf.toml:4364\nreg_meta_build/curation/registers/scb/ulf.toml:4377\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:pension-inkl-delpension-maka-make-sy0069"
+fields = { "sets" = ["legacy-sm0069"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2727\nreg_meta_build/curation/registers/scb/ulf.toml:3987\nreg_meta_build/curation/registers/scb/ulf.toml:4000\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-heltid-skal-1-sy0093"
+fields = { "sets" = ["legacy-sy0087"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2505\nreg_meta_build/curation/registers/scb/ulf.toml:4403\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-heltid-skal-2-sy0094"
+fields = { "sets" = ["legacy-sy0088"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2511\nreg_meta_build/curation/registers/scb/ulf.toml:4416\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-heltid-skal-3-sy0095"
+fields = { "sets" = ["legacy-sy0089"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2517\nreg_meta_build/curation/registers/scb/ulf.toml:4429\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-heltid-skal-4-sy0096"
+fields = { "sets" = ["legacy-sy0090"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2523\nreg_meta_build/curation/registers/scb/ulf.toml:4442\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:ej-heltid-skal-5-sy0097"
+fields = { "sets" = ["legacy-sy0091"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2529\nreg_meta_build/curation/registers/scb/ulf.toml:4455\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-onskad-omfattning-sy0422"
+fields = { "sets" = ["legacy-sy0372"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2607\nreg_meta_build/curation/registers/scb/ulf.toml:3636\nreg_meta_build/curation/registers/scb/ulf.toml:3649\nreg_meta_build/curation/registers/scb/ulf.toml:3662\nreg_meta_build/curation/registers/scb/ulf.toml:3675\nreg_meta_build/curation/registers/scb/ulf.toml:3688\nreg_meta_build/curation/registers/scb/ulf.toml:3701\nreg_meta_build/curation/registers/scb/ulf.toml:3714\nreg_meta_build/curation/registers/scb/ulf.toml:3727\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbete-heltid-sy0423"
+fields = { "sets" = ["legacy-sy0373"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2601\nreg_meta_build/curation/registers/scb/ulf.toml:4273\nreg_meta_build/curation/registers/scb/ulf.toml:4286\nreg_meta_build/curation/registers/scb/ulf.toml:4299\nreg_meta_build/curation/registers/scb/ulf.toml:4312\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatt-sy0030"
+fields = { "sets" = ["legacy-sysselsatt"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2739\nreg_meta_build/curation/registers/scb/ulf.toml:3870\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-postombud-1-tk0195"
+fields = { "sets" = ["legacy-tk0095"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2763\nreg_meta_build/curation/registers/scb/ulf.toml:4026\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:oro-hotelser-tr0057"
+fields = { "sets" = ["legacy-tr0056"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2721\nreg_meta_build/curation/registers/scb/ulf.toml:4325\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:grundskolekompetens-ut3510"
+fields = { "sets" = ["legacy-ut0311"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2613\nreg_meta_build/curation/registers/scb/ulf.toml:3740\nreg_meta_build/curation/registers/scb/ulf.toml:3753\nreg_meta_build/curation/registers/scb/ulf.toml:3766\nreg_meta_build/curation/registers/scb/ulf.toml:3779\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieskolekompetens-yrkeslinje-ut3511"
+fields = { "sets" = ["legacy-ut0312"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2625\nreg_meta_build/curation/registers/scb/ulf.toml:3818\nreg_meta_build/curation/registers/scb/ulf.toml:3831\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieskolekompetens-teoretisk-linje-ut3512"
+fields = { "sets" = ["legacy-ut0313"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2619\nreg_meta_build/curation/registers/scb/ulf.toml:3792\nreg_meta_build/curation/registers/scb/ulf.toml:3805\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-utbildning-ut3514"
+fields = { "sets" = ["legacy-ut0315"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2349\nreg_meta_build/curation/registers/scb/ulf.toml:4221\nreg_meta_build/curation/registers/scb/ulf.toml:4234\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:studerande-vid-mattillfallet-ut2350"
+fields = { "sets" = ["legacy-ut23"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2733\nreg_meta_build/curation/registers/scb/ulf.toml:3948\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:annan-yrkesinriktad-utbildning-ut0314"
+fields = { "sets" = ["legacy-ut3513"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2355\nreg_meta_build/curation/registers/scb/ulf.toml:3519\nreg_meta_build/curation/registers/scb/ulf.toml:3532\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-2-ha0644"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-2"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2439\nreg_meta_build/curation/registers/scb/ulf.toml:3558\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-3-ha0645"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-3"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2445\nreg_meta_build/curation/registers/scb/ulf.toml:3571\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-5-ha0647"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-5"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2457\nreg_meta_build/curation/registers/scb/ulf.toml:3597\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-6-ha0648"
+fields = { "sets" = ["legacy-besvar-svarighetsgrad-6"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2463\nreg_meta_build/curation/registers/scb/ulf.toml:3610\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-1-ha0643"
+fields = { "sets" = ["legacy-ha06"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2433\nreg_meta_build/curation/registers/scb/ulf.toml:3545\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:besvarens-svarighetsgrad-4-ha0646"
+fields = { "sets" = ["legacy-ha064"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2451\nreg_meta_build/curation/registers/scb/ulf.toml:3584\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-lantbrevbarare-tk0194"
+fields = { "sets" = ["legacy-tillgang-lantbrevbarare"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2757\nreg_meta_build/curation/registers/scb/ulf.toml:4013\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgang-till-butiksbuss-e-dyl-tk0183"
+fields = { "sets" = ["legacy-tk0"] }
+evidence = "reg_meta_build/curation/registers/scb/ulf.toml:2751\nreg_meta_build/curation/registers/scb/ulf.toml:3961\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json.\n\nEvery participating own source member explicitly contains every named literal form of this same reviewed source quantity. Keep each original physical metadata and separately fingerprinted own domain. No stored-code/value equivalence or suffix semantics. Batch51-ULF87-identity-proof.json.\n\nComplete own native-family, source-member, operational-text and bound own-domain review. No column-suffix meaning, inferred equivalence, later-list copy or official-book substitution. Batch51-ULF87-identity-proof.json."
+caveat = "Catalog identity follows the complete own exported question and reviewed literal/source-context maps. Distinct documented population, job, derived category or encoding contexts remain separate guarded quantities. Unqualified historical context is retained without retroactive interpretation. Every raw wording, code/label, original storage and scope stays intact; statistical/value equivalence is not asserted."

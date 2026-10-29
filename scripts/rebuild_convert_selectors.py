@@ -53,7 +53,7 @@ class Snapshot:
         register_bounds = converter.context_registers.get(owner, {})
         defaults = {}
         for (pid, rid, handle), source in converter.context_tables.items():
-            if (pid, rid) == owner:
+            if (pid, rid) == owner and (pid, rid, handle) in converter.tables:
                 defaults[converter.tables[pid, rid, handle]] = (
                     source.get("from") or register_bounds.get("from") or OPEN[0],
                     source.get("to") or register_bounds.get("to") or OPEN[1],
@@ -86,7 +86,7 @@ class Snapshot:
                 continue
             releases[match[1], match[2]] = periods[0]
         for row in converter.rows[owner]:
-            table = converter.tables[*owner, row["table"]]
+            table = converter.tables.get((*owner, row["table"]))
             period = (
                 releases.get((table, row["release"]))
                 if row.get("release")
