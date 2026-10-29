@@ -779,6 +779,12 @@
                     "$ref": "#/$defs/ShowText"
                   },
                   "type": "array"
+                },
+                "unit_types": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
                 }
               },
               "required": [
@@ -787,6 +793,7 @@
                 "definition",
                 "register",
                 "period",
+                "unit_types",
                 "texts",
                 "spellings",
                 "tables",

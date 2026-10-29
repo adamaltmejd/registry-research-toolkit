@@ -4,7 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# Contract v6 reads catalog schema v5. Every result is answered from the queries and
+# v5 reads the v4 catalog (schema.md v4). Every result is answered from the queries and
 # indexes of schema.md §2.1.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
@@ -40,7 +40,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "6.0.0"
+contract_version = "5.1.0"
 
 [[operation]]
 name = "search"
@@ -333,7 +333,7 @@ note = """A `kind`-tagged summary: root (providers), provider (registers), regis
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, unit_type, cadence, spans \
 [Period], releases [Release], row_keys [{fqid, spelling, period}]), variable (name, \
-definition, register, period, texts [{period, label, definition, \
+definition, register, period, unit_types, texts [{period, label, definition, \
 operational_definition, unit}], spellings [{spelling, kind}], tables [fqid]), \
 classification_family (name, kind, publisher, versions [{fqid, label, period}]) and \
 classification_version (family, label, period, value_set ValueSetRef, levels). \

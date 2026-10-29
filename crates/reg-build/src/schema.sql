@@ -1,4 +1,4 @@
--- The catalog file, schema v5 (crates/DESIGN.md, "The catalog builder").
+-- The catalog file, schema v4 (crates/DESIGN.md, "The catalog builder").
 PRAGMA page_size = 4096;
 PRAGMA application_id = 1380271939;      -- 'REGC'
 -- user_version: emit sets it from reg_core::CATALOG_SCHEMA_VERSION (= meta schema_version).
@@ -168,6 +168,13 @@ CREATE TABLE variable (
   CHECK (start < end)
 ) STRICT;
 CREATE INDEX variable_register ON variable(register_id, pid);
+
+-- simplify: Unwritten since D (table-only unit types); delete with the next schema-major change.
+CREATE TABLE variable_unit_type (
+  variable_id  INTEGER NOT NULL REFERENCES variable(id),
+  unit_type_id INTEGER NOT NULL REFERENCES unit_type(id),
+  PRIMARY KEY (variable_id, unit_type_id)
+) STRICT, WITHOUT ROWID;
 
 -- Definition runs: descriptive text over time.
 CREATE TABLE variable_text (

@@ -3739,6 +3739,7 @@
               "definition",
               "register",
               "period",
+              "unit_types",
               "texts",
               "spellings",
               "tables",
@@ -3787,6 +3788,12 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ShowText"
+                }
+              },
+              "unit_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
                 }
               }
             }

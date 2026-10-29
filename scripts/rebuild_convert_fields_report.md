@@ -348,18 +348,17 @@ claims are already marked set-wide by the original LKF1992/LKF1993 lists; no sco
 setter is added. The actual empty code remains a real item: only the four literal
 `[BLANK]` declarations listed above are currently curated.
 
-The unwritten `variable_unit_type` table, its variable-show field and reader, and its
-diff facet are deleted. The catalog schema is 5 and operation contract is 6.0.0; project
-document schema remains 5.1.0. Exact-version guards are preserved: schema-5 `diff` and
-`verify --previous` refuse the schema-4 0.66.0 catalog. The Operator's comparison must
-account for this intentional schema boundary; no compatibility path or bypass was
-introduced.
+The unwritten `variable_unit_type` table and its variable-show field and reader remain
+for schema-4 release comparison and retirement verification. Nothing writes the table
+since D's table-only unit types; its DDL schedules deletion with the next schema-major
+change. The variable unit-type diff facet remains removed. The catalog schema stays 4
+and operation contract stays 5.1.0, as on `origin/main`.
 
 Operator-provided evidence for parent `06687d8d`: its real build and
 `verify --previous 0.66.0` passed, and its diff changed only sentinel flags on 965 value
 sets. Those are the Operator's results, not a new full build in this fix.
 
-Checks run in this fix:
+Historical checks run in fix-03 (before fix-04 restored schema 4):
 
 - `cargo build --release -p reg-build --locked` passed.
 - The saved pre-fix builder silently reproduced the defect: lock/build/verify passed
@@ -393,3 +392,21 @@ Checks run in this fix:
 
 No real-seed build, full-artifact verify/diff, `gate.py regen`, release publication or
 PR merge ran. The Operator reruns full validation after push.
+
+Fix-04 restores the schema-4 table/reader and contract 5.1.0 only. The variable
+unit-type diff facet remains removed; all sentinel changes and locked curation from
+fix-03 remain unchanged. Existing API, admission and order oracles are restored to
+their pre-bump values; no new tests or weaker assertions were added.
+
+Checks run in fix-04:
+
+- `gate.py g0 rust` passed: static checks, workspace Rust tests, 116 script tests,
+  byte-identical synthetic builds and 203 conformance checks (two skipped). Gate times:
+  G0 34 s, Rust 9 s.
+- Explicit synthetic build and `verify` passed. `verify --previous` against an identical
+  schema-4 synthetic copy passed; `diff` against that copy exited 0 with no changes.
+  The artifact carries schema 4 and the retained `variable_unit_type` table is empty.
+- Independent restoration review and `git diff --check` passed.
+
+No real-seed build, 0.66.0 artifact comparison, `gate.py regen`, publication or PR merge
+ran in fix-04. The Operator runs full release verification after push.

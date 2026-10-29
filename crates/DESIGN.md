@@ -765,10 +765,7 @@ overlapping curated overrides are refused at both locations.
   skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. Schema 5 removes the unwritten `variable_unit_type`
-  table. Unit types remain table metadata; variable summaries no longer expose an
-  always-empty membership field. This also makes the operation contract 6.0.0. Schema-4
-  releases cannot be passed to the schema-5 `diff` or `verify --previous` commands.
+  other version is not comparable.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
@@ -1030,7 +1027,7 @@ and `sun2000niva`.
 ```json
 {
   "data": {
-    "catalog": {"generation_id": "9f2c…", "catalog_version": "dev", "schema_version": "5"},
+    "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
     "project": {"name": "income-panel", "schema_version": "5.1.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [

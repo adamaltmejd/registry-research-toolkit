@@ -14,9 +14,9 @@
 //! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and
 //! `crates/reg-core/tests/project/corpus/`.
 
-/// The catalog file's schema version: `PRAGMA user_version` and
+/// The catalog file's schema version (schema v4 §3.2): `PRAGMA user_version` and
 /// `meta.schema_version` (as decimal text). Readers admit exactly this version.
-pub const CATALOG_SCHEMA_VERSION: u32 = 5;
+pub const CATALOG_SCHEMA_VERSION: u32 = 4;
 
 mod case_folding;
 mod grammar;

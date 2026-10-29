@@ -15,7 +15,7 @@ use serde_json::Value;
 pub use error::{Code, Error, Spec};
 
 /// `contract_version` in `conformance/api/operations.toml`.
-pub const CONTRACT_VERSION: &str = "6.0.0";
+pub const CONTRACT_VERSION: &str = "5.1.0";
 const DB_FILENAME: &str = "reg_meta.db";
 /// The `meta` keys every catalog carries (`reg-build`'s `schema.sql` and `checks.sql`).
 const REQUIRED_META: [&str; 10] = [
