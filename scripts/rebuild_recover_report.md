@@ -1,3 +1,174 @@
+# D recovery fix-01
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The Operator's strict build of `4f49e5aa` refused 34 unminted r193 variables. The
+earlier successful lock also lacked the D-11 concurrent-fold guard; it did not certify
+that invariant. The original 4f49e5aa accounting below is historical and superseded by
+this fix.
+
+## Current curation
+
+The branch now retains 827 additional statements relative to `73bde698`: 571 assertions
+and 256 setters across 22 statement files. Retained setters are 229 `sets`, 24
+`operational_definition`, two `description` and one `tags`. No newly recovered
+`set variable` remains. Additional outputs come from 299 delivered declarations, 239
+parallel declarations, 176 partitions, 44 column declarations and two descriptions, plus
+one tag membership.
+
+The new resolver guard refuses concurrent different folded spellings within one table at
+lock time. It reuses the resolver's existing overlap components; sequential spellings
+and cross-table assignments remain allowed. The CLI regression case failed against the
+pre-fix binary because it accepted an inclusive one-day overlap; it passes after the
+fix, beside allowed twins, with an externally authored located D-11 diagnostic. Every
+fixture ID retains unselected occurrences.
+
+Eighteen recovered setters are dropped under D-11: 12 SNI-edition setters, two KSJU
+stratum setters, two nomination-code setters, one LISA FInk90 setter and one HUT
+identifier setter. The resolver reports a register-wide assignment failure at each
+assignment location, so valid pre-PR assignments were preserved instead of deleting
+every reported line. Sources and subjects are listed below.
+
+A disposable lock-only variable-selector probe resolved the minted LISA ID
+`naringsgren-storsta-forvarvskalla-ku1astsni2007` after those drops. The same probe
+found `stratum-strat` empty under the five recovered FoU STRAT assignments; those five
+are also dropped pending explicit identity/retirement review. All 23 recovered identity
+setters are now deferred in the defined post-D id sprint. Probe statements never entered
+authoritative curation or publication.
+
+## Append-only tooling
+
+The replacement CLI and writer mode are deleted. The two unreachable
+classification-conversion modules and their dead report/audit branches are deleted;
+historical reports remain. Recovery only appends to a scratch copy and refuses output
+paths inside authoritative `curation/`. Unknown table joins raise located refusals;
+tables are not matched by display name. Membership normalization reads published catalog
+identities and defers proposed identity changes until a refreshed locked catalog exists,
+rather than predicting assignments in Python.
+
+Overlap follows the resolver's edition/union rules. IoT table/spelling literals are
+removed; an exact-ledger source-inventory recount gives 117 missing set memberships and
+one missing tag membership. The four IoT placement questions remain deferred in
+REBUILD.md. The 20-row remaining-work table defines edition/qualifier measurement, then
+the full-catalog id sprint, then SWECOV curation in E.
+
+## New r193 IDs for review
+
+These are 34 legitimate recovered assertions: 17 `AvdFTH`, 12 `SkolenhetsKodFTH` and
+five `SkolKodFTH`. Without documented native keys, each assertion has its own source key
+and therefore its own one-release identity. No continuity was inferred. Repeated labels
+use the D-12 label-plus-column fallback and counters last; all slugs are at most 44
+characters. Existing, table and retired namespaces remain reserved. Every new anchor
+names an existing assertion's exact table, column and source release day. All suffixes
+below are under `scb/grundskola-elever/`.
+
+  | Public ID suffix                               | Label                        | Dated ledger anchor                              |
+  | ---------------------------------------------- | ---------------------------- | ------------------------------------------------ |
+  | `fritidshemsavdelningens-namn-avdfth`          | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2008-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-2`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2009-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-3`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2010-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-4`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2011-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-5`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2012-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-6`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2013-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-7`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2014-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-8`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2015-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-9`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2016-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-10`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2017-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-11`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2018-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-12`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2019-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-13`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2020-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-14`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2021-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-15`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2022-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-16`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2023-10-15`           |
+  | `fritidshemsavdelningens-namn-avdfth-17`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2024-10-15`           |
+  | `skolkod-fritidshem-skolkodfth`                | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2008-10-15`       |
+  | `skolkod-fritidshem-skolkodfth-2`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2009-10-15`       |
+  | `skolkod-fritidshem-skolkodfth-3`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2010-10-15`       |
+  | `skolkod-fritidshem-skolkodfth-4`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2011-10-15`       |
+  | `skolkod-fritidshem-skolkodfth-5`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2012-10-15`       |
+  | `skolenhetskod-fritidshem-skolenhetskodfth`    | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2013-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-2`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2014-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-3`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2015-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-4`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2016-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-5`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2017-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-6`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2018-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-7`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2019-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-8`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2020-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-9`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2021-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-10` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2022-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-11` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2023-10-15` |
+  | `skolenhetskod-fritidshem-skolenhetskodfth-12` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2024-10-15` |
+
+## Dropped recovery setters
+
+  | Source                                                                 | Subject                                      | Reason / home                                                                                                                               |
+  | ---------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+  | reg_meta_build/curation/registers/scb/lisa.toml:2592                   | individer-16plus: fink90                     | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | arbetsstallen: ast_sni2007                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | foretag: org_sni2007                         | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-15plus: astsni2007                 | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni2007                 | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni69                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni92                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-15plus: ku2astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-16plus: ku2astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-15plus: ku1astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-16plus: ku1astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-15plus: ku3astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-16plus: ku3astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/hut.toml:732                     | hushall-2021: undnr                          | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: strata        | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: stratum       | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109 | kommunfullmaktigeval: kommunvalkrets         | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103 | riksdagsval: riksdagsvalkrets                | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
+  | reg_meta_build/curation/registers/scb/fou.toml:15338                   | uoh-personal: strat @2019                    | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
+  | reg_meta_build/curation/registers/scb/fou.toml:15365                   | uoh-personal: strat where release = 'r18421' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
+  | reg_meta_build/curation/registers/scb/fou.toml:15347                   | uoh-personal: strat where release = 'r18431' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
+  | reg_meta_build/curation/registers/scb/fou.toml:15374                   | uoh-personal: strat where release = 'r19474' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
+  | reg_meta_build/curation/registers/scb/fou.toml:15356                   | uoh-personal: strat where release = 'r19506' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
+
+## Fix-01 validation
+
+  | Check                                          | Result                                                              |
+  | ---------------------------------------------- | ------------------------------------------------------------------- |
+  | Release `reg-build` compile                    | exit 0                                                              |
+  | New D-11 CLI corpus against the pre-fix binary | failed as expected: lock wrongly accepted the overlap               |
+  | Same corpus after the guard                    | passed, 0.84 s                                                      |
+  | Initial whole-root lock                        | refused D-11 assignments; pre-PR assignments preserved              |
+  | Disposable population-probe lock               | refused only the empty FoU `stratum-strat` probe; LISA KU1 resolved |
+  | Revised authoritative whole-root lock          | exit 0, after dropping all 23 recovered variable setters            |
+  | Separate synthetic build / verify              | exit 0 / exit 0                                                     |
+  | Initial post-fix `gate.py g0 rust`             | passed; 116 script tests, 204 conformance passed / two skipped      |
+  | Recovery output under `curation/`              | refused before writing; no directory created                        |
+
+The new test pins the Curation TOML → located lock-refusal boundary. Its expected
+diagnostic is authored from D-11, not computed from resolver output. No existing
+assignment lock/refusal corpus covered it. It adds one case with an inclusive one-day
+edge and allowed nonconcurrent/cross-table twins; no test was deleted. The previous
+conformance run was 203 cases in 3.58 s; the first post-fix run was 204 cases in 3.97 s,
+both inside the 30 s package budget.
+
+The table/display-name and assignment-prediction paths are removed, not replaced with a
+Python resolver. Focused probes covered missing-table source locations, catalog-only
+membership reads, exact-spelling unit routing and scratch-output confinement. The main
+D-12 namespace/anchor checks preserve every existing r193 ledger entry and reserve
+existing, table and retired names.
+
+Not run in fix-01: a real-seed catalog build, real-catalog `verify --previous`,
+comparison against 0.66.0, release gate, R suites, full converter replay or
+`gate.py regen`. The Operator reruns the strict build and real verification. No PR
+merge. Task scratch is deleted before completion.
+
+Final authoritative-checkout `gate.py g0 rust` also passed: G0 18 s and Rust 6 s; 116
+script tests and 204 conformance cases passed, two conformance cases skipped. The
+synthetic double build remained byte-identical. Separate synthetic build/verify both
+exited 0. Fresh independent review confirmed the current 827 statement count, all 34
+unique dated ID anchors, unchanged original IDs, exact pre-PR statement byte prefixes
+and the 20-row remaining-work table. Final Markdown format/lint and `git diff --check`
+passed.
+
+## Historical 4f49e5aa accounting
+
 # D recovery close-out
 
 Temporary conversion evidence; deleted at milestone F (cutover).

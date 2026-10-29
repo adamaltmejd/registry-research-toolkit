@@ -1,42 +1,19 @@
-#!/usr/bin/env python3
-"""One-shot curation converter/report; deleted at milestone F (REBUILD.md).
+"""Append-only recovery helpers; deleted at milestone F (REBUILD.md).
 
-Extends the raw-TOML partition/owner census in scratchpad/fable/partitions.py.
-The exact historical dry-run program is lost; its expected table is in REBUILD.md.
-Reads reg-build read JSONL, never the legacy builder's IR.
-Classification label conversion also joins exact descriptors from the pinned raw CSVs. Generated statements
-are proposals: lock reviews today's premises, not the old builder's fingerprints.
-
-Run reg-build read first, then:
-  uv run --no-project scripts/rebuild_convert.py --frames DIR --catalog BUILT_DB --out SCRATCH
-  ... --lock --inputs DIR --assets DIR
-For D-9 only (preserves unrelated authored statements and locks):
-  uv run --no-project scripts/rebuild_convert.py --classifications-only --frames DIR --catalog BUILT_DB \
-    --assets ASSETS --out SCRATCH --write-curation --lock --inputs INPUTS
-The default mode remains the earlier full-tree conversion census.
-The report output root must not exist. --write-curation replaces the checkout's
-curation statements and locks directly; otherwise output stays in scratch.
-Exit 1 when the requested lock fails, after writing the report.
+Root curation is authoritative. Run scripts/rebuild_recover.py to propose additions
+in a scratch copy, then certify them with reg-build lock. No replacement mode exists.
 """
 
-import argparse
 import collections
-import gc
 import json
 import re
 import shutil
-import subprocess
-import time
 import tomllib
 from pathlib import Path
 
-from rebuild_convert_cases import CaseSafety, audit_cached
-from rebuild_convert_classification_bindings import convert as classification_bindings
-from rebuild_convert_classifications import convert as classifications
+from rebuild_convert_cases import CaseSafety
 from rebuild_convert_deferred import convert as deferred, period
-from rebuild_convert_groups import normalize_sets
 from rebuild_convert_identity import CatalogIdentity
-from rebuild_convert_selectors import collapse
 
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED = {
@@ -304,10 +281,7 @@ class Converter:
         self.grouping_deferred = []
         self.case_safety = CaseSafety(self)
         self.current_kind = ""
-        self.cached_audit = {}
-        self.current_audit = {}
         self.native_registers = {}
-        self.previous_cases = set()
 
     def normalize_identity(self):
         """Remove catalog-satisfied statements before checking local mint authority."""
@@ -315,10 +289,7 @@ class Converter:
         for owner, statements in self.statements.items():
             lookup = collections.defaultdict(list)
             for row in self.rows[owner]:
-                try:
-                    subject = self.selector(row)
-                except ValueError:
-                    continue
+                subject = self.selector(row)
                 lookup[subject].append(row)
                 base = re.sub(r" and release = '[^']*'$", "", subject)
                 if base != subject:
@@ -460,14 +431,7 @@ class Converter:
         return source.get("from"), source.get("to")
 
     def selector(self, row):
-        table = self.tables.get((row["provider"], row["register"], row["table"]))
-        if table is None:
-            # Implicit tables have no ledger entry and use the empty handle.
-            if row["table"] != "":
-                raise ValueError("source table has no ledger slug")
-            table = self.ledgers.get((row["provider"], row["register"]), {}).get(
-                "public", row["register"]
-            )
+        table = self.identity.table(row)
         if any(
             "'" in v or "\n" in v or "\r" in v
             for v in (row["source_key"], row.get("release") or "")
@@ -563,10 +527,7 @@ class Converter:
         if owner not in self.selector_members:
             members = collections.defaultdict(set)
             for row in self.rows[owner]:
-                try:
-                    subject = self.selector(row)
-                except ValueError:
-                    continue
+                subject = self.selector(row)
                 base = re.sub(r" and release = '[^']*'$", "", subject)
                 members[base].add(subject)
             self.selector_members[owner] = members
@@ -663,11 +624,7 @@ class Converter:
             slug = variants.get(
                 variant, self.tables.get((provider, register, variant), variant)
             )
-            rows = [
-                r
-                for r in rows
-                if self.tables.get((provider, register, r["table"]), r["table"]) == slug
-            ]
+            rows = [r for r in rows if self.identity.table(r) == slug]
         editions = entry.get("editions") or (
             [entry["edition"]] if "edition" in entry else None
         )
@@ -1133,15 +1090,10 @@ class Converter:
                 result.update(outcome="dropped", reason=str(error))
             self.results.append(result)
 
-    def write(self, write_curation=False, *, preserve=False):
-        self.curation = ROOT / "curation" if write_curation else self.out / "curation"
-        if not write_curation:
-            shutil.copytree(ROOT / "curation", self.curation)
-        if not preserve:
-            for path in self.curation.rglob("curation.lock"):
-                path.unlink()
-            for path in self.curation.rglob("curation.toml"):
-                path.unlink()
+    def write(self):
+        """Append proposals to a fresh scratch copy; never replace authored curation."""
+        self.curation = self.out / "curation"
+        shutil.copytree(ROOT / "curation", self.curation)
         self.counts = collections.Counter()
         self.locations = {}
         for (provider, register), records in sorted(self.statements.items()):
@@ -1149,7 +1101,7 @@ class Converter:
                 continue
             path = self.curation / "registers" / provider / register / "curation.toml"
             path.parent.mkdir(parents=True, exist_ok=True)
-            text = path.read_text() if preserve and path.exists() else ""
+            text = path.read_text() if path.exists() else ""
             next_line = text.count("\n") + 1
             for key, record in sorted(records.items()):
                 statement = dict(record["statement"])
@@ -1161,14 +1113,14 @@ class Converter:
                     + "\n"
                 )
                 block = "\n[[statement]]\n" + body
-                if preserve and block in text:
+                if block in text:
                     line = text[: text.index(block)].count("\n") + 2
                 else:
                     line = next_line + 1
                     text += block
                     next_line = text.count("\n") + 1
                 self.locations[str(path.resolve()), line] = record
-                relative = path.relative_to(ROOT if write_curation else self.out)
+                relative = path.relative_to(self.out)
                 record["location"] = f"{relative}:{line}"
                 kind = statement["kind"]
                 self.counts[kind] += 1
@@ -1252,7 +1204,6 @@ class Converter:
         outcomes = collections.Counter(r["outcome"] for r in self.results)
         data = {
             "deletion_gate": "milestone F (cutover)",
-            "classification_conversion": getattr(self, "classification_conversion", {}),
             "source_entries": len(self.results),
             "outcomes": dict(outcomes),
             "statement_counts": dict(sorted(self.counts.items())),
@@ -1266,17 +1217,6 @@ class Converter:
             "identity_deferred": self.identity_deferred,
             "case_audit": dict(self.case_safety.counts),
             "case_conflicts": self.case_safety.conflicts,
-            "previous_proposal_audit": self.cached_audit,
-            "current_proposal_audit": getattr(self, "current_audit", {}),
-            "previous_case_drops": dict(
-                collections.Counter(
-                    ("still dropped: " + r["reason"])
-                    if r["outcome"] == "dropped"
-                    else "emitted"
-                    for r in self.results
-                    if r["source"] in self.previous_cases
-                )
-            ),
             "explicit_legacy_set_field_requests": dict(
                 sorted(self.field_demand.items())
             ),
@@ -1304,85 +1244,6 @@ class Converter:
         (self.out / "report.json").write_text(
             json.dumps(data, ensure_ascii=False, indent=2) + "\n"
         )
-        if getattr(self, "classification_conversion", None):
-            text = [
-                "# D-9 classification conversion",
-                "",
-                "Temporary conversion evidence; deleted with this converter at milestone F.",
-                "ICD has no structured family publisher: its four edition publishers are preserved verbatim in inventory evidence.",
-                "",
-                f"Lock: {lock['status']}. Converted entries are certified only after a successful lock.",
-                "",
-                "| Source | Category | Outcome | Expanded statements / reason |",
-                "| --- | --- | --- | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {r['category']} | {r['outcome']} | {r.get('statements', r.get('reason', ''))} |"
-                for r in self.results
-            ]
-            text += [
-                "",
-                "## Exact label-rule expansion",
-                "",
-                "| Source | Label | Matched occurrences | Expanded bindings | Emitted statements | Covered by book binding | Refused occurrences | Outcome |",
-                "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {r['label']} | {r.get('matched_occurrences', 0)} | {r.get('statements', 0)} | {r.get('emitted_statements', r.get('statements', 0))} | {r.get('covered_by_book_binding', 0)} | {len(r.get('refused_occurrences', []))} | {r['outcome']} |"
-                for r in self.results
-                if r["category"] == "classification-label-rule"
-            ]
-            text += [
-                "",
-                "## Reviewed book identities",
-                "",
-                "| Source | Old short name | Exact version |",
-                "| --- | --- | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {r['short_name']} | {r['fqid']} |"
-                for r in self.results
-                if r["category"] == "classification"
-            ]
-            text += [
-                "",
-                "## Explicit succession edges",
-                "",
-                "| Source | Predecessor | Successor | Origin |",
-                "| --- | --- | --- | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {r['predecessor']} | {r['successor']} | {r['reason']} |"
-                for r in self.results
-                if r["category"] == "classification-succession"
-            ]
-            text += [
-                "",
-                "## Refused source occurrences",
-                "",
-                "| Rule | Source occurrence |",
-                "| --- | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {at['input']}:{at['at']} |"
-                for r in self.results
-                for item in r.get("refused_occurrences", [])
-                for at in [item.get("locator", item)]
-            ]
-            text += [
-                "",
-                "## Timeline editions",
-                "",
-                "| Source | Exact version | From | To |",
-                "| --- | --- | --- | --- |",
-            ]
-            text += [
-                f"| {r['source']} | {version} | {lower} | {upper} |"
-                for r in self.results
-                for version, lower, upper in r.get("editions", [])
-            ]
-            (self.out / "report.md").write_text("\n".join(text) + "\n")
-            return
         text = [
             "# One-shot curation conversion report",
             "",
@@ -1433,9 +1294,6 @@ class Converter:
             "",
             f"Case safety: `{json.dumps(dict(self.case_safety.counts), sort_keys=True)}`. Remaining cases are listed in report.json.",
             "",
-            f"Cached proposal audit: `{json.dumps(self.cached_audit.get('counts', {}), sort_keys=True)}`. This is a static reconstruction, not a new real-frame lock.",
-            "",
-            f"Missing ledger causes: `{json.dumps(self.cached_audit.get('missing_ledger_causes', {}), sort_keys=True)}`. A same-named id in another register is not authority to borrow it; changed groups without local ids wait for D-12.",
         ]
         text += [
             "",
@@ -1489,116 +1347,3 @@ class Converter:
             "",
         ]
         (self.out / "report.md").write_text("\n".join(text) + summary)
-
-
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--frames", type=Path, required=True)
-    parser.add_argument("--catalog", type=Path, required=True)
-    parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--lock", action="store_true")
-    parser.add_argument("--classifications-only", action="store_true")
-    parser.add_argument("--write-curation", action="store_true")
-    parser.add_argument("--inputs", type=Path)
-    parser.add_argument("--assets", type=Path)
-    parser.add_argument("--previous-proposals", type=Path)
-    args = parser.parse_args()
-    if args.write_curation and args.previous_proposals:
-        parser.error("--previous-proposals requires scratch curation output")
-    args.out = args.out.resolve()
-    if args.out.exists() or ROOT / "curation" in (args.out, *args.out.parents):
-        parser.error("--out must be a new scratch directory outside curation/")
-    if not list(args.frames.glob("*.jsonl")):
-        parser.error("--frames contains no reg-build read JSONL")
-    args.out.mkdir(parents=True)
-    converter = Converter(args.frames, args.out, args.catalog)
-    if args.previous_proposals:
-        converter.cached_audit = audit_cached(converter, args.previous_proposals)
-        previous = json.loads((args.previous_proposals / "report.json").read_text())
-        converter.previous_cases = {
-            r["source"]
-            for r in previous["entries"]
-            if r.get("reason")
-            == "literal-only column selector cannot distinguish case-folded source rows"
-        }
-    if args.classifications_only:
-        if not args.assets:
-            parser.error(
-                "--classifications-only requires --assets for exact source descriptors"
-            )
-        classification_bindings(converter, args.write_curation, args.assets)
-    else:
-        for provider in ("scb", "fk", "sos"):
-            for path in sorted(
-                (ROOT / "reg_meta_build/curation/registers" / provider).glob("*.toml")
-            ):
-                if not path.name.endswith(".auto.toml"):
-                    converter.convert_file(path)
-        for provider, register, path, line, statement, reason in classifications(
-            ROOT, register_public=converter.public
-        ):
-            at = f"{path}:{line}"
-            result = {
-                "source": at,
-                "category": "classification",
-                "outcome": "converted" if statement else "dropped",
-            }
-            if statement:
-                converter.add(at, provider, register, statement)
-            else:
-                result["reason"] = reason
-            converter.results.append(result)
-        converter.normalize_identity()
-        normalize_sets(converter)
-        collapse(converter)
-        converter.write(args.write_curation)
-    lock = {"status": "not run", "refusals": []}
-    converter.report(lock)
-    if args.previous_proposals:
-        converter.current_audit = audit_cached(converter, args.out)
-    if args.lock:
-        if not args.inputs:
-            parser.error("--lock requires --inputs")
-        command = [
-            str(ROOT / "target/release/reg-build"),
-            "lock",
-            "--inputs",
-            str(args.inputs),
-            "--curation",
-            str(converter.curation),
-        ]
-        if args.assets:
-            command += ["--assets", str(args.assets)]
-        converter.records.clear()
-        converter.rows.clear()
-        converter.releases.clear()
-        converter.value_sets.clear()
-        converter.context_tables.clear()
-        converter.context_registers.clear()
-        gc.collect()
-        started = time.monotonic()
-        result = subprocess.run(command, capture_output=True, text=True, check=False)
-        (args.out / "lock.log").write_text(result.stdout + result.stderr)
-        lock = {
-            "status": "accepted" if result.returncode == 0 else "refused",
-            "exit_code": result.returncode,
-            "elapsed_seconds": round(time.monotonic() - started, 3),
-            "refusals": result.stderr.splitlines(),
-        }
-    converter.report(lock)
-    print(
-        json.dumps(
-            {
-                "source_entries": len(converter.results),
-                "statement_counts": converter.counts,
-                "lock": lock["status"],
-            },
-            sort_keys=True,
-        )
-    )
-    if lock["status"] == "refused":
-        raise SystemExit(1)
-
-
-if __name__ == "__main__":
-    main()

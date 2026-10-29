@@ -133,3 +133,11 @@ The combined D recovery subsequently passed its whole-root lock, including the n
 `familjetyp` tag. The final locked curation and preservation checks are recorded in [the
 D recovery report](rebuild_recover_report.md). No new real catalog build, real-catalog
 verification or 0.66.0 diff ran in this close-out.
+
+## Fix-01 ledger-only recount
+
+Removing the IoT coordinate exception reclassifies four old placement deferrals as
+ordinary missing-ID refusals: 117 sets plus one tag (118), with two set and 12
+register-tag deferrals. An exact-current-ledger source-inventory count confirmed these
+missing-ID totals. The frame-based converter was not rerun; no membership statement
+changed in this fix. Earlier validation remains historical.

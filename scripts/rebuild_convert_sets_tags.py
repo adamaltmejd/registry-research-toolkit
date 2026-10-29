@@ -19,80 +19,23 @@ from rebuild_convert import ROOT, entries, literal
 
 
 def frame_deferrals(frames, ledgers):
-    """Recheck the five real-lock refusals against their reviewed source facts.
+    """Recheck the remaining shared-identity refusal against its reviewed source facts.
 
     This one-shot conversion cannot invent release placement or split variable
     identity. A changed premise needs a new reviewed address, not a stale exception.
     """
     rows = []
-    releases = {}
     for path in sorted(frames.glob("*.jsonl")):
         for line in path.open():
             row = json.loads(line)
-            if (row.get("provider"), row.get("register")) not in {
-                ("scb", "r25"),
-                ("sos", "lova"),
-            }:
+            if (row.get("provider"), row.get("register")) != ("sos", "lova"):
                 continue
             if row["kind"] == "occurrence":
                 rows.append(row)
-            elif row["kind"] == "release":
-                releases[row["provider"], row["register"], row["release"]] = row
     if not rows:
-        raise ValueError("--frames contains no current IOT/LOVA occurrence frames")
+        raise ValueError("--frames contains no current LOVA occurrence frames")
     deferred = {}
     notes = []
-    iot = ledgers["scb/iot"]
-    if any(
-        "period" in statement.get("fields", {})
-        for statement in tomllib.loads(iot[0].read_text()).get("statement", [])
-    ):
-        raise ValueError(
-            "IOT placement curation changed; review the VX membership addresses"
-        )
-    # These reviewed anchors predate D-12, which removed the four unplaced ids.
-    # Keep source-coordinate checks without requiring ids that cannot yet be minted.
-    for variable, spelling in {
-        "disponibel-inkomst-2": "CDISP04VXHB",
-        "disponibel-inkomst-4": "CDISPVXHB",
-        "disponibel-inkomst-exkl-kapitalvinst-hushall-vaxelvis-boende": "CDISP5VXHB",
-        "disponibel-inkomst-exkl-kapvinst-2004-hushall-vaxelvis-boende": "CDISP504VXHB",
-    }.items():
-        table = "Bostadshushåll"
-        anchors = iot[1].get(variable)
-        if anchors is not None and anchors != [f"{table}: {spelling}"]:
-            raise ValueError(
-                f"IOT anchor changed; review membership address: {variable}"
-            )
-        selected = [
-            row
-            for row in rows
-            if (row["provider"], row["register"], row["table"]) == ("scb", "r25", table)
-            and row["column"].lower() == spelling.lower()
-        ]
-        parents = {
-            row["release"]: releases.get(("scb", "r25", row["release"]))
-            for row in selected
-        }
-        if not selected or any(
-            parent is None or parent.get("from") or parent.get("to")
-            for parent in parents.values()
-        ):
-            raise ValueError(
-                f"IOT source placement changed; review membership address: {variable}"
-            )
-        windows = ", ".join(
-            f"{handle} ({releases['scb', 'r25', handle]['name']})"
-            for handle in sorted(parents)
-        )
-        deferred[f"scb/iot/{variable}"] = (
-            "D-7: unplaced VX releases; see current-frame deferrals"
-        )
-    notes.append(
-        f"The four IOT targets occur only on unplaced releases {windows}. "
-        "Their frame periods are absent; no final variable address exists until release "
-        "placement is curated. The converter does not infer a calendar period from a name."
-    )
     selected = [
         row
         for row in rows

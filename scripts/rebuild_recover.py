@@ -45,7 +45,7 @@ def covered_unit(statement, setters):
         if (
             other is not None
             and own[0] == other[0]
-            and {s.lower() for s in own[1]} <= {s.lower() for s in other[1]}
+            and own[1] == other[1]
             and not other[3]
             and all(any(a <= lo and hi <= b for a, b in other[2]) for lo, hi in own[2])
         ):
@@ -64,6 +64,10 @@ def main():
     parser.add_argument("--catalog", required=True, type=Path)
     parser.add_argument("--out", required=True, type=Path)
     args = parser.parse_args()
+    args.out = args.out.resolve()
+    authoritative = (ROOT / "curation").resolve()
+    if args.out == authoritative or authoritative in args.out.parents:
+        parser.error("--out must be a new scratch directory outside curation/")
     args.out.mkdir(parents=True, exist_ok=False)
     existing = set()
     existing_effects = collections.defaultdict(set)
@@ -137,7 +141,7 @@ def main():
         elif result["outcome"] == "converted" and not retained[result["source"]]:
             result["outcome"] = "dropped"
             result["reason"] = "no additional statement after catalog identity review"
-    converter.write(preserve=True)
+    converter.write()
     converter.report({"status": "not run", "refusals": []})
     summary = collections.Counter(
         (result["category"], result["outcome"]) for result in converter.results

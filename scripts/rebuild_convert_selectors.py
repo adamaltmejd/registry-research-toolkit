@@ -53,18 +53,17 @@ class Snapshot:
         register_bounds = converter.context_registers.get(owner, {})
         defaults = {}
         for (pid, rid, handle), source in converter.context_tables.items():
-            if (pid, rid) == owner and (pid, rid, handle) in converter.tables:
-                defaults[converter.tables[pid, rid, handle]] = (
+            if (pid, rid) == owner:
+                defaults[converter.identity.table(source)] = (
                     source.get("from") or register_bounds.get("from") or OPEN[0],
                     source.get("to") or register_bounds.get("to") or OPEN[1],
                 )
         releases = {
-            (converter.tables[provider, register, table], release): (
+            (converter.identity.table(row), release): (
                 (row["from"], row["to"]) if row.get("from") and row.get("to") else None
             )
             for (provider, register, table, release), row in converter.releases.items()
             if (provider, register) == owner
-            and (provider, register, table) in converter.tables
         }
         constructors = [
             record["statement"]
@@ -86,7 +85,7 @@ class Snapshot:
                 continue
             releases[match[1], match[2]] = periods[0]
         for row in converter.rows[owner]:
-            table = converter.tables.get((*owner, row["table"]))
+            table = converter.identity.table(row)
             period = (
                 releases.get((table, row["release"]))
                 if row.get("release")
@@ -361,58 +360,3 @@ def collapse(converter, *, context=None):
         "remaining_release_reasons": dict(sorted(remaining.items()))
     }
     return converter.selector_collapse
-
-
-def bundle_classifications(converter):
-    """Use literal spelling unions only when every other selector/payload fact agrees.
-
-    Run last: Snapshot models one spelling at a time. A literal union with one
-    shared period and guards is exactly the union of the individually proved rows.
-    """
-    before = after = lists = 0
-    for owner, statements in converter.statements.items():
-        groups = collections.defaultdict(list)
-        retained = []
-        before += len(statements)
-        for record in statements.values():
-            statement = record["statement"]
-            address = parse_selector(statement["subject"])
-            if (
-                statement["kind"] != "set"
-                or set(statement.get("fields", {})) != {"classification"}
-                or address is None
-                or not re.fullmatch(r"[\w.-]+", address[1])
-            ):
-                retained.append(record)
-                continue
-            table, spelling, scope, guards = address
-            payload = {k: v for k, v in statement.items() if k != "subject"}
-            key = (
-                table,
-                tuple(scope),
-                tuple(sorted(guards.items())),
-                tuple(sorted(set(record["origins"]))),
-                value_key(payload),
-            )
-            groups[key].append((record, spelling, address))
-        for group in groups.values():
-            record, _, address = group[0]
-            spellings = sorted({spelling for _, spelling, _ in group})
-            if len(spellings) > 1:
-                table, _, scope, guards = address
-                statement = record["statement"] | {
-                    "subject": render(
-                        table, "{" + ",".join(spellings) + "}", scope, guards
-                    )
-                }
-                record = record | {"statement": statement}
-                lists += 1
-            retained.append(record)
-        converter.statements[owner] = {
-            json.dumps(record["statement"], sort_keys=True, ensure_ascii=False): record
-            for record in retained
-        }
-        after += len(converter.statements[owner])
-    converter.selector_collapse.update(
-        bundle_before=before, bundle_after=after, literal_spelling_lists=lists
-    )

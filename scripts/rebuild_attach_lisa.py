@@ -21,7 +21,7 @@ from pathlib import Path
 
 from rebuild_convert import ROOT, Converter, literal, table_slug
 from rebuild_convert_cases import parse_selector, period_intervals
-from rebuild_convert_groups import final_variables, normalize_sets
+from rebuild_convert_groups import catalog_variables, normalize_sets
 from rebuild_convert_identity import CatalogIdentity
 from rebuild_convert_selectors import OPEN, Snapshot, collapse
 
@@ -237,7 +237,7 @@ def main():
     converter.identity = CatalogIdentity(
         converter.records, converter.ledgers, args.catalog
     )
-    effective, used, *_ = final_variables(converter, OWNER)
+    effective, used = catalog_variables(converter, OWNER)
     corrected = [dict(row) for row, _ in snapshot.rows]
     periods = [period for _, period in snapshot.rows]
     curated = collections.defaultdict(set)

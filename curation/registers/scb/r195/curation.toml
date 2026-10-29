@@ -508,18 +508,6 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/ksju.toml
 
 [[statement]]
 kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: strata"
-fields = { "variable" = "urvalsstratum" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:645\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
-subject = "sjukfranvaro-sjukloneperioden: stratum"
-fields = { "variable" = "urvalsstratum" }
-evidence = "reg_meta_build/curation/registers/scb/ksju.toml:645\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred."
-
-[[statement]]
-kind = "set"
 subject = "var:aktuellt-antal-anstallda-anstje"
 fields = { "sets" = ["legacy-aktuellt-antal-anstallda", "legacy-aktuellt-antal-anstallda-foretag"] }
 evidence = "reg_meta_build/curation/registers/scb/ksju.toml:1290\nreg_meta_build/curation/registers/scb/ksju.toml:1303\nreg_meta_build/curation/registers/scb/ksju.toml:1316\nreg_meta_build/curation/registers/scb/ksju.toml:1329\nreg_meta_build/curation/registers/scb/ksju.toml:1342\nreg_meta_build/curation/registers/scb/ksju.toml:1355\nreg_meta_build/curation/registers/scb/ksju.toml:627\n\nComplete accepted SCB KSJU native families, actual source operations and bound domains; Batch51-KSJU13-source-proof.json. Exact literal/source-edition ownership preserves every raw field, period, flag and coding association. No suffix meaning, value equivalence, quarter date or encoding is inferred.\n\nComplete accepted own-native KSJU family: explicit common quantity or sourced operation, exact simultaneous literal columns and identical complete own active(code,label) pairs where coded. Every physical storage type, operational context, original date, source list and coding association remains separate. No value equivalence, stored-format conversion or inferred quarter bounds. Batch51-KSJU13-source-proof.json."

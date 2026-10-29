@@ -10181,37 +10181,6 @@ evidence = "reg_meta_build/curation/registers/scb/fou.toml:2468\n\nSWECOV holds 
 caveat = "SCB documents no column v068 on FoU Företagssektorn for 2012, 2014. The meaning and unit are assumed from SCB's 2015 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
 
 [[statement]]
-kind = "set"
-subject = "uoh-personal: strat @2019"
-fields = { "variable" = "stratum" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:15338\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: strat where release = 'r18421'"
-fields = { "variable" = "stratum" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:15365\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: strat where release = 'r18431'"
-fields = { "variable" = "stratum" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:15347\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: strat where release = 'r19474'"
-fields = { "variable" = "stratum" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:15374\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-
-[[statement]]
-kind = "set"
-subject = "uoh-personal: strat where release = 'r19506'"
-fields = { "variable" = "stratum" }
-evidence = "reg_meta_build/curation/registers/scb/fou.toml:15356\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
-
-
-[[statement]]
 kind = "assert"
 subject = "foretagssektorn: V015 @2001-01-01..2001-12-31 where key = 'v3325' and release = '2001'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "antal årsverken för FoU av forskarutbildade", "definition" = "Årsverk = det arbete en heltidsanställd utför under ett år", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }

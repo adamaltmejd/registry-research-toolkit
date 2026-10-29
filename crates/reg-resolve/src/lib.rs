@@ -948,6 +948,19 @@ pub fn resolve(
             let mut runs: Vec<Segment> = Vec::new();
             let mut last_same_family = true;
             for (period, covering) in components {
+                if defaults.is_some()
+                    && covering
+                        .iter()
+                        .map(|&i| fold_identity(&resolved[i].occurrence.column))
+                        .collect::<BTreeSet<_>>()
+                        .len()
+                        > 1
+                {
+                    return Err(format!(
+                        "D-11: set variable would merge concurrent different folded spellings in table {:?} into variable {key:?}; retain separate variables",
+                        tables[t].table.table
+                    ));
+                }
                 let top = latest(&resolved, &covering).expect("a component has a member");
                 let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
                 let o = &resolved[top].occurrence;

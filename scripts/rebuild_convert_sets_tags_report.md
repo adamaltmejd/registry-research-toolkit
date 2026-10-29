@@ -1,3 +1,18 @@
+# Fix-01 membership accounting
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+The IoT table/spelling exception is removed. An exact-ledger recount now has 117 missing
+set memberships and one missing tag membership (118 total); the four previous IoT
+placement deferrals are included in that ordinary missing-ID count. Converted membership
+counts stay 529 sets and 23 tags; two set and 12 register-tag memberships remain
+deferred. No memberships changed in fix-01. The four known IoT placement questions
+remain in REBUILD.md's post-D measurement step.
+
+This recount reads the frozen source inventory and current ledgers; the frame-based
+converter was not rerun in fix-01. The generated report below records the earlier
+4f49e5aa replay and is historical.
+
 # D-9 set/tag membership conversion
 
 Temporary conversion evidence; deleted with this converter at milestone F.

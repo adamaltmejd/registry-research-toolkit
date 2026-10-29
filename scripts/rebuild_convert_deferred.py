@@ -298,8 +298,8 @@ def delivered(converter, provider, register, entry, variants):
                 "delivered occurrence needs one dated existing release; convert the missing release first"
             )
         release = releases[0]
-        # Exact release guards distinguish overlapping editions. The lock owns
-        # assertion conflicts; calendar overlap alone is not a refusal.
+        # The resolver's edition/union rules decide overlap (crates/DESIGN.md,
+        # Releases); calendar overlap alone is not a refusal.
         if any(
             row["table"] == handle
             and row["column"].lower() == entry["column"].lower()

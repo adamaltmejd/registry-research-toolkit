@@ -1,3 +1,14 @@
+# D recovery fix-01 counts
+
+Temporary conversion evidence; deleted at milestone F (cutover).
+
+Current branch additions are 827 statements (571 assertions and 256 setters), including
+the tag membership. All 23 recovered variable-assignment setters are dropped: 18 violate
+D-11 and five empty the minted FoU `stratum-strat` identity. The 34 legitimate r193
+assertion identities now have dated ledger anchors. Source-level review, all new ID
+names, dropped subjects and final validation are in [the recovery
+report](rebuild_recover_report.md). Earlier counts below are historical.
+
 # D close-out recovery
 
 Temporary conversion evidence; deleted at milestone F (cutover).

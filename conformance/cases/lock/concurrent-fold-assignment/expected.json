@@ -1,0 +1,4 @@
+{
+  "exit_code": 1,
+  "located_error": "registers/demo/assignment/curation.toml:13: D-11: set variable would merge concurrent different folded spellings in table \"t\" into variable \"alpha\"; retain separate variables"
+}

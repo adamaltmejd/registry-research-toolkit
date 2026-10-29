@@ -31,14 +31,10 @@ class CatalogIdentity:
         try:
             table_rows = list(
                 connection.execute("""
-                SELECT t.id, t.pid, t.implicit, x.body AS name
-                FROM tbl t JOIN text x ON x.id = t.name_text
+                SELECT id, pid FROM tbl
             """)
             )
             table_ids = {r["pid"]: r["id"] for r in table_rows}
-            names = collections.defaultdict(list)
-            for row in table_rows:
-                names[row["name"]].append(row["pid"])
             by_locator = collections.defaultdict(dict)
             for row in connection.execute("""
                 SELECT ol.locator, o.id, o.source_key, o.status, o.start, o.end,
@@ -80,9 +76,6 @@ class CatalogIdentity:
                 if pid in table_ids:
                     self._table(row, pid)
                     continue
-                matches = [p for p in names[row["table"]] if p.startswith(prefix + "/")]
-                if len(matches) == 1:
-                    self._table(row, matches[0])
             # The LISA attachment reconstructs authored constructors whose locators
             # are deliberately absent from occurrence_locator. Match their exact
             # published coordinates; never synthesize their identity.
@@ -111,6 +104,10 @@ class CatalogIdentity:
                 provider, register = row["provider"], row["register"]
                 public = ledgers.get((provider, register), {}).get("public", register)
                 slug = self.tables.get((provider, register, row["table"]))
+                if slug is None:
+                    # No implicit-table fallback for an unmatched named table;
+                    # selector construction will refuse with its source locator.
+                    continue
                 pid = f"{provider}/{public}" + (
                     f"/{slug}" if slug and slug != public else ""
                 )
@@ -180,6 +177,16 @@ class CatalogIdentity:
             # Cross-register routing needs reviewed curation, never a guessed handle.
             return
         self.tables[provider, register, row["table"]] = slug
+
+    def table(self, row):
+        key = row["provider"], row["register"], row["table"]
+        if key not in self.tables:
+            locator = row["locator"]
+            raise ValueError(
+                f"{locator['input']}:{locator['at']}: source table {row['table']!r} "
+                "has no catalog identity; review its ledger or source locators"
+            )
+        return self.tables[key]
 
     def group(self, row):
         pids = {r["variable"] for r in self.matches[id(row)]}
