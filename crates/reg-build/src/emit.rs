@@ -1,4 +1,4 @@
-//! Link and emit: resolved registers into one SQLite file, schema v4 (`schema.sql`).
+//! Link and emit: resolved registers into one SQLite file, schema v5 (`schema.sql`).
 //! The emitter decides nothing. Row ids follow natural-key order, indexes come after
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!

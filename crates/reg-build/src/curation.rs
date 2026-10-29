@@ -478,6 +478,136 @@ fn bound_sentinels(records: &[Record], applied: &mut Applied) -> Result<Vec<Stri
     Ok(findings)
 }
 
+/// Local setters are complete claims; classification lists are additive exemptions.
+#[allow(clippy::too_many_lines)]
+fn sentinel_conflicts(
+    root: &Path,
+    records: &[Record],
+    applied: &Applied,
+) -> Result<(BTreeSet<String>, Vec<String>), String> {
+    let sets = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::ValueSet(set) => Some((set.hash.as_str(), set)),
+            _ => None,
+        })
+        .collect::<BTreeMap<_, _>>();
+    let classes = applied
+        .classifications
+        .iter()
+        .map(|class| (&class.locator, class))
+        .collect::<BTreeMap<_, _>>();
+    let mut canonical = BTreeMap::new();
+    for (at, class) in &classes {
+        let set = sets.get(class.valueset.as_str()).ok_or_else(|| {
+            inventory_error(
+                root,
+                at,
+                format!(
+                    "classification-reference-unresolved: value set {}",
+                    class.valueset
+                ),
+            )
+        })?;
+        canonical.insert(
+            *at,
+            set.items
+                .iter()
+                .map(|item| item.code.as_str())
+                .collect::<BTreeSet<_>>(),
+        );
+    }
+    let mut groups = BTreeMap::<&str, Vec<&Sentinels>>::new();
+    for declaration in &applied.sentinels {
+        groups
+            .entry(&declaration.hash)
+            .or_default()
+            .push(declaration);
+    }
+    let mut conflicts = BTreeSet::new();
+    let mut refusals = BTreeSet::new();
+    let mut refuse = |declaration: &Sentinels, other: &Sentinels, detail: String| {
+        conflicts.insert(declaration.statement.clone());
+        refusals.insert(inventory_error(
+            root,
+            &declaration.locator,
+            format!(
+                "sentinel-conflict: shared value set {} {detail}; other binding {}:{}",
+                declaration.hash,
+                other.locator.input,
+                other
+                    .locator
+                    .at
+                    .strip_prefix("line=")
+                    .unwrap_or(&other.locator.at),
+            ),
+        ));
+    };
+    for declarations in groups.values() {
+        let local = declarations
+            .iter()
+            .copied()
+            .filter(|d| d.inventory.is_none())
+            .collect::<Vec<_>>();
+        if let Some(first) = local.first()
+            && let Some(rival) = local.iter().find(|d| d.codes != first.codes)
+        {
+            for declaration in &local {
+                let other = if declaration.codes == first.codes {
+                    *rival
+                } else {
+                    *first
+                };
+                refuse(
+                    declaration,
+                    other,
+                    "has disagreeing local sentinel lists".into(),
+                );
+            }
+        }
+        let mut versions = BTreeMap::<_, Vec<_>>::new();
+        for declaration in declarations {
+            if let Some(at) = &declaration.inventory {
+                versions.entry(at).or_default().push(*declaration);
+            }
+        }
+        for (at, claims) in &versions {
+            for (other_at, other_claims) in &versions {
+                let (class, other) = (classes[at], classes[other_at]);
+                if class.family == other.family && class.version == other.version {
+                    continue;
+                }
+                let bad = claims[0]
+                    .codes
+                    .iter()
+                    .filter(|code| canonical[other_at].contains(code.as_str()))
+                    .collect::<Vec<_>>();
+                if bad.is_empty() {
+                    continue;
+                }
+                let detail = format!(
+                    "lists codes {bad:?} from class/{}/{} that are canonical in class/{}/{} (inventory {}:{} and {}:{})",
+                    class.family,
+                    class.version,
+                    other.family,
+                    other.version,
+                    at.input,
+                    at.at.strip_prefix("line=").unwrap_or(&at.at),
+                    other_at.input,
+                    other_at.at.strip_prefix("line=").unwrap_or(&other_at.at),
+                );
+                for declaration in claims {
+                    refuse(declaration, other_claims[0], detail.clone());
+                }
+                for declaration in other_claims {
+                    refuse(declaration, claims[0], detail.clone());
+                }
+            }
+        }
+    }
+    Ok((conflicts, refusals.into_iter().collect()))
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
@@ -504,6 +634,7 @@ enum Phase {
     Facts,
     Variables,
     Fields,
+    Sentinels,
     Relations,
     Acknowledgements,
 }
@@ -520,6 +651,7 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
+        Statement::Set { fields, .. } if fields.sentinels.is_some() => Phase::Sentinels,
         Statement::Link { .. } => Phase::Relations,
         Statement::Ack { .. } => Phase::Acknowledgements,
         Statement::Set { .. } => Phase::Fields,
@@ -703,10 +835,14 @@ fn run_selected(
         Phase::Facts,
         Phase::Variables,
         Phase::Fields,
+        Phase::Sentinels,
         Phase::Relations,
         Phase::Acknowledgements,
     ] {
-        let fields_stage = matches!(stage, Phase::Coverage | Phase::Periods | Phase::Fields);
+        let fields_stage = matches!(
+            stage,
+            Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels
+        );
         let structural_stage = matches!(stage, Phase::Parents | Phase::Moves | Phase::Facts);
         let mut field_snapshot = Vec::new();
         if !conflicts.is_empty() {
@@ -788,7 +924,7 @@ fn run_selected(
                 .filter(|r| application_record(r, provider, register, None))
                 .cloned()
                 .collect::<Vec<_>>();
-            if stage == Phase::Fields
+            if matches!(stage, Phase::Fields | Phase::Sentinels)
                 && group
                     .iter()
                     .any(|s| matches!(s.statement, reg_frame::statement::Statement::Set { .. }))
@@ -1015,7 +1151,7 @@ fn run_selected(
                 Phase::Relations | Phase::Acknowledgements => {
                     Ok(reg_resolve::curation::apply::Applied::default())
                 }
-                Phase::Coverage | Phase::Periods | Phase::Fields => {
+                Phase::Coverage | Phase::Periods | Phase::Fields | Phase::Sentinels => {
                     if let Some((indices, before, applied)) =
                         field_applications.remove(&publication_identity(statement))
                     {
@@ -1331,55 +1467,9 @@ fn run_selected(
         ));
     }
     findings.extend(bound_sentinels(&records, &mut result)?);
-    // Scoped certificates and classification exemptions are additive. Compare each
-    // source kind's complete claims independently, then publish their union.
-    let mut sentinel_sources = BTreeMap::<(bool, &str), Vec<&Sentinels>>::new();
-    for declaration in &result.sentinels {
-        sentinel_sources
-            .entry((declaration.inventory.is_some(), &declaration.hash))
-            .or_default()
-            .push(declaration);
-    }
-    for declarations in sentinel_sources.values() {
-        let first = declarations[0];
-        let Some(rival) = declarations.iter().find(|d| d.codes != first.codes) else {
-            continue;
-        };
-        let messages = declarations
-            .iter()
-            .map(|declaration| {
-                let other = if declaration.codes == first.codes {
-                    *rival
-                } else {
-                    first
-                };
-                inventory_error(
-                    root,
-                    &declaration.locator,
-                    format!(
-                        "sentinel-conflict: shared value set {} disagrees with {}:{}{}",
-                        declaration.hash,
-                        other.locator.input,
-                        other
-                            .locator
-                            .at
-                            .strip_prefix("line=")
-                            .unwrap_or(&other.locator.at),
-                        other
-                            .inventory
-                            .as_ref()
-                            .map_or_else(String::new, |at| format!(
-                                " (classification inventory {}:{})",
-                                at.input,
-                                at.at.strip_prefix("line=").unwrap_or(&at.at)
-                            )),
-                    ),
-                )
-            })
-            .collect::<Vec<_>>();
-        conflicts.extend(declarations.iter().map(|d| d.statement.clone()));
-        refusals.extend(messages);
-    }
+    let (sentinel_conflicts, sentinel_refusals) = sentinel_conflicts(root, &records, &result)?;
+    conflicts.extend(sentinel_conflicts);
+    refusals.extend(sentinel_refusals);
     if !conflicts.is_empty() {
         if record || release {
             return Err(refusals.join("\n"));

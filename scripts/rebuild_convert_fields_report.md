@@ -11,15 +11,17 @@ Only source metadata is listed, never holdings or individual records.
   their 44 premise additions. They are dropped with the reason **delivery-header
   mapping; home: E holdings layer**. `set synonyms` remains available for actual search
   synonyms.
-- Local sentinels: nine of 15 entries have exclusively scoped value-set hashes and are
-  converted to set-wide `set sentinels`. Six remain dropped because the same hash is
-  referenced outside the entry's scope; exact references are below.
-- Classification sentinels: all 63 legacy lists apply to bound occurrence value sets,
-  never to their canonical books. Their 490 original code/version pairs include one
-  allowed unobserved pair. Reviewed noncanonical-code propagation resolves actual
-  shared-bound-set conflicts with 22 additions in 14 LKF versions (512 pairs total).
-  Differing legacy meanings are listed separately as dropped: the schema has no distinct
-  sentinel-meaning field.
+- Local sentinels: nine of 15 entries have exclusively scoped hashes and are converted
+  to set-wide setters. Four Lisa AstLan claims are already applied set-wide through the
+  original LKF1992/LKF1993 lists, wider than their local scope; no additional scoped
+  setter is added. Two IoT claims remain deferred because their hashes are shared
+  outside scope. Exact references are below.
+- Classification sentinels: all 63 lists equal their legacy declarations, with 490
+  code/version pairs and one allowed unobserved pair. Lists are additive on shared bound
+  sets; they never add items to canonical books. A listed code that is canonical in
+  another bound classification version refuses. The 22 fix-02 LKF additions are
+  reverted. Meaning differences have no distinct schema home; counts and exceptional
+  labels are retained below for review.
 - Roles and unit types: no legacy key named `role` or `unit_type` exists. No values are
   inferred. Unit types are table-only; variable inheritance and its override were
   removed.
@@ -105,15 +107,15 @@ exclusive, as in the published schema.
   | `reg_meta_build/curation/registers/scb/iot.toml:5045`  | `individer-och-dodsbon: MAKEBOST @1991 where key = 'v39851'`              | `8cd2632ac496364e29131f07f6d4c2f294e0520994f8beed85eb362ac6e77701` | converted: 1 scoped occurrence(s), zero outside references                                                                                                    |
   | `reg_meta_build/curation/registers/scb/iot.toml:5055`  | `individer-och-dodsbon: TNLAN @1990 where key = 'v39966'`                 | `1bc176d895af8e9195741580bb229eaed66ff48c7d705577b2481a45036fbc24` | converted: 1 scoped occurrence(s), zero outside references                                                                                                    |
   | `reg_meta_build/curation/registers/scb/lisa.toml:2633` | `foretag: Org_Sni92 @1990,1991,1992,1993,1994,1995 where key = 'v19054'`  | `fba414b9b471c6191aaaa88ea747556d1f4daadd9bd91fbb4ac7f66a490ccba2` | converted: 6 scoped occurrence(s), zero outside references                                                                                                    |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:3231` | `individer-16plus: KU1AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | dropped: 8 outside-scope occurrence references; occurrence-scoped sentinels deferred to sentinel-aware value-set identity, revisit when this entry is needed  |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:3241` | `individer-16plus: KU2AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | dropped: 8 outside-scope occurrence references; occurrence-scoped sentinels deferred to sentinel-aware value-set identity, revisit when this entry is needed  |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:3251` | `individer-16plus: KU3AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | dropped: 8 outside-scope occurrence references; occurrence-scoped sentinels deferred to sentinel-aware value-set identity, revisit when this entry is needed  |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:3261` | `individer-16plus: AstLan [['1990-01-01', '1990-12-31']]`                 | `52f34f09dcc93bfe814443cbe84c3d4320965d14851b32962b903e5d1c9b43a3` | dropped: 2 outside-scope occurrence references; occurrence-scoped sentinels deferred to sentinel-aware value-set identity, revisit when this entry is needed  |
+  | `reg_meta_build/curation/registers/scb/lisa.toml:3231` | `individer-16plus: KU1AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | applied set-wide through original lkf1992/lkf1993 lists, wider than scoped claim; no added setter                                                             |
+  | `reg_meta_build/curation/registers/scb/lisa.toml:3241` | `individer-16plus: KU2AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | applied set-wide through original lkf1992/lkf1993 lists, wider than scoped claim; no added setter                                                             |
+  | `reg_meta_build/curation/registers/scb/lisa.toml:3251` | `individer-16plus: KU3AstLan [['1990-01-01', '1990-12-31']]`              | `c1ffbef279ea4136a8b872671273e7ca7667a488ff8aa0031ed1cc399266af8d` | applied set-wide through original lkf1992/lkf1993 lists, wider than scoped claim; no added setter                                                             |
+  | `reg_meta_build/curation/registers/scb/lisa.toml:3261` | `individer-16plus: AstLan [['1990-01-01', '1990-12-31']]`                 | `52f34f09dcc93bfe814443cbe84c3d4320965d14851b32962b903e5d1c9b43a3` | applied set-wide through original lkf1992/lkf1993 lists, wider than scoped claim; no added setter                                                             |
   | `reg_meta_build/curation/registers/scb/rtb.toml:1317`  | `folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'` | `d9772838ee6e4543c4b1421e357045b0f0072f6cfb6d90e64fdc9270155138c5` | converted: 1 scoped occurrence(s), zero outside references                                                                                                    |
   | `reg_meta_build/curation/registers/scb/rtb.toml:1327`  | `folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'` | `67c8f982e7d06a3e3f88afa2a21df4b93718fee4ff7752d8f37ac3a0722003cf` | converted: 1 scoped occurrence(s), zero outside references                                                                                                    |
   | `reg_meta_build/curation/registers/scb/rtb.toml:1337`  | `folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'`     | `e703a6ccdb4ebb315f5141a846c021daea1a35384080a375691f183384bbcedd` | converted: 1 scoped occurrence(s), zero outside references                                                                                                    |
 
-Outside-scope references, by dropped entry:
+Outside-scope references for claims without an additional scoped setter:
 
 - `reg_meta_build/curation/registers/scb/iot.toml:4781`:
   - `scb/linda/panelurval-befolkningen`, `v21073`, `KUSNI`:
@@ -160,163 +162,146 @@ Outside-scope references, by dropped entry:
 
 ## Classification books
 
-Fix-02 corrects the fix-01 interpretation. The legacy `sentinel_codes` lists name known
-noncanonical codes observed in columns bound to a classification; they do not add codes
-to the canonical book. `resolved_catalog.py` checks the observed noncanonical members
-against the book sentinel list and scoped certificates, and
-`source_classification_bindings.py::_sentinel_map` retains their meanings.
+The legacy lists name known noncanonical codes observed in bound columns, not items of
+the canonical book. `resolved_catalog.py` combines the list with scoped certificates,
+and `source_classification_bindings.py::_sentinel_map` retains its meanings. All 63
+inventory lists now equal those legacy declarations exactly; the 22 fix-02 additions and
+their generic evidence suffixes are removed.
 
-Read-only audit of the published 0.66.0 catalog examined all direct and
-population-alternative value sets of occurrences bound to each exact classification
-version. All 83 versions were included: 70 have bindings and together reference 1,495
-distinct value-set hashes. The 63 original lists contain 490 code/version pairs; 489
-occur in at least one bound set. The remaining pair, `class/sektorkod/sektorkod` code
-`99`, occurs in no bound set and is an allowed unobserved declaration. Absence from the
-canonical book is expected.
+The read-only 0.66.0 audit included all 83 versions: 70 have bindings, referencing 1,495
+distinct direct or population-alternative hashes. Of 490 declared code/version pairs,
+489 occur in a bound set. The unobserved pair is `class/sektorkod/sektorkod` code `99`;
+it is allowed and counted. Absence from a canonical book is expected.
 
-The original lists disagree on present codes for 59 version pairs across 13 shared bound
-hashes. Every conflicting code was checked against both versions' canonical books and is
-noncanonical. A minimal per-code propagation across shared hashes resolves those
-disagreements: 22 code/version additions in 14 LKF versions, giving 512 declared pairs,
-511 observed pairs and the same one unobserved pair. No code was added to a value set or
-canonical book; identities and supplied labels are unchanged. These are reviewed
-curation amendments, not a rerun of the one-shot legacy converter. The
-classification-only projection marks 1,585 hash/code pairs across 961 observed value
-sets; no canonical-book value set receives a flag. Local setters contribute separately.
+Fix-03's Operator ruling makes lists additive on a shared bound hash. The original 59
+version-pair differences across 13 hashes are not conflicts: the disputed codes are
+noncanonical in the other bound versions. A code canonical in another version bound to
+that hash is a located refusal at both bindings. No version-level list is widened merely
+to align the flags of shared sets.
 
-The earlier `lkf1987/lkf1988` pair has no present-code conflict on their shared bound
-sets. The `lkf1989/lkf1990/lkf1991` group does: code `99` on
-`444d84e28637fa1a0c093ef4996281f3ff9e98fd58cad21ccabf7d2dc2bc6141`, `0000`/`9999` on
-`c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde`, and `0000` on
-`fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a`. The amendments below
-resolve them and the other shared-bound-set disagreements.
+### Blank codes
 
-### Reviewed list amendments
-
-Each added code occurs in the listed shared bound set and is absent from the target
-version's canonical book. Repeating this step to a fixed point gives zero remaining
-present-code disagreements. Hashes are evidence for the addition; original conflicts can
-involve more hashes.
-
-  | Version             | Added code | Shared bound hash proving the addition                             |
-  | ------------------- | ---------- | ------------------------------------------------------------------ |
-  | `class/lkf/lkf1986` | `"00"`     | `26411f2393dd92e3a760913ab6418581f35054862232aa63cddfb5be6ae3c015` |
-  | `class/lkf/lkf1986` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
-  | `class/lkf/lkf1987` | `"0000"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
-  | `class/lkf/lkf1987` | `"9999"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
-  | `class/lkf/lkf1988` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
-  | `class/lkf/lkf1989` | `"00"`     | `2be1e760559fe462059b25f08c9169ea20710d6a1487228c45ad5caf8676f4ff` |
-  | `class/lkf/lkf1989` | `"0000"`   | `fd1587a2798c37f19e4b8013efaa830a9d8ac8fb57aae2308486127104dcde0a` |
-  | `class/lkf/lkf1990` | `"00"`     | `26411f2393dd92e3a760913ab6418581f35054862232aa63cddfb5be6ae3c015` |
-  | `class/lkf/lkf1990` | `"0000"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
-  | `class/lkf/lkf1990` | `"9999"`   | `c3664d0303de3ee323d7cd067ad1e12f08da489157c7164e5984042c9b376fde` |
-  | `class/lkf/lkf1991` | `"00"`     | `2be1e760559fe462059b25f08c9169ea20710d6a1487228c45ad5caf8676f4ff` |
-  | `class/lkf/lkf1991` | `"99"`     | `444d84e28637fa1a0c093ef4996281f3ff9e98fd58cad21ccabf7d2dc2bc6141` |
-  | `class/lkf/lkf1998` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf1999` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf1999` | `"8000"`   | `024f36bf2fc08e91b3842ac8798771ae9af3cf1692f8b3e47fd6fb028bc4c356` |
-  | `class/lkf/lkf2002` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf2002` | `"8000"`   | `d273a7ec6b6621bb8355bf453b8b6b3a3433b49f91b3ff2531d2c6e5ed8ae9ef` |
-  | `class/lkf/lkf2003` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf2004` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf2006` | `"[NULL]"` | `8d39e670f1c9a2cfbebd7176b57a77d44dcfb123aaa5b30c9ab8d0845ff8b40f` |
-  | `class/lkf/lkf2008` | `"80"`     | `6b26d6f5af3fe7b8029072b75ed0631ecee2be5e0cbcb911e042d00e1b105300` |
-  | `class/lkf/lkf2025` | `"0199"`   | `7fb631740c6891ccb67899e633d86a187485d4ab778d39df664ad18cee8189a8` |
+The literal code `[BLANK]` is listed by `class/lkf/lkf2016`, `class/ssyk/ssyk1996`,
+`class/sun-inriktning/sun2000-inriktning` and `class/sun-niva/sun2000-niva`. It is
+marked when present in their bound sets. No inventory list or converted local setter
+currently declares the actual empty code `""`. The reader preserves code text and does
+not translate `[BLANK]` to `""`; an actual empty code remains a real item unless
+separately curated.
 
 ### Bound-set accounting
 
-  | Classification                            | Original / normalized declared pairs | Bound sets | Unobserved codes |
-  | ----------------------------------------- | ------------------------------------ | ---------- | ---------------- |
-  | `class/agarkat/agarkat2000`               | 3 / 3                                | 8          | none             |
-  | `class/agarkat/agarkat2020`               | 1 / 1                                | 5          | none             |
-  | `class/isced/isced2011`                   | 2 / 2                                | 4          | none             |
-  | `class/jurform/jurform2000`               | 2 / 2                                | 13         | none             |
-  | `class/jurform/jurform2020`               | 1 / 1                                | 4          | none             |
-  | `class/lkf/lkf1980`                       | 2 / 2                                | 5          | none             |
-  | `class/lkf/lkf1981`                       | 2 / 2                                | 9          | none             |
-  | `class/lkf/lkf1986`                       | 4 / 6                                | 17         | none             |
-  | `class/lkf/lkf1987`                       | 5 / 7                                | 17         | none             |
-  | `class/lkf/lkf1988`                       | 4 / 5                                | 20         | none             |
-  | `class/lkf/lkf1989`                       | 4 / 6                                | 16         | none             |
-  | `class/lkf/lkf1990`                       | 3 / 6                                | 15         | none             |
-  | `class/lkf/lkf1991`                       | 4 / 6                                | 25         | none             |
-  | `class/lkf/lkf1992`                       | 6 / 6                                | 20         | none             |
-  | `class/lkf/lkf1993`                       | 6 / 6                                | 17         | none             |
-  | `class/lkf/lkf1994`                       | 6 / 6                                | 20         | none             |
-  | `class/lkf/lkf1995`                       | 6 / 6                                | 22         | none             |
-  | `class/lkf/lkf1996`                       | 7 / 7                                | 30         | none             |
-  | `class/lkf/lkf1997`                       | 7 / 7                                | 25         | none             |
-  | `class/lkf/lkf1998`                       | 7 / 8                                | 31         | none             |
-  | `class/lkf/lkf1999`                       | 9 / 11                               | 36         | none             |
-  | `class/lkf/lkf2000`                       | 10 / 10                              | 39         | none             |
-  | `class/lkf/lkf2001`                       | 11 / 11                              | 35         | none             |
-  | `class/lkf/lkf2002`                       | 9 / 11                               | 34         | none             |
-  | `class/lkf/lkf2003`                       | 8 / 9                                | 38         | none             |
-  | `class/lkf/lkf2004`                       | 10 / 11                              | 44         | none             |
-  | `class/lkf/lkf2005`                       | 11 / 11                              | 55         | none             |
-  | `class/lkf/lkf2006`                       | 16 / 17                              | 62         | none             |
-  | `class/lkf/lkf2007`                       | 10 / 10                              | 56         | none             |
-  | `class/lkf/lkf2008`                       | 11 / 12                              | 54         | none             |
-  | `class/lkf/lkf2009`                       | 11 / 11                              | 54         | none             |
-  | `class/lkf/lkf2010`                       | 12 / 12                              | 61         | none             |
-  | `class/lkf/lkf2011`                       | 10 / 10                              | 58         | none             |
-  | `class/lkf/lkf2012`                       | 10 / 10                              | 62         | none             |
-  | `class/lkf/lkf2013`                       | 11 / 11                              | 61         | none             |
-  | `class/lkf/lkf2014`                       | 10 / 10                              | 56         | none             |
-  | `class/lkf/lkf2015`                       | 9 / 9                                | 49         | none             |
-  | `class/lkf/lkf2016`                       | 15 / 15                              | 55         | none             |
-  | `class/lkf/lkf2017`                       | 10 / 10                              | 57         | none             |
-  | `class/lkf/lkf2018`                       | 11 / 11                              | 58         | none             |
-  | `class/lkf/lkf2019`                       | 9 / 9                                | 58         | none             |
-  | `class/lkf/lkf2020`                       | 7 / 7                                | 64         | none             |
-  | `class/lkf/lkf2021`                       | 10 / 10                              | 60         | none             |
-  | `class/lkf/lkf2022`                       | 12 / 12                              | 61         | none             |
-  | `class/lkf/lkf2023`                       | 11 / 11                              | 50         | none             |
-  | `class/lkf/lkf2024`                       | 9 / 9                                | 52         | none             |
-  | `class/lkf/lkf2025`                       | 5 / 6                                | 23         | none             |
-  | `class/niva-old/niva-oldv1`               | 5 / 5                                | 29         | none             |
-  | `class/sektor/sektor2000`                 | 1 / 1                                | 7          | none             |
-  | `class/sektorkod/sektorkod`               | 2 / 2                                | 22         | `"99"`           |
-  | `class/sni/sni2002`                       | 11 / 11                              | 46         | none             |
-  | `class/sni/sni2007`                       | 13 / 13                              | 122        | none             |
-  | `class/sni/sni1969`                       | 4 / 4                                | 48         | none             |
-  | `class/sni/sni1992`                       | 5 / 5                                | 89         | none             |
-  | `class/ssyk/ssyk2012`                     | 21 / 21                              | 61         | none             |
-  | `class/ssyk/ssyk1996`                     | 32 / 32                              | 124        | none             |
-  | `class/sun/sun1996`                       | 3 / 3                                | 19         | none             |
-  | `class/sun-grupp/sun2000-grupp`           | 1 / 1                                | 2          | none             |
-  | `class/sun-inriktning/sun2000-inriktning` | 9 / 9                                | 37         | none             |
-  | `class/sun-niva/sun2000-niva`             | 14 / 14                              | 63         | none             |
-  | `class/sun-grupp/sun2020-grupp`           | 1 / 1                                | 3          | none             |
-  | `class/sun-inriktning/sun2020-inriktning` | 3 / 3                                | 21         | none             |
-  | `class/sun-niva/sun2020-niva`             | 6 / 6                                | 31         | none             |
+  | Classification                            | Legacy declared pairs | Bound sets | Unobserved codes |
+  | ----------------------------------------- | --------------------- | ---------- | ---------------- |
+  | `class/agarkat/agarkat2000`               | 3                     | 8          | none             |
+  | `class/agarkat/agarkat2020`               | 1                     | 5          | none             |
+  | `class/isced/isced2011`                   | 2                     | 4          | none             |
+  | `class/jurform/jurform2000`               | 2                     | 13         | none             |
+  | `class/jurform/jurform2020`               | 1                     | 4          | none             |
+  | `class/lkf/lkf1980`                       | 2                     | 5          | none             |
+  | `class/lkf/lkf1981`                       | 2                     | 9          | none             |
+  | `class/lkf/lkf1986`                       | 4                     | 17         | none             |
+  | `class/lkf/lkf1987`                       | 5                     | 17         | none             |
+  | `class/lkf/lkf1988`                       | 4                     | 20         | none             |
+  | `class/lkf/lkf1989`                       | 4                     | 16         | none             |
+  | `class/lkf/lkf1990`                       | 3                     | 15         | none             |
+  | `class/lkf/lkf1991`                       | 4                     | 25         | none             |
+  | `class/lkf/lkf1992`                       | 6                     | 20         | none             |
+  | `class/lkf/lkf1993`                       | 6                     | 17         | none             |
+  | `class/lkf/lkf1994`                       | 6                     | 20         | none             |
+  | `class/lkf/lkf1995`                       | 6                     | 22         | none             |
+  | `class/lkf/lkf1996`                       | 7                     | 30         | none             |
+  | `class/lkf/lkf1997`                       | 7                     | 25         | none             |
+  | `class/lkf/lkf1998`                       | 7                     | 31         | none             |
+  | `class/lkf/lkf1999`                       | 9                     | 36         | none             |
+  | `class/lkf/lkf2000`                       | 10                    | 39         | none             |
+  | `class/lkf/lkf2001`                       | 11                    | 35         | none             |
+  | `class/lkf/lkf2002`                       | 9                     | 34         | none             |
+  | `class/lkf/lkf2003`                       | 8                     | 38         | none             |
+  | `class/lkf/lkf2004`                       | 10                    | 44         | none             |
+  | `class/lkf/lkf2005`                       | 11                    | 55         | none             |
+  | `class/lkf/lkf2006`                       | 16                    | 62         | none             |
+  | `class/lkf/lkf2007`                       | 10                    | 56         | none             |
+  | `class/lkf/lkf2008`                       | 11                    | 54         | none             |
+  | `class/lkf/lkf2009`                       | 11                    | 54         | none             |
+  | `class/lkf/lkf2010`                       | 12                    | 61         | none             |
+  | `class/lkf/lkf2011`                       | 10                    | 58         | none             |
+  | `class/lkf/lkf2012`                       | 10                    | 62         | none             |
+  | `class/lkf/lkf2013`                       | 11                    | 61         | none             |
+  | `class/lkf/lkf2014`                       | 10                    | 56         | none             |
+  | `class/lkf/lkf2015`                       | 9                     | 49         | none             |
+  | `class/lkf/lkf2016`                       | 15                    | 55         | none             |
+  | `class/lkf/lkf2017`                       | 10                    | 57         | none             |
+  | `class/lkf/lkf2018`                       | 11                    | 58         | none             |
+  | `class/lkf/lkf2019`                       | 9                     | 58         | none             |
+  | `class/lkf/lkf2020`                       | 7                     | 64         | none             |
+  | `class/lkf/lkf2021`                       | 10                    | 60         | none             |
+  | `class/lkf/lkf2022`                       | 12                    | 61         | none             |
+  | `class/lkf/lkf2023`                       | 11                    | 50         | none             |
+  | `class/lkf/lkf2024`                       | 9                     | 52         | none             |
+  | `class/lkf/lkf2025`                       | 5                     | 23         | none             |
+  | `class/niva-old/niva-oldv1`               | 5                     | 29         | none             |
+  | `class/sektor/sektor2000`                 | 1                     | 7          | none             |
+  | `class/sektorkod/sektorkod`               | 2                     | 22         | `"99"`           |
+  | `class/sni/sni2002`                       | 11                    | 46         | none             |
+  | `class/sni/sni2007`                       | 13                    | 122        | none             |
+  | `class/sni/sni1969`                       | 4                     | 48         | none             |
+  | `class/sni/sni1992`                       | 5                     | 89         | none             |
+  | `class/ssyk/ssyk2012`                     | 21                    | 61         | none             |
+  | `class/ssyk/ssyk1996`                     | 32                    | 124        | none             |
+  | `class/sun/sun1996`                       | 3                     | 19         | none             |
+  | `class/sun-grupp/sun2000-grupp`           | 1                     | 2          | none             |
+  | `class/sun-inriktning/sun2000-inriktning` | 9                     | 37         | none             |
+  | `class/sun-niva/sun2000-niva`             | 14                    | 63         | none             |
+  | `class/sun-grupp/sun2020-grupp`           | 1                     | 3          | none             |
+  | `class/sun-inriktning/sun2020-inriktning` | 3                     | 21         | none             |
+  | `class/sun-niva/sun2020-niva`             | 6                     | 31         | none             |
 
 ### Legacy meanings
 
-The schema has no separate home for a sentinel meaning that differs from the bound
-item's supplied label. The 845 differing version/code/label combinations (357 exact
-grouped rows) are listed as dropped in [the sentinel-meanings
-report](rebuild_convert_sentinel_meanings_report.md). Existing code labels are retained.
-Equal meanings require no separate storage.
+The schema has no separate sentinel-meaning field. The earlier read-only audit found 845
+differing version/code/label combinations, grouped into 357 exact code/meaning/label
+combinations. Those separate meanings are dropped with that single reason; existing
+labels and content hashes remain unchanged. Routine missing, unknown, abroad,
+inapplicable and nonresponse wording is summarized by these counts, not repeated in a
+per-delivery table.
+
+The following non-routine labels or meanings remain for review. This shortlist records
+source descriptions; it does not change flags or redefine the sentinel policy.
+
+  | Source                                    | Code(s)                                                                                                                | Description requiring review                                                                                       |
+  | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+  | `class/lkf/lkf2008`                       | `00`, `0000`                                                                                                           | Bound label `Hela riket`, rather than missing/inapplicable wording.                                                |
+  | `class/lkf/lkf2008`                       | `9999`                                                                                                                 | Bound label `Riket exkl. Gotland`; legacy meaning `Utländsk adress`.                                               |
+  | `class/lkf/lkf2021`                       | `0000`                                                                                                                 | Bound label `kommun eller region ägd`.                                                                             |
+  | `class/lkf/lkf2011`                       | `0000`                                                                                                                 | Bound label `Kursort = skolort`.                                                                                   |
+  | `class/lkf/lkf2017`, `lkf2018`, `lkf2019` | `9999`                                                                                                                 | Bound label `Samma som skolkommun`.                                                                                |
+  | `class/lkf/lkf2020`–`lkf2024`             | `0000`                                                                                                                 | Bound label `Personen är inte folkbokförd`.                                                                        |
+  | `class/lkf/lkf1999`                       | `99`, `9900`                                                                                                           | `99` has legacy meaning `Obefintliga` and label `Utomlands`; `9900` has label `Obefintliga`.                       |
+  | `class/ssyk/ssyk1996`                     | `2140`, `2410`, `2420`, `2490`, `3110`, `4210`, `5220`, `7210`, `7230`, `7340`, `8120`, `8140`, `8250`, `8260`, `8280` | Occupation-group labels (sometimes with `4:e siffran okodad`), against legacy meaning `Bortfall på fyrsiffernivå`. |
+  | `class/ssyk/ssyk2012`                     | `9993`                                                                                                                 | Bound label `Arbetslös`.                                                                                           |
+  | `class/sni/sni2007`                       | `U99`                                                                                                                  | Bound label `Internationella organisationer`.                                                                      |
+  | `class/sni/sni2002`                       | `XXXXX`                                                                                                                | Bound label `Samtliga branscher`.                                                                                  |
+  | IoT `MAKEBOST`, local 1991 claim          | `00`, `99`                                                                                                             | Exact source descriptions `Övriga fall` and `Mantalsskrivna i samma län men ej samma fastighet`.                   |
 
 ### Interaction with local setters
 
-All nine local setter hashes also have classification bindings. Seven local code lists
-differ from the book-list intersection on that hash; two agree. The old builder combines
-book sentinels with scoped certificates, so book allowances must not negate local
-source-reviewed sentinel claims. The local-source scope proof above remains valid.
+All nine local setter hashes also have classification bindings. Their local codes are
+additional exemptions, not replacements for the original book-list intersections. The
+old builder combines book sentinels with scoped certificates, so book allowances must
+not negate local source-reviewed sentinel claims. The local-source scope proof above
+remains valid.
 
-  | Local setter                                                                  | Local codes            | Bound classification intersection   |
-  | ----------------------------------------------------------------------------- | ---------------------- | ----------------------------------- |
-  | `r2: folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'` | `"111183"`             | `class/lkf/lkf1987`: empty          |
-  | `r2: folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'` | `"048080"`, `"202084"` | `class/lkf/lkf1988`: empty          |
-  | `r2: folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'`     | `"2020"`               | `class/lkf/lkf1988`: empty          |
-  | `r25: individer-och-dodsbon: KUSNI @1987 where key = 'v21073'`                | `"09350"`, `"83100"`   | `class/sni/sni1969`: `"00000"`      |
-  | `r25: individer-och-dodsbon: BNGR @2003 where key = 'v2702'`                  | `"72201"`              | `class/sni/sni2002`: `"00000"`      |
-  | `r25: individer-och-dodsbon: BSUN @1996 where key = 'v8189'`                  | `"90000"`, `"[NULL]"`  | `class/sun/sun1996`: empty          |
-  | `r25: individer-och-dodsbon: MAKEBOST @1991 where key = 'v39851'`             | `"00"`, `"99"`         | `class/lkf/lkf1991`: `"00"`, `"99"` |
-  | `r25: individer-och-dodsbon: TNLAN @1990 where key = 'v39966'`                | `"00"`                 | `class/lkf/lkf1991`: `"00"`         |
-  | `r34: foretag: Org_Sni92 @1990,1991,1992,1993,1994,1995 where key = 'v19054'` | `"01250"`, `"02010"`   | `class/sni/sni1992`: `"00000"`      |
+  | Local setter                                                                  | Local codes            | Bound classification intersection |
+  | ----------------------------------------------------------------------------- | ---------------------- | --------------------------------- |
+  | `r2: folkbokforda-personer-kvartal: Forsamling @1986-12-31 where key = 'v31'` | `"111183"`             | `class/lkf/lkf1987`: empty        |
+  | `r2: folkbokforda-personer-kvartal: Forsamling @1987-12-31 where key = 'v31'` | `"048080"`, `"202084"` | `class/lkf/lkf1988`: empty        |
+  | `r2: folkbokforda-personer-kvartal: Kommun @1987-12-31 where key = 'v36'`     | `"2020"`               | `class/lkf/lkf1988`: empty        |
+  | `r25: individer-och-dodsbon: KUSNI @1987 where key = 'v21073'`                | `"09350"`, `"83100"`   | `class/sni/sni1969`: `"00000"`    |
+  | `r25: individer-och-dodsbon: BNGR @2003 where key = 'v2702'`                  | `"72201"`              | `class/sni/sni2002`: `"00000"`    |
+  | `r25: individer-och-dodsbon: BSUN @1996 where key = 'v8189'`                  | `"90000"`, `"[NULL]"`  | `class/sun/sun1996`: empty        |
+  | `r25: individer-och-dodsbon: MAKEBOST @1991 where key = 'v39851'`             | `"00"`, `"99"`         | `class/lkf/lkf1991`: empty        |
+  | `r25: individer-och-dodsbon: TNLAN @1990 where key = 'v39966'`                | `"00"`                 | `class/lkf/lkf1991`: empty        |
+  | `r34: foretag: Org_Sni92 @1990,1991,1992,1993,1994,1995 where key = 'v19054'` | `"01250"`, `"02010"`   | `class/sni/sni1992`: `"00000"`    |
 
 ## Other unmapped fields
 
@@ -351,48 +336,60 @@ source-reviewed sentinel claims. The local-source scope proof above remains vali
 
 ## Implementation and validation
 
-Fix-02 corrects fix-01's interpretation: inventory sentinel lists describe known
-non-canonical codes in bound columns, not membership of the canonical book. The engine
-projects each list onto the direct and population-alternative sets of occurrences
-curated to that exact version. The book's own set is unchanged. Unobserved declarations
-are counted without refusal. Classification versions sharing a hash must agree about
-codes present there; codes absent from that set do not cause a conflict.
+Fix-03 applies explicit sentinel setters after `set value_set` overrides. Their premises
+and flags therefore use the final published hashes, including population alternatives.
+Classification lists are additive on shared hashes; only a listed code canonical in
+another bound version refuses, locating both binding authors and the inventory sources.
+Disagreeing local complete claims still refuse.
 
-Explicit local certificates and classification exemptions are additive, as in the old
-builder. Local/local complete-list conflicts and classification/classification projected
-conflicts are checked separately before emitting their union. Missing codes in an
-explicit local setter still refuse. Code/label/parent identity is unchanged. Binding
-premises lock inventory sentinel lists and observed value-set hashes. Those content
-hashes already cover all item facts; no duplicate item snapshots are required for
-classification bindings. Explicit local setters retain their item validation.
+All 63 inventory lists again equal their legacy declarations (490 code/version pairs).
+The 22 fix-02 additions and generic evidence suffixes are removed. Four Lisa AstLan
+claims are already marked set-wide by the original LKF1992/LKF1993 lists; no scoped
+setter is added. The actual empty code remains a real item: only the four literal
+`[BLANK]` declarations listed above are currently curated.
 
-The 44 delivery-header mappings remain deferred to E; genuine `set synonyms` is still
-supported. Roles share one vocabulary. Unit types remain table-only, with the existing
-non-null dictionary label represented by the slug. All six register-name corrections are
-already satisfied by source titles after reader trimming.
+The unwritten `variable_unit_type` table, its variable-show field and reader, and its
+diff facet are deleted. The catalog schema is 5 and operation contract is 6.0.0; project
+document schema remains 5.1.0. Exact-version guards are preserved: schema-5 `diff` and
+`verify --previous` refuse the schema-4 0.66.0 catalog. The Operator's comparison must
+account for this intentional schema boundary; no compatibility path or bypass was
+introduced.
 
-Read-only audit used input commit `9186fcbceeb2283a50c7f684764869e4dda5765e` and the
-published 0.66.0 catalog. The pinned SCB archive SHA-256 is
-`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`. The binding audit
-and every noncanonical-code amendment are recorded above. Distinct legacy meanings have
-no published home and remain named drops in the linked report; source labels were not
-overwritten.
+Operator-provided evidence for parent `06687d8d`: its real build and
+`verify --previous 0.66.0` passed, and its diff changed only sentinel flags on 965 value
+sets. Those are the Operator's results, not a new full build in this fix.
 
-Final implementation checks:
+Checks run in this fix:
 
 - `cargo build --release -p reg-build --locked` passed.
+- The saved pre-fix builder silently reproduced the defect: lock/build/verify passed
+  with replacement code `0` unmarked and superseded source code `0` marked. The new
+  hardest-case HTTP corpus scenario uses two lists that both contain `0`, places
+  sentinel curation before the override, and checks both the published replacement and
+  unchanged control. No existing case covered sentinel/override ordering. It uses the
+  existing multi-request harness unchanged; source lists and independently calculated
+  hashes supply the oracle.
+- The fixed release binary's synthetic lock/build/verify passed. Direct publication
+  checks confirmed replacement `0` marked, original/control `0` unmarked, unchanged
+  value-set hashes and absence of the removed table.
+- Separate synthetic classification checks passed: differing noncanonical exemption
+  lists union on a shared set; making code `0` canonical in the other bound version
+  produces `sentinel-conflict` at both authors.
+- Cross-schema guard checks passed: schema-5 `verify --previous` against a valid
+  schema-4 fixture exits 1, and `diff` exits 2 with the schema mismatch.
 - `gate.py g0 rust` passed: static checks, Clippy, workspace Rust tests, dependency
-  audit, 116 script tests, byte-identical synthetic builds, and 201 conformance checks
-  (two skipped). Final gate times: G0 25 s, Rust 7 s. Existing fixture inputs and
-  expected outputs were unchanged.
-- The final release binary's synthetic lock/build/verify passed. Direct publication
-  checks confirmed unchanged content hash, untouched canonical-book sets, observed
-  direct and population-alternative flags, and additive local certificates.
-- Different lists agreeing on all present codes passed. Unobserved declarations were
-  counted without refusal. Present-code disagreement refused at both binding statements;
-  a missing code in an explicit local setter still refused.
-- Independent review passed, including premise coverage by verified content hashes and
-  the separate classification/local conflict checks. No new tests were added. No
-  real-seed build, full-artifact verify/diff, `gate.py regen`, release publication or PR
-  merge ran. The Operator runs the full pinned build, verify and comparison against
-  0.66.0 after push.
+  audit, 116 script tests, byte-identical synthetic builds, and 203 conformance checks
+  (two skipped). Gate times: G0 65 s, Rust 16 s. Contract oracles changed only for the
+  removed field and version gates; no expected semantic result was weakened.
+- Independent review passed, including the regression's test-policy checks, final
+  value-set premises, canonical-code guard and schema/API contract edits.
+- All-register `reg-build lock` passed against input commit
+  `9186fcbceeb2283a50c7f684764869e4dda5765e` and SCB archive SHA-256
+  `a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`. It refreshed 1,023
+  existing premises across 132 root lock files, adding or removing no keys. All 63
+  legacy lists (490 pairs) match their binding premises exactly. It reported 45
+  redundant-set notices and one unused declaration (`sektorkod/99`, 22 bound sets), with
+  no refusals. The new regression fixture was locked separately.
+
+No real-seed build, full-artifact verify/diff, `gate.py regen`, release publication or
+PR merge ran. The Operator reruns full validation after push.

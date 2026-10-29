@@ -172,7 +172,7 @@ def inventory(root):
                     line,
                     "classification-sentinels",
                     "converted",
-                    reason="set-wide sentinel codes in classification inventory",
+                    reason="known noncanonical codes in bound columns",
                     count=len(definition["sentinel_codes"]),
                 )
             )

@@ -380,20 +380,21 @@ Accepting one requires reviewed curation and a premise lock.
   Table setters require a source-stated or asserted table, not a synthesized implicit
   table. Table and release `name` changes preserve their public ids; variable names use
   `label`. Variable `synonyms` enrich search labels without adding delivery aliases.
-  `set sentinels` at an occurrence or variable address applies to the selected value-set
-  hashes, including population alternatives. Sentinel codes are set-wide:
-  `vs_item.sentinel` changes for every reference to that shared set. Missing codes and
-  disagreeing declarations for the same hash refuse at their authoring locations.
-  Classification inventory `sentinel_codes` names known non-canonical codes in columns
-  bound to that exact version, not codes in its canonical book. It marks the listed
-  codes present in each bound occurrence's value sets, including population
-  alternatives; declarations absent from all bound sets are counted, not refused. Two
-  versions sharing a bound set must agree about sentinel status for every code present
-  there. Disagreements refuse at both bindings. The bits remain set-wide, and the hash
-  remains based on code, label and parent, without sentinel status. Occurrence-scoped
-  sentinel claims on shared sets are deferred to sentinel-aware value-set identity;
-  revisit when a dropped scoped entry needs it. Register name corrections that differ
-  from source remain deferred: they need a register address in the grammar.
+  `set sentinels` at an occurrence or variable address applies after value-set overrides
+  to the published hashes, including population alternatives. Sentinel codes are
+  set-wide: `vs_item.sentinel` changes for every reference to that shared set. Missing
+  codes in an explicit setter and disagreeing local declarations for the same hash
+  refuse at their authoring locations. Classification inventory `sentinel_codes` names
+  known non-canonical codes in columns bound to that exact version, not codes in its
+  canonical book. It marks the listed codes present in each bound occurrence's value
+  sets, including population alternatives; declarations absent from all bound sets are
+  counted, not refused. Classification lists sharing a bound set are additive. A listed
+  code that is canonical in another version bound to that set refuses at both bindings.
+  The bits remain set-wide, and the hash remains based on code, label and parent,
+  without sentinel status. Occurrence-scoped sentinel claims on shared sets are deferred
+  to sentinel-aware value-set identity; revisit when a dropped scoped entry needs it.
+  Register name corrections that differ from source remain deferred: they need a
+  register address in the grammar.
 - `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
   as keys. Premises contain sorted `subjects` and `objects`: source locators,
   coordinates, overridden values, guards and dependent facts, including the destination
@@ -737,17 +738,17 @@ overlapping curated overrides are refused at both locations.
 
 **Decisions taken in milestone C.**
 
-- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two v4 catalogs by
-  natural key (pid, table name, meta key), never by row id, in nine sections: schema
-  (`sqlite_master`), meta, row counts per table, ids (added, removed, kind changed,
-  retired), provider and register names, table names, roles, unit-type slugs and spans,
-  per-variable segments and published unit-type memberships, label and definition runs,
-  value sets (including shared-hash sentinel changes and the codes added and removed
-  where only a segment's value-set hash changed), and finding counts per code. Text
-  shows at most `N` (default 20) per section; `--json` is complete. Exit 0 when nothing
-  differs, 1 when something does (the meta keys `generation_id`, `catalog_version`,
-  `builder_version` and `curation_digest` never count, since they differ every release),
-  2 on a usage or IO error or a missing or different `schema_version` major.
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
+  catalogs by natural key (pid, table name, meta key), never by row id, in nine
+  sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
+  kind changed, retired), provider and register names, table names, roles, unit-type
+  slugs and spans, per-variable segments, label and definition runs, value sets
+  (including shared-hash sentinel changes and the codes added and removed where only a
+  segment's value-set hash changed), and finding counts per code. Text shows at most `N`
+  (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
+  something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
+  and `curation_digest` never count, since they differ every release), 2 on a usage or
+  IO error or a missing or different `schema_version` major.
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -764,7 +765,10 @@ overlapping curated overrides are refused at both locations.
   skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable.
+  other version is not comparable. Schema 5 removes the unwritten `variable_unit_type`
+  table. Unit types remain table metadata; variable summaries no longer expose an
+  always-empty membership field. This also makes the operation contract 6.0.0. Schema-4
+  releases cannot be passed to the schema-5 `diff` or `verify --previous` commands.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
@@ -1026,7 +1030,7 @@ and `sun2000niva`.
 ```json
 {
   "data": {
-    "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
+    "catalog": {"generation_id": "9f2c…", "catalog_version": "dev", "schema_version": "5"},
     "project": {"name": "income-panel", "schema_version": "5.1.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [

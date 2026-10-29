@@ -1,4 +1,4 @@
-//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two v4 catalogs
+//! `reg-build diff OLD NEW [--json] [-n N]`: what changed between two catalogs
 //! (`crates/DESIGN.md`, "Release diff").
 //!
 //! Everything is compared by natural key (pid, table name, meta key), never by row id:
@@ -638,13 +638,6 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
     let (old_pids, new_pids) = (pids(&p.old)?, pids(&p.new)?);
     let (old_segs, new_segs) = (segments(&p.old)?, segments(&p.new)?);
     let (old_runs, new_runs) = (runs(&p.old)?, runs(&p.new)?);
-    let unit_types = "SELECT v.pid, u.slug FROM variable_unit_type m
-                      JOIN variable v ON v.id = m.variable_id
-                      JOIN unit_type u ON u.id = m.unit_type_id";
-    let (old_units, new_units) = (
-        memberships(&p.old, unit_types)?,
-        memberships(&p.new, unit_types)?,
-    );
     let (old_labels, new_labels) = p.maps(
         "SELECT v.pid, t.body FROM variable v JOIN text t ON t.id = v.label_text",
         |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
@@ -668,14 +661,6 @@ fn variables(p: &Pair) -> Res<(Section, Vec<HashChange>)> {
 
         let mut facets = serde_json::Map::new();
         let mut lines = vec![pid.clone()];
-        let (unit_old, unit_new) = (old_units.get(pid), new_units.get(pid));
-        if unit_old != unit_new {
-            facets.insert(
-                "unit_types".into(),
-                json!({"old": unit_old, "new": unit_new}),
-            );
-            lines.push(format!("  unit_types: {unit_old:?} → {unit_new:?}"));
-        }
         if !seg_old.is_empty() || !seg_new.is_empty() {
             facets.insert(
                 "segments".into(),

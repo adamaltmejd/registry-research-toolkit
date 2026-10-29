@@ -1072,9 +1072,7 @@ fn apply_fields(
                     if !reg_core::is_slug(winning.as_str().expect("typed unit type")) {
                         return Err("set unit_type requires a catalog slug".into());
                     }
-                    if kind == "table" {
-                        after["unit_type"] = winning.clone();
-                    }
+                    after["unit_type"] = winning.clone();
                 }
                 "name" if winning.as_str().is_none_or(|v| v.trim().is_empty()) => {
                     return Err("set name requires a nonblank entity name".into());

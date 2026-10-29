@@ -279,9 +279,12 @@ The full SCB read is a heavy run.
   - B4: when C or D next changes `crates/reg-resolve/src/lib.rs` (1,569 lines), move
     gaps, cadence and stretch into `gaps.rs` and `assign_ids` and `Anchor` into
     `ledger.rs`. Code move only, no behaviour change, not a standalone PR;
-  - for `reg-catalog` and the SPA: a blank code (`""`, SCB's "Uppgift saknas") is a real
-    item until D marks it a sentinel. It must render and be searchable, and never be
-    confused with "no value set".
+  - for `reg-catalog` and the SPA: a blank code (`""`, SCB's "Uppgift saknas") remains a
+    real item unless explicitly curated. Current sentinel lists declare the literal
+    `[BLANK]` for LKF2016, SSYK1996, SUN2000-inriktning and SUN2000-niva when present in
+    their bound sets; `[BLANK]` is not translated to `""`, and no converted list or
+    local setter currently marks `""`. Elsewhere a blank stays a real item. It must
+    render and be searchable, and never be confused with "no value set".
 - **The link stage:**
   - cross-register `continues` and `derived-from` links;
   - the SCB export's `Timeseries` events (series breaks, ends, replacements) and release

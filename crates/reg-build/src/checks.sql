@@ -1,4 +1,4 @@
--- Post-write checks of the catalog file (schema v4): each returns no rows.
+-- Post-write checks of the catalog file (schema v5): each returns no rows.
 -- PRAGMA integrity_check runs separately (it returns 'ok').
 PRAGMA foreign_key_check;
 

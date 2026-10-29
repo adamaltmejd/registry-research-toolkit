@@ -72,7 +72,6 @@ pub enum Show {
         /// The register's fqid.
         register: String,
         period: Period,
-        unit_types: Vec<String>,
         texts: Vec<ShowText>,
         spellings: Vec<ShowSpelling>,
         /// The fqids of the tables the variable has segments in.
@@ -365,13 +364,6 @@ fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 ))
             },
         )?;
-    let unit_types = conn
-        .prepare(
-            "SELECT u.slug FROM variable_unit_type vu JOIN unit_type u ON u.id = vu.unit_type_id
-             WHERE vu.variable_id = ? ORDER BY u.slug",
-        )?
-        .query_map([entity.id], |row| row.get(0))?
-        .collect::<rusqlite::Result<_>>()?;
     let texts = conn
         .prepare(
             "SELECT vt.start, vt.end, l.body, d.body, o.body, u.body
@@ -416,7 +408,6 @@ fn variable(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         definition,
         register,
         period: server.period(start, end),
-        unit_types,
         texts,
         spellings,
         tables,

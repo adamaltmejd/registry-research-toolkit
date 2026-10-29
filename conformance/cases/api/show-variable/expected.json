@@ -8,7 +8,6 @@
       "/data/definition": null,
       "/data/register": "demo/reg2",
       "/data/period": {"start": "2019-01-01", "end": "2021-01-01"},
-      "/data/unit_types": [],
       "/data/texts": [
         {
           "period": {"start": "2019-01-01", "end": "2020-01-01"},
@@ -41,8 +40,7 @@
         "register",
         "spellings",
         "tables",
-        "texts",
-        "unit_types"
+        "texts"
       ]
     }
   }

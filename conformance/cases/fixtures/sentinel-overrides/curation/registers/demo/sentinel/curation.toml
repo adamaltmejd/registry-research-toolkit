@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "var:current"
+fields.sentinels = ["0"]
+evidence = "The reviewed missing code belongs to the published replacement set."
+
+[[statement]]
+kind = "set"
+subject = "var:current"
+fields.value_set = "7f11a187056ed0702a1d381b2b0d2539f5cff265cd384a4483ca64cba5d8ee0d"
+evidence = "Use the replacement source list; keep the control on the original list."
