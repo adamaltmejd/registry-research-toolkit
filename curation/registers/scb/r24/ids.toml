@@ -43,7 +43,7 @@ public = "ureg"
 "hogsta-utbildningens-niva-sun2020-aldre-aggregat-till-sju-varden" = ["Personens högsta utbildning: SUN2020Niva_old"]
 "hogsta-utbildningens-niva-sun2020-forsta-positionen" = ["Personens högsta utbildning: SUN2020Niva_1"]
 "hogsta-utbildningens-niva-sun2020-grovt-aggregat-till-fyra-varden" = ["Personens högsta utbildning: SUN2020Niva_Grov"]
-"hogsta-utbildningens-niva-sun2020-tva-forsta-positionerna" = ["Komvux: sun2020Niva_2"]
+
 "isced-f-2013" = ["Personens högsta utbildning: ISCED_F_2013"]
 "isced2011niva" = ["Personens högsta utbildning: ISCED2011Niva"]
 "kallar" = ["Komvux: kallar"]
@@ -65,7 +65,7 @@ public = "ureg"
 "sun2020grp" = ["Personens högsta utbildning: SUN2020Grp"]
 "sun2020grp-detalj" = ["Personens högsta utbildning: SUN2020Grp_Detalj"]
 "sun2020inr" = ["Komvux: SUN2020Inr"]
-"sun2020niva" = ["Komvux: SUN2020Niva"]
+
 "sun2020niva-det" = ["Personens högsta utbildning: SUN2020Niva_Det"]
 "sungrov" = ["Personens högsta utbildning,16-74 år: SUNGrov"]
 "sungrp" = ["Personens högsta utbildning,16-74 år: SUNGrp"]
@@ -86,3 +86,8 @@ public = "ureg"
 "ypoang-num" = ["Komvux: YPoang_Num"]
 "ytantal" = ["Komvux: YTantal"]
 "ytutim" = ["Komvux: YTutim"]
+
+"hogsta-utbildningens-niva-foregaende-ar-sun2020-fullstandig" = ["Komvux: sun2020niva @ 1988-07-01"]
+"hogsta-utbildningens-niva-foregaende-ar-sun2020-tva-forsta" = ["Komvux: sun2020Niva_2 @ 1988-07-01"]
+"hogsta-utbildningens-niva-sun2020-tva-forsta-sun2020niva-2" = ["Personens högsta utbildning: SUN2020Niva_2 @ 2019-01-01"]
+"utbildningsniva-sun2020niva" = ["Personens högsta utbildning: SUN2020Niva @ 2019-01-01"]

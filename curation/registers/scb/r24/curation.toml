@@ -988,9 +988,45 @@ kind = "set"
 subject = "var:kommun"
 fields = { "tags" = ["geography"] }
 evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:201"
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utbildningens-niva-foregaende-ar-sun2020-fullstandig"
+fields = { "tags" = ["education"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:119"
 
 [[statement]]
 kind = "set"
-subject = "var:sun2020niva"
+subject = "var:utbildningsniva-sun2020niva"
 fields = { "tags" = ["education"] }
 evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:119"
+
+
+[[statement]]
+kind = "set"
+subject = "komvux: sun2020niva_2"
+fields = { "variable" = "hogsta-utbildningens-niva-foregaende-ar-sun2020-tva-forsta" }
+evidence = "Komvux explicitly measures education from the previous year's register; the residual history measures highest education through the current spring term."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva_2"
+fields = { "variable" = "hogsta-utbildningens-niva-sun2020-tva-forsta-sun2020niva-2" }
+evidence = "Komvux explicitly measures education from the previous year's register; the residual history measures highest education through the current spring term."
+
+[[statement]]
+kind = "set"
+subject = "komvux: sun2020niva where key = 'v66' and release = 'r17564'"
+fields = { "variable" = "hogsta-utbildningens-niva-foregaende-ar-sun2020-fullstandig" }
+evidence = "Komvux explicitly measures the full education level code from the previous year's register."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: sun2020niva"
+fields = { "variable" = "utbildningsniva-sun2020niva" }
+evidence = "Komvux explicitly measures the full education level code from the previous year's register."
+
+[[statement]]
+kind = "set"
+subject = "personens-samtliga-utbildningar: sun2020niva"
+fields = { "variable" = "utbildningsniva-sun2020niva" }
+evidence = "Komvux explicitly measures the full education level code from the previous year's register."

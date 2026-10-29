@@ -22,3 +22,63 @@ kind = "set"
 subject = "kommuner: llkk @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "reg_meta_build/curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kommuner: fr45_4 where key = 'v28625'"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: webbepost"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr30_8"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr42_4"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr44_4"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "regioner: webbepost"
+fields = { "variable" = "webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2" }
+evidence = "One keyed meaning was split by release-specific column names."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: fr45_3"
+fields = { "variable" = "webbplats-med-information-om-det-politiska-styret-fr45-3-2" }
+evidence = "The same source key, label, definition, unit and value set identify one meaning split by column renaming."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr30_7"
+fields = { "variable" = "webbplats-med-information-om-det-politiska-styret-fr45-3-2" }
+evidence = "The same source key, label, definition, unit and value set identify one meaning split by column renaming."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr42_3"
+fields = { "variable" = "webbplats-med-information-om-det-politiska-styret-fr45-3-2" }
+evidence = "The same source key, label, definition, unit and value set identify one meaning split by column renaming."
+
+[[statement]]
+kind = "set"
+subject = "regioner: fr44_3"
+fields = { "variable" = "webbplats-med-information-om-det-politiska-styret-fr45-3-2" }
+evidence = "The same source key, label, definition, unit and value set identify one meaning split by column renaming."

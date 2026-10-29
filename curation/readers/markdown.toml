@@ -415,5 +415,5 @@ source = "source"
 "n:vpltyp" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:vpltyp" }]
 "n:vuxlan" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:vuxenstudiestod-lan" }]
 "n:yrkarbtyp" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:yrkarbtyp" }]
-"n:yrkstalln" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:yrkesstallning" }]
+"n:yrkstalln" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:yrkesstallning-yrkstalln" }]
 "n:yrkstallnkomb" = [{ "kind" = "variable", "provider" = "scb", "register" = "r34", "key" = "var:yrkstallnkomb" }]

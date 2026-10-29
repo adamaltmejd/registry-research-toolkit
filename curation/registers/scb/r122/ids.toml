@@ -1316,9 +1316,9 @@ public = "aku"
 "namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetag" = ["AKU april 2005 - dec 2020: UarbForetag # v6880"]
 "namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetagku" = ["AKU april 2005 - dec 2020: UARBFORETAGKU"]
 "nar-upphor-din-tidsbegransade-anstallning" = ["AKU april 2005 - dec 2020: hu12a"]
-"nattarbete-i-huvudsysslan-frekvens-hsarbnattant" = ["AKU fr.o.m. januari 2021: HsArbNattAnt"]
+
 "nattarbete-i-huvudsysslan-frekvens-huarbnatt" = ["AKU april 2005 - dec 2020: HuArbNatt # v6522"]
-"nattarbete-i-huvudsysslan-frekvens-huarbnattant" = ["AKU april 2005 - dec 2020: HUARBNATTANT"]
+
 "nattarbete-i-huvudsysslan-harledd" = ["AKU april 2005 - dec 2020: HUARBNATT # v7103"]
 "skiftarbete-hu24" = ["AKU april 2005 - dec 2020: Hu24"]
 "skiftarbete-huskift" = ["AKU april 2005 - dec 2020: HUSKIFT # v30623"]
@@ -1331,3 +1331,5 @@ public = "aku"
 "vet-ej-om-sokt-annat-arbete-sysselsatta-syssoksatt88" = ["AKU april 2005 - dec 2020: SysSokSatt88 # v6850"]
 "yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall" = ["AKU april 2005 - dec 2020: UARBSOKTYRKSTALL # v6908"]
 "yrkesstallning-i-senaste-arbete-personer-utan-uarbyrkstall" = ["AKU april 2005 - dec 2020: UARBYRKSTALL # v6908"]
+
+"nattarbete-i-huvudsysslan-frekvens-huarbnattant-2" = ["AKU april 2005 - dec 2020: HUARBNATTANT @ 2005-04-01"]

@@ -292,3 +292,15 @@ kind = "set"
 subject = "var:vardear-vaeaar"
 fields = { "sets" = ["legacy-vardear"] }
 evidence = "reg_meta_build/curation/registers/scb/iku.toml:156\n\nComplete source-native construct, exact operations, own domains and full-register physical collision review; all original storage, source periods, parents and coding associations retained. Batch52-IKU-exact-context-disposition-proposal.json; Batch52-IKU-source-positive-proof.json."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: a91 where key = 'v21695'"
+fields = { "variable" = "totalyta-a91-2" }
+evidence = "In 2009, A91 replaces Y91 in the private housing table with identical key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: y91"
+fields = { "variable" = "totalyta-a91-2" }
+evidence = "In 2009, A91 replaces Y91 in the private housing table with identical key, label, definition, unit and value set."

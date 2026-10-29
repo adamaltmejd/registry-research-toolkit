@@ -1546,3 +1546,129 @@ kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: {finr1,finr2,ifinr1,ifinr2,ifinr3,inffield1,inffield2,infinr1,infinr2,infinr3}"
 fields = { "classification" = "class/sun-inriktning/sun2000-inriktning" }
 evidence = "reg_meta_build/curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: difficulty"
+fields = { "variable" = "svarighet-vid-utbildningsdeltagande-anger-om-personen-har" }
+evidence = "DIFFICULTY was renamed WANT with the same key, label, definitions, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: want"
+fields = { "variable" = "svarighet-vid-utbildningsdeltagande-anger-om-personen-har" }
+evidence = "DIFFICULTY was renamed WANT with the same key, label, definitions, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_4 @2022"
+fields = { "variable" = "informationskalla-informationskallan-ar-en-annan" }
+evidence = "GUIDESOURCE_4 was reassigned from a trade union to another institution or organization; the latter option previously occupied the separate GUIDESOURCE_5 column."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_5"
+fields = { "variable" = "informationskalla-informationskallan-ar-en-annan" }
+evidence = "GUIDESOURCE_4 was reassigned from a trade union to another institution or organization; the latter option previously occupied the separate GUIDESOURCE_5 column."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_4 @2016"
+fields = { "variable" = "informationskalla-informationskallan-ar-en-guidesource-4" }
+evidence = "GUIDESOURCE_4 was reassigned from a trade union to another institution or organization; the latter option previously occupied the separate GUIDESOURCE_5 column."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud1"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval1" }
+evidence = "One cost meaning was split by a column rename; key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval1"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval1" }
+evidence = "One cost meaning was split by a column rename; key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud2"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2" }
+evidence = "One cost meaning was split by a column rename; the training-2 role, key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval2"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval2-2" }
+evidence = "One cost meaning was split by a column rename; the training-2 role, key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifeurostud3"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2" }
+evidence = "One cost meaning was split by a column rename; the training-3 role, key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfepaidval3"
+fields = { "variable" = "kostnader-icke-formell-utbildning-avser-icke-nfepaidval3-2" }
+evidence = "One cost meaning was split by a column rename; the training-3 role, key, label, definition, unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd1"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-formell-nfenbhours1" }
+evidence = "One duration meaning was split by a column rename; key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours1"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-formell-nfenbhours1" }
+evidence = "One duration meaning was split by a column rename; key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd2"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-nfenbhours2-2" }
+evidence = "One duration meaning was split by a column rename; the training-2 role, key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours2"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-nfenbhours2-2" }
+evidence = "One duration meaning was split by a column rename; the training-2 role, key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: iflangd3"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-nfenbhours3-2" }
+evidence = "One duration meaning was split by a column rename; the training-3 role, key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfenbhours3"
+fields = { "variable" = "langd-icke-formell-utbildning-avser-icke-nfenbhours3-2" }
+evidence = "One duration meaning was split by a column rename; the training-3 role, key, label, definition, hour unit and value set agree."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: guidesource_1"
+fields = { "variable" = "informationskalla-informationskallan-ar-en-skola" }
+evidence = "The 2011/2012 and 2016 occurrences share the source key, label, definition, unit and substantive value set under renamed columns."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: seeksource_5"
+fields = { "variable" = "informationskalla-informationskallan-ar-en-skola" }
+evidence = "The 2011/2012 and 2016 occurrences share the source key, label, definition, unit and substantive value set under renamed columns."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeactweight"
+fields = { "variable" = "gregvikt-beraknad-vikt-for-varje-icke-formell" }
+evidence = "The unsuffixed column became NFEACTWEIGHT_5 with identical source key, label, definitions, unit and value-set status."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: nfeactweight_5"
+fields = { "variable" = "gregvikt-beraknad-vikt-for-varje-icke-formell" }
+evidence = "The unsuffixed column became NFEACTWEIGHT_5 with identical source key, label, definitions, unit and value-set status."

@@ -2404,9 +2404,237 @@ kind = "set"
 subject = "individer-och-dodsbon: TNLAN @1990 where key = 'v39966'"
 fields = { sentinels = ["00"] }
 evidence = "reg_meta_build/curation/registers/scb/iot.toml:5055; Retain exact source-labelled unknown or nongeographic values as checked local classification sentinels. Complete pinned SCB source originals and ordered coding claims explicitly supply these literal meanings. Apply only to this physical column and finite delivery window under the reviewed local sentinel policy. Preserve all source labels, codes, associations, scopes and formal geography codes; this neither assigns geography to unknown values nor changes the canonical book. Shared-set scope audit against 0.66.0: all references to 1bc176d895af8e9195741580bb229eaed66ff48c7d705577b2481a45036fbc24 are inside this exact original entry scope."
+[[statement]]
+kind = "set"
+subject = "var:familjetyp-bfamtyp"
+fields = { "tags" = ["family-household"] }
+evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:153"
 
 [[statement]]
 kind = "set"
-subject = "var:familjetyp"
+subject = "var:familjetyp-famtyp"
 fields = { "tags" = ["family-household"] }
 evidence = "D-9 membership only: reg_meta_build/curation/tags.toml:153"
+
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: cfviki where key = 'v335'"
+fields = { "variable" = "forvarvs-och-kapitalinkomst-cfviki-2" }
+evidence = "FINK was renamed CFVIKI with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: fink"
+fields = { "variable" = "forvarvs-och-kapitalinkomst-cfviki-2" }
+evidence = "FINK was renamed CFVIKI with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kaprta"
+fields = { "variable" = "inkomstranta-och-utdelning-kapital-kaprta-2" }
+evidence = "KAPRTA and KIRANTA are successive spellings with the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kiranta"
+fields = { "variable" = "inkomstranta-och-utdelning-kapital-kaprta-2" }
+evidence = "KAPRTA and KIRANTA are successive spellings with the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kuapens"
+fields = { "variable" = "summa-allman-pension-tjanstepension-tjanst-kuapens-2" }
+evidence = "KUAPENS becomes PKUSSP with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkussp"
+fields = { "variable" = "summa-allman-pension-tjanstepension-tjanst-kuapens-2" }
+evidence = "KUAPENS becomes PKUSSP with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kulonf"
+fields = { "variable" = "summa-vissa-skattepliktiga-formaner-kulonf-2" }
+evidence = "KULONF was renamed TKULONF with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tkulonf"
+fields = { "variable" = "summa-vissa-skattepliktiga-formaner-kulonf-2" }
+evidence = "KULONF was renamed TKULONF with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kupenst"
+fields = { "variable" = "summa-pension-enligt-kontrolluppgift-kupenst-2" }
+evidence = "KUPENST becomes PKUPENS with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkupens"
+fields = { "variable" = "summa-pension-enligt-kontrolluppgift-kupenst-2" }
+evidence = "KUPENST becomes PKUPENS with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: livskf"
+fields = { "variable" = "skattefri-del-av-livranta-och-pension-livskf-2" }
+evidence = "LIVSKF, PKUSLSF and PSLSF are successive spellings with the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkuslsf"
+fields = { "variable" = "skattefri-del-av-livranta-och-pension-livskf-2" }
+evidence = "LIVSKF, PKUSLSF and PSLSF are successive spellings with the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pslsf"
+fields = { "variable" = "skattefri-del-av-livranta-och-pension-livskf-2" }
+evidence = "LIVSKF, PKUSLSF and PSLSF are successive spellings with the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: lon"
+fields = { "variable" = "loneinkomst-lon-2" }
+evidence = "LON changes to TLONT between releases with the same source key, label, definition, operational definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: tlont"
+fields = { "variable" = "loneinkomst-lon-2" }
+evidence = "LON changes to TLONT between releases with the same source key, label, definition, operational definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: csfvi"
+fields = { "variable" = "sammanraknad-forvarvsinkomst-csfvi-2" }
+evidence = "SINKF changes to CSFVI with the same source key, label, definition, operational definition, unit and value set at the release boundary."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sinkf"
+fields = { "variable" = "sammanraknad-forvarvsinkomst-csfvi-2" }
+evidence = "SINKF changes to CSFVI with the same source key, label, definition, operational definition, unit and value set at the release boundary."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: isjuk"
+fields = { "variable" = "sjukpenning-skattefri-isjuk-2" }
+evidence = "SJUKPF in 1992 and ISJUK in 1993 share the same source key, label, definition, unit and value set, proving a spelling-only rename."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sjukpf @1990..1992"
+fields = { "variable" = "sjukpenning-skattefri-isjuk-2" }
+evidence = "SJUKPF in 1992 and ISJUK in 1993 share the same source key, label, definition, unit and value set, proving a spelling-only rename."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sjukpf @1981..1989"
+fields = { "variable" = "sjukpenning-skattefri-sjukpf-2" }
+evidence = "SJUKPF in 1992 and ISJUK in 1993 share the same source key, label, definition, unit and value set, proving a spelling-only rename."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sktotf @1983..1989"
+fields = { "variable" = "slutlig-skatt-familj-sktotf-2" }
+evidence = "SKTOTF to STOTEXH is a rename with unchanged key, label, definition, unit and value set at the boundary."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: sktotf @1990..1992"
+fields = { "variable" = "slutlig-skatt-familj-sktotf-3" }
+evidence = "SKTOTF to STOTEXH is a rename with unchanged key, label, definition, unit and value set at the boundary."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stotexh"
+fields = { "variable" = "slutlig-skatt-familj-sktotf-3" }
+evidence = "SKTOTF to STOTEXH is a rename with unchanged key, label, definition, unit and value set at the boundary."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: istud"
+fields = { "variable" = "studiemedel-studiehjalp-lan-och-bidrag-istud-2" }
+evidence = "STUD was renamed ISTUD with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: stud"
+fields = { "variable" = "studiemedel-studiehjalp-lan-och-bidrag-istud-2" }
+evidence = "STUD was renamed ISTUD with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ckulonf"
+fields = { "variable" = "summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf-2" }
+evidence = "Successive KULONS, WKULONF and CKULONF spellings share the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kulons"
+fields = { "variable" = "summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf-2" }
+evidence = "Successive KULONS, WKULONF and CKULONF spellings share the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: wkulonf"
+fields = { "variable" = "summa-lon-och-formaner-enligt-kontrolluppgifter-ckulonf-2" }
+evidence = "Successive KULONS, WKULONF and CKULONF spellings share the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: bfamtyp"
+fields = { "variable" = "familjetyp-bfamtyp" }
+evidence = "The 1998 transition replaces five labour-income categories with thirteen family-composition categories."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: famtyp @1978..1992,1996..1997"
+fields = { "variable" = "familjetyp-bfamtyp" }
+evidence = "The 1998 transition replaces five labour-income categories with thirteen family-composition categories."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: famtyp @1998..2024"
+fields = { "variable" = "familjetyp-famtyp" }
+evidence = "The 1998 transition replaces five labour-income categories with thirteen family-composition categories."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: penst where key = 'v21783'"
+fields = { "variable" = "pensionsbeloppskontroll-per-person-penst-2" }
+evidence = "The PENST-to-PKONTR boundary preserves source key, label, definition, operational text, unit and value set, proving a spelling-only split."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkontr"
+fields = { "variable" = "pensionsbeloppskontroll-per-person-penst-2" }
+evidence = "The PENST-to-PKONTR boundary preserves source key, label, definition, operational text, unit and value set, proving a spelling-only split."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: kuppens"
+fields = { "variable" = "summa-privat-pensionsforsakring-skattepliktig-kuppens-2" }
+evidence = "The four successive spellings share the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkuslsp"
+fields = { "variable" = "summa-privat-pensionsforsakring-skattepliktig-kuppens-2" }
+evidence = "The four successive spellings share the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pkusspl"
+fields = { "variable" = "summa-privat-pensionsforsakring-skattepliktig-kuppens-2" }
+evidence = "The four successive spellings share the same key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: pslsp"
+fields = { "variable" = "summa-privat-pensionsforsakring-skattepliktig-kuppens-2" }
+evidence = "The four successive spellings share the same key, label, definition, unit and value set."

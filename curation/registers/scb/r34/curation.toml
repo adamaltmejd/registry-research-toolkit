@@ -973,12 +973,6 @@ evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2464\n\nSeparate YSE
 
 [[statement]]
 kind = "set"
-subject = "individer-15plus: opvledare"
-fields = { "variable" = "operativ-verksamhetsledare" }
-evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2624\n\nSeparate the descriptive twelve-position PersonNr_OpV identifier representation from one-position OpVLedare with exact supplied 0=Nej and 1=Ja finite domain. Native definition and source algorithm remain unchanged; no identifier or sensitivity flags are fabricated."
-
-[[statement]]
-kind = "set"
 subject = "individer-15plus: forpeng_bdag_midas"
 fields = { "variable" = "foraldrapenning-antal-bruttodagar-midas" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2088\n\nSource switch to Försäkringskassans MiDAS in 2014 (SCB: MiDAS source since 2014), joined by replaced_by in relations.toml; prepared v28 native family 34.37047: ForPeng_Bdag 1993-2012; ForPeng_Bdag_MiDAS 2016-2023."
@@ -2064,13 +2058,13 @@ subject = "var:tillfalligt-franvarande"
 relation = "derived_from"
 object = "scb/bas"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A150\n\nLISA Grundregister: BAS. BAS: SCB r404: Befolkningens arbetsmarknadsstatus (BAS)."
-
 [[statement]]
 kind = "link"
-subject = "var:yrkesstallning"
+subject = "var:yrkesstallning-byrkstalln"
 relation = "derived_from"
 object = "scb/bas"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A157\n\nLISA Grundregister: BAS. BAS: SCB r404: Befolkningens arbetsmarknadsstatus (BAS)."
+
 
 [[statement]]
 kind = "link"
@@ -5760,13 +5754,13 @@ subject = "var:tillfalligt-franvarande"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A149\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
-
 [[statement]]
 kind = "link"
-subject = "var:yrkesstallning"
+subject = "var:yrkesstallning-yrkstalln"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A153\n\nLISA Grundregister: SyssReg. SyssReg: SCB RAMS: Sysselsättningsregistret (SREG), AM0207 2003 A.12."
+
 
 [[statement]]
 kind = "link"
@@ -14145,3 +14139,33 @@ kind = "set"
 subject = "foretag: Org_Sni92 @1990,1991,1992,1993,1994,1995 where key = 'v19054'"
 fields = { sentinels = ["01250", "02010"] }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:2633; Preserve the exact supplied unknown-labelled values as bounded variable-local classification sentinels. Complete pinned SCB source coding and original family audit: these exact code-label pairs are explicitly unknown in this occurrence cohort. Substantive same-literal source categories remain outside this decision. Preserve complete source lists, original claims, fields, periods and all registry codes; no global sentinel widening or source label replacement. Shared-set scope audit against 0.66.0: all references to fba414b9b471c6191aaaa88ea747556d1f4daadd9bd91fbb4ac7f66a490ccba2 are inside this exact original entry scope."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: byrkstalln"
+fields = { "variable" = "yrkesstallning-byrkstalln" }
+evidence = "The 2022–2023 value set replaces the historical employment-status categories with a materially different classification."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: yrkstalln"
+fields = { "variable" = "yrkesstallning-yrkstalln" }
+evidence = "The 2022–2023 value set replaces the historical employment-status categories with a materially different classification."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: yrkstalln"
+fields = { "variable" = "yrkesstallning-yrkstalln" }
+evidence = "The 2022–2023 value set replaces the historical employment-status categories with a materially different classification."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: opvledare"
+fields = { "variable" = "operativ-verksamhetsledare-opvledare" }
+evidence = "The company column identifies the selected person, while the individual column records a Boolean indicator."
+
+[[statement]]
+kind = "set"
+subject = "foretag: personnr_opv"
+fields = { "variable" = "operativ-verksamhetsledare-personnr-opv" }
+evidence = "The company column identifies the selected person, while the individual column records a Boolean indicator."

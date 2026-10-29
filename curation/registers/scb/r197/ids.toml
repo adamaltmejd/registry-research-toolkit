@@ -148,7 +148,9 @@ public = "iku"
 "total-lokalyta-loyf" = ["Allmännyttiga bostadsföretag: LOYF"]
 "total-lokalyta-toyf" = ["Allmännyttiga bostadsföretag: TOYF # v3419"]
 "total-lokalyta-y20" = ["Bostadsrättsföreningar: Y20"]
-"totalyta-a91" = ["Privatägda flerbostadshus: A91 # v21695"]
+
 "totalyta-toyf" = ["Allmännyttiga bostadsföretag: TOYF # v21695"]
-"totalyta-y91" = ["Privatägda flerbostadshus: Y91"]
+
 "vardear-vaeaar" = ["Bostadsrättsföreningar: VAEAAR"]
+
+"totalyta-a91-2" = ["Privatägda flerbostadshus: A91 # v21695 @ 2009-01-01"]

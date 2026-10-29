@@ -520,7 +520,7 @@ public = "lisa"
 "nettoomsattning-justerad-merchanting" = ["Företag: Ftg_Nettoomsattning"]
 "omstallningsstudiestod" = ["Individer, 15 år och äldre: OmstStud"]
 "omvardnads-och-ferieomvardnadsbidrag" = ["Individer, 15 år och äldre: OmVardBidr"]
-"operativ-verksamhetsledare" = ["Företag: PersonNr_OpV"]
+
 "opftgledare" = ["Individer, 15 år och äldre: OpFtgLedare"]
 "opftgledarej" = ["Individer, 15 år och äldre: OpFtgLedareJ"]
 "org-antalsys" = ["Företag: Org_AntalSys"]
@@ -741,7 +741,7 @@ public = "lisa"
 "yrkarbtyp" = ["Individer, 15 år och äldre: YrkArbTyp"]
 "yrkesbaserad-seg" = ["Individer, 15 år och äldre: YSEG"]
 "yrkesbaserad-seg-eseg" = ["Individer, 15 år och äldre: ESeG @ 2015-01-01"]
-"yrkesstallning" = ["Individer, 15 år och äldre: BYrkstalln"]
+
 "yrkesstallning-nast-forvarvskallan" = ["Individer, 15 år och äldre: KU2YrkStalln"]
 "yrkesstallning-nast-forvarvskallan-agi" = ["Individer, 15 år och äldre: AGI2YrkStalln"]
 "yrkesstallning-storsta-forvarvskallan" = ["Individer, 15 år och äldre: KU1YrkStalln"]
@@ -842,3 +842,8 @@ public = "lisa"
 "yrke-enligt-ssyk-96-4-sifferniva-inkl-harledda-yrken-for" = ["Individer, 15 år och äldre: ssyk4_j16"]
 "yrkesbaserad-socioekonomisk-gruppering-inkl-harledda-yrken" = ["Individer, 15 år och äldre: yseg_j16"]
 "yrkesstallning-enligt-justerad-metod" = ["Individer, 16 år och äldre: yrkstallnj"]
+
+"operativ-verksamhetsledare-opvledare" = ["Individer, 15 år och äldre: OpVLedare @ 2023-01-01"]
+"operativ-verksamhetsledare-personnr-opv" = ["Företag: PersonNr_OpV @ 2023-01-01"]
+"yrkesstallning-byrkstalln" = ["Individer, 15 år och äldre: BYrkstalln @ 2022-01-01"]
+"yrkesstallning-yrkstalln" = ["Individer, 15 år och äldre: YrkStalln @ 2010-01-01"]

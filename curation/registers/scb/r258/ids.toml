@@ -1395,7 +1395,7 @@ public = "it-anvandning"
 "anvander-annan-fast-bredbandsanslutning-till-internet-bbwfx" = ["Befolkningens IT-användning: BBWFX # v17653"]
 "anvander-mobil-anslutning-via-gsm-natet-moboth" = ["IT-användning i företag: MOBOTH"]
 "anvander-mobil-anslutning-via-gsm-natet-mphnar1" = ["Befolkningens IT-användning: MPHNAR1 # v17652"]
-"anvander-mobiltelefon-med-3g-4g-for-internetuppkoppling" = ["Befolkningens IT-användning: DatC4A # v23393"]
+
 "anvander-traditionellt-modem-eller-isdn-for-dialup" = ["IT-användning i företag: DIALUP"]
 "anvander-traditionellt-modem-eller-isdn-for-dialup1" = ["Befolkningens IT-användning: DIALUP1"]
 "ar" = ["IT-användning i företag: ar"]
@@ -1561,3 +1561,6 @@ public = "it-anvandning"
 "webper-enligt-leverans" = ["IT-användning i företag: webper # stmt:9c20e8f9452d3f9330a64017020750a7deb9e279d688208ccc4a890972f86e38"]
 "wlan" = ["IT-användning i företag: wlan"]
 "xgrupp" = ["IT-användning i företag: xgrupp"]
+
+"anvander-mobiltelefon-med-3g-4g-for-datc4a" = ["Befolkningens IT-användning: DatC4A # v23393 @ 2010-01-01"]
+"anvander-mobiltelefon-med-3g-4g-for-empmd1pct" = ["IT-användning i företag: EMPMD1PCT # v23393 @ 2017-01-01"]
