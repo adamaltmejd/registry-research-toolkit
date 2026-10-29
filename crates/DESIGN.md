@@ -260,7 +260,12 @@ Accepting one requires reviewed curation and a premise lock.
   splits. The first ledger is generated from today's slug pins. A release build refuses
   a variable without an id, or a ledger id reported unplaced (no placed target) or split
   (anchors reach several variables). The latter refusals name the ledger file, line and
-  id; dev builds keep reporting them without refusing.
+  id; dev builds keep reporting them without refusing. Build collects publication
+  refusals across registers, including refused curation and public-name collisions,
+  before placing a catalog. With `--report`, it writes the normal report plus `refusals`
+  (register, kind and full details), even when publication is refused. Inventory-wide
+  refusals have no register; all curation refusals retain their source locations. Stderr
+  summarizes counts; malformed inputs that prevent resolution still abort early.
 - **Row id:** renumbered every build and never exposed.
 
 **Curation.**
