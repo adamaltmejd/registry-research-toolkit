@@ -55,6 +55,7 @@ impl StatementRow {
 
 /// Everything the file holds, linked.
 pub struct Catalog {
+    pub retired: Vec<crate::retired::Retired>,
     pub meta: BTreeMap<&'static str, String>,
     /// Sorted by name.
     pub inputs: Vec<InputRow>,
@@ -1273,6 +1274,32 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<(), String>
     for statement in &others {
         db.execute_batch(statement)
             .map_err(|e| format!("{statement}: {e}"))?;
+    }
+    let live: BTreeSet<&str> = rows
+        .tables
+        .get("ident")
+        .into_iter()
+        .flatten()
+        .filter_map(|row| match &row[0] {
+            Cell::Str(pid) => Some(pid.as_str()),
+            _ => None,
+        })
+        .collect();
+    for retired in &catalog.retired {
+        if live.contains(retired.pid.as_str()) {
+            return Err(retired.live_error());
+        }
+    }
+    for retired in &catalog.retired {
+        rows.push(
+            "ident_retired",
+            vec![
+                Cell::Str(retired.pid.clone()),
+                Cell::Str(retired.kind.clone()),
+                Cell::Str(retired.version.clone()),
+                Cell::Str(retired.reason.clone()),
+            ],
+        );
     }
     // Tables fill in schema order, which declares each table after those it references.
     // Row order within a table does not reach the file: `VACUUM INTO` rewrites every

@@ -21,6 +21,10 @@ pub struct Ledger {
     pub tables: BTreeMap<String, String>,
     #[serde(default)]
     pub variables: BTreeMap<String, Vec<String>>,
+    /// Retired table and variable slugs in the register's public namespace, supplied
+    /// by the builder from `curation/retired.toml`.
+    #[serde(skip)]
+    pub retired: BTreeSet<String>,
 }
 
 /// A ledger anchor, parsed: table, folded spelling, source key and day.
@@ -79,6 +83,7 @@ pub(crate) fn assign_ids(
             return Err(format!("ledger id {id:?} is also a table id"));
         }
     }
+    taken.extend(ledger.retired.iter().cloned());
     // Anchors match the folded spellings of each table's placed columns; a keyed anchor
     // only that source key's variables, a dated one only those placed there that day.
     // A spelling's source keys count every occurrence, placed or not.
