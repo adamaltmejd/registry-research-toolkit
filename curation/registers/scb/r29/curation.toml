@@ -2524,3 +2524,63 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda: {bkungr,bngre} @1999..2001"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "reg_meta_build/curation/classifications/SNI92.toml:22\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, brancher SNI 92"
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngr @1994,1997..2001"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: bngr"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: bngr"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngr @1999..2001"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngr @2002"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-2" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngr @2002"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-2" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngr @2003..2006"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-3" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngr @2003..2006"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-3" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: bngr @2007..2013,2015..2018"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-4" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: bngr @2007..2013,2015..2018"
+fields = { "variable" = "naringsgren-fran-kontrolluppgifter-och-bngr-4" }
+evidence = "BNGR pools SNI92, combined SNI2002/SNI92, SNI2002 and SNI2007 classifications whose documented boundaries require four distinct families."

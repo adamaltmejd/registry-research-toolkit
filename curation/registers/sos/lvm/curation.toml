@@ -18,3 +18,21 @@ kind = "assert"
 subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: avslut"
 fact = { entity = "value-set", items = [{ code = "1", label = "ja" }, { code = "2", label = "överflyttning till annat LVM-hem." }] }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Registret över tvångsvård enligt lagen om vård av missbrukare i vissa fall (LVM)_webb.xlsx#Metadata - Variabelnivå!41. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list."
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: ar"
+fields = { "variable" = "beslutsar-ar" }
+evidence = "AR combines decision year with discharge year, so discharge year must leave the decision-year family while all other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: ar"
+fields = { "variable" = "beslutsar-ar" }
+evidence = "AR combines decision year with discharge year, so discharge year must leave the decision-year family while all other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: ar"
+fields = { "variable" = "utskrivningsar" }
+evidence = "AR combines decision year with discharge year, so discharge year must leave the decision-year family while all other families remain unchanged."

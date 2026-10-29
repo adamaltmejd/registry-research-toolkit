@@ -256,7 +256,7 @@ public = "fou"
 "stora-n" = ["Företagssektorn: Storan"]
 "storanrev" = ["Företagssektorn: StoraNRev"]
 "storleksklass-antal-anstallda" = ["Privata icke vinstdrivande organisationer (PNP): SIZE_CLASS"]
-"stratum" = ["Företagssektorn: Stratum"]
+
 "svarstid-enkat" = ["Företagssektorn: v1256"]
 "syfte-allman-kunskapsuppbyggnad" = ["Företagssektorn: v0505"]
 "syfte-forbattring-existerande-processer" = ["Företagssektorn: v0504"]
@@ -910,7 +910,7 @@ public = "fou"
 "statuskod" = ["Företagssektorn: statuskod"]
 "statustillaggkod" = ["Företagssektorn: statustillaggkod"]
 "storleksklass-antal-anstallda-size-class" = ["Företagssektorn: size_class"]
-"stratum-strat" = ["UoH personal: STRAT"]
+
 "sumdrift" = ["Företagssektorn: sumdrift"]
 "suminvest" = ["Företagssektorn: suminvest"]
 "totala-driftkost" = ["Företagssektorn: totala_driftkost"]
@@ -1566,3 +1566,5 @@ public = "fou"
 "vdel2" = ["Företagssektorn: vdel2"]
 "vikt-enligt-leverans" = ["Företagssektorn: vikt"]
 "xgrupp" = ["Företagssektorn: xgrupp"]
+
+"stratum-stratum" = ["Företagssektorn: Stratum @ 2003-01-01"]

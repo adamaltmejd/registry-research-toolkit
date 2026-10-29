@@ -5349,3 +5349,27 @@
 "scb/ureg/hogsta-utbildningens-niva-sun2020-tva-forsta-positionerna" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
 
 "scb/ureg/sun2020niva" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/fou/stratum" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/fou/stratum-strat" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/linda/bngr" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/lisa/naringsgren-huvud-foretag" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/pin/branschgrupp-branschgr" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/rtb/civilstandsdatum-civdat" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/rtb/civilstandsdatum-civildatum" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"sos/lova/klartext-spec-grp" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/lova/sysselsattningsstatus-klartext" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/lova/yrkesstallning-november-manad-klartext" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/lvm/beslutsar" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/lova/invandringsdatum-8-numerisk" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }

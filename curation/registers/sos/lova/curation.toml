@@ -1125,3 +1125,87 @@ kind = "set"
 subject = "var:utvandringsland-9"
 fields = { "sets" = ["utvandringsland"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml:46"
+
+[[statement]]
+kind = "set"
+subject = "lova-syssstat: beskrivning"
+fields = { "variable" = "sysselsattningsstatus-klartext-beskrivning" }
+evidence = "BESKRIVNING mixes code-edition origin and employment-status text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+
+[[statement]]
+kind = "set"
+subject = "lova-hospkoder: beskrivning"
+fields = { "variable" = "vilken-upplaga-av-socailstyrelsens-koder-for" }
+evidence = "BESKRIVNING mixes code-edition origin and employment-status text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+
+[[statement]]
+kind = "set"
+subject = "lova-agarkat: klartext"
+fields = { "variable" = "agarkategori-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-arb-mark-stat: klartext"
+fields = { "variable" = "arbetsmarknadsstatus-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-leg-spec-exam: klartext"
+fields = { "variable" = "klartext-spec" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-landskod: klartext"
+fields = { "variable" = "land-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-hospkoder: klartext"
+fields = { "variable" = "legitimationens-inriktning-i-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-sektorkod: klartext"
+fields = { "variable" = "sektorkod-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-yrkstalln: klartext"
+fields = { "variable" = "yrkesstallning-november-manad-klartext-klartext" }
+evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "lova-landskod: klartext_grp"
+fields = { "variable" = "klartext-grupp" }
+evidence = "KLARTEXT_GRP mixes country-group and specialty-group text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+
+[[statement]]
+kind = "set"
+subject = "lova-leg-spec-exam: klartext_grp"
+fields = { "variable" = "klartext-spec-grp-klartext-grp" }
+evidence = "KLARTEXT_GRP mixes country-group and specialty-group text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+
+[[statement]]
+evidence = "The ninth-immigration label and definition identify INVARN9; the source repeats INVARN8 for the eighth and ninth dates."
+fields = { "spelling" = "INVARN9" }
+kind = "set"
+subject = "lova-person: INVARN8 where key = 'n:invarn8' and label = 'Invandringsdatum 9 numerisk'"
+
+[[statement]]
+kind = "set"
+subject = "lova-person: INVARN8 where key = 'n:invarn8' and label = 'Invandringsdatum 8 numerisk'"
+fields = { "variable" = "invandringsdatum-8-numerisk-invarn8" }
+evidence = "The source labels and definitions identify the eighth and ninth immigration dates; the approved INVARN9 spelling correction exposes two distinct dates pooled in one published family."
+
+[[statement]]
+kind = "set"
+subject = "lova-person: INVARN8 where key = 'n:invarn8' and label = 'Invandringsdatum 9 numerisk'"
+fields = { "variable" = "invandringsdatum-9-numerisk" }
+evidence = "The source labels and definitions identify the eighth and ninth immigration dates; the approved INVARN9 spelling correction exposes two distinct dates pooled in one published family."

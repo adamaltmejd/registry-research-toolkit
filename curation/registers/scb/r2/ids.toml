@@ -310,9 +310,9 @@ public = "rtb"
 "alder-vid-handelsen-skilsalder" = ["Civilståndsändringar: SkilsAlder"]
 "alder-vid-handelsen-vigselalder" = ["Civilståndsändringar: VigselAlder"]
 "antal-dodfodda-antdodfodd" = ["Födda: AntDodFodd"]
-"civilstandsdatum-civdat" = ["Civilståndsändringar: CivDat"]
+
 "civilstandsdatum-civilandrdatum" = ["Civilståndsändringar: CivilAndrDatum"]
-"civilstandsdatum-civildatum" = ["Folkbokförda personer: CivilDatum"]
+
 "civilstandsdatum-partnerdatum" = ["Civilståndsändringar: PartnerDatum"]
 "civilstandsdatum-skilsdatum" = ["Civilståndsändringar: Skilsdatum"]
 "civilstandsdatum-tidcivilandrdatum" = ["Döda: TidCivilAndrDatum"]
@@ -327,3 +327,5 @@ public = "rtb"
 
 # Recovered source families, explicitly keyed by folded column where provider ids are absent.
 "personnummer-for-partnern" = ["Familjer 1990-1997: PersonNr_Partner"]
+
+"civilstandsdatum-civdat-2" = ["Civilståndsändringar: CivDat @ 1998-01-01"]
