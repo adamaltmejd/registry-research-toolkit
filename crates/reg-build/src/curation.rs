@@ -620,6 +620,20 @@ impl Refusal {
     }
 }
 
+fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>, String> {
+    if record && !refusals.is_empty() {
+        return Err(refusals
+            .iter()
+            .map(|r| r.message.as_str())
+            .collect::<Vec<_>>()
+            .join("\n"));
+    }
+    Ok(refusals
+        .iter()
+        .map(|r| format!("{} (statement skipped)", r.message))
+        .collect())
+}
+
 /// The accepted frame and its curated provenance. No reader output is mutated.
 #[derive(Default)]
 pub(super) struct Applied {
@@ -783,7 +797,6 @@ pub(super) fn run(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
 ) -> Result<Applied, String> {
     let mut applied = run_selected(
         root,
@@ -792,7 +805,6 @@ pub(super) fn run(
         outputs,
         record,
         registers,
-        release,
     )?;
     applied.refusals.sort();
     applied.refusals.dedup();
@@ -810,7 +822,6 @@ fn run_selected(
     outputs: &[reg_readers::ReadOutput],
     record: bool,
     registers: &[String],
-    release: bool,
 ) -> Result<Applied, String> {
     let mut records = outputs
         .iter()
@@ -1215,29 +1226,17 @@ fn run_selected(
                 Err(e) => {
                     let refusal =
                         Refusal::scoped(statement, format!("{}: {e}", location(statement)));
-                    if record {
-                        refusals.push(refusal);
-                        return Err(refusals
-                            .iter()
-                            .map(|r| r.message.as_str())
-                            .collect::<Vec<_>>()
-                            .join("\n"));
-                    }
+                    refusals.push(refusal);
+                    let skipped = refusal_findings(&refusals, record)?;
                     // Refused statements contribute neither facts nor provenance.
                     let retained = statements
                         .iter()
                         .copied()
                         .filter(|s| publication_identity(s) != publication_identity(statement))
                         .collect::<Vec<_>>();
-                    let mut rerun = run_selected(
-                        root, retired, &retained, outputs, record, registers, release,
-                    )?;
-                    refusals.push(refusal);
-                    rerun.findings.extend(
-                        refusals
-                            .iter()
-                            .map(|r| format!("{} (statement skipped)", r.message)),
-                    );
+                    let mut rerun =
+                        run_selected(root, retired, &retained, outputs, record, registers)?;
+                    rerun.findings.extend(skipped);
                     rerun.refusals.extend(refusals);
                     return Ok(rerun);
                 }
@@ -1427,11 +1426,7 @@ fn run_selected(
                 })
                 .collect::<Vec<_>>();
             if record {
-                return Err(messages
-                    .iter()
-                    .map(|r| r.message.as_str())
-                    .collect::<Vec<_>>()
-                    .join("\n"));
+                refusal_findings(&messages, record)?;
             }
             let refused = linked
                 .refusals
@@ -1443,15 +1438,9 @@ fn run_selected(
                 .copied()
                 .filter(|s| !refused.contains(&publication_identity(s)))
                 .collect::<Vec<_>>();
-            let mut rerun = run_selected(
-                root, retired, &retained, outputs, record, registers, release,
-            )?;
+            let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
             refusals.extend(messages);
-            rerun.findings.extend(
-                refusals
-                    .iter()
-                    .map(|r| format!("{} (statement skipped)", r.message)),
-            );
+            rerun.findings.extend(refusal_findings(&refusals, record)?);
             rerun.refusals.extend(refusals);
             return Ok(rerun);
         }
@@ -1526,26 +1515,14 @@ fn run_selected(
         message,
     }));
     if !conflicts.is_empty() {
-        if record {
-            return Err(refusals
-                .iter()
-                .map(|r| r.message.as_str())
-                .collect::<Vec<_>>()
-                .join("\n"));
-        }
+        let skipped = refusal_findings(&refusals, record)?;
         let retained = statements
             .iter()
             .copied()
             .filter(|s| !conflicts.contains(&publication_identity(s)))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(
-            root, retired, &retained, outputs, record, registers, release,
-        )?;
-        rerun.findings.extend(
-            refusals
-                .iter()
-                .map(|r| format!("{} (statement skipped)", r.message)),
-        );
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers)?;
+        rerun.findings.extend(skipped);
         rerun.refusals.extend(refusals);
         return Ok(rerun);
     }
@@ -1594,18 +1571,7 @@ fn run_selected(
             }
         }
     }
-    if !refusals.is_empty() && record {
-        return Err(refusals
-            .iter()
-            .map(|r| r.message.as_str())
-            .collect::<Vec<_>>()
-            .join("\n"));
-    }
-    findings.extend(
-        refusals
-            .iter()
-            .map(|r| format!("{} (statement skipped)", r.message)),
-    );
+    findings.extend(refusal_findings(&refusals, record)?);
     result.refusals = refusals;
     if record {
         // Prepare all serializations before writing; a refused register never causes
@@ -1634,11 +1600,6 @@ fn run_selected(
         }
         for (path, bytes) in files {
             std::fs::write(&path, bytes).map_err(|e| format!("{}: {e}", path.display()))?;
-        }
-    }
-    if record || !release {
-        for finding in &findings {
-            eprintln!("reg-build: {finding}");
         }
     }
     result.findings = findings;

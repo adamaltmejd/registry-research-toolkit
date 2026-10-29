@@ -258,15 +258,12 @@ fn build(args: &Args) -> Result<(), String> {
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
-    let mut applied = curation::run(
-        &args.curation,
-        &retired,
-        &statements,
-        &outputs,
-        false,
-        &[],
-        args.release,
-    )?;
+    let mut applied = curation::run(&args.curation, &retired, &statements, &outputs, false, &[])?;
+    if !args.release {
+        for finding in &applied.findings {
+            eprintln!("reg-build: {finding}");
+        }
+    }
 
     let mut inputs = Vec::new();
     let mut warnings = Vec::new();
@@ -583,15 +580,17 @@ fn lock(args: &Args) -> Result<(), String> {
     let statements = reg_readers::curation::load(&args.curation).map_err(|e| e.to_string())?;
     let manifest: Manifest = toml_file(&args.curation.join("inputs.toml"))?;
     let outputs = read_all(args, &manifest)?;
-    curation::run(
+    let applied = curation::run(
         &args.curation,
         &retired,
         &statements,
         &outputs,
         true,
         &args.registers,
-        true,
     )?;
+    for finding in &applied.findings {
+        eprintln!("reg-build: {finding}");
+    }
     Ok(())
 }
 
