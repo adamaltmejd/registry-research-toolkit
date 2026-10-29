@@ -1,61 +1,23 @@
-# D recovery fix-03 accounting
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-Current statement accounting is 827 additions: 571 assertions and 256 setters. Four FoU
-identity setters are withdrawn to retain the published STRAT family. All 23 recovered
-identity setters are deferred. This fix restores 33 published r257 IDs to their 0.66.0
-native targets and replaces two hash anchors with dates. It names the 38 recovered
-CIS2002 columns separately: eight free legacy names and 30 D-12 label-plus-column names.
-The branch still mints 42 IDs total. The fix-02 claim of retained populations used the
-wrong reference and is superseded. The full published-ID comparison and new names are in
-[the recovery report](rebuild_recover_report.md).
-
-# Historical D recovery fix-02 counts (superseded)
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-Current branch additions are 831 statements: 571 assertions and 260 setters. Four FoU
-identity setters are restored; 19 remain deferred (16 D-11, three ID-emptying). Retained
-source entries by kind are 299 delivered, 239 parallel, 176 partition, 44 column, four
-column-owner and two description, plus one tag membership.
-
-The fix adds explicit shared keys to 107 recovered assertions and mints 42 IDs: r2 one,
-r193 three replacing its 34 branch-added IDs, r257 38. Baseline public ID names and LISA
-bindings/lineage remain unchanged; 35 r257 anchors gain disambiguating source keys.
-Current setter dispositions and checks are recorded in [the recovery
-report](rebuild_recover_report.md). Earlier counts below are historical.
-
-# Historical D recovery fix-01 counts (superseded)
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-Current branch additions are 827 statements (571 assertions and 256 setters), including
-the tag membership. All 23 recovered variable-assignment setters are dropped: 18 violate
-D-11 and five empty the minted FoU `stratum-strat` identity. The 34 legitimate r193
-assertion identities now have dated ledger anchors. Source-level review, all new ID
-names, dropped subjects and final validation are in [the recovery
-report](rebuild_recover_report.md). Earlier counts below are historical.
-
 # D close-out recovery
 
 Temporary conversion evidence; deleted at milestone F (cutover).
 
-The catalog-backed recovery retains locked additional outputs from 774 legacy entries:
-299 `errata.delivered`, 239 `representation.parallel`, 183 `identity.partition`, 44
-`errata.column`, seven `identity.column_owner` and two `enrichment.description`. There
-are 849 added statements (571 assertions, 278 setters), plus the independent set/tag
-replay's one IoT `familjetyp` tag membership. These are additional outputs; they do not
-replace the historical stage counts below.
+The recovery retains 827 additional statements: 571 assertions and 256 setters. Retained
+source entries are 299 delivered, 239 parallel, 176 partition, 44 column and two
+description entries, plus one tag membership. All 23 recovered identity setters remain
+deferred: 16 concurrent-fold merges, two SNI ID-emptying cases and five FoU setters that
+would move published `stratum-strat` coverage.
+
+The branch mints 42 IDs: r2 one, r193 three and r257 38. The r257 anchors retain their
+published 0.66.0 native families; recovered CIS2002 columns use eight free legacy names
+and 30 D-12 label-plus-column names. New-ID and published-anchor tables and current
+per-entry dispositions are in [the recovery report](rebuild_recover_report.md).
 
 The prior 806 absent-everywhere / 125 other-register ledger-target drops now read 775 /
 100, plus two mixed missing-ID/unplaced entries. Missing/undated-release drops are 49
-after rechecking the prior 426 missing-release drops against exact published releases.
-The output-level inventory, located refusals and final validation status are in [the D
-recovery report](rebuild_recover_report.md); all remaining cohorts have a home in
-REBUILD.md §D deferrals.
-
-Earlier conversion measurements below are historical.
+after reconsidering the prior 426 using exact published releases. These counts are
+separate from the earlier stage measurements below. Remaining work is homed in
+REBUILD.md §D.
 
 # D-4b fix round 01: readable selectors
 

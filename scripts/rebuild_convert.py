@@ -11,7 +11,7 @@ import shutil
 import tomllib
 from pathlib import Path
 
-from rebuild_convert_cases import CaseSafety
+from rebuild_convert_cases import CaseSafety, UnexpressibleSelector
 from rebuild_convert_deferred import convert as deferred, period
 from rebuild_convert_identity import CatalogIdentity
 
@@ -289,7 +289,10 @@ class Converter:
         for owner, statements in self.statements.items():
             lookup = collections.defaultdict(list)
             for row in self.rows[owner]:
-                subject = self.selector(row)
+                try:
+                    subject = self.selector(row)
+                except UnexpressibleSelector:
+                    continue
                 lookup[subject].append(row)
                 base = re.sub(r" and release = '[^']*'$", "", subject)
                 if base != subject:
@@ -436,13 +439,17 @@ class Converter:
             "'" in v or "\n" in v or "\r" in v
             for v in (row["source_key"], row.get("release") or "")
         ):
-            raise ValueError("source guard cannot be expressed by address grammar")
+            raise UnexpressibleSelector(
+                "source guard cannot be expressed by address grammar"
+            )
         guards = [f"key = '{row['source_key']}'"]
         if row.get("release"):
             guards.append(f"release = '{row['release']}'")
         spelling = fold(row["column"]) or "<none>"
         if any(c.isspace() for c in spelling) or "@" in spelling:
-            raise ValueError("source spelling cannot be expressed by address grammar")
+            raise UnexpressibleSelector(
+                "source spelling cannot be expressed by address grammar"
+            )
         scope = ""
         if not row.get("release"):
             start, end = self.span(row)
@@ -462,7 +469,7 @@ class Converter:
                     self.coordinate_spans[owner] = peers
                 coordinate = row["table"], fold(row["column"]), row["source_key"]
                 if len(self.coordinate_spans[owner][coordinate]) != 1:
-                    raise ValueError(
+                    raise UnexpressibleSelector(
                         "unsupported selector year outside 1900-2099; removing scope would widen source occurrences"
                     )
                 # The key/table/fold guards select exactly the same whole sources.
@@ -484,7 +491,7 @@ class Converter:
         if len(labels) > 1:
             label = row.get("label")
             if not label or any(c in label for c in ("'", "\n", "\r")):
-                raise ValueError(
+                raise UnexpressibleSelector(
                     "ambiguous source label cannot be expressed by an exact guard"
                 )
             guards.append(f"label = '{label}'")
@@ -527,7 +534,10 @@ class Converter:
         if owner not in self.selector_members:
             members = collections.defaultdict(set)
             for row in self.rows[owner]:
-                subject = self.selector(row)
+                try:
+                    subject = self.selector(row)
+                except UnexpressibleSelector:
+                    continue
                 base = re.sub(r" and release = '[^']*'$", "", subject)
                 members[base].add(subject)
             self.selector_members[owner] = members

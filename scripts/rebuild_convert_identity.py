@@ -138,15 +138,35 @@ class CatalogIdentity:
                     by_key[candidate["source_key"]].append(candidate)
                 exact = []
                 for group in by_key.values():
+                    start, end = row.get("from"), row.get("to")
+                    scoped = reconstructed and start is not None and end is not None
+                    if scoped:
+                        # Snapshot expands a multi-period constructor into rows;
+                        # match this row's coverage, not the key's whole history.
+                        group = [
+                            r
+                            for r in group
+                            if r["start"] is not None
+                            and max(start, iso_day(r["start"]))
+                            <= min(end, iso_day(r["end"] - 1))
+                        ]
                     spans = [
-                        (iso_day(r["start"]), iso_day(r["end"] - 1))
+                        (
+                            max(start, iso_day(r["start"]))
+                            if scoped
+                            else iso_day(r["start"]),
+                            min(end, iso_day(r["end"] - 1))
+                            if scoped
+                            else iso_day(r["end"] - 1),
+                        )
                         for r in group
                         if r["start"] is not None
                     ]
                     if (
-                        len(spans) == len(group)
-                        and merge_periods(spans) == [(row.get("from"), row.get("to"))]
-                    ) or (not spans and not row.get("from") and not row.get("to")):
+                        group
+                        and len(spans) == len(group)
+                        and merge_periods(spans) == [(start, end)]
+                    ) or (group and not spans and not start and not end):
                         exact.append(group)
                 if reconstructed and len(exact) != 1:
                     locator = row["locator"]

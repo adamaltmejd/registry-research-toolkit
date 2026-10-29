@@ -52,18 +52,22 @@ class Snapshot:
         self.period_coordinates = set()
         register_bounds = converter.context_registers.get(owner, {})
         defaults = {}
+        # Documentary headings can lack catalog tables. Only mapped metadata can
+        # supply defaults; actual occurrence selectors below still require identity.
         for (pid, rid, handle), source in converter.context_tables.items():
-            if (pid, rid) == owner:
-                defaults[converter.identity.table(source)] = (
+            table = converter.tables.get((pid, rid, handle))
+            if (pid, rid) == owner and table is not None:
+                defaults[table] = (
                     source.get("from") or register_bounds.get("from") or OPEN[0],
                     source.get("to") or register_bounds.get("to") or OPEN[1],
                 )
         releases = {
-            (converter.identity.table(row), release): (
+            (converter.tables[provider, register, table], release): (
                 (row["from"], row["to"]) if row.get("from") and row.get("to") else None
             )
             for (provider, register, table, release), row in converter.releases.items()
             if (provider, register) == owner
+            and (provider, register, table) in converter.tables
         }
         constructors = [
             record["statement"]
@@ -226,6 +230,8 @@ def collapse(converter, *, context=None):
     counts = collections.Counter()
     remaining = collections.Counter()
     for owner, statements in converter.statements.items():
+        if not statements:
+            continue
         counts["statements_before"] += len(statements)
         counts["release_guards_before"] += sum(
             "release = '" in r["statement"]["subject"] for r in statements.values()

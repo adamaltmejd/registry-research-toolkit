@@ -5,14 +5,17 @@ import json
 import re
 from typing import Any
 
-from rebuild_convert_cases import parse_selector
+from rebuild_convert_cases import UnexpressibleSelector, parse_selector
 from rebuild_convert_selectors import Snapshot
 
 
 def _selection(converter, owner):
     lookup = collections.defaultdict(list)
     for row in converter.rows[owner]:
-        subject = converter.selector(row)
+        try:
+            subject = converter.selector(row)
+        except UnexpressibleSelector:
+            continue
         lookup[subject].append(row)
         base = re.sub(r" and release = '[^']*'$", "", subject)
         if base != subject:

@@ -538,13 +538,13 @@ exit and peak RSS were not captured. Independent `reg-build verify` passed (exit
 - F1 counts: definition-change 20,677; domain-change 16,040; label-differs 47;
   label-drift 181; type-change 6,713; unit-change 5,977; population-change zero.
 - Source disposition evidence remains in `scripts/rebuild_convert_report.md`,
-  `scripts/rebuild_convert_classifications_report.md` and
-  `scripts/rebuild_convert_sets_tags_report.md`. These are overlapping stage reports,
-  not additive final counts: base conversion 5,603 converted / 12,538 named drops / zero
-  refused; classification conversion 288 / 218 / six; set/tag report 551 converted
-  membership rows, 115 missing-ID refusals, 11 deferred rows and 729 drops. The reports
-  retain source locations and reasons; later D work supersedes some early deferrals. The
-  converters were not rerun.
+  `scripts/rebuild_convert_classifications_report.md`,
+  `scripts/rebuild_convert_sets_tags_report.md` and `scripts/rebuild_recover_report.md`.
+  These are overlapping stage reports, not additive final counts: base conversion 5,603
+  converted / 12,538 named drops / zero refused; classification conversion 288 / 218 /
+  six; set/tag report 551 converted membership rows, 115 missing-ID refusals, 11
+  deferred rows and 729 drops. The reports retain source locations and reasons; later D
+  work supersedes some early deferrals. The converters were not rerun.
 - Rust `reg-build diff` against the downloaded 0.65.0 asset exited 1 (differences), with
   no schema change. It reports 28 changed table counts, 6,687 added and 5,149 removed
   public ids, 29 shared table changes, 5,411 shared variable changes and eight added
@@ -653,7 +653,7 @@ conversion reports.
   | Item                                  | Count                                                | Reason                                                                                                                             | Home                                                                         |
   | ------------------------------------- | ---------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
   | Editions, qualifiers and coverage     | 37 splits, 7 releases, 122 claims, 4 IoT memberships | Source placement and edition identity need evidence.                                                                               | Post-D edition/qualifier measurement.                                        |
-  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU published-family claims.                                                    | Id sprint: SNI-edition variables and other identity reviews.                 |
+  | Recovered identity assignments        |                                           23 setters | 16 concurrent-fold merges; two empty SNI IDs; five FoU setters would move published stratum-strat coverage.                        | Id sprint: SNI-edition variables and FoU retire-and-mint decision.           |
   | Other identity and endpoint reviews   |                      1,586 claims, 1 LOVA membership | Missing or ambiguous ownership and scope.                                                                                          | Id sprint, after the source/edition review.                                  |
   | Missing memberships and small sets    |                      118 missing, 2 deferred, 5 sets | No unique placed members.                                                                                                          | Id sprint: concept groups and tags.                                          |
   | Keyless assertion defaults            |                                      47 baseline IDs | The per-statement default remains; folded-column alignment affects published identities.                                           | Id sprint: align defaults after full identity measurement.                   |

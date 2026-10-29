@@ -17,6 +17,10 @@ ALIASES = {
 SOURCE_FIELDS = {"type": "dtype", "spelling": "column"}
 
 
+class UnexpressibleSelector(ValueError):
+    """Source evidence exists but cannot be represented by address grammar."""
+
+
 def period_intervals(scope):
     """Calendar scopes as inclusive ISO intervals; refuse unfamiliar period syntax."""
 

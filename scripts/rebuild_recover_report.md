@@ -1,12 +1,6 @@
-# D recovery fix-03
+# D recovery dispositions
 
 Temporary conversion evidence; deleted at milestone F (cutover).
-
-The Operator reports that the real build of `8f158e5e` and verification against 0.66.0
-passed, but comparison of the actual targets found 33 published r257 IDs on different
-variables. The fix-02 preservation claim used the wrong reference: already changed
-resolver targets, rather than the published 0.66.0 catalog. That claim is superseded. No
-real-seed catalog build or real-artifact verification was run by this worker.
 
 ## Published r257 targets and recovered names
 
@@ -19,16 +13,14 @@ family. No statement hash remains in those anchors.
 The 38 recovered CIS2002 columns receive separate unpublished names. Eight free legacy
 pins are reused: `ho-enligt-leverans`, `weight-enligt-leverans`,
 `lillan-enligt-leverans` and the five customer columns. The uppercase legacy pin
-`257.CO31` exists and supplies `cis2002-samarbete-kunder-sverige`; the earlier drift
-note missed that case variant. Thirty legacy names collide with published native IDs, so
-those recovered columns use D-12 label-plus-column names. All names are unique, avoid
-reserved/table namespaces and have at most 59 characters. The id sprint explicitly
-carries "CIS2002 2000-2002 vs native ids: naming"; published ID populations take
-precedence over legacy name intent.
+`257.CO31` supplies `cis2002-samarbete-kunder-sverige`. Thirty legacy names collide with
+published native IDs, so those recovered columns use D-12 label-plus-column names. All
+names are unique, avoid reserved/table namespaces and have at most 59 characters. The id
+sprint explicitly carries "CIS2002 2000-2002 vs native ids: naming"; published ID
+populations take precedence over legacy name intent.
 
 The total of new branch IDs remains 42: r2 one, r193 three and r257 38. The 38 r257
-names below replace the incorrect fix-02 native-family mints. No curation assertion or
-membership statement changes in this fix.
+names below distinguish recovered CIS2002 columns from the published native families.
 
   | New ID                                                                               | Label                                                                                                                          | Anchor                                          | Rule           |
   | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------- | -------------- |
@@ -111,621 +103,63 @@ membership statement changes in this fix.
   | `scb/innovation-foretag/strat-enligt-leverans`                               | `stmt:43451ed92b65b5ab4355cb9d26bfda06e38722b5fca129bcdbef7778939e105d` | `Innovation i företagssektorn: STRAT @ 2002-01-01`   |                     1 |
   | `scb/innovation-foretag/weight`                                              | `v49567`                                                                | `Innovation i företagssektorn: WEIGHT # v49567`      |                     1 |
 
-## Published FoU coverage and current accounting
+## Other new IDs
 
-The full comparison also found a partial published-family transfer missed by the fix-02
-nonempty-ID check. Four restored FoU setters moved the 2019 and 2021
-`UoH personal / STRAT / v462` witnesses from `scb/fou/stratum-strat` to
-`scb/fou/stratum`. Those four task-owned setters are withdrawn. The fifth FoU setter was
-already deferred because applying all five empties `stratum-strat`; the whole family
-needs published-ID review in the id sprint. No baseline statement is removed.
+  | New ID                                               | Anchor                                 |
+  | ---------------------------------------------------- | -------------------------------------- |
+  | `scb/rtb/personnummer-for-partnern`                  | `Familjer 1990-1997: PersonNr_Partner` |
+  | `scb/grundskola-elever/fritidshemsavdelningens-namn` | `Individregister: AvdFTH`              |
+  | `scb/grundskola-elever/skolenhetskod-fritidshem`     | `Individregister: SkolenhetsKodFTH`    |
+  | `scb/grundskola-elever/skolkod-fritidshem`           | `Individregister: SkolKodFTH`          |
 
-Current recovery accounting is 827 added statements: 571 assertions and 256 setters (229
-`sets`, 24 `operational_definition`, two `description`, one `tags`). Retained source
-entries are 299 delivered, 239 parallel, 176 partition, 44 column and two description
-entries, plus one tag membership. All 23 recovered identity setters remain deferred: 16
-D-11 violations, two SNI ID-emptying cases and five FoU identity claims.
+## Current recovery disposition
 
-## Resolver and design
+The recovery retains 827 additional statements in 22 statement files: 571 assertions and
+256 setters (229 `sets`, 24 `operational_definition`, two `description`, one `tags`).
+Retained legacy entries are 299 `errata.delivered`, 239 `representation.parallel`, 176
+`identity.partition`, 44 `errata.column` and two `enrichment.description`, plus one
+independent tag membership. Named d-fields drops remain dropped.
 
-DESIGN.md now states the implemented behaviour: asserted occurrences without a `key`
-guard have per-statement keys. Folded-column default alignment remains a deferral; §D
-counts the 47 baseline IDs, excluding the 31 removed r193 branch IDs. D-11 now expects
-its differing-fold overlap pair with an explicit connectivity reason, so an internal
-invariant failure cannot silently accept the component.
+The 23 recovered identity setters remain deferred: 16 would merge concurrent folded
+spellings, two would empty published SNI IDs, and five would move published FoU
+`stratum-strat` coverage. The id sprint must make an explicit retire-and-mint decision
+for the FoU family.
 
-## Full published-ID comparison
-
-The temporary evidence harness reads `base.db` in place with SQLite read-only flags. It
-calls the existing source readers, curation runner and resolver, then compares every
-published variable PID with its actual resolved membership. It uses the emitter's PID
-and date helpers; no catalog is emitted or copied. Coordinates are exact table PID,
-spelling and source key, with duplicate/adjacent period ranges normalized by union. It
-includes all bound occurrence statuses and retains missing/empty published IDs in the
-comparison. Results and changed-PID explanations follow in the final validation.
-
-## Full comparison result
-
-The final comparison checked all 57,462 published 0.66.0 variable PIDs and 498,480 bound
-occurrence memberships. There are no missing PIDs or lost baseline witnesses. 57,165
-normalized targets are identical. The other 297 have justified additions: 212
-period-only extensions, 84 added case-alias coordinates and one mixed case. Each retains
-its existing table, folded spelling and native key, and exact authored assertions cover
-every added interval. All 297 before/after changes and source citations are listed in
-[the published-ID movement report](rebuild_recover_id_movement.md). All current resolver
-unminted/merged/split/unplaced lists are empty; 42 new IDs remain. No published ID moves
-to a different variable.
-
-The full comparison was rerun after withdrawing the four FoU setters. `stratum` and
-`stratum-strat` now match 0.66.0 exactly. Of the 35 corrected r257 published IDs, 33
-match exactly; native LILLAN and WEIGHT retain every baseline witness and add only
-source-backed older case-alias periods, detailed in the movement report.
-
-## Fix-03 validation and handoff
-
-The source/ledger changes and both refreshed locks are committed together in `6a4c2fc5`.
-`origin/main` advanced to `bffd564f` (#2030); the merge adds the published-ID
-verification/diff guard and its corpus. It changes no reader, curation, resolver or
-emitter logic, so the full comparison remains valid after the merge. No rebase ran.
-
-Post-merge `gate.py g0 rust` passed: G0 28 seconds, Rust ten seconds; 116 script tests
-and 208 conformance tests passed, two skipped. The gate rebuilt the synthetic fixture
-twice with byte-identical output. The separate synthetic build and `reg-build verify`
-both exited zero. The normal authoritative whole-root lock then exited zero against the
-original pinned inputs/assets and complete curation, with only existing redundant-set
-and classification notices. Its lock bytes match the committed refresh. Independent
-review found no blocker in the data, proof, naming, reports or merge.
-
-The initial compiler-cache wrapper failed to write sandboxed dep-info. Rust compilation
-and the gate succeeded with `RUSTC_WRAPPER=`; other gate tool pins and checks were
-unchanged. The temporary evidence harness sources and executables were deleted before
-the final gate. It emitted no catalog; `base.db` was read in place and never copied.
-Task scratch is deleted after the push.
-
-Not run by this worker: a real-seed catalog build, real-artifact `verify --previous` or
-catalog diff against 0.66.0, the release gate, R suites, full conversion replay or
-`gate.py regen`. The Operator re-checks the real artifact on the pushed head. The
-published-ID movement comparison described above did run in full using resolver/lock
-evidence against all published 0.66.0 variable IDs.
-
-# Historical D recovery fix-02 (superseded)
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-The Operator's strict build of `79dc97c9` refused 35 unminted r2 variables. Its
-non-release catalog and ledger audit locate all 73 unminted variables: 35 in r2 and 38
-in r257. r193 was already minted. No real-seed build ran in this fix.
-
-## Assertion identity and ID review
-
-The resolver's keyless-assertion default remains unchanged. A read-only catalog audit
-found 227 unique committed IDs in 97 repeated folded-column groups (193 from
-`origin/main`, 34 branch-added r193 IDs). This is a candidate population-impact count,
-not a prediction from a second resolver. A counterfactual lock/resolver probe against
-`79dc97c9` applies shared keys through the existing assertion guard mechanism. The
-resolver removes 78 formerly canonical committed IDs: 53 merge and 25 keyed anchors
-become unplaced. This comprises 47 baseline IDs and 31 branch-added r193 IDs. By
-register: r193 31, r258 24, r47 10, r122 nine, r34 two, r182 one and r366 one. The
-global default therefore cannot change without committed identity movement. Aligning it
-with DESIGN.md is deferred to the id sprint.
-
-Instead, 107 recovered assertions receive explicit shared folded-column keys: r2 35,
-r193 34 and r257 38. Only branch-added assertions change. All public ID names from
-`origin/main` remain intact. Thirty-five r257 anchors require source-key qualification
-to distinguish their current canonical families from parallel families; names and
-canonical populations are retained. r193's 34 branch-added IDs are replaced by three
-per-column IDs; r2 receives one new ID and r257 receives 38. The r257 cohort contains 35
-distinct CO columns plus HO, LILLAN and WEIGHT; these are not 38 copies of one column.
-Its new keys replace singleton assertion families without matching any existing literal
-key in the supplied catalog.
-
-All 42 new IDs follow D-12: label first, another period's documented label if available,
-then label plus column for repeated labels; no counter is needed. Every slug is at most
-55 characters, with no table or retired-ID collision.
-
-  | New ID                                                                           | Anchor                                          |
-  | -------------------------------------------------------------------------------- | ----------------------------------------------- |
-  | `scb/rtb/personnummer-for-partnern`                                              | `Familjer 1990-1997: PersonNr_Partner`          |
-  | `scb/grundskola-elever/fritidshemsavdelningens-namn`                             | `Individregister: AvdFTH`                       |
-  | `scb/grundskola-elever/skolenhetskod-fritidshem`                                 | `Individregister: SkolenhetsKodFTH`             |
-  | `scb/grundskola-elever/skolkod-fritidshem`                                       | `Individregister: SkolKodFTH`                   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co11`       | `Innovation i företagssektorn: CO11 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co12`       | `Innovation i företagssektorn: CO12 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co13`       | `Innovation i företagssektorn: CO13 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co14`       | `Innovation i företagssektorn: CO14 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co15`       | `Innovation i företagssektorn: CO15 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co21`       | `Innovation i företagssektorn: CO21 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co22`       | `Innovation i företagssektorn: CO22 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co23`       | `Innovation i företagssektorn: CO23 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co24`       | `Innovation i företagssektorn: CO24 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co25`       | `Innovation i företagssektorn: CO25 # v15662`   |
-  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-sverige-cis-20002002` | `Innovation i företagssektorn: co31`            |
-  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-2-cis`    | `Innovation i företagssektorn: co32`            |
-  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-3-cis`    | `Innovation i företagssektorn: co33`            |
-  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-4-cis`    | `Innovation i företagssektorn: co34`            |
-  | `scb/innovation-foretag/samarbete-om-innovation-med-kunder-platskolumn-5-cis`    | `Innovation i företagssektorn: co35`            |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co41`       | `Innovation i företagssektorn: CO41 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co42`       | `Innovation i företagssektorn: CO42 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co43`       | `Innovation i företagssektorn: CO43 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co44`       | `Innovation i företagssektorn: CO44 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co45`       | `Innovation i företagssektorn: CO45 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co51`       | `Innovation i företagssektorn: CO51 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co52`       | `Innovation i företagssektorn: CO52 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co53`       | `Innovation i företagssektorn: CO53 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co54`       | `Innovation i företagssektorn: CO54 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co55`       | `Innovation i företagssektorn: CO55 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co61`       | `Innovation i företagssektorn: CO61 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co62`       | `Innovation i företagssektorn: CO62 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co63`       | `Innovation i företagssektorn: CO63 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co64`       | `Innovation i företagssektorn: CO64 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co65`       | `Innovation i företagssektorn: CO65 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co71`       | `Innovation i företagssektorn: CO71 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co72`       | `Innovation i företagssektorn: CO72 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co73`       | `Innovation i företagssektorn: CO73 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co74`       | `Innovation i företagssektorn: CO74 # v15662`   |
-  | `scb/innovation-foretag/typ-av-samarbetspartner-geografiskt-fordelat-co75`       | `Innovation i företagssektorn: CO75 # v15662`   |
-  | `scb/innovation-foretag/koncernmarkering-huvudkontoret-belaget`                  | `Innovation i företagssektorn: HO # v37075`     |
-  | `scb/innovation-foretag/lilla-n-per-stratum-lillan`                              | `Innovation i företagssektorn: lillan # v5697`  |
-  | `scb/innovation-foretag/bortfallskompenserad-vikt`                               | `Innovation i företagssektorn: weight # v49567` |
-
-## Catalog-backed attachment lookup
-
-Reconstructed keyless assertions match one published source key using table, spelling,
-release and exact combined catalog period. The catalog may segment an assertion;
-ALUAMK's three published segments match. Explicit keys remain mandatory. Wrong keys,
-periods, tables and ambiguous coordinates refuse at the assertion locator.
-
-All 664 LISA lineage link statements and all 408 document bindings are unchanged against
-`origin/main`; the markdown reader configuration is byte-identical. Removing
-`frame_deferrals()` also removes its LOVA literals and unused `--frames` argument. A
-ledger-only membership dry run proposes LOVA again, but no membership replay or write
-was applied: its source-placement question remains deferred.
-
-## Current conversion and D-11 dispositions
-
-The branch retains 831 additional statements relative to `73bde698`: 571 assertions and
-260 setters in 22 statement files. Setters comprise 229 `sets`, 24
-`operational_definition`, four `variable`, two `description` and one `tags`. Retained
-outputs come from 764 legacy entries: 299 `errata.delivered`, 239
-`representation.parallel`, 176 `identity.partition`, 44 `errata.column`, four
-`identity.column_owner` and two `enrichment.description`, plus one tag membership. No
-pre-existing statement is removed. Named d-fields drops remain dropped.
-
-D-11 now names the two folded spellings, exact inclusive overlap, table and target. The
-lock attributes it only to statements whose selected occurrence identity and
-source-evidence holder touch that overlap. This also distinguishes separate fragments
-sharing a locator. The existing corpus asserts the complete diagnostic list: line 13
-only, with bystanders at lines 1 and 7 absent. Its authored oracle pins an inclusive
-one-day overlap; the regression is register-wide misattribution. No duplicate test was
-added.
-
-Each of the 23 dropped setters was checked independently through the existing lock
-runner and resolver, using unchanged records from `reg-build read`. Sixteen violate
-D-11; two empty the minted SNI69/SNI92 IDs. Five FoU setters pass individually. The
-first four in the original authored order also pass together, with no canonical ID
-merge, split, unplaced or unminted result. They are restored verbatim. Adding the fifth
-(`release = 'r19506'`) empties `stratum-strat`, so it remains deferred. The verified
-remaining count is 19: 16 concurrent-fold merges and three ID-emptying setters. The
-raw-reader first-setter lock and the snapshot probe produce the same located
-FInk89/FInk90 refusal.
+## Deferred identity setters
 
   | Source                                                                 | Subject                                      | Disposition | Evidence / reason                                                                                                                                                                                                                               |
   | ---------------------------------------------------------------------- | -------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | reg_meta_build/curation/registers/scb/lisa.toml:2592                   | individer-16plus: fink90                     | Dropped     | set variable would merge concurrent folded spellings "fink89" and "fink90" in table "Individer, 16 år och äldre" over 1990-01-01..1990-12-31 into variable "fink"; retain separate variables; id sprint.                                        |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | arbetsstallen: ast_sni2007                   | Dropped     | set variable would merge concurrent folded spellings "ast_sni2002" and "ast_sni2007" in table "Arbetsställen" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-arbetsstalle"; retain separate variables; id sprint.                 |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | foretag: org_sni2007                         | Dropped     | set variable would merge concurrent folded spellings "org_sni2002" and "org_sni2007" in table "Företag" over 2008-01-01..2008-12-31 into variable "naringsgren-huvud-foretag"; retain separate variables; id sprint.                            |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-15plus: astsni2007                 | Dropped     | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni2007                 | Dropped     | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni69                   | Dropped     | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni69; id sprint.                                                                                                                                                        |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni92                   | Dropped     | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni92; id sprint.                                                                                                                                                        |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-15plus: ku2astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-16plus: ku2astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-15plus: ku1astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-16plus: ku1astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-15plus: ku3astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-16plus: ku3astsni2007              | Dropped     | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
-  | reg_meta_build/curation/registers/scb/hut.toml:732                     | hushall-2021: undnr                          | Dropped     | set variable would merge concurrent folded spellings "hut_del" and "undnr" in table "Hushåll 2021-" over 2021-01-01..2021-12-31 into variable "hut-del"; retain separate variables; id sprint.                                                  |
-  | reg_meta_build/curation/registers/scb/fou.toml:15338                   | uoh-personal: strat @2019                    | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
-  | reg_meta_build/curation/registers/scb/fou.toml:15365                   | uoh-personal: strat where release = 'r18421' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
-  | reg_meta_build/curation/registers/scb/fou.toml:15347                   | uoh-personal: strat where release = 'r18431' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
-  | reg_meta_build/curation/registers/scb/fou.toml:15374                   | uoh-personal: strat where release = 'r19474' | Restored    | D11 and canonical-ID checks pass individually and in the retained four-setter combination.                                                                                                                                                      |
-  | reg_meta_build/curation/registers/scb/fou.toml:15356                   | uoh-personal: strat where release = 'r19506' | Dropped     | Would empty minted stratum-strat when added to the retained four; id sprint.                                                                                                                                                                    |
-  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: strata        | Dropped     | set variable would merge concurrent folded spellings "strataks" and "strata" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                    |
-  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: stratum       | Dropped     | set variable would merge concurrent folded spellings "strataks" and "stratum" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                   |
-  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109 | kommunfullmaktigeval: kommunvalkrets         | Dropped     | set variable would merge concurrent folded spellings "ko_valkretskod" and "kommunvalkrets" in table "Kommunfullmäktigeval" over 1998-01-01..1998-12-31 into variable "kommunvalkrets-kod"; retain separate variables; id sprint.                |
-  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103 | riksdagsval: riksdagsvalkrets                | Dropped     | set variable would merge concurrent folded spellings "ri_valkretskod" and "riksdagsvalkrets" in table "Riksdagsval" over 1998-01-01..1998-12-31 into variable "riksdagsvalkrets-kod"; retain separate variables; id sprint.                     |
-
-## Qualified r257 anchors
-
-Thirty-five pre-existing r257 anchors are qualified by their current canonical source
-keys. Their public IDs and target source families are retained; the qualifier excludes
-the parallel recovered/native family. The authoritative resolver reported each original
-anchor as split across two families.
-
-  | Existing ID                                                                  | Qualified anchor                                                                                                |
-  | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-sverige`            | `Innovation i företagssektorn: CO11 # co11`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-2`      | `Innovation i företagssektorn: CO12 # co12`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-3`      | `Innovation i företagssektorn: CO13 # co13`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-4`      | `Innovation i företagssektorn: CO14 # co14`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-koncernforetag-platskolumn-5`      | `Innovation i företagssektorn: CO15 # co15`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-sverige`              | `Innovation i företagssektorn: CO21 # co21`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-2`        | `Innovation i företagssektorn: CO22 # co22`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-3`        | `Innovation i företagssektorn: CO23 # co23`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-4`        | `Innovation i företagssektorn: CO24 # co24`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-leverantorer-platskolumn-5`        | `Innovation i företagssektorn: CO25 # co25`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-sverige`              | `Innovation i företagssektorn: CO41 # co41`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-2`        | `Innovation i företagssektorn: CO42 # co42`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-3`        | `Innovation i företagssektorn: CO43 # co43`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-4`        | `Innovation i företagssektorn: CO44 # co44`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konkurrenter-platskolumn-5`        | `Innovation i företagssektorn: CO45 # co45`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konsulter-sverige`                 | `Innovation i företagssektorn: CO51 # co51`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-2`           | `Innovation i företagssektorn: CO52 # co52`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-3`           | `Innovation i företagssektorn: CO53 # co53`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-4`           | `Innovation i företagssektorn: CO54 # co54`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-konsulter-platskolumn-5`           | `Innovation i företagssektorn: CO55 # co55`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-universitet-sverige`               | `Innovation i företagssektorn: CO61 # co61`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-2`         | `Innovation i företagssektorn: CO62 # co62`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-3`         | `Innovation i företagssektorn: CO63 # co63`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-4`         | `Innovation i företagssektorn: CO64 # co64`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-universitet-platskolumn-5`         | `Innovation i företagssektorn: CO65 # co65`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-sverige`       | `Innovation i företagssektorn: CO71 # co71`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-2` | `Innovation i företagssektorn: CO72 # co72`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-3` | `Innovation i företagssektorn: CO73 # co73`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-4` | `Innovation i företagssektorn: CO74 # co74`                                                                     |
-  | `scb/innovation-foretag/cis2002-samarbete-offentlig-forskning-platskolumn-5` | `Innovation i företagssektorn: CO75 # co75`                                                                     |
-  | `scb/innovation-foretag/ho`                                                  | `Innovation i företagssektorn: HO # ho`                                                                         |
-  | `scb/innovation-foretag/lilla-n-per-stratum`                                 | `Innovation i företagssektorn: LillaN # lillan`                                                                 |
-  | `scb/innovation-foretag/strat-enligt-leverans`                               | `Innovation i företagssektorn: STRAT # stmt:43451ed92b65b5ab4355cb9d26bfda06e38722b5fca129bcdbef7778939e105d`   |
-  | `scb/innovation-foretag/samarbete-inom-ovriga-aktiviteter`                   | `Innovation i företagssektorn: COOP_NO # stmt:a55dabd95a1bb46ad685c59f51cea157d519da92f0f76e068160aa4bc7862398` |
-  | `scb/innovation-foretag/weight`                                              | `Innovation i företagssektorn: WEIGHT # weight`                                                                 |
-
-## Validation and handoff
-
-The read-only catalog/ledger audit completed before the supplied `new.db` disappeared.
-Later native-key collision checks used the exact saved reader frames. No source data or
-resolver outcome was inferred in Python. The disposable harness reused the normal
-curation runner and resolver; it emitted no catalog. Its sources and executable were
-deleted before the final gate.
-
-The first reduced probe setups refused at the manifest/schema boundary (missing
-repo/commit, omitted provider inputs, or empty fields). They were corrected; interrupted
-attempts and those refusals are not passing setter checks. The successful checks use
-actual source frames and located refusal/canonical-ID results described above.
-
-`origin/main` advanced to `c5d8fd83` (#2029). It was merged, preserving both the new
-structured refusal reports and D-11's exact affected-premise filter. No rebase was run.
-Independent review found no blocker in the data, code, exact-location test, or merge.
-
-The pre-merge `g0 rust` gate passed (116 script tests, 204 conformance tests, two
-skipped), as did the authoritative whole-root lock and separate synthetic build/verify.
-Post-merge checks are recorded in the final handoff below.
-
-Post-merge `g0 rust` passed: G0 17 seconds, Rust six seconds; 116 script tests and 205
-conformance tests passed, two skipped. The gate also rebuilt the synthetic fixture twice
-with byte-identical results. The separate post-merge synthetic build and
-`reg-build verify` both exited zero. The release Rust binary compiled successfully; this
-is a binary compile, not a real-corpus catalog build.
-
-The authoritative post-merge whole-root lock exited zero against the original pinned
-inputs, complete `curation/` and original assets. It reported only existing
-redundant-set and classification-sentinel notices. All refreshed lock bytes were
-unchanged from the successful pre-merge lock; the four changed recovery locks are
-committed. No refusal was suppressed or accepted by the disposable probes.
-
-Not run: a real-seed catalog build, real-catalog `verify --previous`, the diff against
-0.66.0, the release gate, R suites, full conversion/attachment replay, or
-`gate.py regen`. The Operator runs the real strict build and real-artifact checks after
-push.
-
-## Historical fix-01 evidence
-
-The following fix-01 counts and statements are superseded by fix-02 where noted above.
-
-# Historical D recovery fix-01 (superseded)
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-The Operator's strict build of `4f49e5aa` refused 34 unminted r193 variables. The
-earlier successful lock also lacked the D-11 concurrent-fold guard; it did not certify
-that invariant. The original 4f49e5aa accounting below is historical and superseded by
-this fix.
-
-## Fix-01 curation
-
-The branch now retains 827 additional statements relative to `73bde698`: 571 assertions
-and 256 setters across 22 statement files. Retained setters are 229 `sets`, 24
-`operational_definition`, two `description` and one `tags`. No newly recovered
-`set variable` remains. Additional outputs come from 299 delivered declarations, 239
-parallel declarations, 176 partitions, 44 column declarations and two descriptions, plus
-one tag membership.
-
-The new resolver guard refuses concurrent different folded spellings within one table at
-lock time. It reuses the resolver's existing overlap components; sequential spellings
-and cross-table assignments remain allowed. The CLI regression case failed against the
-pre-fix binary because it accepted an inclusive one-day overlap; it passes after the
-fix, beside allowed twins, with an externally authored located D-11 diagnostic. Every
-fixture ID retains unselected occurrences.
-
-Eighteen recovered setters are dropped under D-11: 12 SNI-edition setters, two KSJU
-stratum setters, two nomination-code setters, one LISA FInk90 setter and one HUT
-identifier setter. The resolver reports a register-wide assignment failure at each
-assignment location, so valid pre-PR assignments were preserved instead of deleting
-every reported line. Sources and subjects are listed below.
-
-A disposable lock-only variable-selector probe resolved the minted LISA ID
-`naringsgren-storsta-forvarvskalla-ku1astsni2007` after those drops. The same probe
-found `stratum-strat` empty under the five recovered FoU STRAT assignments; those five
-are also dropped pending explicit identity/retirement review. All 23 recovered identity
-setters are now deferred in the defined post-D id sprint. Probe statements never entered
-authoritative curation or publication.
-
-## Append-only tooling
-
-The replacement CLI and writer mode are deleted. The two unreachable
-classification-conversion modules and their dead report/audit branches are deleted;
-historical reports remain. Recovery only appends to a scratch copy and refuses output
-paths inside authoritative `curation/`. Unknown table joins raise located refusals;
-tables are not matched by display name. Membership normalization reads published catalog
-identities and defers proposed identity changes until a refreshed locked catalog exists,
-rather than predicting assignments in Python.
-
-Overlap follows the resolver's edition/union rules. IoT table/spelling literals are
-removed; an exact-ledger source-inventory recount gives 117 missing set memberships and
-one missing tag membership. The four IoT placement questions remain deferred in
-REBUILD.md. The 20-row remaining-work table defines edition/qualifier measurement, then
-the full-catalog id sprint, then SWECOV curation in E.
-
-## New r193 IDs for review
-
-These are 34 legitimate recovered assertions: 17 `AvdFTH`, 12 `SkolenhetsKodFTH` and
-five `SkolKodFTH`. Without documented native keys, each assertion has its own source key
-and therefore its own one-release identity. No continuity was inferred. Repeated labels
-use the D-12 label-plus-column fallback and counters last; all slugs are at most 44
-characters. Existing, table and retired namespaces remain reserved. Every new anchor
-names an existing assertion's exact table, column and source release day. All suffixes
-below are under `scb/grundskola-elever/`.
-
-  | Public ID suffix                               | Label                        | Dated ledger anchor                              |
-  | ---------------------------------------------- | ---------------------------- | ------------------------------------------------ |
-  | `fritidshemsavdelningens-namn-avdfth`          | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2008-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-2`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2009-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-3`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2010-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-4`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2011-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-5`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2012-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-6`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2013-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-7`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2014-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-8`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2015-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-9`        | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2016-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-10`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2017-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-11`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2018-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-12`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2019-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-13`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2020-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-14`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2021-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-15`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2022-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-16`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2023-10-15`           |
-  | `fritidshemsavdelningens-namn-avdfth-17`       | Fritidshemsavdelningens namn | `Individregister: AvdFTH @ 2024-10-15`           |
-  | `skolkod-fritidshem-skolkodfth`                | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2008-10-15`       |
-  | `skolkod-fritidshem-skolkodfth-2`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2009-10-15`       |
-  | `skolkod-fritidshem-skolkodfth-3`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2010-10-15`       |
-  | `skolkod-fritidshem-skolkodfth-4`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2011-10-15`       |
-  | `skolkod-fritidshem-skolkodfth-5`              | Skolkod fritidshem           | `Individregister: SkolKodFTH @ 2012-10-15`       |
-  | `skolenhetskod-fritidshem-skolenhetskodfth`    | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2013-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-2`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2014-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-3`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2015-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-4`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2016-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-5`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2017-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-6`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2018-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-7`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2019-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-8`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2020-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-9`  | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2021-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-10` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2022-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-11` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2023-10-15` |
-  | `skolenhetskod-fritidshem-skolenhetskodfth-12` | Skolenhetskod fritidshem     | `Individregister: SkolenhetsKodFTH @ 2024-10-15` |
-
-## Dropped recovery setters
-
-  | Source                                                                 | Subject                                      | Reason / home                                                                                                                               |
-  | ---------------------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-  | reg_meta_build/curation/registers/scb/lisa.toml:2592                   | individer-16plus: fink90                     | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | arbetsstallen: ast_sni2007                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | foretag: org_sni2007                         | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-15plus: astsni2007                 | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni2007                 | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni69                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni92                   | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-15plus: ku2astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-16plus: ku2astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-15plus: ku1astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-16plus: ku1astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-15plus: ku3astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-16plus: ku3astsni2007              | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/hut.toml:732                     | hushall-2021: undnr                          | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: strata        | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: stratum       | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109 | kommunfullmaktigeval: kommunvalkrets         | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103 | riksdagsval: riksdagsvalkrets                | D-11: concurrent folded spellings must retain separate identities; id sprint: SNI-edition variables and other identity reviews              |
-  | reg_meta_build/curation/registers/scb/fou.toml:15338                   | uoh-personal: strat @2019                    | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
-  | reg_meta_build/curation/registers/scb/fou.toml:15365                   | uoh-personal: strat where release = 'r18421' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
-  | reg_meta_build/curation/registers/scb/fou.toml:15347                   | uoh-personal: strat where release = 'r18431' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
-  | reg_meta_build/curation/registers/scb/fou.toml:15374                   | uoh-personal: strat where release = 'r19474' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
-  | reg_meta_build/curation/registers/scb/fou.toml:15356                   | uoh-personal: strat where release = 'r19506' | would empty minted stratum-strat; requires explicit identity/retirement review; id sprint: SNI-edition variables and other identity reviews |
-
-## Fix-01 validation
-
-  | Check                                          | Result                                                              |
-  | ---------------------------------------------- | ------------------------------------------------------------------- |
-  | Release `reg-build` compile                    | exit 0                                                              |
-  | New D-11 CLI corpus against the pre-fix binary | failed as expected: lock wrongly accepted the overlap               |
-  | Same corpus after the guard                    | passed, 0.84 s                                                      |
-  | Initial whole-root lock                        | refused D-11 assignments; pre-PR assignments preserved              |
-  | Disposable population-probe lock               | refused only the empty FoU `stratum-strat` probe; LISA KU1 resolved |
-  | Revised authoritative whole-root lock          | exit 0, after dropping all 23 recovered variable setters            |
-  | Separate synthetic build / verify              | exit 0 / exit 0                                                     |
-  | Initial post-fix `gate.py g0 rust`             | passed; 116 script tests, 204 conformance passed / two skipped      |
-  | Recovery output under `curation/`              | refused before writing; no directory created                        |
-
-The new test pins the Curation TOML → located lock-refusal boundary. Its expected
-diagnostic is authored from D-11, not computed from resolver output. No existing
-assignment lock/refusal corpus covered it. It adds one case with an inclusive one-day
-edge and allowed nonconcurrent/cross-table twins; no test was deleted. The previous
-conformance run was 203 cases in 3.58 s; the first post-fix run was 204 cases in 3.97 s,
-both inside the 30 s package budget.
-
-The table/display-name and assignment-prediction paths are removed, not replaced with a
-Python resolver. Focused probes covered missing-table source locations, catalog-only
-membership reads, exact-spelling unit routing and scratch-output confinement. The main
-D-12 namespace/anchor checks preserve every existing r193 ledger entry and reserve
-existing, table and retired names.
-
-Not run in fix-01: a real-seed catalog build, real-catalog `verify --previous`,
-comparison against 0.66.0, release gate, R suites, full converter replay or
-`gate.py regen`. The Operator reruns the strict build and real verification. No PR
-merge. Task scratch is deleted before completion.
-
-Final authoritative-checkout `gate.py g0 rust` also passed: G0 18 s and Rust 6 s; 116
-script tests and 204 conformance cases passed, two conformance cases skipped. The
-synthetic double build remained byte-identical. Separate synthetic build/verify both
-exited 0. Fresh independent review confirmed the current 827 statement count, all 34
-unique dated ID anchors, unchanged original IDs, exact pre-PR statement byte prefixes
-and the 20-row remaining-work table. Final Markdown format/lint and `git diff --check`
-passed.
-
-## Historical 4f49e5aa accounting
-
-# D recovery close-out
-
-Temporary conversion evidence; deleted at milestone F (cutover).
-
-The supplied read-only catalog was built from d-fields `9c03adf6`; its curation is
-identical to base `73bde698`. Source inputs remain pinned at
-`9186fcbceeb2283a50c7f684764869e4dda5765e`; the SCB asset digest is
-`a1e081e94e966af9d21cc68bfc7e1968c120c924f3f692a79bfef2366d94d2ff`. Fresh
-`reg-build read` frames and minted ledgers supply source evidence; published IDs,
-tables, occurrence memberships and releases replace the Python identity projection. No
-row-level holdings were read or printed.
-
-## Retained additional outputs
-
-Counts below are additional source entries with at least one retained output, not
-historical conversion totals. An entry can have both retained outputs and a separately
-located refusal. Existing curation is preserved; exact existing effects and already
-explicit membership subsets need no added statement.
-
-  | Legacy kind               | Source entries with retained outputs |
-  | ------------------------- | -----------------------------------: |
-  | `enrichment.description`  |                                    2 |
-  | `errata.column`           |                                   44 |
-  | `errata.delivered`        |                                  299 |
-  | `identity.column_owner`   |                                    7 |
-  | `identity.partition`      |                                  183 |
-  | `representation.parallel` |                                  239 |
-
-Additional generated statements: 849 (571 assert, 278 set); 24 register files. The
-independent sets/tags replay additionally recovered one IoT `familjetyp` tag membership
-(529 set / 23 tag memberships now converted; 114 missing-ID refusals, six set and 12
-register-tag deferrals).
-
-  | Set field                | Additional statements |
-  | ------------------------ | --------------------: |
-  | `description`            |                     2 |
-  | `operational_definition` |                    24 |
-  | `sets`                   |                   229 |
-  | `variable`               |                    23 |
-
-## Screening and remaining work
-
-The prior report had 806 absent-everywhere and 125 other-register ledger-target drops.
-The catalog-backed pass now has 775 and 100 respectively, plus two mixed
-missing-ID/unplaced entries. Old target names are not borrowed across registers.
-Published complete group membership can prove that the existing canonical identity
-already preserves a legacy grouping. A local ID alone does not authorize a changed
-assignment.
-
-The original 426 missing-release drops were reconsidered using exact published release
-handles and dates. Remaining missing/undated-release drops: 49. Named-release column
-assertions also use exact catalog coverage instead of interpreting release names.
-Distinct exact release guards allow overlapping edition windows; the real resolver lock
-owns conflict decisions. Donor disagreements remain unresolved rather than selecting an
-edition or metadata value by guess.
-
-The exploratory lock located 158 screened new outputs. These refusals are recorded
-below, with their exact source declarations. Every original statement survives. Exact
-existing effects and already explicit positive memberships are not re-emitted.
-
-Base-conversion drop reasons below total 12,368 source entries. These are a separate
-accounting population: catalog-satisfied/no-op drops and entries covered by later D
-converters are included. They do not add to the additional-output counts. Every cohort
-has a disposition in REBUILD.md §D deferrals.
-
-  | Base-conversion reason                                                                                             | Entries |
-  | ------------------------------------------------------------------------------------------------------------------ | ------: |
-  | D-12: delivered occurrence has no unique existing unqualified ledger anchor                                        |      47 |
-  | D-12: target has no local ledger id (absent-everywhere)                                                            |     775 |
-  | D-12: target has no local ledger id (absent-everywhere); D-7: identity assignment targets an unplaced occurrence   |       1 |
-  | D-12: target has no local ledger id (only-other-register)                                                          |     100 |
-  | D-12: target has no local ledger id (only-other-register); D-7: identity assignment targets an unplaced occurrence |       1 |
-  | D-7                                                                                                                |      33 |
-  | D-7: identity assignment targets an unplaced occurrence                                                            |      85 |
-  | D-7: identity assignment targets an unplaced occurrence; built catalog identity already has the legacy outcome     |     130 |
-  | D-7: parallel legacy window disagrees with new-reader release placement                                            |       4 |
-  | asserted column classification needs reviewed family/version mapping                                               |       6 |
-  | asserted column needs a reviewed existing table                                                                    |      21 |
-  | asserted column needs an explicit expressible period                                                               |       4 |
-  | assertion needs one existing table; table declaration requires review                                              |     109 |
-  | built catalog identity already has the legacy outcome                                                              |    6436 |
-  | case aliases covered by folded spellings; no statement                                                             |     211 |
-  | case-folded variants have different or unproven legacy outcomes                                                    |      40 |
-  | case-only split: folded spelling cannot distinguish owners                                                         |       8 |
-  | classification correction needs reviewed family/version mapping                                                    |       6 |
-  | classification_timeline: requires reviewed translation of legacy payload/guards                                    |       1 |
-  | code list has no unique existing frame value set; needs handwritten assertion                                      |      62 |
-  | coding choice needs a reviewed selected source value-set hash                                                      |     186 |
-  | coding.omit: requires reviewed translation of legacy payload/guards                                                |       5 |
-  | coding.sentinel: requires reviewed translation of legacy payload/guards                                            |      15 |
-  | coding.support: requires reviewed translation of legacy payload/guards                                             |       8 |
-  | delivered donor facts disagree in length; reviewed edition-specific mapping required                               |      94 |
-  | delivered donor facts disagree in operational_definition; reviewed edition-specific mapping required               |      50 |
-  | delivered donor facts disagree in type; reviewed edition-specific mapping required                                 |      43 |
-  | delivered occurrence needs one dated existing release; convert the missing release first                           |      49 |
-  | delivery metadata alternatives disagree or lack the requested value                                                |       3 |
-  | delivery metadata window does not cover a whole source occurrence                                                  |       1 |
-  | delivery-header mapping; home: E holdings layer                                                                    |      44 |
-  | documentary.binding: requires reviewed translation of legacy payload/guards                                        |      21 |
-  | documentary.retained: requires reviewed translation of legacy payload/guards                                       |      16 |
-  | errata.occurrence_carry: requires reviewed translation of legacy payload/guards                                    |       4 |
-  | errata.support: requires reviewed translation of legacy payload/guards                                             |      35 |
-  | four-kind fields cannot clear a value                                                                              |       4 |
-  | group: requires reviewed translation of legacy payload/guards                                                      |      48 |
-  | grouping identity may change after asserted occurrences; reviewed final membership required                        |     100 |
-  | identity split needs a reviewed non-type selector                                                                  |      31 |
-  | identity.edition_split: requires reviewed translation of legacy payload/guards                                     |      37 |
-  | identity.rename: requires reviewed translation of legacy payload/guards                                            |       1 |
-  | identity.route: requires reviewed translation of legacy payload/guards                                             |      20 |
-  | legacy diagnostic/link endpoint has no placed final local variable; reviewed current finding/link required         |       2 |
-  | legacy field has no four-kind field                                                                                |      12 |
-  | legacy finding code; no new-model finding                                                                          |    2296 |
-  | legacy period cuts a whole source occurrence                                                                       |       8 |
-  | new reader binds no source classification                                                                          |      52 |
-  | no exact new-frame occurrence endpoint                                                                             |     268 |
-  | noncontiguous occurrence coverage cannot be expressed by set period                                                |       2 |
-  | occurrence period requires an explicit parent coverage correction; no scope is shrunk                              |       2 |
-  | parallel declared occurrence absent from new frames; reviewed assertion required                                   |      33 |
-  | partition includes case-only owners beside other spellings; needs reviewed regrouping                              |      13 |
-  | qualified ledger endpoint needs reviewed key/day selection                                                         |       5 |
-  | release name needs reviewed coverage interpretation; do not infer coverage from its token shape                    |       4 |
-  | representation.alias_window: requires reviewed translation of legacy payload/guards                                |       4 |
-  | representation.matrix: requires reviewed translation of legacy payload/guards                                      |       7 |
-  | representation.period_family: requires reviewed translation of legacy payload/guards                               |       8 |
-  | source spelling cannot be expressed by address grammar                                                             |       7 |
-  | table identity already in ledger; panel metadata has no four-kind field                                            |     750 |
+  | reg_meta_build/curation/registers/scb/lisa.toml:2592                   | individer-16plus: fink90                     | Deferred    | set variable would merge concurrent folded spellings "fink89" and "fink90" in table "Individer, 16 år och äldre" over 1990-01-01..1990-12-31 into variable "fink"; retain separate variables; id sprint.                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | arbetsstallen: ast_sni2007                   | Deferred    | set variable would merge concurrent folded spellings "ast_sni2002" and "ast_sni2007" in table "Arbetsställen" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-arbetsstalle"; retain separate variables; id sprint.                 |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | foretag: org_sni2007                         | Deferred    | set variable would merge concurrent folded spellings "org_sni2002" and "org_sni2007" in table "Företag" over 2008-01-01..2008-12-31 into variable "naringsgren-huvud-foretag"; retain separate variables; id sprint.                            |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-15plus: astsni2007                 | Deferred    | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni2007                 | Deferred    | set variable would merge concurrent folded spellings "astsni2002" and "astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-huvud-individ"; retain separate variables; id sprint.           |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni69                   | Deferred    | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni69; id sprint.                                                                                                                                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1247                   | individer-16plus: astsni92                   | Deferred    | Empties a minted source ID: naringsgren-for-statistiken-huvudsaklig-astsni92; id sprint.                                                                                                                                                        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-15plus: ku2astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1255                   | individer-16plus: ku2astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku2astsni2002" and "ku2astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-nast-storsta-ku"; retain separate variables; id sprint.   |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-15plus: ku1astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1271                   | individer-16plus: ku1astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku1astsni2002" and "ku1astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-storsta-ku"; retain separate variables; id sprint.        |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-15plus: ku3astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 15 år och äldre" over 2010-01-01..2010-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
+  | reg_meta_build/curation/registers/scb/lisa.toml:1263                   | individer-16plus: ku3astsni2007              | Deferred    | set variable would merge concurrent folded spellings "ku3astsni2002" and "ku3astsni2007" in table "Individer, 16 år och äldre" over 2007-01-01..2007-12-31 into variable "naringsgren-tredje-storsta-ku"; retain separate variables; id sprint. |
+  | reg_meta_build/curation/registers/scb/hut.toml:732                     | hushall-2021: undnr                          | Deferred    | set variable would merge concurrent folded spellings "hut_del" and "undnr" in table "Hushåll 2021-" over 2021-01-01..2021-12-31 into variable "hut-del"; retain separate variables; id sprint.                                                  |
+  | reg_meta_build/curation/registers/scb/fou.toml:15338                   | uoh-personal: strat @2019                    | Deferred    | Moves 2019/2021 UoH personal STRAT v462 coverage from scb/fou/stratum-strat to scb/fou/stratum; id sprint: retire-and-mint decision.                                                                                                            |
+  | reg_meta_build/curation/registers/scb/fou.toml:15365                   | uoh-personal: strat where release = 'r18421' | Deferred    | Moves 2019/2021 UoH personal STRAT v462 coverage from scb/fou/stratum-strat to scb/fou/stratum; id sprint: retire-and-mint decision.                                                                                                            |
+  | reg_meta_build/curation/registers/scb/fou.toml:15347                   | uoh-personal: strat where release = 'r18431' | Deferred    | Moves 2019/2021 UoH personal STRAT v462 coverage from scb/fou/stratum-strat to scb/fou/stratum; id sprint: retire-and-mint decision.                                                                                                            |
+  | reg_meta_build/curation/registers/scb/fou.toml:15374                   | uoh-personal: strat where release = 'r19474' | Deferred    | Moves 2019/2021 UoH personal STRAT v462 coverage from scb/fou/stratum-strat to scb/fou/stratum; id sprint: retire-and-mint decision.                                                                                                            |
+  | reg_meta_build/curation/registers/scb/fou.toml:15356                   | uoh-personal: strat where release = 'r19506' | Deferred    | Moves 2019/2021 UoH personal STRAT v462 coverage from scb/fou/stratum-strat to scb/fou/stratum; id sprint: retire-and-mint decision.                                                                                                            |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: strata        | Deferred    | set variable would merge concurrent folded spellings "strataks" and "strata" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                    |
+  | reg_meta_build/curation/registers/scb/ksju.toml:645                    | sjukfranvaro-sjukloneperioden: stratum       | Deferred    | set variable would merge concurrent folded spellings "strataks" and "stratum" in table "Sjukfrånvaro under sjuklöneperioden" over 2006-01-01..2006-12-31 into variable "urvalsstratum"; retain separate variables; id sprint.                   |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109 | kommunfullmaktigeval: kommunvalkrets         | Deferred    | set variable would merge concurrent folded spellings "ko_valkretskod" and "kommunvalkrets" in table "Kommunfullmäktigeval" over 1998-01-01..1998-12-31 into variable "kommunvalkrets-kod"; retain separate variables; id sprint.                |
+  | reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103 | riksdagsval: riksdagsvalkrets                | Deferred    | set variable would merge concurrent folded spellings "ri_valkretskod" and "riksdagsvalkrets" in table "Riksdagsval" over 1998-01-01..1998-12-31 into variable "riksdagsvalkrets-kod"; retain separate variables; id sprint.                     |
 
 ## Retained source declarations
 
+Rows count committed statements citing each source declaration; a collapsed statement
+can cite several declarations. Counts therefore overlap.
+
   | Source                                                                    | Legacy kind               | Retained statements |
   | ------------------------------------------------------------------------- | ------------------------- | ------------------: |
-  | `reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:103`  | `identity.partition`      |                   1 |
-  | `reg_meta_build/curation/registers/scb/allmanna-val-nominerade.toml:109`  | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:194` | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/allmanna-val-valresultat.toml:231` | `representation.parallel` |                   1 |
   | `reg_meta_build/curation/registers/scb/arlig-energistatistik.toml:2637`   | `identity.partition`      |                   1 |
@@ -893,12 +327,7 @@ has a disposition in REBUILD.md §D deferrals.
   | `reg_meta_build/curation/registers/scb/fou.toml:1499`                     | `errata.delivered`        |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1511`                     | `errata.delivered`        |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1523`                     | `errata.delivered`        |                   1 |
-  | `reg_meta_build/curation/registers/scb/fou.toml:15338`                    | `identity.column_owner`   |                   1 |
-  | `reg_meta_build/curation/registers/scb/fou.toml:15347`                    | `identity.column_owner`   |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1535`                     | `errata.delivered`        |                   1 |
-  | `reg_meta_build/curation/registers/scb/fou.toml:15356`                    | `identity.column_owner`   |                   1 |
-  | `reg_meta_build/curation/registers/scb/fou.toml:15365`                    | `identity.column_owner`   |                   1 |
-  | `reg_meta_build/curation/registers/scb/fou.toml:15374`                    | `identity.column_owner`   |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1547`                     | `errata.delivered`        |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1559`                     | `errata.delivered`        |                   1 |
   | `reg_meta_build/curation/registers/scb/fou.toml:1571`                     | `errata.delivered`        |                   1 |
@@ -1072,7 +501,6 @@ has a disposition in REBUILD.md §D deferrals.
   | `reg_meta_build/curation/registers/scb/hreg.toml:796`                     | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/hreg.toml:841`                     | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/hreg.toml:921`                     | `representation.parallel` |                   1 |
-  | `reg_meta_build/curation/registers/scb/hut.toml:732`                      | `identity.column_owner`   |                   1 |
   | `reg_meta_build/curation/registers/scb/iku.toml:114`                      | `identity.partition`      |                   2 |
   | `reg_meta_build/curation/registers/scb/iku.toml:120`                      | `identity.partition`      |                   2 |
   | `reg_meta_build/curation/registers/scb/iku.toml:126`                      | `identity.partition`      |                   1 |
@@ -1318,7 +746,6 @@ has a disposition in REBUILD.md §D deferrals.
   | `reg_meta_build/curation/registers/scb/ksju.toml:627`                     | `identity.partition`      |                   6 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:633`                     | `identity.partition`      |                   2 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:639`                     | `identity.partition`      |                   1 |
-  | `reg_meta_build/curation/registers/scb/ksju.toml:645`                     | `identity.partition`      |                   2 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:651`                     | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:657`                     | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:663`                     | `identity.partition`      |                   1 |
@@ -1333,11 +760,6 @@ has a disposition in REBUILD.md §D deferrals.
   | `reg_meta_build/curation/registers/scb/ksju.toml:965`                     | `representation.parallel` |                   1 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:978`                     | `representation.parallel` |                   2 |
   | `reg_meta_build/curation/registers/scb/ksju.toml:991`                     | `representation.parallel` |                   2 |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:1247`                    | `identity.partition`      |                   6 |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:1255`                    | `identity.partition`      |                   2 |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:1263`                    | `identity.partition`      |                   2 |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:1271`                    | `identity.partition`      |                   2 |
-  | `reg_meta_build/curation/registers/scb/lisa.toml:2592`                    | `identity.column_owner`   |                   1 |
   | `reg_meta_build/curation/registers/scb/pin.toml:1403`                     | `representation.parallel` |                   1 |
   | `reg_meta_build/curation/registers/scb/prisindex.toml:237`                | `identity.partition`      |                   1 |
   | `reg_meta_build/curation/registers/scb/prisindex.toml:245`                | `representation.parallel` |                   1 |
@@ -1498,11 +920,12 @@ has a disposition in REBUILD.md §D deferrals.
   | `reg_meta_build/curation/registers/scb/ulf.toml:4442`                     | `representation.parallel` |                   1 |
   | `reg_meta_build/curation/registers/scb/ulf.toml:4455`                     | `representation.parallel` |                   1 |
   | `reg_meta_build/curation/registers/scb/utrikeshandel.toml:196`            | `errata.delivered`        |                   2 |
+  | `reg_meta_build/curation/tags.toml:153`                                   | `tag membership`          |                   1 |
 
 ## Located exploratory lock refusals
 
 Counts here are output statements; one statement can have several located diagnostics.
-The final combined lock passed after screening.
+These screened proposals are not committed.
 
   | Source                                                                     | Subject / field                                                                                             | Located reason                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -4358,48 +3781,4 @@ spelling, no setter guards, equal unit values and full coverage in all 28 cases.
 the duplicate constructor unit is omitted; the original covering scalar setter supplies
 the explicit unit after assertion. Each revised constructor retains the source evidence
 and records this routing. These 28 are included in the retained assertion counts, and
-excluded from the 158 outstanding output refusals. Final combined lock acceptance is
-recorded below.
-
-## Validation
-
-The final **whole-root `reg-build lock` passed (exit 0)** on the combined candidate,
-including the 28 revised FoU assertions and the new tag membership. The additional
-statements and 25 changed premise locks were copied to this checkout. All 24 statement
-files with additions preserve every pre-task byte as a prefix; no hand curation, later D
-statement or d-fields ruling was replaced. The 44 delivery-header aliases remain
-dropped. No classification inventory or ID ledger was changed.
-
-  | Check                                                       | Result                                                                                              |
-  | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-  | `cargo build --release --locked -p reg-build`               | exit 0                                                                                              |
-  | Fresh `reg-build read` on the pinned real source inputs     | exit 0; frames only, no catalog build                                                               |
-  | Catalog-backed conversion and output-level screening        | exit 0                                                                                              |
-  | Exploratory whole-root locks                                | three exit-1 passes: 116, 42 and 28 located outputs; existing statements preserved                  |
-  | Reduced whole-root lock                                     | exit 0, before restoring the 28 revised unit-covered constructors                                   |
-  | Final combined whole-root lock                              | exit 0; 158 output refusals remain withheld; 28 unit overlaps resolved                              |
-  | Separate synthetic `reg-build build` and `reg-build verify` | exit 0 / exit 0                                                                                     |
-  | `gate.py g0 rust` before copying the candidate              | passed; 116 script tests, 203 conformance cases passed, two skipped; synthetic byte identity passed |
-
-Final lock notices are existing redundant setters and the existing one-code
-`classification-sentinels-unused` notice; no new output was marked redundant.
-
-Initial gate attempts found import/executable-bit, formatting and type issues; these
-were corrected. The sandbox prevented writes to the default uv tool directory, so
-subsequent gates used `UV_TOOL_DIR=/Users/adam/.cache/uv-tools`. An initial manual
-synthetic command used a nonexistent fixture path; the corrected build and verify used
-`crates/reg-build/fixture` and passed. No permanent tests were added or changed.
-
-Not run: a real-seed catalog build, real-catalog `verify --previous`, comparison against
-0.66.0, the release gate, R suites or `gate.py regen`. The Operator runs the real build,
-verification and diff after push. No PR merge or real release was done. Task-owned
-scratch frames, candidates, logs and review scripts are deleted after retaining this
-source-located accounting.
-
-The final checkout
-`UV_TOOL_DIR=/Users/adam/.cache/uv-tools uv run --no-project scripts/gate.py g0 rust`
-also **passed** after copying the locked candidate: 116 script tests and 203 conformance
-cases passed, two conformance cases skipped, and synthetic byte identity passed. The
-complete branch delta contains 850 additional statements: 571 assertions and 279 setters
-across 25 statement files. Final `git diff --check` and Markdown format/lint checks
-passed.
+excluded from the 158 outstanding output refusals.
