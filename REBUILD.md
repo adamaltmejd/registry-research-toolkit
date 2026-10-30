@@ -652,8 +652,10 @@ catalog remains for a later release decision.
    partition (LOVA INVARN8/9): 17 partitions adopted, 12 ids retired (4 merged, 8
    split), 25 minted and 23 claims deferred; it also corrected the LOVA INVARN9
    spelling. Batch 4 reviewed 454 claims: 12 adopted claims yielded 10 partitions, 12
-   retired ids and 18 minted; 238 were rejected and 204 deferred, including the
-   unaddressable Pris/pris split. Another 211 coordinator holds remain. Then finish
+   retired ids (4 merged, 8 split) and 18 minted; 238 were rejected and 204 deferred.
+   The Pris/pris split remains deferred: its two targets differ only by operational
+   definition, which curation selectors cannot address. The 211 coordinator holds and
+   the deferred claims keep their current ids and do not block 0.68.0. Then finish
    keyless defaults/setters and release 0.68.0 as the sprint baseline.
 
 2. **Id sprint:** after that review, make one full-catalog pass over id names,

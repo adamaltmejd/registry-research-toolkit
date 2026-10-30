@@ -73,6 +73,6 @@
 "hemtjanst-avlosning-av-anhorig" = ["SOL_2007_2012: AVAN @ 2007-10-01"]
 "hemtjanst-matdistribution" = ["SOL_2007_2012: MATD @ 2007-10-01"]
 "kontaktfamilj-eller-kontaktperson" = ["SOL_2007_2012: KONTP @ 2007-10-01"]
-"kontaktperson-insats" = ["SOL: KONTP @ 2012-07-01"]
+"kontaktperson-kontp" = ["SOL: KONTP @ 2012-07-01"]
 "matdistribution-separat-beslut" = ["SOL: MATD @ 2012-07-01"]
 "startdatum-for-avslutat-bistand" = ["SOL_INCR: AVDAT @ 2012-07-01"]

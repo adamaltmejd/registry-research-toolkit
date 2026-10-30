@@ -2642,11 +2642,11 @@ evidence = "The four successive spellings share the same key, label, definition,
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: arbink"
-fields = { "variable" = "arbetsinkomst-arbink-carb" }
+fields = { "variable" = "arbetsinkomst-carb-2" }
 evidence = "ARBINK and CARB record the same work-income measure across disjoint periods."
 
 [[statement]]
 kind = "set"
 subject = "individer-och-dodsbon: carb where key = 'v75'"
-fields = { "variable" = "arbetsinkomst-arbink-carb" }
+fields = { "variable" = "arbetsinkomst-carb-2" }
 evidence = "ARBINK and CARB record the same work-income measure across disjoint periods."

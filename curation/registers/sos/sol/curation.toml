@@ -374,13 +374,13 @@ evidence = "KONTP changes from a combined contact-family or contact-person item 
 [[statement]]
 kind = "set"
 subject = "sol-incr: kontp"
-fields = { "variable" = "kontaktperson-insats" }
+fields = { "variable" = "kontaktperson-kontp" }
 evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
 
 [[statement]]
 kind = "set"
 subject = "sol: kontp"
-fields = { "variable" = "kontaktperson-insats" }
+fields = { "variable" = "kontaktperson-kontp" }
 evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
 
 [[statement]]
