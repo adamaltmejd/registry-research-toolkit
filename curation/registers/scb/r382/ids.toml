@@ -242,5 +242,5 @@ public = "pin"
 
 "organisationsnummer-12-siffror-orgnr-2" = ["Industrins kapacitetsutnyttjande: OrgNr @ 2019-01-01"]
 
-"branschgrupp-branschgr-2" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2006-04-01"]
-"branschgrupp-branschgr-3" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2009-04-01"]
+"branschgrupp-sni2002" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2006-04-01"]
+"branschgrupp-sni2007" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2009-04-01"]

@@ -1130,13 +1130,13 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/sos/lova.toml
 kind = "set"
 subject = "lova-syssstat: beskrivning"
 fields = { "variable" = "sysselsattningsstatus-klartext-beskrivning" }
-evidence = "BESKRIVNING mixes code-edition origin and employment-status text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+evidence = "BESKRIVNING in SYSSSTAT describes employed and non-employed categories."
 
 [[statement]]
 kind = "set"
 subject = "lova-hospkoder: beskrivning"
-fields = { "variable" = "vilken-upplaga-av-socailstyrelsens-koder-for" }
-evidence = "BESKRIVNING mixes code-edition origin and employment-status text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+fields = { "variable" = "upplaga-av-socialstyrelsens-koder" }
+evidence = "BESKRIVNING in HOSPKODER records the edition and origin of Socialstyrelsen's licence codes."
 
 [[statement]]
 kind = "set"
@@ -1177,26 +1177,26 @@ evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and m
 [[statement]]
 kind = "set"
 subject = "lova-yrkstalln: klartext"
-fields = { "variable" = "yrkesstallning-november-manad-klartext-klartext" }
+fields = { "variable" = "yrkesstallning-klartext" }
 evidence = "KLARTEXT pools text columns for seven unrelated lookup domains and must split while the other families remain unchanged."
 
 [[statement]]
 kind = "set"
 subject = "lova-landskod: klartext_grp"
-fields = { "variable" = "klartext-grupp" }
-evidence = "KLARTEXT_GRP mixes country-group and specialty-group text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+fields = { "variable" = "landgrupp-klartext" }
+evidence = "KLARTEXT_GRP in LANDSKOD contains the text for each country's grouping."
 
 [[statement]]
 kind = "set"
 subject = "lova-leg-spec-exam: klartext_grp"
-fields = { "variable" = "klartext-spec-grp-klartext-grp" }
-evidence = "KLARTEXT_GRP mixes country-group and specialty-group text while KLARTEXT mixes seven lookup domains, requiring separate families for those lookup meanings."
+fields = { "variable" = "specialitetsgrupp-klartext" }
+evidence = "KLARTEXT_GRP in LEG_SPEC_EXAM contains the text for the specialty's group."
 
 [[statement]]
-evidence = "The ninth-immigration label and definition identify INVARN9; the source repeats INVARN8 for the eighth and ninth dates."
-fields = { "spelling" = "INVARN9" }
 kind = "set"
 subject = "lova-person: INVARN8 where key = 'n:invarn8' and label = 'Invandringsdatum 9 numerisk'"
+fields = { "spelling" = "INVARN9" }
+evidence = "The ninth-immigration label and definition identify INVARN9; the source repeats INVARN8 for the eighth and ninth dates."
 
 [[statement]]
 kind = "set"

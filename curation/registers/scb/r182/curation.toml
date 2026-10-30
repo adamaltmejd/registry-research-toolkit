@@ -10379,17 +10379,17 @@ caveat = "SCB documents no column V098 on FoU Företagssektorn for 2001. The mea
 [[statement]]
 kind = "set"
 subject = "foretagssektorn: stratum"
-fields = { "variable" = "stratum-stratum" }
+fields = { "variable" = "stratum-2" }
 evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
 
 [[statement]]
 kind = "set"
 subject = "uoh-personal: strat"
-fields = { "variable" = "stratum-stratum" }
+fields = { "variable" = "stratum-2" }
 evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
 
 [[statement]]
 kind = "set"
 subject = "uoh-personal: stratum"
-fields = { "variable" = "stratum-stratum" }
+fields = { "variable" = "stratum-2" }
 evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."

@@ -1253,7 +1253,7 @@ public = "linda"
 "underlag-for-fastighetsskatt-med-2-8-avseende-afavat" = ["Panelurval av befolkningen inkl. familjemedlemmar: AFAVAT # v28886"]
 "urvalskod-for-panelurvalet-burvkodp" = ["Panelurval av befolkningen inklusive taxeringshushåll: BURVKODP"]
 
-"naringsgren-fran-kontrolluppgifter-och-bngr" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 1994-01-01"]
-"naringsgren-fran-kontrolluppgifter-och-bngr-2" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2002-01-01"]
-"naringsgren-fran-kontrolluppgifter-och-bngr-3" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2003-01-01"]
-"naringsgren-fran-kontrolluppgifter-och-bngr-4" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2007-01-01"]
+"naringsgren-bngr-sni92" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 1994-01-01"]
+"naringsgren-bngr-sni2002-sni92" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2002-01-01"]
+"naringsgren-bngr-sni2002" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2003-01-01"]
+"naringsgren-bngr-sni2007" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2007-01-01"]
