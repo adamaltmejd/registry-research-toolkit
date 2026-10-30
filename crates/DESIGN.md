@@ -568,13 +568,14 @@ overlapping curated overrides are refused at both locations.
   With no usable canonical label, use the column alone. Reserve existing, retired and
   table ids before allocating new ones. Existing ids, including manually shortened label
   slugs, are never renamed by minting.
-- **Retirements.** `curation/retired.toml` permanently records each retired public id,
-  its kind, retirement version and reason (`merged`, `split` or `withdrawn`). Any PR
-  removing a published id adds its entry in the same PR; the id-sprint assembler appends
-  renames and dissolved sets. The builder emits these entries to `ident_retired`,
+- **Retirements.** For ids published before v1, a rename switches the id; no retirement,
+  redirect or rename warning is required. For ids published from v1,
+  `curation/retired.toml` permanently records each retired public id, its kind,
+  retirement version and reason (`merged`, `split` or `withdrawn`); removing a published
+  id requires its entry in the same PR. The builder emits them to `ident_retired`,
   refuses live collisions with both `ident` and `var_set` (including tags), and reserves
-  their names during minting and set membership admission. Entries are never removed or
-  redirected.
+  their names during minting and set membership admission. From v1, entries are never
+  removed or redirected.
 - **Inputs.** `curation/inputs.toml` lists the pinned inputs, each with its reader and,
   for readers that need them, provider and register. A reader's config is
   `curation/readers/<reader>.toml`. An input row covers every file its reader read.
@@ -783,18 +784,23 @@ overlapping curated overrides are refused at both locations.
   and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
   `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. Removed ids from `ident` or `var_set` must appear
-  with the same kind in `ident_retired`, and existing retirements must remain. A
-  published variable id's targets are its column-bearing occurrences' (table slug,
-  folded spelling, `[start, end)` period) triples. Targets overlap when table and
-  spelling match and their periods overlap; matching names in disjoint periods do not
-  preserve identity. An explicit table id targets its table name. Implicit tables share
-  their register's id and are excluded from the table rule. If an id of the same kind
+  other version is not comparable. When the previous release's catalog version has an
+  integer major of at least 1, removed ids from `ident` or `var_set` must appear with
+  the same kind in `ident_retired`, and existing retirements must remain. A published
+  variable id's targets are its column-bearing occurrences' (table slug, folded
+  spelling, `[start, end)` period) triples. Targets overlap when table and spelling
+  match and their periods overlap; matching names in disjoint periods do not preserve
+  identity. An explicit table id targets its table name. Implicit tables share their
+  register's id and are excluded from the table rule. If an id of the same kind
   survives, both target sets are non-empty, and no old/new targets overlap,
-  `verify --previous` refuses it as moved, naming the pid and both target sets; retire
-  that id and mint a new one. Overlapping targets, including growth, are allowed. `diff`
-  lists and counts moved ids in its `ids` section. Registers and providers are excluded
-  from this rule.
+  `verify --previous` refuses it as moved under that same version rule, naming the pid
+  and both target sets; retire that id and mint a new one. Otherwise, missing unretired
+  ids, moved ids and removed retirements are reported on stdout, one line per id in id
+  order with a total count, without refusing. The rule follows the previous release's
+  version, whatever the candidate's: a `dev` or 1.0.0 candidate compared with a 0.x
+  release is lenient. No flag changes this rule; other verification checks still apply.
+  Overlapping targets, including growth, are allowed. `diff` lists and counts moved ids
+  in its `ids` section. Registers and providers are excluded from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a

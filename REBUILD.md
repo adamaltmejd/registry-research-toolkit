@@ -658,6 +658,9 @@ catalog remains for a later release decision.
    the deferred claims keep their current ids and do not block 0.68.0. Then finish
    keyless defaults/setters and release 0.68.0 as the sprint baseline.
 
+   **Ruling (2026-10-30):** retirements are optional before v1; the 5,302 ledger entries
+   were cleared.
+
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and
    evidenced deferred endpoints; refresh locks and have the Operator verify the real

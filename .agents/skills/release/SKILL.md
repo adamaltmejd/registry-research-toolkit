@@ -184,8 +184,11 @@ digest, and decompress it into a separate evidence directory. Never substitute a
 release or a synthetic artifact. Run the single validation authority:
 
 ```sh
-target/debug/reg-build verify "$evidence/catalog/reg_meta.db" --previous <previous-release-dir>/reg_meta.db
+target/debug/reg-build verify "$evidence/catalog/reg_meta.db" --previous <previous-release-dir>/reg_meta.db > "$evidence/catalog-verify.txt"
 ```
+
+Retain stdout in `catalog-verify.txt` beside `catalog-diff.json`, including the pre-v1
+id-change report when the previous release is pre-v1.
 
 The switch release has no v4 predecessor: run `verify` without `--previous` and state
 that exception in its notes. From the next release on, `--previous` is required. A
