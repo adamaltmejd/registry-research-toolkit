@@ -10375,3 +10375,21 @@ subject = "foretagssektorn: V098 @2001-01-01..2001-12-31 where key = 'v3401' and
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ämne: Industriell teknik och ekonomi", "definition" = "Antal årsverk för ämne 168 i Nationell ämnesförteckning", "type" = "decimal", "length" = 53, "sensitive" = false, "identifier" = false } }
 evidence = "reg_meta_build/curation/registers/scb/fou.toml:2933\n\nSWECOV holds V098 in FTG_FOU_2001; the same delivered name is documented on this variant as native 3401 (scb/fou/v098), nearest in 2003. Carried under the same-name rule: a column with the same delivered name in the same series reuses the meaning of its nearest documented edition, with a warning that the meaning is assumed (#1603 batch-e; Operator under maintainer delegation 2026-10-16). Delivered storage type is compatible with the documented data type.\n\nThe explicit unit is supplied by the existing covering unit setter; omitted from this constructor to avoid overlapping claims."
 caveat = "SCB documents no column V098 on FoU Företagssektorn for 2001. The meaning and unit are assumed from SCB's 2003 documentation of the same delivered name in this survey series; it is not confirmed for these rounds."
+
+[[statement]]
+kind = "set"
+subject = "foretagssektorn: stratum"
+fields = { "variable" = "stratum-2" }
+evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: strat"
+fields = { "variable" = "stratum-2" }
+evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: stratum"
+fields = { "variable" = "stratum-2" }
+evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."

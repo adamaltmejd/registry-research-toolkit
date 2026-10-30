@@ -3028,3 +3028,51 @@ kind = "set"
 subject = "var:grund-for-bosattning-grundforbosattning"
 fields = { "sets" = ["legacy-2-8180"] }
 evidence = "reg_meta_build/curation/registers/scb/rtb.toml:763\n\n2026-09-30: SCB RTB VarId 8180: GFBKod and GrundForBosattning supply the same person-prioritized residence-basis classification. Preserve Nordic US/blank/null not-applicable versus non-Nordic missing meanings and all original member coding. Same literal GrundForBosattning on native2.15724 is a grouped construct outside this map. Pinned prepared v28 originals retain all source fields, variants, periods and coding associations."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "doda-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal: civdat @1998..2025"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: civildatum"
+fields = { "variable" = "civilstandsdatum-civdat-2" }
+evidence = "CivilDatum/Civildatum and CivDat share their key, label, definition and date format across disjoint periods and must merge while VigselDatum remains unchanged."

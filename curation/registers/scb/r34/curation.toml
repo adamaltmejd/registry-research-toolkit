@@ -1525,12 +1525,6 @@ evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1247\n\ncuration/con
 
 [[statement]]
 kind = "set"
-subject = "foretag: org_sni92"
-fields = { "variable" = "naringsgren-huvud-foretag" }
-evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1247\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
-
-[[statement]]
-kind = "set"
 subject = "individer-16plus: ku2astsni92"
 fields = { "variable" = "naringsgren-nast-storsta-ku" }
 evidence = "reg_meta_build/curation/registers/scb/lisa.toml:1255\n\ncuration/concept_groups.toml group scb/lisa/naringsgren member delivery columns"
@@ -4280,7 +4274,14 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Fö
 
 [[statement]]
 kind = "link"
-subject = "var:naringsgren-huvud-foretag"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni92"
+relation = "derived_from"
+object = "scb/rams"
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A15\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A18\n\nLISA Grundregister: Orgra. Orgra: SCB RAMS: Registret över företag (ORGRA), AM0207 2003 A.12."
+
+[[statement]]
+kind = "link"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2002"
 relation = "derived_from"
 object = "scb/rams"
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A15\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Företag!A18\n\nLISA Grundregister: Orgra. Orgra: SCB RAMS: Registret över företag (ORGRA), AM0207 2003 A.12."
@@ -13842,7 +13843,13 @@ evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-huvud-foretag"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni92"
+fields = { "sets" = ["naringsgren"] }
+evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig-org-sni2002"
 fields = { "sets" = ["naringsgren"] }
 evidence = "D-9 membership only: reg_meta_build/curation/registers/scb/lisa.toml:1180"
 
@@ -14169,3 +14176,15 @@ kind = "set"
 subject = "foretag: personnr_opv"
 fields = { "variable" = "operativ-verksamhetsledare-personnr-opv" }
 evidence = "The company column identifies the selected person, while the individual column records a Boolean indicator."
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni2002"
+fields = { "variable" = "naringsgren-for-statistiken-huvudsaklig-org-sni2002" }
+evidence = "Org_Sni2002 explicitly names SNI2002, a different industry classification from the Org_Sni92 history."
+
+[[statement]]
+kind = "set"
+subject = "foretag: org_sni92"
+fields = { "variable" = "naringsgren-for-statistiken-huvudsaklig-org-sni92" }
+evidence = "The compared Org_Sni92 code lists differ only by two removed 'Okänt värde' sentinels, leaving the SNI92 meaning unchanged."

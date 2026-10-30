@@ -196,7 +196,7 @@ public = "pin"
 "branschgrupp-aktbr92" = ["Industrins kapacitetsutnyttjande: AktBr92"]
 "branschgrupp-al2undeju" = ["Industrins kapacitetsutnyttjande: AL2UndEjU # v3310"]
 "branschgrupp-bgrupp" = ["Industrins kapacitetsutnyttjande: BGrupp # v3310"]
-"branschgrupp-branschgr" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310"]
+
 "brist-pa-insatsvaror" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v2925"]
 "brist-pa-kvalificerad-arbetskraft" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v2914"]
 "brist-pa-okvalificerad-arbetskraft" = ["Industrins kapacitetsutnyttjande: AgeOvanU # v2915"]
@@ -241,3 +241,6 @@ public = "pin"
 "verksamhetsenhetens-identitetsnummer" = ["Industrins kapacitetsutnyttjande: AL2UndU # v1454"]
 
 "organisationsnummer-12-siffror-orgnr-2" = ["Industrins kapacitetsutnyttjande: OrgNr @ 2019-01-01"]
+
+"branschgrupp-sni2002" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2006-04-01"]
+"branschgrupp-sni2007" = ["Omsättning inom tjänstesektorn t.o.m. 2014: branschgr # v3310 @ 2009-04-01"]

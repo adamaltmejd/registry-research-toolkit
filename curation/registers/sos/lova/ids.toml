@@ -54,7 +54,7 @@
 "invandringsdatum-7" = ["LOVA PERSON: INVDATUM7"]
 "invandringsdatum-7-numerisk" = ["LOVA PERSON: INVARN7"]
 "invandringsdatum-8" = ["LOVA PERSON: INVDATUM8"]
-"invandringsdatum-8-numerisk" = ["LOVA PERSON: INVARN8"]
+
 "invandringsdatum-9" = ["LOVA PERSON: INVDATUM9"]
 "invandringsland-1" = ["LOVA PERSON: INVLAND1"]
 "invandringsland-2" = ["LOVA PERSON: INVLAND2"]
@@ -143,7 +143,7 @@
 "yrkstalln" = ["LOVA: YRKSTALLN"]
 "arbetsmarknadsstatus-kod" = ["LOVA ARB_MARK_STAT: ARB_MARK_STATUS"]
 "klartext-for-lakarspecialitstyp" = ["LOVA LEG_SPEC_EXAM: SPEC_TYP"]
-"klartext-spec-grp" = ["LOVA LANDSKOD: KLARTEXT_GRP"]
+
 "kod-for-lakarspecialtetstyp" = ["LOVA LEG_SPEC_EXAM: SPEC_ORDER"]
 "kod-for-legitimationen" = ["LOVA HOSPKODER: KOD"]
 "kodens-giltighetsslut" = ["LOVA LANDSKOD: TOM_DATUM"]
@@ -153,5 +153,20 @@
 "landskod" = ["LOVA LANDSKOD: LANDSKOD"]
 "sos-egen-kod-for-sjukskoterskors-specialistexamen" = ["LOVA EXAMENSKODER: SPEC"]
 "start-for-kodens-giltighetstid" = ["LOVA LANDSKOD: FROM_DATUM"]
-"sysselsattningsstatus-klartext" = ["LOVA HOSPKODER: BESKRIVNING"]
-"yrkesstallning-november-manad-klartext" = ["LOVA AGARKAT: KLARTEXT"]
+
+
+
+"agarkategori-klartext" = ["lova-agarkat: KLARTEXT @ 1995-01-01"]
+"arbetsmarknadsstatus-klartext" = ["lova-arb-mark-stat: KLARTEXT @ 1995-01-01"]
+"landgrupp-klartext" = ["lova-landskod: KLARTEXT_GRP @ 1995-01-01"]
+"klartext-spec" = ["lova-leg-spec-exam: KLARTEXT @ 1995-01-01"]
+"specialitetsgrupp-klartext" = ["lova-leg-spec-exam: KLARTEXT_GRP @ 1995-01-01"]
+"land-klartext" = ["lova-landskod: KLARTEXT @ 1995-01-01"]
+"legitimationens-inriktning-i-klartext" = ["lova-hospkoder: KLARTEXT @ 1995-01-01"]
+"sektorkod-klartext" = ["lova-sektorkod: KLARTEXT @ 1995-01-01"]
+"sysselsattningsstatus-klartext-beskrivning" = ["lova-syssstat: BESKRIVNING @ 1995-01-01"]
+"upplaga-av-socialstyrelsens-koder" = ["lova-hospkoder: BESKRIVNING @ 1995-01-01"]
+"yrkesstallning-klartext" = ["lova-yrkstalln: KLARTEXT @ 1995-01-01"]
+
+"invandringsdatum-8-numerisk-invarn8" = ["LOVA PERSON: INVARN8 @ 1995-01-01"]
+"invandringsdatum-9-numerisk" = ["LOVA PERSON: INVARN9 @ 1995-01-01"]

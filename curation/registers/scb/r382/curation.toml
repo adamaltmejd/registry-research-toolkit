@@ -172,3 +172,15 @@ kind = "set"
 subject = "omsattning-tjanstesektorn-2015: peorgnr where key = 'v3578'"
 fields = { "variable" = "organisationsnummer-12-siffror-orgnr-2" }
 evidence = "PeorgNr became OrgNr with the same source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: branschgr @2006-04-01..2009-03-31"
+fields = { "variable" = "branschgrupp-sni2002" }
+evidence = "BranschGr 2001 and BranschGr 2007 reassign industry codes and require separate families at the April 2009 boundary."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: branschgr @2009-04-01..2015-03-31 where key = 'v3310'"
+fields = { "variable" = "branschgrupp-sni2007" }
+evidence = "BranschGr 2001 and BranschGr 2007 reassign industry codes and require separate families at the April 2009 boundary."

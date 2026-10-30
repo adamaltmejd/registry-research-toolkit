@@ -647,8 +647,11 @@ catalog remains for a later release decision.
 
    **Identity batches.** Batch 1 (A1, 44 registers, 954 claims) adopted 35 partitions,
    retired 73 ids (64 merged, 9 split), minted 44 and deferred 145 claims to batches
-   3/4. Batch 2 covers fordonsreg and RTB; batch 3 covers catalog-settleable defers and
-   held items; batch 4 needs A2 documents. Then finish keyless defaults/setters and
+   3/4. Batch 2 reviewed 156 claims in fordonsreg and RTB without identity edits; its
+   RTB holds continued in batch 3. Batch 3 reviewed 93 claims and applied one Operator
+   partition (LOVA INVARN8/9): 17 partitions adopted, 12 ids retired (4 merged, 8
+   split), 25 minted and 23 claims deferred; it also corrected the LOVA INVARN9
+   spelling. Batch 4 needs A2 documents. Then finish keyless defaults/setters and
    release 0.68.0 as the sprint baseline.
 
 2. **Id sprint:** after that review, make one full-catalog pass over id names,

@@ -465,7 +465,7 @@ public = "lisa"
 "naringsgren-huvud-arbetsstalle-sni2007u" = ["Arbetsställen: Ast_Sni2007U"]
 "naringsgren-huvud-arbetsstalle-sni92b" = ["Arbetsställen: Ast_Sni92B"]
 "naringsgren-huvud-arbetsstalle-sni92g" = ["Arbetsställen: Ast_Sni92G"]
-"naringsgren-huvud-foretag" = ["Företag: Org_Sni2002"]
+
 "naringsgren-huvud-foretag-sni2002b" = ["Företag: Org_Sni2002B"]
 "naringsgren-huvud-foretag-sni2002g" = ["Företag: Org_Sni2002G"]
 "naringsgren-huvud-foretag-sni2007g" = ["Företag: Org_Sni2007G"]
@@ -847,3 +847,6 @@ public = "lisa"
 "operativ-verksamhetsledare-personnr-opv" = ["Företag: PersonNr_OpV @ 2023-01-01"]
 "yrkesstallning-byrkstalln" = ["Individer, 15 år och äldre: BYrkstalln @ 2022-01-01"]
 "yrkesstallning-yrkstalln" = ["Individer, 15 år och äldre: YrkStalln @ 2010-01-01"]
+
+"naringsgren-for-statistiken-huvudsaklig-org-sni2002" = ["Företag: Org_Sni2002 @ 2002-01-01"]
+"naringsgren-for-statistiken-huvudsaklig-org-sni92" = ["Företag: Org_Sni92 @ 1990-01-01"]

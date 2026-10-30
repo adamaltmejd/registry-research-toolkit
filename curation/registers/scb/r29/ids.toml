@@ -296,7 +296,7 @@ public = "linda"
 "bmber" = ["Panelurval av befolkningen inkl. familjemedlemmar: BMBER"]
 "bnadb" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNADB"]
 "bnat" = ["Tilläggsurval av utrikesfödda inkl. familjemedlemmar: BNAT"]
-"bngr" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR"]
+
 "boendetillagg" = ["Panelurval av befolkningen inkl. familjemedlemmar: IBOENT"]
 "bomrak" = ["Panelurval av befolkningen inkl. familjemedlemmar: BOMRAK"]
 "bostadsbidrag-barnfamiljer" = ["Panelurval av befolkningen inkl. familjemedlemmar: BOSTK"]
@@ -1252,3 +1252,8 @@ public = "linda"
 "tjanstgoringsomfattning-tjomf" = ["Panelurval av befolkningen inkl. familjemedlemmar: TJOMF"]
 "underlag-for-fastighetsskatt-med-2-8-avseende-afavat" = ["Panelurval av befolkningen inkl. familjemedlemmar: AFAVAT # v28886"]
 "urvalskod-for-panelurvalet-burvkodp" = ["Panelurval av befolkningen inklusive taxeringshushåll: BURVKODP"]
+
+"naringsgren-bngr-sni92" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 1994-01-01"]
+"naringsgren-bngr-sni2002-sni92" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2002-01-01"]
+"naringsgren-bngr-sni2002" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2003-01-01"]
+"naringsgren-bngr-sni2007" = ["Panelurval av befolkningen inkl. familjemedlemmar: BNGR @ 2007-01-01"]
