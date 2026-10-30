@@ -1209,3 +1209,21 @@ kind = "set"
 subject = "lova-person: INVARN8 where key = 'n:invarn8' and label = 'Invandringsdatum 9 numerisk'"
 fields = { "variable" = "invandringsdatum-9-numerisk" }
 evidence = "The source labels and definitions identify the eighth and ninth immigration dates; the approved INVARN9 spelling correction exposes two distinct dates pooled in one published family."
+
+[[statement]]
+kind = "set"
+subject = "lova-ekonomi-arbetsmarknad: examar"
+fields = { "variable" = "examensar-aktuell-examen" }
+evidence = "EXAMAR records the current degree in the HOSP and economy tables, but the highest degree in the EXAMEN table."
+
+[[statement]]
+kind = "set"
+subject = "lova-hosp: examar"
+fields = { "variable" = "examensar-aktuell-examen" }
+evidence = "EXAMAR records the current degree in the HOSP and economy tables, but the highest degree in the EXAMEN table."
+
+[[statement]]
+kind = "set"
+subject = "lova-examen: examar"
+fields = { "variable" = "examensar-hogsta-examen" }
+evidence = "EXAMAR records the current degree in the HOSP and economy tables, but the highest degree in the EXAMEN table."

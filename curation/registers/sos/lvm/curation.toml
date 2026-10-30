@@ -36,3 +36,21 @@ kind = "set"
 subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: ar"
 fields = { "variable" = "utskrivningsar" }
 evidence = "AR combines decision year with discharge year, so discharge year must leave the decision-year family while all other families remain unchanged."
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: lk"
+fields = { "variable" = "den-omhandertagnas-kommun" }
+evidence = "LK records the placing municipality in applications and discharges, but the person's municipality in custody decisions."
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: lk"
+fields = { "variable" = "placerande-kommun" }
+evidence = "LK records the placing municipality in applications and discharges, but the person's municipality in custody decisions."
+
+[[statement]]
+kind = "set"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: lk"
+fields = { "variable" = "placerande-kommun" }
+evidence = "LK records the placing municipality in applications and discharges, but the person's municipality in custody decisions."

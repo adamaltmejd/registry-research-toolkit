@@ -304,3 +304,27 @@ kind = "set"
 subject = "privatagda-flerbostadshus: y91"
 fields = { "variable" = "totalyta-a91-2" }
 evidence = "In 2009, A91 replaces Y91 in the private housing table with identical key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "bostadsrattsforeningar: v4081 @2013"
+fields = { "variable" = "hushallsel-ingar-i-fastighetselkostnader" }
+evidence = "The 2013 item asks whether household electricity is included in property-electricity costs; the surrounding editions record monetary household-electricity costs."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: v4081 @2013"
+fields = { "variable" = "hushallsel-ingar-i-fastighetselkostnader" }
+evidence = "The 2013 item asks whether household electricity is included in property-electricity costs; the surrounding editions record monetary household-electricity costs."
+
+[[statement]]
+kind = "set"
+subject = "bostadsrattsforeningar: v4081 @2012,2015"
+fields = { "variable" = "hushallsel-kostnader-belopp" }
+evidence = "The 2013 item asks whether household electricity is included in property-electricity costs; the surrounding editions record monetary household-electricity costs."
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: v4081 @2012,2015"
+fields = { "variable" = "hushallsel-kostnader-belopp" }
+evidence = "The 2013 item asks whether household electricity is included in property-electricity costs; the surrounding editions record monetary household-electricity costs."

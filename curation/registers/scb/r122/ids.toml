@@ -1287,8 +1287,8 @@ public = "aku"
 "antal-formella-studietimmar-pa-betald-arbetstid-studbettim" = ["AKU april 2005 - dec 2020: STUDBETTIM # v7829"]
 "antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-2" = ["AKU april 2005 - dec 2020: HuFrAntimTotAnst # v6619"]
 "antal-franvarotimmar-i-huvudsysslan-hufrantimtotanst-3" = ["AKU april 2005 - dec 2020: HuFranTimTotAnst # v6618"]
-"antal-franvarotimmar-i-huvudsysslan-totalt-for-hsfrantimtot" = ["AKU fr.o.m. januari 2021: HsFranTimTot"]
-"antal-franvarotimmar-i-huvudsysslan-totalt-for-hufrantimtot" = ["AKU april 2005 - dec 2020: HuFrAntimTot"]
+
+
 "arbete-hemifran-egna-bostaden-i-huvudsysslan-hsarbhemmaantv" = ["AKU fr.o.m. januari 2021: hsarbhemmaantv"]
 "arbete-hemifran-egna-bostaden-i-huvudsysslan-hsarbhemmav" = ["AKU fr.o.m. januari 2021: hsarbhemmav"]
 "benamning-pa-up-s-senaste-arbetsplats-personer-uarbbenamn-2" = ["AKU april 2005 - dec 2020: UArbBenamn # v6873"]
@@ -1333,3 +1333,5 @@ public = "aku"
 "yrkesstallning-i-senaste-arbete-personer-utan-uarbyrkstall" = ["AKU april 2005 - dec 2020: UARBYRKSTALL # v6908"]
 
 "nattarbete-i-huvudsysslan-frekvens-huarbnattant-2" = ["AKU april 2005 - dec 2020: HUARBNATTANT @ 2005-04-01"]
+
+"antal-franvarotimmar-i-huvudsysslan-totalt-for-sysselsatta" = ["AKU april 2005 - dec 2020: HuFrAntimTot @ 2009-01-01"]

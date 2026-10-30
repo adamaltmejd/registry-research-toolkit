@@ -25,7 +25,7 @@
 "dodsdatum" = ["LOVA PERSON: AVLIDENDATUM"]
 "ej-pnr" = ["LOVA: EJ_PNR"]
 "eu-ees" = ["LOVA HOSP: EU_EES"]
-"examar" = ["LOVA: EXAMAR"]
+
 "examen" = ["LOVA EXAMEN: EXAMEN"]
 "examen-grov-gruppering-kod" = ["LOVA EXAMEN: TMGRP"]
 "examensdatum" = ["LOVA HOSP: EXAMENSDATUM"]
@@ -170,3 +170,6 @@
 
 "invandringsdatum-8-numerisk-invarn8" = ["LOVA PERSON: INVARN8 @ 1995-01-01"]
 "invandringsdatum-9-numerisk" = ["LOVA PERSON: INVARN9 @ 1995-01-01"]
+
+"examensar-aktuell-examen" = ["LOVA HOSP: EXAMAR @ 1995-01-01"]
+"examensar-hogsta-examen" = ["LOVA EXAMEN: EXAMAR @ 1995-01-01"]

@@ -1480,3 +1480,15 @@ kind = "set"
 subject = "aku-januari-2021: hsarbnattant"
 fields = { "variable" = "nattarbete-i-huvudsysslan-frekvens-huarbnattant-2" }
 evidence = "The release-boundary rename preserves source key, label, definition, unit and value set."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: hufrantimtot"
+fields = { "variable" = "antal-franvarotimmar-i-huvudsysslan-totalt-for-sysselsatta" }
+evidence = "SCB states that total absence hours retain their meaning across the 2021 redesign; half-hour answers change precision."
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: hsfrantimtot"
+fields = { "variable" = "antal-franvarotimmar-i-huvudsysslan-totalt-for-sysselsatta" }
+evidence = "SCB states that total absence hours retain their meaning across the 2021 redesign; half-hour answers change precision."
