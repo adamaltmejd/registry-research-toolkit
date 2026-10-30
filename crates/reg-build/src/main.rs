@@ -10,7 +10,7 @@
 //! ```
 //!
 //! `verify` checks a written catalog file (`verify.rs`) and, with `--previous`, its ids
-//! against the previous release's, reporting id changes for pre-v1 candidates.
+//! against the previous release's, reporting id changes when the previous release is pre-v1.
 //! `read` and `build` run every reader of the manifest `<curation>/inputs.toml` over the inputs root.
 //! An input that is a release asset of the inputs repository is read from
 //! `<assets>/<release>/<path>`, fetched there beforehand (`gh release download`).

@@ -223,8 +223,8 @@ fn pdfs(db: &Connection) -> Result<(), String> {
     Ok(())
 }
 
-/// From v1, ids survive on overlapping targets or are permanently retired.
-/// Pre-v1 candidates report these changes without refusing them.
+/// Ids published from v1 survive on overlapping targets or are permanently retired.
+/// Earlier releases report these changes without refusing them.
 fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     let fail = |what: String| format!("previous release: {what}");
     // `#`, `?` and `%` are URI syntax: encode every byte but unreserved ones and `/`.
@@ -265,14 +265,16 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
     }
     let catalog_version: String = db
         .query_row(
-            "SELECT value FROM meta WHERE key = 'catalog_version'",
+            "SELECT value FROM prev.meta WHERE key = 'catalog_version'",
             [],
             |r| r.get(0),
         )
         .map_err(|e| fail(e.to_string()))?;
     let pre_v1 = catalog_version
-        .split_once('.')
-        .is_some_and(|(major, _)| major == "0");
+        .split('.')
+        .next()
+        .and_then(|major| major.parse::<u64>().ok())
+        .is_none_or(|major| major == 0);
     let mut changes = Vec::new();
     for (change, statement) in [
         ("removed id", "SELECT p.pid FROM prev.ident p
@@ -288,7 +290,7 @@ fn compare(db: &Connection, previous: &Path) -> Result<(), String> {
         for pid in pids {
             let pid = pid.map_err(|e| e.to_string())?;
             if !pre_v1 {
-                return Err(fail(format!("{statement}; e.g. {pid}")));
+                return Err(fail(format!("{change} {pid}")));
             }
             changes.push((pid.clone(), format!("{change} {pid}")));
         }
