@@ -44,7 +44,10 @@
 "utskrivtill" = ["Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: UTSKRIVTILL"]
 
 "beslutsdatum" = ["Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: BESDATUM"]
-"kommunkod" = ["Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: LK"]
+
 
 "beslutsar-ar" = ["Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: AR @ 1994-01-03"]
 "utskrivningsar" = ["Tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: AR @ 1994-01-01"]
+
+"den-omhandertagnas-kommun" = ["Beslut om omedelbart omhändertagande för tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: LK @ 1994-01-03"]
+"placerande-kommun" = ["Ansökningar om tvångsvård enligt lagen om vård av missbrukare i vissa fall, LVM: LK @ 1994-01-03"]

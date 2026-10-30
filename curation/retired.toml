@@ -5373,3 +5373,27 @@
 "sos/lvm/beslutsar" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
 
 "sos/lova/invandringsdatum-8-numerisk" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/aku/antal-franvarotimmar-i-huvudsysslan-totalt-for-hsfrantimtot" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/aku/antal-franvarotimmar-i-huvudsysslan-totalt-for-hufrantimtot" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iku/v4081" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"scb/iot/arbetsinkomst-arbink" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"scb/iot/arbetsinkomst-carb" = { "kind" = "variable", "in" = "0.68.0", "reason" = "merged" }
+
+"sos/lova/examar" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/lvm/kommunkod" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/sol/annat-bistandsbeslut" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/sol/avlosning-av-anhorig" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/sol/kontaktperson" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/sol/matdistribution" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }
+
+"sos/sol/verkstallighetsdatum-for-avslutat-bistand" = { "kind" = "variable", "in" = "0.68.0", "reason" = "split" }

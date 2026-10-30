@@ -59,9 +59,20 @@
 "servmatd" = ["SOL: SERVMATD"]
 "vboform" = ["SOL_INCR: VBOFORM"]
 "verkst" = ["SOL_INCR: VERKST"]
-"annat-bistandsbeslut" = ["SOL: ABIST"]
-"avlosning-av-anhorig" = ["SOL: AVAN"]
-"kontaktperson" = ["SOL: KONTP"]
-"matdistribution" = ["SOL: MATD"]
+
+
+
+
 "trygghetslarm" = ["SOL: TRYGG"]
-"verkstallighetsdatum-for-avslutat-bistand" = ["SOL_2007_2012: AVDAT"]
+
+
+"annat-bistand-boende" = ["SOL_2007_2012: ABIST @ 2007-10-01"]
+"annat-bistand-vard-och-omsorg" = ["SOL: ABIST @ 2012-07-01"]
+"avlosning-av-anhorig-separat-beslut" = ["SOL: AVAN @ 2012-07-01"]
+"datum-for-avslut-utan-verkstallan" = ["SOL_2007_2012: AVDAT @ 2008-12-31"]
+"hemtjanst-avlosning-av-anhorig" = ["SOL_2007_2012: AVAN @ 2007-10-01"]
+"hemtjanst-matdistribution" = ["SOL_2007_2012: MATD @ 2007-10-01"]
+"kontaktfamilj-eller-kontaktperson" = ["SOL_2007_2012: KONTP @ 2007-10-01"]
+"kontaktperson-insats" = ["SOL: KONTP @ 2012-07-01"]
+"matdistribution-separat-beslut" = ["SOL: MATD @ 2012-07-01"]
+"startdatum-for-avslutat-bistand" = ["SOL_INCR: AVDAT @ 2012-07-01"]

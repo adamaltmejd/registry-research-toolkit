@@ -651,8 +651,10 @@ catalog remains for a later release decision.
    RTB holds continued in batch 3. Batch 3 reviewed 93 claims and applied one Operator
    partition (LOVA INVARN8/9): 17 partitions adopted, 12 ids retired (4 merged, 8
    split), 25 minted and 23 claims deferred; it also corrected the LOVA INVARN9
-   spelling. Batch 4 needs A2 documents. Then finish keyless defaults/setters and
-   release 0.68.0 as the sprint baseline.
+   spelling. Batch 4 reviewed 454 claims: 12 adopted claims yielded 10 partitions, 12
+   retired ids and 18 minted; 238 were rejected and 204 deferred, including the
+   unaddressable Pris/pris split. Another 211 coordinator holds remain. Then finish
+   keyless defaults/setters and release 0.68.0 as the sprint baseline.
 
 2. **Id sprint:** after that review, make one full-catalog pass over id names,
    descriptions, concept groups and tags. This includes SNI-edition variables and

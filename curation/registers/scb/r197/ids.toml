@@ -102,7 +102,7 @@ public = "iku"
 "v4040" = ["Bostadsrättsföreningar: V4040"]
 "v4050" = ["Bostadsrättsföreningar: V4050 @ 2007-01-01"]
 "v4080" = ["Privatägda flerbostadshus: V4080"]
-"v4081" = ["Bostadsrättsföreningar: V4081 @ 2012-01-01"]
+
 "v4085" = ["Privatägda flerbostadshus: V4085"]
 "v4100" = ["Bostadsrättsföreningar: V4100"]
 "v4120" = ["Bostadsrättsföreningar: V4120"]
@@ -154,3 +154,6 @@ public = "iku"
 "vardear-vaeaar" = ["Bostadsrättsföreningar: VAEAAR"]
 
 "totalyta-a91-2" = ["Privatägda flerbostadshus: A91 # v21695 @ 2009-01-01"]
+
+"hushallsel-ingar-i-fastighetselkostnader" = ["Bostadsrättsföreningar: V4081 # v30403 @ 2013-01-01"]
+"hushallsel-kostnader-belopp" = ["Bostadsrättsföreningar: V4081 # v30403 @ 2012-01-01"]

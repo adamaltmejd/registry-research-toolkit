@@ -1654,8 +1654,8 @@ public = "iot"
 "yrkesstallning-arbetsinkomst-basbeloppet" = ["Individer och dödsbon: BYSTM"]
 "andel-grad-av-aktivitetsersattning-vilande" = ["Individer och dödsbon: BFAKT"]
 "andel-grad-sjukersattning-vilande" = ["Individer och dödsbon: BFSJUK"]
-"arbetsinkomst-arbink" = ["Individer och dödsbon: ARBINK"]
-"arbetsinkomst-carb" = ["Individer och dödsbon: CARB # v75"]
+
+
 "arbetsinkomst-carbhb" = ["Bostadshushåll: CARBHB"]
 "delkomponent-till-disponibel-inkomst-2004-ars-cdisp04-inklgp" = ["Individer och dödsbon: cdisp04_inklgp"]
 "disponibel-inkomst-for-familj-2004-ars-definition-inklusive" = ["Individer och dödsbon: cdisp04h_inklgp"]
@@ -1741,3 +1741,5 @@ public = "iot"
 "summa-pension-enligt-kontrolluppgift-kupenst-2" = ["Individer och dödsbon: KUPENST @ 1991-01-01"]
 "summa-privat-pensionsforsakring-skattepliktig-kuppens-2" = ["Individer och dödsbon: KUPPENS @ 1991-01-01"]
 "summa-vissa-skattepliktiga-formaner-kulonf-2" = ["Individer och dödsbon: KULONF @ 1991-01-01"]
+
+"arbetsinkomst-arbink-carb" = ["Individer och dödsbon: ARBINK @ 1982-01-01"]

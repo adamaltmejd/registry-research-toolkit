@@ -316,3 +316,87 @@ kind = "set"
 subject = "sol: pomvtrygg"
 fields = { value_set = "b4acd7895f71aecc3067b8f93ae9a983eb02405590bed7d0db0b6b603a73ec4e" }
 evidence = "catalog/source/Socialstyrelsen/Metadata_Socialtjänstinsatser till äldre och personer med funktionsnedsättning (SOL)_webb.xlsx#Metadata - Variabelnivå!32. The Värdemängd cell explicitly enumerates these codes and labels; preserve this occurrence's own domain rather than borrowing a wider list. Rows 32 and 109 enumerate the same six codes and meanings; use row 109's spelling ogiltigt for code 0, retaining row 32's source typo as evidence."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: abist"
+fields = { "variable" = "annat-bistand-boende" }
+evidence = "ABIST changes from other assistance-approved housing to other care and service assistance."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: abist"
+fields = { "variable" = "annat-bistand-vard-och-omsorg" }
+evidence = "ABIST changes from other assistance-approved housing to other care and service assistance."
+
+[[statement]]
+kind = "set"
+subject = "sol: abist"
+fields = { "variable" = "annat-bistand-vard-och-omsorg" }
+evidence = "ABIST changes from other assistance-approved housing to other care and service assistance."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: avan"
+fields = { "variable" = "avlosning-av-anhorig-separat-beslut" }
+evidence = "AVAN changes from relief within home help to a separate decision for relief of a relative."
+
+[[statement]]
+kind = "set"
+subject = "sol: avan"
+fields = { "variable" = "avlosning-av-anhorig-separat-beslut" }
+evidence = "AVAN changes from relief within home help to a separate decision for relief of a relative."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: avan"
+fields = { "variable" = "hemtjanst-avlosning-av-anhorig" }
+evidence = "AVAN changes from relief within home help to a separate decision for relief of a relative."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: avdat"
+fields = { "variable" = "datum-for-avslut-utan-verkstallan" }
+evidence = "AVDAT changes from the termination date of an unimplemented decision to the start date of the service being ended."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: avdat"
+fields = { "variable" = "startdatum-for-avslutat-bistand" }
+evidence = "AVDAT changes from the termination date of an unimplemented decision to the start date of the service being ended."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: kontp"
+fields = { "variable" = "kontaktfamilj-eller-kontaktperson" }
+evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: kontp"
+fields = { "variable" = "kontaktperson-insats" }
+evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
+
+[[statement]]
+kind = "set"
+subject = "sol: kontp"
+fields = { "variable" = "kontaktperson-insats" }
+evidence = "KONTP changes from a combined contact-family or contact-person item to a contact-person item with contact families recorded separately."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: matd"
+fields = { "variable" = "hemtjanst-matdistribution" }
+evidence = "MATD changes from meal distribution within home help to a separate meal-distribution decision."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: matd"
+fields = { "variable" = "matdistribution-separat-beslut" }
+evidence = "MATD changes from meal distribution within home help to a separate meal-distribution decision."
+
+[[statement]]
+kind = "set"
+subject = "sol: matd"
+fields = { "variable" = "matdistribution-separat-beslut" }
+evidence = "MATD changes from meal distribution within home help to a separate meal-distribution decision."
