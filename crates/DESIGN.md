@@ -315,11 +315,16 @@ Accepting one requires reviewed curation and a premise lock.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
   withholds the selected occurrences. An explicit `set variable` changes the variable of
   exactly the selected occurrences; every unselected occurrence resolves as if the
-  statement were absent. The same exact-selection rule governs every field override:
-  change only selected whole occurrences, or the selected entity for fields owned by
-  tables, releases or variables. Selectors and premises use the immutable phase view.
-  Assignments cannot merge concurrent different folded spellings in one table;
-  resolution refuses with `D-11` at lock, before a malformed segment can be published.
+  statement were absent. Inherited groups take their ledger id from anchors reaching
+  their unselected members, falling back to the default id if none reaches them; a dated
+  anchor identifies the whole remaining group, not only its anchor day. This prevents
+  the default pass's id-order winner from absorbing a curated split. Anchors spanning
+  several default groups retain default identities rather than merging those groups. The
+  same exact-selection rule governs every field override: change only selected whole
+  occurrences, or the selected entity for fields owned by tables, releases or variables.
+  Selectors and premises use the immutable phase view. Assignments cannot merge
+  concurrent different folded spellings in one table; resolution refuses with `D-11` at
+  lock, before a malformed segment can be published.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
   `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
   occurrences; text runs and segments derive from those occurrences. `period` changes

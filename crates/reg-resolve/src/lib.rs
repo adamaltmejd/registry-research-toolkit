@@ -831,6 +831,34 @@ pub(crate) fn resolve_located(
         };
         (key, sub)
     };
+    // Resolve ids over the unselected members, not the whole default variable:
+    // an assignment can remove the anchor that won in the default pass. A dated
+    // anchor still identifies the remaining group beyond the anchor day.
+    let mut inherited_ids = BTreeMap::new();
+    if let Some(defaults) = &defaults {
+        for (id, targets) in
+            ledger::anchor_targets(&defaults.occurrences, &defaults.tables, ledger)?
+        {
+            // An id spanning several default groups is a ledger split, not an
+            // instruction to merge those groups through an unrelated assignment.
+            if targets
+                .iter()
+                .filter_map(|&i| defaults.occurrences[i].variable)
+                .collect::<BTreeSet<_>>()
+                .len()
+                > 1
+            {
+                continue;
+            }
+            for i in targets {
+                if assignment(&resolved[i].occurrence)?.is_none()
+                    && let Some(v) = defaults.occurrences[i].variable
+                {
+                    inherited_ids.entry(v).or_insert(id);
+                }
+            }
+        }
+    }
     let mut variable_keys: BTreeMap<(String, String, bool), Vec<usize>> = BTreeMap::new();
     for (i, r) in resolved.iter_mut().enumerate() {
         let chosen = assignment(&r.occurrence)?;
@@ -853,7 +881,15 @@ pub(crate) fn resolve_located(
                     let Some(v) = defaults.occurrences[i].variable else {
                         continue;
                     };
-                    (defaults.variables[v].slug.clone(), String::new(), true)
+                    (
+                        inherited_ids
+                            .get(&v)
+                            .copied()
+                            .unwrap_or(&defaults.variables[v].slug)
+                            .to_owned(),
+                        String::new(),
+                        true,
+                    )
                 }
             }
         } else {

@@ -1,0 +1,17 @@
+[
+  [
+    "demo/inheritance/a-date",
+    "MemberDate",
+    "2007-01-01"
+  ],
+  [
+    "demo/inheritance/z-year",
+    "MemberYear",
+    "2011-01-01"
+  ],
+  [
+    "demo/inheritance/z-year",
+    "MemberYear",
+    "2012-01-01"
+  ]
+]

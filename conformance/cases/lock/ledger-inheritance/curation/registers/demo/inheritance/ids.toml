@@ -1,0 +1,6 @@
+[tables]
+t = "t"
+
+[variables]
+a-date = ["t: MemberDate"]
+z-year = ["t: MemberYear @ 2011-01-01"]

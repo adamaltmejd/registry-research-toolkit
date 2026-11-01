@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "t: memberdate"
+fields = { variable = "a-date" }
+evidence = "The earlier spelling is a distinct variable from the later years."
