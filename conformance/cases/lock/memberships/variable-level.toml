@@ -1,0 +1,23 @@
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { label = "Published income", definition = "Income concept.", operational_definition = "Income in source units.", description = "Income description." }
+evidence = "Variable metadata applies across all matched occurrences."
+
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { sets = [] }
+evidence = "The variable has no curated concept memberships."
+
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { tags = ["income"] }
+evidence = "The concept describes income."
+
+[[statement]]
+kind = "set"
+subject = "var:published"
+fields = { synonyms = ["Earnings"] }
+evidence = "Earnings is an alternate search label."

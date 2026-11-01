@@ -17,6 +17,14 @@
     "code": "retired-id-live",
     "pid": "demo/r/concept"
   },
+  "variable_premise": {
+    "location": "registers/demo/r/curation.toml:1",
+    "code": "premise-changed",
+    "subject": "var:published",
+    "max_entry_bytes": 256,
+    "original_count": 1,
+    "grown_count": 3
+  },
   "tag_text": ["Inkomst", "Personers och hushålls inkomster."],
   "reworded_definition": "Inkomster för personer och hushåll."
 }

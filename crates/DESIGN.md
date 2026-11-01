@@ -406,13 +406,29 @@ Accepting one requires reviewed curation and a premise lock.
   value-set identity; revisit when a dropped scoped entry needs it. Register name
   corrections that differ from source remain deferred: they need a register address in
   the grammar.
-- `curation.lock` is canonical JSON with `version = 1` and normalized statement hashes
-  as keys. Premises contain sorted `subjects` and `objects`: source locators,
-  coordinates, overridden values, guards and dependent facts, including the destination
-  facts used by table moves. Dependencies are evidence, never extra rows selected for
-  rewriting. Missing or changed premises, empty or ambiguous selectors, and conflicts
-  are located refusals. Release builds fail; dev builds skip refused statements and
-  report them. A `set` equal to the source is a redundant-set finding.
+- `curation.lock` is canonical JSON with `version = 2` and normalized statement hashes
+  as keys. Version 1 refuses with an instruction to run `reg-build lock`; locks are
+  regenerated, never migrated. Variable-level setters are `var:` setters containing only
+  `sets`, `tags`, `label`, `description`, `definition`, `operational_definition` or
+  `synonyms`. Their locked `subjects` record the variable slug, distinct matched locator
+  count and SHA-256 of the sorted canonical locator JSON lines. Changed membership
+  refuses with the variable subject and old/new counts, even when the counts are equal.
+  Occurrence field values and container facts (register, table and release objects) are
+  not premises for these setters. No container fact is folded into the digest: these
+  fields apply metadata to the matched variable without consuming container contents;
+  selector membership is already checked by the locator digest. Non-container objects
+  retain their full premises. None of these seven fields references a value set or
+  classification: those dependencies arise from other setter fields, which retain full
+  premises. A variable-level lock entry therefore has constant size, independent of
+  occurrence count and container text length. Every other statement, including mixed
+  setters with occurrence-level fields, keeps the full premise. Application and conflict
+  detection always use full in-memory subjects. Full premises contain sorted `subjects`
+  and `objects`: source locators, coordinates, overridden values, guards and dependent
+  facts, including the destination facts used by table moves. Dependencies are evidence,
+  never extra rows selected for rewriting. Missing or changed premises, empty or
+  ambiguous selectors, and conflicts are located refusals. Release builds fail; dev
+  builds skip refused statements and report them. A `set` equal to the source is a
+  redundant-set finding.
 - Evaluation serializes shared code-list facts once per phase and indexes selectors and
   application dependencies once per register phase. Conflict candidates share source
   locators, assertion addresses or table moves; the identity and overlap rules still

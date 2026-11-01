@@ -5,7 +5,7 @@ use std::path::Path;
 
 use reg_frame::Record;
 use reg_readers::curation::LocatedStatement;
-use reg_resolve::curation::Premise;
+use reg_resolve::curation::{Premise, SourcePremise, variable_level_setter};
 use serde::{Deserialize, Serialize};
 use sha2::Digest;
 
@@ -13,7 +13,68 @@ use sha2::Digest;
 #[serde(deny_unknown_fields)]
 struct Lock {
     version: u32,
-    statements: BTreeMap<String, Premise>,
+    statements: BTreeMap<String, LockedPremise>,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields)]
+struct LockedPremise {
+    subjects: LockedSubjects,
+    objects: Vec<SourcePremise>,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(untagged, deny_unknown_fields)]
+enum LockedSubjects {
+    Rows(Vec<SourcePremise>),
+    Variable {
+        variable: String,
+        count: usize,
+        locators_sha256: String,
+    },
+}
+
+impl LockedPremise {
+    fn new(statement: &LocatedStatement, premise: &Premise) -> Self {
+        let variable = variable_level_setter(&statement.statement);
+        let subjects = if let Some(variable) = variable {
+            let locators = premise
+                .subjects
+                .iter()
+                .map(|row| reg_frame::canonical_line(&row.locator))
+                .collect::<BTreeSet<_>>();
+            let mut hash = sha2::Sha256::new();
+            for locator in &locators {
+                hash.update(locator.as_bytes());
+                hash.update(b"\n");
+            }
+            LockedSubjects::Variable {
+                variable: variable.to_owned(),
+                count: locators.len(),
+                locators_sha256: reg_frame::hex(&hash.finalize()),
+            }
+        } else {
+            LockedSubjects::Rows(premise.subjects.clone())
+        };
+        Self {
+            subjects,
+            objects: premise
+                .objects
+                .iter()
+                .filter(|object| {
+                    variable.is_none()
+                        || !matches!(
+                            object
+                                .fields
+                                .get("kind")
+                                .and_then(serde_json::Value::as_str),
+                            Some("register" | "table" | "release")
+                        )
+                })
+                .cloned()
+                .collect(),
+        }
+    }
 }
 
 fn location(statement: &LocatedStatement) -> String {
@@ -748,39 +809,56 @@ fn merge_fields(current: &Record, before: &Record, after: &Record) -> Result<Rec
     serde_json::from_value(current).map_err(|e| e.to_string())
 }
 
-fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, Premise>, String> {
+fn previous(path: &Path, record: bool) -> Result<BTreeMap<String, LockedPremise>, String> {
     if record || !path.try_exists().map_err(|e| e.to_string())? {
         return Ok(BTreeMap::new());
     }
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let lock: Lock = serde_json::from_str(&text)
+    let value: serde_json::Value = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if lock.version != 1 {
+    if value["version"] != 2 {
         return Err(format!(
-            "{}: unsupported premise lock version {}",
+            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 2",
             path.display(),
-            lock.version
+            value["version"]
         ));
     }
+    let lock: Lock = serde_json::from_value(value)
+        .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
     Ok(lock.statements)
 }
 
 fn checked_premise(
     statement: &LocatedStatement,
     premise: &Premise,
-    old: &BTreeMap<String, Premise>,
+    old: &BTreeMap<String, LockedPremise>,
     path: &Path,
 ) -> Result<(), String> {
+    let premise = LockedPremise::new(statement, premise);
     match old.get(&statement.identity) {
         None => Err(format!(
             "premise-missing: no reviewed premise in {}; run reg-build lock",
             path.display()
         )),
-        Some(previous) if previous != premise => {
+        Some(previous) if previous != &premise => {
             let mut diff = Vec::new();
+            if let (
+                LockedSubjects::Variable {
+                    count: old_count, ..
+                },
+                LockedSubjects::Variable {
+                    variable, count, ..
+                },
+            ) = (&previous.subjects, &premise.subjects)
+                && previous.subjects != premise.subjects
+            {
+                diff.push(format!(
+                    "var:{variable}: matched rows changed (old count {old_count}, new count {count})"
+                ));
+            }
             changes(
                 &serde_json::to_value(previous).map_err(|e| e.to_string())?,
-                &serde_json::to_value(premise).map_err(|e| e.to_string())?,
+                &serde_json::to_value(&premise).map_err(|e| e.to_string())?,
                 "premise",
                 &mut diff,
             );
@@ -1256,10 +1334,10 @@ fn run_selected(
                     }),
             );
             evaluated.push((statement, premise.clone()));
-            premises
-                .entry((provider, register))
-                .or_default()
-                .insert(statement.identity.clone(), premise);
+            premises.entry((provider, register)).or_default().insert(
+                statement.identity.clone(),
+                LockedPremise::new(statement, &premise),
+            );
             if !applied.changes.is_empty() {
                 let value =
                     serde_json::to_value(&statement.statement).map_err(|e| e.to_string())?;
@@ -1544,7 +1622,7 @@ fn run_selected(
         pending.push((
             path,
             Lock {
-                version: 1,
+                version: 2,
                 statements: reviewed,
             },
         ));
