@@ -1882,6 +1882,7 @@ kind = "link"
 subject = "var:driftkostnader-vatten-och-avlopp-v4050"
 relation = "continues"
 object = "scb/iku/v4050"
+at = "2012-01-01.."
 evidence = "IKU V4050: water operating costs (2007-11) -> water and sewerage fixed+variable charges (2012-15), KSEK; broadened."
 
 [[statement]]
@@ -1889,4 +1890,5 @@ kind = "link"
 subject = "var:driftskostnader-reparationer-underhall"
 relation = "continues"
 object = "scb/iku/driftskostnader-reparationer"
+at = "2012-01-01.."
 evidence = "IKU V3010: repairs and running maintenance (2007-11) -> incl. periodic maintenance (2012-15); broadened."

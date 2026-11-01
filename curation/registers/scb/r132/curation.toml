@@ -1270,6 +1270,7 @@ kind = "link"
 subject = "var:adress-till-arbetsstallet"
 relation = "continues"
 object = "scb/isen/vilken-adress-har-redovisningsenheten-adress"
+at = "2006-01-01.."
 evidence = "ISEN: reporting-unit address (2004-05) -> establishment address (2006+); reporting unit redefined."
 
 [[statement]]
@@ -1277,6 +1278,7 @@ kind = "link"
 subject = "var:benamning-pa-arbetsstallet-ben"
 relation = "continues"
 object = "scb/isen/benamning-pa-redovisningsenheten-ben"
+at = "2006-01-01.."
 evidence = "ISEN Ben: reporting-unit name -> establishment name (2006+)."
 
 [[statement]]
@@ -1284,6 +1286,7 @@ kind = "link"
 subject = "var:blankett-indatum"
 relation = "continues"
 object = "scb/isen/insamlingsdatum"
+at = "2006-01-01.."
 evidence = "ISEN: electronic collection date -> form receipt date (2006+)."
 
 [[statement]]
@@ -1291,6 +1294,7 @@ kind = "link"
 subject = "var:epost-arbetsstallet"
 relation = "continues"
 object = "scb/isen/epost-redovisningsenheten"
+at = "2006-01-01.."
 evidence = "ISEN EPost: reporting-unit email -> establishment email (2006+)."
 
 [[statement]]
@@ -1298,6 +1302,7 @@ kind = "link"
 subject = "var:kontrollnr-arbetsstallet"
 relation = "continues"
 object = "scb/isen/kontrollnr-redovisningsenh"
+at = "2006-01-01.."
 evidence = "ISEN RekNr: reporting-unit control number -> establishment control number (2006+)."
 
 [[statement]]
@@ -1305,6 +1310,7 @@ kind = "link"
 subject = "var:orgnr-foretaget"
 relation = "continues"
 object = "scb/isen/organisationsnummer-redovisningsenheten-peorgnr"
+at = "2006-01-01.."
 evidence = "ISEN: reporting-unit org number -> company org number (2006+)."
 
 [[statement]]
@@ -1312,4 +1318,5 @@ kind = "link"
 subject = "var:panneffekt-arbetsstallet"
 relation = "continues"
 object = "scb/isen/panneffekt-redovisningsenheten"
+at = "2006-01-01.."
 evidence = "ISEN Panneff: boiler capacity of reporting unit -> of establishment (2006)."

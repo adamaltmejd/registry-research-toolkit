@@ -1373,6 +1373,7 @@ kind = "link"
 subject = "var:period-ppi-period"
 relation = "continues"
 object = "scb/prisindex/period"
+at = "2017-01-01.."
 evidence = "PPI Period: 12 months (2013-16) -> 12 months plus base month (2017+); coding extended."
 
 [[statement]]
@@ -1380,4 +1381,5 @@ kind = "link"
 subject = "var:produktgrupp-sammanvagda"
 relation = "continues"
 object = "scb/prisindex/produktgrupp-namn"
+at = "2022-01-01.."
 evidence = "PPI product group: product grouping (2013-21) -> weighted classes (2022+); grouping redefined."

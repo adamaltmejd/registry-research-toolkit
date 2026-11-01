@@ -26825,6 +26825,7 @@ kind = "link"
 subject = "var:arbetsinkomst-familj"
 relation = "continues"
 object = "scb/iot/carbh"
+at = "1990-01-01.."
 evidence = "IoT CARBH: family earned income incl. seamen's income (1978-89) -> family earned income (1990+); redefined."
 
 [[statement]]
@@ -26832,6 +26833,7 @@ kind = "link"
 subject = "var:bgsam"
 relation = "continues"
 object = "scb/iot/samtaxerad-make-maka"
+at = "1990-01-01.."
 evidence = "IoT BGSAM: jointly-taxed spouse pnr (1968-89) -> spouse/partner pnr (1990+); same link, population redefined."
 
 [[statement]]
@@ -26839,6 +26841,7 @@ kind = "link"
 subject = "var:civ"
 relation = "continues"
 object = "scb/iot/civilstand-inkomstar"
+at = "1978-01-01.."
 evidence = "IoT CIV: civil status for income year (1968-77) -> civil status (1978+); coding redefined (code 12)."
 
 [[statement]]
@@ -26846,6 +26849,7 @@ kind = "link"
 subject = "var:fodelselan"
 relation = "continues"
 object = "scb/iot/fodelselan-ort"
+at = "1998-01-01.."
 evidence = "IoT Fodelselan: birth county or foreign birthplace (1982-97) -> birth county for Swedish-born (1998+); scope narrowed."
 
 [[statement]]
@@ -26853,6 +26857,7 @@ kind = "link"
 subject = "var:forvarvs-kapitalinkomst-familj"
 relation = "continues"
 object = "scb/iot/sammanraknad-inkomst-familj"
+at = "1993-01-01.."
 evidence = "IoT CFVIKIH: family assessed income (1978-89) -> family earned + capital income (1993+); income concept redefined by 1991 tax reform."
 
 [[statement]]
@@ -26860,6 +26865,7 @@ kind = "link"
 subject = "var:inpens"
 relation = "continues"
 object = "scb/iot/pension-skattepliktig"
+at = "1990-01-01.."
 evidence = "IoT INPENS: taxable pension (1974-89) -> declared fully taxable pension/annuity (1990); redefined."
 
 [[statement]]
@@ -26867,6 +26873,7 @@ kind = "link"
 subject = "var:person-organisationsnummer-personnr"
 relation = "continues"
 object = "scb/iot/eget-personnr"
+at = "1990-01-01.."
 evidence = "IoT PersonNr: own personal number (1968-89) -> person/organisation number (1990+); identifier kind widened (estates/businesses)."
 
 [[statement]]
@@ -26874,6 +26881,7 @@ kind = "link"
 subject = "var:sksin"
 relation = "continues"
 object = "scb/iot/statlig-inkomstskatt"
+at = "1990-01-01.."
 evidence = "IoT SKSIN: state income tax (1971-89) -> state income tax basic amount (1990); narrowed."
 
 [[statement]]
@@ -26881,6 +26889,7 @@ kind = "link"
 subject = "var:socialbidrag-inkl-introduktion-familj"
 relation = "continues"
 object = "scb/iot/socialbidrag-familj"
+at = "1990-01-01.."
 evidence = "IoT SOCBF: family social assistance (1983-89) -> incl. refugee introduction compensation (1990-92); broadened."
 
 [[statement]]
@@ -26888,6 +26897,7 @@ kind = "link"
 subject = "var:sokpersonens-personnr"
 relation = "continues"
 object = "scb/iot/personnr-huvudman"
+at = "1990-01-01.."
 evidence = "IoT BHMPNR: family head pnr (1978-89) -> search-person pnr for tax household (1990-2007); linking key redefined."
 
 [[statement]]
@@ -26895,6 +26905,7 @@ kind = "link"
 subject = "var:studiemedel-studiehjalp-summering"
 relation = "continues"
 object = "scb/iot/studiestod-skattefri"
+at = "2012-01-01.."
 evidence = "IoT ISTUDSF: tax-free student aid (2003-11) -> study grants/loans summed (2012-16); components changed."
 
 [[statement]]
@@ -26902,6 +26913,7 @@ kind = "link"
 subject = "var:summa-sarskilt-bostadstillagg-individ"
 relation = "continues"
 object = "scb/iot/sarskilt-bostadstillagg-till-pens"
+at = "2009-01-01.."
 evidence = "IoT IBTPS: special housing supplement for pensioners -> total incl. sickness/activity compensation (2009+)."
 
 [[statement]]
@@ -26909,6 +26921,7 @@ kind = "link"
 subject = "var:underlag-hyreshus-fastighetsskatt-15-promille"
 relation = "continues"
 object = "scb/iot/ahy15"
+at = "1998-01-01.."
 evidence = "IoT AHY15: property-tax base for rental buildings 1.5%, cohort cutoff value year 1978 -> 1986 (1998); same base, rule changed."
 
 [[statement]]

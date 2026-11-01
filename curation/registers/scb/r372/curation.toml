@@ -1756,6 +1756,7 @@ kind = "link"
 subject = "var:antal-anstallda-arbetsstalle"
 relation = "continues"
 object = "scb/foretagsreg/aktuellt-antal-anstallda"
+at = "2021-01-01.."
 evidence = "Business register: current employees, price-base threshold (1999-2020) -> employees per workplace, SEK 1000/month threshold (2021+); definition change, split by unit."
 
 [[statement]]
@@ -1763,4 +1764,5 @@ kind = "link"
 subject = "var:antal-anstallda-juridisk-enhet"
 relation = "continues"
 object = "scb/foretagsreg/aktuellt-antal-anstallda"
+at = "2021-01-01.."
 evidence = "Business register: current employees (1999-2020) -> employees per legal unit (2021+); definition change, split by unit."

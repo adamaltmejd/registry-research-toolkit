@@ -7336,6 +7336,7 @@ kind = "link"
 subject = "var:nfepaidby1"
 relation = "continues"
 object = "scb/aes/nfepaidby"
+at = "2022-01-01.."
 evidence = "AES NFEPAIDBY1: payer count for 1st random non-formal activity (2011, vs10300) -> any-payer indicator (2022, vs8055); same survey item, measure redefined."
 
 [[statement]]
@@ -7343,6 +7344,7 @@ kind = "link"
 subject = "var:nfepaidby2"
 relation = "continues"
 object = "scb/aes/icke-formell-utbildning-kostnadsvariabler-andra"
+at = "2022-01-01.."
 evidence = "AES NFEPAIDBY2: payer count for 2nd activity (2011) -> any-payer indicator (2022); same item, coding redefined."
 
 [[statement]]
@@ -7350,4 +7352,5 @@ kind = "link"
 subject = "var:svarighet-vid-utbildningsdeltagande-orsaker-till-att"
 relation = "continues"
 object = "scb/aes/difftype"
+at = "2022-01-01.."
 evidence = "AES DIFFTYPE: number of difficulties with participation (2011, vs933) -> any-reason indicator for not participating more (2022, vs6720); same topic, measure redefined."

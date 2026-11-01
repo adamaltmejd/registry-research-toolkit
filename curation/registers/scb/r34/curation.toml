@@ -26291,6 +26291,7 @@ kind = "link"
 subject = "var:antal-personer-pa-arbetsstallet"
 relation = "continues"
 object = "scb/lisa/antal-personer-vid-arbetsstallet"
+at = "2023-01-01.."
 evidence = "LISA Ast_AntalPers: persons with income statement (1990-2021) -> with employer declaration (2023); source redefined."
 
 [[statement]]
@@ -26298,4 +26299,5 @@ kind = "link"
 subject = "var:eseg"
 relation = "continues"
 object = "scb/lisa/yrkesbaserad-seg-eseg"
+at = "2016-01-01.."
 evidence = "LISA ESeG: ISCO-88 based (2015) -> ISCO-08 based (2016); classification revision."

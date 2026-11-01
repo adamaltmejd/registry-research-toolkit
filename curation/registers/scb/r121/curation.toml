@@ -78712,6 +78712,7 @@ kind = "link"
 subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-42"
 relation = "continues"
 object = "scb/frida/v712-42"
+at = "2014-01-01.."
 evidence = "FRIDA V712_42: deduction for fuel with prior tax liability/destroyed/diplomatic (2007-13) -> prior tax liability or returned purchase (2014+); group-wide redefinition of the deduction ground, same line."
 
 [[statement]]

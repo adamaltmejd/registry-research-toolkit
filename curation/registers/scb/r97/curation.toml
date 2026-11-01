@@ -27352,6 +27352,7 @@ kind = "link"
 subject = "var:summa-bostadstillagg"
 relation = "continues"
 object = "scb/hek/bostadstillagg-till-pensionarer-ibtp"
+at = "2009-01-01.."
 evidence = "HEK IBTP: housing supplement for pensioners (1998-2008) -> total incl. sickness/activity compensation recipients (2009+); broadened population."
 
 [[statement]]
@@ -27359,6 +27360,7 @@ kind = "link"
 subject = "var:summa-bostadstillagg-ibtpz"
 relation = "continues"
 object = "scb/hek/bostadstillagg-till-pensionarer-ibtpz"
+at = "2009-01-01.."
 evidence = "HEK IBTPZ: same broadening at household level."
 
 [[statement]]
@@ -27366,6 +27368,7 @@ kind = "link"
 subject = "var:summa-sarskilt-bostadstillagg"
 relation = "continues"
 object = "scb/hek/sarskilt-bostadstillagg-till-pens"
+at = "2009-01-01.."
 evidence = "HEK IBTPS: special housing supplement, same broadening."
 
 [[statement]]

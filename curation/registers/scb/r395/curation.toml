@@ -982,6 +982,7 @@ kind = "link"
 subject = "var:kapitalforlust-bostadsratt"
 relation = "continues"
 object = "scb/kapitalvinster/kapitalforlust-smahus-bostadsratt"
+at = "2007-01-01.."
 evidence = "Capital gains KFRB: loss on small houses and tenant-owned flats (2005-06) -> tenant-owned flats only (2007+); narrowed."
 
 [[statement]]
@@ -989,4 +990,5 @@ kind = "link"
 subject = "var:kapitalvinst-bostadsratt"
 relation = "continues"
 object = "scb/kapitalvinster/kapitalvinst-smahus-bostadsratt"
+at = "2007-01-01.."
 evidence = "Capital gains KVRB: same narrowing for gains."

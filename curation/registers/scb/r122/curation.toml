@@ -16948,6 +16948,7 @@ kind = "link"
 subject = "var:alsni2002"
 relation = "continues"
 object = "scb/aku/alsni92"
+at = "2000-01-01.."
 evidence = "AKU last-job industry: SNI92 (1991-1999) -> SNI2002 AKU-adapted (2000-2005); classification revision."
 
 [[statement]]
@@ -16955,6 +16956,7 @@ kind = "link"
 subject = "var:naringsgren-bi-sni2002"
 relation = "continues"
 object = "scb/aku/bisni"
+at = "2000-01-01.."
 evidence = "AKU side-job industry: SNI (1987-1999) -> SNI2002 AKU-adapted (2000-2005); classification revision."
 
 [[statement]]
@@ -16962,4 +16964,5 @@ kind = "link"
 subject = "var:onskad-arbetstid-tot-aldre"
 relation = "continues"
 object = "scb/aku/onskad-okad-arbetstid-sysselsatta"
+at = "1992-01-01.."
 evidence = "AKU TotOnskTim: desired additional hours (1987-1991) -> desired total weekly hours (1992-2005), same value set vs3817; measure redefined."

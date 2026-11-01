@@ -108761,6 +108761,7 @@ kind = "link"
 subject = "var:avstand-till-livsmedelsbutik-tk0089"
 relation = "continues"
 object = "scb/ulf/tk0089"
+at = "1999-01-01.."
 evidence = "ULF TK0089: distance to usual food store (1991) -> to nearest food store (1999); revised question."
 
 [[statement]]
@@ -108768,6 +108769,7 @@ kind = "link"
 subject = "var:barn-3-tillsammans"
 relation = "continues"
 object = "scb/ulf/barn-3-tillsammans-t-o-m-ar"
+at = "1993-01-01.."
 evidence = "ULF FU0435: child 3 lived with respondent until calendar year (1984-85) -> until age (1993+); coding redefined."
 
 [[statement]]
@@ -108775,6 +108777,7 @@ kind = "link"
 subject = "var:boendeform-harledd"
 relation = "continues"
 object = "scb/ulf/institution"
+at = "2006-01-01.."
 evidence = "ULF BO0064: lives in institution (1975-2004) -> derived housing form (2006+); broadened classification."
 
 [[statement]]
@@ -108782,6 +108785,7 @@ kind = "link"
 subject = "var:buller-harledd"
 relation = "continues"
 object = "scb/ulf/am0181"
+at = "2006-01-01.."
 evidence = "ULF AM0181: constructed noise variable (1975-2004) -> derived noise at work (2006-13); same construct, coding changed."
 
 [[statement]]
@@ -108789,6 +108793,7 @@ kind = "link"
 subject = "var:halsotillstand-relativt"
 relation = "continues"
 object = "scb/ulf/relativt-halsotillstand"
+at = "2009-01-01.."
 evidence = "ULF HA0601: relative health, direct interviews (1975-2004) -> restricted to 65+, indirect allowed (2009-13); same question, population changed."
 
 [[statement]]
@@ -108796,6 +108801,7 @@ kind = "link"
 subject = "var:insamlingsdatum"
 relation = "continues"
 object = "scb/ulf/intervjudatum"
+at = "2022-01-01.."
 evidence = "ULF: interview date (1975-2021) -> collection date incl. web (2022+); mode change."
 
 [[statement]]
@@ -108803,6 +108809,7 @@ kind = "link"
 subject = "var:klarar-sig-sjalv-efter-skolan-barn-1"
 relation = "continues"
 object = "scb/ulf/klarar-sig-sjalv-barn-1"
+at = "2006-01-01.."
 evidence = "ULF GO0120: child 1 manages alone part of day (1975-2004) -> alone at least one hour after school (2006+); revised question."
 
 [[statement]]
@@ -108810,6 +108817,7 @@ kind = "link"
 subject = "var:komvux-grundvux-typ-utbildning"
 relation = "continues"
 object = "scb/ulf/komvux-grundvux-typ-1"
+at = "2008-01-01.."
 evidence = "ULF UT0535: komvux education type for course 1 (2002-04) -> education type (2008-09); categories redefined."
 
 [[statement]]
@@ -108817,6 +108825,7 @@ kind = "link"
 subject = "var:kontanttransfereringar-netto"
 relation = "continues"
 object = "scb/ulf/betalt-underhallsbidrag-netto"
+at = "2022-01-01.."
 evidence = "ULF HY130N: paid maintenance support net (2021) -> paid cash transfers net incl. maintenance (2022+); broadened."
 
 [[statement]]
@@ -108824,6 +108833,7 @@ kind = "link"
 subject = "var:kraftiga-skakningar-arbetet"
 relation = "continues"
 object = "scb/ulf/skakningar-vibrationer"
+at = "2006-01-01.."
 evidence = "ULF AM0250: shaking/vibrations at work, frequency coding (1975-2004) -> yes/no (2006+); same question, coding changed."
 
 [[statement]]
@@ -108831,6 +108841,7 @@ kind = "link"
 subject = "var:pbstart1"
 relation = "continues"
 object = "scb/ulf/intervju-med-vem"
+at = "2022-01-01.."
 evidence = "ULF PBSTART1: interviewee (1991-2021) -> respondent across phone/web (2022+); mode change, documented predecessor."
 
 [[statement]]
@@ -108838,6 +108849,7 @@ kind = "link"
 subject = "var:socioekonomisk-grupp-hela-bef"
 relation = "continues"
 object = "scb/ulf/ba2110"
+at = "2006-01-01.."
 evidence = "ULF BA2110: SEI whole population (1975-2004) -> socioeconomic group (2006-13); coding collapsed."
 
 [[statement]]
@@ -108845,6 +108857,7 @@ kind = "link"
 subject = "var:typ-av-pagaende-studier"
 relation = "continues"
 object = "scb/ulf/pagaende-studier-3"
+at = "2008-01-01.."
 evidence = "ULF UT2340: type of current studies 3 (1980-2004) -> type of current studies (2008-11); new value domain, documented break."
 
 [[statement]]

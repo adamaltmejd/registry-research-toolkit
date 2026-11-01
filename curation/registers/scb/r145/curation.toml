@@ -454,6 +454,7 @@ kind = "link"
 subject = "var:ekologisk-hostsadd-hostdinkel-speltvete"
 relation = "continues"
 object = "scb/hostsadda-arealer/ekologisk-hostsadd-areal-hostdinkel"
+at = "2023-01-01.."
 evidence = "Autumn-sown areas Areal_511: organic winter spelt -> winter spelt and spelt wheat (2023+), hectares; broadened crop."
 
 [[statement]]
@@ -461,4 +462,5 @@ kind = "link"
 subject = "var:hostsadd-areal-hostdinkel-speltvete"
 relation = "continues"
 object = "scb/hostsadda-arealer/hostsadd-areal-hostdinkel"
+at = "2023-01-01.."
 evidence = "Areal_511 non-organic: same broadening."

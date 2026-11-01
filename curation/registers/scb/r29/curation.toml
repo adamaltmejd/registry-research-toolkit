@@ -22402,6 +22402,7 @@ kind = "link"
 subject = "var:allmant-avdrag-pension-periodiskt"
 relation = "continues"
 object = "scb/linda/allmant-avdrag-pensionsforsakring"
+at = "2005-01-01.."
 evidence = "LINDA APENSP: pension-insurance deduction (1991-2004) -> incl. periodic maintenance payments (2005+); broadened."
 
 [[statement]]
@@ -22409,6 +22410,7 @@ kind = "link"
 subject = "var:bprelsk"
 relation = "continues"
 object = "scb/linda/skatteform-31-12"
+at = "2005-01-01.."
 evidence = "LINDA BPRELSK: tax form on 31/12 (1971-2004) -> tax form for current income year (2005+); reference redefined."
 
 [[statement]]
@@ -22416,6 +22418,7 @@ kind = "link"
 subject = "var:efterlevandepension-till-barn"
 relation = "continues"
 object = "scb/linda/efterlevandestod-barn"
+at = "2005-01-01.."
 evidence = "LINDA PEFLEVB: survivor support for children (2003-04) -> survivor pension for children (2005+); benefit reform."
 
 [[statement]]
@@ -22423,6 +22426,7 @@ kind = "link"
 subject = "var:ersattning-amprogram-skattefri"
 relation = "continues"
 object = "scb/linda/ovriga-utbildningsbidrag-mm"
+at = "2005-01-01.."
 evidence = "LINDA IARBUT: other training grants incl. tax-free AMU compensation (1998-2004) -> tax-free AM-programme compensation (2005+); redefined."
 
 [[statement]]
@@ -22430,6 +22434,7 @@ kind = "link"
 subject = "var:kapitalforlust-fonder"
 relation = "continues"
 object = "scb/linda/realisationsforlust-vardepapper"
+at = "2005-01-01.."
 evidence = "LINDA KFKUFON: realised loss on securities from KU (1996-2004) -> loss on fund units (2005+); narrowed to the fund KU."
 
 [[statement]]
@@ -22437,6 +22442,7 @@ kind = "link"
 subject = "var:summa-sarskilt-bostadstillagg"
 relation = "continues"
 object = "scb/linda/sarskilt-bostadstillagg-till-pens"
+at = "2009-01-01.."
 evidence = "LINDA IBTPS: special housing supplement for pensioners -> total incl. sickness/activity compensation (2009+)."
 
 [[statement]]
@@ -22444,6 +22450,7 @@ kind = "link"
 subject = "var:underlag-for-hyreshusskatt-med-0-75-procent"
 relation = "continues"
 object = "scb/linda/ahy075"
+at = "1998-01-01.."
 evidence = "LINDA AHY075: rental-building tax base 0.75%, cohort rule changed (1998); same base."
 
 [[statement]]
@@ -22451,4 +22458,5 @@ kind = "link"
 subject = "var:underlag-for-hyreshusskatt-med-1-5-procent"
 relation = "continues"
 object = "scb/linda/ahy15"
+at = "1998-01-01.."
 evidence = "LINDA AHY15: rental-building tax base 1.5%, cutoff 1978 -> 1986 (1998); same base."

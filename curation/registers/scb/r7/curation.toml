@@ -3845,6 +3845,7 @@ kind = "link"
 subject = "var:antal-ve-produktiv-skog"
 relation = "continues"
 object = "scb/ftr/antal-varderingsenheter-skogsmark"
+at = "2011-01-01.."
 evidence = "FTR: valuation units with woodland (1998-2010) -> with productive woodland (2011+), Antal; narrowed definition."
 
 [[statement]]
@@ -3852,6 +3853,7 @@ kind = "link"
 subject = "var:energi-elsystemsbyte-2003-eller-senare"
 relation = "continues"
 object = "scb/ftr/energi-elbyte-efter-1990"
+at = "2009-01-01.."
 evidence = "FTR: electrical system replaced after 1990 (1998-2008) -> 2003 or later (2009+), same value set vs10696; reference window moved."
 
 [[statement]]
@@ -3859,6 +3861,7 @@ kind = "link"
 subject = "var:exterior-fasadbyte-2003-eller-senare"
 relation = "continues"
 object = "scb/ftr/exterior-fasadbyte-efter-1989"
+at = "2009-01-01.."
 evidence = "FTR: facade replaced after 1989 -> 2003 or later; reference window moved."
 
 [[statement]]
@@ -3866,6 +3869,7 @@ kind = "link"
 subject = "var:kok-koksinredningsbyte-2003-eller-senare"
 relation = "continues"
 object = "scb/ftr/kok-koksinredningsbyte-efter-1990"
+at = "2009-01-01.."
 evidence = "FTR: kitchen fittings replaced after 1990 (2005-08) -> 2003 or later (2009+); reference window moved."
 
 [[statement]]
@@ -3873,4 +3877,5 @@ kind = "link"
 subject = "var:kok-koksinredningsbyte-efter-1990"
 relation = "continues"
 object = "scb/ftr/kok-koksinredningsbyte-efter-1985"
+at = "2005-01-01.."
 evidence = "FTR: kitchen fittings replaced after 1985 (1998-2002) -> after 1990 (2005-08); reference window moved."

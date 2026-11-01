@@ -1030,6 +1030,7 @@ kind = "link"
 subject = "var:leve"
 relation = "continues"
 object = "scb/konjunkturstatistik-industri/leveranser-exportmarknad-leve"
+at = "2014-01-01.."
 evidence = "Industry KS LevE: export deliveries (1998-2013) -> export net turnover (2014), KSEK; measure redefined."
 
 [[statement]]
@@ -1037,4 +1038,5 @@ kind = "link"
 subject = "var:levh"
 relation = "continues"
 object = "scb/konjunkturstatistik-industri/leveranser-hemmamarknad-levh"
+at = "2014-01-01.."
 evidence = "Industry KS LevH: domestic deliveries -> domestic net turnover (2014); measure redefined."

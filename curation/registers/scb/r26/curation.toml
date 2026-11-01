@@ -4289,6 +4289,7 @@ kind = "link"
 subject = "var:sysselsattningsstatus-november-agi"
 relation = "continues"
 object = "scb/rams/sysselsattningsstatus-november"
+at = "2019-01-01.."
 evidence = "RAMS employment status Nov: 1 hour/week criterion (1986-2018) -> AGI payment >= 99 kr (2019+); definition change."
 
 [[statement]]
@@ -4296,4 +4297,5 @@ kind = "link"
 subject = "var:sysselsattningsstatus-november-agi"
 relation = "continues"
 object = "scb/rams/syssstat-nov-jobbet"
+at = "2019-01-01.."
 evidence = "RAMS jobs table: job-level Nov status (1998-2018) -> AGI-based Nov status (2019+); definition change."
