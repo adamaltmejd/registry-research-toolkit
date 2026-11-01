@@ -30836,18 +30836,6 @@ evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.
 
 [[statement]]
 kind = "set"
-subject = "var:antal-med-kod-5-i-hushallet"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.\ncatalog:occurrence:497437\ncatalog:occurrence:498554\ncatalog:variable_text:46225:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-med-kod-5-i-hushallet"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.\ncatalog:occurrence:497437\ncatalog:occurrence:498554\ncatalog:variable_text:46225:13879:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-med-kod-6-i-hushallet"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har en annan ägare och kodens innehåll varierar.\ncatalog:occurrence:497438\ncatalog:occurrence:498555\ncatalog:variable_text:46226:13879:16436"
@@ -65705,18 +65693,6 @@ kind = "set"
 subject = "var:ha1344"
 fields = { "tags" = ["transport"] }
 evidence = "Katalogen anger samma källkolumn med en annan ägare i en tidigare period.\ncatalog:occurrence:496775\ncatalog:occurrence:500325"
-
-[[statement]]
-kind = "set"
-subject = "var:ha1345"
-fields = { "sets" = [] }
-evidence = "Katalogen anger samma källkolumn med en annan ägare i en tidigare period.\ncatalog:occurrence:496776\ncatalog:occurrence:500326"
-
-[[statement]]
-kind = "set"
-subject = "var:ha1345"
-fields = { "tags" = ["transport"] }
-evidence = "Katalogen anger samma källkolumn med en annan ägare i en tidigare period.\ncatalog:occurrence:496776\ncatalog:occurrence:500326"
 
 [[statement]]
 kind = "set"
@@ -108779,3 +108755,173 @@ kind = "set"
 subject = "ulf-2021: hhbo0990 @2025-01-01..2025-12-31 where key = 'v35767'"
 fields = { "variable" = "bo0990" }
 evidence = "Both define norm 3 by requiring a room for each household member except cohabiting partners, excluding the kitchen and one living room. Their complete three-code lists consistently distinguish overcrowded, other or not overcrowded, and missing responses. Occurrences do not overlap."
+
+[[statement]]
+kind = "link"
+subject = "var:avstand-till-livsmedelsbutik-tk0089"
+relation = "continues"
+object = "scb/ulf/tk0089"
+at = "1999-01-01.."
+evidence = "ULF TK0089: distance to usual food store (1991) -> to nearest food store (1999); revised question."
+
+[[statement]]
+kind = "link"
+subject = "var:barn-3-tillsammans"
+relation = "continues"
+object = "scb/ulf/barn-3-tillsammans-t-o-m-ar"
+at = "1993-01-01.."
+evidence = "ULF FU0435: child 3 lived with respondent until calendar year (1984-85) -> until age (1993+); coding redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:boendeform-harledd"
+relation = "continues"
+object = "scb/ulf/institution"
+at = "2006-01-01.."
+evidence = "ULF BO0064: lives in institution (1975-2004) -> derived housing form (2006+); broadened classification."
+
+[[statement]]
+kind = "link"
+subject = "var:buller-harledd"
+relation = "continues"
+object = "scb/ulf/am0181"
+at = "2006-01-01.."
+evidence = "ULF AM0181: constructed noise variable (1975-2004) -> derived noise at work (2006-13); same construct, coding changed."
+
+[[statement]]
+kind = "link"
+subject = "var:halsotillstand-relativt"
+relation = "continues"
+object = "scb/ulf/relativt-halsotillstand"
+at = "2009-01-01.."
+evidence = "ULF HA0601: relative health, direct interviews (1975-2004) -> restricted to 65+, indirect allowed (2009-13); same question, population changed."
+
+[[statement]]
+kind = "link"
+subject = "var:insamlingsdatum"
+relation = "continues"
+object = "scb/ulf/intervjudatum"
+at = "2022-01-01.."
+evidence = "ULF: interview date (1975-2021) -> collection date incl. web (2022+); mode change."
+
+[[statement]]
+kind = "link"
+subject = "var:klarar-sig-sjalv-efter-skolan-barn-1"
+relation = "continues"
+object = "scb/ulf/klarar-sig-sjalv-barn-1"
+at = "2006-01-01.."
+evidence = "ULF GO0120: child 1 manages alone part of day (1975-2004) -> alone at least one hour after school (2006+); revised question."
+
+[[statement]]
+kind = "link"
+subject = "var:komvux-grundvux-typ-utbildning"
+relation = "continues"
+object = "scb/ulf/komvux-grundvux-typ-1"
+at = "2008-01-01.."
+evidence = "ULF UT0535: komvux education type for course 1 (2002-04) -> education type (2008-09); categories redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:kontanttransfereringar-netto"
+relation = "continues"
+object = "scb/ulf/betalt-underhallsbidrag-netto"
+at = "2022-01-01.."
+evidence = "ULF HY130N: paid maintenance support net (2021) -> paid cash transfers net incl. maintenance (2022+); broadened."
+
+[[statement]]
+kind = "link"
+subject = "var:kraftiga-skakningar-arbetet"
+relation = "continues"
+object = "scb/ulf/skakningar-vibrationer"
+at = "2006-01-01.."
+evidence = "ULF AM0250: shaking/vibrations at work, frequency coding (1975-2004) -> yes/no (2006+); same question, coding changed."
+
+[[statement]]
+kind = "link"
+subject = "var:pbstart1"
+relation = "continues"
+object = "scb/ulf/intervju-med-vem"
+at = "2022-01-01.."
+evidence = "ULF PBSTART1: interviewee (1991-2021) -> respondent across phone/web (2022+); mode change, documented predecessor."
+
+[[statement]]
+kind = "link"
+subject = "var:socioekonomisk-grupp-hela-bef"
+relation = "continues"
+object = "scb/ulf/ba2110"
+at = "2006-01-01.."
+evidence = "ULF BA2110: SEI whole population (1975-2004) -> socioeconomic group (2006-13); coding collapsed."
+
+[[statement]]
+kind = "link"
+subject = "var:typ-av-pagaende-studier"
+relation = "continues"
+object = "scb/ulf/pagaende-studier-3"
+at = "2008-01-01.."
+evidence = "ULF UT2340: type of current studies 3 (1980-2004) -> type of current studies (2008-11); new value domain, documented break."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2006-01-01..2006-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2008-01-01..2008-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2009-01-01..2009-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2010-01-01..2010-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2011-01-01..2011-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2012-01-01..2012-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2013-01-01..2013-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ba3005 @2014-01-01..2014-12-31 where key = 'v47864'"
+fields = { "variable" = "antal-med-kod-05-i-tablan" }
+evidence = "ULF BA3005: count with relation code 5; successor's own definition says code 5 = own sibling through 2007 and mother only from 2008, so at the 2005/2006 boundary both variables count siblings. The change is inside the successor (2008), not at this link."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ha1345 @2009-01-01..2009-12-31 where key = 'v49175'"
+fields = { "variable" = "ansokt-om-fardtjanst" }
+evidence = "ULF HA1345 'Ansökt om färdtjänst': the successor (2009-11) uses value set vs2680, the same set the predecessor already used in 2002-2003; the recode happened inside the predecessor, same question and label."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ha1345 @2010-01-01..2010-12-31 where key = 'v49175'"
+fields = { "variable" = "ansokt-om-fardtjanst" }
+evidence = "ULF HA1345 'Ansökt om färdtjänst': the successor (2009-11) uses value set vs2680, the same set the predecessor already used in 2002-2003; the recode happened inside the predecessor, same question and label."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: ha1345 @2011-01-01..2011-12-31 where key = 'v49175'"
+fields = { "variable" = "ansokt-om-fardtjanst" }
+evidence = "ULF HA1345 'Ansökt om färdtjänst': the successor (2009-11) uses value set vs2680, the same set the predecessor already used in 2002-2003; the recode happened inside the predecessor, same question and label."

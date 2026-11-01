@@ -628,3 +628,11 @@ kind = "set"
 subject = "foretagens-utgifter-for-it: data_tot @2009-01-01..2009-12-31 where key = 'v21895'"
 fields = { "description" = "Anger företagets utgifter, exklusive leasing, för datautrustning, till exempel datorer, servrar, datorskärmar, projektorer, skrivare, datalagringsenheter och kassaterminaler." }
 evidence = "Beskrivningen avser enbart investeringar medan etiketten avser totala utgifter.\ncatalog:variable_text:11980:14245:18993"
+
+[[statement]]
+kind = "link"
+subject = "var:orgnr-12"
+relation = "continues"
+object = "scb/foretagens-utgifter-it/person-orgnr"
+at = "2009-01-01.."
+evidence = "IT expenditure: legal-unit person/org number (2006-08) -> enterprise-unit org number from CFAR (2009-21); respondent key redefined."

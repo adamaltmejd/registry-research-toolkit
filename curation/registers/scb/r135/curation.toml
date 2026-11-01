@@ -796,3 +796,11 @@ kind = "set"
 subject = "var:vsni-4027"
 fields = { "tags" = ["business"] }
 evidence = "Samma begrepp är uppdelat på perioder med scb/ivp/vsni.\ncatalog:occurrence:293339\ncatalog:occurrence:293369\ncatalog:variable_text:33874:17532:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:ivp-typkod"
+relation = "continues"
+object = "scb/ivp/typkod-lonbearbetning"
+at = "2008-01-01.."
+evidence = "IVP Typkod: undocumented type code 1996-2007 -> contract-processing indicator (2008+); documented redefinition."

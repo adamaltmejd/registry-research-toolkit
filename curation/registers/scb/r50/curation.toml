@@ -982,3 +982,11 @@ kind = "set"
 subject = "lonestrukturstatistik-privat-sektor-slp: PersKat @2024-01-01..2024-12-31 where key = 'v3117'"
 fields = { "description" = "Visar individens personalkategori." }
 evidence = "Rättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:42927:9496:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:lonesumma-formaner"
+relation = "continues"
+object = "scb/slp/sumforman"
+at = "2015-01-01.."
+evidence = "SLP SumFormaner: FTE monthly benefits (2014) -> benefits wage sum (2015+); measure redefined."

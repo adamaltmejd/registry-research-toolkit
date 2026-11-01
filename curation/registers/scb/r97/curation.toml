@@ -10729,18 +10729,6 @@ evidence = "Försäljningspris vid avyttring.\ncatalog:variable_text:24478:12053
 
 [[statement]]
 kind = "set"
-subject = "var:forsamling"
-fields = { "sets" = ["folkbokforingsort"] }
-evidence = "Katalogens identitetsfakt kräver granskning av den periodvisa kopplingen.\ncatalog:occurrence:231559\ncatalog:occurrence:231827"
-
-[[statement]]
-kind = "set"
-subject = "var:forsamling"
-fields = { "tags" = ["geography"] }
-evidence = "Katalogens identitetsfakt kräver granskning av den periodvisa kopplingen.\ncatalog:occurrence:231559\ncatalog:occurrence:231827"
-
-[[statement]]
-kind = "set"
 subject = "var:forsamling-den-1-11"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "Församlingen bestäms av folkbokföring den 1 november.\ncatalog:register:142\ncatalog:variable_text:24480:12418:16071"
@@ -21853,18 +21841,6 @@ evidence = "Samlat skattefritt studiestöd.\ncatalog:variable_text:25425:15340:1
 
 [[statement]]
 kind = "set"
-subject = "var:studiestod-skattefri-del"
-fields = { "sets" = ["samlat-studiestod"] }
-evidence = "Källkolumnen har överlappande och anslutande ägare.\ncatalog:occurrence:227632\ncatalog:occurrence:228321\ncatalog:occurrence:229021\ncatalog:occurrence:229022"
-
-[[statement]]
-kind = "set"
-subject = "var:studiestod-skattefri-del"
-fields = { "tags" = ["transfers"] }
-evidence = "Källkolumnen har överlappande och anslutande ägare.\ncatalog:occurrence:227632\ncatalog:occurrence:228321\ncatalog:occurrence:229021\ncatalog:occurrence:229022"
-
-[[statement]]
-kind = "set"
 subject = "var:studiestod-skatterfri-bidrag-och-lan-istudsf"
 fields = { "sets" = ["samlat-studiestod"] }
 evidence = "Samma studiestödsbegrepp är uppdelat mellan efterföljande perioder med scb/hek/studiestod-skattefri-del.\ncatalog:occurrence:227632\ncatalog:occurrence:228321"
@@ -27370,3 +27346,45 @@ kind = "set"
 subject = "kosthushall: bstoran @2000-01-01..2000-12-31 where key = 'v24444'"
 fields = { "variable" = "stora-n-per-stratum" }
 evidence = "Both explicitly count individuals per stratum in the sampling frame. The individual-table BSTORAN mapping changes at day 12418 without overlap; the units denote person counts, including the generic count label in household observations."
+
+[[statement]]
+kind = "link"
+subject = "var:summa-bostadstillagg"
+relation = "continues"
+object = "scb/hek/bostadstillagg-till-pensionarer-ibtp"
+at = "2009-01-01.."
+evidence = "HEK IBTP: housing supplement for pensioners (1998-2008) -> total incl. sickness/activity compensation recipients (2009+); broadened population."
+
+[[statement]]
+kind = "link"
+subject = "var:summa-bostadstillagg-ibtpz"
+relation = "continues"
+object = "scb/hek/bostadstillagg-till-pensionarer-ibtpz"
+at = "2009-01-01.."
+evidence = "HEK IBTPZ: same broadening at household level."
+
+[[statement]]
+kind = "link"
+subject = "var:summa-sarskilt-bostadstillagg"
+relation = "continues"
+object = "scb/hek/sarskilt-bostadstillagg-till-pens"
+at = "2009-01-01.."
+evidence = "HEK IBTPS: special housing supplement, same broadening."
+
+[[statement]]
+kind = "set"
+subject = "individregister: istudsf @2012-01-01..2012-12-31 where key = 'v4535'"
+fields = { "variable" = "studiestod-skatterfri-bidrag-och-lan-istudsf" }
+evidence = "HEK ISTUDSF: 'Studiestöd, skatterfri (bidrag och lån)' (1975-2011) vs 'Studiestöd, skattefri del (bidrag och lån)' (2012-13), same SEK, same definitions; the reason's 'boarding support' is not in the catalog text."
+
+[[statement]]
+kind = "set"
+subject = "individregister: istudsf @2013-01-01..2013-12-31 where key = 'v4535'"
+fields = { "variable" = "studiestod-skatterfri-bidrag-och-lan-istudsf" }
+evidence = "HEK ISTUDSF: 'Studiestöd, skatterfri (bidrag och lån)' (1975-2011) vs 'Studiestöd, skattefri del (bidrag och lån)' (2012-13), same SEK, same definitions; the reason's 'boarding support' is not in the catalog text."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: blkf @2009-01-01..2009-12-31 where key = 'v31'"
+fields = { "variable" = "lan-kommun-forsamling" }
+evidence = "HEK BLKF: 'Län, kommun, församling' (2007-08) and 'Församling' (2009) carry the same 6-digit LKF codes (011401=Ed, 011402=Hammarby ...; 1810 vs 1790 items); a parish-code list update, same variable."

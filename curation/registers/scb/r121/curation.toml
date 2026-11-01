@@ -64777,18 +64777,6 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:20165:17167:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v713-20"
-fields = { "sets" = [] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182397\ncatalog:occurrence:183008"
-
-[[statement]]
-kind = "set"
-subject = "var:v713-20"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182397\ncatalog:occurrence:183008"
-
-[[statement]]
-kind = "set"
 subject = "var:v713-23"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i följande period.\ncatalog:occurrence:182400\ncatalog:occurrence:183011"
@@ -66310,18 +66298,6 @@ kind = "set"
 subject = "var:v718-10"
 fields = { "tags" = ["taxation"] }
 evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182513\ncatalog:occurrence:183162"
-
-[[statement]]
-kind = "set"
-subject = "var:v718-11"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182514\ncatalog:occurrence:183163"
-
-[[statement]]
-kind = "set"
-subject = "var:v718-11"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har olika ägare.\ncatalog:occurrence:182514\ncatalog:occurrence:183163"
 
 [[statement]]
 kind = "set"
@@ -78730,3 +78706,95 @@ kind = "set"
 subject = "punktskatter-for-energi: v736_27 @2013-01-01..2013-12-31 where key = 'v26631'"
 fields = { "variable" = "skatt-netto-energiskatt-v736-27" }
 evidence = "Both measure net tax on raw tall oil in Swedish kronor in the energy excise table, column V736_27. The earlier net raw-tall-oil tax observations end at day 16071; the later net energy tax observations begin there and explicitly identify raw tall oil in their operational definition."
+
+[[statement]]
+kind = "link"
+subject = "var:avdr-for-skatt-pa-bransle-tidigare-skattskyldighet-v712-42"
+relation = "continues"
+object = "scb/frida/v712-42"
+at = "2014-01-01.."
+evidence = "FRIDA V712_42: deduction for fuel with prior tax liability/destroyed/diplomatic (2007-13) -> prior tax liability or returned purchase (2014+); group-wide redefinition of the deduction ground, same line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2007-01-01..2007-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2008-01-01..2008-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2009-01-01..2009-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2010-01-01..2010-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2011-01-01..2011-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2012-01-01..2012-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v713_20 @2013-01-01..2013-12-31 where key = 'v26418'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v713-20" }
+evidence = "FRIDA V713_20: CO2 stock tax natural gas/coal/coke (2007-13) -> label 'Skatt på lager (vid återkallande) energiskatt' (2014+), but its 2017+ operational text is 'naturgas, kol och koks, CO2-skatt'. The 2014 label is a block label shared by every stock-tax line; same line, same tax (prior audit C14 reached the same reading)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2007-01-01..2007-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2008-01-01..2008-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2009-01-01..2009-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2010-01-01..2010-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2011-01-01..2011-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2012-01-01..2012-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v718_11 @2013-01-01..2013-12-31 where key = 'v26563'"
+fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
+evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."

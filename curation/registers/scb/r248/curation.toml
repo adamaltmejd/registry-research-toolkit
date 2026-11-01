@@ -2448,3 +2448,35 @@ kind = "set"
 subject = "var:verksamhetsform-skolvasendet"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln klassificerar utbildningens verksamhetsform.\ncatalog:variable_text:34642:18993:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:sfi-prov-poang-hor"
+relation = "continues"
+object = "scb/komvux-sfi/sfi-prov-betyg-hor"
+at = "2022-01-01.."
+evidence = "SFI national tests BetH: grade (2009-2021) -> points (2022+); result measure replaced."
+
+[[statement]]
+kind = "link"
+subject = "var:sfi-prov-poang-las"
+relation = "continues"
+object = "scb/komvux-sfi/sfi-prov-betyg-las"
+at = "2022-01-01.."
+evidence = "SFI national tests BetL: grade (2009-2021) -> points (2022+); result measure replaced."
+
+[[statement]]
+kind = "link"
+subject = "var:sfi-prov-poang-skrift"
+relation = "continues"
+object = "scb/komvux-sfi/sfi-prov-betyg-skrift"
+at = "2022-01-01.."
+evidence = "SFI national tests BetS: grade (2009-2021) -> points (2022+); result measure replaced."
+
+[[statement]]
+kind = "link"
+subject = "var:sfi-prov-poang-tal"
+relation = "continues"
+object = "scb/komvux-sfi/sfi-prov-betyg-tal"
+at = "2022-01-01.."
+evidence = "SFI national tests BetT: grade (2009-2021) -> points (2022+); result measure replaced."

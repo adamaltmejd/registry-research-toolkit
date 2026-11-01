@@ -658,3 +658,11 @@ kind = "set"
 subject = "var:utbildningsniva-3-positioner"
 fields = { "tags" = ["education"] }
 evidence = "Samma tresiffriga nivå som scb/slh/sun2000niva är uppdelad mellan perioder.\ncatalog:occurrence:443174\ncatalog:occurrence:443201"
+
+[[statement]]
+kind = "link"
+subject = "var:utbildningsgrupp"
+relation = "continues"
+object = "scb/slh/utbildningsgrupp-enl-sun-2000"
+at = "2016-01-01.."
+evidence = "SLH SUN2000Grp: education group SUN2000 -> education group (2016+, later SUN2020); classification revision."

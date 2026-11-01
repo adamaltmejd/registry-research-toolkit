@@ -2626,3 +2626,19 @@ kind = "set"
 subject = "tjansteproduktionsindex: MeasureValue @2022-01-01..2022-12-31 where key = 'v50056'"
 fields = { "description" = "Variabel som beskriver modellskattad nettoomsättning." }
 evidence = "Etiketten anger modellskattad nettoomsättning i hela perioden.\ncatalog:variable_text:40558:18993:20089"
+
+[[statement]]
+kind = "link"
+subject = "var:bgrupp"
+relation = "continues"
+object = "scb/pin/branschgrupp-bgrupp"
+at = "2022-01-01.."
+evidence = "PIN BGrupp: reporting group, 42 codes (2019-20) -> frame stratum industry group, 178 codes (2022+); grouping redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:branschgrupp-sni2007"
+relation = "continues"
+object = "scb/pin/branschgrupp-sni2002"
+at = "2009-04-01.."
+evidence = "PIN branschgr: SNI2002-based groups -> SNI2007-based groups (2009); classification revision."

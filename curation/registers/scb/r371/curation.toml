@@ -31638,3 +31638,27 @@ kind = "set"
 subject = "individregister: ppenssf @2012-01-01..2012-12-31 where key = 'v93'"
 fields = { "variable" = "pension-och-livranta-skattefri" }
 evidence = "Both definitions explicitly cover tax-free pension and annuity in SEK. PPENSSF passes between them in the individual table at 15706 without overlap. Earlier metadata seeks comparability across years; later metadata details the pension, annuity and child-benefit components of the total."
+
+[[statement]]
+kind = "link"
+subject = "var:avsattning-privat-pensionssparande"
+relation = "continues"
+object = "scb/fasit/summerat-pensionssparande"
+at = "2013-01-01.."
+evidence = "FASIT FAPENSP: summed pension savings (2012) -> summed private pension contributions 1991-2014 (2013-2023), SEK; same measure redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:ersattning-slutford-terminsaffar"
+relation = "continues"
+object = "scb/fasit/ersattning-avyttring-terminskontrakt"
+at = "2009-01-01.."
+evidence = "FASIT KKUEHT: futures proceeds incl. commission (2006-08) -> proceeds after commission (2009+), SEK; measure redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:summa-skattefritt-skattepliktigt"
+relation = "continues"
+object = "scb/fasit/pkuen426"
+at = "2008-01-01.."
+evidence = "FASIT PKUEN426: KU code 426 sum, content annuities (2006-07) -> lump-sum personal-injury payments (2008+); same code, redefined content."

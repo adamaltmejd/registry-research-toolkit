@@ -1889,3 +1889,11 @@ kind = "set"
 subject = "lss-utjamning: UtjLSSinsats @2014-01-01..2014-12-31 where key = 'v23682'"
 fields = { "description" = "En kommuns standardkostnad inklusive personalkostnadsindex för insatser enligt LSS, utom råd och stöd, samt personlig assistans enligt LASS, från och med 2011 inordnad i socialförsäkringsbalken, i tusentals kronor." }
 evidence = "Den befintliga beskrivningen anger en sammanlagd standardkostnad men variabeln mäter standardkostnaden inklusive personalkostnadsindex.\ncatalog:variable_text:34260:13879:17532\ncatalog:variable_text:34260:19723:20819"
+
+[[statement]]
+kind = "link"
+subject = "var:region"
+relation = "continues"
+object = "scb/kommunalekonomisk-utjamning/landstingsnamn-i-kortform"
+at = "2020-01-01.."
+evidence = "Kommunalekonomisk utjämning: county-council short name (2007-19) -> official region name (2020+); landsting renamed regions."

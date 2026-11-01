@@ -3328,3 +3328,171 @@ kind = "set"
 subject = "foretagens-kortperiodiska-tillgangar-och-skulder: transrad32 @2011-01-01..2011-12-31 where key = 'v21287'"
 fields = { "variable" = "utlandska-noterade-aktier-trans" }
 evidence = "Both measure quarterly transactions in foreign listed shares, in thousands of SEK, on TransRad32. Their periods [10957,14610) and [14610,15340) are adjacent and nonoverlapping. The earlier definition specifies market value; the later definition describes net purchases and sales, including subscriptions, redemptions and shareholder contributions."
+
+[[statement]]
+kind = "link"
+subject = "var:aktier-svenska-onoterade-omv"
+relation = "continues"
+object = "scb/bast/ovriga-svenska-aktier-omv"
+at = "2010-01-01.."
+evidence = "BAST OmvRad31: 'övriga svenska aktier' (other than listed Rad30, 1997-2009) -> 'svenska onoterade' (2010-2011); same residual category, valuation basis changed."
+
+[[statement]]
+kind = "link"
+subject = "var:aktier-utlandska-onoterade-omv"
+relation = "continues"
+object = "scb/bast/ovriga-utlandska-aktier-omv"
+at = "2010-01-01.."
+evidence = "BAST OmvRad33: 'övriga utländska aktier' (2000-2009, beside listed Rad32) -> 'utländska onoterade' (2010-2011); same residual category."
+
+[[statement]]
+kind = "link"
+subject = "var:kommentar-internetrapportor"
+relation = "continues"
+object = "scb/bast/komm"
+at = "2009-01-01.."
+evidence = "BAST Komm: free-text comment (1997-2008) -> comment from internet respondents (2009-2011); same comment field, channel narrowed."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-omv"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad21: overnight-loan debt (1997-2001) -> short-term borrowing excl. group (2002-2011), KSEK; no dagslån row after 2002, short loans absorb it (broadened item)."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-stallning"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad21: overnight-loan debt (1997-2001) -> short-term borrowing excl. group (2002-2011), KSEK; no dagslån row after 2002, short loans absorb it (broadened item)."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-trans"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad21: overnight-loan debt (1997-2001) -> short-term borrowing excl. group (2002-2011), KSEK; no dagslån row after 2002, short loans absorb it (broadened item)."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-utlandet-omv"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-utlandet-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad211: overnight-loan debt abroad (1997-2001) -> short-term borrowing abroad (2002-2011); broadened item, no parallel dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-utlandet-stallning"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-utlandet-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad211: overnight-loan debt abroad (1997-2001) -> short-term borrowing abroad (2002-2011); broadened item, no parallel dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-korta-lan-utlandet-trans"
+relation = "continues"
+object = "scb/bast/dagslan-skuld-utlandet-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad211: overnight-loan debt abroad (1997-2001) -> short-term borrowing abroad (2002-2011); broadened item, no parallel dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-omv"
+relation = "continues"
+object = "scb/bast/annan-upplaning-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad25: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-stallning"
+relation = "continues"
+object = "scb/bast/annan-upplaning-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad25: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-trans"
+relation = "continues"
+object = "scb/bast/annan-upplaning-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad25: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-utlandet-omv"
+relation = "continues"
+object = "scb/bast/annan-upplaning-utlandet-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad251: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-utlandet-stallning"
+relation = "continues"
+object = "scb/bast/annan-upplaning-utlandet-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad251: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:upplaning-langa-lan-utlandet-trans"
+relation = "continues"
+object = "scb/bast/annan-upplaning-utlandet-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad251: other short+long borrowing excl. group (1997-2001) -> long-term borrowing excl. group (2002-2011); 2002 split, short part moves to Rad21/211, no pre-existing long-loan row."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-omv"
+relation = "continues"
+object = "scb/bast/dagslan-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad13: overnight lending (1997-2001) -> short-term lending and deposits excl. bank balances (2002-2011); broadened item, no dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-stallning"
+relation = "continues"
+object = "scb/bast/dagslan-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad13: overnight lending (1997-2001) -> short-term lending and deposits excl. bank balances (2002-2011); broadened item, no dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-trans"
+relation = "continues"
+object = "scb/bast/dagslan-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad13: overnight lending (1997-2001) -> short-term lending and deposits excl. bank balances (2002-2011); broadened item, no dagslån row after 2002."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-utlandet-omv"
+relation = "continues"
+object = "scb/bast/dagslan-utlandet-omv"
+at = "2002-01-01.."
+evidence = "BAST OmvRad131: overnight lending abroad (1997-2001) -> short-term lending abroad (2002-2011); broadened item."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-utlandet-stallning"
+relation = "continues"
+object = "scb/bast/dagslan-utlandet-stallning"
+at = "2002-01-01.."
+evidence = "BAST StallnRad131: overnight lending abroad (1997-2001) -> short-term lending abroad (2002-2011); broadened item."
+
+[[statement]]
+kind = "link"
+subject = "var:utlaning-korta-lan-utlandet-trans"
+relation = "continues"
+object = "scb/bast/dagslan-utlandet-trans"
+at = "2002-01-01.."
+evidence = "BAST TransRad131: overnight lending abroad (1997-2001) -> short-term lending abroad (2002-2011); broadened item."

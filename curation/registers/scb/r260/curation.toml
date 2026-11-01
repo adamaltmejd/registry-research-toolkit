@@ -3136,3 +3136,19 @@ kind = "set"
 subject = "var:vy-skolkod"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar skola.\ncatalog:variable_text:23360:11504:11688"
+
+[[statement]]
+kind = "link"
+subject = "var:kommun"
+relation = "continues"
+object = "scb/gymnasieskola-sokande/gymnasieregion"
+at = "1993-01-01.."
+evidence = "Gymnasieskola applicants HGYREG: upper-secondary region (1985-92) -> municipality (1993, vs417); geography redefined."
+
+[[statement]]
+kind = "link"
+subject = "var:meritvarde"
+relation = "continues"
+object = "scb/gymnasieskola-sokande/medelbetyg"
+at = "1998-07-01.."
+evidence = "Gymnasieskola: mean grade (1994-97) -> merit value (1998-2001); grading measure replaced."

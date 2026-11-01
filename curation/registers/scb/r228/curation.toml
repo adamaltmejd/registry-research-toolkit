@@ -2404,3 +2404,19 @@ kind = "set"
 subject = "var:utlandsk-skatt-pa-utdelning-delagare"
 fields = { "tags" = ["taxation"] }
 evidence = "Variabeln mäter skatt på utdelning.\ncatalog:variable_text:12773:13878:13879"
+
+[[statement]]
+kind = "link"
+subject = "var:kapitalforlust-annan-fond-rantefond"
+relation = "continues"
+object = "scb/formogenhetsreg/kapitalforlust-aktiefond"
+at = "2001-12-31.."
+evidence = "Wealth register KFKUFON2: loss on equity funds (1999-2000) -> loss on funds other than interest funds incl. equity funds (2001-07); broadened scope."
+
+[[statement]]
+kind = "link"
+subject = "var:kapitalvinst-annan-fond-rantefond"
+relation = "continues"
+object = "scb/formogenhetsreg/kapitalvinst-aktiefond"
+at = "2001-12-31.."
+evidence = "Wealth register KVKUFON2: gain on equity funds (1999-2000) -> gain on funds other than interest funds (2001-07); broadened scope."

@@ -16942,3 +16942,27 @@ kind = "set"
 subject = "aku-april-2005-dec-2020: huarblorok @2005-04-01..2005-12-31 where key = 'v31238'"
 fields = { "variable" = "huarblorok" }
 evidence = "Both definitions ask about an agreement with the employer to work certain Saturdays in the main job. They use the identical complete yes/no code list and occupy adjacent periods [12874,13149) and [13149,13879)."
+
+[[statement]]
+kind = "link"
+subject = "var:alsni2002"
+relation = "continues"
+object = "scb/aku/alsni92"
+at = "2000-01-01.."
+evidence = "AKU last-job industry: SNI92 (1991-1999) -> SNI2002 AKU-adapted (2000-2005); classification revision."
+
+[[statement]]
+kind = "link"
+subject = "var:naringsgren-bi-sni2002"
+relation = "continues"
+object = "scb/aku/bisni"
+at = "2000-01-01.."
+evidence = "AKU side-job industry: SNI (1987-1999) -> SNI2002 AKU-adapted (2000-2005); classification revision."
+
+[[statement]]
+kind = "link"
+subject = "var:onskad-arbetstid-tot-aldre"
+relation = "continues"
+object = "scb/aku/onskad-okad-arbetstid-sysselsatta"
+at = "1992-01-01.."
+evidence = "AKU TotOnskTim: desired additional hours (1987-1991) -> desired total weekly hours (1992-2005), same value set vs3817; measure redefined."

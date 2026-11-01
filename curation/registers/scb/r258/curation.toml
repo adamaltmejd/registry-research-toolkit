@@ -18855,3 +18855,11 @@ kind = "set"
 subject = "it-anvandning-i-foretag: webord @2025-01-01..2025-12-31 where key = 'v16917'"
 fields = { "variable" = "webbplats-bestallning-bokning" }
 evidence = "Both measure whether the enterprise website permits online orders, reservations or bookings. Their observed periods do not overlap in the enterprise table, and both use the complete four-code value set 7898."
+
+[[statement]]
+kind = "link"
+subject = "var:anstallda-distansarbete"
+relation = "continues"
+object = "scb/it-anvandning/sysselsatta-utanfor-foretaget"
+at = "2015-01-01.."
+evidence = "IT use GDIST: persons engaged working remotely (2013-14) -> employees working remotely (2015-20); population wording changed."
