@@ -26929,3 +26929,75 @@ kind = "set"
 subject = "individer-och-dodsbon: tnlan @1990-01-01..1990-12-31 where key = 'v39966'"
 fields = { "variable" = "lan-for-taxeringsdistrikt" }
 evidence = "IoT TNLAN: 'Län för taxeringsdistrikt' (1978-89) and 'Taxeringsnämnd, län' defined as 'i vilket län taxeringsdistriktet ligger' (1990); same county codes (01 Stockholm, 03 Uppsala ..., 25 items each); label wording only."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2016-01-01..2016-12-31 where key = 'v3290' and release = 'r11663'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2016-01-01..2016-12-31 where key = 'v3291' and release = 'r11663'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2016-01-01..2016-12-31 where key = 'v3290' and release = 'r11480'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2016-01-01..2016-12-31 where key = 'v3291' and release = 'r11480'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2017-01-01..2017-12-31 where key = 'v3290' and release = 'r13443'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2017-01-01..2017-12-31 where key = 'v3291' and release = 'r13443'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2017-01-01..2017-12-31 where key = 'v3290' and release = 'r12573'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2017-01-01..2017-12-31 where key = 'v3291' and release = 'r12573'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2018-01-01..2018-12-31 where key = 'v3290' and release = 'r13744'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2018-01-01..2018-12-31 where key = 'v3291' and release = 'r13744'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KFKUFON3 @2018-01-01..2018-12-31 where key = 'v3290' and release = 'r13544'"
+fields = { "variable" = "kapitalforlust-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: KVKUFON3 @2018-01-01..2018-12-31 where key = 'v3291' and release = 'r13544'"
+fields = { "variable" = "kapitalvinst-rantefond" }
+evidence = "IoT 2016-2018 swaps the interest-fund gain/loss labels and source keys between KFKUFON3 and KVKUFON3, in both preliminary and final releases. Across 1999, 2005-2015 and 2019-2024, KF consistently denotes loss and KV gain. All are SEK amounts without a value set; no operational text contradicts column continuity. Restore whole-occurrence ownership by column; retain the source text as evidence."

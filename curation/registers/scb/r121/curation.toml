@@ -37117,18 +37117,6 @@ evidence = "Samma källkolumn har intilliggande ägare med olika beteckningar.\n
 
 [[statement]]
 kind = "set"
-subject = "var:l20"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder och etiketten anger intäkter snarare än kostnader.\ncatalog:occurrence:163698\ncatalog:occurrence:163834"
-
-[[statement]]
-kind = "set"
-subject = "var:l20"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har olika ägare i angränsande perioder och etiketten anger intäkter snarare än kostnader.\ncatalog:occurrence:163698\ncatalog:occurrence:163834"
-
-[[statement]]
-kind = "set"
 subject = "var:l25"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har en annan ägare i följande period.\ncatalog:occurrence:163703\ncatalog:occurrence:163839"
@@ -44830,18 +44818,6 @@ kind = "set"
 subject = "var:orealiserade-forluster-l10"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnerna har identitetskonflikter.\ncatalog:occurrence:163821\ncatalog:occurrence:163822\ncatalog:occurrence:163823\ncatalog:occurrence:163960"
-
-[[statement]]
-kind = "set"
-subject = "var:orealiserade-forluster-l18"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har olika ägare i intilliggande perioder.\ncatalog:occurrence:163832\ncatalog:occurrence:163968"
-
-[[statement]]
-kind = "set"
-subject = "var:orealiserade-forluster-l18"
-fields = { "tags" = ["business"] }
-evidence = "Källkolumnen har olika ägare i intilliggande perioder.\ncatalog:occurrence:163832\ncatalog:occurrence:163968"
 
 [[statement]]
 kind = "set"
@@ -78798,3 +78774,165 @@ kind = "set"
 subject = "punktskatter-for-energi: v718_11 @2013-01-01..2013-12-31 where key = 'v26563'"
 fields = { "variable" = "skatt-pa-lager-vid-aterkallande-energiskatt-v718-11" }
 evidence = "FRIDA V718_11: sulphur stock tax (2007-13) -> block label '... energiskatt' (2014+), whose 2017+ operational text is 'svavel, svavelskatt'. Same line, same tax; the label is shared by every stock-tax line."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2017-01-01..2017-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2018-01-01..2018-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2018-01-01..2018-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2019-01-01..2019-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2019-01-01..2019-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2020-01-01..2020-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2020-01-01..2020-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2021-01-01..2021-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2021-01-01..2021-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2022-01-01..2022-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2022-01-01..2022-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l19 @2023-01-01..2023-12-31 where key = 'v26224'"
+fields = { "variable" = "l18" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: l20 @2023-01-01..2023-12-31 where key = 'v26287'"
+fields = { "variable" = "ovriga-intakter-l19" }
+evidence = "FRIDA insurers renumber the life-insurance lines from 2017 while retaining their old label numbers: L20 carries Övriga intäkter (L19), and L19 from 2018 carries Orealiserade förluster (L18). Definitions and KSEK units agree across all releases; neither has a value set. The 2017 legacy L18 and L19 occurrences retain their own meanings."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2017-01-01..2017-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2017-01-01..2017-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2018-01-01..2018-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2018-01-01..2018-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2019-01-01..2019-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2019-01-01..2019-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2020-01-01..2020-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2020-01-01..2020-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2021-01-01..2021-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2021-01-01..2021-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2022-01-01..2022-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2022-01-01..2022-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_33 @2023-01-01..2023-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-34" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: v712_34 @2023-01-01..2023-12-31 where key = 'v26612'"
+fields = { "variable" = "v712-33" }
+evidence = "FRIDA gross tax on oil and LPG: V712_33 is explicitly energy tax and V712_34 CO2 tax in 2007-2013; their 2017-2023 operational definitions reverse those meanings. Both use SEK and no value set. Assign only the releases with explicit operational evidence; the generic 2014-2016 labels do not date the swap."

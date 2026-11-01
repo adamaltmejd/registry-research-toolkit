@@ -1075,18 +1075,6 @@ evidence = "Samma kolumn har olika ägare och enhetsbenämningar.\ncatalog:occur
 
 [[statement]]
 kind = "set"
-subject = "var:postort-for-arbetsstallet-postnr"
-fields = { "sets" = [] }
-evidence = "Kolumnnamnet PostNr och angränsande ägare anger postnummer medan etiketten anger postort.\ncatalog:occurrence:288635\ncatalog:occurrence:288667\ncatalog:occurrence:288699"
-
-[[statement]]
-kind = "set"
-subject = "var:postort-for-arbetsstallet-postnr"
-fields = { "tags" = ["geography"] }
-evidence = "Kolumnnamnet PostNr och angränsande ägare anger postnummer medan etiketten anger postort.\ncatalog:occurrence:288635\ncatalog:occurrence:288667\ncatalog:occurrence:288699"
-
-[[statement]]
-kind = "set"
 subject = "var:postort-for-arbetsstallet-postort"
 fields = { "sets" = [] }
 evidence = "Enhetsbenämningen skiljer sig mellan observerade perioder.\ncatalog:occurrence:288236\ncatalog:occurrence:288324"
@@ -1320,3 +1308,15 @@ relation = "continues"
 object = "scb/isen/panneffekt-redovisningsenheten"
 at = "2006-01-01.."
 evidence = "ISEN Panneff: boiler capacity of reporting unit -> of establishment (2006)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: poanst @2017-01-01..2017-12-31 where key = 'v16429' and release = 'r11509'"
+fields = { "variable" = "postort-for-arbetsstallet-poanst" }
+evidence = "ISEN G101: in 2006-2016 and 2018 PostNr consistently denotes the establishment postal code and PoAnst the postal town. Only release r11509 (2017) exchanges their labels and definitions; neither has a value set or operational text. Restore ownership by column; retain the source text."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: postnr @2017-01-01..2017-12-31 where key = 'v16428' and release = 'r11509'"
+fields = { "variable" = "postnummer-arbetsstallet" }
+evidence = "ISEN G101: in 2006-2016 and 2018 PostNr consistently denotes the establishment postal code and PoAnst the postal town. Only release r11509 (2017) exchanges their labels and definitions; neither has a value set or operational text. Restore ownership by column; retain the source text."
