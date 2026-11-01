@@ -8016,13 +8016,13 @@ evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28402:168
 
 [[statement]]
 kind = "set"
-subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades"
+subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
 fields = { "sets" = ["aktiefinansiering"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades"
+subject = "var:finansieringkalla-forsok-till-aktiefinansiering-lyckades-inte"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Id:t är en ogenomskinlig källkod.\ncatalog:variable_text:28403:18262:20089"
 
