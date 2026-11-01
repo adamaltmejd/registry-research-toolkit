@@ -4,3 +4,7 @@ t = "t"
 [variables]
 a-date = ["t: MemberDate"]
 z-year = ["t: MemberYear @ 2011-01-01"]
+a = ["t: X", "t: Y"]
+b = ["t: X @ 2013-01-01"]
+c = ["t: Z"]
+d = ["t: Y @ 2013-01-01"]

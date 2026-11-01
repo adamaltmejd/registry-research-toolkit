@@ -3,3 +3,9 @@ kind = "set"
 subject = "t: memberdate"
 fields = { variable = "a-date" }
 evidence = "The earlier spelling is a distinct variable from the later years."
+
+[[statement]]
+kind = "set"
+subject = "t: Z"
+fields = { variable = "c" }
+evidence = "An unrelated assignment must leave X and Y's default ids unchanged."

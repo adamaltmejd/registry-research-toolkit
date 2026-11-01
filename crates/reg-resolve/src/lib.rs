@@ -831,11 +831,19 @@ pub(crate) fn resolve_located(
         };
         (key, sub)
     };
-    // Resolve ids over the unselected members, not the whole default variable:
-    // an assignment can remove the anchor that won in the default pass. A dated
-    // anchor still identifies the remaining group beyond the anchor day.
+    // Re-derive ids only for partially selected default groups: an assignment can
+    // remove the anchor that won in the default pass. A dated anchor still
+    // identifies the remaining group beyond the anchor day.
     let mut inherited_ids = BTreeMap::new();
     if let Some(defaults) = &defaults {
+        let mut selected_groups = BTreeSet::new();
+        for (i, row) in defaults.occurrences.iter().enumerate() {
+            if assignment(&resolved[i].occurrence)?.is_some()
+                && let Some(v) = row.variable
+            {
+                selected_groups.insert(v);
+            }
+        }
         for (id, targets) in
             ledger::anchor_targets(&defaults.occurrences, &defaults.tables, ledger)?
         {
@@ -853,6 +861,7 @@ pub(crate) fn resolve_located(
             for i in targets {
                 if assignment(&resolved[i].occurrence)?.is_none()
                     && let Some(v) = defaults.occurrences[i].variable
+                    && selected_groups.contains(&v)
                 {
                     inherited_ids.entry(v).or_insert(id);
                 }
